@@ -11,3 +11,4 @@ lib
 .project
 *.ser
 junit*.properties
+*.patch
