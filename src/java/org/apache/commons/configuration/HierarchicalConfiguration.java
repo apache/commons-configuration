@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.12 2004/10/18 10:19:26 ebourg Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.13 2004/11/13 17:02:51 oheger Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -387,7 +387,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      */
     public Iterator getKeys(String prefix)
     {
-        DefinedKeysVisitor visitor = new DefinedKeysVisitor();
+        DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         List nodes = fetchNodeList(prefix);
         ConfigurationKey key = new ConfigurationKey();
         
@@ -990,6 +990,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     {
         /** Stores the list to be filled.*/
         private Set keyList;
+        
+        /** Stores a prefix for the keys.*/
+        private String prefix;
 
         /**
          * Default constructor.
@@ -997,6 +1000,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         public DefinedKeysVisitor()
         {
             keyList = new HashSet();
+        }
+        
+        /**
+         * Creates a new <code>DefinedKeysVisitor</code> instance and sets the
+         * prefix for the keys to fetch.
+         * 
+         * @param prefix the prefix
+         */
+        public DefinedKeysVisitor(String prefix)
+        {
+            this();
+            this.prefix = prefix;
         }
 
         /**
@@ -1020,7 +1035,26 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         {
             if (node.getValue() != null && key != null)
             {
+                addKey(key);
+            }
+        }
+        
+        /**
+         * Adds the specified key to the internal list.
+         * 
+         * @param key the key to add
+         */
+        protected void addKey(ConfigurationKey key)
+        {
+            if(prefix == null)
+            {
                 keyList.add(key.toString());
+            }
+            else
+            {
+                StringBuffer buf = new StringBuffer(prefix);
+                buf.append('.').append(key);
+                keyList.add(buf.toString());
             }
         }
     }
