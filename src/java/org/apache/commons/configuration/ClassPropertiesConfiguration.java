@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
- * @version $Id: ClassPropertiesConfiguration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.5 2004/03/13 17:31:40 epugh Exp $
  */
 public class ClassPropertiesConfiguration
     extends BasePropertiesConfiguration
@@ -84,12 +84,6 @@ public class ClassPropertiesConfiguration
         throws IOException
     {
         InputStream resource = null;
-        //For backwards compatibility with earlier versions, 
-        //strip a leading "./" from the 
-            if (resourceName.startsWith("./"))
-            {
-                //classPath.append(resourceName.substring(2));
-            }
         
         //First try to load from within the package of the provided class
         resource = baseClass.getResourceAsStream(resourceName);
