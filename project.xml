@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.13 2004/03/28 16:02:10 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.14 2004/04/01 18:21:46 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -112,18 +112,23 @@
       <name>Emmanuel Bourg</name>
       <id>ebourg</id>
       <email>e.bourg@cross-systems.com</email>
-    </contributor>    
+    </contributor> 
+    <contributor>
+      <name>Oliver Heger</name>
+      <id>oheger</id>
+      <email>oliver.heger@t-online.de</email>
+    </contributor> 
+    <contributor>
+      <name>Jörg Schaible</name>
+      <id>jschaible</id>
+      <email>joerg.schaible@gmx.de</email>
+    </contributor>            
     <contributor>
       <name>Konstantin Shaposhnikov</name>
       <id>kshaposhnikov</id>
       <email>ksh@scand.com</email>
       <organization>scand.com</organization>
     </contributor>
-    <contributor>
-      <name>Oliver Heger</name>
-      <id>oheger</id>
-      <email>oliver.heger@t-online.de</email>
-    </contributor>    
   </contributors>
   
   <dependencies>
@@ -270,51 +275,43 @@
         <resource>
           <directory>conf</directory>
           <includes>
-            <include>testClasspath.properties</include>
-            <include>testdb.script</include>
+            <include>*.xml</include>
           </includes>
         </resource>
-      </resources>
-      <resources>
+        <resource>
+          <directory>conf</directory>
+          <includes>
+            <include>testClasspath.properties</include>
+            <include>testdb.script</include>
+            <include>*.properties</include>
+          </includes>
+        </resource>
         <resource>
           <directory>conf</directory>
           <targetPath>org/apache/commons/configuration</targetPath> 
           <includes>
-            <include>*.properties</include>
+            <include>test.properties</include>
+            <include>include.properties</include>
           </includes>
-          <excludes>
-            <exclude>testClasspath.properties</exclude>
-          </excludes>          
         </resource>
-      </resources>
-      <resources>
         <resource>
           <directory>conf/config</directory>
           <targetPath>config</targetPath> 
           <includes>
-            <include>*.properties</include>
+            <include>**/*.properties</include>
           </includes>
-          <excludes>
-            <exclude>testClasspath.properties</exclude>
-          </excludes>          
         </resource>        
       </resources>
     </unitTest>
-
-    <!-- J A R  R E S O U R C E S -->
-    <!-- Resources that are packaged up inside the JAR file -->
 
     <resources>
       <resource>
         <directory>conf</directory>
         <includes>
-          <include>*</include>
+          <include>digesterRules.xml</include>
         </includes>
       </resource>
     </resources>
-
-    <jars>
-    </jars>
   </build>
   <reports>
     <report>maven-jdepend-plugin</report>

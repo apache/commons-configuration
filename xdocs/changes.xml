@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">  
+	 <action dev="jschaible" type="update">
+        Update build to not include test configuration files in resulting jar.
+     </action>       
 	 <action dev="ebourg" type="update">
         Refactored JNDIConfiguration to use AbstractConfiguration.
      </action>      
