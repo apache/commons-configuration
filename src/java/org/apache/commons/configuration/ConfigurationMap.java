@@ -31,7 +31,7 @@ import java.util.Set;
  * @todo This implementation is incomplete. 
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.7 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision$, $Date$
  * @since 1.0
  */
 public class ConfigurationMap extends AbstractMap

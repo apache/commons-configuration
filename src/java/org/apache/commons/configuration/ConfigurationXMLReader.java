@@ -37,7 +37,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * configuration classes.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationXMLReader.java,v 1.3 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id$
  */
 public abstract class ConfigurationXMLReader implements XMLReader
 {

@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2005/01/03 18:32:46 $
+ * @version $Revision$, $Date$
  */
 public class TestXMLPropertiesConfiguration extends TestCase
 {

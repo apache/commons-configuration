@@ -42,7 +42,7 @@ import org.apache.commons.lang.StringUtils;
  * version.</p>
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.2 $, $Date$
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration

@@ -27,7 +27,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.20 2005/01/03 16:35:04 ebourg Exp $
+ * @version $Id$
  */
 public class TestConfigurationFactory extends TestCase
 {

@@ -63,7 +63,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * 
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
- * @version $Revision: 1.22 $, $Date: 2005/01/03 12:42:30 $
+ * @version $Revision$, $Date$
  */
 public class XMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {

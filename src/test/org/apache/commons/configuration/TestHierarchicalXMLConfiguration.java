@@ -30,7 +30,7 @@ import java.util.Iterator;
  * @author Emmanuel Bourg
  * @author Mark Woodman
  * @author Oliver Heger
- * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.6 2004/12/23 18:42:25 oheger Exp $
+ * @version $Id$
  */
 public class TestHierarchicalXMLConfiguration extends TestCase
 {

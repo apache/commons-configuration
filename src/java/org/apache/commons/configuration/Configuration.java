@@ -25,7 +25,7 @@ import java.util.Properties;
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.13 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id$
  */
 public interface Configuration
 {

@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: BaseNonStringProperties.java,v 1.7 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id$
  */
 public abstract class BaseNonStringProperties extends TestCase
 {

@@ -29,7 +29,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * A persistent configuration loaded and saved to a file.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2005/01/03 12:42:30 $
+ * @version $Revision$, $Date$
  * @since 1.0-rc2
  */
 public interface FileConfiguration extends Configuration

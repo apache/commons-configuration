@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id$
  */
 public class TestCompositeConfiguration extends TestCase
 {

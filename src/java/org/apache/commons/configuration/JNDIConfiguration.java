@@ -39,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.24 2004/12/04 15:54:55 oheger Exp $
+ * @version $Id$
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {

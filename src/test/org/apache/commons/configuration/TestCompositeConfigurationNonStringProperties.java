@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.5 2005/01/03 16:35:04 ebourg Exp $
+ * @version $Id$
  */
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {

@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfigurationXMLReader.
  *
- * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.5 2004/12/23 18:42:25 oheger Exp $
+ * @version $Id$
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {

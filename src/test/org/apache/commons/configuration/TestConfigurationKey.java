@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * Test class for ConfigurationKey. 
  * 
- * @version $Id: TestConfigurationKey.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id$
  */
 public class TestConfigurationKey extends TestCase
 {

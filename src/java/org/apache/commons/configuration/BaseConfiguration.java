@@ -45,7 +45,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfiguration.java,v 1.10 2004/12/02 22:05:52 ebourg Exp $
+ * @version $Id$
  */
 public class BaseConfiguration extends AbstractConfiguration
 {

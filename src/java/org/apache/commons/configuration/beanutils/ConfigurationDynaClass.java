@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
  * {@link org.apache.commons.configuration.Configuration} instance.
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.4 $, $Date: 2004/09/21 17:49:39 $
+ * @version $Revision$, $Date$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaClass implements DynaClass

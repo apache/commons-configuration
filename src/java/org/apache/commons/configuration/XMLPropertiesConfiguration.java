@@ -54,7 +54,7 @@ import org.xml.sax.InputSource;
  * @since 1.1
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2005/01/03 18:32:46 $
+ * @version $Revision$, $Date$
  */
 public class XMLPropertiesConfiguration extends PropertiesConfiguration
 {

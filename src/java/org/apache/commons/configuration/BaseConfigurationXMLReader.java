@@ -25,7 +25,7 @@ package org.apache.commons.configuration;
  * it is possible to perform XML processing on a configuration object.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfigurationXMLReader.java,v 1.4 2004/06/23 11:15:45 ebourg Exp $
+ * @version $Id$
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 {

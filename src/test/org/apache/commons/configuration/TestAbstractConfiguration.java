@@ -27,7 +27,7 @@ import junitx.framework.ListAssert;
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date$
+ * @version $Revision$, $Date$
  */
 public abstract class TestAbstractConfiguration extends TestCase
 {

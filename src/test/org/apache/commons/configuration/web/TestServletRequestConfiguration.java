@@ -30,7 +30,7 @@ import org.apache.commons.configuration.TestAbstractConfiguration;
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration
 {

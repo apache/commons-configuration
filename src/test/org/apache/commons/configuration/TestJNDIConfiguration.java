@@ -27,7 +27,7 @@ import javax.naming.InitialContext;
  *
  * This does work fine with Tomcat's JNDI provider however.
  *
- * @version $Id: TestJNDIConfiguration.java,v 1.9 2004/09/21 17:18:27 ebourg Exp $
+ * @version $Id$
  */
 public class TestJNDIConfiguration extends TestCase {
 

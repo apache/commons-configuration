@@ -20,7 +20,7 @@ package org.apache.commons.configuration;
  * A configuration based on the system properties.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public class SystemConfiguration extends MapConfiguration

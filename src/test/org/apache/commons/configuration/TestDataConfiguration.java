@@ -34,7 +34,7 @@ import junitx.framework.ListAssert;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestDataConfiguration extends TestCase
 {

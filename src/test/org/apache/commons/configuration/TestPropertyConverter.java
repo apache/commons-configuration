@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestPropertyConverter extends TestCase
 {

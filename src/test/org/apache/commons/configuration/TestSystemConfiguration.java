@@ -24,7 +24,7 @@ import junit.framework.TestCase;
  * Tests for MapConfiguration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision$, $Date$
  */
 public class TestSystemConfiguration extends TestCase
 {

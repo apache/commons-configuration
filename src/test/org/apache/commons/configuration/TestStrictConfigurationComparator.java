@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * Tests the StrintConfigurationComparator class
  *
- * @version $Revision: 1.4 $, $Date: 2004/06/22 09:56:38 $
+ * @version $Revision$, $Date$
  */
 public class TestStrictConfigurationComparator extends TestCase
 {

@@ -29,7 +29,7 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * @see Configuration#subset(String)
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision$, $Date$
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {

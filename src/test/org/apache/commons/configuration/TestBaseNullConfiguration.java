@@ -30,7 +30,7 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys might
  * return null.
  *
- * @version $Id: TestBaseNullConfiguration.java,v 1.4 2005/01/03 16:35:04 ebourg Exp $
+ * @version $Id$
  */
 public class TestBaseNullConfiguration extends TestCase
 {

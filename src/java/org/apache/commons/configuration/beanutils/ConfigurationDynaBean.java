@@ -43,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * method. Setting an indexed property always throws an exception.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.7 $, $Date: 2004/09/21 17:58:10 $
+ * @version $Revision$, $Date$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean implements DynaBean

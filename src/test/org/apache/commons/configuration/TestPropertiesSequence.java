@@ -31,7 +31,7 @@ import org.apache.commons.configuration.BaseConfiguration;
  * Test that the configuration factory returns keys in the same
  * sequence as the properties configurator
  * 
- * @version $Id: TestPropertiesSequence.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id$
  */
 public class TestPropertiesSequence extends TestCase
 {

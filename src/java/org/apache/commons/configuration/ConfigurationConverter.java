@@ -29,7 +29,7 @@ import org.apache.commons.collections.ExtendedProperties;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Revision: 1.8 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision$, $Date$
  */
 public final class ConfigurationConverter
 {

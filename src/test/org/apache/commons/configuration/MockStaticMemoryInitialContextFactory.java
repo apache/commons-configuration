@@ -25,7 +25,7 @@ import org.codehaus.spice.jndikit.memory.MemoryContext;
  * memory context.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision: 1.2 $
+ * @version $Revision$
  */
 public class MockStaticMemoryInitialContextFactory
     implements InitialContextFactory

@@ -28,7 +28,7 @@ package org.apache.commons.configuration;
  * 
  * @author J&ouml;rg Schaible
  * @author Oliver Heger
- * @version $Revision: 1.9 $, $Date: 2004/12/23 18:41:04 $
+ * @version $Revision$, $Date$
  * @deprecated This class is deprecated. Use <code>XMLConfiguration</code>
  * instead, which supports all features this class had offered before.
  */

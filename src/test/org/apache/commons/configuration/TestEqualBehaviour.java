@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * Compare the behaviour of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  * 
- * @version $Id: TestEqualBehaviour.java,v 1.6 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id$
  */
 public class TestEqualBehaviour  extends TestCase
 {

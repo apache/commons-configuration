@@ -31,7 +31,7 @@ import org.apache.commons.configuration.BaseConfiguration;
  * because the two classes provide similar levels of functionality.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.4 $
+ * @version $Revision$
  */
 public class TestConfigurationDynaBean extends TestCase
 {

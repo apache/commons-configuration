@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2005/01/15 15:29:30 $
+ * @version $Revision$, $Date$
  */
 public class TestFileConfiguration extends TestCase
 {

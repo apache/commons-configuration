@@ -25,7 +25,7 @@ import junit.framework.TestCase;
  * org.apache.commons.configuration.BasePropertiesConfiguration}
  * extensions.
  *
- * @version $Id: TestThreesomeConfiguration.java,v 1.3 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id$
  */
 public class TestThreesomeConfiguration extends TestCase
 {

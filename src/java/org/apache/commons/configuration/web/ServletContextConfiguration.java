@@ -31,7 +31,7 @@ import org.apache.commons.configuration.PropertyConverter;
  * throw an UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.4 $, $Date$
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public class ServletContextConfiguration extends AbstractConfiguration

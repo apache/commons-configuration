@@ -26,7 +26,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * Test case for the ReloadableConfiguration class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/12/04 15:45:40 $
+ * @version $Revision$, $Date$
  */
 public class TestFileChangedReloadingStrategy extends TestCase
 {

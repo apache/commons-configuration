@@ -56,7 +56,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * file.</li></ul></p>
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.15 $, $Date: 2005/01/21 15:51:33 $
+ * @version $Revision$, $Date$
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration

@@ -22,7 +22,7 @@ package org.apache.commons.configuration;
  * @since 1.0
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
- * @version $Revision: 1.4 $, $Date: 2004/06/24 12:35:15 $
+ * @version $Revision$, $Date$
  */
 public interface ConfigurationComparator
 {

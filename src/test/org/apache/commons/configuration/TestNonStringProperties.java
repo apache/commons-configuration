@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: TestNonStringProperties.java,v 1.4 2005/01/03 16:35:04 ebourg Exp $
+ * @version $Id$
  */
 public class TestNonStringProperties extends BaseNonStringProperties
 {

@@ -24,7 +24,7 @@ import java.util.Map;
  * A Map based Configuration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/12/14 17:03:50 $
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration

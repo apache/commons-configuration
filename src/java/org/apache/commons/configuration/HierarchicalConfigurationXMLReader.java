@@ -35,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * that these methods ignore their argument.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.5 2004/07/05 09:54:17 ebourg Exp $
+ * @version $Id$
  */
 public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
 {

@@ -29,7 +29,7 @@ import org.apache.commons.collections.ExtendedProperties;
  *
  * @author Martin Poeschl
  * @author Emmanuel Bourg
- * @version $Revision: 1.8 $, $Date: 2004/10/18 21:38:45 $
+ * @version $Revision$, $Date$
  */
 public class TestConfigurationConverter extends TestCase
 {

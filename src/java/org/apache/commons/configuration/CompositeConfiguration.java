@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.23 2004/12/02 22:05:52 ebourg Exp $
+ * @version $Id$
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {

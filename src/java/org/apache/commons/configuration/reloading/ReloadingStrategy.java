@@ -23,7 +23,7 @@ import org.apache.commons.configuration.FileConfiguration;
  *
  * @author Emmanuel Bourg
  * @author Olivier Heger
- * @version $Revision: 1.1 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public interface ReloadingStrategy {

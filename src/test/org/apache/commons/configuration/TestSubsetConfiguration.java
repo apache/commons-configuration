@@ -30,7 +30,7 @@ import junit.framework.TestCase;
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.8 $, $Date: 2004/11/13 17:03:18 $
+ * @version $Revision$, $Date$
  */
 public class TestSubsetConfiguration extends TestCase
 {

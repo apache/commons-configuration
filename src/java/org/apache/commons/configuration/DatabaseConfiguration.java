@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.13 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision$, $Date$
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {

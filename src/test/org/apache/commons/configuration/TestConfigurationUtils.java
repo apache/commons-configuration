@@ -27,7 +27,7 @@ import junitx.framework.ListAssert;
 /**
  * Tests the ConfigurationUtils class
  *
- * @version $Revision: 1.9 $, $Date: 2004/12/04 15:45:39 $
+ * @version $Revision$, $Date$
  */
 public class TestConfigurationUtils extends TestCase
 {

@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 /**
  * test if properties that contain a "=" will be loaded correctly.
  *
- * @version $Id: TestEqualsProperty.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id$
  */
 public class TestEqualsProperty extends TestCase
 {

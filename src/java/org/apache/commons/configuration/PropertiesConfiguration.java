@@ -130,7 +130,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.19 2005/01/03 16:51:29 ebourg Exp $
+ * @version $Id$
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {

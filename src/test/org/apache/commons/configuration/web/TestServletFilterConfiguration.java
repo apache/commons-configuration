@@ -28,7 +28,7 @@ import java.util.Properties;
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration
 {

@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * Test class for BaseConfigurationXMLReader.
  *
- * @version $Id: TestBaseConfigurationXMLReader.java,v 1.4 2004/11/17 00:12:05 ebourg Exp $
+ * @version $Id$
  */
 public class TestBaseConfigurationXMLReader extends TestCase
 {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.14 $, $Date: 2005/01/21 15:51:33 $
+ * @version $Revision$, $Date$
  */
 public final class ConfigurationUtils
 {

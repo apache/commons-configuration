@@ -38,7 +38,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries. Otherwise you may get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.13 $, $Date: 2005/01/03 16:35:04 $
+ * @version $Revision$, $Date$
  */
 public class TestDatabaseConfiguration extends TestCase
 {

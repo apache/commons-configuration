@@ -39,7 +39,7 @@ import java.util.Set;
  * @see HierarchicalConfiguration
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationConverter.java,v 1.6 2004/09/20 09:37:07 henning Exp $
+ * @version $Id$
  */
 abstract class HierarchicalConfigurationConverter
 {

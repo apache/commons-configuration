@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.9 2004/12/23 18:42:25 oheger Exp $
+ * @version $Id$
  */
 public class TestHierarchicalConfiguration extends TestCase
 {

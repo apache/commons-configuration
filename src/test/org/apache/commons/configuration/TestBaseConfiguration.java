@@ -33,7 +33,7 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys will
  * throw Exceptions
  *
- * @version $Id: TestBaseConfiguration.java,v 1.19 2004/12/14 17:03:51 ebourg Exp $
+ * @version $Id$
  */
 public class TestBaseConfiguration extends TestCase
 {

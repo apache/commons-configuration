@@ -26,7 +26,7 @@ import java.util.Properties;
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {

@@ -23,7 +23,7 @@ import java.util.Map;
  * Tests for MapConfiguration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date$
+ * @version $Revision$, $Date$
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {

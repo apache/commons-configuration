@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.18 2005/01/03 16:35:04 ebourg Exp $
+ * @version $Id$
  */
 public class TestXMLConfiguration extends TestCase
 {

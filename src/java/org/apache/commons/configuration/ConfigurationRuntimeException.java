@@ -24,7 +24,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/06/24 14:01:03 $
+ * @version $Revision$, $Date$
  */
 public class ConfigurationRuntimeException extends NestableRuntimeException
 {

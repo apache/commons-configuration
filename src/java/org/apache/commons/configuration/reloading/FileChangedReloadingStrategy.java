@@ -27,7 +27,7 @@ import org.apache.commons.configuration.FileConfiguration;
  * delay. This strategy only works with FileConfiguration instances.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/12/04 15:45:40 $
+ * @version $Revision$, $Date$
  * @since 1.1
  */
 public class FileChangedReloadingStrategy implements ReloadingStrategy

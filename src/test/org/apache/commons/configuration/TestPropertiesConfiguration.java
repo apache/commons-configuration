@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.18 2005/01/03 11:58:46 ebourg Exp $
+ * @version $Id$
  */
 public class TestPropertiesConfiguration extends TestCase
 {
