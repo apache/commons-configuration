@@ -28,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.9 2004/09/03 16:36:21 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.10 2004/09/10 13:34:54 epugh Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -226,6 +226,9 @@ public class TestXMLConfiguration extends TestCase
         // set a new attribute
         conf.setProperty("foo[@bar]", "value");
         assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
+        
+        conf.setProperty("name1","value1");
+        assertEquals("value1",conf.getProperty("name1"));
     }
 
     public void testAddAttribute()
