@@ -17,7 +17,6 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
-import java.io.PrintStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -32,19 +31,21 @@ public class TestConfigurationUtils extends TestCase
 
     public void testToString()
     {
+        String lineSeparator = System.getProperty("line.separator");
+
         assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
 
         config.setProperty("one", "1");
         assertEquals("String representation of a configuration", "one=1", ConfigurationUtils.toString(config));
 
         config.setProperty("two", "2");
-        assertEquals("String representation of a configuration", "one=1\ntwo=2" , ConfigurationUtils.toString(config));
+        assertEquals("String representation of a configuration", "one=1" + lineSeparator + "two=2" , ConfigurationUtils.toString(config));
         
         config.clearProperty("one");
         assertEquals("String representation of a configuration", "two=2" , ConfigurationUtils.toString(config));
                 
         config.setProperty("one","1");
-        assertEquals("String representation of a configuration", "two=2\none=1" , ConfigurationUtils.toString(config));
+        assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1" , ConfigurationUtils.toString(config));
     }
 
     public void testGetURL() throws Exception
