@@ -1,45 +1,174 @@
 <?xml version="1.0"?>
 
 <document>
+  <properties>
+    <title>Properties files</title>
+    <author email="smanux@lfjr.net">Emmanuel Bourg</author>
+    <author email="oliver.heger@t-online.de">Oliver Heger</author>
+  </properties>
 
- <properties>
-  <title>Configuration Examples</title>
-  <author email="oliver.heger@t-online.de">Oliver Heger</author>
- </properties>
+  <body>
 
-<body>
+    <section name="Properties files">
+      <p>
+        Properties files are a popular mean of configuring applications. Of course Commons Configuration
+        supports this format and enhance significantly the basic <code>java.util.Properties</code> class.
+        This section introduces the features of the  <code>PropertiesConfiguration</code> class.
+      </p>
 
-    <section name="Steps for loading a properties file">
-    	<p>
-    		This section contains some very simple examples of configuration
-    		files and demonstrates how the properties defined there can be
-    		read from Java code.
-    	</p>
-    	<subsection name="A simple properties file">
-    		<p>
-    			At first lets consider that the whole configuration data of an
-    			application consists of a single properties file named 
-    			<code>usergui.properties</code> with the following content:
-    		</p>
-    			<source><![CDATA[
-#Properties definining the GUI
-colors.background=#FFFFFF
+      <subsection name="Loading">
+        <p>
+          At first lets consider that the whole configuration data of an application consists in
+          a single properties file named <code>usergui.properties</code> with the following content:
+        </p>
+        <source><![CDATA[
+# Properties definining the GUI
+colors.background = #FFFFFF
 ]]></source>
-			<p>
-				Note that this file complies to the typical format of
-				properties files.
-			</p>
-			<p>
-				You can also have in a simple properties file various characters
-				that are typically escaped like \n, \t etc:
-			</p>
-    			<source><![CDATA[
-#Unescaped string that will be escaped
-test.unescape = This \n string \t contains \" escaped \\ characters
-]]></source>			
-		</subsection>
-	</section>
-	
-</body>
 
+        <p>
+          To load this file, you'll write:
+        </p>
+<source>
+Configuration config = new PropertiesConfiguration("usergui.properties");
+</source>
+        <p>
+          If you do not specify an absolute path, the file will be searched automatically
+          in the following locations:
+          <ul>
+            <li>in the current directory</li>
+            <li>in the user home directory</li>
+            <li>in the classpath</li>
+          </ul>
+        </p>
+      </subsection>
+
+      <subsection name="Includes">
+        <p>
+          If a property is named "<code>include</code>" and the value of that property is the
+          name of a file on the disk, that file will be included into the configuration. Here is
+          an example:
+        </p>
+<source>
+# usergui.properties
+
+include = colors.properties
+include = sizes.properties
+</source>
+
+<source>
+# colors.properties
+
+colors.background = #FFFFFF
+</source>
+
+      </subsection>
+
+      <subsection name="Automatic Reloading">
+        <p>
+          A common issue with properties file is to handle the reloading of the file when it
+          changes. Typically you would use a thread monitoring the date of the file and reloading
+          the <code>Properties</code> when a more recent date is detected. Commons Configuration
+          integrates this mechanism out of the box, to enable it, just specify a reloading strategy
+          on your configuration:
+        </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setReloadingStrategy(new FileChangedReloadingStrategy());
+</source>
+        <p>
+          Now everytime you edit manually the <code>usergui.properties</code> file, the
+          configuration is automatically refreshed and the modified values are immediately
+          available to your application.
+        </p>
+
+      </subsection>
+
+      <subsection name="Saving">
+        <p>
+          To save your configuration, just call the <code>save()</code> method:
+        </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setProperty("colors.background", "#000000);
+config.save();
+</source>
+        <p>
+          You can also save a copy of the configuration to another file:
+        </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setProperty("colors.background", "#000000);
+config.save("usergui.backup.properties);
+</source>
+        <p>
+          And if you don't want to bother saving your configuration everytime it changes,
+          you can enable the automatic saving mode:
+        </p>
+<source>
+PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
+config.setAutoSave(true);
+config.setProperty("colors.background", "#000000); // the configuration is saved after this call
+</source>
+
+      </subsection>
+
+      <subsection name="Lists and arrays">
+        <p>
+          Commons Configuration has the ability to return easily a list of values,
+          for example if your file contains a list of comma separated values:
+        </p>
+<source>
+# chart colors
+colors.pie = #FF0000, #00FF00, #0000FF
+</source>
+        <p>
+          You don't have to split the value manually, you can retrieve an array directly with:
+        </p>
+<source>
+String[] colors = config.getStringArray("colors.pie");
+</source>
+        <p>
+          Alternatively, you can specify a list of values in your properties file by using
+          the same key on several lines:
+        </p>
+<source>
+# chart colors
+colors.pie = #FF0000;
+colors.pie = #00FF00;
+colors.pie = #0000FF;
+</source>
+      </subsection>
+
+      <subsection name="Variable Interpolation">
+        <p>
+          If you are familiar with Ant or Maven, you have most certainly already encountered
+          the variables (like <code>${token}</code>) that are automatically expanded when the
+          configuration file is loaded. Commons Configuration supports this feature as well,
+          here is an example:
+        </p>
+<source>
+application.name = Killer App
+application.version = 1.6.2
+
+application.title = ${application.name} ${application.version}
+</source>
+      </subsection>
+
+      <subsection name="Special Characters">
+        <p>
+          If you need a special character in a property like a line feed, a tabulation or
+          an unicode character, you can specify it with the same escaped notation used for
+          Java Strings. The list separator ("," by default), can also be escaped:
+        </p>
+        <source><![CDATA[
+key = This \n string \t contains \, escaped \\ characters \u0020
+]]></source>
+      </subsection>
+
+
+
+    </section>
+
+  </body>
 </document>
