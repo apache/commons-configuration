@@ -37,37 +37,24 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.15 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.16 2004/06/24 14:01:03 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
-    /** how big the initial arraylist for splitting up name value pairs */
-    private static final int INITIAL_LIST_SIZE = 2;
-
     /** start token */
     protected static final String START_TOKEN = "${";
+
     /** end token */
     protected static final String END_TOKEN = "}";
 
     /** The property delimiter used while parsing (a comma). */
     protected static final char DELIMITER = ',';
 
+    /** how big the initial arraylist for splitting up name value pairs */
+    private static final int INITIAL_LIST_SIZE = 2;
+
     /**
-     * Add a property to the configuration. If it already exists then the value
-     * stated here will be added to the configuration entry. For example, if
-     *
-     * resource.loader = file
-     *
-     * is already present in the configuration and you
-     *
-     * addProperty("resource.loader", "classpath")
-     *
-     * Then you will end up with a List like the following:
-     *
-     * ["file", "classpath"]
-     *
-     * @param key The Key to add the property to.
-     * @param token The Value to add.
+     * {@inheritDoc}
      */
     public void addProperty(String key, Object token)
     {
@@ -121,8 +108,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     protected String interpolate(String base)
     {
-        String result = interpolateHelper(base, null);
-        return (result);
+        return interpolateHelper(base, null);
     }
 
     /**
@@ -259,13 +245,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Create an BaseConfiguration object that is a subset
-     * of this one.
-     *
-     * @param prefix prefix string for keys
-     *
-     * @return subset of configuration if there is keys, that match
-     * given prefix, or <code>null</code> if there is no such keys.
+     * {@inheritDoc}
      */
     public Configuration subset(String prefix)
     {
@@ -273,30 +253,17 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Check if the configuration is empty
-     *
-     * @return <code>true</code> if Configuration is empty,
-     * <code>false</code> otherwise.
+     * {@inheritDoc}
      */
     public abstract boolean isEmpty();
 
     /**
-     * check if the configuration contains the key
-     *
-     * @param key the configuration key
-     *
-     * @return <code>true</code> if Configuration contain given key,
-     * <code>false</code> otherwise.
+     * {@inheritDoc}
      */
     public abstract boolean containsKey(String key);
 
     /**
-     * Set a property, this will replace any previously
-     * set values. Set values is implicitly a call
-     * to clearProperty(key), addProperty(key,value).
-     *
-     * @param key the configuration key
-     * @param value the property value
+     * {@inheritDoc}
      */
     public void setProperty(String key, Object value)
     {
@@ -305,27 +272,17 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Clear a property in the configuration.
-     *
-     * @param key the key to remove along with corresponding value.
+     * {@inheritDoc}
      */
     public  abstract void clearProperty(String key);
 
     /**
-     * Get the list of the keys contained in the configuration
-     * repository.
-     *
-     * @return An Iterator.
+     * {@inheritDoc}
      */
     public abstract Iterator getKeys();
 
     /**
-     * Get the list of the keys contained in the configuration
-     * repository that match the specified prefix.
-     *
-     * @param prefix The prefix to test against.
-     *
-     * @return An Iterator of keys that match the prefix.
+     * {@inheritDoc}
      */
     public Iterator getKeys(final String prefix)
     {
@@ -347,19 +304,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a list of properties associated with the given
-     * configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated properties if key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a String/List.
-     * @throws IllegalArgumentException if one of the tokens is
-     *         malformed (does not contain an equals sign).
-     *
-     * @see #getProperties(String, Properties)
+     * {@inheritDoc}
      */
     public Properties getProperties(String key)
     {
@@ -391,8 +336,7 @@ public abstract class AbstractConfiguration implements Configuration
         /*
          * Each token is of the form 'key=value'.
          */
-        Properties props =
-            (defaults == null ? new Properties() : new Properties(defaults));
+        Properties props = defaults == null ? new Properties() : new Properties(defaults);
         for (int i = 0; i < tokens.length; i++)
         {
             String token = tokens[i];
@@ -419,11 +363,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     *  Gets a property from the configuration.
-     *
-     *  @param key property to retrieve
-     *  @return value as object. Will return user value if exists,
-     *          if not then default value if exists, otherwise null
+     * {@inheritDoc}
      */
     public Object getProperty(String key)
     {
@@ -444,16 +384,7 @@ public abstract class AbstractConfiguration implements Configuration
    }
 
     /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated boolean.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Boolean.
+     * {@inheritDoc}
      */
     public boolean getBoolean(String key)
     {
@@ -470,15 +401,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated boolean.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Boolean.
+     * {@inheritDoc}
      */
     public boolean getBoolean(String key, boolean defaultValue)
     {
@@ -486,16 +409,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated boolean if key is found and has valid
-     * format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Boolean.
+     * {@inheritDoc}
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
@@ -526,16 +440,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated byte.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Byte.
+     * {@inheritDoc}
      */
     public byte getByte(String key)
     {
@@ -552,15 +457,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated byte.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Byte.
+     * {@inheritDoc}
      */
     public byte getByte(String key, byte defaultValue)
     {
@@ -568,16 +465,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated byte if key is found and has valid format, default
-     *         value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *            is not a Byte.
+     * {@inheritDoc}
      */
     public Byte getByte(String key, Byte defaultValue)
     {
@@ -610,16 +498,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated double.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Double.
+     * {@inheritDoc}
      */
     public double getDouble(String key)
     {
@@ -636,15 +515,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated double.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Double.
+     * {@inheritDoc}
      */
     public double getDouble(String key, double defaultValue)
     {
@@ -652,16 +523,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated double if key is found and has valid
-     * format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     * object that is not a Double.
+     * {@inheritDoc}
      */
     public Double getDouble(String key, Double defaultValue)
     {
@@ -694,16 +556,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated float.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * {@inheritDoc}
      */
     public float getFloat(String key)
     {
@@ -720,14 +573,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * {@inheritDoc}
      */
     public float getFloat(String key, float defaultValue)
     {
@@ -735,15 +581,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Float.
+     * {@inheritDoc}
      */
     public Float getFloat(String key, Float defaultValue)
     {
@@ -776,16 +614,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated int.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Integer.
+     * {@inheritDoc}
      */
     public int getInt(String key)
     {
@@ -802,14 +631,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated int.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Integer.
+     * {@inheritDoc}
      */
     public int getInt(String key, int defaultValue)
     {
@@ -824,16 +646,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated int if key is found and has valid format, default
-     *         value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *         is not a Integer.
+     * {@inheritDoc}
      */
     public Integer getInteger(String key, Integer defaultValue)
     {
@@ -866,17 +679,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated long.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
+     * {@inheritDoc}
      */
     public long getLong(String key)
     {
@@ -893,15 +696,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated long.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
+     * {@inheritDoc}
      */
     public long getLong(String key, long defaultValue)
     {
@@ -909,16 +704,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated long if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Long.
+     * {@inheritDoc}
      */
     public Long getLong(String key, Long defaultValue)
     {
@@ -951,16 +737,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated short.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
+     * {@inheritDoc}
      */
     public short getShort(String key)
     {
@@ -977,15 +754,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated short.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
+     * {@inheritDoc}
      */
     public short getShort(String key, short defaultValue)
     {
@@ -993,16 +762,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated short if key is found and has valid
-     *         format, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Short.
+     * {@inheritDoc}
      */
     public Short getShort(String key, Short defaultValue)
     {
@@ -1034,6 +794,9 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public BigDecimal getBigDecimal(String key)
     {
         BigDecimal number = getBigDecimal(key, null);
@@ -1048,6 +811,9 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1078,6 +844,9 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public BigInteger getBigInteger(String key)
     {
         BigInteger number = getBigInteger(key, null);
@@ -1092,6 +861,9 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1124,17 +896,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a string associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated string.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *         is not a String.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
+     * {@inheritDoc}
      */
     public String getString(String key)
     {
@@ -1151,15 +913,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a string associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     *
-     * @return The associated string if key is found, default value otherwise.
-     *
-     * @throws ConversionException is thrown if the key maps to an object that
-     *         is not a String.
+     * {@inheritDoc}
      */
     public String getString(String key, String defaultValue)
     {
@@ -1181,14 +935,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get an array of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     *
-     * @return The associated string array if key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a String/List of Strings.
+     * {@inheritDoc}
      */
     public String[] getStringArray(String key)
     {
@@ -1224,13 +971,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a List of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated List.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a List.
+     * {@inheritDoc}
      */
     public List getList(String key)
     {
@@ -1238,14 +979,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a List of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated List.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a List.
+     * {@inheritDoc}
      */
     public List getList(String key, List defaultValue)
     {
@@ -1353,7 +1087,7 @@ public abstract class AbstractConfiguration implements Configuration
     static class Container
     {
         /** We're wrapping a List object (A List) */
-        private List list = null;
+        private List list;
 
         /**
          * Constructor

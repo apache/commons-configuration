@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p><strong>Implementation note:</strong> This class is not thread safe.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationXMLDocument.java,v 1.5 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: ConfigurationXMLDocument.java,v 1.6 2004/06/24 14:01:03 ebourg Exp $
  */
 public class ConfigurationXMLDocument
 {
@@ -352,7 +352,7 @@ public class ConfigurationXMLDocument
     public void write(Writer out, String prefix, String root, boolean pretty) throws IOException, DocumentException
     {
         OutputFormat format =
-            (pretty)
+            pretty
                 ? OutputFormat.createPrettyPrint()
                 : OutputFormat.createCompactFormat();
 

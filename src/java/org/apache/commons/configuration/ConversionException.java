@@ -22,7 +22,7 @@ package org.apache.commons.configuration;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/06/15 11:48:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/24 14:01:03 $
  */
 public class ConversionException extends ConfigurationRuntimeException
 {
@@ -30,7 +30,10 @@ public class ConversionException extends ConfigurationRuntimeException
      * Constructs a new <code>ConversionException</code> without specified
      * detail message.
      */
-    public ConversionException() { }
+    public ConversionException()
+    {
+        super();
+    }
 
     /**
      * Constructs a new <code>ConversionException</code> with specified

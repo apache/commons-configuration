@@ -50,7 +50,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.11 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.12 2004/06/24 14:01:03 ebourg Exp $
  */
 public class PropertiesConfiguration extends BasePropertiesConfiguration
 {
@@ -61,7 +61,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
      * The name of the file to be loaded.  This is used in conjuction with
      * the load method.
      */
-    protected String fileName = null;
+    protected String fileName;
 
     /**
      * Creates an empty PropertyConfiguration object which can be

@@ -123,18 +123,18 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.14 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.15 2004/06/24 14:01:03 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
-    /** Allow file inclusion or not */
-    private boolean includesAllowed = false;
-
     /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
      */
     protected static String include = "include";
+
+    /** Allow file inclusion or not */
+    private boolean includesAllowed;
 
     /**
      * Implementations of this class must implement this method.

@@ -23,7 +23,7 @@ import org.apache.commons.lang.exception.NestableException;
  * object.
  *
  * @author Eric Pugh
- * @version $Revision: 1.4 $, $Date: 2004/06/15 10:40:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/06/24 14:01:03 $
  */
 public class ConfigurationException extends NestableException
 {
@@ -31,7 +31,10 @@ public class ConfigurationException extends NestableException
      * Constructs a new <code>ConfigurationException</code> without specified
      * detail message.
      */
-    public ConfigurationException() { }
+    public ConfigurationException()
+    {
+        super();
+    }
 
     /**
      * Constructs a new <code>ConfigurationException</code> with specified

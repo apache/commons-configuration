@@ -41,10 +41,11 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.15 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.16 2004/06/24 14:01:03 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
+    /** Logger. */
     private static Log log = LogFactory.getLog(JNDIConfiguration.class);
 
     /** The prefix of the context. */
@@ -108,9 +109,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get the list of the keys contained in the configuration repository.
-     *
-     * @return An Iterator.
+     * {@inheritDoc}
      */
     public Iterator getKeys()
     {
@@ -118,11 +117,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get the list of the keys contained in the configuration
-     * repository that match a passed in beginning pattern.
-     *
-     * @param key the key pattern to match on.
-     * @return An Iterator.
+     * {@inheritDoc}
      */
     public Iterator getKeys(String key)
     {
@@ -164,7 +159,9 @@ public class JNDIConfiguration extends AbstractConfiguration
      * tree, till we find the Context specified by the key to start from.
      * Otherwise return null.
      *
-     * @param The key (or name) of the Context we are looking to start from.
+     * @param keys
+     * @param parentContext
+     * @param enumeration
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
@@ -201,11 +198,19 @@ public class JNDIConfiguration extends AbstractConfiguration
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     *
+     * <b>This operation is not supported</b>
+     */
     public Properties getProperties(String key)
     {
         throw new UnsupportedOperationException("This operation is not supported");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty()
     {
         try
@@ -221,11 +226,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Gets a property from the configuration.
-     *
-     * @param key property to retrieve
-     * @return value as object. Will return user value if exists,
-     *          if not then default value if exists, otherwise null
+     * {@inheritDoc}
      */
     public Object getProperty(String key)
     {
@@ -233,11 +234,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Set a property, this will replace any previously set values. Set values
-     * is implicitly a call to clearProperty(key), addProperty(key,value).
-     *
-     * @param key
-     * @param value
+     * {@inheritDoc}
      */
     public void setProperty(String key, Object value)
     {
@@ -245,10 +242,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Clear a property in the configuration.  Just marks it as cleared,
-     * doesn't change the underlying JNDI data source.
-     *
-     * @param key the key to remove along with corresponding value.
+     * {@inheritDoc}
      */
     public void clearProperty(String key)
     {
@@ -256,7 +250,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Check if the configuration contains the key, or the key has been removed.
+     * {@inheritDoc}
      */
     public boolean containsKey(String key)
     {
@@ -295,6 +289,9 @@ public class JNDIConfiguration extends AbstractConfiguration
         this.prefix = prefix;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected Object getPropertyDirect(String key)
     {
         if (clearedProperties.contains(key))
@@ -318,6 +315,9 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("This operation is not supported");

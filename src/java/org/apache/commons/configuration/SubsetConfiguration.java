@@ -29,19 +29,24 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * @see Configuration#subset(String)
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2004/06/23 11:15:45 $
+ * @version $Revision: 1.5 $, $Date: 2004/06/24 14:01:03 $
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {
+    /** The parent configuration. */
     protected Configuration parent;
+
+    /** The prefix used to select the properties. */
     protected String prefix;
+
+    /** The prefix delimiter */
     protected String delimiter;
 
     /**
      * Create a subset of the specified configuration
      *
      * @param parent The parent configuration
-     * @param prefix The prefix used to select the properties.
+     * @param prefix The prefix used to select the properties
      */
     public SubsetConfiguration(Configuration parent, String prefix)
     {
@@ -53,7 +58,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * Create a subset of the specified configuration
      *
      * @param parent    The parent configuration
-     * @param prefix    The prefix used to select the properties.
+     * @param prefix    The prefix used to select the properties
      * @param delimiter The prefix delimiter
      */
     public SubsetConfiguration(Configuration parent, String prefix, String delimiter)
@@ -134,41 +139,65 @@ public class SubsetConfiguration extends AbstractConfiguration
         this.prefix = prefix;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Configuration subset(String prefix)
     {
         return parent.subset(getParentKey(prefix));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty()
     {
         return !getKeys().hasNext();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsKey(String key)
     {
         return parent.containsKey(getParentKey(key));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void addPropertyDirect(String key, Object value)
     {
         parent.addProperty(getParentKey(key), value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void setProperty(String key, Object value)
     {
         parent.setProperty(getParentKey(key), value);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void clearProperty(String key)
     {
         parent.clearProperty(getParentKey(key));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Object getPropertyDirect(String key)
     {
         return parent.getProperty(getParentKey(key));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Iterator getKeys(String prefix)
     {
         return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer()
@@ -180,6 +209,9 @@ public class SubsetConfiguration extends AbstractConfiguration
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Iterator getKeys()
     {
         return new TransformIterator(parent.getKeys(prefix), new Transformer()
@@ -191,6 +223,9 @@ public class SubsetConfiguration extends AbstractConfiguration
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected String interpolate(String base)
     {
         if (delimiter == null && "".equals(prefix))

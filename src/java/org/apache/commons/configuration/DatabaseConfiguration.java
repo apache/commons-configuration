@@ -35,10 +35,14 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.6 $, $Date: 2004/06/24 12:35:15 $
+ * @version $Revision: 1.7 $, $Date: 2004/06/24 14:01:03 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
+    /** Logger */
+    private static Log log = LogFactory.getLog(DatabaseConfiguration.class);
+
+    /** The datasource to connect to the database. */
     private DataSource datasource;
 
     /** The name of the table containing the configurations. */
@@ -56,8 +60,6 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /** The name of the configuration. */
     private String name;
 
-    private static Log log = LogFactory.getLog(DatabaseConfiguration.class);
-
     /**
      * Build a configuration from a table containing multiple configurations.
      *
@@ -68,7 +70,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param valueColumn   the column containing the values of the configuration
      * @param name          the name of the configuration
      */
-    public DatabaseConfiguration(DataSource datasource, String table, String nameColumn, String keyColumn, String valueColumn, String name)
+    public DatabaseConfiguration(DataSource datasource, String table, String nameColumn,
+                                 String keyColumn, String valueColumn, String name)
     {
         this.datasource = datasource;
         this.table = table;
@@ -91,6 +94,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         this(datasource, table, null, keyColumn, valueColumn, null);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected Object getPropertyDirect(String key)
     {
         Object result = null;
@@ -136,6 +142,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     protected void addPropertyDirect(String key, Object obj)
     {
         // build the query
@@ -179,6 +188,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty()
     {
         boolean empty = false;
@@ -208,7 +220,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
             if (rs.next())
             {
-                empty = (rs.getInt(1) == 0);
+                empty = rs.getInt(1) == 0;
             }
         }
         catch (SQLException e)
@@ -224,6 +236,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         return empty;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean containsKey(String key)
     {
         boolean found = false;
@@ -267,6 +282,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         return found;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void clearProperty(String key)
     {
         // build the query
@@ -304,6 +322,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public Iterator getKeys()
     {
         Collection keys = new ArrayList();
@@ -360,8 +381,14 @@ public class DatabaseConfiguration extends AbstractConfiguration
     {
         try
         {
-            if (stmt != null) { stmt.close(); }
-            if (conn != null) { conn.close(); }
+            if (stmt != null)
+            {
+                stmt.close();
+            }
+            if (conn != null)
+            {
+                conn.close();
+            }
         }
         catch (SQLException e)
         {

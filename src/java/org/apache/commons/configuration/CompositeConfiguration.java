@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.15 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.16 2004/06/24 14:01:03 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -54,8 +54,10 @@ public class CompositeConfiguration extends AbstractConfiguration
 
     /**
      * Creates an CompositeConfiguration object with a specified InMemory
-     * configuration.  This configuration will store any changes made to
+     * configuration. This configuration will store any changes made to
      * the CompositeConfiguration.
+     *
+     * @param inMemoryConfiguration the in memory configuration to use
      */
     public CompositeConfiguration(Configuration inMemoryConfiguration)
     {
@@ -64,6 +66,11 @@ public class CompositeConfiguration extends AbstractConfiguration
         configList.add(inMemoryConfiguration);
     }
 
+    /**
+     * Add a configuration.
+     *
+     * @param config the configuration to add
+     */
     public void addConfiguration(Configuration config)
     {
         if (!configList.contains(config))
@@ -76,6 +83,11 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * Remove a configuration. The in memory configuration cannot be removed.
+     *
+     * @param config The configuration to remove
+     */
     public void removeConfiguration(Configuration config)
     {
         // Make sure that you can't remove the inMemoryConfiguration from
@@ -86,11 +98,19 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * Return the number of configurations.
+     *
+     * @return the number of configuration
+     */
     public int getNumberOfConfigurations()
     {
         return configList.size();
     }
 
+    /**
+     * Remove all configuration reinitialize the in memory configuration.
+     */
     public void clear()
     {
         configList.clear();
@@ -141,10 +161,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get the list of the keys contained in the configuration
-     * repository.
-     *
-     * @return An Iterator.
+     * {@inheritDoc}
      */
     public Iterator getKeys()
     {
@@ -168,10 +185,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get the list of the keys contained in the configuration
-     * repository.
-     *
-     * @return An Iterator.
+     * {@inheritDoc}
      */
     public Iterator getKeys(String key)
     {
@@ -194,6 +208,9 @@ public class CompositeConfiguration extends AbstractConfiguration
         return keys.iterator();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public boolean isEmpty()
     {
         boolean isEmpty = true;
@@ -210,11 +227,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Gets a property from the configuration.
-     *
-     * @param key property to retrieve
-     * @return value as object. Will return user value if exists,
-     *         if not then default value if exists, otherwise null
+     * {@inheritDoc}
      */
     public Object getProperty(String key)
     {
@@ -222,12 +235,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Set a property, this will replace any previously
-     * set values. Set values is implicitly a call
-     * to clearProperty(key), addProperty(key,value).
-     *
-     * @param key
-     * @param value
+     * {@inheritDoc}
      */
     public void setProperty(String key, Object value)
     {
@@ -236,9 +244,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Clear a property in the configuration.
-     *
-     * @param key the key to remove along with corresponding value.
+     * {@inheritDoc}
      */
     public void clearProperty(String key)
     {
@@ -250,7 +256,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Check if the configuration contains the key
+     * {@inheritDoc}
      */
     public boolean containsKey(String key)
     {
@@ -266,11 +272,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get a List of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated List.
+     * {@inheritDoc}
      */
     public List getList(String key, List defaultValue)
     {
@@ -299,13 +301,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Get an array of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated string array if key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a String/List of Strings.
+     * {@inheritDoc}
      */
     public String[] getStringArray(String key)
     {
@@ -313,14 +309,18 @@ public class CompositeConfiguration extends AbstractConfiguration
         return (String []) list.toArray(new String [0]);
     }
 
-
+    /**
+     * Return the configuration at the specified index.
+     *
+     * @param index The index of the configuration to retrieve
+     */
     public Configuration getConfiguration(int index)
     {
         return (Configuration) configList.get(index);
     }
 
     /**
-     * @return Returns the inMemoryConfiguration.
+     * {@inheritDoc}
      */
     public Configuration getInMemoryConfiguration()
     {

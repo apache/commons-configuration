@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.12 2004/06/23 11:15:45 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.13 2004/06/24 14:01:03 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -64,6 +64,9 @@ public class ConfigurationFactory implements BasePathLoader
     /** Constant for the default base path (points to actual directory).*/
     private static final String DEF_BASE_PATH = ".";
 
+    /** static logger */
+    private static Log log = LogFactory.getLog(ConfigurationFactory.class);
+
     /** The XML file with the details about the configuration to load */
     private String configurationFileName;
 
@@ -79,9 +82,6 @@ public class ConfigurationFactory implements BasePathLoader
 
     /** The basePath to prefix file paths for file based property files. */
     private String basePath;
-
-    /** static logger */
-    private static Log log = LogFactory.getLog(ConfigurationFactory.class);
 
     /** URL for xml digester rules file */
     private URL digesterRules;
@@ -387,6 +387,7 @@ public class ConfigurationFactory implements BasePathLoader
         }
         digester.setValidating(false);
     }
+
     /**
      * Returns the Base path from which this Configuration Factory operates.
      * This is never null. If you set the BasePath to null, then a base path
@@ -396,8 +397,7 @@ public class ConfigurationFactory implements BasePathLoader
      */
     public String getBasePath()
     {
-        String path = StringUtils.isEmpty(basePath) ?
-        implicitBasePath : basePath;
+        String path = StringUtils.isEmpty(basePath) ? implicitBasePath : basePath;
         return StringUtils.isEmpty(path) ? "." : path;
     }
 
@@ -513,6 +513,7 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Returns the value of the <code>at</code> attribute.
+         *
          * @return the at attribute
          */
         public String getAt()
@@ -522,6 +523,7 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Sets the value of the <code>at</code> attribute.
+         *
          * @param string the attribute value
          */
         public void setAt(String string)
@@ -531,6 +533,7 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Returns the configuration object.
+         *
          * @return the configuration
          */
         public Configuration getConfiguration()
@@ -543,6 +546,7 @@ public class ConfigurationFactory implements BasePathLoader
          * named <code>setConfiguration()</code>, but the name
          * <code>addConfiguration()</code> is required by some of the digester
          * rules.
+         *
          * @param config the configuration to set
          */
         public void addConfiguration(Configuration config)
@@ -645,8 +649,7 @@ public class ConfigurationFactory implements BasePathLoader
          * @param cdata the configuration data object
          * @return a root node for this configuration
          */
-        private HierarchicalConfiguration.Node createRootNode(
-        AdditionalConfigurationData cdata)
+        private HierarchicalConfiguration.Node createRootNode(AdditionalConfigurationData cdata)
         {
             if (cdata.getConfiguration() instanceof HierarchicalConfiguration)
             {

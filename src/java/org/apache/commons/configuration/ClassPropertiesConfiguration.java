@@ -32,15 +32,15 @@ import java.io.InputStream;
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: ClassPropertiesConfiguration.java,v 1.8 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.9 2004/06/24 14:01:03 ebourg Exp $
  */
 public class ClassPropertiesConfiguration extends BasePropertiesConfiguration implements Configuration
 {
     /** Base class, which is used to load all relative class references */
-    private Class baseClass = null;
+    private Class baseClass;
 
     /** Class Loader which we will use to load the resources */
-    private ClassLoader classLoader = null;
+    private ClassLoader classLoader;
 
     /**
      * Creates and loads an extended properties file from the Class

@@ -22,7 +22,7 @@ package org.apache.commons.configuration;
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BasePathConfiguration.java,v 1.4 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: BasePathConfiguration.java,v 1.5 2004/06/24 14:01:03 ebourg Exp $
  */
 public abstract class BasePathConfiguration extends BaseConfiguration implements BasePathLoader
 {
@@ -32,7 +32,7 @@ public abstract class BasePathConfiguration extends BaseConfiguration implements
      * "synthetic" PropertyConfiguration has been created which
      * is not loaded from a file
      */
-    private String basePath = null;
+    private String basePath;
 
     /**
      * Returns the Base path from which this Configuration Factory operates.
