@@ -22,8 +22,9 @@
       <item name="Composite Config Howto"       href="/howto_compositeconfiguration.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
-      <item name="Javadoc"                      href="/apidocs/index.html"/>
-      <item name="CVS"                          href="http://cvs.apache.org/viewcvs/jakarta-commons/configuration/"/>
+      <item name="Javadoc (latest)"             href="/apidocs/index.html"/>
+      <item name="Javadoc (Release 1.0)"        href="/apidocs_1.0/index.html"/>
+      <item name="SVN"                          href="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/"/>
     </menu>
 
     <menu name="Extensions">
