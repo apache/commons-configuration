@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
-public class TestJNDIEnvironmentValues extends TestCase
+public class TestNullJNDIEnvironmentValues extends TestCase
 {
     private JNDIConfiguration conf = null;
 
@@ -30,12 +30,12 @@ public class TestJNDIEnvironmentValues extends TestCase
         System.setProperty("java.naming.factory.initial", TestJNDIConfiguration.CONTEXT_FACTORY);
         
         conf = new JNDIConfiguration();
-        conf.setThrowExceptionOnMissing(true);
+        conf.setThrowExceptionOnMissing(false);
     }
 
     public void testThrowExceptionOnMissing()
     {
-        assertTrue("Throw Exception Property is not set!", conf.isThrowExceptionOnMissing());
+        assertFalse("Throw Exception Property is set!", conf.isThrowExceptionOnMissing());
     }
 
     public void testSimpleGet() throws Exception
@@ -54,15 +54,7 @@ public class TestJNDIEnvironmentValues extends TestCase
 
     public void testGetMissingKey() throws Exception
     {
-        try
-        {
-            conf.getString("test.imaginarykey");
-            fail("Should have thrown NoSuchElementException");
-        }
-        catch (NoSuchElementException e)
-        {
-            assertTrue(e.getMessage(), e.getMessage().indexOf("test.imaginarykey") != -1);
-        }
+        assertNull("Missing Key is not null!", conf.getString("test.imaginarykey"));
     }
 
     public void testGetMissingKeyWithDefault() throws Exception

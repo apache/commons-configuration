@@ -39,7 +39,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.21 2004/09/16 22:35:35 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.22 2004/09/19 22:01:49 henning Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -54,6 +54,12 @@ public abstract class AbstractConfiguration implements Configuration
 
     /** how big the initial arraylist for splitting up name value pairs */
     private static final int INITIAL_LIST_SIZE = 2;
+
+    /** 
+     * Whether the configuration should throw NoSuchElementExceptions or simply return null
+     * when a property does not exist. Defaults to return null.
+     */
+    private boolean throwExceptionOnMissing = false;
 
     /**
      * For configurations extending AbstractConfiguration, allow them to
@@ -71,6 +77,28 @@ public abstract class AbstractConfiguration implements Configuration
     public static char getDelimiter(){
         return AbstractConfiguration.DELIMITER;
     }
+
+    /**
+     * If set to false, missing elements return null if possible (for objects).
+     * 
+     * @param throwExceptionOnMissing The new value for the property
+     */
+    public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
+    {
+        this.throwExceptionOnMissing = throwExceptionOnMissing;
+    }
+
+    /**
+     * Returns true if missing values throw Exceptions.
+     *
+     * @return true if missing values throw Exceptions
+     */
+    public boolean isThrowExceptionOnMissing()
+    {
+        return throwExceptionOnMissing;
+    }
+
+
     /**
      * {@inheritDoc}
      */
@@ -802,10 +830,14 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return number;
         }
-        else
+        else if(throwExceptionOnMissing)
         {
             throw new NoSuchElementException(
                 '\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -852,10 +884,14 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return number;
         }
-        else
+        else if(throwExceptionOnMissing)
         {
             throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+                    '\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -903,10 +939,14 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return s;
         }
-        else
+        else if(throwExceptionOnMissing)
         {
             throw new NoSuchElementException(
                 '\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
         }
     }
 

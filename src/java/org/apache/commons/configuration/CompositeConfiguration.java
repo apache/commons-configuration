@@ -31,7 +31,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.17 2004/08/16 22:16:31 henning Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.18 2004/09/19 22:01:50 henning Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -81,6 +81,11 @@ public class CompositeConfiguration extends AbstractConfiguration
             // configuration add their keys at the end of the configuration and
             // we want to mimic this behaviour.
             configList.add(configList.indexOf(inMemoryConfiguration), config);
+
+            if (config instanceof AbstractConfiguration)
+            {
+                ((AbstractConfiguration) config).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+            }
         }
     }
 
@@ -117,6 +122,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         configList.clear();
         // recreate the in memory configuration
         inMemoryConfiguration = new BaseConfiguration();
+        ((BaseConfiguration) inMemoryConfiguration).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
         configList.add(inMemoryConfiguration);
     }
 

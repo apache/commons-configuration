@@ -7,6 +7,12 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="henning" type="add">
+        Make the behaviour on missing properties for the get methods that return objects
+        configurable. A property <code>throwExceptionOnMissing</code> can be set and then
+        the getters throw an <code>NoSuchElementException</code>. The old default behaviour
+        of returning a <code>null</code> value has been restored.
+      </action>         
       <action dev="epugh" type="add" issue="29714">
         Allow configurations extending AbstractConfiguration to change the delimiter
         used from "," to something else.

@@ -20,7 +20,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -28,9 +27,9 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.11 2004/09/19 22:01:50 henning Exp $
+ * @version $Id: TestNullCompositeConfiguration.java,v 1.1 2004/09/19 22:01:50 henning Exp $
  */
-public class TestCompositeConfiguration extends TestCase
+public class TestNullCompositeConfiguration extends TestCase
 {
     protected BasePropertiesConfiguration conf1;
     protected BasePropertiesConfiguration conf2;
@@ -49,12 +48,12 @@ public class TestCompositeConfiguration extends TestCase
         conf2 = new PropertiesConfiguration(testProperties2);
         xmlConf = new XMLConfiguration(new File(testPropertiesXML));
 
-        cc.setThrowExceptionOnMissing(true);
+        cc.setThrowExceptionOnMissing(false);
     }
 
     public void testThrowExceptionOnMissing()
     {
-        assertTrue("Throw Exception Property is not set!", cc.isThrowExceptionOnMissing());
+        assertFalse("Throw Exception Property is set!", cc.isThrowExceptionOnMissing());
     }
 
     public void testAddRemoveConfigurations() throws Exception
@@ -110,13 +109,8 @@ public class TestCompositeConfiguration extends TestCase
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        try{
-            assertNull(cc.getString("bogus.property"));
-            fail("Should have thrown a NoSuchElementException");
-        }
-        catch(NoSuchElementException nsee){
-            assertTrue(nsee.getMessage().indexOf("bogus.property")>-1);
-        }
+
+        assertNull("Bogus property is not null!", cc.getString("bogus.property"));
 
         assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));
         assertTrue("Should be true", cc.getBoolean("test.missing.boolean.true", true));
@@ -425,27 +419,13 @@ public class TestCompositeConfiguration extends TestCase
         BaseConfiguration defaults = new BaseConfiguration();
         defaults.addProperty("default", "default string");
 
-        CompositeConfiguration c = new CompositeConfiguration(defaults);
-        c.setThrowExceptionOnMissing(cc.isThrowExceptionOnMissing());
+        Configuration c = new CompositeConfiguration(defaults);
+        
         c.addProperty("string", "test string");
 
         assertEquals("test string", c.getString("string"));
-        try
-        {
-            System.out.println(cc.getClass().getName());
-            assertTrue(cc.isThrowExceptionOnMissing());
-            String foo = c.getString("XXX");
-            assertNull(foo);
-            fail("Should throw NoSuchElementException exception");
-        }
-        catch (NoSuchElementException e)
-        {
-            //ok
-        }
-        catch (Exception e)
-        {
-            fail("Should throw NoSuchElementException exception, not " + e);
-        }
+
+        assertNull("XXX should have been null!", c.getString("XXX"));
 
         //test defaults
         assertEquals(

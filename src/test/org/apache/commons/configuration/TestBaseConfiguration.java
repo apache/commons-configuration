@@ -28,16 +28,29 @@ import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
 /**
- * Tests some basic functions of the BaseConfiguration class
+ * Tests some basic functions of the BaseConfiguration class. Missing keys will
+ * throw Exceptions
  *
- * @version $Id: TestBaseConfiguration.java,v 1.14 2004/08/16 22:16:31 henning Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.15 2004/09/19 22:01:50 henning Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
-	protected BaseConfiguration config = new BaseConfiguration();
+        protected BaseConfiguration config = null;
 
 	protected static Class missingElementException = NoSuchElementException.class;
 	protected static Class incompatibleElementException = ConversionException.class;
+
+        protected void setUp()
+            throws Exception
+        {
+            config = new BaseConfiguration();
+            config.setThrowExceptionOnMissing(true);
+        }
+
+        public void testThrowExceptionOnMissing()
+        {
+            assertTrue("Throw Exception Property is not set!", config.isThrowExceptionOnMissing());
+        }
 
 	public void testGetProperty()
 	{
@@ -272,6 +285,27 @@ public class TestBaseConfiguration extends TestCase
 		}
 		assertNotNull("No exception thrown for incompatible values", t);
 		ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
+	}
+
+	public void testGetString()
+	{
+		config.setProperty("testString", "The quick brown fox");
+		String string = new String("The quick brown fox");
+		String defaultValue = new String("jumps over the lazy dog");
+
+		assertEquals("Existing key", string, config.getString("testString"));
+		assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
+		assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
+
+		// missing key without default value
+		Throwable t = null;
+		try {
+			config.getString("stringNotInConfig");
+		} catch (Throwable T) {
+			t = T;
+		}
+		assertNotNull("No exception thrown for missing keys", t);
+		ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
 	}
 
 	public void testGetBoolean()
