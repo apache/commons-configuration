@@ -65,7 +65,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/07/21 12:38:56 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/12 15:45:21 $
  */
 public class XMLConfiguration extends BasePathConfiguration
 {
@@ -247,7 +247,7 @@ public class XMLConfiguration extends BasePathConfiguration
     public void addProperty(String name, Object value)
     {
         super.addProperty(name, value);
-        setXmlProperty(name, value);
+        addXmlProperty(name, value);
         possiblySave();
     }
 
@@ -316,6 +316,60 @@ public class XMLConfiguration extends BasePathConfiguration
         else
         {
             element.setAttribute(attName, (String) value);
+        }
+    }
+
+    /**
+     * Adds the property value in our document tree, auto-saving if
+     * appropriate.
+     *
+     * @param name The name of the element to set a value for.
+     * @param value The value to set.
+     */
+    private void addXmlProperty(String name, Object value)
+    {
+        // parse the key
+        String[] nodes = parseElementNames(name);
+        String attName = parseAttributeName(name);
+
+        Element element = document.getDocumentElement();
+        Element parent = element;
+
+        for (int i = 0; i < nodes.length; i++)
+        {
+            if(element == null) break;
+            parent = element;
+            String eName = nodes[i];
+            Element child = null;
+
+            NodeList list = element.getChildNodes();
+            for (int j = 0; j < list.getLength(); j++)
+            {
+                Node node = list.item(j);
+                if (node instanceof Element)
+                {
+                    child = (Element) node;
+                    if (eName.equals(child.getTagName()))
+                    {
+                        break;
+                    }
+                    child = null;
+                }
+            }
+
+            element = child;
+        }
+
+        Element child = document.createElement(nodes[nodes.length-1]);
+        parent.appendChild(child);
+        if (attName == null)
+        {
+            CharacterData data = document.createTextNode((String) value);
+            child.appendChild(data);
+        }
+        else
+        {
+            child.setAttribute(attName, (String) value);
         }
     }
 
