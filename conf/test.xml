@@ -1,0 +1,11 @@
+<baseElement>
+  <element>value</element>
+  <element2>
+    <subelement>
+      <subsubelement>I'm complex!</subsubelement>
+    </subelement>
+  </element2>
+  <test>
+  	<short>8</short>
+  </test>
+</baseElement>

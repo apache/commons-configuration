@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <author email="pete@kazmier.com">Pete Kazmier</author>
+    <author email="mpoeschl@marmot.at">Martin Poeschl</author>
+    <author email="jason@zenplex.com">Jason van Zyl</author>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+    <title>Configuration</title>
+  </properties>
+
+  <body>
+    <section name="Intro">
+      <p>
+      	Configuration is a project to provide a generic Configuration
+      	interface and allow the source of the
+        values to vary.  It 
+      	provides easy typed access to single, as well as lists of 
+      	configuration values based on a 'key':
+<source><![CDATA[
+	Double double = Configuration.getDouble("some_double_value");
+]]></source>      	
+      </p>
+      <p>
+		Right now you can load properties from a simple properties file, 
+		a properties file in a jar, an XML file, JNDI settings, as well as use
+        a mix different sources using a ConfigurationFactory and CompositeConfiguration.
+      </p>
+      <p>
+      	Custom configuration objects are very easy to create now by just subclassing 
+      	AbstractConfiguration.  This works similar to how AbstractList works.
+      </p>
+    </section>  	
+    <section name="History">
+      <p>
+        This code originated in JServ, was brought into Turbine,
+        moved to Velocity and improved, and then moved into the
+        Commons as ExtendedProperties. The code in
+        ExtendedProperties is a little unwieldly and deals
+        specifically with properties files.  Eventually it was added to
+        the Commons sandbox project. 
+      </p>
+    </section>
+  </body>
+</document>

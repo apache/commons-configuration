@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- $Id: maven.xml,v 1.1 2003/12/23 15:09:05 epugh Exp $ -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<project default="jar:jar">
+  <!-- NonStringTestHolder.java contains tests shared by JUnit and Cactus
+  tests.  This ugly hack moves the src from /src/test to /src/test-cactus
+  so the Cactus tests will compile.  Not sure what is worse, this hack, or
+  just duplicating the code!
+  -->
+  <preGoal name="cactus:compile">
+    <copy todir="${basedir}/src/test-cactus/org/apache/commons/configuration">
+        <fileset dir="${basedir}/src/test/" includes="**/NonStringTestHolder.java"/>
+    </copy>
+  </preGoal>
+</project>
+
+

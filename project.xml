@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- $Id: project.xml,v 1.1 2003/12/23 15:09:05 epugh Exp $ -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<project>
+  <pomVersion>3</pomVersion>
+  <name>commons-configuration</name>
+  <id>commons-configuration</id>
+  <currentVersion>1.0-dev-3</currentVersion>
+  <organization>
+    <name>Apache Software Foundation</name>
+    <url>http://jakarta.apache.org/</url>
+    <logo>/images/jakarta-logo-blue.gif</logo>
+  </organization>
+  <inceptionYear>2001</inceptionYear>
+  <package>org.apache.commons.configuration</package>
+
+  <shortDescription>Common ConfigurationTools</shortDescription>
+
+  <!-- Gump integration -->
+  <gumpRepositoryId>jakarta</gumpRepositoryId>
+
+  <description>
+    Tools to assist in the reading of configuration/preferences files in
+    various formats
+  </description>
+
+  <url>http://jakarta.apache.org/commons/sandbox/configuration/</url>
+  <issueTrackingUrl>http://nagoya.apache.org/scarab/servlet/scarab/</issueTrackingUrl>
+  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteDirectory>/www/jakarta.apache.org/commons/sandbox/configuration/</siteDirectory>
+  <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons-sandbox/</distributionDirectory>
+
+  <repository>
+    <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons-sandbox</connection>
+    <url>http://cvs.apache.org/viewcvs/jakarta-commons-sandbox/configuration/</url>
+  </repository>
+
+  <branches>
+  </branches>
+
+  <mailingLists>
+    <mailingList>
+      <name>Configuration List</name>
+      <subscribe>commons-dev-subscribe@jakarta.apache.org</subscribe>
+      <unsubscribe>commons-dev-unsubscribe@jakarta.apache.org</unsubscribe>
+      <archive>http://nagoya.apache.org/eyebrowse/SummarizeList?listName=commons-dev@jakarta.apache.org</archive>
+    </mailingList>
+  </mailingLists>
+
+  <developers>
+
+    <developer>
+      <name>Daniel Rall</name>
+      <id>dlr</id>
+      <email>dlr@finemaltcoding.com</email>
+      <organization>CollabNet, Inc.</organization>
+    </developer>
+
+    <developer>
+      <name>Jason van Zyl</name>
+      <id>jvanzyl</id>
+      <email>jason@zenplex.com</email>
+      <organization>Zenplex</organization>
+    </developer>
+
+    <developer>
+      <name>Martin Poeschl</name>
+      <id>mpoeschl</id>
+      <email>mpoeschl@marmot.at</email>
+      <organization>tucana.at</organization>
+    </developer>
+
+    <developer>
+      <name>dIon Gillard</name>
+      <id>dion</id>
+      <email>dion@multitask.com.au</email>
+      <organization>Multitask Consulting</organization>
+    </developer>
+
+    <developer>
+      <name>Henning P. Schmiedehausen</name>
+      <id>henning</id>
+      <email>hps@intermeta.de</email>
+      <organization>INTERMETA - Gesellschaft fuer Mehrwertdienste mbH</organization>
+    </developer>
+
+    <developer>
+      <name>Eric Pugh</name>
+      <id>epugh</id>
+      <email>epugh@upstate.com</email>
+      <organization>upstate.com</organization>
+    </developer>
+
+    <developer>
+      <name>Brian E. Dunbar</name>
+      <id>bdunbar</id>
+      <email>bdunbar@dunbarconsulting.org</email>
+      <organization>dunbarconsulting.org</organization>
+    </developer>
+  </developers>
+  
+  <contributors>  
+    <contributor>
+      <name>Konstantin Shaposhnikov</name>
+      <id>kshaposhnikov</id>
+      <email>ksh@scand.com</email>
+      <organization>scand.com</organization>
+    </contributor>
+    <contributor>
+      <name>Oliver Heger</name>
+      <id>oheger</id>
+      <email>oliver.heger@t-online.de</email>
+    </contributor>    
+  </contributors>
+  
+  <dependencies>
+    <dependency>
+      <id>commons-collections</id>
+      <version>2.1</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>
+
+    <dependency>
+      <id>commons-lang</id>
+      <version>2.0</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>
+
+    <dependency>
+      <id>commons-logging</id>
+      <version>1.0.3</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>      
+    </dependency>
+
+    <dependency>
+      <id>dom4j</id>
+      <version>1.4</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>            
+    </dependency>
+    <dependency>
+      <id>commons-digester</id>      
+      <version>1.5</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>            
+    </dependency>                    
+    <dependency>
+      <id>commons-beanutils</id>      
+      <version>1.7-dev</version>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>            
+    </dependency>                        
+    <dependency>
+      <id>junit</id>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+    </dependency>
+    <dependency>
+      <id>xerces</id>
+      <version>2.2.1</version>
+      <url>http://xml.apache.org/xerces2-j/</url>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties> 
+    </dependency>
+
+    <dependency>
+      <id>xml-apis</id>
+      <version>2.0.2</version>
+      <url>http://xml.apache.org/commons/</url>
+      <properties>        
+        <war.bundle>true</war.bundle>
+      </properties>  
+    </dependency>
+  </dependencies>
+
+  <build>
+    <nagEmailAddress>commons-dev@jakarta.apache.org</nagEmailAddress>
+
+    <sourceDirectory>src/java</sourceDirectory>
+    <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
+    <integrationUnitTestSourceDirectory/>
+    <aspectSourceDirectories/>
+
+    <!-- Unit test classes -->
+    <unitTest>
+      <includes>
+        <include>**/*Test*.java</include>
+      </includes>
+      <excludes>
+        <exclude>**/TestBasePropertiesConfiguration.java</exclude>
+        <exclude>**/NonStringTestHolder.java</exclude>
+      </excludes>
+      <resources>
+        <resource>
+          <directory>conf</directory>
+          <includes>
+            <include>testClasspath.properties</include>
+          </includes>
+        </resource>
+      </resources>
+      <resources>
+        <resource>
+          <directory>conf</directory>
+          <targetPath>org/apache/commons/configuration</targetPath> 
+          <includes>
+            <include>*.properties</include>
+          </includes>
+          <excludes>
+            <exclude>testClasspath.properties</exclude>
+          </excludes>          
+        </resource>
+      </resources>
+    </unitTest>
+
+    <!-- J A R  R E S O U R C E S -->
+    <!-- Resources that are packaged up inside the JAR file -->
+
+    <resources>
+      <resource>
+        <directory>conf</directory>
+        <includes>
+          <include>*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <jars>
+    </jars>
+  </build>
+  <reports>
+    <report>maven-jdepend-plugin</report>
+    <report>maven-checkstyle-plugin</report>
+    <report>maven-changes-plugin</report>
+    <report>maven-changelog-plugin</report>
+    <report>maven-file-activity-plugin</report>
+    <report>maven-developer-activity-plugin</report>
+    <report>maven-javadoc-plugin</report>
+    <report>maven-jxr-plugin</report>
+    <report>maven-junit-report-plugin</report>
+    <report>maven-tasklist-plugin</report>
+    <report>maven-pmd-plugin</report>
+    <report>maven-simian-plugin</report>
+    <report>maven-faq-plugin</report>
+    <report>maven-jcoverage-plugin</report>    
+  </reports>
+</project>

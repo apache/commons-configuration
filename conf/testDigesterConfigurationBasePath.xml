@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="test.properties"/>
+</configuration>
+
+  
+  
+
+
+

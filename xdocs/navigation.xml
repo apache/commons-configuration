@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE project [
+<!ENTITY commons-nav SYSTEM "../../incl_nav.xml">
+]>
+
+<project name="Configuration">
+
+  <title>Configuration</title>
+  <organizationLogo href="/images/jakarta-logo-blue.gif">
+   Jakarta
+  </organizationLogo>
+
+  <body>
+	<menu name="Configuration">
+      <item name="Home"                href="/index.html"/>
+      <item name="Overview"            href="/overview.html"/>
+      <item name="Examples"            href="/examples.html"/>
+      <item name="To Do List"          href="/tasks.html"/>      
+    </menu>
+    <menu name="Extensions">
+      <item name="Avalon Component" href="http://jakarta.apache.org/turbine/fulcrum/fulcrum-configuration/index.html"/>
+    </menu>    
+    
+    &commons-nav;
+
+  </body>
+</project>

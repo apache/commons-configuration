@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<document>
+  <properties>
+    <title>TODO</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+    <section name="TODO list">
+      <p>
+        The following is a list of items that need to be completed in
+        Configuration.  Contributions are welcome! 
+      </p>
+    
+    <subsection name="High priority"> 
+      <ul>
+        <li>Using XML based digester rules will probably blow this bugger
+            apart.  You do need a factory from an inner class of the
+            Configuration factory to get the base Path right; even if 
+            the test with the rule configuration file works, I'm pretty
+            sure that the resulting rule set will not read configuration
+            files if you're not running from the current (".") directory
+            as base path. This needs more thinking and checking.</li>
+
+        <li>I'm also 99% sure that using XML based Digester rules and
+            Namespace awareness in the configuration file can't be used
+            together. As far as I can see, the namespace awareness must
+            be set/reset before the rules are added. In the case of the
+            DigestLoader (using a DigesterRules() URI), the rules are 
+            already added when configureNamespace() is called on the
+            digester. This might even be a bug in the Digester itself.
+         </li>
+       </ul>
+    </subsection>
+    
+    <subsection name="Medium priority"> 
+       <ul>
+          <li>
+              <strong>JDBC Integration</strong>
+              Need to be able to retrieve configuration values from JDBC 
+              datasource.
+          </li>
+          <li>
+              <strong>JDBC backed by Hibernate</strong>
+              Would love to have a JDBC version backed with Hibernate.
+          </li>          
+       </ul>
+    </subsection>
+    
+    <subsection name="Low priority"> 
+    </subsection>
+</section>
+  </body>
+</document>
+

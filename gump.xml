@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module name="commons-configuration">
+  <description>Common ConfigurationTools</description>
+  <url href="http://jakarta.apache.org/commons/sandbox/configuration/">
+  </url>
+  <cvs module="jakarta-commons-sandbox" repository="jakarta">
+  </cvs>
+  <project name="commons-configuration">
+    <ant buildfile="build.xml" target="dist">
+      <property name="final.name" value="commons-configuration-@@DATE@@">
+      </property>
+    </ant>
+    <package>org.apache.commons.configuration</package>
+    <depend project="commons-beanutils">
+    </depend>
+    <depend project="commons-collections">
+    </depend>
+    <depend project="commons-digester">
+    </depend>
+    <depend project="commons-lang">
+    </depend>
+    <depend project="commons-logging">
+    </depend>
+    <depend project="dom4j">
+    </depend>
+    <depend project="jakarta-ant">
+    </depend>
+    <depend project="junit">
+    </depend>
+    <depend project="xml-apis">
+    </depend>
+    <depend project="xml-xerces">
+    </depend>
+    <depend project="xml-xerces2">
+    </depend>
+    <work nested="target/classes">
+    </work>
+    <home nested="target">
+    </home>
+    <jar name="commons-configuration-@@DATE@@.jar">
+    </jar>
+    <javadoc module="jakarta-commons-sandbox" nested="target/docs/apidocs">
+    </javadoc>
+    <nag to="commons-dev@jakarta.apache.org" from="commons-configuration development &lt;commons-dev@jakarta.apache.org&gt;">
+    </nag>
+  </project>
+</module>

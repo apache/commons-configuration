@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
+  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
+  
+</configuration>
+
+  
+  
+
+
+

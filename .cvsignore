@@ -1,0 +1,13 @@
+*~
+.nbattrs
+docs
+target
+test-reports
+velocity.log*
+maven.log
+STRING0
+lib
+.classpath
+.project
+*.ser
+junit*.properties

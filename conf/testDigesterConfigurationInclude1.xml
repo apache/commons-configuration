@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <table tableType="application">
+    <name>tasks</name>
+    <fields>
+      <field>
+        <name>taskid</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>responsibleID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>creatorID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>startDate</name>
+        <type>java.util.Date</type>
+      </field>
+      <field>
+        <name>endDate</name>
+        <type>java.util.Date</type>
+      </field>
+    </fields>
+  </table>
+</config>

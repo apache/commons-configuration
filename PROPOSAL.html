@@ -1,0 +1,71 @@
+<html>
+<head>
+<title>Proposal for Configuration Package</title>
+</head>
+<body bgcolor="white">
+
+<div align="center">
+<h1>Proposal for <em>Configuration</em> Package</h1>
+</div>
+
+<h3>(0) Rationale</h3>
+
+<p>There is currently no configuration package that can work with multiple
+sources of data, and provide configuration capabilities for multiple applications.
+This package provides a simple to use api for performing configuration.
+</p>
+
+
+<h3>(1) Scope of the Package</h3>
+
+<p>This proposal is to create a package of Java utility classes to read
+simplify configuring a java application.</p>
+
+
+<h3>(1.5) Interaction With Other Packages</h3>
+
+<p><em>Configuration</em> relies on many other commons packages.  It will utilize 
+the JUnit unit testing framework for developing and executing unit tests, but 
+this is of interest only to developers of the component.</p>
+
+
+
+<h3>(2) Initial Source of the Package</h3>
+
+<p>This code originated in JServ, was brought into Turbine,
+moved to Velocity and improved, and then moved into the Commons
+as Configurations sub-project.</p>
+
+<p>The proposed package name for the new component is
+<code>org.apache.commons.configuration</code>.</p>
+
+
+<h3>(3)  Required Jakarta-Commons Resources</h3>
+
+<ul>
+<li>CVS Repository - New directory <code>configuration</code> in the
+    <code>jakarta-commons</code> CVS repository.</li>
+<li>Mailing List - Discussions will take place on the general
+    <em>commons-dev@jakarta.apache.org</em> mailing list.  To help
+    list subscribers identify messages of interest, it is suggested that
+    the message subject of messages about this component be prefixed with
+    [Configuration].</li>
+<li>Bugzilla - New component "Configuration" under the "Commons" product
+    category, with appropriate version identifiers as needed.</li>
+<li>Jyve FAQ - New category "commons-configuration" (when available).</li>
+</ul>
+
+
+<h3>(4) Initial Committers</h3>
+
+<p>The initial committers on the Configuration component shall be as follows:
+<ul>
+<li>Eric Pugh (epugh)</li>
+<li>Henning P. Schmiedehausen (henning)</li>
+<li>Martin Poeschl (mpoeschl)</li>
+
+</ul>
+</p>
+
+</body>
+</html>

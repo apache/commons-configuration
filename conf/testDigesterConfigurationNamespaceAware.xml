@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+
+
+<configuration xmlns:foo="namespace-one"
+               xmlns:bar="namespace-two">
+  <foo:properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
+  <bar:dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
+</configuration>
+
+
+  
+  
+
+
+

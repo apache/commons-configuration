@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<document>
+  <properties>
+    <title>Changes</title>
+    <author email="epugh@upstate.com">Eric Pugh</author>
+  </properties>
+
+  <body>
+    <release version="1.0-dev-4" date="">
+	 <action dev="oheger" type="add">
+      	ConfigurationFactory now supports two types of properties files, additional and 
+      	override.  Additional properties add each other together.  Override override each
+      	other.  This allows you to have a single property that is either aggregated from a 
+      	number of sources, or have a property that is overridden according to a specific 
+      	order of sources.
+     </action>        	
+     <action dev="oheger" type="update">
+      	AbstractConfiguration addProperty now delegates to an abstract addPropertyDirect
+      	implemented by BaseConfiguration.  
+     </action>    	
+     <action dev="kshaposhnikov" type="update">
+      	Changed getString() method to throw a NoSuchElementException instead of "" if the
+      	configuration property doesn't exist.     
+     </action>      	
+     <action dev="kshaposhnikov" type="add">
+      	Added AbstractConfiguration to make it easier to create subclasses by only
+      	having to implement the methods required.      
+     </action>  
+     <action dev="bdunbar" type="fix">
+	   <strong>ClassPropertiesConfiguration Additions</strong>
+	   <ul>
+	     <li>Use the classloader of class that is provided by the constructor.</li>
+		 <li>Add a constructor that indicates whether to use relative or absolute.</li>
+		 <li>Change getPropertyStream to utilize the relative or absolute flag.</li>
+		 <li>Add a test case that checks that absolute paths work.</li>
+	   </ul>
+     </action>    
+     <action dev="epugh" type="fix">
+      	<strong>JNDIConfiguration.getKeys() Addition</strong>
+	  	The JNDIConfiguration.getKeys() method was returning an unsupported
+	  	operation error.  However, this is an important method to have 
+	 	supported.
+     </action>    
+     <action dev="epugh" type="fix">
+      	<strong>CompositeConfiguration.getKeys() Fix</strong>
+	  	The CompositeConfiguration.getKeys() method was returning an
+	  	unordered list of configuration values.  However, many apps
+	  	expect the order that keys are returned to be the order they
+	  	are added into the properties file.
+     </action>         
+    </release>
+
+  </body>
+</document>
+
