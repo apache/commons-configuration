@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0" date="IN CVS">
+      <action dev="ebourg" type="fix" issue="29616">
+        The getStringArray() method in CompositeConfiguration now interpotales
+        the strings.
+      </action>
       <action dev="ebourg" type="fix" issue="31540">
         SubsetConfiguration now shares the "throwExceptionOnMissing" property
         with its parent.

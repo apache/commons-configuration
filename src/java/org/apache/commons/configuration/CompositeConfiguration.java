@@ -31,7 +31,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.18 2004/09/19 22:01:50 henning Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.19 2004/10/05 22:56:58 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -312,15 +312,7 @@ public class CompositeConfiguration extends AbstractConfiguration
      */
     public Vector getVector(String key, Vector defaultValue)
     {
-        List list = getList(key, defaultValue);
-        Vector vector = new Vector(list.size());
-
-        for (Iterator it = list.iterator(); it.hasNext();)
-        {
-            vector.add(it.next());
-        }
-
-        return vector;
+        return new Vector(getList(key, defaultValue));
     }
 
     /**
@@ -329,7 +321,16 @@ public class CompositeConfiguration extends AbstractConfiguration
     public String[] getStringArray(String key)
     {
         List list = getList(key);
-        return (String []) list.toArray(new String [0]);
+
+        // interpolate the strings
+        String[] tokens = new String[list.size()];
+
+        for (int i = 0; i < tokens.length; i++)
+        {
+            tokens[i] = interpolate(String.valueOf(list.get(i)));
+        }
+
+        return tokens;
     }
 
     /**

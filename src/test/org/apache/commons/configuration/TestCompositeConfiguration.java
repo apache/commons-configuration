@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.13 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.14 2004/10/05 22:56:58 ebourg Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -37,7 +37,9 @@ public class TestCompositeConfiguration extends TestCase
     protected XMLConfiguration xmlConf;
     protected CompositeConfiguration cc;
 
-    /** The File that we test with */
+    /**
+     * The File that we test with
+     */
     private String testProperties = new File("conf/test.properties").getAbsolutePath();
     private String testProperties2 = new File("conf/test2.properties").getAbsolutePath();
     private String testPropertiesXML = new File("conf/test.xml").getAbsolutePath();
@@ -81,7 +83,7 @@ public class TestCompositeConfiguration extends TestCase
         Vector v = cc.getVector("packages");
         assertTrue(v.contains("packagea"));
     }
-    
+
     public void testGetProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -103,24 +105,24 @@ public class TestCompositeConfiguration extends TestCase
         cc.removeConfiguration(internal);
 
         assertEquals(1, cc.getNumberOfConfigurations());
-
     }
 
     public void testGetPropertyMissing() throws Exception
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        try{
+        try
+        {
             assertNull(cc.getString("bogus.property"));
             fail("Should have thrown a NoSuchElementException");
         }
-        catch(NoSuchElementException nsee){
-            assertTrue(nsee.getMessage().indexOf("bogus.property")>-1);
+        catch (NoSuchElementException nsee)
+        {
+            assertTrue(nsee.getMessage().indexOf("bogus.property") > -1);
         }
 
         assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));
         assertTrue("Should be true", cc.getBoolean("test.missing.boolean.true", true));
-
     }
 
     /**
@@ -251,8 +253,8 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-      * Tests <code>List</code> parsing.
-      */
+     * Tests <code>List</code> parsing.
+     */
     public void testList() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -284,8 +286,8 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-      * Tests <code>String</code> array parsing.
-      */
+     * Tests <code>String</code> array parsing.
+     */
     public void testStringArray() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -356,19 +358,17 @@ public class TestCompositeConfiguration extends TestCase
         cc.addProperty("array", "value5");
 
         List list = cc.getList("array");
-        
-        for (Iterator it = list.iterator(); it.hasNext(); )
+
+        for (Iterator it = list.iterator(); it.hasNext();)
         {
             Object value = it.next();
-            System.out.println(value.getClass().getName() + " -> " + value);
         }
 
         Vector lVector = cc.getVector("array");
-        
-        for (Iterator it = lVector.iterator(); it.hasNext(); )
+
+        for (Iterator it = lVector.iterator(); it.hasNext();)
         {
             Object value = it.next();
-            System.out.println(value.getClass().getName() + " -> " + value);
         }
 
         // test the new vector
@@ -381,45 +381,51 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-      * Tests <code>getKeys</code> preserves the order
-      */
+     * Tests <code>getKeys</code> preserves the order
+     */
     public void testGetKeysPreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
         List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys();keys.hasNext();){
+        for (Iterator keys = conf1.getKeys(); keys.hasNext();)
+        {
             orderedList.add(keys.next());
         }
         List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys();keys.hasNext();){
+        for (Iterator keys = cc.getKeys(); keys.hasNext();)
+        {
             iteratedList.add(keys.next());
         }
-        assertEquals(orderedList.size(),iteratedList.size());
-        for (int i =0;i<orderedList.size();i++){
-            assertEquals(orderedList.get(i),iteratedList.get(i));
-        }        
-    }    
+        assertEquals(orderedList.size(), iteratedList.size());
+        for (int i = 0; i < orderedList.size(); i++)
+        {
+            assertEquals(orderedList.get(i), iteratedList.get(i));
+        }
+    }
 
     /**
-      * Tests <code>getKeys(String key)</code> preserves the order
-      */
+     * Tests <code>getKeys(String key)</code> preserves the order
+     */
     public void testGetKeys2PreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
         List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys("test");keys.hasNext();){
+        for (Iterator keys = conf1.getKeys("test"); keys.hasNext();)
+        {
             orderedList.add(keys.next());
         }
         List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys("test");keys.hasNext();){
+        for (Iterator keys = cc.getKeys("test"); keys.hasNext();)
+        {
             iteratedList.add(keys.next());
         }
-        assertEquals(orderedList.size(),iteratedList.size());
-        for (int i =0;i<orderedList.size();i++){
-            assertEquals(orderedList.get(i),iteratedList.get(i));
-        }        
-    }        
-    
+        assertEquals(orderedList.size(), iteratedList.size());
+        for (int i = 0; i < orderedList.size(); i++)
+        {
+            assertEquals(orderedList.get(i), iteratedList.get(i));
+        }
+    }
+
     public void testGetStringWithDefaults()
     {
         BaseConfiguration defaults = new BaseConfiguration();
@@ -445,23 +451,17 @@ public class TestCompositeConfiguration extends TestCase
         }
 
         //test defaults
-        assertEquals(
-            "test string",
-            c.getString("string", "some default value"));
+        assertEquals("test string", c.getString("string", "some default value"));
         assertEquals("default string", c.getString("default"));
-        assertEquals(
-            "default string",
-            c.getString("default", "some default value"));
-        assertEquals(
-            "some default value",
-            c.getString("XXX", "some default value"));
+        assertEquals("default string", c.getString("default", "some default value"));
+        assertEquals("some default value", c.getString("XXX", "some default value"));
     }
-    
+
     public void testCheckingInMemoryConfiguration() throws Exception
     {
         String TEST_KEY = "testKey";
         Configuration defaults = new PropertiesConfiguration();
-        defaults.setProperty(TEST_KEY,"testValue");
+        defaults.setProperty(TEST_KEY, "testValue");
         Configuration testConfiguration = new CompositeConfiguration(defaults);
         assertTrue(testConfiguration.containsKey(TEST_KEY));
         assertFalse(testConfiguration.isEmpty());
@@ -470,14 +470,31 @@ public class TestCompositeConfiguration extends TestCase
         //assertTrue(i instanceof IteratorChain);
         //IteratorChain ic = (IteratorChain)i;
         //assertEquals(2,i.size());
-        for (;i.hasNext();){
-            String key = (String)i.next();
-            if(key.equals(TEST_KEY)){
+        for (; i.hasNext();)
+        {
+            String key = (String) i.next();
+            if (key.equals(TEST_KEY))
+            {
                 foundTestKey = true;
             }
         }
         assertTrue(foundTestKey);
         testConfiguration.clearProperty(TEST_KEY);
         assertFalse(testConfiguration.containsKey(TEST_KEY));
-    }    
+    }
+
+    public void testStringArrayInterpolation()
+    {
+        CompositeConfiguration config = new CompositeConfiguration();
+        config.addProperty("base", "foo");
+        config.addProperty("list", "${base}.bar1");
+        config.addProperty("list", "${base}.bar2");
+        config.addProperty("list", "${base}.bar3");
+
+        String[] array = config.getStringArray("list");
+        assertEquals("size", 3, array.length);
+        assertEquals("1st element", "foo.bar1", array[0]);
+        assertEquals("2nd element", "foo.bar2", array[1]);
+        assertEquals("3rd element", "foo.bar3", array[2]);
+    }
 }
