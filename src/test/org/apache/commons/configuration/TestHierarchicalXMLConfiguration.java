@@ -16,26 +16,40 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
  
+import junit.framework.TestCase;
+
 import java.io.File;
 import java.util.Collection;
-
-import junit.framework.TestCase;
+import java.util.Iterator;
 
 /**
  * Test class for HierarchicalXMLConfiguration,
  *
- * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.1 2004/07/12 12:14:38 ebourg Exp $
+ * @author Emmanuel Bourg
+ * @author Mark Woodman
+ * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.2 2004/09/06 13:12:04 epugh Exp $
  */
 public class TestHierarchicalXMLConfiguration extends TestCase
 {
+    /** Test resources directory. */
     private static final String TEST_DIR = "conf";
-    
+
+    /** Test file #1 **/
     private static final String TEST_FILENAME = "testHierarchicalXMLConfiguration.xml";
-    
+
+    /** Test file #2 **/
+    private static final String TEST_FILENAME2 = "testHierarchicalXMLConfiguration2.xml";
+
+    /** Test file path #1 **/
     private static final String TEST_FILE = TEST_DIR + File.separator + TEST_FILENAME;
-    
+
+    /** Test file path #2 **/
+    private static final String TEST_FILE2 = TEST_DIR + File.separator + TEST_FILENAME2;
+
+    /** Instance config used for tests. */
     private HierarchicalXMLConfiguration config;
-    
+
+    /** Fixture setup. */
     protected void setUp() throws Exception
     {
         config = new HierarchicalXMLConfiguration();
@@ -92,4 +106,43 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         config.load();
         configTest(config);
     }
+
+    /**
+     * Ensure various node types are correctly processed in config.
+     * @throws Exception
+     */
+    public void testXmlNodeTypes() throws Exception
+    {
+        // Number of keys expected from test configuration file
+        final int KEY_COUNT = 5;
+
+        // Load the configuration file
+        config.load(new File(TEST_FILE2).getAbsoluteFile().toURL());
+
+        // Validate comment in element ignored
+        assertEquals("Comment in element must not change element value.", "Case1Text", config.getString("case1"));
+
+        // Validate sibling comment ignored
+        assertEquals("Comment as sibling must not change element value.", "Case2Text", config.getString("case2.child"));
+
+        // Validate comment ignored, CDATA processed
+        assertEquals("Comment and use of CDATA must not change element value.", "Case3Text", config.getString("case3"));
+
+        // Validate comment and processing instruction ignored
+        assertEquals("Comment and use of PI must not change element value.", "Case4Text", config.getString("case4"));
+
+        // Validate comment ignored in parent attribute
+        assertEquals("Comment must not change attribute node value.", "Case5Text", config.getString("case5[@attr]"));
+
+        // Validate non-text nodes haven't snuck in as keys
+        Iterator iter = config.getKeys();
+        int count = 0;
+        while (iter.hasNext())
+        {
+            iter.next();
+            count++;
+        }
+        assertEquals("Config must contain only " + KEY_COUNT + " keys.", KEY_COUNT, count);
+    }
+
 }

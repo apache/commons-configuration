@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!-- Test config to confirm proper consumption of various XML nodes. -->
+<config>
+    <case1>
+        <!-- Comment contained in element. -->
+        Case1Text
+    </case1>
+    <case2>
+        <!-- Comment sibling to element. -->
+        <child>
+
+            Case2Text
+        </child>
+    </case2>
+    <case3>
+        <!-- Comment sibling to CDATA. -->
+        <![CDATA[
+            Case3Text
+        ]]>
+    </case3>
+    <case4>
+        <!-- Comment sibling to PI and text. -->
+
+        <?xml-stylesheet href="pi.css" type="text/css" ?>
+        Case4Text
+    </case4>
+    <case5 attr="Case5Text">
+        <!-- Comment in element with text in attribute -->
+    </case5>
+</config>

@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="epugh" type="fix" issue="30597" due-to="Mark Woodman">
+        Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes
+      </action>         
       <action dev="epugh" type="fix" issue="30545" due-to="Ricardo Gladwell">
         Clarify for ConfigurationDynaBean that the get method should throw an illegalArgumentException
         if there is no property specified.
