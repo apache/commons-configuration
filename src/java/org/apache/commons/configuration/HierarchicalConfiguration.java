@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * allowed index that can be added to a given property key. This method can be
  * used to iterate over all values defined for a certain property.</p>
  *
- * @version $Id: HierarchicalConfiguration.java,v 1.6 2004/03/28 14:43:04 epugh Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.7 2004/06/02 17:04:51 ebourg Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -667,7 +667,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         {
             if (children == null)
             {
-                children = new SequencedHashMap();
+                children = new LinkedMap();
             } /* if */
 
             List c = (List) children.get(child.getName());

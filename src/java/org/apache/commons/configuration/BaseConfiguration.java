@@ -17,8 +17,9 @@ package org.apache.commons.configuration;
  */
 
 import java.util.Iterator;
+import java.util.Map;
 
-import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * Basic configuration classe. Stores the configuration data but does not
@@ -30,12 +31,12 @@ import org.apache.commons.collections.SequencedHashMap;
  * instead of overwriting them.
  *
  *
- * @version $Id: BaseConfiguration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: BaseConfiguration.java,v 1.5 2004/06/02 17:04:51 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
     /** stores the configuration key-value pairs */
-    private SequencedHashMap store = new SequencedHashMap();
+    private Map store = new LinkedMap();
     
     /**
      * Empty constructor.  You must add all the values to this configuration.
@@ -148,6 +149,6 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public Iterator getKeys()
     {        
-        return store.iterator();        
+        return store.keySet().iterator();
     }
 }

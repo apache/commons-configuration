@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.20 2004/05/13 12:29:12 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.21 2004/06/02 17:04:51 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -163,7 +163,7 @@
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>    	
-      <version>2.1</version>
+      <version>3.0</version>
       <properties>        
         <war.bundle>true</war.bundle>
       </properties>      
