@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 import java.util.List;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import org.apache.commons.collections.ExtendedProperties;
@@ -28,7 +29,7 @@ import org.apache.commons.collections.ExtendedProperties;
  *
  * @author Martin Poeschl
  * @author Emmanuel Bourg
- * @version $Revision: 1.6 $, $Date: 2004/08/16 22:16:31 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/18 12:32:06 $
  */
 public class TestConfigurationConverter extends TestCase
 {
@@ -42,14 +43,14 @@ public class TestConfigurationConverter extends TestCase
 
         Configuration config = ConfigurationConverter.getConfiguration(eprops);
 
-        assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
+        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
         List item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+        assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
 
         Vector item2 = config.getVector("list");
-        assertEquals("This returns 'item 1'", (String) item2.get(0), "item 1");
+        assertEquals("This returns 'item 1'", "item 1", (String) item2.get(0));
 
-        assertEquals("This returns 123", config.getInt("int"), 123);
+        assertEquals("This returns 123", 123, config.getInt("int"));
     }
 
     public void testPropertiesToConfiguration()
@@ -61,14 +62,14 @@ public class TestConfigurationConverter extends TestCase
 
         Configuration config = ConfigurationConverter.getConfiguration(props);
 
-        assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
+        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
         List item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+        assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
 
         Vector item2 = config.getVector("list");
-        assertEquals("This returns 'item 1'", (String) item2.get(0), "item 1");
+        assertEquals("This returns 'item 1'", "item 1", (String) item2.get(0));
 
-        assertEquals("This returns 123", config.getInt("int"), 123);
+        assertEquals("This returns 123", 123, config.getInt("int"));
     }
 
     public void testConfigurationToExtendedProperties()
@@ -81,10 +82,10 @@ public class TestConfigurationConverter extends TestCase
 
         ExtendedProperties eprops = ConfigurationConverter.getExtendedProperties(config);
 
-        assertEquals("This returns 'teststring'", eprops.getString("string"), "teststring");
+        assertEquals("This returns 'teststring'", "teststring", eprops.getString("string"));
         List list = eprops.getVector("list");
-        assertEquals("This returns 'item 1'", (String) list.get(0), "item 1");
-        assertEquals("This returns 123", eprops.getInt("int"), 123);
+        assertEquals("This returns 'item 1'", "item 1", (String) list.get(0));
+        assertEquals("This returns 123", 123, eprops.getInt("int"));
     }
 
     public void testConfigurationToProperties()
@@ -99,6 +100,17 @@ public class TestConfigurationConverter extends TestCase
         assertNotNull("null properties", props);
         assertEquals("'string' property", "teststring", props.getProperty("string"));
         assertEquals("'array' property", "item 1, item 2", props.getProperty("array"));
+    }
+
+    public void testConfigurationToMap()
+    {
+        Configuration config = new BaseConfiguration();
+        config.addProperty("string", "teststring");
+
+        Map map = ConfigurationConverter.getMap(config);
+
+        assertNotNull("null map", map);
+        assertEquals("'string' property", "teststring", map.get("string"));
     }
 
 }
