@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * allowed index that can be added to a given property key. This method can be
  * used to iterate over all values defined for a certain property.</p>
  *
- * @version $Id: HierarchicalConfiguration.java,v 1.4 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.5 2004/03/13 17:04:04 epugh Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -290,7 +290,50 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     {
         return !nodeDefined(getRoot());
     }
+    
+    /**
+     * Creates a new <code>Configuration</code> object containing all keys
+     * that start with the specified prefix. This implementation will return
+     * a <code>HierarchicalConfiguration</code> object so that the structure
+     * of the keys will be saved.
+     * @param prefix the prefix of the keys for the subset
+     * @return a new configuration object representing the selected subset
+     */
+    public Configuration subset(String prefix)
+    {
+        Collection nodes = fetchNodeList(prefix);
+        if (nodes.isEmpty())
+        {
+            return new HierarchicalConfiguration();
+        } /* if */
 
+        HierarchicalConfiguration result = new HierarchicalConfiguration();
+        CloneVisitor visitor = new CloneVisitor();
+
+        for (Iterator it = nodes.iterator(); it.hasNext();)
+        {
+            Node nd = (Node) it.next();
+            nd.visit(visitor, null);
+
+            Container children = visitor.getClone().getChildren();
+            if (children.size() > 0)
+            {
+                for (int i = 0; i < children.size(); i++)
+                {
+                    result.getRoot().addChild((Node) children.get(i));
+                } /* for */
+            } /* if */
+            else
+            {
+                // In this case we cannot shorten the key because only
+                // values are found without further child nodes.
+                // result.getRoot().addChild(visitor.getClone());
+            } /* else */
+        } /* for */
+
+        return (result.isEmpty()) ? new HierarchicalConfiguration() : result;
+    }
+    
     /**
      * Checks if the specified key is contained in this configuration.
      * Note that for this configuration the term &quot;contained&quot; means

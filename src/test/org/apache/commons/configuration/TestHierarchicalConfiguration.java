@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.4 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.5 2004/03/13 17:04:04 epugh Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -242,5 +242,8 @@ public class TestHierarchicalConfiguration extends TestCase
         prop = conf.getProperty("name");
         assertTrue("prop is not a collection", prop instanceof Collection);
         assertEquals(10, ((Collection) prop).size());
+        
+        conf = config.subset("tables.table.fields.field.name");
+        assertTrue("subset is not empty", conf.isEmpty());
     }
 }
