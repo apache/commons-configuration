@@ -27,7 +27,7 @@ import org.apache.commons.configuration.FileConfiguration;
  * delay. This strategy only works with FileConfiguration instances.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/04 15:45:40 $
  * @since 1.1
  */
 public class FileChangedReloadingStrategy implements ReloadingStrategy
@@ -106,13 +106,12 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected boolean hasChanged()
     {
-        if (configuration.getFileName() == null)
+        if (!configuration.getFile().exists())
         {
             return false;
         }
 
-        File file = new File(configuration.getFileName());
-        return (file.lastModified() > lastModified);
+        return (configuration.getFile().lastModified() > lastModified);
     }
 
 }

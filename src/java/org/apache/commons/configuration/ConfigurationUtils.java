@@ -31,10 +31,13 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.12 $, $Date: 2004/11/19 01:56:30 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/04 15:45:40 $
  */
 public final class ConfigurationUtils
 {
+    /** Constant for the file URL protocol.*/
+    static final String PROTOCOL_FILE = "file";
+
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
     private ConfigurationUtils()
@@ -144,7 +147,7 @@ public final class ConfigurationUtils
     public static URL getURL(String basePath, String file) throws MalformedURLException
     {
         File f = new File(file);
-        if (f.isAbsolute())     // already absolute?
+        if (f.isAbsolute()) // already absolute?
         {
             return f.toURL();
         }
@@ -222,7 +225,6 @@ public final class ConfigurationUtils
         return file;
     }
 
-
     /**
      * Return the location of the specified resource by searching the user home
      * directory, the current classpath and the system classpath.
@@ -287,7 +289,7 @@ public final class ConfigurationUtils
         if (url == null)
         {
             File file = new File(name);
-            if (file.isAbsolute())     // already absolute?
+            if (file.isAbsolute() && file.exists()) // already absolute?
             {
                 try
                 {
@@ -322,7 +324,6 @@ public final class ConfigurationUtils
                 e.printStackTrace();
             }
         }
-
 
         // attempt to load from the user home directory
         if (url == null)
@@ -386,7 +387,7 @@ public final class ConfigurationUtils
         {
             return null;
         }
-        
+
         String s = url.toString();
 
         if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
@@ -421,4 +422,64 @@ public final class ConfigurationUtils
         }
     }
 
+    /**
+     * Tries to convert the specified base path and file name into a file object.
+     * This method is called e.g. by the save() methods of file based
+     * configurations. The parameter strings can be relative files, absolute
+     * files and URLs as well.
+     * 
+     * @param basePath the base path
+     * @param fileName the file name
+     * @return the file object
+     */
+    public static File getFile(String basePath, String fileName)
+    {
+        // Check if URLs are involved
+        URL url;
+        try
+        {
+            url = new URL(new URL(basePath), fileName);
+        }
+        catch (MalformedURLException mex1)
+        {
+            try
+            {
+                url = new URL(fileName);
+            }
+            catch (MalformedURLException mex2)
+            {
+                url = null;
+            }
+        }
+
+        if (url != null)
+        {
+            File result = fileFromURL(url);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return constructFile(basePath, fileName);
+    }
+
+    /**
+     * Tries to convert the specified URL to a file object. If this fails,
+     * <b>null</b> is returned.
+     * 
+     * @param url the URL
+     * @return the resulting file object
+     */
+    static File fileFromURL(URL url)
+    {
+        if (PROTOCOL_FILE.equals(url.getProtocol()))
+        {
+            return new File(url.getPath());
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

@@ -33,22 +33,43 @@ import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
- * Partial implementation of the <code>FileConfiguration</code> interface.
- * Developpers of file based configuration may wan't to extend this class,
+ * <p>Partial implementation of the <code>FileConfiguration</code> interface.
+ * Developpers of file based configuration may want to extend this class,
  * the two methods left to implement are {@see AbstractFileConfiguration#load(Reader)}
- * and {@see AbstractFileConfiguration#save(Reader)}.
+ * and {@see AbstractFileConfiguration#save(Reader)}.</p>
+ * <p>This base class already implements a couple of ways to specify the location
+ * of the file this configuration is based on. The following possibilities
+ * exist:
+ * <ul><li>URLs: With the method <code>setURL()</code> a full URL to the
+ * configuration source can be specified. This is the most flexible way. Note
+ * that the <code>save()</code> methods support only <em>file:</em> URLs.</li>
+ * <li>Files: The <code>setFile()</code> method allows to specify the
+ * configuration source as a file. This can be either a relative or an
+ * absolute file. In the former case the file is resolved based on the current
+ * directory.</li>
+ * <li>As file paths in string form: With the <code>setPath()</code> method a
+ * full path to a configuration file can be provided as a string.</li>
+ * <li>Separated as base path and file name: This is the native form in which
+ * the location is stored. The base path is a string defining either a local
+ * directory or a URL. It can be set using the <code>setBasePath()</code>
+ * method. The file name, non surprisingly, defines the name of the configuration
+ * file.</li></ul></p>
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.11 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/04 15:45:40 $
  * @since 1.0-rc2
  */
-public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
+public abstract class AbstractFileConfiguration extends BaseConfiguration implements
+        FileConfiguration
 {
     protected String fileName;
+
     protected String basePath;
-    protected URL url;
+
     protected boolean autoSave;
+
     protected ReloadingStrategy strategy;
+
     private Object reloadLock = new Object();
 
     /**
@@ -62,7 +83,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Creates and loads the configuration from the specified file.
+     * Creates and loads the configuration from the specified file. The passed
+     * in string must be a valid file name, either absolute or relativ.
      *
      * @param fileName The name of the file to load.
      *
@@ -74,10 +96,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         this();
 
         // store the file name
-        setFileName(fileName);
-
-        // update the base path
-        setBasePath(ConfigurationUtils.getBasePath(url));
+        setPath(fileName);
 
         // load the file
         load();
@@ -114,7 +133,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public AbstractFileConfiguration(URL url) throws ConfigurationException
     {
         this();
-        
+
         // set the URL and update the base path and the file name
         setURL(url);
 
@@ -123,21 +142,13 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Load the configuration from the underlying URL. If the URL is not
-     * specified, it attempts to locate the specified file name.
+     * Load the configuration from the underlying location.
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if loading of the configuration fails
      */
     public void load() throws ConfigurationException
     {
-        if (url == null)
-        {
-            load(fileName);
-        }
-        else
-        {
-            load(url);
-        }
+        load(getFileName());
     }
 
     /**
@@ -262,7 +273,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (UnsupportedEncodingException e)
             {
-                throw new ConfigurationException("The requested encoding is not supported, try the default encoding.", e);
+                throw new ConfigurationException(
+                        "The requested encoding is not supported, try the default encoding.", e);
             }
         }
 
@@ -298,7 +310,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         try
         {
             // create a new file
-            save(ConfigurationUtils.constructFile(basePath, fileName));
+            save(ConfigurationUtils.getFile(basePath, fileName));
         }
         catch (ConfigurationException e)
         {
@@ -321,9 +333,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void save(URL url) throws ConfigurationException
     {
-        if ("file".equals(url.getProtocol()))
+        File file = ConfigurationUtils.fileFromURL(url);
+        if (file != null)
         {
-            save(new File(url.getFile()));
+            save(file);
         }
     }
 
@@ -400,7 +413,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (UnsupportedEncodingException e)
             {
-                throw new ConfigurationException("The requested encoding is not supported, try the default encoding.", e);
+                throw new ConfigurationException(
+                        "The requested encoding is not supported, try the default encoding.", e);
             }
         }
 
@@ -421,16 +435,15 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Set the name of the file.
+     * Set the name of the file. The passed in file name should not contain a
+     * path. Use <code>{@link AbstractFileConfiguration#setPath(String)
+     * setPath()}</code> to set a full qualified file name.
      *
      * @param fileName the name of the file
      */
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
-
-        // update the URL
-        url = ConfigurationUtils.locate(basePath, fileName);
     }
 
     /**
@@ -443,82 +456,85 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Set the base path. Relative configurations are loaded from this path.
+     * The base path can be either a path to a directory or a URL.
      *
      * @param basePath the base path.
      */
     public void setBasePath(String basePath)
     {
         this.basePath = basePath;
-
-        // todo: update the url
     }
 
     /**
-     * Return the file where the configuration is stored.
+     * Return the file where the configuration is stored. If the base path is
+     * a URL with a protocol different than &quot;file&quot;, the return value
+     * will not point to a valid file object.
+     * 
+     * @return the file where the configuration is stored
      */
     public File getFile()
     {
-        if (url != null && "file".equals(url.getProtocol()))
-        {
-            return new File(url.getFile());
-        }
-        else
-        {
-            return ConfigurationUtils.constructFile(getBasePath(), getFileName());
-        }
+        return ConfigurationUtils.getFile(getBasePath(), getFileName());
     }
 
     /**
-     * Set the file where the configuration is stored.
+     * Set the file where the configuration is stored. The passed in file is
+     * made absolute if it is not yet. Then the file's path component becomes
+     * the base path and its name component becomes the file name.
      *
-     * @param file
+     * @param file the file where the configuration is stored
      */
     public void setFile(File file)
     {
-        if (file != null)
-        {
-            try
-            {
-                setURL(file.toURL());
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
-            url = null;
-        }
+        setFileName(file.getName());
+        setBasePath((file.getParentFile() != null) ? file.getParentFile().getAbsolutePath() : null);
+    }
+
+    /**
+     * Returns the full path to the file this configuration is based on. The
+     * return value is valid only if this configuration is based on a file on
+     * the local disk.
+     * 
+     * @return the full path to the configuration file
+     */
+    public String getPath()
+    {
+        return getFile().getAbsolutePath();
+    }
+
+    /**
+     * Sets the location of this configuration as a full path name. The passed
+     * in path should represent a valid file name.
+     * 
+     * @param path the full path name of the configuration file
+     */
+    public void setPath(String path)
+    {
+        setFile(new File(path));
     }
 
     /**
      * Return the URL where the configuration is stored.
+     * 
+     * @return the configuration's location as URL
      */
     public URL getURL()
     {
-        return url;
+        return ConfigurationUtils.locate(getBasePath(), getFileName());
     }
 
     /**
-     * Set the URL where the configuration is stored.
+     * Set the location of this configuration as a URL. For loading this can be
+     * an arbitrary URL with a supported protocol. If the configuration is to
+     * be saved, too, a URL with the &quot;file&quot; protocol should be
+     * provided.
      *
-     * @param url
+     * @param url the location of this configuration as URL
      */
     public void setURL(URL url)
     {
-        this.url = url;
-
-        // update the base path
-        basePath = ConfigurationUtils.getBasePath(url);
-        if (basePath != null && basePath.startsWith("file:"))
-        {
-            // remove the "file:" prefix from file URLs
-            basePath = basePath.substring(5);
-        }
-
-        // update the file name
-        fileName = ConfigurationUtils.getFileName(url);
+        setBasePath(ConfigurationUtils.getBasePath(url));
+        setFileName(ConfigurationUtils.getFileName(url));
     }
 
     public void setAutoSave(boolean autoSave)

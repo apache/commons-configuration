@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/11/19 13:19:50 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/04 15:45:39 $
  */
 public class TestFileConfiguration extends TestCase
 {
@@ -33,13 +33,37 @@ public class TestFileConfiguration extends TestCase
         FileConfiguration config = new PropertiesConfiguration();
         config.setURL(new URL("http://jakarta.apache.org/commons/configuration/index.html"));
 
-        assertEquals("base path", "http://jakarta.apache.org/commons/configuration/", config.getBasePath());
+        assertEquals("base path", "http://jakarta.apache.org/commons/configuration/", config
+                .getBasePath());
         assertEquals("file name", "index.html", config.getFileName());
 
         // file URL
         config.setURL(new URL("file:/temp/test.properties"));
-        assertEquals("base path", "/temp/", config.getBasePath());
+        assertEquals("base path", "file:/temp/", config.getBasePath());
         assertEquals("file name", "test.properties", config.getFileName());
+    }
+
+    public void testLocations() throws Exception
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+
+        File directory = new File("conf");
+        File file = new File(directory, "test.properties");
+        config.setFile(file);
+        assertEquals(directory.getAbsolutePath(), config.getBasePath());
+        assertEquals("test.properties", config.getFileName());
+        assertEquals(file.getAbsolutePath(), config.getPath());
+
+        config.setPath("conf" + File.separator + "test.properties");
+        assertEquals("test.properties", config.getFileName());
+        assertEquals(directory.getAbsolutePath(), config.getBasePath());
+        assertEquals(file.getAbsolutePath(), config.getPath());
+        assertEquals(file.toURL(), config.getURL());
+
+        config.setBasePath(null);
+        config.setFileName("test.properties");
+        assertNull(config.getBasePath());
+        assertEquals("test.properties", config.getFileName());
     }
 
     public void testCreateFile1() throws Exception
@@ -92,5 +116,54 @@ public class TestFileConfiguration extends TestCase
         config.save(file);
 
         assertTrue("The file doesn't exist", file.exists());
+    }
+
+    /**
+     * Tests collaboration with ConfigurationFactory: Is the base path set on
+     * loading is valid in file based configurations?
+     * 
+     * @throws Exception if an error occurs
+     */
+    public void testWithConfigurationFactory() throws Exception
+    {
+        File dir = new File("conf");
+        File file = new File(dir, "testFileConfiguration.properties");
+
+        if (file.exists())
+        {
+            assertTrue("File cannot be deleted", file.delete());
+        }
+
+        try
+        {
+            ConfigurationFactory factory = new ConfigurationFactory();
+            factory.setConfigurationURL(new File(dir, "testDigesterConfiguration2.xml").toURL());
+            CompositeConfiguration cc = (CompositeConfiguration) factory.getConfiguration();
+            PropertiesConfiguration config = null;
+            for (int i = 0; config == null; i++)
+            {
+                if (cc.getConfiguration(i) instanceof PropertiesConfiguration)
+                {
+                    config = (PropertiesConfiguration) cc.getConfiguration(i);
+                }
+            }
+
+            config.setProperty("test", "yes");
+            config.save(file.getName());
+            assertTrue(file.exists());
+            config = new PropertiesConfiguration();
+            config.setFile(file);
+            config.load();
+
+            assertEquals("yes", config.getProperty("test"));
+            assertEquals("masterOfPost", config.getProperty("mail.account.user"));
+        }
+        finally
+        {
+            if (file.exists())
+            {
+                assertTrue("File could not be deleted", file.delete());
+            }
+        }
     }
 }

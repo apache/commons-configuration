@@ -128,7 +128,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.16 2004/10/19 11:44:31 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.17 2004/12/04 15:45:40 oheger Exp $
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
@@ -273,7 +273,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     if (StringUtils.isNotEmpty(getInclude())
                         && key.equalsIgnoreCase(getInclude()))
                     {
-                        if (getIncludesAllowed() && url != null)
+                        if (getIncludesAllowed())
                         {
                             String [] files = StringUtils.split(value, getDelimiter());
                             for (int i = 0; i < files.length; i++)

@@ -27,7 +27,7 @@ import junitx.framework.ListAssert;
 /**
  * Tests the ConfigurationUtils class
  *
- * @version $Revision: 1.8 $, $Date: 2004/10/19 13:41:44 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/04 15:45:39 $
  */
 public class TestConfigurationUtils extends TestCase
 {
@@ -170,5 +170,17 @@ public class TestConfigurationUtils extends TestCase
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
+    }
+    
+    public void testGetFile() throws Exception
+    {
+        File directory = new File("target");
+        File reference = new File(directory, "test.txt").getAbsoluteFile();
+        
+        assertEquals(reference, ConfigurationUtils.getFile(null, reference.getAbsolutePath()));
+        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
+        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));        
+        assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
+        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
     }
 }

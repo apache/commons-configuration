@@ -26,7 +26,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * Test case for the ReloadableConfiguration class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/04 15:45:40 $
  */
 public class TestFileChangedReloadingStrategy extends TestCase
 {
@@ -51,7 +51,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         config.setReloadingStrategy(new FileChangedReloadingStrategy());
         assertEquals("Initial value", "value1", config.getString("string"));
 
-        Thread.sleep(500);
+        Thread.sleep(5000);
 
         // change the file
         out = new FileWriter(file);

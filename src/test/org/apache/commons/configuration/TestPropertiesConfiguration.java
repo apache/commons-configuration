@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.16 2004/11/14 18:29:02 oheger Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.17 2004/12/04 15:45:39 oheger Exp $
  */
 public class TestPropertiesConfiguration extends TestCase
 {
@@ -151,6 +151,25 @@ public class TestPropertiesConfiguration extends TestCase
         {
             //good
         }
+    }
+    
+    /**
+     * Tests if the base path is taken into account by the save() method.
+     * @throws Exception if an error occurs
+     */
+    public void testSaveWithBasePath() throws Exception
+    {
+        // remove the file previously saved if necessary
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue(testSavePropertiesFile.delete());
+        }
+        
+        conf.setProperty("test", "true");
+        conf.setBasePath(testSavePropertiesFile.getParentFile().toURL().toString());
+        conf.setFileName(testSavePropertiesFile.getName());
+        conf.save();
+        assertTrue(testSavePropertiesFile.exists());
     }
 
     public void testLoadViaProperty() throws Exception
