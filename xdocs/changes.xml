@@ -7,6 +7,11 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="ebourg" type="fix" issue="31346">
+        Replaced the calls to Boolean.booleanValue(boolean) in
+        AbstractConfiguration and ConfigurationDynaBean to be Java 1.3
+        compatible.
+      </action>
       <action dev="ebourg" type="fix" issue="31345">
         Changing the prefix of a JNDIConfiguration will now reset the base context used.
       </action>

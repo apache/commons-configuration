@@ -23,6 +23,7 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConversionException;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -42,7 +43,7 @@ import org.apache.commons.logging.LogFactory;
  * method. Setting an indexed property always throws an exception.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.6 $, $Date: 2004/09/21 17:49:39 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/21 17:58:10 $
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean implements DynaBean
@@ -53,7 +54,11 @@ public class ConfigurationDynaBean implements DynaBean
 
     public ConfigurationDynaBean(Configuration configuration)
     {
-        if (log.isTraceEnabled()) log.trace("ConfigurationDynaBean(" + configuration + ")");
+        if (log.isTraceEnabled())
+        {
+            log.trace("ConfigurationDynaBean(" + configuration + ")");
+        }
+        
         this.configuration = configuration;
     }
 
@@ -94,7 +99,7 @@ public class ConfigurationDynaBean implements DynaBean
             boolean[] array = (boolean[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, Boolean.valueOf(array[i]));
+                configuration.addProperty(name, BooleanUtils.toBooleanObject(array[i]));
             }
         }
         else if (value instanceof char[])
