@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.11 $, $Date: 2004/10/18 14:05:23 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/21 18:02:09 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -208,7 +208,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public boolean isEmpty()
     {
-        boolean empty = false;
+        boolean empty = true;
 
         // build the query
         StringBuffer query = new StringBuffer("SELECT count(*) FROM " + table);

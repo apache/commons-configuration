@@ -8,6 +8,9 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="fix">
+        DatabaseConfiguration.isEmpty() now returns true if an SQLException occurs.
+      </action>
       <action dev="ebourg" type="add">
         Added two methods copy(Configuration, Configuration) and
         append(Configuration, Configuration) in ConfigurationUtils to copy
