@@ -6,8 +6,11 @@
   </properties>
 
   <body>
-    <release version="1.0-dev-4" date="">
-	 <action dev="epugh" type="add">
+    <release version="1.0-dev-4" date=""> 
+	 <action dev="epugh" type="update">
+      	Bugzilla 16504 Enhancement: Configuration Comparator
+     </action>        
+	 <action dev="epugh" type="update">
       	Bugzilla 26694 (BaseConfiguration: containsKey ignores default properties).  I have changed it so that
       	now the defaults are paid attention to.   
      </action>        

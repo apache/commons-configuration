@@ -54,15 +54,13 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
-import javax.naming.InitialContext;
-
 import junit.framework.TestCase;
 
 /**
  * test if non-string properties are handled correctly
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestJNDIConfiguration.java,v 1.2 2004/02/12 12:59:19 epugh Exp $
+ * @version $Id: TestJNDIConfiguration.java,v 1.3 2004/02/14 20:06:23 epugh Exp $
  */
 public class TestJNDIConfiguration extends TestCase
 {
@@ -73,8 +71,8 @@ public class TestJNDIConfiguration extends TestCase
 
     public void setUp() throws Exception
     {
-		InitialContext context = new InitialContext();
-		assertNotNull(context);
+		//InitialContext context = new InitialContext();
+		//assertNotNull(context);
         
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
 		jndiConfiguration.setPrefix("");
@@ -159,6 +157,12 @@ public class TestJNDIConfiguration extends TestCase
 		//nonStringTestHolder.testSubset();
 	      
 	 }
+	  
+	  public void testProperties() throws Exception{
+	      Object o = conf.getProperty("test.boolean");
+	      assertNotNull(o);
+	      
+	  }
 
 
     

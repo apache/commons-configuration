@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Configuration test file that checks all known configuration types -->
+
+<configuration>
+  <additional>
+    <dom4j fileName="test.xml"/>
+    <hierarchicalDom4j fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
+    <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>
+    <jndi prefix=""/>
+  </additional>
+</configuration>
+
+  
+
+
+
+

@@ -71,7 +71,7 @@ public class TestJNDIEnvironmentValues extends TestCase
     {
         JNDIConfiguration conf = new JNDIConfiguration();
         conf.setPrefix("");
-        String s = conf.getString("test/key");
+        String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
@@ -79,7 +79,7 @@ public class TestJNDIEnvironmentValues extends TestCase
     {
         JNDIConfiguration conf = new JNDIConfiguration();
         conf.setPrefix("");
-        String s = conf.getString("test/key");
+        String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
         assertEquals(1, conf.getShort("test.short"));
@@ -91,7 +91,7 @@ public class TestJNDIEnvironmentValues extends TestCase
         conf.setPrefix("");
         try
         {
-            conf.getString("test/imaginarykey");
+            conf.getString("test.imaginarykey");
             fail("Should have thrown NoSuchElementException");
         }
         catch (NoSuchElementException nsee)
@@ -105,7 +105,7 @@ public class TestJNDIEnvironmentValues extends TestCase
         JNDIConfiguration conf = new JNDIConfiguration();
         conf.setPrefix("");
 
-        String result = conf.getString("test/imaginarykey", "bob");
+        String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
 
     }
@@ -114,9 +114,9 @@ public class TestJNDIEnvironmentValues extends TestCase
         JNDIConfiguration conf = new JNDIConfiguration();
         conf.setPrefix("");
 
-        assertTrue(conf.containsKey("test/key"));
+        assertTrue(conf.containsKey("test.key"));
 
-        assertTrue(!conf.containsKey("test/imaginerykey"));
+        assertTrue(!conf.containsKey("test.imaginerykey"));
 
     }
 }

@@ -71,7 +71,7 @@ import org.apache.commons.logging.LogFactory;
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.3 2004/01/16 14:27:56 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.4 2004/02/14 20:06:23 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -268,7 +268,7 @@ public class JNDIConfiguration
      */
     public Object getProperty(String key)
     {
-        throw new Error("This operation is not supported");
+        return getValueFromJNDI(key);
     }
     /**
      * Set a property, this will replace any previously
