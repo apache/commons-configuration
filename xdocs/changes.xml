@@ -8,6 +8,12 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="oheger" type="add" issue="33475">
+        ConfigurationFactory now always configures digester to use the context
+        classloader. This avoids problems in application server environments,
+        which use their own version of digester. Thanks to Mike Colbert for the
+        patch!
+      </action>
       <action dev="ebourg" type="add" issue="32318">
         Added a new configuration, XMLPropertiesConfiguration, supporting the
         new XML format for java.util.Properties introduced in Java 1.5.

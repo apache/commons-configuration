@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.20 2004/12/23 18:42:25 oheger Exp $
+ * @version $Id$
  */
 public class ConfigurationFactory
 {
@@ -152,6 +152,9 @@ public class ConfigurationFactory
             // awareness must be configured before the digester rules are loaded.
             configureNamespace(digester);
         }
+        
+        // Configure digester to always enable the context class loader
+        digester.setUseContextClassLoader(true);
         // Put the composite builder object below all of the other objects.
         digester.push(builder);
         // Parse the input stream to configure our mappings
