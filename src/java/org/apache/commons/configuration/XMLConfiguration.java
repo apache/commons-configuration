@@ -70,9 +70,6 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
-    /** Delimiter character for attributes. */
-    private static char ATTR_DELIMITER = ',';
-
     private FileConfigurationDelegate delegate = new FileConfigurationDelegate();
 
     /** The document from this configuration's data source. */
@@ -288,7 +285,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                for (Iterator it = PropertyConverter.split(attr.getValue(), ATTR_DELIMITER).iterator(); it.hasNext();)
+                for (Iterator it = PropertyConverter.split(attr.getValue(), getDelimiter()).iterator(); it.hasNext();)
                 {
                     Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()), element);
                     child.setValue(it.next());
@@ -365,7 +362,19 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     public void load(InputStream in) throws ConfigurationException
     {
-        delegate.load(in);
+        try
+        {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document newDocument = builder.parse(new InputSource(in));
+            Document oldDocument = document;
+            document = null;
+            initProperties(newDocument, oldDocument == null);
+            document = (oldDocument == null) ? newDocument : oldDocument;
+        }
+        catch (Exception e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
     }
 
     public void load(InputStream in, String encoding) throws ConfigurationException
@@ -782,7 +791,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                     {
                         if (buf.length() > 0)
                         {
-                            buf.append(ATTR_DELIMITER);
+                            buf.append(getDelimiter());
                         }
                         buf.append(attr.getValue());
                     }
