@@ -19,8 +19,10 @@ package org.apache.commons.configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * <p>A base class for converters that transform a normal configuration
@@ -37,7 +39,7 @@ import java.util.List;
  * @see HierarchicalConfiguration
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationConverter.java,v 1.3 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: HierarchicalConfigurationConverter.java,v 1.4 2004/08/20 15:49:27 ebourg Exp $
  */
 abstract class HierarchicalConfigurationConverter
 {
@@ -56,18 +58,28 @@ abstract class HierarchicalConfigurationConverter
         {
             ConfigurationKey keyEmpty = new ConfigurationKey();
             ConfigurationKey keyLast = keyEmpty;
+            Set keySet = new HashSet();
 
             for (Iterator it = config.getKeys(); it.hasNext();)
             {
                 String key = (String) it.next();
+                if (keySet.contains(key))
+                {
+                	// this key has already been processed by openElements
+                	continue;
+                }
                 ConfigurationKey keyAct = new ConfigurationKey(key);
                 closeElements(keyLast, keyAct);
-                String elem = openElements(keyLast, keyAct);
-                fireValue(elem, config.getProperty(key));
+                String elem = openElements(keyLast, keyAct, config, keySet);
+                if (elem != null)
+                {
+                	fireValue(elem, config.getProperty(key));
+                }
                 keyLast = keyAct;
             }
 
-            closeElements(keyLast, keyEmpty); // close all open
+            // close all open
+            closeElements(keyLast, keyEmpty);
         }
     }
 
@@ -142,22 +154,33 @@ abstract class HierarchicalConfigurationConverter
      * Fires all necessary element start events for the specified key. This
      * method is called for each key obtained from the configuration to be
      * converted. It ensures that all elements "between" the last key and the
-     * actual key are opened.
+     * actual key are opened and their values are set.
      *
      * @param keyLast the last processed key
      * @param keyAct the actual key
+     * @param config the configuration to process
+     * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct)
+    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
 
-        for (it.nextKey(); it.hasNext(); it.nextKey())
+        if(it.hasNext())
         {
-            elementStart(it.currentKey(), null);
+        	ConfigurationKey k = keyLast.commonKey(keyAct);
+	        for (it.nextKey(); it.hasNext(); it.nextKey())
+	        {
+	        	k.append(it.currentKey(true));
+	            elementStart(it.currentKey(true), config.getProperty(k.toString()));
+	            keySet.add(k.toString());
+	        }
+	        return it.currentKey(true);
         }
-
-        return it.currentKey();
+        else
+        {
+        	return null;
+        }
     }
 
     /**

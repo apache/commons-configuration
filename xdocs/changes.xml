@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="ebourg" type="fix" issue="30655" due-to="Oliver Heger">
+        Fixed the handling of attribute properties by HierarchicalConfigurationConverter.
+      </action>
       <action dev="ebourg" type="fix" issue="30676">
         Fixed a ClassCastException thrown on adding a non string property
         in a DatabaseConfiguration.

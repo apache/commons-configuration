@@ -3,8 +3,7 @@
 
 <configuration>
   <additional>
-    <!--xml format seems to cause configuration factory to die-->
-    <!--xml fileName="test.xml"/-->
+    <xml fileName="test.xml"/>
     <hierarchicalXml fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
     <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>
     <jndi prefix=""/>
