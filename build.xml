@@ -20,6 +20,12 @@
   </property>
   <property name="javadocdir" value="dist/docs/api">
   </property>
+  
+  <!-- Manual changes for dealing with the conf directory -->
+  <property name="confdir" value="conf"/>
+  <property name="targetconfdir" value="${defaulttargetdir}/${confdir}"/>
+  <!-- Manual changes end -->
+  
   <property name="final.name" value="commons-configuration-1.1-dev">
   </property>
   <path id="build.classpath">
@@ -101,6 +107,15 @@
         </pathelement>
         <pathelement path="${classesdir}">
         </pathelement>
+        <!-- Manual changes for dealing with the conf directory -->
+        <pathelement path="${targetconfdir}"/>
+        <path>
+          <fileset dir="${targetconfdir}">
+            <include name="resources.jar"/>
+          </fileset>
+        </path>
+        <!-- Manual changes end -->
+        
       </classpath>
       <batchtest todir="${testreportdir}">
         <fileset dir="src/test">
@@ -136,14 +151,16 @@
         </pathelement>
       </classpath>
     </javac>
-    <copy todir="${testclassesdir}">
-      <fileset dir="src/test">
+    <!-- Manual changes for dealing with the conf directory -->
+    <mkdir dir="${targetconfdir}"/>
+    <copy todir="${targetconfdir}">
+      <fileset dir="${confdir}">
         <include name="*.xml">
         </include>
       </fileset>
     </copy>
-    <copy todir="${testclassesdir}">
-      <fileset dir="src/test">
+    <copy todir="${targetconfdir}">
+      <fileset dir="${confdir}">
         <include name="testClasspath.properties">
         </include>
         <include name="testdb.script">
@@ -152,12 +169,13 @@
         </include>
         <include name="*.dtd">
         </include>
+        <include name="resources.jar"/>
       </fileset>
     </copy>
-    <mkdir dir="${testclassesdir}/org/apache/commons/configuration">
+    <mkdir dir="${targetconfdir}/org/apache/commons/configuration">
     </mkdir>
-    <copy todir="${testclassesdir}/org/apache/commons/configuration">
-      <fileset dir="src/test">
+    <copy todir="${targetconfdir}/org/apache/commons/configuration">
+      <fileset dir="${confdir}">
         <include name="test.properties">
         </include>
         <include name="include.properties">
@@ -167,11 +185,12 @@
     <mkdir dir="${testclassesdir}/config">
     </mkdir>
     <copy todir="${testclassesdir}/config">
-      <fileset dir="src/test">
+      <fileset dir="${confdir}">
         <include name="**/*.properties">
         </include>
       </fileset>
     </copy>
+    <!-- Manual changes end -->
   </target>
   <target name="javadoc" description="o Generate javadoc" depends="get-deps">
     <mkdir dir="${javadocdir}">
