@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
- * @version $Id: JNDIConfiguration.java,v 1.8 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.9 2004/03/13 17:30:42 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -140,14 +140,9 @@ public class JNDIConfiguration
             }
             if (context != null)
             {
-                NamingEnumeration enum2 = context.list("");
-                for(;enum2.hasMore();){
-                    System.out.println(enum2.next());
-                }
+              
                 NamingEnumeration enum = context.listBindings("");
-                for(;enum.hasMore();){
-                    System.out.println(enum.next());
-                }
+              
                 recursiveGetKeys(keys, enum, key);
             }
         }
