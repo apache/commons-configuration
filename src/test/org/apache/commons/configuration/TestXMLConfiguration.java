@@ -21,11 +21,12 @@ import java.util.List;
 import java.util.Iterator;
 
 import junit.framework.TestCase;
+import junitx.framework.ArrayAssert;
 
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.3 2004/07/13 14:10:06 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.4 2004/07/21 12:36:27 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -44,6 +45,22 @@ public class TestXMLConfiguration extends TestCase
     public void testGetProperty() throws Exception
     {
         assertEquals("value", conf.getProperty("element"));
+    }
+
+    public void testGetCommentedProperty()
+    {
+        assertEquals(null, conf.getProperty("test.comment"));
+    }
+
+    public void testGetPropertyWithXMLEntity()
+    {
+        assertEquals("1<2", conf.getProperty("test.entity"));
+    }
+
+    public void testClearProperty()
+    {
+        conf.clearProperty("element");
+        assertEquals("element", null, conf.getProperty("element"));
     }
 
     public void testGetAttribute() throws Exception
@@ -161,8 +178,7 @@ public class TestXMLConfiguration extends TestCase
         // add an array of strings in an attribute
         for (int i = 1; i < 5; i++)
         {
-            //conf.addProperty("test.attribute[@array]", "value" + i);
-            conf.addProperty("element3[@name]", "value" + i);
+            conf.addProperty("test.attribute[@array]", "value" + i);
         }
 
         // save the configuration
@@ -171,10 +187,46 @@ public class TestXMLConfiguration extends TestCase
         // read the configuration and compare the properties
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFileName(testSaveConf.getAbsolutePath());
-        for (Iterator i = conf.getKeys(); i.hasNext();) {
+        checkConfig.load();
+
+        for (Iterator i = conf.getKeys(); i.hasNext();)
+        {
         	String key = (String) i.next();
         	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
         	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
+    }
+
+    public void testParseElementsNames()
+    {
+        // without attribute
+        String key = "x.y.z";
+        String[] array = new String[] {"x", "y", "z"};
+        ArrayAssert.assertEquals("key without attribute", array, XMLConfiguration.parseElementNames(key));
+
+        // with attribute
+        key = "x.y.z[@name]";
+        ArrayAssert.assertEquals("key with attribute", array, XMLConfiguration.parseElementNames(key));
+
+        // null key
+        ArrayAssert.assertEquals("null key", new String[] {}, XMLConfiguration.parseElementNames(null));
+    }
+
+    public void testParseAttributeName()
+    {
+        // no attribute
+        String key = "x.y.z";
+        assertEquals("no attribute", null, XMLConfiguration.parseAttributeName(key));
+
+        // simple attribute
+        key = "x.y.z[@name]";
+        assertEquals("simple attribute", "name", XMLConfiguration.parseAttributeName(key));
+
+        // missing end marker
+        key = "x.y.z[@name";
+        assertEquals("missing end marker", "name", XMLConfiguration.parseAttributeName(key));
+
+        // null key
+        assertEquals("null key", null, XMLConfiguration.parseAttributeName(null));
     }
 }

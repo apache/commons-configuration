@@ -1,4 +1,7 @@
-<baseElement>
+<?xml version="1.0"?>
+
+<!-- Test file for XMLConfiguration -->
+<configuration>
     <element>value</element>
     <element2>
         <subelement>
@@ -7,6 +10,13 @@
     </element2>
     <element3 name="foo">value</element3>
     <test>
+        <comment><!-- this value is commented --></comment>
+        <cdata><![CDATA[<cdata value>]]></cdata>
+        <entity name="foo&quot;bar">1&lt;2</entity>
+    </test>
+
+    <!-- non string properties -->
+    <test>
         <short>8</short>
     </test>
-</baseElement>
+</configuration>
