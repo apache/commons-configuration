@@ -39,7 +39,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.26 2004/10/18 09:54:37 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.27 2004/10/18 14:05:22 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -325,6 +325,18 @@ public abstract class AbstractConfiguration implements Configuration
      * {@inheritDoc}
      */
     public  abstract void clearProperty(String key);
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear()
+    {
+        Iterator it = getKeys();
+        while (it.hasNext())
+        {
+            clearProperty((String) it.next());
+        }
+    }
 
     /**
      * {@inheritDoc}

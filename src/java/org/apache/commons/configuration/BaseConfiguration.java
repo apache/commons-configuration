@@ -45,7 +45,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfiguration.java,v 1.8 2004/07/05 09:54:17 ebourg Exp $
+ * @version $Id: BaseConfiguration.java,v 1.9 2004/10/18 14:05:23 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
@@ -59,7 +59,6 @@ public class BaseConfiguration extends AbstractConfiguration
     {
         super();
     }
-
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -139,7 +138,6 @@ public class BaseConfiguration extends AbstractConfiguration
     public boolean containsKey(String key)
     {
         return store.containsKey(key);
-
     }
 
     /**
@@ -153,6 +151,14 @@ public class BaseConfiguration extends AbstractConfiguration
         {
             store.remove(key);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear()
+    {
+        store.clear();
     }
 
     /**

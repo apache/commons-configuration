@@ -26,7 +26,7 @@ import java.util.Vector;
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.11 2004/10/18 09:52:02 ebourg Exp $
+ * @version $Id: Configuration.java,v 1.12 2004/10/18 14:05:23 ebourg Exp $
  */
 public interface Configuration
 {
@@ -115,6 +115,11 @@ public interface Configuration
      * @param key the key to remove along with corresponding value.
      */
     void clearProperty(String key);
+
+    /**
+     * Remove all properties from the configuration.
+     */
+    void clear();
 
     /**
      * Gets a property from the configuration.

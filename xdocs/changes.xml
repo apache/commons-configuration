@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="26102">
+        Added a clear() method to the Configuration interface to remove
+        all properties.
+      </action>
       <action dev="ebourg" type="add" issue="26066">
         Added a SystemConfiguration wrapping the system properties.
         ConfigurationFactory recognizes the corresponding &lt;system/&gt;

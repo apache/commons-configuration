@@ -40,7 +40,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.9 $, $Date: 2004/10/11 09:17:09 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/18 14:05:23 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -150,6 +150,22 @@ public class TestDatabaseConfiguration extends TestCase
         config.clearProperty("key");
 
         assertFalse("property not cleared", config.containsKey("key"));
+    }
+
+    public void testClearSingle()
+    {
+        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        config.clear();
+
+        assertTrue("configuration is not cleared", config.isEmpty());
+    }
+
+    public void testClearMultiple()
+    {
+        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        config.clear();
+
+        assertTrue("configuration is not cleared", config.isEmpty());
     }
 
     public void testGetKeysSingle()

@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.10 $, $Date: 2004/09/20 09:37:07 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/18 14:05:23 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -322,6 +322,45 @@ public class DatabaseConfiguration extends AbstractConfiguration
             if (nameColumn != null)
             {
                 pstmt.setString(2, name);
+            }
+
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            log.error(e.getMessage(), e);
+        }
+        finally
+        {
+            // clean up
+            closeQuietly(conn, pstmt);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void clear()
+    {
+        // build the query
+        StringBuffer query = new StringBuffer("DELETE FROM " + table);
+        if (nameColumn != null)
+        {
+            query.append(" WHERE " + nameColumn + "=?");
+        }
+
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try
+        {
+            conn = datasource.getConnection();
+
+            // bind the parameters
+            pstmt = conn.prepareStatement(query.toString());
+            if (nameColumn != null)
+            {
+                pstmt.setString(1, name);
             }
 
             pstmt.executeUpdate();
