@@ -24,25 +24,34 @@ import java.util.Map;
 /**
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
-class ConfigurationSet extends AbstractSet {
 
-    class Entry implements Map.Entry {
+public class ConfigurationSet
+        extends AbstractSet
+{
+    private Configuration configuration = null;
 
-        Object key;
+    public class Entry
+            implements Map.Entry
+    {
+        private Object key = null;
 
-        public Entry(Object key) {
+        public Entry(Object key)
+        {
             this.key = key;
         }
 
-        public Object getKey() {
+        public Object getKey()
+        {
             return key;
         }
 
-        public Object getValue() {
+        public Object getValue()
+        {
             return configuration.getProperty((String) key);
         }
 
-        public Object setValue(Object value) {
+        public Object setValue(Object value)
+        {
             Object old = getValue();
             configuration.setProperty((String) key, value);
             return old;
@@ -50,52 +59,59 @@ class ConfigurationSet extends AbstractSet {
 
     }
 
-    class ConfigurationSetIterator implements Iterator {
+    public class ConfigurationSetIterator
+            implements Iterator
+    {
+        private Iterator keys;
 
-        Iterator keys;
-
-        public ConfigurationSetIterator() {
-        	keys = configuration.getKeys();
+        public ConfigurationSetIterator()
+        {
+            keys = configuration.getKeys();
         }
 
-        public boolean hasNext() {
+        public boolean hasNext()
+        {
             return keys.hasNext();
-         }
+        }
 
-        public Object next() {
+        public Object next()
+        {
             return new Entry(keys.next());
-         }
+        }
 
-         public void remove() {
-         	keys.remove();
-         }
+        public void remove()
+        {
+            keys.remove();
+        }
 
     }
 
-    Configuration configuration;
-
-    public ConfigurationSet(Configuration configuration) {
+    public ConfigurationSet(Configuration configuration)
+    {
         this.configuration = configuration;
     }
 
     /**
-	 * @see java.util.Collection#size()
-	 */
-	public int size() {
+     * @see java.util.Collection#size()
+     */
+    public int size()
+    {
+        // Ouch. Now _that_ one is expensive...
         int count = 0;
-		Iterator iterator = configuration.getKeys();
-        while(iterator.hasNext()) {
+        for (Iterator iterator = configuration.getKeys(); iterator.hasNext(); )
+        {
             iterator.next();
             count++;
         }
         return count;
-	}
+    }
 
-	/**
-	 * @see java.util.Collection#iterator()
-	 */
-	public Iterator iterator() {
-		return new ConfigurationSetIterator();
-	}
+    /**
+     * @see java.util.Collection#iterator()
+     */
+    public Iterator iterator()
+    {
+        return new ConfigurationSetIterator();
+    }
 
 }

@@ -26,14 +26,19 @@ import java.util.Set;
  * {@link org.apache.commons.configuration.Configuration}
  * instance to provide a <code>Map</code> interface.</p>
  *
+ * @todo This implementation is incomplete. 
+ *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
-public class ConfigurationMap extends AbstractMap {
+
+public class ConfigurationMap
+        extends AbstractMap
+{
 
     /**
      * The <code>Configuration</code> wrapped by this class.
      */
-    Configuration configuration;
+    Configuration configuration = null;
 
     /**
      * Creates a new instance of a <code>ConfigurationMap</code>
@@ -42,24 +47,35 @@ public class ConfigurationMap extends AbstractMap {
      * @param configuration <code>Configuration</code>
      * instance.
      */
-    public ConfigurationMap(Configuration configuration) {
+    public ConfigurationMap(Configuration configuration)
+    {
         this.configuration = configuration;
     }
 
     /**
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet() {
+    public Set entrySet()
+    {
         return new ConfigurationSet(configuration);
     }
 
     /**
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
-    public Object put(Object key, Object value) {
+    public Object put(Object key, Object value)
+    {
         Object old = configuration.getProperty((String) key);
         configuration.setProperty((String) key,value);
         return old;
+    }
+
+    /**
+     * @see java.util.Map#get(java.lang.Object)
+     */
+    public Object get(Object key)
+    {
+        return configuration.getProperty((String) key);
     }
 
 }
