@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.11 $, $Date: 2004/09/03 16:36:20 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/06 11:40:34 $
  */
 public class XMLConfiguration extends BasePathConfiguration {
     // For conformance with xpath
@@ -165,6 +165,11 @@ public class XMLConfiguration extends BasePathConfiguration {
         URL confURL = XMLConfiguration.class.getClassLoader().getResource(resource);
         if (confURL == null) {
             confURL = ClassLoader.getSystemResource(resource);
+        }
+        if (confURL == null) {
+            throw new IllegalArgumentException("Resource: "
+                    + resource + " not found through context or "
+                    + "system classloaders.");
         }
         return new File(confURL.getFile());
     }
