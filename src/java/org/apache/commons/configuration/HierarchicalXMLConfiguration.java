@@ -23,11 +23,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Attr;
-import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 /**
  * A specialized hierarchical configuration class that is able to parse
@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.1 $, $Date: 2004/07/12 12:14:38 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/14 11:22:00 $
  */
 public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
@@ -165,9 +165,9 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
                 node.addChild(childNode);
                 processAttributes(childNode, child);
             }
-            else if (w3cNode instanceof CharacterData)
+            else if (w3cNode instanceof Text)
             {
-                CharacterData data = (CharacterData) w3cNode;
+                Text data = (Text) w3cNode;
                 buffer.append(data.getData());
             }
         }
