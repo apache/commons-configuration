@@ -29,7 +29,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * A persistent configuration loaded and saved to a file.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/03 12:42:30 $
  * @since 1.0-rc2
  */
 public interface FileConfiguration extends Configuration
@@ -70,8 +70,8 @@ public interface FileConfiguration extends Configuration
     void load(URL url) throws ConfigurationException;
 
     /**
-     * Load the configuration from the specified stream, using the default
-     * platform specific encoding.
+     * Load the configuration from the specified stream, using the encoding
+     * returned by {@link #getEncoding()}.
      *
      * @param in the input stream
      *
@@ -134,7 +134,8 @@ public interface FileConfiguration extends Configuration
     void save(URL url) throws ConfigurationException;
 
     /**
-     * Save the configuration to the specified stream.
+     * Save the configuration to the specified stream, using the encoding
+     * returned by {@link #getEncoding()}.
      *
      * @param out
      *
@@ -245,5 +246,21 @@ public interface FileConfiguration extends Configuration
      * @since 1.1
      */
     void reload();
+
+    /**
+     * Return the encoding used to store the configuration file. If the value
+     * is null the default encoding is used.
+     *
+     * @since 1.1
+     */
+    String getEncoding();
+
+    /**
+     * Set the encoding used to store the configuration file. Set the encoding
+     * to null to use the default encoding.
+     *
+     * @since 1.1
+     */
+    void setEncoding(String encoding);
 
 }

@@ -8,6 +8,11 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add">
+        Added the setEncoding(String) and the getEncoding() methods to the
+        FileConfiguration interface to control the encoding of the
+        configuration file.
+      </action>
 	  <action dev="oheger" type="add" issue="31136">
 		Access to the top leven element of the XML document is now provided. For
 		newly created configurations this element can be changed before the

@@ -56,11 +56,10 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * file.</li></ul></p>
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.12 $, $Date: 2004/12/04 15:45:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/03 12:42:30 $
  * @since 1.0-rc2
  */
-public abstract class AbstractFileConfiguration extends BaseConfiguration implements
-        FileConfiguration
+public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
 {
     protected String fileName;
 
@@ -71,6 +70,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     protected ReloadingStrategy strategy;
 
     private Object reloadLock = new Object();
+
+    private String encoding;
 
     /**
      * Default constructor
@@ -240,8 +241,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Load the configuration from the specified stream, using the default
-     * platform specific encoding.
+     * Load the configuration from the specified stream, using the encoding
+     * returned by {@link #getEncoding()}.
      *
      * @param in the input stream
      *
@@ -249,7 +250,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void load(InputStream in) throws ConfigurationException
     {
-        load(in, null);
+        load(in, getEncoding());
     }
 
     /**
@@ -382,7 +383,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration to the specified stream.
+     * Save the configuration to the specified stream, using the encoding
+     * returned by {@link #getEncoding()}.
      *
      * @param out
      *
@@ -390,7 +392,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void save(OutputStream out) throws ConfigurationException
     {
-        save(out, null);
+        save(out, getEncoding());
     }
 
     /**
@@ -654,5 +656,15 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                 }
             }
         }
+    }
+
+    public String getEncoding()
+    {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding)
+    {
+        this.encoding = encoding;
     }
 }

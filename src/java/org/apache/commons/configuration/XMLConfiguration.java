@@ -63,7 +63,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * 
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
- * @version $Revision: 1.21 $, $Date: 2004/12/31 16:00:00 $
+ * @version $Revision: 1.22 $, $Date: 2005/01/03 12:42:30 $
  */
 public class XMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
@@ -502,6 +502,16 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     public void reload()
     {
         delegate.reload();
+    }
+
+    public String getEncoding()
+    {
+        return delegate.getEncoding();
+    }
+
+    public void setEncoding(String encoding)
+    {
+        delegate.setEncoding(encoding);
     }
 
     /**
