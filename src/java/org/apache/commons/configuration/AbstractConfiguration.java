@@ -37,7 +37,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.17 2004/07/05 09:54:17 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.18 2004/07/12 14:36:58 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -290,15 +290,8 @@ public abstract class AbstractConfiguration implements Configuration
         {
             public boolean evaluate(Object obj)
             {
-                boolean matching = false;
-
-                if (obj instanceof String)
-                {
-                    String key = (String) obj;
-                    matching = key.startsWith(prefix + ".") || key.equals(prefix);
-                }
-
-                return matching;
+                String key = (String) obj;
+                return key.startsWith(prefix + ".") || key.equals(prefix);
             }
         });
     }
