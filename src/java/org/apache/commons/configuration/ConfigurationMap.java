@@ -17,6 +17,9 @@
 package org.apache.commons.configuration;
 
 import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -79,4 +82,93 @@ public class ConfigurationMap
         return configuration.getProperty(String.valueOf(key));
     }
 
+    static class ConfigurationSet
+            extends AbstractSet
+    {
+        private Configuration configuration = null;
+
+        private class Entry
+                implements Map.Entry
+        {
+            private Object key = null;
+            
+            private Entry(Object key)
+            {
+                this.key = key;
+            }
+            
+            public Object getKey()
+            {
+                return key;
+            }
+            
+            public Object getValue()
+            {
+                return configuration.getProperty((String) key);
+            }
+
+            public Object setValue(Object value)
+            {
+                Object old = getValue();
+                configuration.setProperty((String) key, value);
+                return old;
+            }
+
+        }
+
+        private class ConfigurationSetIterator
+                implements Iterator
+        {
+            private Iterator keys;
+
+            private ConfigurationSetIterator()
+            {
+                keys = configuration.getKeys();
+            }
+
+            public boolean hasNext()
+            {
+                return keys.hasNext();
+            }
+
+            public Object next()
+            {
+                return new Entry(keys.next());
+            }
+
+            public void remove()
+            {
+                keys.remove();
+            }
+
+        }
+
+        ConfigurationSet(Configuration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        /**
+         * @see java.util.Collection#size()
+         */
+        public int size()
+        {
+            // Ouch. Now _that_ one is expensive...
+            int count = 0;
+            for (Iterator iterator = configuration.getKeys(); iterator.hasNext(); )
+            {
+                iterator.next();
+                count++;
+            }
+            return count;
+        }
+
+        /**
+         * @see java.util.Collection#iterator()
+         */
+        public Iterator iterator()
+        {
+            return new ConfigurationSetIterator();
+        }
+    }
 }

@@ -12,7 +12,7 @@ import junit.framework.TestSuite;
  */
 public class TestConfigurationSet extends TestCase {
 
-    ConfigurationSet set;
+    ConfigurationMap.ConfigurationSet set;
 
     String[] properties = {
             "booleanProperty",
@@ -51,7 +51,7 @@ public class TestConfigurationSet extends TestCase {
         BaseConfiguration configuration = new BaseConfiguration();
         for(int i = 0; i < properties.length ; i++)
             configuration.setProperty(properties[i], values[i]);
-        set = new ConfigurationSet(configuration);
+        set = new ConfigurationMap.ConfigurationSet(configuration);
     }
 
     /**
