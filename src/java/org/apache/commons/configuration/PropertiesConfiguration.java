@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.io.StringReader;
+import java.io.BufferedReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
@@ -128,7 +130,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.18 2005/01/03 11:58:46 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.19 2005/01/03 16:51:29 ebourg Exp $
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
@@ -140,6 +142,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** Allow file inclusion or not */
     private boolean includesAllowed = true;
+
+    /** Comment header of the .properties file */
+    private String header;
 
     /**
      * Creates an empty PropertyConfiguration object which can be
@@ -237,6 +242,26 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
+     * Return the comment header.
+     *
+     * @since 1.1
+     */
+    public String getHeader()
+    {
+        return header;
+    }
+
+    /**
+     * Set the comment header.
+     *
+     * @since 1.1
+     */
+    public void setHeader(String header)
+    {
+        this.header = header;
+    }
+
+    /**
      * Load the properties from the given input stream and using the specified
      * encoding.
      *
@@ -306,8 +331,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             PropertiesWriter out = new PropertiesWriter(writer, getDelimiter());
 
+            if (header != null)
+            {
+                BufferedReader reader = new BufferedReader(new StringReader(header));
+                String line;
+                while ((line = reader.readLine()) != null)
+                {
+                    out.writeComment(line);
+                }
+                out.write("\n");
+            }
+
             out.writeComment("written by PropertiesConfiguration");
             out.writeComment(new Date().toString());
+            out.write("\n");
 
             Iterator keys = getKeys();
             while (keys.hasNext())
@@ -387,8 +424,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
                 line = line.trim();
 
-                if (StringUtils.isEmpty(line)
-                        || (line.charAt(0) == '#'))
+                // skip comments and empty lines
+                if (StringUtils.isEmpty(line) || (line.charAt(0) == '#'))
                 {
                     continue;
                 }

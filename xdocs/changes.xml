@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="26092">
+        Added a comment header to PropertiesConfiguration. The header is not
+        parsed when the file is loaded yet.
+      </action>
       <action dev="ebourg" type="add">
         Added the setEncoding(String) and the getEncoding() methods to the
         FileConfiguration interface to control the encoding of the
