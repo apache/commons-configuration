@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Vector;
 
@@ -29,7 +30,7 @@ import org.apache.commons.collections.ExtendedProperties;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Revision: 1.6 $, $Date: 2004/06/24 12:35:15 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/12 16:06:01 $
  */
 public final class ConfigurationConverter
 {
@@ -144,4 +145,15 @@ public final class ConfigurationConverter
 
         return props;
     }
+
+    /**
+     * Convert a Configuration class into a Map class.
+     *
+     * @param config Configuration object to convert
+     * @return Map created from the Configuration
+     */
+    public static Map getMap(Configuration config) {
+        return new ConfigurationMap(config);
+    }
+
 }
