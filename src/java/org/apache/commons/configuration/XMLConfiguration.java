@@ -54,31 +54,31 @@ import org.xml.sax.SAXException;
 
 /**
  * Reads a XML configuration file.
- *
+ * 
  * To retrieve the value of an attribute of an element, use
- * <code>X.Y.Z[@attribute]</code>.  The '@' symbol was chosen for
- * consistency with XPath.
- *
- * Setting property values will <b>NOT</b> automatically persist
- * changes to disk, unless <code>autoSave=true</code>.
- *
+ * <code>X.Y.Z[@attribute]</code>. The '@' symbol was chosen for consistency
+ * with XPath.
+ * 
+ * Setting property values will <b>NOT </b> automatically persist changes to
+ * disk, unless <code>autoSave=true</code>.
+ * 
  * @since commons-configuration 1.0
- *
+ * 
  * @author Jörg Schaible
- * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
- * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
+ * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
+ * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.9 $, $Date: 2004/08/14 11:21:26 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/14 11:32:06 $
  */
-public class XMLConfiguration extends BasePathConfiguration
-{
+public class XMLConfiguration extends BasePathConfiguration {
     // For conformance with xpath
     private static final String ATTRIBUTE_START = "[@";
+
     private static final String ATTRIBUTE_END = "]";
 
     /**
-     * For consistency with properties files.  Access nodes via an
-     * "A.B.C" notation.
+     * For consistency with properties files. Access nodes via an "A.B.C"
+     * notation.
      */
     private static final String NODE_DELIMITER = ".";
 
@@ -98,19 +98,15 @@ public class XMLConfiguration extends BasePathConfiguration
     private boolean autoSave = false;
 
     /**
-     * Empty construtor.  You must provide a file/fileName
-     * to save the configuration.
+     * Empty construtor. You must provide a file/fileName to save the
+     * configuration.
      */
-    public XMLConfiguration()
-    {
+    public XMLConfiguration() {
         // build an empty document.
         DocumentBuilder builder = null;
-        try
-        {
+        try {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }
-        catch (ParserConfigurationException e)
-        {
+        } catch (ParserConfigurationException e) {
             throw new ConfigurationRuntimeException(e.getMessage(), e);
         }
 
@@ -119,66 +115,55 @@ public class XMLConfiguration extends BasePathConfiguration
     }
 
     /**
-     * Attempts to load the XML file as a resource from the
-     * classpath. The XML file must be located somewhere in the
-     * classpath.
-     *
-     * @param resource Name of the resource
-     * @throws ConfigurationException If error reading data source.
+     * Attempts to load the XML file as a resource from the classpath. The XML
+     * file must be located somewhere in the classpath.
+     * 
+     * @param resource
+     *            Name of the resource
+     * @throws ConfigurationException
+     *             If error reading data source.
      */
-    public XMLConfiguration(String resource) throws ConfigurationException
-    {
+    public XMLConfiguration(String resource) throws ConfigurationException {
         setFile(resourceURLToFile(resource));
         load();
     }
 
     /**
      * Attempts to load the XML file.
-     *
-     * @param file File object representing the XML file.
-     * @throws ConfigurationException If error reading data source.
+     * 
+     * @param file
+     *            File object representing the XML file.
+     * @throws ConfigurationException
+     *             If error reading data source.
      */
-    public XMLConfiguration(File file) throws ConfigurationException
-    {
+    public XMLConfiguration(File file) throws ConfigurationException {
         setFile(file);
         load();
     }
 
-    public void load() throws ConfigurationException
-    {
+    public void load() throws ConfigurationException {
         File file = null;
-        try
-        {
+        try {
             URL url = ConfigurationUtils.getURL(getBasePath(), getFileName());
             file = new File(url.getFile());
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             document = builder.parse(file);
-        }
-        catch (IOException de)
-        {
+        } catch (IOException de) {
             throw new ConfigurationException("Could not load from " + file.getAbsolutePath(), de);
-        }
-        catch (ParserConfigurationException ex)
-        {
+        } catch (ParserConfigurationException ex) {
             throw new ConfigurationException("Could not configure parser", ex);
-		}
-        catch (FactoryConfigurationError ex)
-        {
+        } catch (FactoryConfigurationError ex) {
             throw new ConfigurationException("Could not create parser", ex);
-        }
-        catch (SAXException ex)
-        {
+        } catch (SAXException ex) {
             throw new ConfigurationException("Error parsing file " + file.getAbsolutePath(), ex);
-		}
+        }
 
         initProperties(document.getDocumentElement(), new StringBuffer());
     }
 
-    private static File resourceURLToFile(String resource)
-    {
+    private static File resourceURLToFile(String resource) {
         URL confURL = XMLConfiguration.class.getClassLoader().getResource(resource);
-        if (confURL == null)
-        {
+        if (confURL == null) {
             confURL = ClassLoader.getSystemResource(resource);
         }
         return new File(confURL.getFile());
@@ -186,54 +171,49 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * Loads and initializes from the XML file.
-     *
-     * @param element The element to start processing from.  Callers
-     *                should supply the root element of the document.
+     * 
+     * @param element
+     *            The element to start processing from. Callers should supply
+     *            the root element of the document.
      * @param hierarchy
      */
-    private void initProperties(Element element, StringBuffer hierarchy)
-    {
+    private void initProperties(Element element, StringBuffer hierarchy) {
         StringBuffer buffer = new StringBuffer();
         NodeList list = element.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++)
-        {
+        for (int i = 0; i < list.getLength(); i++) {
             Node node = list.item(i);
-            if (node instanceof Element)
-            {
+            if (node instanceof Element) {
                 Element child = (Element) node;
 
                 StringBuffer subhierarchy = new StringBuffer(hierarchy.toString());
                 subhierarchy.append(child.getTagName());
                 processAttributes(subhierarchy.toString(), child);
                 initProperties(child, subhierarchy.append(NODE_DELIMITER));
-            }
-            else if (node instanceof CDATASection || node instanceof Text)
-            {
-                CharacterData data = (CharacterData)node;
+            } else if (node instanceof CDATASection || node instanceof Text) {
+                CharacterData data = (CharacterData) node;
                 buffer.append(data.getData());
             }
         }
 
         String text = buffer.toString().trim();
-        if (text.length() > 0 && hierarchy.length() > 0)
-        {
+        if (text.length() > 0 && hierarchy.length() > 0) {
             super.addProperty(hierarchy.substring(0, hierarchy.length() - 1), text);
         }
     }
 
     /**
-     * Helper method for constructing properties for the attributes of the
-     * given XML element.
-     *
-     * @param hierarchy the actual hierarchy
-     * @param element the actual XML element
+     * Helper method for constructing properties for the attributes of the given
+     * XML element.
+     * 
+     * @param hierarchy
+     *            the actual hierarchy
+     * @param element
+     *            the actual XML element
      */
-    private void processAttributes(String hierarchy, Element element)
-    {
+    private void processAttributes(String hierarchy, Element element) {
         // Add attributes as x.y{ATTRIBUTE_START}att{ATTRIBUTE_END}
         NamedNodeMap attributes = element.getAttributes();
-        for (int i = 0; i < attributes.getLength(); ++i)
-        {
+        for (int i = 0; i < attributes.getLength(); ++i) {
             Attr attr = (Attr) attributes.item(i);
             String attrName = hierarchy + ATTRIBUTE_START + attr.getName() + ATTRIBUTE_END;
             super.addProperty(attrName, attr.getValue());
@@ -241,21 +221,19 @@ public class XMLConfiguration extends BasePathConfiguration
     }
 
     /**
-     * Calls super method, and also ensures the underlying {@link
-     * Document} is modified so changes are persisted when saved.
-     *
+     * Calls super method, and also ensures the underlying {@linkDocument} is
+     * modified so changes are persisted when saved.
+     * 
      * @param name
      * @param value
      */
-    public void addProperty(String name, Object value)
-    {
+    public void addProperty(String name, Object value) {
         super.addProperty(name, value);
         addXmlProperty(name, value);
         possiblySave();
     }
 
-    public Object getXmlProperty(String name)
-    {
+    public Object getXmlProperty(String name) {
         // parse the key
         String[] nodes = parseElementNames(name);
         String attName = parseAttributeName(name);
@@ -264,34 +242,29 @@ public class XMLConfiguration extends BasePathConfiguration
         ArrayList children = findElementsForPropertyNodes(nodes);
 
         ArrayList properties = new ArrayList();
-        if (attName == null)
-        {
+        if (attName == null) {
             // return text contents of elements
             Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element)cIter.next();
+            while (cIter.hasNext()) {
+                Element child = (Element) cIter.next();
                 // add non-empty strings
                 String text = getChildText(child);
                 if (StringUtils.isNotEmpty(text)) {
                     properties.add(text);
                 }
             }
-        }
-        else
-        {
+        } else {
             // return text contents of attributes
             Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element)cIter.next();
+            while (cIter.hasNext()) {
+                Element child = (Element) cIter.next();
                 if (child.hasAttribute(attName)) {
                     properties.add(child.getAttribute(attName));
                 }
             }
         }
-        
-        switch(properties.size()) {
+
+        switch (properties.size()) {
         case 0:
             return null;
         case 1:
@@ -303,35 +276,30 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * TODO Add comment.
-     *
+     * 
      * @param nodes
      * @return
      */
     private ArrayList findElementsForPropertyNodes(String[] nodes) {
         ArrayList children = new ArrayList();
         ArrayList elements = new ArrayList();
-        
+
         children.add(document.getDocumentElement());
-        for (int i = 0; i < nodes.length; i++)
-        {
+        for (int i = 0; i < nodes.length; i++) {
             elements.clear();
             elements.addAll(children);
             children.clear();
-            
+
             String eName = nodes[i];
             Iterator eIter = elements.iterator();
-            while(eIter.hasNext())
-            {
-                Element element = (Element)eIter.next();
+            while (eIter.hasNext()) {
+                Element element = (Element) eIter.next();
                 NodeList list = element.getChildNodes();
-                for (int j = 0; j < list.getLength(); j++)
-                {
+                for (int j = 0; j < list.getLength(); j++) {
                     Node node = list.item(j);
-                    if (node instanceof Element)
-                    {
+                    if (node instanceof Element) {
                         Element child = (Element) node;
-                        if (eName.equals(child.getTagName()))
-                        {
+                        if (eName.equals(child.getTagName())) {
                             children.add(child);
                         }
                     }
@@ -355,8 +323,7 @@ public class XMLConfiguration extends BasePathConfiguration
             short type = child.getNodeType();
             if (type == Node.TEXT_NODE) {
                 str.append(child.getNodeValue());
-            }
-            else if (type == Node.CDATA_SECTION_NODE) {
+            } else if (type == Node.CDATA_SECTION_NODE) {
                 str.append(child.getNodeValue());
             }
             child = child.getNextSibling();
@@ -367,84 +334,79 @@ public class XMLConfiguration extends BasePathConfiguration
 
     } // getChildText(Node):String
 
-    
     /**
-     * Calls super method, and also ensures the underlying {@link
-     * Document} is modified so changes are persisted when saved.
-     *
+     * Calls super method, and also ensures the underlying {@linkDocument} is
+     * modified so changes are persisted when saved.
+     * 
      * @param name
      * @param value
      */
-    public void setProperty(String name, Object value)
-    {
+    public void setProperty(String name, Object value) {
         super.setProperty(name, value);
         setXmlProperty(name, value);
         possiblySave();
     }
 
     /**
-     * Sets the property value in our document tree, auto-saving if
-     * appropriate.
-     *
-     * @param name The name of the element to set a value for.
-     * @param value The value to set.
+     * Sets the property value in our document tree, auto-saving if appropriate.
+     * 
+     * @param name
+     *            The name of the element to set a value for.
+     * @param value
+     *            The value to set.
      */
-    private void setXmlProperty(String name, Object value)
-    {
+    private void setXmlProperty(String name, Object value) {
         // parse the key
         String[] nodes = parseElementNames(name);
         String attName = parseAttributeName(name);
 
         Element element = document.getDocumentElement();
-        for (int i = 0; i < nodes.length; i++)
-        {
+        for (int i = 0; i < nodes.length; i++) {
             String eName = nodes[i];
-
-            Element child = null;
-            NodeList list = element.getChildNodes();
-            for (int j = 0; j < list.getLength(); j++)
-            {
-                Node node = list.item(j);
-                if (node instanceof Element)
-                {
-                    child = (Element) node;
-                    if (eName.equals(child.getTagName()))
-                    {
-                        break;
-                    }
-                    child = null;
-                }
-            }
+            Element child = getChildElementWithName(eName, element);
             // If we don't find this part of the property in the XML hierarchy
             // we add it as a new node
-            if (child == null)
-            {
+            if (child == null) {
                 child = document.createElement(eName);
                 element.appendChild(child);
             }
             element = child;
         }
 
-        if (attName == null)
-        {
+        if (attName == null) {
             CharacterData data = document.createTextNode((String) value);
             element.appendChild(data);
-        }
-        else
-        {
+        } else {
             element.setAttribute(attName, (String) value);
         }
     }
 
+    private Element getChildElementWithName(String eName, Element element) {
+        Element child = null;
+
+        NodeList list = element.getChildNodes();
+        for (int j = 0; j < list.getLength(); j++) {
+            Node node = list.item(j);
+            if (node instanceof Element) {
+                child = (Element) node;
+                if (eName.equals(child.getTagName())) {
+                    break;
+                }
+                child = null;
+            }
+        }
+        return child;
+    }
+
     /**
-     * Adds the property value in our document tree, auto-saving if
-     * appropriate.
-     *
-     * @param name The name of the element to set a value for.
-     * @param value The value to set.
+     * Adds the property value in our document tree, auto-saving if appropriate.
+     * 
+     * @param name
+     *            The name of the element to set a value for.
+     * @param value
+     *            The value to set.
      */
-    private void addXmlProperty(String name, Object value)
-    {
+    private void addXmlProperty(String name, Object value) {
         // parse the key
         String[] nodes = parseElementNames(name);
         String attName = parseAttributeName(name);
@@ -452,59 +414,40 @@ public class XMLConfiguration extends BasePathConfiguration
         Element element = document.getDocumentElement();
         Element parent = element;
 
-        for (int i = 0; i < nodes.length; i++)
-        {
-            if(element == null) break;
+        for (int i = 0; i < nodes.length; i++) {
+            if (element == null)
+                break;
             parent = element;
             String eName = nodes[i];
-            Element child = null;
-
-            NodeList list = element.getChildNodes();
-            for (int j = 0; j < list.getLength(); j++)
-            {
-                Node node = list.item(j);
-                if (node instanceof Element)
-                {
-                    child = (Element) node;
-                    if (eName.equals(child.getTagName()))
-                    {
-                        break;
-                    }
-                    child = null;
-                }
-            }
+            Element child = getChildElementWithName(eName, element);
 
             element = child;
         }
 
-        Element child = document.createElement(nodes[nodes.length-1]);
+        Element child = document.createElement(nodes[nodes.length - 1]);
         parent.appendChild(child);
-        if (attName == null)
-        {
+        if (attName == null) {
             CharacterData data = document.createTextNode((String) value);
             child.appendChild(data);
-        }
-        else
-        {
+        } else {
             child.setAttribute(attName, (String) value);
         }
     }
 
     /**
-     * Calls super method, and also ensures the underlying {@link Document} is
+     * Calls super method, and also ensures the underlying {@link Document}is
      * modified so changes are persisted when saved.
-     *
-     * @param name The name of the property to clear.
+     * 
+     * @param name
+     *            The name of the property to clear.
      */
-    public void clearProperty(String name)
-    {
+    public void clearProperty(String name) {
         super.clearProperty(name);
         clearXmlProperty(name);
         possiblySave();
     }
 
-    private void clearXmlProperty(String name)
-    {
+    private void clearXmlProperty(String name) {
         // parse the key
         String[] nodes = parseElementNames(name);
         String attName = parseAttributeName(name);
@@ -512,75 +455,58 @@ public class XMLConfiguration extends BasePathConfiguration
         // get all the matching elements
         ArrayList children = findElementsForPropertyNodes(nodes);
 
-        if (attName == null)
-        {
+        if (attName == null) {
             // remove children with no subelements
             Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element)cIter.next();
-                
+            while (cIter.hasNext()) {
+                Element child = (Element) cIter.next();
+
                 // determine if child has subelments
                 boolean hasSubelements = false;
                 Node subchild = child.getFirstChild();
-                while(subchild != null)
-                {
-                    if (subchild.getNodeType() == Node.ELEMENT_NODE)
-                    {
+                while (subchild != null) {
+                    if (subchild.getNodeType() == Node.ELEMENT_NODE) {
                         hasSubelements = true;
                         break;
                     }
                     subchild = subchild.getNextSibling();
                 }
-                
-                if (!hasSubelements)
-                {
+
+                if (!hasSubelements) {
                     // safe to remove
-                    if (!child.hasAttributes())
-                    {
+                    if (!child.hasAttributes()) {
                         // remove entire node
                         Node parent = child.getParentNode();
                         parent.removeChild(child);
-                    }
-                    else
-                    {
+                    } else {
                         // only remove node contents
                         subchild = child.getLastChild();
-                        while(subchild != null)
-                        {
+                        while (subchild != null) {
                             child.removeChild(subchild);
                             subchild = child.getLastChild();
                         }
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             // remove attributes from children
             Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element)cIter.next();
+            while (cIter.hasNext()) {
+                Element child = (Element) cIter.next();
                 child.removeAttribute(attName);
             }
         }
     }
 
     /**
-     * Save the configuration if the automatic persistence is enabled and a
-     * file is specified.
+     * Save the configuration if the automatic persistence is enabled and a file
+     * is specified.
      */
-    private void possiblySave()
-    {
-        if (autoSave && fileName != null)
-        {
-            try
-            {
+    private void possiblySave() {
+        if (autoSave && fileName != null) {
+            try {
                 save();
-            }
-            catch (ConfigurationException ce)
-            {
+            } catch (ConfigurationException ce) {
                 throw new ConfigurationRuntimeException("Failed to auto-save", ce);
             }
         }
@@ -588,155 +514,132 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * If true, changes are automatically persisted.
-     *
+     * 
      * @param autoSave
      */
-    public void setAutoSave(boolean autoSave)
-    {
+    public void setAutoSave(boolean autoSave) {
         this.autoSave = autoSave;
     }
 
     /**
      * Save the configuration to the file specified by the fileName attribute.
-     *
+     * 
      * @throws ConfigurationException
      */
-    public void save() throws ConfigurationException
-    {
+    public void save() throws ConfigurationException {
         save(getFile().toString());
     }
 
     /**
      * Save the configuration to a file.
-     *
-     * @param filename the name of the xml file
-     *
+     * 
+     * @param filename
+     *            the name of the xml file
+     * 
      * @throws ConfigurationException
      */
-    public void save(String filename) throws ConfigurationException
-    {
+    public void save(String filename) throws ConfigurationException {
         FileWriter writer = null;
 
-        try
-        {
+        try {
             writer = new FileWriter(filename);
             save(writer);
-        }
-        catch (IOException ioe)
-        {
-        	throw new ConfigurationException("Could not save to " + getFile());
-        }
-        finally
-        {
-        	try
-            {
-                if (writer != null)
-                {
+        } catch (IOException ioe) {
+            throw new ConfigurationException("Could not save to " + getFile());
+        } finally {
+            try {
+                if (writer != null) {
                     writer.close();
                 }
-        	}
-        	catch (IOException ioe)
-            {
-        		throw new ConfigurationException(ioe);
-        	}
+            } catch (IOException ioe) {
+                throw new ConfigurationException(ioe);
+            }
         }
     }
 
     /**
      * Save the configuration to the specified stream.
-     *
-     * @param out the output stream used to save the configuration
+     * 
+     * @param out
+     *            the output stream used to save the configuration
      */
-    public void save(OutputStream out) throws ConfigurationException
-    {
+    public void save(OutputStream out) throws ConfigurationException {
         save(out, null);
     }
 
     /**
      * Save the configuration to the specified stream.
-     *
-     * @param out the output stream used to save the configuration
-     * @param encoding the charset used to write the configuration
+     * 
+     * @param out
+     *            the output stream used to save the configuration
+     * @param encoding
+     *            the charset used to write the configuration
      */
-    public void save(OutputStream out, String encoding) throws ConfigurationException
-    {
-        try
-        {
+    public void save(OutputStream out, String encoding) throws ConfigurationException {
+        try {
             OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
             save(writer);
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
 
     /**
      * Save the configuration to the specified stream.
-     *
-     * @param writer the output stream used to save the configuration
+     * 
+     * @param writer
+     *            the output stream used to save the configuration
      */
-    public void save(Writer writer) throws ConfigurationException
-    {
-        try
-        {
+    public void save(Writer writer) throws ConfigurationException {
+        try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             Source source = new DOMSource(document);
             Result result = new StreamResult(writer);
 
             transformer.setOutputProperty("indent", "yes");
             transformer.transform(source, result);
-        }
-        catch (TransformerException e)
-        {
+        } catch (TransformerException e) {
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
 
     /**
      * Returns the file.
-     *
+     * 
      * @return File
      */
-    public File getFile()
-    {
+    public File getFile() {
         return ConfigurationUtils.constructFile(getBasePath(), getFileName());
     }
 
     /**
      * Sets the file.
-     *
-     * @param file The file to set
+     * 
+     * @param file
+     *            The file to set
      */
-    public void setFile(File file)
-    {
+    public void setFile(File file) {
         this.fileName = file.getAbsolutePath();
     }
 
-    public void setFileName(String fileName)
-    {
+    public void setFileName(String fileName) {
         this.fileName = fileName;
     }
 
     /**
      * Returns the fileName.
-     *
+     * 
      * @return String
      */
-    public String getFileName()
-    {
+    public String getFileName() {
         return fileName;
     }
 
-    public String toString()
-    {
+    public String toString() {
         StringWriter writer = new StringWriter();
-        try
-        {
+        try {
             save(writer);
-        }
-        catch (ConfigurationException e)
-        {
+        } catch (ConfigurationException e) {
             e.printStackTrace();
         }
         return writer.toString();
@@ -745,24 +648,20 @@ public class XMLConfiguration extends BasePathConfiguration
     /**
      * Parse a property key and return an array of the element hierarchy it
      * specifies. For example the key "x.y.z[@abc]" will result in [x, y, z].
-     *
-     * @param key the key to parse
-     *
+     * 
+     * @param key
+     *            the key to parse
+     * 
      * @return the elements in the key
      */
-    protected static String[] parseElementNames(String key)
-    {
-        if (key == null)
-        {
+    protected static String[] parseElementNames(String key) {
+        if (key == null) {
             return new String[] {};
-        }
-        else
-        {
+        } else {
             // find the beginning of the attribute name
             int attStart = key.indexOf(ATTRIBUTE_START);
 
-            if (attStart > -1)
-            {
+            if (attStart > -1) {
                 // remove the attribute part of the key
                 key = key.substring(0, attStart);
             }
@@ -773,22 +672,20 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * Parse a property key and return the attribute name if it existst.
-     *
-     * @param key the key to parse
-     *
+     * 
+     * @param key
+     *            the key to parse
+     * 
      * @return the attribute name, or null if the key doesn't contain one
      */
-    protected static String parseAttributeName(String key)
-    {
+    protected static String parseAttributeName(String key) {
         String name = null;
 
-        if (key != null)
-        {
+        if (key != null) {
             // find the beginning of the attribute name
             int attStart = key.indexOf(ATTRIBUTE_START);
 
-            if (attStart > -1)
-            {
+            if (attStart > -1) {
                 // find the end of the attribute name
                 int attEnd = key.indexOf(ATTRIBUTE_END);
                 attEnd = attEnd > -1 ? attEnd : key.length();
