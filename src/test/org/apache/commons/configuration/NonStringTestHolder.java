@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,7 +14,11 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -24,11 +26,12 @@ import junit.framework.Assert;
  * Pulling out the calls to do the tests so both JUnit and Cactus tests 
  * can share.
  * 
- * @version $Id: NonStringTestHolder.java,v 1.5 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: NonStringTestHolder.java,v 1.6 2004/06/21 09:58:54 ebourg Exp $
  */
 public class NonStringTestHolder
 {
     private Configuration configuration;
+
     public void testBoolean() throws Exception
     {
         boolean booleanValue = configuration.getBoolean("test.boolean");
@@ -38,12 +41,10 @@ public class NonStringTestHolder
 
     public void testBooleanDefaultValue() throws Exception
     {
-        boolean booleanValue =
-            configuration.getBoolean("test.boolean.missing", true);
+        boolean booleanValue = configuration.getBoolean("test.boolean.missing", true);
         Assert.assertEquals(true, booleanValue);
 
-        Boolean booleanObject =
-            configuration.getBoolean("test.boolean.missing", new Boolean(true));
+        Boolean booleanObject = configuration.getBoolean("test.boolean.missing", new Boolean(true));
         Assert.assertEquals(new Boolean(true), booleanObject);
     }
 
@@ -66,8 +67,7 @@ public class NonStringTestHolder
     public void testDoubleDefaultValue() throws Exception
     {
         double testValue = 10.25;
-        double doubleValue =
-            configuration.getDouble("test.double.missing", 10.25);
+        double doubleValue = configuration.getDouble("test.double.missing", 10.25);
 
         Assert.assertEquals(testValue, doubleValue, 0.01);
     }
@@ -83,10 +83,8 @@ public class NonStringTestHolder
     public void testFloatDefaultValue() throws Exception
     {
         float testValue = (float) 20.25;
-        float floatValue =
-            configuration.getFloat("test.float.missing", testValue);
+        float floatValue = configuration.getFloat("test.float.missing", testValue);
         Assert.assertEquals(testValue, floatValue, 0.01);
-
     }
 
     public void testInteger() throws Exception
@@ -123,14 +121,14 @@ public class NonStringTestHolder
 
     public void testShortDefaultValue() throws Exception
     {
-        short shortValue =
-            configuration.getShort("test.short.missing", (short) 1);
+        short shortValue = configuration.getShort("test.short.missing", (short) 1);
         Assert.assertEquals(1, shortValue);
     }
 
     public void testListMissing() throws Exception
     {
-        Assert.assertEquals(0, configuration.getList("missing.list").size());
+        List list = configuration.getList("missing.list");
+        Assert.assertTrue("'missing.list' is not empty", list.isEmpty());
     }
 
     public void testSubset() throws Exception
