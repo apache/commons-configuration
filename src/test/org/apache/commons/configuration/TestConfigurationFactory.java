@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.14 2004/08/20 15:49:27 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.15 2004/09/21 17:18:27 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -59,7 +59,7 @@ public class TestConfigurationFactory extends TestCase
         factory = new ConfigurationFactory();
     }
 
-    public void testJNDI()
+    public void testJNDI() throws Exception
     {
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
         Object o = jndiConfiguration.getProperty("test.boolean");

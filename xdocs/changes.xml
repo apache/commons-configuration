@@ -7,15 +7,24 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="ebourg" type="fix" issue="31345">
+        Changing the prefix of a JNDIConfiguration will now reset the base context used.
+      </action>
+      <action dev="ebourg" type="add" due-to="Eric Jung">
+        The context used by JNDIConfiguration can be specified in its
+        constructor or through the setContext() method. The context can be
+        accessed with the getContext() method which is now public.
+      </action>
       <action dev="henning" type="add">
-        Make the behaviour on missing properties for the get methods that return objects
-        configurable. A property <code>throwExceptionOnMissing</code> can be set and then
-        the getters throw an <code>NoSuchElementException</code>. The old default behaviour
-        of returning a <code>null</code> value has been restored.
+        Make the behaviour on missing properties for the get methods that
+        return objects configurable. A property <code>throwExceptionOnMissing</code>
+        can be set and then the getters throw an <code>NoSuchElementException</code>.
+        The old default behaviour of returning a <code>null</code> value has
+        been restored.
       </action>         
       <action dev="epugh" type="add" issue="29714">
-        Allow configurations extending AbstractConfiguration to change the delimiter
-        used from "," to something else.
+        Allow configurations extending AbstractConfiguration to change the
+        delimiter used from "," to something else.
       </action>         
       <action dev="epugh" type="fix">
         PropertiesConfiguration.save() method has issues with preserving the filename
@@ -24,8 +33,8 @@
         Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes
       </action>         
       <action dev="epugh" type="fix" issue="30545" due-to="Ricardo Gladwell">
-        Clarify for ConfigurationDynaBean that the get method should throw an illegalArgumentException
-        if there is no property specified.
+        Clarify for ConfigurationDynaBean that the get method should throw an
+        illegalArgumentException if there is no property specified.
       </action>        
       <action dev="ebourg" type="fix" issue="30839">
         Fixed a ClassCastException when adding a non String property to an XMLConfiguration.
@@ -44,6 +53,7 @@
         deprecated. These methods will be removed for 1.1.
       </action>
     </release>
+
     <release version="1.0-rc1" date="2004-08-14">
       <action dev="epugh" type="add" issue="30597" due-to="Oliver Heger">
         HierarchicalConfigurationXMLReader stores comments as text nodes

@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.17 2004/07/08 15:34:20 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.18 2004/09/21 17:18:27 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -52,11 +52,62 @@ public class JNDIConfiguration extends AbstractConfiguration
     /** The prefix of the context. */
     private String prefix;
 
-    /** The JNDI context. */
+    /** The initial JNDI context. */
     private Context context;
+
+    /** The base JNDI context. */
+    private Context baseContext;
 
     /** The Set of keys that have been virtually cleared. */
     private Set clearedProperties = new HashSet();
+
+    /**
+     * Creates a JNDIConfiguration using the default initial context as the
+     * root of the properties.
+     *
+     * @throws NamingException thrown if an error occurs when initializing the default context
+     */
+    public JNDIConfiguration() throws NamingException
+    {
+        this((String) null);
+    }
+
+    /**
+     * Creates a JNDIConfiguration using the default initial context, shifted
+     * with the specified prefix, as the root of the properties.
+     *
+     * @param prefix
+     *
+     * @throws NamingException thrown if an error occurs when initializing the default context
+     */
+    public JNDIConfiguration(String prefix) throws NamingException
+    {
+        this(new InitialContext(), prefix);
+    }
+
+    /**
+     * Creates a JNDIConfiguration using the specified initial context as the
+     * root of the properties.
+     *
+     * @param context the initial context
+     */
+    public JNDIConfiguration(Context context)
+    {
+        this(context, null);
+    }
+
+    /**
+     * Creates a JNDIConfiguration using the specified initial context shifted
+     * by the specified prefix as the root of the properties.
+     *
+     * @param context the initial context
+     * @param prefix
+     */
+    public JNDIConfiguration(Context context, String prefix)
+    {
+        this.context = context;
+        this.prefix = prefix;
+    }
 
     /**
      * JNDIConfigurations can not be added to.
@@ -138,7 +189,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         try
         {
             // find the context matching the specified path
-            Context context = getContext(path, getContext());
+            Context context = getContext(path, getBaseContext());
 
             // return all the keys under the context found
             Set keys = new HashSet();
@@ -217,7 +268,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         try
         {
-            NamingEnumeration enumeration = getContext().list("");
+            NamingEnumeration enumeration = getBaseContext().list("");
             return !enumeration.hasMore();
         }
         catch (NamingException ne)
@@ -264,7 +315,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         try
         {
             // throws a NamingException if JNDI doesn't contain the key.
-            getContext().lookup(key);
+            getBaseContext().lookup(key);
             return true;
         }
         catch (NamingException ne)
@@ -289,6 +340,9 @@ public class JNDIConfiguration extends AbstractConfiguration
     public void setPrefix(String prefix)
     {
         this.prefix = prefix;
+
+        // clear the previous baseContext
+        baseContext = null;
     }
 
     /**
@@ -304,7 +358,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         try
         {
             key = StringUtils.replace(key, ".", "/");
-            return getContext().lookup(key);
+            return getBaseContext().lookup(key);
         }
         catch (NameNotFoundException e)
         {
@@ -329,13 +383,37 @@ public class JNDIConfiguration extends AbstractConfiguration
         throw new UnsupportedOperationException("This operation is not supported");
     }
 
-    private Context getContext() throws NamingException
+    /**
+     * Return the base context with the prefix applied.
+     */
+    public Context getBaseContext() throws NamingException
     {
-        if (context == null)
+        if (baseContext == null)
         {
-            Context initCtx = new InitialContext();
-            context = (Context) initCtx.lookup(prefix == null ? "" : prefix);
+            baseContext = (Context) getContext().lookup(prefix == null ? "" : prefix);
         }
+
+        return baseContext;
+    }
+
+    /**
+     * Return the initial context used by this configuration. This context is
+     * independent of the prefix specified.
+     */
+    public Context getContext()
+    {
         return context;
+    }
+
+    /**
+     * Set the initial context of the configuration.
+     */
+    public void setContext(Context context)
+    {
+        // forget the removed properties
+        clearedProperties.clear();
+
+        // change the context
+        this.context = context;
     }
 }

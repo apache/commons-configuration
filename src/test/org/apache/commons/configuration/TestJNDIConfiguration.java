@@ -18,6 +18,8 @@ package org.apache.commons.configuration;
 
 import junit.framework.TestCase;
 
+import javax.naming.InitialContext;
+
 /**
  * Test to see if the JNDIConfiguration works properly.  Currently excluded
  * in the project.xml unitTest section as our JNDI provider doesn't
@@ -25,7 +27,7 @@ import junit.framework.TestCase;
  *
  * This does work fine with Tomcat's JNDI provider however.
  *
- * @version $Id: TestJNDIConfiguration.java,v 1.8 2004/07/08 15:29:50 ebourg Exp $
+ * @version $Id: TestJNDIConfiguration.java,v 1.9 2004/09/21 17:18:27 ebourg Exp $
  */
 public class TestJNDIConfiguration extends TestCase {
 
@@ -118,6 +120,45 @@ public class TestJNDIConfiguration extends TestCase {
 
         conf.clearProperty(key);
         assertFalse("'" + key + "' still found", conf.containsKey(key));
+    }
+
+    public void testChangePrefix()
+    {
+        assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
+        assertEquals("'boolean' property", null, conf.getString("boolean"));
+
+        // change the prefix
+        conf.setPrefix("test");
+        assertEquals("'test.boolean' property", null, conf.getString("test.boolean"));
+        assertEquals("'boolean' property", "true", conf.getString("boolean"));
+    }
+
+    public void testResetRemovedProperties() throws Exception
+    {
+        assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
+
+        // remove the property
+        conf.clearProperty("test.boolean");
+        assertEquals("'test.boolean' property", null, conf.getString("test.boolean"));
+
+        // change the context
+        conf.setContext(new InitialContext());
+
+        // get the property
+        assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
+    }
+
+    public void testConstructor() throws Exception
+    {
+        // test the constructor accepting a context
+        conf = new JNDIConfiguration(new InitialContext());
+
+        assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
+
+        // test the constructor accepting a context and a prefix
+        conf = new JNDIConfiguration(new InitialContext(), "test");
+
+        assertEquals("'boolean' property", "true", conf.getString("boolean"));
     }
 
 }
