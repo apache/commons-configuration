@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2004 The Apache Software Foundation.
  *
@@ -16,10 +14,11 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.naming.ConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -37,15 +36,15 @@ import org.w3c.dom.NodeList;
  * contained properties can be accessed using all methods supported by
  * the base class <code>HierarchicalConfiguration</code>.
  * This class is a direct adaption of the
- * <code>HierarchicalDOM4JConfiguration</code>. 
+ * <code>HierarchicalDOM4JConfiguration</code>.
+ *
+ * @since commons-configuration 1.0
+ *
  * @author J&ouml;rg Schaible
- * @since commons-configuragtion 1.0
+ * @version $Revision: 1.2 $, $Date: 2004/06/21 18:44:30 $
  */
-public class HierarchicalDOMConfiguration
-        extends HierarchicalConfiguration
-        implements BasePathLoader 
+public class HierarchicalDOMConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
-
     /** Stores the file name of the document to be parsed.*/
     private String file;
 
@@ -74,7 +73,7 @@ public class HierarchicalDOMConfiguration
      * Sets the name of the file to be parsed by this object.
      * @param file the file to be parsed
      */
-    public void setFileName(final String file)
+    public void setFileName(String file)
     {
         this.file = file;
     }
@@ -93,7 +92,7 @@ public class HierarchicalDOMConfiguration
      * this path.
      * @param path the base path; this can be a URL or a file path
      */
-    public void setBasePath(final String path)
+    public void setBasePath(String path)
     {
         basePath = path;
     }
@@ -109,7 +108,8 @@ public class HierarchicalDOMConfiguration
         {
             load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
         }
-        catch (MalformedURLException mue) {
+        catch (MalformedURLException mue)
+        {
             throw new ConfigurationException(
                     "Could not load from " + getBasePath() + 
                     ", " + getFileName());
@@ -119,6 +119,7 @@ public class HierarchicalDOMConfiguration
     /**
      * Loads and parses the specified XML document.
      * @param url the URL to the XML document
+     *
      * @throws ConfigurationException Thrown if an error occurs
      */
     public void load(URL url) throws ConfigurationException
@@ -129,7 +130,7 @@ public class HierarchicalDOMConfiguration
                 DocumentBuilderFactory.newInstance().newDocumentBuilder();
             initProperties(builder.parse(url.toExternalForm()));
         }
-        catch (Exception de)
+        catch (Exception e)
         {
             throw new ConfigurationException("Could not load from " + url);
         }
@@ -137,9 +138,10 @@ public class HierarchicalDOMConfiguration
 
     /**
      * Initializes this configuration from an XML document.
+     *
      * @param document the document to be parsed
      */
-    public void initProperties(final Document document)
+    public void initProperties(Document document)
     {
         constructHierarchy(getRoot(), document.getDocumentElement());
     }
@@ -147,30 +149,32 @@ public class HierarchicalDOMConfiguration
     /**
      * Helper method for building the internal storage hierarchy. The XML
      * elements are transformed into node objects.
+     *
      * @param node the actual node
      * @param element the actual XML element
      */
-    private void constructHierarchy(final Node node, final Element element)
+    private void constructHierarchy(Node node, Element element)
     {
-        final StringBuffer buffer = new StringBuffer();
-        final NodeList list = element.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            final org.w3c.dom.Node w3cNode = list.item(i);
+        StringBuffer buffer = new StringBuffer();
+        NodeList list = element.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++)
+        {
+            org.w3c.dom.Node w3cNode = list.item(i);
             if (w3cNode instanceof Element)
             {
-                final Element child = (Element) w3cNode;
-                final Node childNode = new Node(child.getTagName());
+                Element child = (Element) w3cNode;
+                Node childNode = new Node(child.getTagName());
                 constructHierarchy(childNode, child);
                 node.addChild(childNode);
                 processAttributes(childNode, child);
             } 
             else if (w3cNode instanceof CharacterData)
             {
-                final CharacterData data = (CharacterData) w3cNode;
+                CharacterData data = (CharacterData) w3cNode;
                 buffer.append(data.getData());
             }
         }
-        final String text = buffer.toString().trim();
+        String text = buffer.toString().trim();
         if (text.length() > 0)
         {
             node.setValue(text);
@@ -180,19 +184,20 @@ public class HierarchicalDOMConfiguration
     /**
      * Helper method for constructing node objects for the attributes of the
      * given XML element.
+     *
      * @param node the actual node
      * @param element the actual XML element
      */
-    private void processAttributes(final Node node, final Element element) 
+    private void processAttributes(Node node, Element element)
     {
-        final NamedNodeMap attributes = element.getAttributes();
+        NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i) 
         {
-            final org.w3c.dom.Node w3cNode = attributes.item(i);
+            org.w3c.dom.Node w3cNode = attributes.item(i);
             if (w3cNode instanceof Attr) 
             {
-                final Attr attr = (Attr) w3cNode;
-                final Node child =
+                Attr attr = (Attr) w3cNode;
+                Node child =
                     new Node(
                         ConfigurationKey.constructAttributeKey(attr.getName()));
                 child.setValue(attr.getValue());
