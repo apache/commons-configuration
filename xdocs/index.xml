@@ -41,6 +41,9 @@
 		configuration objects.  This customization can be achieved by
 		extending <code>AbstractConfiguration</code>.
       </p>
+	  <p>
+		The full Configuration API is available <a href="apidocs/org/apache/commons/configuration/Configuration.html#method_summary">here</a>.
+	  </p>
     </section>  	
     <section name="History">
       <p>

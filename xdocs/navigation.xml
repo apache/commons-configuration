@@ -14,6 +14,8 @@
 
 	<menu name="Configuration">
       <item name="Home"                         href="/index.html"/>
+	  <item name="API"                          href="/apidocs/org/apache/commons/configuration/Configuration.html#method_summary"/>
+	  
       <item name="Overview"                     href="/overview.html"/>
       <item name="Simple Howto"                 href="/howto_properties.html"/>
       <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
