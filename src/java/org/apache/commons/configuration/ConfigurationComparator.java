@@ -20,9 +20,9 @@ package org.apache.commons.configuration;
  * Comparator for configurations interface.
  *
  * @since 1.0
- * 
+ *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
- * @version $Revision: 1.3 $, $Date: 2004/06/22 09:56:38 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/24 12:35:15 $
  */
 public interface ConfigurationComparator
 {

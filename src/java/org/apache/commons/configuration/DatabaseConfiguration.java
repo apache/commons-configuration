@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.5 $, $Date: 2004/06/23 11:15:45 $
+ * @version $Revision: 1.6 $, $Date: 2004/06/24 12:35:15 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -352,6 +352,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Close a <code>Connection</code> and, <code>Statement</code>.
      * Avoid closing if null and hide any SQLExceptions that occur.
+     *
+     * @param conn The database connection to close
+     * @param stmt The statement to close
      */
     private void closeQuietly(Connection conn, Statement stmt)
     {

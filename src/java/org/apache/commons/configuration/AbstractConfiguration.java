@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -35,7 +35,9 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.14 2004/06/22 09:35:54 ebourg Exp $
+ * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: AbstractConfiguration.java,v 1.15 2004/06/24 12:35:14 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -209,7 +211,8 @@ public abstract class AbstractConfiguration implements Configuration
                 // prop.name=${some.other.prop1}/blahblah/${some.other.prop2}
                 priorVariables.remove(priorVariables.size() - 1);
             }
-            else {
+            else
+            {
                 //variable not defined - so put it back in the value
                 result.append(START_TOKEN).append(variable).append(END_TOKEN);
             }
@@ -324,13 +327,16 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return An Iterator of keys that match the prefix.
      */
-    public Iterator getKeys(final String prefix) {
-
-        return new FilterIterator(getKeys(), new Predicate() {
-            public boolean evaluate(Object obj) {
+    public Iterator getKeys(final String prefix)
+    {
+        return new FilterIterator(getKeys(), new Predicate()
+        {
+            public boolean evaluate(Object obj)
+            {
                 boolean matching = false;
 
-                if (obj instanceof String) {
+                if (obj instanceof String)
+                {
                     String key = (String) obj;
                     matching = key.startsWith(prefix + ".") || key.equals(prefix);
                 }
@@ -1028,7 +1034,8 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
-    public BigDecimal getBigDecimal(String key) throws NoSuchElementException {
+    public BigDecimal getBigDecimal(String key)
+    {
         BigDecimal number = getBigDecimal(key, null);
         if (number != null)
         {
@@ -1041,7 +1048,8 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
-    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
+    {
         Object value = resolveContainerStore(key);
 
         if (value instanceof BigDecimal)
@@ -1070,7 +1078,8 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
-    public BigInteger getBigInteger(String key) throws NoSuchElementException {
+    public BigInteger getBigInteger(String key)
+    {
         BigInteger number = getBigInteger(key, null);
         if (number != null)
         {
@@ -1083,7 +1092,8 @@ public abstract class AbstractConfiguration implements Configuration
         }
     }
 
-    public BigInteger getBigInteger(String key, BigInteger defaultValue) {
+    public BigInteger getBigInteger(String key, BigInteger defaultValue)
+    {
         Object value = resolveContainerStore(key);
 
         if (value instanceof BigInteger)

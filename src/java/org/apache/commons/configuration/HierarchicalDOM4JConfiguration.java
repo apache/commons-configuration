@@ -29,12 +29,13 @@ import org.dom4j.io.SAXReader;
 /**
  * <p>A specialized hierarchical configuration class that is able to parse
  * XML documents using DOM4J.</p>
+ * 
  * <p>The parsed document will be stored keeping its structure. The
  * contained properties can be accessed using all methods supported by
  * the base class <code>HierarchicalProperties</code>.
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.7 2004/06/23 11:15:45 ebourg Exp $
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.8 2004/06/24 12:35:15 ebourg Exp $
  */
 public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
@@ -151,7 +152,7 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
         if (element.getTextTrim().length() > 0)
         {
             node.setValue(element.getTextTrim());
-        } /* if */
+        }
         processAttributes(node, element);
 
         for (Iterator it = element.elementIterator(); it.hasNext();)
@@ -160,7 +161,7 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
             Node childNode = new Node(child.getName());
             constructHierarchy(childNode, child);
             node.addChild(childNode);
-        } /* for */
+        }
     }
 
     /**
@@ -180,6 +181,6 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
                     ConfigurationKey.constructAttributeKey(attr.getName()));
             child.setValue(attr.getValue());
             node.addChild(child);
-        } /* for */
+        }
     }
 }

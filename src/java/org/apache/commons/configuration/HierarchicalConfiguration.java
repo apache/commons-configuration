@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -88,7 +88,8 @@ import org.apache.commons.lang.StringUtils;
  * allowed index that can be added to a given property key. This method can be
  * used to iterate over all values defined for a certain property.</p>
  *
- * @version $Id: HierarchicalConfiguration.java,v 1.7 2004/06/02 17:04:51 ebourg Exp $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: HierarchicalConfiguration.java,v 1.8 2004/06/24 12:35:15 ebourg Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -108,6 +109,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
     /**
      * Returns the root node of this hierarchical configuration.
+     *
      * @return the root node
      */
     public Node getRoot()
@@ -117,6 +119,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
     /**
      * Sets the root node of this hierarchical configuration.
+     *
      * @param node the root node
      */
     public void setRoot(Node node)
@@ -124,13 +127,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         if (node == null)
         {
             throw new IllegalArgumentException("Root node must not be null!");
-        } /* if */
+        }
         root = node;
     }
 
     /**
      * Fetches the specified property. Performs a recursive lookup in the
      * tree with the configuration properties.
+     *
      * @param key the key to be looked up
      * @return the found value
      */
@@ -141,7 +145,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         if (nodes.size() == 0)
         {
             return null;
-        } /* if */
+        }
         else
         {
             Container cont = new Container();
@@ -151,18 +155,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 if (nd.getValue() != null)
                 {
                     cont.add(nd.getValue());
-                } /* if */
-            } /* for */
+                }
+            }
 
             if (cont.size() < 1)
             {
                 return null;
-            } /* if */
+            }
             else
             {
                 return (cont.size() == 1) ? cont.get(0) : cont;
-            } /* else */
-        } /* else */
+            }
+        }
     }
 
     /**
@@ -224,6 +228,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * <p>(Note that because after the <code>table</code> element a new
      * branch is created indices in following elements are not relevant; the
      * branch is new so there cannot be any ambiguities.)</p>
+     *
      * @param key the key of the new property
      * @param obj the value of the new property
      */
@@ -244,6 +249,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * collection of nodes can be added - and thus complete configuration
      * sub trees. E.g. with this method it is possible to add parts of
      * another <code>HierarchicalConfiguration</code> object to this object.
+     *
      * @param key the key where the nodes are to be added; can be <b>null</b>,
      * then they are added to the root node
      * @param nodes a collection with the <code>Node</code> objects to be
@@ -254,13 +260,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         if (nodes == null || nodes.isEmpty())
         {
             return;
-        } /* if */
+        }
 
         Node parent;
         if (StringUtils.isEmpty(key))
         {
             parent = getRoot();
-        } /* if */
+        }
         else
         {
             ConfigurationKey.KeyIterator kit =
@@ -273,24 +279,25 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 new ConfigurationKey(kit.currentKey(true));
             keyNew.append(NEW_KEY);
             parent = fetchAddNode(keyNew.iterator(), parent);
-        } /* else */
+        }
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             parent.addChild((Node) it.next());
-        } /* for */
+        }
     }
 
     /**
      * Checks if this configuration is empty. Empty means that there are
      * no keys with any values, though there can be some (empty) nodes.
+     *
      * @return a flag if this configuration is empty
      */
     public boolean isEmpty()
     {
         return !nodeDefined(getRoot());
     }
-    
+
     /**
      * Creates a new <code>Configuration</code> object containing all keys
      * that start with the specified prefix. This implementation will return
@@ -305,7 +312,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         if (nodes.isEmpty())
         {
             return new HierarchicalConfiguration();
-        } /* if */
+        }
 
         HierarchicalConfiguration result = new HierarchicalConfiguration();
         CloneVisitor visitor = new CloneVisitor();
@@ -321,19 +328,20 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 for (int i = 0; i < children.size(); i++)
                 {
                     result.getRoot().addChild((Node) children.get(i));
-                } /* for */
-            } /* if */           
-        } /* for */
+                }
+            }
+        }
 
         return (result.isEmpty()) ? new HierarchicalConfiguration() : result;
     }
-    
+
     /**
      * Checks if the specified key is contained in this configuration.
      * Note that for this configuration the term &quot;contained&quot; means
      * that the key has an associated value. If there is a node for this key
      * that has no value but children (either defined or undefined), this
      * method will still return <b>false</b>.
+     *
      * @param key the key to be chekced
      * @return a flag if this key is contained in this configuration
      */
@@ -344,6 +352,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
     /**
      * Removes all values of the property with the given name.
+     *
      * @param key the key of the property to be removed
      */
     public void clearProperty(String key)
@@ -353,13 +362,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             removeNode((Node) it.next());
-        } /* for */
+        }
     }
 
     /**
      * <p>Returns an iterator with all keys defined in this configuration.</p>
      * <p>Note that the keys returned by this method will not contain
      * any indices. This means that some structure will be lost.</p>
+     *
      * @return an iterator with the defined keys in this configuration
      */
     public Iterator getKeys()
@@ -374,6 +384,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * useful if there are multiple values for this key. They can then be
      * addressed separately by specifying indices from 0 to the return value
      * of this method.
+     *
      * @param key the key to be checked
      * @return the maximum defined index for this key
      */
@@ -385,6 +396,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     /**
      * Helper method for fetching a list of all nodes that are addressed by
      * the specified key.
+     *
      * @param key the key
      * @return a list with all affected nodes (never <b>null</b>)
      */
@@ -402,6 +414,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * Recursive helper method for fetching a property. This method
      * processes all facets of a configuration key, traverses the tree of
      * properties and fetches the the nodes of all matching properties.
+     *
      * @param keyPart the configuration key iterator
      * @param node the actual node
      * @param data here the found nodes are stored
@@ -414,8 +427,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         if (!keyPart.hasNext())
         {
             data.add(node);
-        } /* if */
-
+        }
         else
         {
             String key = keyPart.nextKey(true);
@@ -429,9 +441,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                         (ConfigurationKey.KeyIterator) keyPart.clone(),
                         (Node) children.get(keyPart.getIndex()),
                         data);
-                } /* if */
-            } /* if */
-
+                }
+            }
             else
             {
                 for (Iterator it = children.iterator(); it.hasNext();)
@@ -440,13 +451,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                         (ConfigurationKey.KeyIterator) keyPart.clone(),
                         (Node) it.next(),
                         data);
-                } /* for */
-            } /* else */
+                }
+            }
         }
     }
 
     /**
      * Checks if the specified node is defined.
+     *
      * @param node the node to be checked
      * @return a flag if this node is defined
      */
@@ -461,6 +473,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * Removes the specified node from this configuration. This method
      * ensures that parent nodes that become undefined by this operation
      * are also removed.
+     *
      * @param node the node to be removed
      */
     protected void removeNode(Node node)
@@ -472,8 +485,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (!nodeDefined(parent))
             {
                 removeNode(parent);
-            } /* if */
-        } /* if */
+            }
+        }
     }
 
     /**
@@ -481,18 +494,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * Nodes for new properties can be added as children of this node.
      * If the path for the specified key does not exist so far, it is created
      * now.
+     *
      * @param keyIt the iterator for the key of the new property
      * @param startNode the node to start the search with
      * @return the parent node for the add operation
      */
-    protected Node fetchAddNode(
-        ConfigurationKey.KeyIterator keyIt,
-        Node startNode)
+    protected Node fetchAddNode(ConfigurationKey.KeyIterator keyIt, Node startNode)
     {
         if (!keyIt.hasNext())
         {
             throw new IllegalArgumentException("Key must be defined!");
-        } /* if */
+        }
 
         return createAddPath(keyIt, findLastPathNode(keyIt, startNode));
     }
@@ -501,13 +513,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * Finds the last existing node for an add operation. This method
      * traverses the configuration tree along the specified key. The last
      * existing node on this path is returned.
+     *
      * @param keyIt the key iterator
      * @param node the actual node
      * @return the last existing node on the given path
      */
-    protected Node findLastPathNode(
-        ConfigurationKey.KeyIterator keyIt,
-        Node node)
+    protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
     {
         String keyPart = keyIt.nextKey(true);
 
@@ -518,23 +529,24 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (idx < 0 || idx >= c.size())
             {
                 return node;
-            } /* if */
+            }
             else
             {
                 return findLastPathNode(keyIt, (Node) c.get(idx));
-            } /* else */
-        } /* if */
+            }
+        }
 
         else
         {
             return node;
-        } /* else */
+        }
     }
 
     /**
      * Creates the missing nodes for adding a new property. This method
      * ensures that there are corresponding nodes for all components of the
      * specified configuration key.
+     *
      * @param keyIt the key iterator
      * @param root the base node of the path to be created
      * @return the last node of the path
@@ -547,16 +559,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             root.addChild(child);
             keyIt.next();
             return createAddPath(keyIt, child);
-        } /* if */
+        }
         else
         {
             return root;
-        } /* else */
+        }
     }
 
     /**
-     * Helper method for adding all elements of a collection to a
-     * container.
+     * Helper method for adding all elements of a collection to a container.
+     *
      * @param cont the container
      * @param items the collection to be added
      */
@@ -565,7 +577,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         for (Iterator it = items.iterator(); it.hasNext();)
         {
             cont.add(it.next());
-        } /* for */
+        }
     }
 
     /**
@@ -597,6 +609,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Creates a new instance of <code>Node</code> and sets the name.
+         *
          * @param name the node's name
          */
         public Node(String name)
@@ -606,6 +619,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns the name of this node.
+         *
          * @return the node name
          */
         public String getName()
@@ -615,6 +629,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns the value of this node.
+         *
          * @return the node value (may be <b>null</b>)
          */
         public Object getValue()
@@ -624,6 +639,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns the parent of this node.
+         *
          * @return this node's parent (can be <b>null</b>)
          */
         public Node getParent()
@@ -633,6 +649,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Sets the name of this node.
+         *
          * @param string the node name
          */
         public void setName(String string)
@@ -642,6 +659,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Sets the value of this node.
+         *
          * @param object the node value
          */
         public void setValue(Object object)
@@ -651,6 +669,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Sets the parent of this node.
+         *
          * @param node the parent node
          */
         public void setParent(Node node)
@@ -661,6 +680,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         /**
          * Adds the specified child object to this node. Note that there can
          * be multiple children with the same name.
+         *
          * @param child the child to be added
          */
         public void addChild(Node child)
@@ -668,14 +688,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (children == null)
             {
                 children = new LinkedMap();
-            } /* if */
+            }
 
             List c = (List) children.get(child.getName());
             if (c == null)
             {
                 c = new ArrayList();
                 children.put(child.getName(), c);
-            } /* if */
+            }
 
             c.add(child);
             child.setParent(this);
@@ -683,6 +703,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns a list with the child nodes of this node.
+         *
          * @return a list with the children (can be empty, but never
          * <b>null</b>)
          */
@@ -695,14 +716,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 for (Iterator it = children.values().iterator(); it.hasNext();)
                 {
                     addContainer(result, (Collection) it.next());
-                } /* for */
-            } /* if */
+                }
+            }
 
             return result;
         }
 
         /**
          * Returns a list with this node's children with the given name.
+         *
          * @param name the name of the children
          * @return a list with all chidren with this name; may be empty, but
          * never <b>null</b>
@@ -712,20 +734,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (name == null || children == null)
             {
                 return getChildren();
-            } /* if */
+            }
 
             Container cont = new Container();
             List c = (List) children.get(name);
             if (c != null)
             {
                 addContainer(cont, c);
-            } /* if */
+            }
 
             return cont;
         }
 
         /**
          * Removes the specified child from this node.
+         *
          * @param child the child node to be removed
          * @return a flag if the child could be found
          */
@@ -734,13 +757,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (children == null)
             {
                 return false;
-            } /* if */
+            }
 
             List c = (List) children.get(child.getName());
             if (c == null)
             {
                 return false;
-            } /* if */
+            }
 
             else
             {
@@ -749,18 +772,19 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                     if (c.isEmpty())
                     {
                         children.remove(child.getName());
-                    } /* if */
+                    }
                     return true;
-                } /* if */
+                }
                 else
                 {
                     return false;
-                } /* else */
-            } /* else */
+                }
+            }
         }
 
         /**
          * Removes all children with the given name.
+         *
          * @param name the name of the children to be removed
          * @return a flag if children with this name existed
          */
@@ -769,7 +793,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (children == null)
             {
                 return false;
-            } /* if */
+            }
 
             return children.remove(name) != null;
         }
@@ -786,6 +810,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
          * A generic method for traversing this node and all of its children.
          * This method sends the passed in visitor to this node and all of its
          * children.
+         *
          * @param visitor the visitor
          * @param key here a configuration key with the name of the root node
          * of the iteration can be passed; if this key is not <b>null</b>, the
@@ -801,8 +826,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 if (getName() != null)
                 {
                     key.append(getName());
-                } /* if */
-            } /* if */
+                }
+            }
 
             visitor.visitBeforeChildren(this, key);
 
@@ -818,20 +843,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                         )
                     {
                         ((Node) it2.next()).visit(visitor, key);
-                    } /* for */
-                } /* for */
-            } /* if */
+                    }
+                }
+            }
 
             if (key != null)
             {
                 key.setLength(length);
-            } /* if */
+            }
             visitor.visitAfterChildren(this, key);
         }
 
         /**
          * Creates a copy of this object. This is not a deep copy, the children
          * are not cloned.
+         *
          * @return a copy of this object
          */
         protected Object clone()
@@ -839,11 +865,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             try
             {
                 return super.clone();
-            } /* try */
+            }
             catch (CloneNotSupportedException cex)
             {
                 return null; // should not happen
-            } /* catch */
+            }
         }
     }
 
@@ -863,6 +889,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         /**
          * Visits the specified node. This method is called during iteration
          * for each node before its children have been visited.
+         *
          * @param node the actual node
          * @param key the key of this node (may be <b>null</b>)
          */
@@ -874,6 +901,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
          * Visits the specified node after its children have been processed.
          * This gives a visitor the opportunity of collecting additional data
          * after the child nodes have been visited.
+         *
          * @param node the node to be visited
          * @param key the key of this node (may be <b>null</b>)
          */
@@ -887,6 +915,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
          * visitors that search a specific node. If this node is found, the
          * whole process can be stopped. This base implementation always
          * returns <b>false</b>.
+         *
          * @return a flag if iteration should be stopped
          */
         public boolean terminate()
@@ -909,6 +938,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         /**
          * Checks if iteration should be stopped. This can be done if the first
          * defined node is found.
+         *
          * @return a flag if iteration should be stopped
          */
         public boolean terminate()
@@ -918,6 +948,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Visits the node. Checks if a value is defined.
+         *
          * @param node the actual node
          * @param key the key of this node
          */
@@ -928,6 +959,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns the defined flag.
+         *
          * @return the defined flag
          */
         public boolean isDefined()
@@ -956,6 +988,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Returns the list with all defined keys.
+         *
          * @return the list with the defined keys
          */
         public Set getKeyList()
@@ -966,6 +999,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         /**
          * Visits the specified node. If this node has a value, its key is
          * added to the internal list.
+         *
          * @param node the node to be visited
          * @param key the key of this node
          */
@@ -974,7 +1008,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (node.getValue() != null && key != null)
             {
                 keyList.add(key.toString());
-            } /* if */
+            }
         }
     }
 
@@ -1001,6 +1035,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /**
          * Visits the specified node after its children have been processed.
+         *
          * @param node the node
          * @param key the key of this node
          */
@@ -1010,11 +1045,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (copyStack.isEmpty())
             {
                 result = node;
-            } /* if */
+            }
         }
 
         /**
          * Visits and copies the specified node.
+         *
          * @param node the node
          * @param key the key of this node
          */
@@ -1026,7 +1062,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             if (!copyStack.isEmpty())
             {
                 ((Node) copyStack.peek()).addChild(copy);
-            } /* if */
+            }
 
             copyStack.push(copy);
         }
@@ -1034,6 +1070,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         /**
          * Returns the result of the clone process. This is the root node of
          * the cloned node hierarchy.
+         *
          * @return the cloned root node
          */
         public Node getClone()

@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible
- * @version $Revision: 1.3 $, $Date: 2004/06/23 11:15:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/24 12:35:15 $
  */
 public class HierarchicalDOMConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
@@ -110,9 +110,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
         }
         catch (MalformedURLException mue)
         {
-            throw new ConfigurationException(
-                    "Could not load from " + getBasePath() +
-                    ", " + getFileName());
+            throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), mue);
         }
     }
 
@@ -126,8 +124,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
     {
         try
         {
-            DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             initProperties(builder.parse(url.toExternalForm()));
         }
         catch (Exception e)

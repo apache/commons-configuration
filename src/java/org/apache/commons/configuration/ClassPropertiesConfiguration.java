@@ -31,7 +31,8 @@ import java.io.InputStream;
  *
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
- * @version $Id: ClassPropertiesConfiguration.java,v 1.7 2004/06/23 11:15:45 ebourg Exp $
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.8 2004/06/24 12:35:14 ebourg Exp $
  */
 public class ClassPropertiesConfiguration extends BasePropertiesConfiguration implements Configuration
 {
@@ -92,8 +93,7 @@ public class ClassPropertiesConfiguration extends BasePropertiesConfiguration im
 
         if (resource == null)
         {
-            throw new FileNotFoundException("Could not open Resource "
-                                            + resourceName);
+            throw new FileNotFoundException("Could not open Resource " + resourceName);
         }
 
         return resource;

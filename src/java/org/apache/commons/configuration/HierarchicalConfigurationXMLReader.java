@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.xml.sax.Attributes;
@@ -32,10 +32,10 @@ import org.xml.sax.helpers.AttributesImpl;
  * This object will be processed by the <code>parse()</code> methods. Note
  * that these methods ignore their argument.</p>
  *
- * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.3 2004/02/27 17:41:35 epugh Exp $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.4 2004/06/24 12:35:15 ebourg Exp $
  */
-public class HierarchicalConfigurationXMLReader
-extends ConfigurationXMLReader
+public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
 {
     /** Stores the configuration object to be parsed.*/
     private HierarchicalConfiguration configuration;
@@ -53,10 +53,10 @@ extends ConfigurationXMLReader
      * Creates a new instance of
      * <code>HierarchicalConfigurationXMLReader</code> and sets the
      * configuration to be parsed.
+     *
      * @param config the configuration object
      */
-    public HierarchicalConfigurationXMLReader(
-    HierarchicalConfiguration config)
+    public HierarchicalConfigurationXMLReader(HierarchicalConfiguration config)
     {
         this();
         setConfiguration(config);
@@ -64,6 +64,7 @@ extends ConfigurationXMLReader
 
     /**
      * Returns the configuration object to be parsed.
+     *
      * @return the configuration object to be parsed
      */
     public HierarchicalConfiguration getConfiguration()
@@ -73,6 +74,7 @@ extends ConfigurationXMLReader
 
     /**
      * Sets the configuration object to be parsed.
+     *
      * @param config the configuration object to be parsed
      */
     public void setConfiguration(HierarchicalConfiguration config)
@@ -82,6 +84,7 @@ extends ConfigurationXMLReader
 
     /**
      * Returns the configuration object to be processed.
+     *
      * @return the actual configuration object
      */
     public Configuration getParsedConfiguration()
@@ -90,10 +93,7 @@ extends ConfigurationXMLReader
     }
 
     /**
-     * Processes the actual configuration object to generate SAX parsing
-     * events.
-     * @throws IOException if no configuration has been specified
-     * @throws SAXException if an error occurs during parsing
+     * Processes the actual configuration object to generate SAX parsing events.
      */
     protected void processKeys()
     {
@@ -112,38 +112,41 @@ extends ConfigurationXMLReader
 
         /**
          * Visits the specified node after its children have been processed.
+         *
          * @param node the actual node
          * @param key the key of this node
          */
         public void visitAfterChildren(Node node, ConfigurationKey key)
         {
-            if(!isAttributeNode(node))
+            if (!isAttributeNode(node))
             {
                 fireElementEnd(nodeName(node));
-            }  /* if */
+            }
         }
 
         /**
          * Visits the specified node.
+         *
          * @param node the actual node
          * @param key the key of this node
          */
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
-            if(!isAttributeNode(node))
+            if (!isAttributeNode(node))
             {
                 fireElementStart(nodeName(node), fetchAttributes(node));
 
-                if(node.getValue() != null)
+                if (node.getValue() != null)
                 {
                     fireCharacters(node.getValue().toString());
-                }  /* if */
-            }  /* if */
+                }
+            }
         }
 
         /**
          * Checks if iteration should be terminated. This implementation stops
          * iteration after an exception has occurred.
+         *
          * @return a flag if iteration should be stopped
          */
         public boolean terminate()
@@ -153,6 +156,7 @@ extends ConfigurationXMLReader
 
         /**
          * Returns an object with all attributes for the specified node.
+         *
          * @param node the actual node
          * @return an object with all attributes of this node
          */
@@ -161,17 +165,17 @@ extends ConfigurationXMLReader
             AttributesImpl attrs = new AttributesImpl();
             AbstractConfiguration.Container children = node.getChildren();
 
-            for(int i = 0; i < children.size(); i++)
+            for (int i = 0; i < children.size(); i++)
             {
                 Node child = (Node) children.get(i);
-                if(isAttributeNode(child) && child.getValue() != null)
+                if (isAttributeNode(child) && child.getValue() != null)
                 {
                     String attr = ConfigurationKey.attributeName(
                     child.getName());
                     attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE,
                     child.getValue().toString());
-                }  /* if */
-            }  /* for */
+                }
+            }
 
             return attrs;
         }
@@ -180,6 +184,7 @@ extends ConfigurationXMLReader
          * Helper method for determining the name of a node. If a node has no
          * name (which is true for the root node), the specified default name
          * will be used.
+         *
          * @param node the node to be checked
          * @return the name for this node
          */
@@ -192,6 +197,7 @@ extends ConfigurationXMLReader
          * Checks if the specified node is an attribute node. In the node
          * hierarchy attributes are stored as normal child nodes, but with
          * special names.
+         *
          * @param node the node to be checked
          * @return a flag if this is an attribute node
          */

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,19 +14,23 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 /**
  * <p>Definition of an interface for objects that load configuration data
  * from a URL.</p>
  * <p>The interface defines methods for getting and setting a base path.
  * A file name will then be interpreted relative to this base path.</p>
  *
- * @version $Id: BasePathLoader.java,v 1.2 2004/02/27 17:41:35 epugh Exp $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: BasePathLoader.java,v 1.3 2004/06/24 12:35:14 ebourg Exp $
  */
 public interface BasePathLoader
 {
     /**
      * Returns the base path. Relative path names will be resolved based on
      * this path.
+     *
      * @return the base path
      */
     String getBasePath();
@@ -36,6 +38,7 @@ public interface BasePathLoader
     /**
      * Sets the base path. Relative path names will be resolved based on
      * this path. For maximum flexibility this base path should be a URL.
+     *
      * @param path the base path
      */
     void setBasePath(String path);

@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.14 2004/06/23 11:15:45 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.15 2004/06/24 12:35:15 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -267,7 +267,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         key = StringUtils.replace(key, ".", "/");
         try
         {
-        	// throws a NamingException if JNDI doesn't contain the key.
+            // throws a NamingException if JNDI doesn't contain the key.
             getContext().lookup(key);
             return true;
         }

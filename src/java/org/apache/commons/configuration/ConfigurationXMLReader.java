@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.io.IOException;
 
@@ -36,7 +36,8 @@ import org.xml.sax.helpers.AttributesImpl;
  * special purpose. There will be concrete sub classes that process specific
  * configuration classes.</p>
  *
- * @version $Id: ConfigurationXMLReader.java,v 1.2 2004/02/27 17:41:35 epugh Exp $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: ConfigurationXMLReader.java,v 1.3 2004/06/24 12:35:15 ebourg Exp $
  */
 public abstract class ConfigurationXMLReader implements XMLReader
 {
@@ -70,6 +71,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Parses the acutal configuration object. The passed system ID will be
      * ignored.
+     *
      * @param systemId the system ID (ignored)
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
@@ -82,6 +84,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Parses the acutal configuration object. The passed input source will be
      * ignored.
+     *
      * @param input the input source (ignored)
      * @throws IOException if no configuration was specified
      * @throws SAXException if an error occurs during parsing
@@ -93,6 +96,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Dummy implementation of the interface method.
+     *
      * @param name the name of the feature
      * @return always <b>false</b> (no features are supported)
      */
@@ -103,6 +107,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Dummy implementation of the interface method.
+     *
      * @param name the name of the feature to be set
      * @param value the value of the feature
      */
@@ -112,6 +117,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Returns the actually set content handler.
+     *
      * @return the content handler
      */
     public ContentHandler getContentHandler()
@@ -122,6 +128,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Sets the content handler. The object specified here will receive SAX
      * events during parsing.
+     *
      * @param handler the content handler
      */
     public void setContentHandler(ContentHandler handler)
@@ -132,6 +139,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Returns the DTD handler. This class does not support DTD handlers,
      * so this method always returns <b>null</b>.
+     *
      * @return the DTD handler
      */
     public DTDHandler getDTDHandler()
@@ -141,6 +149,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Sets the DTD handler. The passed value is ignored.
+     *
      * @param handler the handler to be set
      */
     public void setDTDHandler(DTDHandler handler)
@@ -150,6 +159,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Returns the entity resolver. This class does not support an entity
      * resolver, so this method always returns <b>null</b>.
+     *
      * @return the entity resolver
      */
     public EntityResolver getEntityResolver()
@@ -159,6 +169,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Sets the entity resolver. The passed value is ignored.
+     *
      * @param resolver the entity resolver
      */
     public void setEntityResolver(EntityResolver resolver)
@@ -168,6 +179,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Returns the error handler. This class does not support an error handler,
      * so this method always returns <b>null</b>.
+     *
      * @return the error handler
      */
     public ErrorHandler getErrorHandler()
@@ -177,6 +189,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Sets the error handler. The passed value is ignored.
+     *
      * @param handler the error handler
      */
     public void setErrorHandler(ErrorHandler handler)
@@ -186,6 +199,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Dummy implementation of the interface method. No properties are
      * supported, so this method always returns <b>null</b>.
+     *
      * @param name the name of the requested property
      * @return the property value
      */
@@ -197,6 +211,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Dummy implementation of the interface method. No properties are
      * supported, so a call of this method just has no effect.
+     *
      * @param name the property name
      * @param value the property value
      */
@@ -206,6 +221,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Returns the name to be used for the root element.
+     *
      * @return the name for the root element
      */
     public String getRootName()
@@ -215,6 +231,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Sets the name for the root element.
+     *
      * @param string the name for the root element.
      */
     public void setRootName(String string)
@@ -224,6 +241,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Fires a SAX element start event.
+     *
      * @param name the name of the actual element
      * @param attribs the attributes of this element (can be <b>null</b>)
      */
@@ -235,16 +253,17 @@ public abstract class ConfigurationXMLReader implements XMLReader
             {
                 Attributes at = (attribs == null) ? EMPTY_ATTRS : attribs;
                 getContentHandler().startElement(NS_URI, name, name, at);
-            } /* try */
+            }
             catch (SAXException ex)
             {
                 exception = ex;
-            } /* catch */
-        } /* if */
+            }
+        }
     }
 
     /**
      * Fires a SAX element end event.
+     *
      * @param name the name of the affected element
      */
     protected void fireElementEnd(String name)
@@ -254,16 +273,17 @@ public abstract class ConfigurationXMLReader implements XMLReader
             try
             {
                 getContentHandler().endElement(NS_URI, name, name);
-            } /* try */
+            }
             catch (SAXException ex)
             {
                 exception = ex;
-            } /* catch */
-        } /* if */
+            }
+        }
     }
 
     /**
      * Fires a SAX characters event.
+     *
      * @param text the text
      */
     protected void fireCharacters(String text)
@@ -274,16 +294,17 @@ public abstract class ConfigurationXMLReader implements XMLReader
             {
                 char[] ch = text.toCharArray();
                 getContentHandler().characters(ch, 0, ch.length);
-            } /* try */
+            }
             catch (SAXException ex)
             {
                 exception = ex;
-            } /* catch */
-        } /* if */
+            }
+        }
     }
 
     /**
      * Returns a reference to an exception that occurred during parsing.
+     *
      * @return a SAXExcpetion or <b>null</b> if none occurred
      */
     public SAXException getException()
@@ -294,6 +315,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     /**
      * Parses the configuration object and generates SAX events. This is the
      * main processing method.
+     *
      * @throws IOException if no configuration has been specified
      * @throws SAXException if an error occurs during parsing
      */
@@ -302,7 +324,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
         if (getParsedConfiguration() == null)
         {
             throw new IOException("No configuration specified!");
-        } /* if */
+        }
 
         if (getContentHandler() != null)
         {
@@ -312,13 +334,14 @@ public abstract class ConfigurationXMLReader implements XMLReader
             if (getException() != null)
             {
                 throw getException();
-            } /* if */
+            }
             getContentHandler().endDocument();
-        } /* if */
+        }
     }
 
     /**
      * Returns a reference to the configuration that is parsed by this object.
+     *
      * @return the parsed configuration
      */
     public abstract Configuration getParsedConfiguration();
@@ -330,6 +353,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
      * <code>startDocument()</code> and <code>endElement()</code> methods
      * and cares for exception handling. The remaining actions are left to this
      * method that must be implemented in a concrete sub class.
+     *
      * @throws IOException if an IO error occurs
      * @throws SAXException if a SAX error occurs
      */

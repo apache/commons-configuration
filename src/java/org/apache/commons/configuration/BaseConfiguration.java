@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -30,8 +30,20 @@ import org.apache.commons.collections.map.LinkedMap;
  * to use the same key many times concatenating the value strings
  * instead of overwriting them.
  *
- *
- * @version $Id: BaseConfiguration.java,v 1.6 2004/06/23 11:15:45 ebourg Exp $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
+ * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
+ * @author <a href="mailto:leon@opticode.co.za">Leon Messerschmidt</a>
+ * @author <a href="mailto:kjohnson@transparent.com">Kent Johnson</a>
+ * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
+ * @author <a href="mailto:ipriha@surfeu.fi">Ilkka Priha</a>
+ * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
+ * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: BaseConfiguration.java,v 1.7 2004/06/24 12:35:14 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {

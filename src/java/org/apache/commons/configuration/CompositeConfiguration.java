@@ -28,7 +28,9 @@ import java.util.List;
  * You can add multiple different types or the same type of properties file.
  * If Configuration1 doesn't have the property, then Configuration2 will be checked.
  *
- * @version $Id: CompositeConfiguration.java,v 1.14 2004/06/21 12:37:40 ebourg Exp $
+ * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @version $Id: CompositeConfiguration.java,v 1.15 2004/06/24 12:35:14 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -136,8 +138,6 @@ public class CompositeConfiguration extends AbstractConfiguration
         {
             return null;
         }
-        /*throw new NoSuchElementException(
-            '\'' + key + "' doesn't map to an existing object");*/
     }
 
     /**
@@ -152,7 +152,9 @@ public class CompositeConfiguration extends AbstractConfiguration
         for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
-            for (Iterator j = config.getKeys(); j.hasNext();)
+
+            Iterator j = config.getKeys();
+            while (j.hasNext())
             {
                 String key = (String) j.next();
                 if (!keys.contains(key))
@@ -161,6 +163,7 @@ public class CompositeConfiguration extends AbstractConfiguration
                 }
             }
         }
+
         return keys.iterator();
     }
 
@@ -176,7 +179,9 @@ public class CompositeConfiguration extends AbstractConfiguration
         for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
-            for (Iterator j = config.getKeys(key); j.hasNext();)
+
+            Iterator j = config.getKeys(key);
+            while (j.hasNext())
             {
                 String newKey = (String) j.next();
                 if (!keys.contains(newKey))
@@ -185,6 +190,7 @@ public class CompositeConfiguration extends AbstractConfiguration
                 }
             }
         }
+
         return keys.iterator();
     }
 
@@ -199,15 +205,16 @@ public class CompositeConfiguration extends AbstractConfiguration
                 return false;
             }
         }
+
         return isEmpty;
     }
 
     /**
-     *  Gets a property from the configuration.
+     * Gets a property from the configuration.
      *
-     *  @param key property to retrieve
-     *  @return value as object. Will return user value if exists,
-     *          if not then default value if exists, otherwise null
+     * @param key property to retrieve
+     * @return value as object. Will return user value if exists,
+     *         if not then default value if exists, otherwise null
      */
     public Object getProperty(String key)
     {
@@ -243,7 +250,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * check if the configuration contains the key
+     * Check if the configuration contains the key
      */
     public boolean containsKey(String key)
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2001-2004 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -13,17 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package org.apache.commons.configuration;
-
-/**
- * Base class for reading an XML configuration file.
- *
- * @since 0.8.1
- *
- * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Revision: 1.3 $, $Date: 2004/06/24 12:35:15 $
- */
-public abstract class XMLConfiguration extends BasePathConfiguration
-{
-}

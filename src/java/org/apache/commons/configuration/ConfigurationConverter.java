@@ -29,10 +29,15 @@ import org.apache.commons.collections.ExtendedProperties;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Revision: 1.5 $, $Date: 2004/06/16 15:17:09 $
+ * @version $Revision: 1.6 $, $Date: 2004/06/24 12:35:15 $
  */
-public class ConfigurationConverter
+public final class ConfigurationConverter
 {
+    private ConfigurationConverter()
+    {
+        // to prevent instanciation...
+    }
+
     /**
      * Convert a ExtendedProperties class into a Configuration class.
      *

@@ -37,7 +37,20 @@ import org.apache.commons.lang.StringUtils;
  * resources without an absolute path, please take a look at the
  * ClassPropertiesConfiguration which is intended to be used for this.
  *
- * @version $Id: PropertiesConfiguration.java,v 1.10 2004/06/23 11:15:45 ebourg Exp $
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
+ * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
+ * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
+ * @author <a href="mailto:leon@opticode.co.za">Leon Messerschmidt</a>
+ * @author <a href="mailto:kjohnson@transparent.com">Kent Johnson</a>
+ * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
+ * @author <a href="mailto:ipriha@surfeu.fi">Ilkka Priha</a>
+ * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
+ * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: PropertiesConfiguration.java,v 1.11 2004/06/24 12:35:15 ebourg Exp $
  */
 public class PropertiesConfiguration extends BasePropertiesConfiguration
 {
@@ -46,7 +59,8 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
 
     /**
      * The name of the file to be loaded.  This is used in conjuction with
-     * the load method. */
+     * the load method.
+     */
     protected String fileName = null;
 
     /**
@@ -143,12 +157,11 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
         try
         {
             url = ConfigurationUtils.getURL(getBasePath(), resourceName);
-        }  /* try */
-        catch(MalformedURLException uex)
+        }
+        catch (MalformedURLException uex)
         {
-            throw new IOException("Cannot obtain URL for resource "
-            + resourceName);
-        }  /* catch */
+            throw new IOException("Cannot obtain URL for resource " + resourceName);
+        }
 
         resource = url.openStream();
 
@@ -160,6 +173,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
 
     /**
      * Returns the fileName.
+     *
      * @return String
      */
     public String getFileName()
@@ -169,6 +183,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
 
     /**
      * Sets the fileName.
+     *
      * @param fileName The fileName to set
      */
     public void setFileName(String fileName)

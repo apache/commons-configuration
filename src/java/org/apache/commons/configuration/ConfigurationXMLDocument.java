@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * <p><strong>Implementation note:</strong> This class is not thread safe.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationXMLDocument.java,v 1.4 2004/03/08 23:42:16 epugh Exp $
+ * @version $Id: ConfigurationXMLDocument.java,v 1.5 2004/06/24 12:35:15 ebourg Exp $
  */
 public class ConfigurationXMLDocument
 {
@@ -61,6 +61,7 @@ public class ConfigurationXMLDocument
     /**
      * Creates a new instance of <code>ConfigurationXMLDocument</code>
      * and sets the configuration object to be processed.
+     *
      * @param config the configuration object
      */
     public ConfigurationXMLDocument(Configuration config)
@@ -70,6 +71,7 @@ public class ConfigurationXMLDocument
 
     /**
      * Returns the <code>Configuration</code> object for this document.
+     *
      * @return the <code>Configuration</code> object
      */
     public Configuration getConfiguration()
@@ -79,6 +81,7 @@ public class ConfigurationXMLDocument
 
     /**
      * Sets the <code>Configuration</code> object this document operates on.
+     *
      * @param configuration the <code>Configuration</code> object
      */
     public void setConfiguration(Configuration configuration)
@@ -90,6 +93,7 @@ public class ConfigurationXMLDocument
      * Returns a <code>XMLReader</code> object for the specified configuration
      * object. This reader can then be used to perform XML-like processing on
      * the configuration.
+     *
      * @param config the configuration object
      * @return a XMLReader for this configuration
      */
@@ -97,18 +101,18 @@ public class ConfigurationXMLDocument
     {
         if (config instanceof HierarchicalConfiguration)
         {
-            return new HierarchicalConfigurationXMLReader(
-                (HierarchicalConfiguration) config);
-        } /* if */
+            return new HierarchicalConfigurationXMLReader((HierarchicalConfiguration) config);
+        }
         else
         {
             return new BaseConfigurationXMLReader(config);
-        } /* else */
+        }
     }
 
     /**
      * Returns a <code>XMLReader</code> object for the actual configuration
      * object.
+     *
      * @return a XMLReader for the actual configuration
      */
     public ConfigurationXMLReader createXMLReader()
@@ -121,6 +125,7 @@ public class ConfigurationXMLDocument
      * configuration specified by the given prefix. If no properties are found
      * under this prefix, a <code>NoSuchElementException</code>
      * exception will be thrown.
+     *
      * @param prefix the prefix of the configuration keys that belong to the
      * subset; can be <b>null</b>, then the whole configuration is affected
      * @return a XMLReader for the specified subset configuration
@@ -132,6 +137,7 @@ public class ConfigurationXMLDocument
 
     /**
      * Transforms the wrapped configuration into a dom4j document.
+     *
      * @param prefix a prefix for the keys to process; can be <b>null</b>,
      * then all keys in the configuration will be added to the document
      * @param rootName the name of the root element in the document; can be
@@ -139,14 +145,13 @@ public class ConfigurationXMLDocument
      * @return the document
      * @throws DocumentException if an error occurs
      */
-    public Document getDocument(String prefix, String rootName)
-        throws DocumentException
+    public Document getDocument(String prefix, String rootName) throws DocumentException
     {
         ConfigurationXMLReader xmlReader = createXMLReader(prefix);
         if (rootName != null)
         {
             xmlReader.setRootName(rootName);
-        } /* if */
+        }
 
         SAXReader reader = new SAXReader(xmlReader);
         return reader.read(getClass().getName());
@@ -155,6 +160,7 @@ public class ConfigurationXMLDocument
     /**
      * Transforms the wrapped configuration into a dom4j document. The root
      * element will be given a default name.
+     *
      * @param prefix a prefix for the keys to process; can be <b>null</b>,
      * then all keys in the configuration will be added to the document
      * @return the document
@@ -168,6 +174,7 @@ public class ConfigurationXMLDocument
     /**
      * Transforms the wrapped configuration into a dom4j document. The root
      * element will be given a default name.
+     *
      * @return the document
      * @throws DocumentException if an error occurs
      */
@@ -178,6 +185,7 @@ public class ConfigurationXMLDocument
 
     /**
      * Transforms the wrapped configuration into a w3c document.
+     *
      * @param prefix a prefix for the keys to process; can be <b>null</b>,
      * then all keys in the configuration will be added to the document
      * @param rootName the name of the root element in the document; can be
@@ -185,8 +193,7 @@ public class ConfigurationXMLDocument
      * @return the document
      * @throws DocumentException if an error occurs
      */
-    public org.w3c.dom.Document getW3cDocument(String prefix, String rootName)
-        throws DocumentException
+    public org.w3c.dom.Document getW3cDocument(String prefix, String rootName) throws DocumentException
     {
         return toW3cDocument(getDocument(prefix, rootName));
     }
@@ -194,13 +201,13 @@ public class ConfigurationXMLDocument
     /**
      * Transforms the wrapped configuration into a w3c document. The root
      * element will be given a default name.
+     *
      * @param prefix a prefix for the keys to process; can be <b>null</b>,
      * then all keys in the configuration will be added to the document
      * @return the document
      * @throws DocumentException if an error occurs
      */
-    public org.w3c.dom.Document getW3cDocument(String prefix)
-        throws DocumentException
+    public org.w3c.dom.Document getW3cDocument(String prefix) throws DocumentException
     {
         return getW3cDocument(prefix, null);
     }
@@ -208,6 +215,7 @@ public class ConfigurationXMLDocument
     /**
      * Transforms the wrapped configuration into a w3c document. The root
      * element will be given a default name.
+     *
      * @return the document
      * @throws DocumentException if an error occurs
      */
@@ -218,12 +226,12 @@ public class ConfigurationXMLDocument
 
     /**
      * Converts a dom4j document into a w3c document.
+     *
      * @param doc the dom4j document
      * @return the w3c document
      * @throws DocumentException if an error occurs
      */
-    static org.w3c.dom.Document toW3cDocument(Document doc)
-        throws DocumentException
+    static org.w3c.dom.Document toW3cDocument(Document doc) throws DocumentException
     {
         return new DOMWriter().write(doc);
     }
@@ -232,6 +240,7 @@ public class ConfigurationXMLDocument
      * Helper method for constructing a subset if necessary. Depending on
      * the passed in key this method either returns the wrapped configuration
      * or the specified subset of it.
+     *
      * @param key the key
      * @return the configuration for that key
      */
@@ -240,14 +249,14 @@ public class ConfigurationXMLDocument
         Configuration conf = (key == null)
             ? getConfiguration()
             : getConfiguration().subset(key);
-            
+
         // undefined?
-        if(conf == null || (conf instanceof CompositeConfiguration
+        if (conf == null || (conf instanceof CompositeConfiguration
         && ((CompositeConfiguration) conf).getNumberOfConfigurations() < 2))
         {
             throw new NoSuchElementException("No subset with key " + key);
-        }  /* if */
-        
+        }
+
         return conf;
     }
 
@@ -272,6 +281,7 @@ public class ConfigurationXMLDocument
      *   &lt;/args&gt;
      * ...
      * </pre></p>
+     *
      * @param prefix the prefix of the keys that are passed to Digester; can
      * be <b>null</b>, then the whole configuration will be processed
      * @return the result of the Digester processing
@@ -287,6 +297,7 @@ public class ConfigurationXMLDocument
     /**
      * Returns a default Digester instance. This instance is used for the
      * simple object creation feature.
+     *
      * @param prefix the prefix of the keys to be processed; can be
      * <b>null</b>, then the whole configuration is meant
      * @return the default Digester instance
@@ -302,6 +313,7 @@ public class ConfigurationXMLDocument
     /**
      * Creates the default Digester instance for the given prefix. This method
      * is called by <code>getDefaultDigester()</code>.
+     *
      * @param prefix the prefix of the keys to be processed; can be
      * <b>null</b>, then the whole configuration is meant
      * @return the default Digester instance
@@ -316,6 +328,7 @@ public class ConfigurationXMLDocument
      * creation. Here all needed properties and rules can be set. This base
      * implementation sets default rules for object creation as explained in
      * the comment for the <code>callDigester()</code> methods.
+     *
      * @param digester the digester instance to be initialized
      */
     protected void setupDefaultDigester(Digester digester)
@@ -326,6 +339,7 @@ public class ConfigurationXMLDocument
 
     /**
      * Writes a configuration (or parts of it) to the given writer.
+     *
      * @param out the output writer
      * @param prefix the prefix of the subset to write; if <b>null</b>, the
      * whole configuration is written
@@ -335,8 +349,7 @@ public class ConfigurationXMLDocument
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing
      */
-    public void write(Writer out, String prefix, String root, boolean pretty)
-        throws IOException, DocumentException
+    public void write(Writer out, String prefix, String root, boolean pretty) throws IOException, DocumentException
     {
         OutputFormat format =
             (pretty)
@@ -348,8 +361,9 @@ public class ConfigurationXMLDocument
     }
 
     /**
-     * Writes a configuration (or parts of it) to the given writer. 
+     * Writes a configuration (or parts of it) to the given writer.
      * This overloaded version always uses pretty print mode.
+     *
      * @param out the output writer
      * @param prefix the prefix of the subset to write; if <b>null</b>, the
      * whole configuration is written
@@ -358,8 +372,7 @@ public class ConfigurationXMLDocument
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing
      */
-    public void write(Writer out, String prefix, String root)
-        throws IOException, DocumentException
+    public void write(Writer out, String prefix, String root) throws IOException, DocumentException
     {
         write(out, prefix, root, true);
     }
@@ -367,6 +380,7 @@ public class ConfigurationXMLDocument
     /**
      * Writes a configuration (or parts of it) to the given writer.
      * The resulting document's root element will be given a default name.
+     *
      * @param out the output writer
      * @param prefix the prefix of the subset to write; if <b>null</b>, the
      * whole configuration is written
@@ -374,8 +388,7 @@ public class ConfigurationXMLDocument
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing
      */
-    public void write(Writer out, String prefix, boolean pretty)
-        throws IOException, DocumentException
+    public void write(Writer out, String prefix, boolean pretty) throws IOException, DocumentException
     {
         write(out, prefix, null, pretty);
     }
@@ -384,14 +397,14 @@ public class ConfigurationXMLDocument
      * Writes a configuration (or parts of it) to the given writer.
      * The resulting document's root element will be given a default name.
      * This overloaded version always uses pretty print mode.
+     *
      * @param out the output writer
      * @param prefix the prefix of the subset to write; if <b>null</b>, the
      * whole configuration is written
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing
      */
-    public void write(Writer out, String prefix)
-        throws IOException, DocumentException
+    public void write(Writer out, String prefix) throws IOException, DocumentException
     {
         write(out, prefix, true);
     }
@@ -399,13 +412,13 @@ public class ConfigurationXMLDocument
     /**
      * Writes the wrapped configuration to the given writer.
      * The resulting document's root element will be given a default name.
+     *
      * @param out the output writer
      * @param pretty flag for the pretty print mode
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing
      */
-    public void write(Writer out, boolean pretty)
-        throws IOException, DocumentException
+    public void write(Writer out, boolean pretty) throws IOException, DocumentException
     {
         write(out, null, null, pretty);
     }
@@ -414,6 +427,7 @@ public class ConfigurationXMLDocument
      * Writes the wrapped configuration to the given writer.
      * The resulting document's root element will be given a default name.
      * This overloaded version always uses pretty print mode.
+     *
      * @param out the output writer
      * @throws IOException if an IO error occurs
      * @throws DocumentException if there is an error during processing

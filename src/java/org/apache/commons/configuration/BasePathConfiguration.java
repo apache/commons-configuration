@@ -20,7 +20,9 @@ package org.apache.commons.configuration;
  * This is exactly the same as the BaseConfiguration but the backing
  * store is based on a path (e.g. a file path) from which it is loaded.
  *
- * @version $Id: BasePathConfiguration.java,v 1.3 2004/06/23 11:15:45 ebourg Exp $
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: BasePathConfiguration.java,v 1.4 2004/06/24 12:35:14 ebourg Exp $
  */
 public abstract class BasePathConfiguration extends BaseConfiguration implements BasePathLoader
 {
