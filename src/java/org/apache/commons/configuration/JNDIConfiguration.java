@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.20 2004/10/21 18:36:14 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.21 2004/12/02 15:50:09 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -315,14 +315,6 @@ public class JNDIConfiguration extends AbstractConfiguration
             log.error(e.getMessage(), e);
             return true;
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Object getProperty(String key)
-    {
-        return getPropertyDirect(key);
     }
 
     /**
