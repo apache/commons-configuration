@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.15 $, $Date: 2004/09/23 11:43:27 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/26 16:29:24 $
  */
 public class XMLConfiguration extends AbstractFileConfiguration
 {
@@ -409,7 +409,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
         }
         else
         {
-            element.setAttribute(attName, (String) value);
+            element.setAttribute(attName, String.valueOf(value));
         }
     }
 
