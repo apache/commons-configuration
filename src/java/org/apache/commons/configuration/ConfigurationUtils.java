@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.5 $, $Date: 2004/07/12 12:14:38 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/12 14:12:22 $
  */
 public final class ConfigurationUtils
 {
@@ -51,19 +51,7 @@ public final class ConfigurationUtils
      */
     public static void dump(Configuration configuration, PrintStream out)
     {
-        Iterator keys = configuration.getKeys();
-        while (keys.hasNext())
-        {
-            String key = (String) keys.next();
-            Object value = configuration.getProperty(key);
-            out.print(key);
-            out.print("=");
-            out.print(value);
-            if (keys.hasNext())
-            {
-                out.println();
-            }
-        }
+        dump(configuration, new PrintWriter(out));
     }
 
     /**
@@ -88,6 +76,8 @@ public final class ConfigurationUtils
                 out.println();
             }
         }
+
+        out.flush();
     }
 
     /**

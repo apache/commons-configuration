@@ -17,6 +17,7 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
+import java.io.PrintStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -27,30 +28,23 @@ import junit.framework.TestCase;
  */
 public class TestConfigurationUtils extends TestCase
 {
-    protected Configuration configuration = new BaseConfiguration();
+    protected Configuration config = new BaseConfiguration();
 
-    public void testCompare()
+    public void testToString()
     {
-        assertEquals(
-            "Get string representation of an empty configuration",
-            "",
-            ConfigurationUtils.toString(configuration));
+        assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
 
-        configuration.setProperty("one", "1");
-        assertEquals(
-            "Get string representation of a configuration",
-            "one=1",
-            ConfigurationUtils.toString(configuration));
+        config.setProperty("one", "1");
+        assertEquals("String representation of a configuration", "one=1", ConfigurationUtils.toString(config));
 
-        configuration.setProperty("two", "2");
-        /*        assertEquals("Get string representation of a configuration", "one=1\ntwo=2" , ConfigurationUtils.toString(configuration));
+        config.setProperty("two", "2");
+        assertEquals("String representation of a configuration", "one=1\ntwo=2" , ConfigurationUtils.toString(config));
         
-                configuration.clearProperty("one");
-                assertEquals("Get string representation of a configuration", "two=2" , ConfigurationUtils.toString(configuration));
+        config.clearProperty("one");
+        assertEquals("String representation of a configuration", "two=2" , ConfigurationUtils.toString(config));
                 
-                configuration.setProperty("one","1");
-                assertEquals("Get string representation of a configuration", "two=2\none=1" , ConfigurationUtils.toString(configuration));
-        */
+        config.setProperty("one","1");
+        assertEquals("String representation of a configuration", "two=2\none=1" , ConfigurationUtils.toString(config));
     }
 
     public void testGetURL() throws Exception
