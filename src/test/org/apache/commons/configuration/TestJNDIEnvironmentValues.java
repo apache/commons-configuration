@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2002-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -25,7 +25,8 @@ public class TestJNDIEnvironmentValues extends TestCase
 {
     private JNDIConfiguration conf = null;
 
-    public void setUp() throws Exception{
+    public void setUp() throws Exception
+    {
         System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
         
         conf = new JNDIConfiguration();
@@ -78,16 +79,13 @@ public class TestJNDIEnvironmentValues extends TestCase
         assertNull("'test.short' property not cleared", conf.getShort("test.short", null));
     }
     
-    public void testIsEmpty() {
+    public void testIsEmpty()
+    {
         assertFalse("the configuration shouldn't be empty", conf.isEmpty());
     }
     
-    /**
-     * Currently failing in that we don't get back any keys!
-     * @throws Exception
-     */
-    public void testGetKeys() throws Exception {
-
+    public void testGetKeys() throws Exception
+    {
         boolean found = false;
         Iterator it = conf.getKeys();
 
@@ -99,4 +97,11 @@ public class TestJNDIEnvironmentValues extends TestCase
 
         assertTrue("'test.boolean' key not found", found);
     }
+
+    public void testGetKeysWithPrefix()
+    {
+        Iterator it = conf.getKeys("foo.bar");
+        assertFalse("no key should be found", it.hasNext());
+    }
+
 }
