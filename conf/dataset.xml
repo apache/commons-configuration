@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE dataset SYSTEM "dataset.dtd">
+
+<!-- dbunit DataSet for the TestDatabaseConfiguration test -->
+<dataset>
+
+    <table name="configuration">
+        <column>key</column>
+        <column>value</column>
+        <row>
+            <value>key1</value>
+            <value>value1</value>
+        </row>
+        <row>
+            <value>key2</value>
+            <value>value2</value>
+        </row>
+    </table>
+
+    <table name="configurations">
+        <column>name</column>
+        <column>key</column>
+        <column>value</column>
+        <row>
+            <value>test</value>
+            <value>key1</value>
+            <value>value1</value>
+        </row>
+        <row>
+            <value>test</value>
+            <value>key2</value>
+            <value>value2</value>
+        </row>
+    </table>
+
+</dataset>

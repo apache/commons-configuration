@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.5 2004/01/16 17:32:37 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.6 2004/01/18 16:15:46 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -158,25 +158,23 @@
         <war.bundle>true</war.bundle>
       </properties>            
     </dependency>
+
     <dependency>
       <id>commons-digester</id>      
       <version>1.5</version>
       <properties>        
         <war.bundle>true</war.bundle>
       </properties>            
-    </dependency>                    
+    </dependency>
+
     <dependency>
       <id>commons-beanutils</id>      
       <version>1.7-dev</version>
       <properties>        
         <war.bundle>true</war.bundle>
       </properties>            
-    </dependency>                        
-    <dependency>
-      <id>junit</id>
-      <version>3.8.1</version>
-      <url>http://www.junit.org</url>
     </dependency>
+
     <dependency>
       <id>xerces</id>
       <version>2.2.1</version>
@@ -194,12 +192,45 @@
         <war.bundle>true</war.bundle>
       </properties>  
     </dependency>
+
     <!-- Needed for testing -->
+    <dependency>
+      <id>junit</id>
+      <version>3.8.1</version>
+      <url>http://www.junit.org</url>
+    </dependency>
+
     <dependency>
       <id>simple-jndi</id>
       <version>0.8</version>
       <url>http://www.osjava.org/simple-jndi/</url> 
-    </dependency>    
+    </dependency>
+
+    <dependency>
+      <id>commons-dbcp</id>
+      <version>1.1</version>
+    </dependency>
+
+    <dependency>
+      <id>commons-pool</id>
+      <version>1.1</version>
+    </dependency>
+
+    <dependency>
+      <id>hsqldb</id>
+      <version>1.7.1</version>
+    </dependency>
+
+    <dependency>
+      <id>dbunit</id>
+      <version>1.5.5</version>
+    </dependency>
+
+    <dependency>
+      <id>exml</id>
+      <version>dbunit1.5.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>
