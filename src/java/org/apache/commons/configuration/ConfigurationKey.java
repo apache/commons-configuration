@@ -71,7 +71,7 @@ import java.util.NoSuchElementException;
  * each part it can be checked whether it has an associated index.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationKey.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: ConfigurationKey.java,v 1.2 2004/01/16 17:59:04 epugh Exp $
  */
 public class ConfigurationKey implements Serializable
 {
@@ -428,11 +428,12 @@ public class ConfigurationKey implements Serializable
 
             else
             {
-                endIndex = keyBuffer.indexOf(
-                String.valueOf(PROPERTY_DELIMITER), startIndex);
+                
+				String s = keyBuffer.toString();    // for compatibility
+                endIndex = s.indexOf(PROPERTY_DELIMITER, startIndex);
                 if(endIndex < 0)
                 {
-                    endIndex = keyBuffer.indexOf(ATTRIBUTE_START, startIndex);
+					endIndex = s.indexOf(ATTRIBUTE_START, startIndex);
                     if(endIndex < 0 || endIndex == startIndex)
                     {
                         endIndex = keyBuffer.length();
