@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.17 2004/12/04 15:45:39 oheger Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.18 2005/01/03 11:58:46 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestCase
 {
@@ -254,7 +254,7 @@ public class TestPropertiesConfiguration extends TestCase
 
     public void testUnescapeJava()
     {
-        assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test"));
+        assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test", ','));
     }
 
     public void testMixedArray()

@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * This is the "classic" Properties loader which loads the values from
  * a single or multiple files (which can be chained with "include =".
  * All given path references are either absolute or relative to the
- * file name supplied in the Constructor.
+ * file name supplied in the constructor.
  * <p>
  * In this class, empty PropertyConfigurations can be built, properties
  * added and later saved. include statements are (obviously) not supported
@@ -72,16 +72,16 @@ import org.apache.commons.lang.StringUtils;
  *   If a property is named "include" (or whatever is defined by
  *   setInclude() and getInclude() and the value of that property is
  *   the full path to a file on disk, that file will be included into
- *   the ConfigurationsRepository. You can also pull in files relative
- *   to the parent configuration file. So if you have something
- *   like the following:
+ *   the configuration. You can also pull in files relative to the parent
+ *   configuration file. So if you have something like the following:
  *
  *   include = additional.properties
  *
  *   Then "additional.properties" is expected to be in the same
  *   directory as the parent configuration file.
  *
- *   Duplicate name values will be replaced, so be careful.
+ *   The properties in the included file are added to the parent configuration,
+ *   they do not replace existing properties with the same key.
  *
  *  </li>
  * </ul>
@@ -128,7 +128,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.17 2004/12/04 15:45:40 oheger Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.18 2005/01/03 11:58:46 ebourg Exp $
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
@@ -284,7 +284,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     }
                     else
                     {
-                        addProperty(key, unescapeJava(value));
+                        addProperty(key, unescapeJava(value, getDelimiter()));
                     }
                 }
             }
@@ -304,7 +304,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     {
         try
         {
-            PropertiesWriter out = new PropertiesWriter(writer);
+            PropertiesWriter out = new PropertiesWriter(writer, getDelimiter());
 
             out.writeComment("written by PropertiesConfiguration");
             out.writeComment(new Date().toString());
@@ -413,14 +413,17 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
+        private char delimiter;
+
         /**
          * Constructor.
          *
          * @param writer a Writer object providing the underlying stream
          */
-        public PropertiesWriter(Writer writer) throws IOException
+        public PropertiesWriter(Writer writer, char delimiter)
         {
             super(writer);
+            this.delimiter = delimiter;
         }
 
         /**
@@ -437,7 +440,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             if (value != null)
             {
                 String v = StringEscapeUtils.escapeJava(String.valueOf(value));
-                v = StringUtils.replace(v, String.valueOf(getDelimiter()), "\\" + getDelimiter());
+                v = StringUtils.replace(v, String.valueOf(delimiter), "\\" + delimiter);
                 write(v);
             }
 
@@ -480,7 +483,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      */
-    protected static String unescapeJava(String str)
+    protected static String unescapeJava(String str, char delimiter)
     {
         if (str == null)
         {
@@ -548,9 +551,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 else if (ch=='b'){
                     out.append('\b');
                 }
-                else if (ch==getDelimiter()){
+                else if (ch==delimiter){
                     out.append('\\');
-                    out.append(getDelimiter());
+                    out.append(delimiter);
                 }
                 else if (ch=='u'){
                     //                  uh-oh, we're in unicode country....
