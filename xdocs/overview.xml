@@ -88,27 +88,27 @@
       </subsection>
     </section>
     <section name="Configuration Details">
-    	<p>
-    	Configuration is done by taking the configuration XML file and using included Digester rules,
-    	parsing the individual configurations.  Make sure to include the various dependencies required for
-    	each type of configuration!  If you have an XML file, you'll need dom4j.jar for instance!
-    	</p>
-    	<subsection name="Classic Properties File">
+      <p>
+      Configuration is done by taking the configuration XML file and using included Digester rules,
+      parsing the individual configurations.  Make sure to include the various dependencies required for
+      each type of configuration!  If you have an XML file, you'll need dom4j.jar for instance!
+      </p>
+      <subsection name="Classic Properties File">
         <source>
 <![CDATA[       
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
 ]]>   
         </source>
         <p>
-    	This configuration file is very simple.  You just need to specify the path to the property file.
-    	</p>
-    	</subsection>
-    	<subsection name="XML Properties File">
+      This configuration file is very simple.  You just need to specify the path to the property file.
+      </p>
+      </subsection>
+      <subsection name="XML Properties File">
         <source>
 <![CDATA[       
   <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
 ]]>   
-        </source>    	
+        </source>     
         <p>
         The configuration is very similar to the classic properties file.  However, the xml file must be in a specific
         format.  Currently there is no DTD.
@@ -123,7 +123,7 @@
     </subelement>
   </element2>
   <test>
-  	<short>8</short>
+    <short>8</short>
   </test>
 </baseElement>
 ]]>   
@@ -132,35 +132,40 @@
         In the above example, the root element is ignored.  So to get the value "8", you would request from your 
         Configuration object the key "test.short".  The root element can be called anything.
         </p>
-    	</subsection>    	
-    	<subsection name="JNDI Properties File">
+      </subsection>     
+      <subsection name="JNDI Properties File">
         <source>
 <![CDATA[       
   <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
 ]]>   
-        </source>    	
+        </source>     
         <p>
         This configuration is very useful for setting environment specific settings like mail servers! The
-        prefix tells the ConfigurationFactory what the root will be to look up your configuration settings. To 
-        enter a value under the key "test.short" you would replcace the '.' with '/' in your web.xml.
+        prefix tells the ConfigurationFactory what the root will be to look up your configuration settings. 
         </p>
         <source>
-<![CDATA[       
+<![CDATA[      
+    <env-entry>
+        <env-entry-name>smtp</env-entry-name>
+        <env-entry-value>127.0.0.1</env-entry-value>
+        <env-entry-type>java.lang.String</env-entry-type>
+    </env-entry>
+    
     <env-entry>
         <env-entry-name>test/short</env-entry-name>
         <env-entry-value>80</env-entry-value>
-        <env-entry-type>java.lang.String</env-entry-type>
+        <env-entry-type>java.lang.Short</env-entry-type>
     </env-entry>
 
 ]]>   
-        </source>    	
+        </source>     
         <p>
-        Note!  If you have a property called "file.name" with spaces in it, then it will be translated
-        as the key "file/name".  Therefore, you should NOT use spaces in the name of properties that
+        <strong>Note!</strong>  If you have a property called "test.short" with spaces in it, then it will be translated
+        as the key "test/short".  Therefore, you should NOT use spaces in the name of properties that
         are loaded from JNDI!  If you do want to use them, then make sure to convert in your web.xml the
         "." characters to "/" characters, like in the test.short example above.
         </p>
-    	</subsection>    	
+      </subsection>     
     </section>
 
 </body>

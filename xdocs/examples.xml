@@ -33,6 +33,16 @@ colors.background=#FFFFFF
 				Note that this file complies to the typical format of
 				properties files.
 			</p>
+			<p>
+				You can also have in a simple properties file various characters
+				that are typically escaped like \n, \t etc:
+			</p>
+    			<source>
+<![CDATA[
+#Unescaped string that will be escaped
+test.unescape = This \n string \t contains \" escaped \\ characters
+]]>
+				</source>			
 		</subsection>
 		
 		<subsection name="The configuration definition file">

@@ -66,6 +66,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -145,6 +146,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
+ * @author <a href="mailto:e.bourg@cross-systems.com">Emmanuel Bourg</a>
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
@@ -156,7 +158,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.2 2004/01/30 14:05:01 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -257,7 +259,7 @@ public abstract class BasePropertiesConfiguration
                 }
                 else
                 {
-                    addProperty(key, value);
+                    addProperty(key, StringEscapeUtils.unescapeJava(value));
                 }
             }
         }
@@ -428,7 +430,7 @@ public abstract class BasePropertiesConfiguration
         {
             write(key);
             write(" = ");
-            write(value != null ? value : "");
+            write(value != null ? StringEscapeUtils.escapeJava(value) : "");             
             write('\n');
         }
 

@@ -56,6 +56,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -64,7 +65,7 @@ import java.util.List;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestPropertiesConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.4 2004/01/30 14:05:00 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -73,28 +74,38 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     private String testBasePath = new File("conf").getAbsolutePath();
     private String testBasePath2 = new File("conf").getAbsoluteFile().getParentFile().getAbsolutePath();
+    private File testSavePropertiesFile = new File("target/testsave.properties");
 
     protected void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
+ 
     }
 
-    public void atestSave() throws Exception
+    public void testSave() throws Exception
     {
-        PropertiesConfiguration toSave = new PropertiesConfiguration();
-        toSave.addProperty("string", "value1");
+    	if(testSavePropertiesFile.exists()){
+    		assertTrue(testSavePropertiesFile.delete());
+    	}
+    	conf.addProperty("string", "value1");
         List list = new ArrayList();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
         }
-        toSave.addProperty("array", list);
-        String filename = "STRING0";
+        conf.addProperty("array", list);
 
-        toSave.save(filename);
+        conf.save(testSavePropertiesFile.getAbsolutePath());
+        
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile.getAbsolutePath());
+        for (Iterator i = conf.getKeys();i.hasNext();){
+        	String key = (String)i.next();
+        	assertTrue(checkConfig.containsKey(key));
+        	assertEquals(conf.getString(key),checkConfig.getString(key));
+        }
     }
 
-    public void atestLoadViaProperty() throws Exception
+    public void testLoadViaProperty() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setFileName(testProperties);
@@ -130,5 +141,10 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         pc.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
+    }
+
+    public void testGetStringWithEscapedChars()
+    {
+        assertEquals("String with escaped characters", "This \n string \t contains \" escaped \\ characters", conf.getString("test.unescape"));
     }
 }
