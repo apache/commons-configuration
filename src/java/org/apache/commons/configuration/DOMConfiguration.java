@@ -48,7 +48,7 @@ import org.xml.sax.SAXException;
  * @since commons-configuration 1.0
  *
  * @author Jörg Schaible
- * @version $Revision: 1.5 $, $Date: 2004/06/21 16:47:24 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/08 09:51:52 $
  */
 public class DOMConfiguration extends XMLConfiguration
 {
@@ -118,9 +118,9 @@ public class DOMConfiguration extends XMLConfiguration
         File file = null;
         try
         {
-            file = new File(getBasePath(), getFileName());
-            DocumentBuilder builder =
-                DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            URL url = ConfigurationUtils.getURL(getBasePath(), getFileName());
+            file = new File(url.getFile());
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             document = builder.parse(file);
         }
         catch (IOException de)
