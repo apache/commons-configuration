@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.39 2004/10/14 09:54:35 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.40 2004/11/14 19:06:32 oheger Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -155,16 +155,18 @@
       <id>ebourg</id>
       <email>smanux@lfjr.net</email>
     </developer>
+	
+	<developer>
+		<name>Oliver Heger</name>
+		<id>oheger</id>
+		<email>oliver.heger@t-online.de</email>
+		<organization>University Marburg</organization>
+		<timezone>+1</timezone>
+	</developer>
 
   </developers>
 
   <contributors>
-
-    <contributor>
-      <name>Oliver Heger</name>
-      <id>oheger</id>
-      <email>oliver.heger@t-online.de</email>
-    </contributor>
 
     <contributor>
       <name>J&ouml;rg Schaible</name>

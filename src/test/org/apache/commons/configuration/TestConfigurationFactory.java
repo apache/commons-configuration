@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.16 2004/10/18 12:50:41 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.17 2004/11/14 19:06:32 oheger Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -44,6 +44,8 @@ public class TestConfigurationFactory extends TestCase
             new File("conf/testDigesterConfiguration2.xml");
     private File testDigesterFileComplete =
             new File("conf/testDigesterConfiguration3.xml");
+    private File testDigesterFileOptional =
+            new File("conf/testDigesterOptionalConfiguration.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
@@ -237,6 +239,15 @@ public class TestConfigurationFactory extends TestCase
         // test SystemConfiguration
         assertNotNull(config.getProperty("java.version"));
         assertEquals(System.getProperty("java.version"), config.getString("java.version"));
+    }
+    
+    // Checks if optional configurations work
+    public void testOptionalConfigurations() throws Exception
+    {
+        factory.setConfigurationURL(testDigesterFileOptional.toURL());
+        Configuration config = factory.getConfiguration();
+        assertTrue(config.getBoolean("test.boolean"));
+        assertEquals("value", config.getProperty("element"));
     }
 
     private void checkUnionConfig() throws Exception

@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.17 2004/10/18 12:50:41 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.18 2004/11/14 19:06:32 oheger Exp $
  */
 public class ConfigurationFactory
 {
@@ -57,9 +57,12 @@ public class ConfigurationFactory
 
     /** Constant for the additional section.*/
     private static final String SEC_ADDITIONAL = SEC_ROOT + "additional/";
-
-    /** Constant for the name of the load method.*/
-    private static final String METH_LOAD = "load";
+    
+    /** Constant for the optional attribute.*/
+    private static final String ATTR_REQUIRED = "required";
+    
+    /** Constant for the fileName attribute.*/
+    private static final String ATTR_FILENAME = "fileName";
 
     /** Constant for the default base path (points to actual directory).*/
     private static final String DEF_BASE_PATH = ".";
@@ -275,21 +278,21 @@ public class ConfigurationFactory
             digester,
             matchString + "properties",
             new FileConfigurationFactory(PropertiesConfiguration.class),
-            METH_LOAD,
+            null,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "xml",
             new FileConfigurationFactory(XMLConfiguration.class),
-            METH_LOAD,
+            null,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "hierarchicalXml",
             new FileConfigurationFactory(HierarchicalXMLConfiguration.class),
-            METH_LOAD,
+            null,
             additional);
 
         setupDigesterInstance(
@@ -488,6 +491,24 @@ public class ConfigurationFactory
         {
             FileConfiguration conf = (FileConfiguration) super.createObject(attributes);
             conf.setBasePath(getBasePath());
+            conf.setFileName(attributes.getValue(ATTR_FILENAME));
+            try
+            {
+                log.info("Trying to load configuration " + conf.getFileName());
+                conf.load();
+            }
+            catch(ConfigurationException cex)
+            {
+                if(attributes.getValue(ATTR_REQUIRED) == null
+                        || !PropertyConverter.toBoolean(attributes.getValue(ATTR_REQUIRED)).booleanValue())
+                {
+                    log.warn("Could not load optional configuration " + conf.getFileName());
+                }
+                else
+                {
+                    throw cex;
+                }
+            }
             return conf;
         }
     }

@@ -71,6 +71,15 @@
         AppletConfiguration, ServletConfiguration, ServletContextConfiguration,
         ServletRequestConfiguration, ServletFilterConfiguration.
       </action>
+	  <action dev="oheger" type="fix" issue="32236">
+		Fixed NPE that where caused in the constructors of file based
+		configurations if an invalid file name was specified.
+	  </action>
+	  <action dev="oheger" type="add" issue="31797">
+		Added support for optional configuration sources in definition files for
+		ConfigurationFactory. A new required attribute allows to specify whether a
+		configuration source is mandatory or optional.
+	  </action>
     </release>
 
     <release version="1.0.1-dev" date="in CVS">
