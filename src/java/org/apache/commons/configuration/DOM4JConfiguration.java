@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -33,9 +34,6 @@ import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * Reads a XML configuration file.
@@ -48,6 +46,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * changes to disk, unless <code>autoSave=true</code>.
  *
  * @since 0.8.1
+ *
+ * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
+ * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
+ * @version $Revision: 1.6 $, $Date: 2004/06/15 11:49:25 $
  */
 public class DOM4JConfiguration extends XMLConfiguration
 {
@@ -287,7 +289,7 @@ public class DOM4JConfiguration extends XMLConfiguration
     }
 
     /**
-     * @throws 
+     * Save the configuration if the automatic persistence is enabled.
      */
     private void possiblySave()
     {
@@ -299,13 +301,14 @@ public class DOM4JConfiguration extends XMLConfiguration
             }
             catch (ConfigurationException ce)
             {
-                throw new NestableRuntimeException("Failed to auto-save", ce);
+                throw new ConfigurationRuntimeException("Failed to auto-save", ce);
             }
         }
     }
 
     /**
      * If true, changes are automatically persisted.
+     *
      * @param autoSave
      */
     public void setAutoSave(boolean autoSave)

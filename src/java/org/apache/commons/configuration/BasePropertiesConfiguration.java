@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,14 +24,12 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * loads the configuration from a properties file. <p>
@@ -110,7 +108,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.9 2004/06/15 10:12:29 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.10 2004/06/15 11:49:25 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -472,7 +470,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                         inUnicode = false;
                         hadSlash = false;
                     } catch (NumberFormatException nfe) {
-                        throw new NestableRuntimeException("Unable to parse unicode value: " + unicode, nfe);
+                        throw new ConfigurationRuntimeException("Unable to parse unicode value: " + unicode, nfe);
                     }
                 }
                 continue;

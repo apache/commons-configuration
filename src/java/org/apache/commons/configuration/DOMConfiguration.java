@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2004 The Apache Software Foundation.
  *
@@ -16,26 +14,24 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.SAXException;
 
 /**
@@ -48,7 +44,10 @@ import org.xml.sax.SAXException;
  * Setting property values will <b>NOT</b> automatically persist
  * changes to disk, unless <code>autoSave=true</code>.
  *
- * @since commons-configuragtion 1.0
+ * @since commons-configuration 1.0
+ *
+ * @author Jörg Schaible
+ * @version $Revision: 1.3 $, $Date: 2004/06/15 11:49:25 $
  */
 public class DOMConfiguration extends XMLConfiguration
 {
@@ -359,6 +358,9 @@ public class DOMConfiguration extends XMLConfiguration
         }
     }
 
+    /**
+     * Save the configuration if the automatic persistence is enabled.
+     */
     private void possiblySave()
     {
         if (autoSave)
@@ -369,7 +371,7 @@ public class DOMConfiguration extends XMLConfiguration
             }
             catch (ConfigurationException ce)
             {
-                throw new NestableRuntimeException("Failed to auto-save", ce);
+                throw new ConfigurationRuntimeException("Failed to auto-save", ce);
             }
         }
     }
