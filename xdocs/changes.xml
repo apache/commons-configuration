@@ -8,6 +8,9 @@
   <body>
     <release version="1.0-dev-4" date="">  
 	 <action dev="ebourg" type="update">
+        Refactored JNDIConfiguration to use AbstractConfiguration.
+     </action>      
+	 <action dev="ebourg" type="update">
         Fixed bug 27427 by refactoring out the subset logic into a SubsetConfiguration.
      </action>    	
      <action dev="oheger" type="fix">
