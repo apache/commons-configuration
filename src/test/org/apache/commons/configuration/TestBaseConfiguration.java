@@ -29,7 +29,7 @@ import junitx.framework.ObjectAssert;
 /**
  * Tests some basic functions of the BaseConfiguration class
  *
- * @version $Id: TestBaseConfiguration.java,v 1.9 2004/05/13 12:19:16 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.10 2004/06/03 14:04:52 ebourg Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -481,6 +481,19 @@ public class TestBaseConfiguration extends TestCase
 		fail("IllegalStateException should have been thrown for looped property references");
 	}
 
-    
+    public void testProcessString()
+    {
+        String s1 = "abc,xyz";
+        List tokens = config.processString(s1);
+        assertEquals("number of tokens in '" + s1 + "'", 2, tokens.size());
+        assertEquals("1st token for '" + s1 + "'", "abc", tokens.get(0));
+        assertEquals("2nd token for '" + s1 + "'", "xyz", tokens.get(1));
+
+        String s2 = "abc\\,xyz";
+        tokens = config.processString(s2);
+        assertEquals("number of tokens in '" + s2 + "'", 1, tokens.size());
+        assertEquals("1st token for '" + s2 + "'", "abc,xyz", tokens.get(0));
+    }
+
 }
 
