@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.4 2004/03/09 10:31:31 epugh Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -235,12 +235,12 @@ public class TestHierarchicalConfiguration extends TestCase
             key.append("name");
             assertEquals(fields[0][i], conf.getProperty(key.toString()));
         }  /* for */
-        
-        assertNull(config.subset("tables.table(2)"));
-        
-        conf = config.subset("tables.table.fields.field.name");
+
+        assertTrue("subset is not empty", config.subset("tables.table(2)").isEmpty());
+
+        conf = config.subset("tables.table.fields.field");
         prop = conf.getProperty("name");
-        assertTrue(prop instanceof Collection);
+        assertTrue("prop is not a collection", prop instanceof Collection);
         assertEquals(10, ((Collection) prop).size());
     }
 }

@@ -16,6 +16,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -23,9 +25,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -33,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.6 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.7 2004/03/09 10:31:31 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -270,63 +272,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public Configuration subset(String prefix)
     {
-        BaseConfiguration c = new BaseConfiguration();
-        Iterator keys = this.getKeys();
-        boolean validSubset = false;
-
-        while (keys.hasNext())
-        {
-            Object key = keys.next();
-
-            if (key instanceof String && ((String) key).startsWith(prefix))
-            {
-                if (!validSubset)
-                {
-                    validSubset = true;
-                }
-
-                String newKey = null;
-
-                /*
-                 * Check to make sure that c.subset(prefix) doesn't blow up when
-                 * there is only a single property with the key prefix. This is
-                 * not a useful subset but it is a valid subset.
-                 */
-                if (((String) key).length() == prefix.length())
-                {
-                    newKey = prefix;
-                }
-                else
-                {
-                    newKey = ((String) key).substring(prefix.length() + 1);
-                }
-
-                /*
-                 * use addPropertyDirect() - this will plug the data as is into
-                 * the Map, but will also do the right thing re key accounting
-                 *
-                 * QUESTION: getProperty or getPropertyDirect
-                 */
-                Object value = getProperty((String) key);
-                if (value instanceof String)
-                {
-                    c.addPropertyDirect(newKey, interpolate((String) value));
-                }
-                else
-                {
-                    c.addProperty(newKey, value);
-                }
-            }
-        }
-
-        if (validSubset)
-        {
-            return c;
-        }
-        else
-        {
-            return null;
-        }
+        return new SubsetConfiguration(this, prefix, ".");
     }
 
     /**
@@ -384,21 +330,20 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return An Iterator of keys that match the prefix.
      */
-    public Iterator getKeys(String prefix)
-    {
-        Iterator keys = getKeys();
-        ArrayList matchingKeys = new ArrayList();
+    public Iterator getKeys(final String prefix) {
 
-        while (keys.hasNext())
-        {
-            Object key = keys.next();
+        return new FilterIterator(getKeys(), new Predicate() {
+            public boolean evaluate(Object obj) {
+                boolean matching = false;
 
-            if (key instanceof String && ((String) key).startsWith(prefix))
-            {
-                matchingKeys.add(key);
+                if (obj instanceof String) {
+                    String key = (String) obj;
+                    matching = key.startsWith(prefix + ".") || key.equals(prefix);
+                }
+
+                return matching;
             }
-        }
-        return matchingKeys.iterator();
+        });
     }
 
     /**

@@ -24,7 +24,7 @@ import junit.framework.Assert;
  * Pulling out the calls to do the tests so both JUnit and Cactus tests 
  * can share.
  * 
- * @version $Id: NonStringTestHolder.java,v 1.4 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: NonStringTestHolder.java,v 1.5 2004/03/09 10:31:31 epugh Exp $
  */
 public class NonStringTestHolder
 {
@@ -130,39 +130,30 @@ public class NonStringTestHolder
 
     public void testListMissing() throws Exception
     {
-
-        Assert.assertEquals(
-            0,
-            configuration.getList("missing.list").size());
+        Assert.assertEquals(0, configuration.getList("missing.list").size());
     }
 
     public void testSubset() throws Exception
     {
-        String KEY_VALUE = "test.short";
-        Configuration subset = configuration.subset(KEY_VALUE);
-		boolean foundKeyValue = false;
-        for (Iterator i = subset.getKeys(); i.hasNext();)
-        {
-            String key = (String) i.next();
-            if (!key.equals(KEY_VALUE))
-            {
+        Configuration subset = configuration.subset("test");
 
-                Assert.assertTrue(
-                    "Key is:" + key,
-                    !key.startsWith("test.short"));
-            }
-            else {
-            	foundKeyValue=true;
-            }
+        // search the "short" key in the subset using the key iterator
+        boolean foundKeyValue = false;
+        Iterator it = subset.getKeys();
+        while (it.hasNext() && !foundKeyValue)
+        {
+            String key = (String) it.next();
+            foundKeyValue = "short".equals(key);
         }
-        Assert.assertTrue("Make sure test.short did show up.  It is valid.",foundKeyValue);
+
+        Assert.assertTrue("'short' key not found in the subset key iterator", foundKeyValue);
     }
 
     public void testIsEmpty() throws Exception
     {
-        Assert.assertTrue("Configuration should not be empty",!configuration.isEmpty());
-
+        Assert.assertTrue("Configuration should not be empty", !configuration.isEmpty());
     }
+
     /**
      * @return
      */

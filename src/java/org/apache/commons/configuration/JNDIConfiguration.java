@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
- * @version $Id: JNDIConfiguration.java,v 1.7 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.8 2004/03/09 10:31:31 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -283,65 +283,6 @@ public class JNDIConfiguration
         catch (javax.naming.NamingException ne)
         {
             return false;
-        }
-    }
-    /**
-     * Create an ExtendedProperties object that is a subset
-     * of this one. Take into account duplicate keys
-     * by using the setProperty() in ExtendedProperties.
-     *
-     * @param prefix
-     */
-    public Configuration subset(String prefix)
-    {
-        BaseConfiguration c = new BaseConfiguration();
-        Iterator keys = this.getKeys();
-        boolean validSubset = false;
-        while (keys.hasNext())
-        {
-            Object key = keys.next();
-            if (key instanceof String && ((String) key).startsWith(prefix))
-            {
-                if (!validSubset)
-                {
-                    validSubset = true;
-                }
-                String newKey = null;
-                /*
-                 * Check to make sure that c.subset(prefix) doesn't blow up when
-                 * there is only a single property with the key prefix. This is
-                 * not a useful subset but it is a valid subset.
-                 */
-                if (((String) key).length() == prefix.length())
-                {
-                    newKey = prefix;
-                }
-                else
-                {
-                    newKey = ((String) key).substring(prefix.length() + 1);
-                }
-                /*
-                 * use addPropertyDirect() - this will plug the data as is into
-                 * the Map, but will also do the right thing re key accounting
-                 */
-                Object value = getValueFromJNDI(key.toString());
-                if (value instanceof String)
-                {
-                    c.addPropertyDirect(newKey, interpolate((String) value));
-                }
-                else
-                {
-                    c.addPropertyDirect(newKey, value);
-                }
-            }
-        }
-        if (validSubset)
-        {
-            return (Configuration) c;
-        }
-        else
-        {
-            return null;
         }
     }
     

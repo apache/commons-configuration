@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">  
+	 <action dev="ebourg" type="update">
+        Fixed bug 27427 by refactoring out the subset logic into a SubsetConfiguration.
+     </action>    	
      <action dev="oheger" type="fix">
       	Reapply the ConfigurationXMLDocument that went missing during migration out of sandbox.
      </action>        	

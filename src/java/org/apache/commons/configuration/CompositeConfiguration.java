@@ -28,7 +28,7 @@ import java.util.ListIterator;
  * You can add multiple different types or the same type of properties file.
  * If Configuration1 doesn't have the property, then Configuration2 will be checked.
  * 
- * @version $Id: CompositeConfiguration.java,v 1.8 2004/03/08 23:27:09 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.9 2004/03/09 10:31:31 epugh Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -247,32 +247,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
         return false;
     }
-    /**
-     * Create a CompositeConfiguration object that is a subset
-     * of this one. Cycles over all the config objects, and calls
-     * their subset method and then just adds that.
-     *
-     * @param prefix
-     */
-    public Configuration subset(String prefix)
-    {
-        CompositeConfiguration subsetCompositeConfiguration =
-            new CompositeConfiguration();
-        Configuration subConf = null;
-        int count = 0;
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
-        {
-            Configuration config = (Configuration) i.next();
-            Configuration subset = config.subset(prefix);
-            if (subset != null)
-            {
-                subsetCompositeConfiguration.addConfiguration(subset);
-                subConf = subset;
-                count++;
-            }
-        }
-        return (count == 1) ? subConf : subsetCompositeConfiguration;
-    }
+ 
     /**
      * Get a List of strings associated with the given configuration key.
      *

@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.5 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.6 2004/03/09 10:31:31 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -210,7 +210,7 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests retrieving subsets of configuraitions
+     * Tests retrieving subsets of configurations
      */
     public void testGettingSubset() throws Exception
     {
@@ -218,14 +218,14 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(dom4jConf);
 
         Configuration subset = null;
-        subset = cc.subset("test.short");
+        subset = cc.subset("test");
         assertNotNull(subset);
-        assertTrue("Shouldn't be empty", !subset.isEmpty());
-        assertEquals("Make sure the initial loaded configs subset overrides" + "any later add configs subset", "1", subset.getString("test.short"));
+        assertFalse("Shouldn't be empty", subset.isEmpty());
+        assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "1", subset.getString("short"));
 
         cc.setProperty("test.short", "43");
-        subset = cc.subset("test.short");
-        assertEquals("Make sure the initial loaded configs subset overrides" + "any later add configs subset", "43", subset.getString("test.short"));
+        subset = cc.subset("test");
+        assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "43", subset.getString("short"));
     }
 
     /**
