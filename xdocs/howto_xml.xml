@@ -8,7 +8,7 @@
  </properties>
 
 <body>		
-	<section name="Using a XML based Configurations">
+	<section name="Using XML based Configurations">
 		<p>
  	 		This section explains how to use Hierarchical
     		and Structured XML datasets.
@@ -18,7 +18,7 @@
 	
 	<section name="Hierarchical properties">
 		<p>
-			The XML document we used so far was quite simple. Because of its
+			The XML document we used in the section about composite configuration was quite simple. Because of its
 			tree-like nature XML documents can represent data that is
 			structured in many ways. This section explains how to deal with
 			such structured documents.
@@ -178,14 +178,13 @@ if(prop instanceof Collection)
 <configuration>
   <properties fileName="usergui.properties"/>
   <dom4j fileName="gui.xml"/>
-  <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration"
-   fileName="tables.xml"/>
+  <hierarchicalDom4j fileName="tables.xml"/>
 </configuration>
 ]]>
 			</source>
 			<p>
-				Note the additional <code>className</code> attribute of the last
-				<code>dom4j</code> element. This attribute tells the configuration
+				Note that one <code>dom4j</code> element was replaced by a
+				<code>hierarchicalDom4j</code> element. This element tells the configuration
 				factory that not the default class for processing XML documents
 				should be used, but the class <code>HierarchicalDOM4JConfiguration</code>.
 				As the name implies this class is capable of saving the
@@ -355,10 +354,8 @@ if(prop instanceof Collection)
   </override>
   
   <additional>
-    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration"
-     fileName="tables.xml"/>
-    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration"
-     fileName="tasktables.xml" at="tables"/>
+    <hierarchicalDom4j fileName="tables.xml"/>
+    <hierarchicalDom4j fileName="tasktables.xml" at="tables"/>
   </additional>
 </configuration>
 ]]>
