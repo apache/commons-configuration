@@ -112,4 +112,15 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("base path of " + url, "http://xyz.net", ConfigurationUtils.getBasePath(url));
     }
 
+    public void testGetFileName() throws Exception
+    {
+        assertEquals("file name for a null URL", null, ConfigurationUtils.getFileName(null));
+
+        URL url = new URL("http://xyz.net/foo/");
+        assertEquals("file for a directory URL " + url, null, ConfigurationUtils.getFileName(url));
+
+        url = new URL("http://xyz.net/foo/bar.xml");
+        assertEquals("file name for a valid URL " + url, "bar.xml", ConfigurationUtils.getFileName(url));
+    }
+
 }

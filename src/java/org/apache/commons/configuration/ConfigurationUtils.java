@@ -17,10 +17,10 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -35,11 +35,11 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.8 $, $Date: 2004/09/23 08:41:55 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/23 11:42:00 $
  */
 public final class ConfigurationUtils
 {
-    private static Log log  = LogFactory.getLog(ConfigurationUtils.class);
+    private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
     private ConfigurationUtils()
     {
@@ -220,7 +220,7 @@ public final class ConfigurationUtils
         {
             if (base == null)
             {
-                url =  new URL(name);
+                url = new URL(name);
             }
             else
             {
@@ -241,10 +241,13 @@ public final class ConfigurationUtils
             File file = new File(name);
             if (file.isAbsolute())     // already absolute?
             {
-                try {
+                try
+                {
                     url = file.toURL();
                     log.debug("Configuration loaded from the absolute path " + name);
-                } catch (MalformedURLException e) {
+                }
+                catch (MalformedURLException e)
+                {
                     e.printStackTrace();
                 }
             }
@@ -340,6 +343,28 @@ public final class ConfigurationUtils
         else
         {
             return s.substring(0, s.lastIndexOf("/") + 1);
+        }
+    }
+
+    /**
+     * Extract the file name from the specified URL.
+     */
+    static String getFileName(URL url)
+    {
+        if (url == null)
+        {
+            return null;
+        }
+
+        String path = url.getPath();
+
+        if (path.endsWith("/") || StringUtils.isEmpty(path))
+        {
+            return null;
+        }
+        else
+        {
+            return path.substring(path.lastIndexOf("/") + 1);
         }
     }
 
