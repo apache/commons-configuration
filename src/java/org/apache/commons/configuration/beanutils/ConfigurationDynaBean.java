@@ -23,7 +23,6 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConversionException;
-import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -47,15 +46,14 @@ import org.apache.commons.logging.LogFactory;
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
-public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean {
+public class ConfigurationDynaBean implements DynaBean {
 
     private final static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
     Configuration configuration;
 
     public ConfigurationDynaBean(Configuration configuration) {
-        super(configuration);
-        if (log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
+        if(log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
         this.configuration = configuration;
     }
 
@@ -190,8 +188,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     }
 
     /**
-     * Calling this method always throws a <code>IllegalArgumentException</code>.
-     * You cannot set indexed properties for configurations.
      * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, int, java.lang.Object)
      */
     public void set(String name, int index, Object value) {
@@ -214,10 +210,4 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
         configuration.setProperty(name+"."+key, value);
     }
 
-    /**
-     * @return the configuration wrapped by this class.
-     */
-    public Configuration getConfiguration() {
-       return configuration;
-    }
 }

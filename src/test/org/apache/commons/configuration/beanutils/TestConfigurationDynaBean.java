@@ -31,7 +31,7 @@ import org.apache.commons.configuration.BaseConfiguration;
  * because the two classes provide similar levels of functionality.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  */
 public class TestConfigurationDynaBean extends TestCase {
 
@@ -57,7 +57,9 @@ public class TestConfigurationDynaBean extends TestCase {
             "mappedProperty.key3",
             "mappedIntProperty.key1",
             "shortProperty",
-            "stringProperty"
+            "stringProperty",
+            "byteProperty",
+            "charProperty"
     };
     
     Object[] values = {
@@ -72,10 +74,19 @@ public class TestConfigurationDynaBean extends TestCase {
             "Third Value",
             new Integer(Integer.MAX_VALUE),
             new Short(Short.MAX_VALUE),
-            "This is a string"
+            "This is a string",
+            new Byte(Byte.MAX_VALUE),
+            new Character(Character.MAX_VALUE)
     };
 
     int[] intArray = { 0, 10, 20, 30, 40 };
+    boolean[] booleanArray = { true, false, true, false, true };
+    char[] charArray = {'a', 'b', 'c', 'd', 'e' };
+    byte[] byteArray = { 0, 10, 20, 30, 40 };
+    long[] longArray = { 0, 10, 20, 30, 40 };
+    short[] shortArray = { 0, 10, 20, 30, 40 };
+    float[] floatArray = { 0, 10, 20, 30, 40 };
+    double[] doubleArray = { 0.0, 10.0, 20.0, 30.0, 40.0 };
     String[] stringArray = { "String 0", "String 1", "String 2", "String 3", "String 4" };
 
     /**
@@ -108,7 +119,15 @@ public class TestConfigurationDynaBean extends TestCase {
 
         bean = new ConfigurationDynaBean(configuration);
 
+        bean.set("listIndexed",list);
         bean.set("intArray", intArray);
+        bean.set("booleanArray", booleanArray);
+        bean.set("charArray", charArray);
+        bean.set("longArray", longArray);
+        bean.set("shortArray", shortArray);
+        bean.set("floatArray", floatArray);
+        bean.set("doubleArray", doubleArray);
+        bean.set("byteArray", byteArray);
         bean.set("stringArray", stringArray);
     }
 
@@ -827,5 +846,55 @@ public class TestConfigurationDynaBean extends TestCase {
         assertNotNull("Failed to get descriptor", descriptor);
         assertEquals("Got incorrect type", type, descriptor.getType());
     }
+    
+    /**
+     * Tests if accessing a non-indexed property using the index
+     * get method throws an IllegalArgumentException as it
+     * should.
+     */
+    public void testNonIndexedPropeties() {
+        ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
+        try {
+            String value = (String) nested.get("key1");
+            assertEquals("Can find first value", "First Value", value);
+        } catch (Throwable t) {
+            fail("Finding first value threw " + t);
+        }
+
+        try {
+            nested.set("key1", "undefined");
+            assertEquals("Incorrect value returned", "undefined", bean.get("mappedProperty.key1"));
+        } catch (Throwable t) {
+            fail("Finding setting first value threw " + t);
+        }
+    }
+
+    /**
+     * Tests if accessing a non-indexed property using the index
+     * get method throws an IllegalArgumentException as it
+     * should.
+     */
+    public void testNestedPropeties() {
+        try {
+            bean.get("booleanProperty", 0);
+        } catch(IllegalArgumentException e) {
+            return;
+        } catch(Throwable t) {
+            fail("Threw " + t + " instead of IllegalArgumentException");
+            return;
+        }
+        fail("Should have thrown IllegalArgumentException");
+
+        try {
+            bean.set("booleanProperty", 0, new Boolean(true));
+        } catch(IllegalArgumentException e) {
+            return;
+        } catch(Throwable t) {
+            fail("Threw " + t + " instead of IllegalArgumentException");
+            return;
+        }
+        fail("Should have thrown IllegalArgumentException");
+    }
+    
 
 }
