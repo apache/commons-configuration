@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.util.Collection;
 import java.net.URL;
 
@@ -53,6 +54,9 @@ public class TestConfigurationFactory extends TestCase
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
     private String testBasePath = new File("conf").getAbsolutePath();
+    
+    private File testProperties = new File("conf/test.properties");
+    private File testAbsConfig = new File("target/testAbsConfig.xml");
 
     private Configuration configuration;
     private CompositeConfiguration compositeConfiguration;
@@ -271,6 +275,43 @@ public class TestConfigurationFactory extends TestCase
         catch(ConfigurationException cex)
         {
             // fine
+        }
+    }
+    
+    // Checks if a file with an absolute path can be loaded
+    public void testLoadAbsolutePath() throws Exception
+    {
+        try
+        {
+            FileWriter out = null;
+            try
+            {
+                out = new FileWriter(testAbsConfig);
+                out.write("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
+                out.write("<configuration>");
+                out.write("<properties fileName=\"");
+                out.write(testProperties.getAbsolutePath());
+                out.write("\"/>");
+                out.write("</configuration>");
+            }
+            finally
+            {
+                if (out != null)
+                {
+                    out.close();
+                }
+            }
+
+            factory.setConfigurationFileName(testAbsConfig.toString());
+            Configuration config = factory.getConfiguration();
+            assertTrue(config.getBoolean("configuration.loaded"));
+        }
+        finally
+        {
+            if (testAbsConfig.exists())
+            {
+                testAbsConfig.delete();
+            }
         }
     }
 
