@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Decorator providing additional getters for any Configuration. This extended
@@ -41,7 +42,7 @@ import org.apache.commons.lang.ArrayUtils;
  * version.</p>
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.2 $, $Date$
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration
@@ -131,7 +132,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -207,7 +208,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         boolean[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -281,7 +282,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -356,7 +357,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         byte[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -430,7 +431,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -505,7 +506,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         short[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -580,7 +581,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -655,7 +656,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         int[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -729,7 +730,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -804,7 +805,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         long[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -825,7 +826,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toLong(it.next()).intValue();
+                array[i++] = PropertyConverter.toLong(it.next()).longValue();
             }
         }
         else
@@ -834,7 +835,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new long[1];
-                array[0] = PropertyConverter.toLong(value).intValue();
+                array[0] = PropertyConverter.toLong(value).longValue();
             }
             catch (ConversionException e)
             {
@@ -878,7 +879,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -953,7 +954,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         float[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -974,7 +975,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toFloat(it.next()).intValue();
+                array[i++] = PropertyConverter.toFloat(it.next()).floatValue();
             }
         }
         else
@@ -983,7 +984,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new float[1];
-                array[0] = PropertyConverter.toFloat(value).intValue();
+                array[0] = PropertyConverter.toFloat(value).floatValue();
             }
             catch (ConversionException e)
             {
@@ -1028,7 +1029,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -1103,7 +1104,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         double[] array;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             array = defaultValue;
         }
@@ -1124,7 +1125,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toDouble(it.next()).intValue();
+                array[i++] = PropertyConverter.toDouble(it.next()).doubleValue();
             }
         }
         else
@@ -1133,7 +1134,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new double[1];
-                array[0] = PropertyConverter.toDouble(value).intValue();
+                array[0] = PropertyConverter.toDouble(value).doubleValue();
             }
             catch (ConversionException e)
             {
@@ -1177,7 +1178,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -1287,7 +1288,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -1444,7 +1445,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -1682,7 +1683,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -1974,7 +1975,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -2193,7 +2194,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }
@@ -2350,7 +2351,7 @@ public class DataConfiguration extends AbstractConfiguration
 
         List list = null;
 
-        if (value == null)
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
             list = defaultValue;
         }

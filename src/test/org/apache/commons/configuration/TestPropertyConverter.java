@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/12/14 17:03:51 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestPropertyConverter extends TestCase
 {
@@ -69,5 +69,10 @@ public class TestPropertyConverter extends TestCase
         assertEquals("1st element", new Integer(1), it.next());
         assertEquals("2nd element", new Integer(2), it.next());
         assertEquals("3rd element", new Integer(3), it.next());
+    }
+
+    public void testToLong()
+    {
+        assertEquals("81008931800 to long", 81008931800L, PropertyConverter.toLong("81008931800").longValue());
     }
 }
