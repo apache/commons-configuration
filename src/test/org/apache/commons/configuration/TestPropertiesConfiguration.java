@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.8 2004/06/17 14:39:54 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.9 2004/06/17 15:30:29 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -127,8 +127,8 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
         assertEquals("array length", 4, array.length);
         assertEquals("1st element", "a", array[0]);
-        assertEquals("1st element", "b", array[1]);
-        assertEquals("1st element", "c", array[2]);
-        assertEquals("1st element", "d", array[3]);
+        assertEquals("2nd element", "b", array[1]);
+        assertEquals("3rd element", "c", array[2]);
+        assertEquals("4th element", "d", array[3]);
     }
 }
