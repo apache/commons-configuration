@@ -59,14 +59,13 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.configuration.exception.ConfigurationLoadException;
 import org.xml.sax.SAXParseException;
 
 /**
  * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.4 2004/01/23 11:52:36 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.5 2004/01/30 14:46:37 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -187,7 +186,7 @@ public class TestConfigurationFactory extends TestCase
     		Configuration c = configurationFactory.getConfiguration();
     		fail("Should have throw an Exception");
     	}
-    	catch (ConfigurationLoadException cle){
+    	catch (ConfigurationException cle){
     		assertTrue(cle.getCause() instanceof SAXParseException);
     	}
     }

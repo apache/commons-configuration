@@ -72,7 +72,7 @@ import org.apache.commons.lang.StringUtils;
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: ClassPropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
  */
 public class ClassPropertiesConfiguration
     extends BasePropertiesConfiguration
@@ -93,7 +93,7 @@ public class ClassPropertiesConfiguration
      * @throws IOException Error while loading the properties file
      */
     public ClassPropertiesConfiguration(Class baseClass, String resource)
-        throws IOException
+        throws ConfigurationException
     {
         this.baseClass = baseClass;
         // According to javadocs, getClassLoader() might return null
@@ -104,8 +104,12 @@ public class ClassPropertiesConfiguration
             : baseClass.getClassLoader();
         
         setIncludesAllowed(true);
-
-        load(getPropertyStream(resource));
+        try {
+        	load(getPropertyStream(resource));
+        }
+        catch (IOException ioe){
+        	throw new ConfigurationException("Could not load input stream from resource " + resource,ioe);
+        }
     }
 
     /**
@@ -119,7 +123,7 @@ public class ClassPropertiesConfiguration
      */
     public ClassPropertiesConfiguration(Class baseClass, String resource, 
                                         Configuration defaults)
-        throws IOException
+        throws ConfigurationException
     {
         this(baseClass, resource);
         this.defaults = defaults;
@@ -136,7 +140,7 @@ public class ClassPropertiesConfiguration
      */
     public ClassPropertiesConfiguration(Class baseClass, String resource,
                                         String defaultFile)
-        throws IOException
+        throws ConfigurationException
     {
         this(baseClass, resource);
 
@@ -155,7 +159,7 @@ public class ClassPropertiesConfiguration
      * @return An Input Stream
      * @throws IOException Error while loading the properties file
      */
-    public InputStream getPropertyStream(String resourceName)
+    protected InputStream getPropertyStream(String resourceName)
         throws IOException
     {
         InputStream resource = null;

@@ -1,4 +1,4 @@
-package org.apache.commons.configuration.exception;
+package org.apache.commons.configuration;
 
 /* ====================================================================
  * The Apache Software License, Version 1.1
@@ -62,21 +62,21 @@ import org.apache.commons.lang.exception.NestableException;;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  *
- * @version $Id: ConfigurationLoadException.java,v 1.1 2004/01/23 11:52:36 epugh Exp $
+ * @version $Id: ConfigurationException.java,v 1.1 2004/01/30 14:46:37 epugh Exp $
  */
 
-public class ConfigurationLoadException extends NestableException {
+public class ConfigurationException extends NestableException {
 
-	public ConfigurationLoadException(Throwable root) {
+	public ConfigurationException(Throwable root) {
 		super(root);
 	}
 
 
-	public ConfigurationLoadException(String string, Throwable root) {
+	public ConfigurationException(String string, Throwable root) {
 		super(string, root);
 	}
 
-	public ConfigurationLoadException(String s) {
+	public ConfigurationException(String s) {
 		super(s);
 	}
 }

@@ -54,11 +54,13 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
@@ -70,7 +72,7 @@ import org.dom4j.io.SAXReader;
  * the base class <code>HierarchicalProperties</code>.
  * 
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
  */
 public class HierarchicalDOM4JConfiguration
     extends HierarchicalConfiguration
@@ -142,9 +144,14 @@ public class HierarchicalDOM4JConfiguration
      * been specified before.
      * @throws Exception if an error occurs
      */
-    public void load() throws Exception
+    public void load() throws ConfigurationException
     {
-        load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
+    	try {
+    		load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
+    	}
+    	catch (MalformedURLException mue){
+    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
+    	}
     }
 
     /**
@@ -152,9 +159,14 @@ public class HierarchicalDOM4JConfiguration
      * @param url the URL to the XML document
      * @throws Exception if an error occurs
      */
-    public void load(URL url) throws Exception
+    public void load(URL url) throws ConfigurationException
     {
-        initProperties(new SAXReader().read(url));
+    	try {
+    		initProperties(new SAXReader().read(url));
+    	}
+    	catch (DocumentException de){
+    		throw new ConfigurationException("Could not load from " + url);
+    	}
     }
 
     /**

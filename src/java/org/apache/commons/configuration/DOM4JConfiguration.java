@@ -59,12 +59,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
 import org.dom4j.Attribute;
 import org.dom4j.Document;
+import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
@@ -132,7 +134,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      * @exception Exception If error reading data source.
      * @see DOM4JConfiguration(File)
      */
-    public DOM4JConfiguration(String resource) throws Exception
+    public DOM4JConfiguration(String resource) throws ConfigurationException
     {
         setFile(resourceURLToFile(resource));
         load();
@@ -144,17 +146,25 @@ public class DOM4JConfiguration extends XMLConfiguration
      * @param file File object representing the XML file.
      * @exception Exception If error reading data source.
      */
-    public DOM4JConfiguration(File file) throws Exception
+    public DOM4JConfiguration(File file) throws ConfigurationException
     {
         setFile(file);
         load();
     }
 
-    public void load() throws Exception
+    public void load() throws ConfigurationException
     {
 
-        document = new SAXReader().read(
-        ConfigurationUtils.getURL(getBasePath(), getFileName()));
+    	try {
+    		document = new SAXReader().read(
+    				ConfigurationUtils.getURL(getBasePath(), getFileName()));
+    	}
+    	catch (MalformedURLException mue){
+    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
+    	}    	
+    	catch (DocumentException de){
+    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
+    	}
         initProperties(document.getRootElement(), new StringBuffer());
 
     }
@@ -327,9 +337,9 @@ public class DOM4JConfiguration extends XMLConfiguration
             {
                 save();
             }
-            catch (IOException e)
+            catch (ConfigurationException ce)
             {
-                throw new NestableRuntimeException("Failed to auto-save", e);
+                throw new NestableRuntimeException("Failed to auto-save", ce);
             }
         }
     }
@@ -343,7 +353,7 @@ public class DOM4JConfiguration extends XMLConfiguration
         this.autoSave = autoSave;
     }
 
-    public synchronized void save() throws IOException
+    public synchronized void save() throws ConfigurationException
     {
         XMLWriter writer = null;
         OutputStream out = null;
@@ -354,8 +364,12 @@ public class DOM4JConfiguration extends XMLConfiguration
             writer = new XMLWriter(out, outputter);
             writer.write(document);
         }
+        catch (IOException ioe){
+        	throw new ConfigurationException("Could not save to " + getFile());
+        }
         finally
         {
+        	try {
             if (out != null)
             {
                 out.close();
@@ -365,6 +379,10 @@ public class DOM4JConfiguration extends XMLConfiguration
             {
                 writer.close();
             }
+        	}
+        	catch (IOException ioe){
+        		throw new ConfigurationException(ioe);
+        	}
         }
     }
     /**

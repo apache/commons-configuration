@@ -91,7 +91,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
  */
 public class PropertiesConfiguration
         extends BasePropertiesConfiguration
@@ -127,7 +127,7 @@ public class PropertiesConfiguration
      * @param defaults Configuration defaults to use if key not in file
      * @throws IOException Error while loading the properties file
      */
-    public PropertiesConfiguration(Configuration defaults) throws IOException
+    public PropertiesConfiguration(Configuration defaults)
     {
         this();
         this.defaults = defaults;
@@ -141,7 +141,7 @@ public class PropertiesConfiguration
      * @param fileName The name of the Properties File to load.
      * @throws IOException Error while loading the properties file
      */
-    public PropertiesConfiguration(String fileName) throws IOException
+    public PropertiesConfiguration(String fileName) throws ConfigurationException
     {
 
         load(fileName);
@@ -152,7 +152,7 @@ public class PropertiesConfiguration
      *
      * @throws IOException
      */
-    public void load() throws IOException
+    public void load() throws ConfigurationException
     {
         load(getFileName());
     }
@@ -163,9 +163,14 @@ public class PropertiesConfiguration
      * @param fileName A properties file to load
      * @throws IOException
      */
-    public void load(String fileName) throws IOException
+    public void load(String fileName) throws ConfigurationException
     {
-        load(getPropertyStream(fileName));
+    	try {
+    		load(getPropertyStream(fileName));
+    	}
+    	catch (IOException ioe){
+    		throw new ConfigurationException("Could not load from file " + fileName,ioe);
+    	}
     }
 
     /**
@@ -175,7 +180,7 @@ public class PropertiesConfiguration
      * @param defaults Configuration defaults to use if key not in file
      * @throws IOException Error while loading the properties file
      */
-    public PropertiesConfiguration(String file, Configuration defaults) throws IOException
+    public PropertiesConfiguration(String file, Configuration defaults) throws ConfigurationException
     {
         this(file);
         this.defaults = defaults;
@@ -189,7 +194,7 @@ public class PropertiesConfiguration
      *                    should be used if a key is not in the file.
      * @throws IOException Error while loading the properties file
      */
-    public PropertiesConfiguration(String file, String defaultFile) throws IOException
+    public PropertiesConfiguration(String file, String defaultFile) throws ConfigurationException
     {
         this(file);
         if (StringUtils.isNotEmpty(defaultFile))
@@ -206,7 +211,7 @@ public class PropertiesConfiguration
      * @return An Input Stream
      * @throws IOException Error while loading the properties file
      */
-    public InputStream getPropertyStream(String resourceName) throws IOException
+    protected InputStream getPropertyStream(String resourceName) throws IOException
     {
         InputStream resource = null;
         URL url = null;

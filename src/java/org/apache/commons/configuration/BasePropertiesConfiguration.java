@@ -158,7 +158,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.2 2004/01/30 14:05:01 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.3 2004/01/30 14:46:37 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -190,7 +190,7 @@ public abstract class BasePropertiesConfiguration
      * @throws IOException
      */
     public void load(InputStream input)
-        throws IOException
+        throws ConfigurationException
     {
         load(input, null);
     }
@@ -204,7 +204,7 @@ public abstract class BasePropertiesConfiguration
      * @exception IOException
      */
     public synchronized void load(InputStream input, String enc)
-        throws IOException
+        throws ConfigurationException
     {
         PropertiesReader reader = null;
         if (enc != null)
@@ -224,7 +224,7 @@ public abstract class BasePropertiesConfiguration
         {
             reader = new PropertiesReader(new InputStreamReader(input));
         }
-
+        try {
         while (true)
         {
             String line = reader.readProperty();
@@ -263,6 +263,10 @@ public abstract class BasePropertiesConfiguration
                 }
             }
         }
+        }
+        catch (IOException ioe){
+        	throw new ConfigurationException("Could not load configuration from input stream.",ioe);
+        }
     }
 
     /**
@@ -273,22 +277,27 @@ public abstract class BasePropertiesConfiguration
      * @throws IOException
      */
     public void save(String filename)
-        throws IOException
+        throws ConfigurationException
     {
         File file = new File(filename);
-        PropertiesWriter out = new PropertiesWriter(file);
+        try {
+        	PropertiesWriter out = new PropertiesWriter(file);
 
-        out.writeComment("written by PropertiesConfiguration");
-        out.writeComment(new Date().toString());
+        	out.writeComment("written by PropertiesConfiguration");
+        	out.writeComment(new Date().toString());
 
-        for (Iterator i = this.getKeys(); i.hasNext();)
-        {
-            String key = (String) i.next();
-            String value = StringUtils.join(this.getStringArray(key), ", ");
-            out.writeProperty(key, value);
+        	for (Iterator i = this.getKeys(); i.hasNext();)
+        	{
+        		String key = (String) i.next();
+        		String value = StringUtils.join(this.getStringArray(key), ", ");
+        		out.writeProperty(key, value);
+        	}
+        	out.flush();
+        	out.close();
         }
-        out.flush();
-        out.close();
+        catch (IOException ioe){
+        	throw new ConfigurationException("Could not save to file " + filename,ioe);
+        }
     }
 
     /**
