@@ -62,7 +62,7 @@ import junit.framework.TestCase;
  * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.3 2004/01/16 17:31:39 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -147,26 +147,7 @@ public class TestConfigurationFactory extends TestCase
         //configurationFactory.setDigesterRules(digesterRules.toURL());
         configurationFactory.setDigesterRuleNamespaceURI("namespace-one");
 
-        compositeConfiguration = (CompositeConfiguration) configurationFactory.getConfiguration();
-
-        assertEquals("Verify how many configs", 2, compositeConfiguration.getNumberOfConfigurations());
-
-        assertEquals(PropertiesConfiguration.class, compositeConfiguration.getConfiguration(0).getClass());
-
-        PropertiesConfiguration pc = (PropertiesConfiguration) compositeConfiguration.getConfiguration(0);
-        assertNotNull("Make sure we have a fileName:" + pc.getFileName(), pc.getFileName());
-        assertTrue("Make sure we have loaded our key", pc.getBoolean("test.boolean"));
-
-        assertTrue("Make sure we have loaded our key", compositeConfiguration.getBoolean("test.boolean"));
-
-        try
-        {
-            compositeConfiguration.getProperty("element2.subelement.subsubelement");
-            fail("Should have thrown an exception");
-        }
-        catch (java.util.NoSuchElementException nsee)
-        {
-        }
+        checkCompositeConfiguration();
     }
 
     public void testLoadingConfigurationBasePath() throws Exception
@@ -178,26 +159,7 @@ public class TestConfigurationFactory extends TestCase
         //configurationFactory.setDigesterRules(digesterRules.toURL());
         //configurationFactory.setDigesterRuleNamespaceURI("namespace-one");
 
-        compositeConfiguration = (CompositeConfiguration) configurationFactory.getConfiguration();
-
-        assertEquals("Verify how many configs", 2, compositeConfiguration.getNumberOfConfigurations());
-
-        assertEquals(PropertiesConfiguration.class, compositeConfiguration.getConfiguration(0).getClass());
-
-        PropertiesConfiguration pc = (PropertiesConfiguration) compositeConfiguration.getConfiguration(0);
-        assertNotNull("Make sure we have a fileName:" + pc.getFileName(), pc.getFileName());
-        assertTrue("Make sure we have loaded our key", pc.getBoolean("test.boolean"));
-
-        assertTrue("Make sure we have loaded our key", compositeConfiguration.getBoolean("test.boolean"));
-
-        try
-        {
-            compositeConfiguration.getProperty("element2.subelement.subsubelement");
-            fail("Should have thrown an exception");
-        }
-        catch (java.util.NoSuchElementException nsee)
-        {
-        }
+		checkCompositeConfiguration();
     }
     
     public void testLoadingAdditional() throws Exception
@@ -240,4 +202,28 @@ public class TestConfigurationFactory extends TestCase
         // This was overriden, too, but not in additional section
         assertEquals("enhanced factory", compositeConfiguration.getString("test.configuration"));
     }
+    
+	private void checkCompositeConfiguration() throws Exception
+	{
+		compositeConfiguration = (CompositeConfiguration) configurationFactory.getConfiguration();
+
+		assertEquals("Verify how many configs", 2, compositeConfiguration.getNumberOfConfigurations());
+
+		assertEquals(PropertiesConfiguration.class, compositeConfiguration.getConfiguration(0).getClass());
+
+		PropertiesConfiguration pc = (PropertiesConfiguration) compositeConfiguration.getConfiguration(0);
+		assertNotNull("Make sure we have a fileName:" + pc.getFileName(), pc.getFileName());
+		assertTrue("Make sure we have loaded our key", pc.getBoolean("test.boolean"));
+
+		assertTrue("Make sure we have loaded our key", compositeConfiguration.getBoolean("test.boolean"));
+
+		try
+		{
+			compositeConfiguration.getProperty("element2.subelement.subsubelement");
+			fail("Should have thrown an exception");
+		}
+		catch (java.util.NoSuchElementException nsee)
+		{
+		}
+	}    
 }
