@@ -16,11 +16,7 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -35,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.11 $, $Date: 2004/11/17 00:14:03 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/19 01:56:30 $
  */
 public final class ConfigurationUtils
 {
@@ -264,13 +260,27 @@ public final class ConfigurationUtils
             {
                 URL baseURL = new URL(base);
                 url = new URL(baseURL, name);
+
+                // check if the file exists
+                InputStream in = null;
+                try
+                {
+                    in = url.openStream();
+                }
+                finally
+                {
+                    if (in != null)
+                    {
+                        in.close();
+                    }
+                }
             }
 
             log.debug("Configuration loaded from the URL " + url);
         }
-        catch (MalformedURLException e)
+        catch (IOException e)
         {
-
+            url = null;
         }
 
         // attempt to load from an absolute path

@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.util.Collection;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -26,7 +27,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.17 2004/11/14 19:06:32 oheger Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.18 2004/11/19 01:56:30 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -194,6 +195,16 @@ public class TestConfigurationFactory extends TestCase
     {
         factory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
+    }
+
+    public void testLoadingFromJAR() throws Exception
+    {
+        URL url = Thread.currentThread().getContextClassLoader().getResource("config-jar.xml");
+        assertNotNull("config-jar.xml not found on the classpath", url);
+        factory.setConfigurationURL(url);
+
+        Configuration conf = factory.getConfiguration();
+        assertFalse("The configuration is empty", conf.isEmpty());
     }
 
     public void testThrowingConfigurationInitializationException() throws Exception

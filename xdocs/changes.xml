@@ -9,6 +9,20 @@
 
     <release version="1.1-dev" date="in CVS">
       <action dev="ebourg" type="fix">
+        ConfigurationUtils.locate() now checks if the URL based ressources exist.
+        This fixes a bug preventing configuration files from being found if
+        the configuration descriptor is in a JAR file (reported by Grant Ingersoll).
+      </action>
+	  <action dev="oheger" type="fix" issue="32236">
+		Fixed NPE that where caused in the constructors of file based
+		configurations if an invalid file name was specified.
+	  </action>
+	  <action dev="oheger" type="add" issue="31797">
+		Added support for optional configuration sources in definition files for
+		ConfigurationFactory. A new required attribute allows to specify whether a
+		configuration source is mandatory or optional.
+	  </action>
+      <action dev="ebourg" type="fix">
         JNDIConfiguration.getKeys() now returns an empty iterator instead of
         throwing a ConfigurationRuntimeException when a NamingException occurs.
         The NamingExceptions are now logged.
@@ -71,15 +85,6 @@
         AppletConfiguration, ServletConfiguration, ServletContextConfiguration,
         ServletRequestConfiguration, ServletFilterConfiguration.
       </action>
-	  <action dev="oheger" type="fix" issue="32236">
-		Fixed NPE that where caused in the constructors of file based
-		configurations if an invalid file name was specified.
-	  </action>
-	  <action dev="oheger" type="add" issue="31797">
-		Added support for optional configuration sources in definition files for
-		ConfigurationFactory. A new required attribute allows to specify whether a
-		configuration source is mandatory or optional.
-	  </action>
     </release>
 
     <release version="1.0.1-dev" date="in CVS">
