@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,14 +37,10 @@ import org.apache.commons.lang.StringUtils;
  * resources without an absolute path, please take a look at the
  * ClassPropertiesConfiguration which is intended to be used for this.
  * 
- * @version $Id: PropertiesConfiguration.java,v 1.8 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.9 2004/06/21 17:45:29 ebourg Exp $
  */
-public class PropertiesConfiguration
-        extends BasePropertiesConfiguration
-        implements Configuration
+public class PropertiesConfiguration extends BasePropertiesConfiguration
 {
-    
-
     /** File separator. */
     protected String fileSeparator = System.getProperty("file.separator");
 
@@ -65,7 +61,6 @@ public class PropertiesConfiguration
         setIncludesAllowed(false);
     }
 
-
     /**
      * Creates and loads the extended properties from the specified file.
      * The specified file can contain "include = " properties which then
@@ -76,7 +71,6 @@ public class PropertiesConfiguration
      */
     public PropertiesConfiguration(String fileName) throws ConfigurationException
     {
-
         load(fileName);
     }
 
@@ -98,24 +92,39 @@ public class PropertiesConfiguration
      */
     public void load(String fileName) throws ConfigurationException
     {
-		InputStream is=null;
-    	try {
-    	    is = getPropertyStream(fileName);
-    		load(is);    		
+		InputStream in = null;
+    	try
+        {
+    	    in = getPropertyStream(fileName);
+    		load(in);
     	}
-    	catch (IOException ioe){
-    		throw new ConfigurationException("Could not load from file " + fileName,ioe);
+    	catch (IOException e)
+        {
+    		throw new ConfigurationException("Could not load from file " + fileName, e);
     	}
-    	finally{
-    	    if(is !=null){
-    	        try{    	    
-    	            is.close();
+    	finally
+        {
+    	    // close the input stream
+            if (in != null)
+            {
+    	        try
+                {
+    	            in.close();
     	        }
-    	        catch (IOException ioe2){
-    	            ioe2.printStackTrace();
+    	        catch (IOException e)
+                {
+    	            e.printStackTrace();
     	        }
     	    }
     	}
+    }
+
+    /**
+     * Save the configuration to the file specified by the fileName attribute.
+     */
+    public void save() throws ConfigurationException
+    {
+        save(fileName);
     }
 
     /**

@@ -7,6 +7,11 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="add">
+        Added a save() method to PropertiesConfiguration and save(Writer out),
+        save(OutputStream out), save(OutputStream out, String encoding) to
+        BasePropertiesConfiguration.
+      </action>
       <action dev="ebourg" type="fix">
         List values are now properly stored as comma separated values in the
         Properties object returned by ConfigurationConverter.getProperties()

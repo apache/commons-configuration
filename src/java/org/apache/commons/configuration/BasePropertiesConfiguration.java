@@ -16,14 +16,17 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
 import java.io.FileWriter;
+import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -108,7 +111,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.11 2004/06/16 18:13:53 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.12 2004/06/21 17:45:29 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -139,8 +142,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      *
      * @throws ConfigurationException
      */
-    public void load(InputStream input)
-        throws ConfigurationException
+    public void load(InputStream input) throws ConfigurationException
     {
         load(input, null);
     }
@@ -165,7 +167,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
             }
             catch (UnsupportedEncodingException e)
             {
-                throw new ConfigurationException("Should look up and use default encoding.",e);
+                throw new ConfigurationException("Should look up and use default encoding.", e);
             }
         }
 
@@ -174,7 +176,8 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
             reader = new PropertiesReader(new InputStreamReader(input));
         }
 
-        try {
+        try
+        {
             while (true)
             {
                 String line = reader.readProperty();
@@ -214,58 +217,98 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                 }
             }
         }
-        catch (IOException ioe){
+        catch (IOException ioe)
+        {
         	throw new ConfigurationException("Could not load configuration from input stream.",ioe);
         }
     }
 
     /**
-     * save properties to a file.
-     * properties with multiple values are saved comma seperated.
+     * Save the configuration to a file. Properties with multiple values are
+     * saved on multiple lines, one value per line.
      *
-     * @param filename name of the properties file
+     * @param filename the name of the properties file
      *
      * @throws ConfigurationException
      */
     public void save(String filename) throws ConfigurationException
     {
-        PropertiesWriter out = null;
-        File file = new File(filename);
-        try {
-        	out = new PropertiesWriter(file);
+        FileWriter writer = null;
 
-        	out.writeComment("written by PropertiesConfiguration");
-        	out.writeComment(new Date().toString());
-
-        	for (Iterator i = this.getKeys(); i.hasNext();)
-        	{
-        		String key = (String) i.next();
-                Object value = getProperty(key);
-
-                if (value instanceof List)
-                {
-                    out.writeProperty(key, (List) value);
-                }
-                else
-                {
-                    out.writeProperty(key, value);
-                }
-        	}
-        	out.flush();
-        	out.close();
-        }
-        catch (IOException ioe)
+        try
         {
-            try {
-                if (out != null){
-                    out.close();
+            writer = new FileWriter(filename);
+            save(writer);
+        }
+        catch (IOException e)
+        {
+        	throw new ConfigurationException("Could not save to file " + filename, e);
+        }
+        finally
+        {
+            // close the writer
+            try
+            {
+                if (writer != null)
+                {
+                    writer.close();
                 }
             }
-            catch (IOException ioe2){
-
-            }
-        	throw new ConfigurationException("Could not save to file " + filename,ioe);
+            catch (IOException ioe2) { }
         }
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param out the output stream used to save the configuration
+     */
+    public void save(OutputStream out) throws IOException
+    {
+        save(out, null);
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param out the output stream used to save the configuration
+     * @param encoding the charset used to write the configuration
+     */
+    public void save(OutputStream out, String encoding) throws IOException
+    {
+        OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
+        save(writer);
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param writer the output stream used to save the configuration
+     */
+    public void save(Writer writer) throws IOException
+    {
+        PropertiesWriter out = new PropertiesWriter(writer);
+
+        out.writeComment("written by PropertiesConfiguration");
+        out.writeComment(new Date().toString());
+
+        Iterator keys = getKeys();
+        while (keys.hasNext())
+        {
+            String key = (String) keys.next();
+            Object value = getProperty(key);
+
+            if (value instanceof List)
+            {
+                out.writeProperty(key, (List) value);
+            }
+            else
+            {
+                out.writeProperty(key, value);
+            }
+        }
+
+        out.flush();
     }
 
     /**
@@ -378,17 +421,16 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
     /**
      * This class is used to write properties lines.
      */
-    class PropertiesWriter extends FileWriter
+    class PropertiesWriter extends FilterWriter
     {
         /**
          * Constructor.
          *
-         * @param file the proerties file
-         * @throws IOException
+         * @param writer a Writer object providing the underlying stream
          */
-        public PropertiesWriter(File file) throws IOException
+        public PropertiesWriter(Writer writer) throws IOException
         {
-            super(file);
+            super(writer);
         }
 
         /**
