@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-
-<!DOCTYPE project [
-<!ENTITY commons-nav SYSTEM "../../commons-build/incl_nav.xml">
-]>
-
+<!DOCTYPE org.apache.commons.menus SYSTEM '../../commons-build/menus/menus.dtd'>
 <project name="Configuration">
 
   <title>Configuration</title>
@@ -29,7 +25,7 @@
       <item name="Avalon Component" href="http://jakarta.apache.org/turbine/fulcrum/fulcrum-configuration/index.html"/>
     </menu>    
     
-    &commons-nav;
+    &common-menus;
 
   </body>
 </project>
