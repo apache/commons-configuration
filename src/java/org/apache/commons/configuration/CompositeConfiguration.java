@@ -1,4 +1,3 @@
-package org.apache.commons.configuration;
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,11 +14,12 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -28,12 +28,12 @@ import java.util.ListIterator;
  * You can add multiple different types or the same type of properties file.
  * If Configuration1 doesn't have the property, then Configuration2 will be checked.
  * 
- * @version $Id: CompositeConfiguration.java,v 1.11 2004/04/01 18:43:04 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.12 2004/06/04 12:58:53 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
-    /** Array holding all the configuration */
-    private LinkedList configList = new LinkedList();
+    /** List holding all the configuration */
+    private List configList = new LinkedList();
 
     /** 
      * Configuration that holds in memory stuff.  Inserted as first so any
@@ -58,8 +58,8 @@ public class CompositeConfiguration extends AbstractConfiguration
     public CompositeConfiguration(Configuration inMemoryConfiguration)
     {
         configList.clear();
-        this.inMemoryConfiguration=inMemoryConfiguration;
-        configList.addLast(inMemoryConfiguration);
+        this.inMemoryConfiguration = inMemoryConfiguration;
+        configList.add(inMemoryConfiguration);
     }    
 
     public void addConfiguration(Configuration config)
@@ -73,6 +73,7 @@ public class CompositeConfiguration extends AbstractConfiguration
             configList.add(configList.indexOf(inMemoryConfiguration), config);
         }
     }
+
     public void removeConfiguration(Configuration config)
     {
         // Make sure that you can't remove the inMemoryConfiguration from
@@ -82,18 +83,19 @@ public class CompositeConfiguration extends AbstractConfiguration
             configList.remove(config);
         }
     }
+
     public int getNumberOfConfigurations()
     {
         return configList.size();
     }
+
     public void clear()
     {
         configList.clear();
         // recreate the in memory configuration
         inMemoryConfiguration = new BaseConfiguration();
-        configList.addLast(inMemoryConfiguration);
+        configList.add(inMemoryConfiguration);
     }
-
     
     /**
      * Add this property to the inmemory Configuration.
@@ -115,26 +117,29 @@ public class CompositeConfiguration extends AbstractConfiguration
      */
     protected Object getPropertyDirect(String key) 
     {
-        Configuration firstMatchingConfiguration=null;
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        Configuration firstMatchingConfiguration = null;
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
             {
-                firstMatchingConfiguration= config;
+                firstMatchingConfiguration = config;
                 break;
             }
-
         }
-       if(firstMatchingConfiguration!=null){
-           return firstMatchingConfiguration.getProperty(key);
-       }
-       else {
-           return null;
-       }
+
+        if (firstMatchingConfiguration != null)
+        {
+            return firstMatchingConfiguration.getProperty(key);
+        }
+        else
+        {
+            return null;
+        }
         /*throw new NoSuchElementException(
             '\'' + key + "' doesn't map to an existing object");*/
     }
+
     /**
      * Get the list of the keys contained in the configuration
      * repository.
@@ -144,7 +149,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     public Iterator getKeys()
     {
         List keys = new ArrayList();
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             for (Iterator j = config.getKeys(); j.hasNext();)
@@ -158,6 +163,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
         return keys.iterator();
     }
+
     /**
      * Get the list of the keys contained in the configuration
      * repository.
@@ -167,7 +173,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     public Iterator getKeys(String key)
     {
         List keys = new ArrayList();
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             for (Iterator j = config.getKeys(key); j.hasNext();)
@@ -185,7 +191,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     public boolean isEmpty()
     {
         boolean isEmpty = true;
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             if (!config.isEmpty())
@@ -195,6 +201,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
         return isEmpty;
     }
+
     /**
      *  Gets a property from the configuration.
      *
@@ -206,6 +213,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     {
         return getPropertyDirect(key);
     }
+
     /**
      * Set a property, this will replace any previously
      * set values. Set values is implicitly a call
@@ -219,6 +227,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         clearProperty(key);
         addProperty(key, value);
     }
+
     /**
      * Clear a property in the configuration.
      *
@@ -226,18 +235,19 @@ public class CompositeConfiguration extends AbstractConfiguration
      */
     public void clearProperty(String key)
     {
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             config.clearProperty(key);
         }
     }
+
     /**
      * check if the configuration contains the key
      */
     public boolean containsKey(String key)
     {
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        for (Iterator i = configList.iterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
@@ -260,14 +270,19 @@ public class CompositeConfiguration extends AbstractConfiguration
     {
         List list = new ArrayList();
 
-        for (ListIterator li = configList.listIterator(); li.hasNext();)
+        // add all elements from the first configuration containing the requested key
+        Iterator it = configList.iterator();
+        while (it.hasNext() && list.isEmpty())
         {
-            Configuration config = (Configuration) li.next();
-            if (config.containsKey(key))
+            Configuration config = (Configuration) it.next();
+            if (config != inMemoryConfiguration && config.containsKey(key))
             {
                 list.addAll(config.getList(key));
             }
         }
+
+        // add all elements from the in memory configuration
+        list.addAll(inMemoryConfiguration.getList(key, null));
 
         return list;
     }
@@ -285,12 +300,11 @@ public class CompositeConfiguration extends AbstractConfiguration
     {
         List list = getList(key);
 
-        return (list.size() == 0) ? defaultValue : list;
+        return list.isEmpty() ? defaultValue : list;
     }
     
     /**
-     * Get an array of strings associated with the given configuration
-     * key.
+     * Get an array of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
@@ -308,6 +322,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     {
         return (Configuration) configList.get(index);
     }
+
     /**
      * @return Returns the inMemoryConfiguration.
      */

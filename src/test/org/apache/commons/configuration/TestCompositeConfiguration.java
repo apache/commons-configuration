@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.7 2004/04/01 18:43:03 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.8 2004/06/04 12:58:53 ebourg Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -35,6 +35,7 @@ public class TestCompositeConfiguration extends TestCase
     protected BasePropertiesConfiguration conf2;
     protected DOM4JConfiguration dom4jConf;
     protected CompositeConfiguration cc;
+
     /** The File that we test with */
     private String testProperties = new File("conf/test.properties").getAbsolutePath();
     private String testProperties2 = new File("conf/test2.properties").getAbsolutePath();
@@ -50,7 +51,6 @@ public class TestCompositeConfiguration extends TestCase
 
     public void testAddRemoveConfigurations() throws Exception
     {
-
         cc.addConfiguration(conf1);
         assertEquals(2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf1);
@@ -165,7 +165,6 @@ public class TestCompositeConfiguration extends TestCase
      */
     public void testClearingProperty() throws Exception
     {
-
         cc.addConfiguration(conf1);
         cc.addConfiguration(dom4jConf);
         cc.clearProperty("test.short");
@@ -178,24 +177,21 @@ public class TestCompositeConfiguration extends TestCase
      */
     public void testAddingProperty() throws Exception
     {
-
         cc.addConfiguration(conf1);
         cc.addConfiguration(dom4jConf);
 
-        String [] values = cc.getStringArray("test.short");
+        String[] values = cc.getStringArray("test.short");
 
-        assertEquals("Number of values before add is wrong!", 2, values.length);
+        assertEquals("Number of values before add is wrong!", 1, values.length);
         assertEquals("First Value before add is wrong", "1", values[0]);
-        assertEquals("Second Value is wrong", "8", values[1]);
 
         cc.addProperty("test.short", "88");
 
         values = cc.getStringArray("test.short");
 
-        assertEquals("Number of values is wrong!", 3, values.length);
+        assertEquals("Number of values is wrong!", 2, values.length);
         assertEquals("First Value is wrong", "1", values[0]);
-        assertEquals("Second Value is wrong", "8", values[1]);
-        assertEquals("Third Value is wrong", "88", values[2]);
+        assertEquals("Third Value is wrong", "88", values[1]);
     }
 
     /**
@@ -280,7 +276,39 @@ public class TestCompositeConfiguration extends TestCase
         // we should get 0 packages here
         assertEquals(0, packages.length);
     }
-    
+
+    public void testGetList()
+    {
+        Configuration conf1 = new BaseConfiguration();
+        conf1.addProperty("array", "value1");
+        conf1.addProperty("array", "value2");
+
+        Configuration conf2 = new BaseConfiguration();
+        conf2.addProperty("array", "value3");
+        conf2.addProperty("array", "value4");
+
+        cc.addConfiguration(conf1);
+        cc.addConfiguration(conf2);
+
+        // check the composite 'array' property
+        List list = cc.getList("array");
+        assertNotNull("null list", list);
+        assertEquals("list size", 2, list.size());
+        assertTrue("'value1' not found in the list", list.contains("value1"));
+        assertTrue("'value2' not found in the list", list.contains("value2"));
+
+        // add an element to the list in the composite configuration
+        cc.addProperty("array", "value5");
+
+        // test the new list
+        list = cc.getList("array");
+        assertNotNull("null list", list);
+        assertEquals("list size", 3, list.size());
+        assertTrue("'value1' not found in the list", list.contains("value1"));
+        assertTrue("'value2' not found in the list", list.contains("value2"));
+        assertTrue("'value5' not found in the list", list.contains("value5"));
+    }
+
     /**
       * Tests <code>getKeys</code> preserves the order
       */
@@ -358,7 +386,8 @@ public class TestCompositeConfiguration extends TestCase
             c.getString("XXX", "some default value"));
     }
     
-    public void testCheckingInMemoryConfiguration() throws Exception{
+    public void testCheckingInMemoryConfiguration() throws Exception
+    {
         String TEST_KEY = "testKey";
         Configuration defaults = new PropertiesConfiguration();
         defaults.setProperty(TEST_KEY,"testValue");
@@ -379,6 +408,5 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue(foundTestKey);
         testConfiguration.clearProperty(TEST_KEY);
         assertFalse(testConfiguration.containsKey(TEST_KEY));
-        
     }    
 }
