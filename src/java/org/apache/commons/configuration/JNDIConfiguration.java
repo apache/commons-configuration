@@ -16,11 +16,6 @@
 
 package org.apache.commons.configuration;
 
-import javax.naming.Binding;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -28,6 +23,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NameClassPair;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -39,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * UnsupportedOperationException. The clear operations are supported but the
  * underlying JNDI data source is not changed.
  *
- * @version $Id: JNDIConfiguration.java,v 1.10 2004/03/28 14:42:45 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.11 2004/04/28 22:58:58 epugh Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -75,22 +76,25 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param key What key we are building on.
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(List keys, NamingEnumeration enum, String key) throws NamingException
+    private void recursiveGetKeys(List keys, Context parentContext, String key) throws NamingException
     {
+        NamingEnumeration enum = parentContext.list("");
         while (enum.hasMoreElements())
         {
-            Binding binding = (Binding) enum.next();
+            Object o = enum.next();
+            
+            NameClassPair nameClassPair = (NameClassPair) o;
             StringBuffer newKey = new StringBuffer();
             newKey.append(key);
             if (newKey.length() > 0)
             {
                 newKey.append(".");
             }
-            newKey.append(binding.getName());
-            if (binding.getObject() instanceof Context)
+            newKey.append(nameClassPair.getName());
+            if (parentContext.lookup(nameClassPair.getName()) instanceof Context)
             {
-                Context context = (Context) binding.getObject();
-                recursiveGetKeys(keys, context.listBindings(""), newKey.toString());
+                Context context = (Context) parentContext.lookup(nameClassPair.getName());
+                recursiveGetKeys(keys, context, newKey.toString());
             }
             else
             {
@@ -138,14 +142,12 @@ public class JNDIConfiguration extends AbstractConfiguration
             }
             else
             {
-                context = getStartingContextPoint(keys, getContext().listBindings(""));
+                context = getStartingContextPoint(keys, getContext(),getContext().list(""));
             }
 
             if (context != null)
             {
-                NamingEnumeration enum = context.listBindings("");
-
-                recursiveGetKeys(keys, enum, key);
+                recursiveGetKeys(keys, context, key);
             }
         }
         catch (NamingException ne)
@@ -165,28 +167,29 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
-    private Context getStartingContextPoint(List keys, NamingEnumeration enum) throws NamingException
+    private Context getStartingContextPoint(List keys, Context parentContext, NamingEnumeration enum) throws NamingException
     {
         String keyToSearchFor = (String) keys.get(0);
         log.debug("Key to search for is " + keyToSearchFor);
         while (enum.hasMoreElements())
-        {
-            Binding binding = (Binding) enum.next();
+        {            
+            NameClassPair nameClassPair = (NameClassPair) enum.next();
+            Object o = parentContext.lookup(nameClassPair.getName());
             log.debug(
                 "Binding for name: "
-                    + binding.getName()
+                    + nameClassPair.getName()
                     + ", object:"
-                    + binding.getObject()
+                    + parentContext.lookup(nameClassPair.getName())
                     + ", class:"
-                    + binding.getClassName());
-            if (binding.getObject() instanceof Context
-                && binding.getName().equals(keyToSearchFor))
+                    + nameClassPair.getClassName());
+            if (o instanceof Context
+                && nameClassPair.getName().equals(keyToSearchFor))
             {
                 keys.remove(0);
-                Context c = (Context) binding.getObject();
+                Context c = (Context) o;
                 if (!keys.isEmpty())
                 {
-                    return getStartingContextPoint(keys, c.listBindings(""));
+                    return getStartingContextPoint(keys,c, c.list(""));
                 }
                 else
                 {
@@ -214,7 +217,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         try
         {
-            NamingEnumeration enum = getContext().listBindings("");
+            NamingEnumeration enum = getContext().list("");
             return !enum.hasMore();
         }
         catch (NamingException ne)
@@ -317,6 +320,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException ne)
         {
+            ne.printStackTrace();
             return null;
         }
     }
