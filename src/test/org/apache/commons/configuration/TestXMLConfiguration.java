@@ -17,13 +17,14 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.util.List;
 
 import junit.framework.TestCase;
 
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.1 2004/07/12 12:14:38 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.2 2004/07/12 14:38:29 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -40,6 +41,34 @@ public class TestXMLConfiguration extends TestCase
     public void testGetProperty() throws Exception
     {
         assertEquals("value", conf.getProperty("element"));
+    }
+
+    public void testGetAttribute() throws Exception
+    {
+        assertEquals("element3{name}", "foo", conf.getProperty("element3[@name]"));
+    }
+
+    public void testClearAttribute() throws Exception
+    {
+        conf.clearProperty("element3[@name]");
+        assertEquals("element3[@name]", null, conf.getProperty("element3[@name]"));
+    }
+
+    public void testSetAttribute() throws Exception
+    {
+        conf.setProperty("element3[@name]", "bar");
+        assertEquals("element3[@name]", "bar", conf.getProperty("element3[@name]"));
+    }
+
+    public void testAddAttribute() throws Exception
+    {
+        conf.addProperty("element3[@name]", "bar");
+
+        List list = conf.getList("element3[@name]");
+        assertNotNull("null list", list);
+        assertTrue("'foo' element missing", list.contains("foo"));
+        assertTrue("'bar' element missing", list.contains("bar"));
+        assertEquals("list size", 2, list.size());
     }
 
     public void testGetComplexProperty() throws Exception
@@ -74,15 +103,24 @@ public class TestXMLConfiguration extends TestCase
 
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
-    
+
     public void testLoadWithBasePath() throws Exception
     {
         conf = new XMLConfiguration();
-        
+
         conf.setFileName("test.xml");
         conf.setBasePath(testBasePath);
         conf.load();
 
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
+    }
+
+    public void testAddProperty()
+    {
+        // add a property to a non initialized xml configuration
+        XMLConfiguration config = new XMLConfiguration();
+        config.addProperty("test.string", "hello");
+
+        assertEquals("'test.string'", "hello", config.getString("test.string"));
     }
 }
