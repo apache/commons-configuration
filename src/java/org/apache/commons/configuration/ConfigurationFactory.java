@@ -80,7 +80,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.6 2004/01/30 14:46:37 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.7 2004/02/15 11:58:37 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -110,7 +110,7 @@ public class ConfigurationFactory implements BasePathLoader
      * the configuration to load and used unless no other base path was
      * explicitely specified.
      */
-    private String impliciteBasePath;
+    private String implicitBasePath;
     /** The basePath to prefix file paths for file based property files. */
     private String basePath;
     /** static logger */
@@ -154,7 +154,7 @@ public class ConfigurationFactory implements BasePathLoader
         try {
         if(url == null)
         {
-            url = ConfigurationUtils.getURL(impliciteBasePath,
+            url = ConfigurationUtils.getURL(implicitBasePath,
             getConfigurationFileName());
         }  /* if */
         input = url.openStream();
@@ -215,7 +215,7 @@ public class ConfigurationFactory implements BasePathLoader
     {
         File file = new File(configurationFileName).getAbsoluteFile();
         this.configurationFileName = file.getName();
-        impliciteBasePath = file.getParent();
+        implicitBasePath = file.getParent();
     }
 
     /**
@@ -235,7 +235,7 @@ public class ConfigurationFactory implements BasePathLoader
     public void setConfigurationURL(URL url)
     {
         configurationURL = url;
-        impliciteBasePath = url.toString();
+        implicitBasePath = url.toString();
 
         // The following is a hack caused by the need to keep backwards
         // compatibility: Per default the base path is set to the current
@@ -411,7 +411,7 @@ public class ConfigurationFactory implements BasePathLoader
     public String getBasePath()
     {
         String path = StringUtils.isEmpty(basePath) ? 
-        impliciteBasePath : basePath;
+        implicitBasePath : basePath;
         return StringUtils.isEmpty(path) ? "." : path;
     }
     /**

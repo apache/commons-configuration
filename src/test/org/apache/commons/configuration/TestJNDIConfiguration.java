@@ -54,13 +54,15 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
+import java.util.Iterator;
+
 import junit.framework.TestCase;
 
 /**
  * test if non-string properties are handled correctly
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestJNDIConfiguration.java,v 1.3 2004/02/14 20:06:23 epugh Exp $
+ * @version $Id: TestJNDIConfiguration.java,v 1.4 2004/02/15 11:58:37 epugh Exp $
  */
 public class TestJNDIConfiguration extends TestCase
 {
@@ -161,9 +163,20 @@ public class TestJNDIConfiguration extends TestCase
 	  public void testProperties() throws Exception{
 	      Object o = conf.getProperty("test.boolean");
 	      assertNotNull(o);
+	      assertEquals("true",o.toString());
 	      
 	  }
 
+	  /** 
+	   * Currently failing in that we don't get back any keys!
+	   * @throws Exception
+	   */
+	  public void testGetKeys() throws Exception{
+	      Iterator i = conf.getKeys();
+	      for (;i.hasNext();){
+	          System.out.println(i.next());
+	      }
+	  }
 
     
 

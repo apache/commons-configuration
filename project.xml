@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.9 2004/02/14 18:54:32 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.10 2004/02/15 11:58:37 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -202,7 +202,7 @@
 
     <dependency>
       <id>simple-jndi</id>
-      <version>0.8</version>
+      <version>0.9.1</version>
       <url>http://www.osjava.org/simple-jndi/</url> 
     </dependency>
 

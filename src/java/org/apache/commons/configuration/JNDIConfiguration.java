@@ -71,7 +71,7 @@ import org.apache.commons.logging.LogFactory;
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.4 2004/02/14 20:06:23 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.5 2004/02/15 11:58:37 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -179,7 +179,14 @@ public class JNDIConfiguration
             }
             if (context != null)
             {
+                NamingEnumeration enum2 = context.list("");
+                for(;enum2.hasMore();){
+                    System.out.println(enum2.next());
+                }
                 NamingEnumeration enum = context.listBindings("");
+                for(;enum.hasMore();){
+                    System.out.println(enum.next());
+                }
                 recursiveGetKeys(keys, enum, key);
             }
         }

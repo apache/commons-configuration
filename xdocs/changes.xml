@@ -6,7 +6,7 @@
   </properties>
 
   <body>
-    <release version="1.0-dev-4" date=""> 
+    <release version="1.0-dev-4" date="">     
 	 <action dev="epugh" type="update">
       	Bugzilla 16504 Enhancement: Configuration Comparator
      </action>        
