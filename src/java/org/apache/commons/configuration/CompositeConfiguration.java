@@ -28,7 +28,7 @@ import java.util.List;
  * You can add multiple different types or the same type of properties file.
  * If Configuration1 doesn't have the property, then Configuration2 will be checked.
  *
- * @version $Id: CompositeConfiguration.java,v 1.13 2004/06/15 15:53:58 ebourg Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.14 2004/06/21 12:37:40 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -262,11 +262,10 @@ public class CompositeConfiguration extends AbstractConfiguration
      * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
+     * @param defaultValue The default value.
      * @return The associated List.
-     * @exception ConversionException is thrown if the key maps to an
-     * object that is not a List.
      */
-    public List getList(String key)
+    public List getList(String key, List defaultValue)
     {
         List list = new ArrayList();
 
@@ -282,25 +281,14 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
 
         // add all elements from the in memory configuration
-        list.addAll(inMemoryConfiguration.getList(key, null));
+        list.addAll(inMemoryConfiguration.getList(key));
+
+        if (list.isEmpty())
+        {
+            return defaultValue;
+        }
 
         return list;
-    }
-
-    /**
-     * Get a List of strings associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated List.
-     * @exception ConversionException is thrown if the key maps to an
-     * object that is not a List.
-     */
-    public List getList(String key, List defaultValue)
-    {
-        List list = getList(key);
-
-        return list.isEmpty() ? defaultValue : list;
     }
 
     /**
@@ -308,8 +296,9 @@ public class CompositeConfiguration extends AbstractConfiguration
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     * @exception ConversionException is thrown if the key maps to an
-     * object that is not a String/List of Strings.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
     {
@@ -326,7 +315,8 @@ public class CompositeConfiguration extends AbstractConfiguration
     /**
      * @return Returns the inMemoryConfiguration.
      */
-    public Configuration getInMemoryConfiguration() {
+    public Configuration getInMemoryConfiguration()
+    {
         return inMemoryConfiguration;
     }
 }

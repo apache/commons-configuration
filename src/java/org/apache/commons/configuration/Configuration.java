@@ -26,7 +26,7 @@ import java.util.Properties;
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.7 2004/06/16 18:13:53 ebourg Exp $
+ * @version $Id: Configuration.java,v 1.8 2004/06/21 12:37:40 ebourg Exp $
  */
 public interface Configuration
 {
@@ -504,6 +504,7 @@ public interface Configuration
 
     /**
      * Get an array of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty array is returned
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
@@ -515,15 +516,13 @@ public interface Configuration
 
     /**
      * Get a List of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object an empty List is returned.
      *
      * @param key The configuration key.
      * @return The associated List.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     List getList(String key);
 

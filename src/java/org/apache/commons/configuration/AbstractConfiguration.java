@@ -35,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.11 2004/06/16 18:13:53 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.12 2004/06/21 12:37:40 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -1217,27 +1217,14 @@ public abstract class AbstractConfiguration implements Configuration
      * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
-     *
      * @return The associated List.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     public List getList(String key)
     {
-        List list = getList(key, null);
-        if (list != null)
-        {
-            return list;
-        }
-        else
-        {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
-        }
+        return getList(key, new ArrayList());
     }
 
     /**
@@ -1245,7 +1232,6 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     *
      * @return The associated List.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1271,7 +1257,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            list = ((defaultValue == null) ? new ArrayList() : defaultValue);
+            list = defaultValue;
         }
         else
         {
