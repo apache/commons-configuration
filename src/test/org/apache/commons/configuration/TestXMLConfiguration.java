@@ -28,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.13 2004/10/04 21:45:11 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.14 2004/10/11 09:26:38 henning Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -301,10 +301,10 @@ public class TestXMLConfiguration extends TestCase
         assertEquals(new File(testBasePath, "hello.xml"), conf.getFile());
 
         conf.setBasePath(testBasePath);
-        conf.setFileName("/subdir/hello.xml");
-        assertEquals("/subdir/hello.xml", conf.getFileName());
+        conf.setFileName("subdir/hello.xml");
+        assertEquals("subdir/hello.xml", conf.getFileName());
         assertEquals(testBasePath.toString(), conf.getBasePath());
-        assertEquals(new File(testBasePath, "/subdir/hello.xml"), conf.getFile());
+        assertEquals(new File(testBasePath, "subdir/hello.xml"), conf.getFile());
     }
 
     public void testLoad() throws Exception
