@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.21 2004/06/02 17:04:51 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.22 2004/07/08 15:22:51 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -312,7 +312,6 @@
       <excludes>
         <exclude>**/TestBasePropertiesConfiguration.java</exclude>
         <exclude>**/NonStringTestHolder.java</exclude>
-        <exclude>**/TestJNDIConfiguration.java</exclude>
       </excludes>
       <resources>
         <resource>
