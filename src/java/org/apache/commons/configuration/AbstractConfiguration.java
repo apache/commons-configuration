@@ -35,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.12 2004/06/21 12:37:40 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.13 2004/06/21 13:49:24 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -71,14 +71,16 @@ public abstract class AbstractConfiguration implements Configuration
     {
         if (token instanceof String)
         {
-            for(Iterator it = processString((String) token).iterator(); it.hasNext();)
+            Iterator it = split((String) token).iterator();
+            while (it.hasNext())
             {
                 addPropertyDirect(key, it.next());
             }
         }
         else if (token instanceof Collection)
         {
-            for (Iterator it = ((Collection) token).iterator(); it.hasNext();)
+            Iterator it = ((Collection) token).iterator();
+            while (it.hasNext())
             {
                 addProperty(key, it.next());
             }
@@ -219,18 +221,17 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Returns a List of Strings built from the supplied
-     * String. Splits up CSV lists. If no commas are in the
-     * String, simply returns a List with the String as its
-     * first element
+     * Returns a List of Strings built from the supplied String. Splits up CSV
+     * lists. If no commas are in the String, simply returns a List with the
+     * String as its first element.
      *
      * @param token The String to tokenize
      *
      * @return A List of Strings
      */
-    protected List processString(String token)
+    protected List split(String token)
     {
-        List retList = new ArrayList(INITIAL_LIST_SIZE);
+        List list = new ArrayList(INITIAL_LIST_SIZE);
 
         if (token.indexOf(DELIMITER) > 0)
         {
@@ -238,13 +239,12 @@ public abstract class AbstractConfiguration implements Configuration
 
             while (tokenizer.hasMoreTokens())
             {
-                String value = tokenizer.nextToken();
-                retList.add(value);
+                list.add(tokenizer.nextToken());
             }
         }
         else
         {
-            retList.add(token);
+            list.add(token);
         }
 
         //
@@ -252,7 +252,7 @@ public abstract class AbstractConfiguration implements Configuration
         // we also keep it in the Container. So the
         // Keys are added to the store in the sequence that
         // is given in the properties
-        return retList;
+        return list;
     }
 
     /**
