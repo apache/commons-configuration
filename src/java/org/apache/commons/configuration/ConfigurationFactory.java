@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * digester rules to use.  It is also namespace aware, by providing a
  * digesterRuleNamespaceURI.
  *
- * @version $Id: ConfigurationFactory.java,v 1.8 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.9 2004/03/08 23:27:09 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -154,7 +154,7 @@ public class ConfigurationFactory implements BasePathLoader
         {
         	log.error("IO Exception caught", ioe);
         	throw new ConfigurationException("IO Exception caught",ioe);
-        }		
+        }
         return builder.getConfiguration();
     }
     /**
@@ -267,7 +267,7 @@ public class ConfigurationFactory implements BasePathLoader
 			matchString + "hierarchicalDom4j",
 			new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
 			METH_LOAD,
-			additional);        
+			additional);
         setupDigesterInstance(
             digester,
             matchString + "jndi",
@@ -391,17 +391,13 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * A base class for digester factory classes. This base class maintains
-     * a default class for the objects to be created. It also supports a
-     * <code>className</code> attribute for specifying a different class.
+     * a default class for the objects to be created.
      * There will be sub classes for specific configuration implementations.
      */
     public class DigesterConfigurationFactory
         extends AbstractObjectCreationFactory
         implements ObjectCreationFactory
     {
-        /** Constant for the className attribute.*/
-        protected static final String ATTR_CLASSNAME = "className";
-
         /** Actual class to use. */
         private Class clazz;
 
@@ -415,23 +411,14 @@ public class ConfigurationFactory implements BasePathLoader
         }
 
         /**
-         * Creates an instance of the specified class. If the passed in
-         * attributes contain a <code>className</code> attribute, the value of
-         * this attribute is interpreted as the full qualified class name of
-         * the class to be instantiated. Otherwise the default class is used.
-         * @param attribs the attributes
+         * Creates an instance of the specified class.
+         * @param attribs the attributes (ignored)
          * @return the new object
          * @exception Exception if object creation fails
          */
         public Object createObject(Attributes attribs) throws Exception
         {
-            Class actCls;
-            
-            int idx = attribs.getIndex(ATTR_CLASSNAME);
-            actCls = (idx < 0) ? clazz :
-            Class.forName(attribs.getValue(idx));
-
-            return actCls.newInstance();
+            return clazz.newInstance();
         }
     }
 
