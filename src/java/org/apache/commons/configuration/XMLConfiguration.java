@@ -50,7 +50,7 @@ import org.xml.sax.SAXException;
  * @author Jörg Schaible
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Revision: 1.4 $, $Date: 2004/07/12 12:14:38 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/12 14:40:54 $
  */
 public class XMLConfiguration extends BasePathConfiguration
 {
@@ -81,11 +81,20 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * Empty construtor.  You must provide a file/fileName
-     * and call the load method
-     *
+     * to save the configuration.
      */
     public XMLConfiguration()
     {
+        // build an empty document.
+        DocumentBuilder builder = null;
+        try {
+            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new ConfigurationRuntimeException(e.getMessage(), e);
+        }
+
+        document = builder.newDocument();
+        document.appendChild(document.createElement("configuration"));
     }
 
     /**
@@ -126,19 +135,19 @@ public class XMLConfiguration extends BasePathConfiguration
         }
         catch (IOException de)
         {
-            throw new ConfigurationException("Could not load from " + file.getAbsolutePath());
+            throw new ConfigurationException("Could not load from " + file.getAbsolutePath(), de);
         }
         catch (ParserConfigurationException ex)
         {
-            throw new ConfigurationException("Could not configure parser");
+            throw new ConfigurationException("Could not configure parser", ex);
 		}
         catch (FactoryConfigurationError ex)
         {
-            throw new ConfigurationException("Could not create parser");
+            throw new ConfigurationException("Could not create parser", ex);
         }
         catch (SAXException ex)
         {
-            throw new ConfigurationException("Error parsing file " + file.getAbsolutePath());
+            throw new ConfigurationException("Error parsing file " + file.getAbsolutePath(), ex);
 		}
 
         initProperties(document.getDocumentElement(), new StringBuffer());
@@ -204,13 +213,9 @@ public class XMLConfiguration extends BasePathConfiguration
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
         {
-            Node node = attributes.item(i);
-            if (node instanceof Attr)
-            {
-                Attr attr = (Attr) node;
-                String attrName = hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
-                super.addProperty(attrName, attr.getValue());
-            }
+            Attr attr = (Attr) attributes.item(i);
+            String attrName = hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
+            super.addProperty(attrName, attr.getValue());
         }
     }
 
@@ -441,7 +446,7 @@ public class XMLConfiguration extends BasePathConfiguration
 
     /**
      * Returns the fileName.
-     * 
+     *
      * @return String
      */
     public String getFileName()
