@@ -1,68 +1,84 @@
 <document>
-  <properties>
-    <title>Roadmap for Configuration</title>
-    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
-  </properties>
-  <body>
+    <properties>
+        <title>Roadmap for Configuration</title>
+        <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+    </properties>
+    <body>
 
-    <category name="Version 1.0" description="Roadmap to release the 1.0 version">
-        <task status="done">
-remaining bugs (26944, 26534, 27427)
-        </task>        
-        <task status="partly done">
-more documentation, examples and tutorials
-        </task>  
-        <task status="done">
-Base JNDIConfiguration on AbstractConfiguration
-        </task>                        
-    </category>
+        <category name="Version 1.0" description="Roadmap to release the 1.0 version">
+            <task status="partly done">
+                remaining bugs
+            </task>
+            <task status="partly done">
+                more documentation, examples and tutorials
+            </task>
+            <task status="done">
+                Base JNDIConfiguration on AbstractConfiguration
+            </task>
+            <task status="">
+                Unify the file based configurations (shared persistence logic)
+            </task>
+        </category>
 
-    <category name="Version 1.1" description="">
-        <task status="">
-comma separated values revamp
-        </task>
-        <task status="">
-add DatabaseConfiguration support to the ConfigurationFactory
-        </task>        
+        <category name="Version 1.1" description="">
+            <task status="">
+                delimiter for comma separated values revamp
+            </task>
+            <task status="">
+                add DatabaseConfiguration support to the ConfigurationFactory
+            </task>
+            <task status="">
+                reloadable configurations
+            </task>
+            <task status="">
+                web configurations
+            </task>
+            <task status="">
+                additionnal types (URL, Locale, Date, Calendar, Color)
+            </task>
+            <task status="">
+                list setters/getters for all types
+            </task>
+            <task status="">
+                INI file support
+            </task>
+            <task status="">
+                system properties interpolation (Bug 26066)
+            </task>
+            <task status="">
+                ConfigurationFactory refactoring for pluggable extensions
+            </task>
+        </category>
 
-        <task status="">
-reloadable configurations
-        </task>
-        <task status="">
-web configurations
-        </task>
-        <task status="">
-Database configuration backed by Hibernate.
-        </task>        
-        <task status="">
-additionnal types (URL, Locale, Date, Calendar, Color)
-        </task>
-        <task status="">
-list setters/getters for all types
-        </task>        
-        <task status="">
-INI file support
-        </task>   
-        <task status="">
-system properties interpolation (Bug 26066)
-        </task>     
-        <task status="">
-ConfigurationFactory refactoring for pluggable extensions
-        </task>          
-    </category>    
-    <category name="Version 1.2" description="">
-        <task status="">
-comments and layout preservation in .properties files
-        </task>
-        <task status="">
-JMX integration ?
-        </task>
-        <task status="">
-Preference API integration ?
-        </task>
-        <task status="">
-observable configurations ?
-        </task>              
-    </category>       
-  </body>
+        <category name="Version 1.2" description="">
+            <task status="">
+                Windows configuration (Registry wrapper)
+            </task>
+            <task status="">
+                comments and layout preservation in .properties files
+            </task>
+        </category>
+
+        <category name="Version 1.3" description="">
+            <task status="">
+                JMX integration ?
+            </task>
+            <task status="">
+                Preference API integration ?
+            </task>
+            <task status="">
+                observable configurations ?
+            </task>
+        </category>
+
+        <category name="Version 2.0" description="">
+            <task status="">
+                Pluggable query engine
+            </task>
+            <task status="">
+                Configuration interface refactoring for hierarchical configurations.
+            </task>
+        </category>
+
+    </body>
 </document>
