@@ -54,7 +54,7 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
-import java.util.Vector;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -66,7 +66,7 @@ import junit.framework.TestCase;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBasePropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestBasePropertiesConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public abstract class TestBasePropertiesConfiguration
     extends TestCase
@@ -125,12 +125,11 @@ public abstract class TestBasePropertiesConfiguration
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
+     * Tests <code>List</code> parsing.
      */
-    public void testVector()
-      throws Exception
+    public void testList() throws Exception
     {
-        Vector packages = conf.getVector("packages");
+        List packages = conf.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }

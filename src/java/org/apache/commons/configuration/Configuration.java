@@ -55,8 +55,8 @@ package org.apache.commons.configuration;
  */
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 /**
  * Configuration interface.
@@ -66,7 +66,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: Configuration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: Configuration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public interface Configuration
 {
@@ -104,7 +104,7 @@ public interface Configuration
      *
      * addProperty("resource.loader", "classpath")
      *
-     * Then you will end up with a Vector like the following:
+     * Then you will end up with a List like the following:
      *
      * ["file", "classpath"]
      *
@@ -163,7 +163,7 @@ public interface Configuration
      * @param key The configuration key.
      * @return The associated properties if key is found.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector.
+     * object that is not a String/List.
      * @exception IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
      */
@@ -486,28 +486,28 @@ public interface Configuration
      * @param key The configuration key.
      * @return The associated string array if key is found.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector of Strings.
+     * object that is not a String/List of Strings.
      */
     String[] getStringArray(String key);
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
-     * @return The associated Vector.
+     * @return The associated List.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      */
-    Vector getVector(String key);
+    List getList(String key);
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated Vector.
+     * @return The associated List.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      */
-    Vector getVector(String key, Vector defaultValue);
+    List getList(String key, List defaultValue);
 }

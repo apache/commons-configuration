@@ -55,7 +55,8 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * test for loading and saving properties files
@@ -63,7 +64,7 @@ import java.util.Vector;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestPropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -87,12 +88,12 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
     {
         PropertiesConfiguration toSave = new PropertiesConfiguration();
         toSave.addProperty("string", "value1");
-        Vector vec = new Vector();
+        List list = new ArrayList();
         for (int i = 1; i < 5; i++)
         {
-            vec.add("value" + i);
+            list.add("value" + i);
         }
-        toSave.addProperty("array", vec);
+        toSave.addProperty("array", list);
         String filename = "STRING0";
 
         toSave.save(filename);

@@ -67,7 +67,7 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBaseConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -186,15 +186,15 @@ public class TestBaseConfiguration extends TestCase
                      new Boolean(boolT));
 
         /*
-         * now add another and get a Vector
+         * now add another and get a List
          */
         eprop.addProperty("number", "2");
-        assertTrue("This returns array", ( eprop.getVector("number")
-                instanceof java.util.Vector ) );
+        assertTrue("This returns array", ( eprop.getList("number")
+                instanceof java.util.List ) );
 
         /*
          *  now test dan's new fix where we get the first scalar
-         *  when we access a vector valued property
+         *  when we access a list valued property
          */
         assertTrue("This returns scalar", ( eprop.getString("number")
                 instanceof String ) );
@@ -204,8 +204,8 @@ public class TestBaseConfiguration extends TestCase
          */
         String prop = "hey, that's a test";
         eprop.setProperty("prop.string", prop);
-        assertTrue("This returns vector", ( eprop.getVector("prop.string")
-                instanceof java.util.Vector ) );
+        assertTrue("This returns list", ( eprop.getList("prop.string")
+                instanceof java.util.List ) );
 
         String prop2 = "hey\\, that's a test";
         eprop.clearProperty("prop.string");
@@ -241,7 +241,7 @@ public class TestBaseConfiguration extends TestCase
         assertTrue("This returns string for subset", ( subEprop
                 .getString("string") instanceof java.lang.String) );
         assertTrue("This returns array for subset", ( subEprop
-                .getVector("string") instanceof java.util.Vector) );
+                .getList("string") instanceof java.util.List) );
 
     }
 

@@ -55,7 +55,6 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
-import java.util.Vector;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ import junit.framework.TestCase;
  *
  
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestCompositeConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -145,7 +144,7 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
+     * Tests <code>List</code> parsing.
      */
     public void testMultipleTypesOfConfigs() throws Exception
     {
@@ -160,7 +159,7 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
+     * Tests <code>List</code> parsing.
      */
     public void testPropertyExistsInOnlyOneConfig() throws Exception
     {
@@ -182,7 +181,7 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
+     * Tests <code>List</code> parsing.
      */
     public void testGettingConfiguration() throws Exception
     {
@@ -263,22 +262,22 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-      * Tests <code>Vector</code> parsing.
+      * Tests <code>List</code> parsing.
       */
-    public void testVector() throws Exception
+    public void testList() throws Exception
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(dom4jConf);
 
-        Vector packages = cc.getVector("packages");
+        List packages = cc.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
 
-        Vector defaultVector = new Vector();
-        defaultVector.add("1");
-        defaultVector.add("2");
+        List defaultList = new ArrayList();
+        defaultList.add("1");
+        defaultList.add("2");
 
-        packages = cc.getVector("packages.which.dont.exist", defaultVector);
+        packages = cc.getList("packages.which.dont.exist", defaultList);
         // we should get 2 packages here
         assertEquals(2, packages.size());
     }

@@ -57,6 +57,9 @@ package org.apache.commons.configuration;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.List;
+import java.util.Vector;
+
 import org.apache.commons.collections.ExtendedProperties;
 
 
@@ -66,7 +69,7 @@ import org.apache.commons.collections.ExtendedProperties;
  * standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: ConfigurationConverter.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: ConfigurationConverter.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public class ConfigurationConverter
 {
@@ -116,7 +119,15 @@ public class ConfigurationConverter
         for (Iterator i = c.getKeys(); i.hasNext();)
         {
             String key = (String) i.next();
-            props.setProperty(key, c.getProperty(key));
+            Object property = c.getProperty(key);
+
+            // turn lists into vectors
+            if (property instanceof List)
+            {
+                property = new Vector((List) property);
+            }
+
+            props.setProperty(key, property);
         }
         return props;
     }

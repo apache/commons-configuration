@@ -57,7 +57,7 @@ package org.apache.commons.configuration;
 import java.io.File;
 
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -68,7 +68,7 @@ import junit.framework.TestSuite;
  * and normal (Properties) Configuration
  * 
  * @author <a href0"mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestEqualBehaviour.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestEqualBehaviour.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class TestEqualBehaviour
         extends TestCase
@@ -134,19 +134,19 @@ public class TestEqualBehaviour
             assertEquals(msg + ", String Array: ", s1[i], s2[i]);
         }
 
-        Vector v1 = c1.getVector(key);
-        Vector v2 = c2.getVector(key);
+        List list1 = c1.getList(key);
+        List list2 = c2.getList(key);
 
-        assertEquals(msg + ", Size: ", v1.size(), v2.size());
+        assertEquals(msg + ", Size: ", list1.size(), list2.size());
 
-        Iterator it1 = v1.iterator();
-        Iterator it2 = v2.iterator();
+        Iterator it1 = list1.iterator();
+        Iterator it2 = list2.iterator();
 
         while(it1.hasNext() && it2.hasNext())
         {
             String val1 = (String) it1.next();
             String val2 = (String) it2.next();
-            assertEquals(msg + ", Vector: ", val1, val2);
+            assertEquals(msg + ", List: ", val1, val2);
         }
         assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
     }

@@ -57,7 +57,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Vector;
 import javax.naming.Binding;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -66,11 +65,12 @@ import javax.naming.NamingException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -236,7 +236,7 @@ public class JNDIConfiguration
      * @param key The configuration key.
      * @return The associated properties if key is found.
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector.
+     * object that is not a String/List.
      * @throws IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
      * @see #getProperties(String, Properties)
@@ -660,7 +660,7 @@ public class JNDIConfiguration
      * @param key The configuration key.
      * @return The associated string array if key is found.
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector of Strings.
+     * object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
     {
@@ -686,36 +686,36 @@ public class JNDIConfiguration
         else
         {
             throw new ClassCastException(
-                '\'' + key + "' doesn't map to a String/Vector object");
+                '\'' + key + "' doesn't map to a String/List object");
         }
         return tokens;
     }
     
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      * Typically this will be just a single item, as you can't have multiple
      * properties with the same name.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated Vector.
+     * @return The associated List.
      */
-    public Vector getVector(String key, Vector defaultValue)
+    public List getList(String key, List defaultValue)
     {
         try
         {
             Object value = this.getValueFromJNDI(key);
             if (value != null)
             {
-                Vector v = new Vector(1);
-                v.add(value.toString());
-                return v;
+                List list = new ArrayList(1);
+                list.add(value.toString());
+                return list;
             }
             else
             {
                 if (defaultValue == null)
                 {
-                    defaultValue = new Vector();
+                    defaultValue = new ArrayList();
                 }
                 return defaultValue;
             }

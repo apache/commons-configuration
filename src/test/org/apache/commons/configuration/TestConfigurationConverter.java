@@ -54,18 +54,20 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 import org.apache.commons.collections.ExtendedProperties;
-import java.util.Vector;
 
 
 /**
  * Tests the ConfigurationConverter class
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: TestConfigurationConverter.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestConfigurationConverter.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class TestConfigurationConverter extends TestCase
 {
@@ -91,10 +93,10 @@ public class TestConfigurationConverter extends TestCase
     {
         config.setProperty("string", "teststring");
         config.setProperty("int", "123");
-        Vector vec = new Vector();
-        vec.add("item 1");
-        vec.add("item 2");
-        config.setProperty("vector", vec);
+        List list = new ArrayList();
+        list.add("item 1");
+        list.add("item 2");
+        config.setProperty("list", list);
 
         ExtendedProperties ep = ConfigurationConverter
                 .getExtendedProperties(config);
@@ -102,7 +104,7 @@ public class TestConfigurationConverter extends TestCase
 
         assertEquals("This returns 'teststring'", ep.getString("string"),
                 "teststring");
-        Vector v = ep.getVector("vector");
+        List v = ep.getVector("list");
         assertEquals("This returns 'item 1'", (String) v.get(0), "item 1");
         assertEquals("This returns 123", ep.getInt("int"), 123);
 
@@ -111,7 +113,7 @@ public class TestConfigurationConverter extends TestCase
 
         assertEquals("This returns 'teststring'", c.getString("string"),
                 "teststring");
-        Vector v1 = c.getVector("vector");
+        List v1 = c.getList("list");
         assertEquals("This returns 'item 1'", (String) v1.get(0), "item 1");
         assertEquals("This returns 123", c.getInt("int"), 123);
     }

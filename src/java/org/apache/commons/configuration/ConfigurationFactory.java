@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -633,7 +633,7 @@ public class ConfigurationFactory implements BasePathLoader
                 AdditionalConfigurationData cdata =
                 (AdditionalConfigurationData) it.next();
                 result.addNodes(cdata.getAt(),
-                createRootNode(cdata).getChildren().asVector());
+                createRootNode(cdata).getChildren().asList());
             }  /* for */
 
             return (result.isEmpty()) ? null : result;

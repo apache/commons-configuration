@@ -391,10 +391,10 @@ if(prop instanceof Collection)
 ]]>
 			</source>
 			<p>
-				An alternative to this code would be the <code>getVector()</code>
+				An alternative to this code would be the <code>getList()</code>
 				method of <code>Configuration</code>. If a property is known to
 				have multiple values (as is the table name property in this example),
-				<code>getVector()</code> allows to retrieve all values at once.
+				<code>getList()</code> allows to retrieve all values at once.
 				By the way, it is completely legal to call <code>getString()</code>
 				or one of the other getter methods on a property with multiple
 				values; in this case only the first value is returned.
@@ -402,11 +402,11 @@ if(prop instanceof Collection)
 		</subsection>
 		<subsection name="Accessing structured properties">
 			<p>
-				Okay, we can obtain a vector with the name of all defined
-				tables. In the same way we can retrieve a vector with the names
+				Okay, we can obtain a list with the name of all defined
+				tables. In the same way we can retrieve a list with the names
 				of all table fields: just pass the key
 				<code>tables.table.fields.field.name</code> to the
-				<code>getVector()</code> method. In our example this vector
+				<code>getList()</code> method. In our example this list
 				would contain 10 elements, the names of all fields of all tables.
 				This is fine, but how do we know, which field belongs to
 				which table?

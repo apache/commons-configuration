@@ -60,7 +60,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Vector;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -71,7 +70,7 @@ import java.util.Vector;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public class CompositeConfiguration implements Configuration
 {
@@ -187,7 +186,7 @@ public class CompositeConfiguration implements Configuration
      * @param key The configuration key.
      * @return The associated properties if key is found.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector.
+     * object that is not a String/List.
      * @exception IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
      * @see #getProperties(String, Properties)
@@ -698,52 +697,52 @@ public class CompositeConfiguration implements Configuration
      * @param key The configuration key.
      * @return The associated string array if key is found.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector of Strings.
+     * object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
     {
-        Vector v = getVector(key);
-        return (String []) v.toArray(new String [0]);
+        List list = getList(key);
+        return (String []) list.toArray(new String [0]);
     }
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
-     * @return The associated Vector.
+     * @return The associated List.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      */
-    public Vector getVector(String key)
+    public List getList(String key)
     {
-        Vector v = new Vector();
+        List list = new ArrayList();
 
         for (ListIterator li = configList.listIterator(); li.hasNext();)
         {
             Configuration config = (Configuration) li.next();
             if (config.containsKey(key))
             {
-                v.addAll(config.getVector(key));
+                list.addAll(config.getList(key));
             }
         }
 
-        return v;
+        return list;
     }
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated Vector.
+     * @return The associated List.
      * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      */
-    public Vector getVector(String key, Vector defaultValue)
+    public List getList(String key, List defaultValue)
     {
-        Vector v = getVector(key);
+        List list = getList(key);
 
-        return (v.size() == 0) ? defaultValue : v;
+        return (list.size() == 0) ? defaultValue : list;
     }
 
     private Configuration getFirstMatchingConfig(String key)

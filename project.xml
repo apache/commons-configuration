@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.2 2003/12/23 15:56:46 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.3 2003/12/24 14:28:22 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -105,6 +105,11 @@
   </developers>
   
   <contributors>  
+    <contributor>
+      <name>Emmanuel Bourg</name>
+      <id>ebourg</id>
+      <email>e.bourg@cross-systems.com</email>
+    </contributor>  	
     <contributor>
       <name>Konstantin Shaposhnikov</name>
       <id>kshaposhnikov</id>

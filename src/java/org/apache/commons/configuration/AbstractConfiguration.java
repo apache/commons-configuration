@@ -61,7 +61,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * Abstract configuration class. Provide basic functionality but does not
@@ -70,7 +69,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -116,7 +115,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * addProperty("resource.loader", "classpath")
      *
-     * Then you will end up with a Vector like the following:
+     * Then you will end up with a List like the following:
      *
      * ["file", "classpath"]
      *
@@ -281,9 +280,9 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Returns a Vector of Strings built from the supplied
+     * Returns a List of Strings built from the supplied
      * String. Splits up CSV lists. If no commas are in the
-     * String, simply returns a Vector with the String as its
+     * String, simply returns a List with the String as its
      * first element
      *
      * @param token The String to tokenize
@@ -500,7 +499,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated properties if key is found.
      *
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector.
+     * object that is not a String/List.
      * @throws IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
      *
@@ -522,7 +521,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated properties if key is found.
      *
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector of Strings.
+     * object that is not a String/List of Strings.
      * @throws IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
      */
@@ -588,11 +587,11 @@ public abstract class AbstractConfiguration implements Configuration
         //
         // We must never give a Container Object out. So if the
         // Return Value is a Container, we fix it up to be a
-        // Vector
+        // List
         //
         if (o instanceof Container)
         {
-            o = ((Container) o).asVector();
+            o = ((Container) o).asList();
         }
         return o;
    }
@@ -1306,7 +1305,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated string array if key is found.
      *
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a String/Vector of Strings.
+     * object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
     {
@@ -1343,29 +1342,29 @@ public abstract class AbstractConfiguration implements Configuration
         else
         {
             throw new ClassCastException(
-                '\'' + key + "' doesn't map to a String/Vector object");
+                '\'' + key + "' doesn't map to a String/List object");
         }
         return tokens;
     }
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      *
-     * @return The associated Vector.
+     * @return The associated List.
      *
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      * @throws NoSuchElementException is thrown if the key doesn't
      *         map to an existing object.
      */
-    public Vector getVector(String key)
+    public List getList(String key)
     {
-        Vector v = getVector(key, null);
-        if (v != null)
+        List list = getList(key, null);
+        if (list != null)
         {
-            return v;
+            return list;
         }
         else
         {
@@ -1375,39 +1374,39 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Get a Vector of strings associated with the given configuration key.
+     * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
      *
-     * @return The associated Vector.
+     * @return The associated List.
      *
      * @throws ClassCastException is thrown if the key maps to an
-     * object that is not a Vector.
+     * object that is not a List.
      */
-    public Vector getVector(String key, Vector defaultValue)
+    public List getList(String key, List defaultValue)
     {
         Object value = getPropertyDirect(key);
-        Vector v = null;
+        List list = null;
 
         if (value instanceof String)
         {
-            v = new Vector(1);
-            v.addElement((String) value);
+            list = new ArrayList(1);
+            list.add(value);
         }
         else if (value instanceof Container)
         {
-            v = ((Container) value).asVector();
+            list = ((Container) value).asList();
         }
         else if (value == null)
         {
             if (defaults != null)
             {
-                v = defaults.getVector(key, defaultValue);
+                list = defaults.getList(key, defaultValue);
             }
             else
             {
-                v = ((defaultValue == null) ? new Vector() : defaultValue);
+                list = ((defaultValue == null) ? new ArrayList() : defaultValue);
             }
         }
         else
@@ -1415,12 +1414,12 @@ public abstract class AbstractConfiguration implements Configuration
             throw new ClassCastException(
                 '\''
                     + key
-                    + "' doesn't map to a Vector object: "
+                    + "' doesn't map to a List object: "
                     + value
                     + ", a "
                     + value.getClass().getName());
         }
-        return v;
+        return list;
     }
 
     /**
@@ -1501,20 +1500,20 @@ public abstract class AbstractConfiguration implements Configuration
     } // class PropertiesTokenizer
 
     /**
-     * Private Wrapper class for Vector, so we can distinguish between
-     * Vector objects and our container
+     * Private Wrapper class for List, so we can distinguish between
+     * List objects and our container
      */
     static class Container
     {
-        /** We're wrapping a List object (A vector) */
-        private List l = null;
+        /** We're wrapping a List object (A List) */
+        private List list = null;
 
         /**
          * C'tor
          */
         public Container()
         {
-            l = new Vector(INITIAL_LIST_SIZE);
+            list = new ArrayList(INITIAL_LIST_SIZE);
         }
 
         /**
@@ -1524,7 +1523,7 @@ public abstract class AbstractConfiguration implements Configuration
          */
         public void add(Object o)
         {
-            l.add(o);
+            list.add(o);
         }
 
         /**
@@ -1534,7 +1533,7 @@ public abstract class AbstractConfiguration implements Configuration
          */
         public int size()
         {
-            return l.size();
+            return list.size();
         }
 
         /**
@@ -1545,7 +1544,7 @@ public abstract class AbstractConfiguration implements Configuration
          */
         public Object get(int index)
         {
-            return l.get(index);
+            return list.get(index);
         }
 
         /**
@@ -1555,27 +1554,21 @@ public abstract class AbstractConfiguration implements Configuration
          */
         public Iterator iterator()
         {
-            return l.iterator();
+            return list.iterator();
         }
 
         /**
          * Returns the Elements of the Container as
-         * a Vector. This is not the internal vector
+         * a List. This is not the internal list
          * element but a shallow copy of the internal
          * list. You may modify the returned list without
          * modifying the container.
          *
-         * @return A Vector containing the elements of the Container.
+         * @return A List containing the elements of the Container.
          */
-        public Vector asVector()
+        public List asList()
         {
-            Vector v = new Vector(l.size());
-
-            for (Iterator it = l.iterator(); it.hasNext();)
-            {
-                v.add(it.next());
-            }
-            return v;
+            return new ArrayList(list);
         }
     }
 }

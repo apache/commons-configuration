@@ -63,7 +63,7 @@ import junit.framework.Assert;
  * can share.
  * 
  * @author Eric Pugh
- * @version $Id: NonStringTestHolder.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: NonStringTestHolder.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
  */
 public class NonStringTestHolder
 {
@@ -72,7 +72,7 @@ public class NonStringTestHolder
     {
         boolean booleanValue = configuration.getBoolean("test.boolean");
         Assert.assertEquals(true, booleanValue);
-        Assert.assertEquals(1, configuration.getVector("test.boolean").size());
+        Assert.assertEquals(1, configuration.getList("test.boolean").size());
     }
 
     public void testBooleanDefaultValue() throws Exception
@@ -91,7 +91,7 @@ public class NonStringTestHolder
         byte testValue = 10;
         byte byteValue = configuration.getByte("test.byte");
         Assert.assertEquals(testValue, byteValue);
-        Assert.assertEquals(1, configuration.getVector("test.byte").size());
+        Assert.assertEquals(1, configuration.getList("test.byte").size());
     }
 
     public void testDouble() throws Exception
@@ -99,7 +99,7 @@ public class NonStringTestHolder
         double testValue = 10.25;
         double doubleValue = configuration.getDouble("test.double");
         Assert.assertEquals(testValue, doubleValue, 0.01);
-        Assert.assertEquals(1, configuration.getVector("test.double").size());
+        Assert.assertEquals(1, configuration.getList("test.double").size());
     }
 
     public void testDoubleDefaultValue() throws Exception
@@ -116,7 +116,7 @@ public class NonStringTestHolder
         float testValue = (float) 20.25;
         float floatValue = configuration.getFloat("test.float");
         Assert.assertEquals(testValue, floatValue, 0.01);
-        Assert.assertEquals(1, configuration.getVector("test.float").size());
+        Assert.assertEquals(1, configuration.getList("test.float").size());
     }
 
     public void testFloatDefaultValue() throws Exception
@@ -132,7 +132,7 @@ public class NonStringTestHolder
     {
         int intValue = configuration.getInt("test.integer");
         Assert.assertEquals(10, intValue);
-        Assert.assertEquals(1, configuration.getVector("test.integer").size());
+        Assert.assertEquals(1, configuration.getList("test.integer").size());
     }
 
     public void testIntegerDefaultValue() throws Exception
@@ -145,7 +145,7 @@ public class NonStringTestHolder
     {
         long longValue = configuration.getLong("test.long");
         Assert.assertEquals(1000000, longValue);
-        Assert.assertEquals(1, configuration.getVector("test.long").size());
+        Assert.assertEquals(1, configuration.getList("test.long").size());
     }
     public void testLongDefaultValue() throws Exception
     {
@@ -157,7 +157,7 @@ public class NonStringTestHolder
     {
         short shortValue = configuration.getShort("test.short");
         Assert.assertEquals(1, shortValue);
-        Assert.assertEquals(1, configuration.getVector("test.short").size());
+        Assert.assertEquals(1, configuration.getList("test.short").size());
     }
 
     public void testShortDefaultValue() throws Exception
@@ -167,12 +167,12 @@ public class NonStringTestHolder
         Assert.assertEquals(1, shortValue);
     }
 
-    public void testVectorMissing() throws Exception
+    public void testListMissing() throws Exception
     {
 
         Assert.assertEquals(
             0,
-            configuration.getVector("missing.vector").size());
+            configuration.getList("missing.list").size());
     }
 
     public void testSubset() throws Exception

@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+	 <action dev="ebourg" type="update">
+      	Change all Vector objects to List objects.
+     </action>     	
 	 <action dev="oheger" type="add">
       	ConfigurationFactory now supports two types of properties files, additional and 
       	override.  Additional properties add each other together.  Override override each
