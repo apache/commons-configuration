@@ -4,8 +4,8 @@
 
 <configuration>
   <additional>
-    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration" fileName="testHierarchicalDOM4JConfiguration.xml"/>
-    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration" fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
+    <hierarchicalDom4j fileName="testHierarchicalDOM4JConfiguration.xml"/>
+    <hierarchicalDom4j fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
     <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>
   </additional>
 

@@ -18,6 +18,7 @@
       <item name="Overview"            href="/overview.html"/>
       <item name="Simple Howto"        href="/howto_properties.html"/>
       <item name="ConfigurationFactory Howto"        href="/howto_configurationfactory.html"/>      
+      <item name="XML Howto"           href="/howto_xml.html"/>
       <item name="Composite Configuration Details"        href="/howto_compositeconfiguration.html"/>
       <item name="To Do List"          href="/tasks.html"/>      
     </menu>

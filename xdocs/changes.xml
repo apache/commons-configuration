@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">  
+     <action dev="oheger" type="fix">
+      	Reapply the ConfigurationXMLDocument that went missing during migration out of sandbox.
+     </action>        	
      <action dev="epugh" type="update">
       	Apply ASL 2.0 license.  Thanks to Jeff Painter for scripting the conversion!
      </action>     

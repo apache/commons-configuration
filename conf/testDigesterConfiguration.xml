@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
+  <properties fileName="conf/test.properties"/>
+  <dom4j fileName="conf/test.xml"/>
 </configuration>
 
   
