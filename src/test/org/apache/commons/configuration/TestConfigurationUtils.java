@@ -57,9 +57,7 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.net.URL;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Tests the ConfigurationUtils class
@@ -70,22 +68,6 @@ import junit.framework.TestSuite;
 public class TestConfigurationUtils extends TestCase
 {
     protected Configuration configuration = new BaseConfiguration();
-
-    public TestConfigurationUtils(String testName)
-    {
-        super(testName);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(TestConfigurationUtils.class);
-    }
-
-    public static void main(String args[])
-    {
-        String[] testCaseName = { TestConfigurationUtils.class.getName()};
-        junit.textui.TestRunner.main(testCaseName);
-    }
 
     public void testCompare()
     {

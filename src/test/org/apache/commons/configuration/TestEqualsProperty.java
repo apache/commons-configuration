@@ -62,25 +62,16 @@ import junit.framework.TestCase;
  * test if properties that contain a "=" will be loaded correctly.
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestEqualsProperty.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestEqualsProperty.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
-public class TestEqualsProperty
-    extends TestCase
+public class TestEqualsProperty extends TestCase
 {
     /** The File that we test with */
-    private String testProperties = 
-        new File("conf/test.properties").getAbsolutePath();
+    private String testProperties = new File("conf/test.properties").getAbsolutePath();
 
-    public TestEqualsProperty(String s)
+    public void testEquals() throws Exception
     {
-        super(s);
-    }
-
-    public void testEquals()
-      throws Exception
-    {
-        PropertiesConfiguration conf =
-            new PropertiesConfiguration(testProperties);
+        PropertiesConfiguration conf = new PropertiesConfiguration(testProperties);
 
         String equals = conf.getString("test.equals");
         assertEquals("value=one", equals);

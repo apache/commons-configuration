@@ -62,11 +62,10 @@ import java.util.ArrayList;
 import junit.framework.TestCase;
 
 /**
- * test loading multiple configurations
+ * Test loading multiple configurations.
  *
- 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestCompositeConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -78,11 +77,6 @@ public class TestCompositeConfiguration extends TestCase
     private String testProperties = new File("conf/test.properties").getAbsolutePath();
     private String testProperties2 = new File("conf/test2.properties").getAbsolutePath();
     private String testPropertiesXML = new File("conf/test.xml").getAbsolutePath();
-
-    public TestCompositeConfiguration(String s)
-    {
-        super(s);
-    }
 
     protected void setUp() throws Exception
     {
@@ -238,7 +232,6 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(dom4jConf);
         cc.setProperty("my.new.property", "supernew");
         assertEquals("supernew", cc.getString("my.new.property"));
-
     }
 
     /**
@@ -258,7 +251,6 @@ public class TestCompositeConfiguration extends TestCase
         cc.setProperty("test.short", "43");
         subset = cc.subset("test.short");
         assertEquals("Make sure the initial loaded configs subset overrides" + "any later add configs subset", "43", subset.getString("test.short"));
-
     }
 
     /**

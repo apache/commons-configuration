@@ -62,7 +62,7 @@ import junit.framework.TestCase;
  * test for loading and saving xml properties files
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestDOM4JConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestDOM4JConfiguration.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestDOM4JConfiguration extends TestCase
 {
@@ -71,11 +71,6 @@ public class TestDOM4JConfiguration extends TestCase
     private String testBasePath = new File("conf").getAbsolutePath();
     private DOM4JConfiguration conf;
 
-    public TestDOM4JConfiguration(String s)
-    {
-        super(s);
-    }
-
     protected void setUp() throws Exception
     {
         conf = new DOM4JConfiguration(new File(testProperties));
@@ -83,16 +78,12 @@ public class TestDOM4JConfiguration extends TestCase
 
     public void testGetProperty() throws Exception
     {
-
         assertEquals("value", conf.getProperty("element"));
-
     }
 
     public void testGetComplexProperty() throws Exception
     {
-
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
-
     }
 
     public void testSettingFileNames() throws Exception
@@ -112,7 +103,6 @@ public class TestDOM4JConfiguration extends TestCase
         assertEquals("/subdir/hello.xml", conf.getFileName());
         assertEquals(testBasePath.toString(), conf.getBasePath());
         assertEquals(new File(testBasePath, "/subdir/hello.xml"), conf.getFile());
-
     }
 
     public void testLoad() throws Exception

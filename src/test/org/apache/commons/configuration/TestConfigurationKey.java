@@ -60,7 +60,7 @@ import junit.framework.TestCase;
  * Test class for ConfigurationKey. 
  * 
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestConfigurationKey.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestConfigurationKey.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestConfigurationKey extends TestCase
 {
@@ -70,15 +70,6 @@ public class TestConfigurationKey extends TestCase
     
     private static final String TESTKEY = TESTPROPS + TESTATTR;
     
-    /**
-     * Constructor for TestConfigurationKey.
-     * @param arg0
-     */
-    public TestConfigurationKey(String arg0)
-    {
-        super(arg0);
-    }
-
     public void testAppend()
     {
         ConfigurationKey key = new ConfigurationKey();

@@ -56,10 +56,9 @@ package org.apache.commons.configuration;
 
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Tests some basic functions of the BaseConfiguration class
@@ -67,42 +66,24 @@ import junit.framework.TestSuite;
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBaseConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
     protected BaseConfiguration eprop = new BaseConfiguration();
 
-    public TestBaseConfiguration(String testName)
-    {
-        super(testName);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite( TestBaseConfiguration.class );
-    }
-    
-    public static void main(String args[])
-    {
-        String[] testCaseName = { TestBaseConfiguration.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
-    }
-
-    public void testRetrieve()
-    {
-        /*
-         * should be empty and return null
-         */
+    public void testGetProperty() {
+        /* should be empty and return null */
         assertEquals("This returns null", eprop.getProperty("foo"), null);
 
-        /*
-         *  add a real value, and get it two different ways
-         */
+        /* add a real value, and get it two different ways */
         eprop.setProperty("number", "1");
         assertEquals("This returns '1'", eprop.getProperty("number"), "1");
         assertEquals("This returns '1'", eprop.getString("number"), "1");
+    }
 
+    public void testGetByte() {
+        eprop.setProperty("number", "1");
         byte oneB = 1, twoB = 2;
         assertEquals("This returns 1(byte)",eprop.getByte("number"),oneB);
         assertEquals("This returns 1(byte)",eprop.getByte("number",twoB),oneB);
@@ -112,7 +93,9 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Byte)",
                      eprop.getByte("number",new Byte("2")),
                      new Byte(oneB));
+    }
 
+    public void testGetShort() {
         eprop.setProperty("numberS", "1");
         short oneS = 1, twoS = 2;
         assertEquals("This returns 1(short)",eprop.getShort("numberS"),oneS);
@@ -125,7 +108,9 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Short)",
                      eprop.getShort("numberS",new Short("2")),
                      new Short(oneS));
+    }
 
+    public void testGetLong() {
         eprop.setProperty("numberL", "1");
         long oneL = 1, twoL = 2;
         assertEquals("This returns 1(long)",eprop.getLong("numberL"),oneL);
@@ -138,7 +123,9 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Long)",
                      eprop.getLong("numberL",new Long("2")),
                      new Long(oneL));
+    }
 
+    public void testGetFloat() {
         eprop.setProperty("numberF", "1.0");
         float oneF = 1, twoF = 2;
         assertEquals("This returns 1(float)",eprop.getFloat("numberF"),oneF,0);
@@ -153,7 +140,9 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Float)",
                      eprop.getFloat("numberF",new Float("2")),
                      new Float(oneF));
+    }
 
+    public void testGetDouble() {
         eprop.setProperty("numberD", "1.0");
         double oneD = 1, twoD = 2;
         assertEquals("This returns 1(double)",
@@ -171,7 +160,9 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Double)",
                      eprop.getDouble("numberD",new Double("2")),
                      new Double(oneD));
+    }
 
+    public void testGetBoolean() {
         eprop.setProperty("boolA", Boolean.TRUE);
         boolean boolT = true, boolF = false;
         assertEquals("This returns true",eprop.getBoolean("boolA"),boolT);
@@ -184,13 +175,16 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns true(Boolean)",
                      eprop.getBoolean("boolA",new Boolean(boolF)),
                      new Boolean(boolT));
+    }
 
-        /*
-         * now add another and get a List
-         */
+    public void testGetList() {
+        eprop.addProperty("number", "1");
         eprop.addProperty("number", "2");
-        assertTrue("This returns array", ( eprop.getList("number")
-                instanceof java.util.List ) );
+        List list = eprop.getList("number");
+        assertNotNull("The list is null", list);
+        assertEquals("List size", 2, list.size());
+        assertTrue("The number 1 is missing from the list", list.contains("1"));
+        assertTrue("The number 2 is missing from the list", list.contains("2"));
 
         /*
          *  now test dan's new fix where we get the first scalar
@@ -198,10 +192,9 @@ public class TestBaseConfiguration extends TestCase
          */
         assertTrue("This returns scalar", ( eprop.getString("number")
                 instanceof String ) );
+    }
 
-        /*
-         * test comma separated string properties
-         */
+    public void testCommaSeparatedString() {
         String prop = "hey, that's a test";
         eprop.setProperty("prop.string", prop);
         assertTrue("This returns list", ( eprop.getList("prop.string")
@@ -212,8 +205,9 @@ public class TestBaseConfiguration extends TestCase
         eprop.setProperty("prop.string", prop2);
         assertTrue("This returns string", ( eprop.getString("prop.string")
                 instanceof java.lang.String) );
+    }
 
-        // Test Properties access.
+    public void testPropertyAccess() {
         eprop.clearProperty("prop.properties");
         eprop.setProperty("prop.properties", "");
         assertEquals("This returns an empty Properties object",
@@ -221,6 +215,7 @@ public class TestBaseConfiguration extends TestCase
                      new Properties());
         eprop.clearProperty("prop.properties");
         eprop.setProperty("prop.properties", "foo=bar, baz=moo, seal=clubber");
+
         Properties p = new Properties();
         p.setProperty("foo", "bar");
         p.setProperty("baz", "moo");
@@ -228,21 +223,24 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns a filled in Properties object",
                      eprop.getProperties("prop.properties"),
                      p);
+    }
 
+    public void testSubset()
+    {
         /*
          * test subset : assure we don't reprocess the data elements
          * when generating the subset
          */
 
+        String prop = "hey, that's a test";
+        String prop2 = "hey\\, that's a test";
+        eprop.setProperty("prop.string", prop2);
+
         Configuration subEprop = eprop.subset("prop");
 
-        assertTrue("Returns the full string", subEprop.getString("string")
-                .equals( prop ) );
-        assertTrue("This returns string for subset", ( subEprop
-                .getString("string") instanceof java.lang.String) );
-        assertTrue("This returns array for subset", ( subEprop
-                .getList("string") instanceof java.util.List) );
-
+        assertEquals("Returns the full string", prop, subEprop.getString("string"));
+        assertTrue("This returns string for subset", ( subEprop.getString("string") instanceof java.lang.String) );
+        assertTrue("This returns array for subset", ( subEprop.getList("string") instanceof java.util.List) );
     }
 
     public void testInterpolation() throws Exception

@@ -59,9 +59,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,20 +71,10 @@ import org.apache.commons.configuration.BaseConfiguration;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href0"mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestPropertiesSequence.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestPropertiesSequence.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
-public class TestPropertiesSequence
-        extends TestCase
+public class TestPropertiesSequence extends TestCase
 {
-    public TestPropertiesSequence(String name) throws Exception
-    {
-        super(name);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(TestPropertiesSequence.class);
-    }
 
     public void testConfigurationValuesInSameOrderFromFile() throws Exception
     {
@@ -112,7 +100,6 @@ public class TestPropertiesSequence
         {
             assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
         }
-
     }
 
     public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception
@@ -145,7 +132,6 @@ public class TestPropertiesSequence
         {
             assertEquals(keysSimpleConfiguration.get(i), keysCompositeConfiguration.get(i));
         }
-
     }
 
     public void testMappingInSameOrder() throws Exception

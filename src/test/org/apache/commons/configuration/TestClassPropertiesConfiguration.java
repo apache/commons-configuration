@@ -62,10 +62,9 @@ package org.apache.commons.configuration;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestClassPropertiesConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestClassPropertiesConfiguration.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
-public class TestClassPropertiesConfiguration
-    extends TestBasePropertiesConfiguration
+public class TestClassPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
     /** The File that we test with */
     private static final String[] TEST_FILE_NAMES = 
@@ -74,13 +73,7 @@ public class TestClassPropertiesConfiguration
         "/org/apache/commons/configuration/test.properties"
      };
 
-    public TestClassPropertiesConfiguration(String s)
-    {
-        super(s);
-    }
-
-    protected void setUp()
-        throws Exception
+    protected void setUp() throws Exception
     {
         conf = new ClassPropertiesConfiguration(getClass(), TEST_FILE_NAMES[0]);
     }

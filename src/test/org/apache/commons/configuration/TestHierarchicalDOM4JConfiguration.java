@@ -63,25 +63,18 @@ import junit.framework.TestCase;
  * Test class for HierarchicalDOM4JConfiguration,
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestHierarchicalDOM4JConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestHierarchicalDOM4JConfiguration.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestHierarchicalDOM4JConfiguration extends TestCase
 {
     private static final String TEST_DIR = "conf";
     
-    private static final String TEST_FILENAME =
-    "testHierarchicalDOM4JConfiguration.xml";
+    private static final String TEST_FILENAME = "testHierarchicalDOM4JConfiguration.xml";
     
-    private static final String TEST_FILE = TEST_DIR
-    + File.separator + TEST_FILENAME;
+    private static final String TEST_FILE = TEST_DIR + File.separator + TEST_FILENAME;
     
     private HierarchicalDOM4JConfiguration config;
     
-    public TestHierarchicalDOM4JConfiguration(String arg0)
-    {
-        super(arg0);
-    }
-
     protected void setUp() throws Exception
     {
         config = new HierarchicalDOM4JConfiguration();

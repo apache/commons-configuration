@@ -57,25 +57,15 @@ package org.apache.commons.configuration;
 import java.io.File;
 
 /**
- * test if non-string properties are handled correctly
+ * Test if non-string properties are handled correctly.
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {
 	/** The File that we test with */
-	private String testProperties =
-		new File("conf/test.properties").getAbsolutePath();
-
-	
-
-	public TestCompositeConfigurationNonStringProperties(String s)
-		throws Exception
-	{
-		super(s);
-
-	}
+	private String testProperties = new File("conf/test.properties").getAbsolutePath();
 
 	public void setUp() throws Exception
 	{

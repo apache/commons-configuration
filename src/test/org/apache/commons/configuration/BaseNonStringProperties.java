@@ -57,25 +57,18 @@ package org.apache.commons.configuration;
 import junit.framework.TestCase;
 
 /**
- * test if non-string properties are handled correctly
+ * Test if non-string properties are handled correctly.
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BaseNonStringProperties.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: BaseNonStringProperties.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
 public abstract class BaseNonStringProperties extends TestCase
 {
 
-    protected NonStringTestHolder nonStringTestHolder =
-        new NonStringTestHolder();
+    protected NonStringTestHolder nonStringTestHolder = new NonStringTestHolder();
     public abstract void setUp() throws Exception;
 
     public Configuration conf = null;
-
-    public BaseNonStringProperties(String s) throws Exception
-    {
-        super(s);
-
-    }
 
     public void testBoolean() throws Exception
     {

@@ -59,12 +59,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * test for loading and saving properties files
+ * Test for loading and saving properties files.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestPropertiesConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -73,11 +73,6 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     private String testBasePath = new File("conf").getAbsolutePath();
     private String testBasePath2 = new File("conf").getAbsoluteFile().getParentFile().getAbsolutePath();
-
-    public TestPropertiesConfiguration(String s)
-    {
-        super(s);
-    }
 
     protected void setUp() throws Exception
     {

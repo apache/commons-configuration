@@ -59,30 +59,17 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * Compare the behaviour of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  * 
  * @author <a href0"mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: TestEqualBehaviour.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestEqualBehaviour.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
-public class TestEqualBehaviour
-        extends TestCase
+public class TestEqualBehaviour  extends TestCase
 {
-    public TestEqualBehaviour(String name) throws Exception
-    {
-        super(name);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite(TestEqualBehaviour.class);
-    }
-
     private Configuration setupSimpleConfiguration()
             throws Exception
     {
@@ -154,8 +141,7 @@ public class TestEqualBehaviour
     /**
      * Are both configurations equal after loading?
      */
-    public void testLoading()
-            throws Exception
+    public void testLoading() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -167,8 +153,7 @@ public class TestEqualBehaviour
      * If we delete a key, does it vanish? Does it leave all
      * the other keys unchanged? How about an unset key?
      */
-    public void testDeletingExisting()
-            throws Exception
+    public void testDeletingExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -187,8 +172,7 @@ public class TestEqualBehaviour
         checkEquality("testDeletingExisting", simple, composite);
     }
 
-    public void testDeletingNonExisting()
-            throws Exception
+    public void testDeletingNonExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -211,8 +195,7 @@ public class TestEqualBehaviour
      * If we set a key, does it work? How about an existing
      * key? Can we change it?
      */
-    public void testSettingNonExisting()
-            throws Exception
+    public void testSettingNonExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -233,8 +216,7 @@ public class TestEqualBehaviour
         checkEquality("testSettingNonExisting", simple, composite);
     }
 
-    public void testSettingExisting()
-            throws Exception
+    public void testSettingExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -260,8 +242,7 @@ public class TestEqualBehaviour
     /**
      * If we add a key, does it work?
      */
-    public void testAddingUnset()
-            throws Exception
+    public void testAddingUnset() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();
@@ -282,8 +263,7 @@ public class TestEqualBehaviour
     /**
      * If we add a to an existing key, does it work?
      */
-    public void testAddingSet()
-            throws Exception
+    public void testAddingSet() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
         Configuration composite = setupCompositeConfiguration();

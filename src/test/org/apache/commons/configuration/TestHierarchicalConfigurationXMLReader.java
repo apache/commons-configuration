@@ -68,7 +68,7 @@ import junit.framework.TestCase;
  * Test class for HierarchicalConfigurationXMLReader.
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
@@ -77,11 +77,6 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
     
     private HierarchicalConfigurationXMLReader parser;
     
-    public TestHierarchicalConfigurationXMLReader(String arg0)
-    {
-        super(arg0);
-    }
-
     protected void setUp() throws Exception
     {
         HierarchicalDOM4JConfiguration config =

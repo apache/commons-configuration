@@ -59,10 +59,10 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 /**
- * Test the ConfigurationFactory
+ * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -79,11 +79,6 @@ public class TestConfigurationFactory extends TestCase
     private Configuration configuration;
     private CompositeConfiguration compositeConfiguration;
     private ConfigurationFactory configurationFactory;
-
-    public TestConfigurationFactory(String s) throws Exception
-    {
-        super(s);
-    }
 
     public void setUp() throws Exception
     {

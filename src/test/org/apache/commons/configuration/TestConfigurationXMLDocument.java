@@ -73,7 +73,7 @@ import junit.framework.TestCase;
  * Test class for ConfigurationXMLDocument.
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestConfigurationXMLDocument.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestConfigurationXMLDocument.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestConfigurationXMLDocument extends TestCase
 {
@@ -83,14 +83,9 @@ public class TestConfigurationXMLDocument extends TestCase
     private ConfigurationFactory configFactory;
     private ConfigurationXMLDocument configDoc;
     
-    private ArrayList tables;
+    private List tables;
     private int counter;
     
-    public TestConfigurationXMLDocument(String arg0)
-    {
-        super(arg0);
-    }
-
     protected void setUp() throws Exception
     {
         configFactory = new ConfigurationFactory();
@@ -428,7 +423,7 @@ public class TestConfigurationXMLDocument extends TestCase
     public static class Table
     {
         /** Stores the list of fields.*/
-        private ArrayList fields;
+        private List fields;
         
         /** Stores the table name.*/
         private String name;

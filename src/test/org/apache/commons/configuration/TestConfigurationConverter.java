@@ -57,9 +57,7 @@ package org.apache.commons.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.apache.commons.collections.ExtendedProperties;
 
 
@@ -67,27 +65,11 @@ import org.apache.commons.collections.ExtendedProperties;
  * Tests the ConfigurationConverter class
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: TestConfigurationConverter.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestConfigurationConverter.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestConfigurationConverter extends TestCase
 {
-    protected Configuration config = (Configuration) new BaseConfiguration();
-
-    public TestConfigurationConverter(String testName)
-    {
-        super(testName);
-    }
-
-    public static Test suite()
-    {
-        return new TestSuite( TestConfigurationConverter.class );
-    }
-
-    public static void main(String args[])
-    {
-        String[] testCaseName = { TestConfigurationConverter.class.getName() };
-        junit.textui.TestRunner.main(testCaseName);
-    }
+    protected Configuration config = new BaseConfiguration();
 
     public void testConverter()
     {
@@ -98,8 +80,7 @@ public class TestConfigurationConverter extends TestCase
         list.add("item 2");
         config.setProperty("list", list);
 
-        ExtendedProperties ep = ConfigurationConverter
-                .getExtendedProperties(config);
+        ExtendedProperties ep = ConfigurationConverter.getExtendedProperties(config);
 
 
         assertEquals("This returns 'teststring'", ep.getString("string"),

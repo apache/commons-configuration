@@ -65,7 +65,7 @@ import junit.framework.TestCase;
  * Test class for HierarchicalConfiguration.
  * 
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestHierarchicalConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.2 2004/01/16 14:23:39 epugh Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -78,11 +78,6 @@ public class TestHierarchicalConfiguration extends TestCase
     };
         
     private HierarchicalConfiguration config;
-    
-    public TestHierarchicalConfiguration(String arg0)
-    {
-        super(arg0);
-    }
 
     protected void setUp() throws Exception
     {

@@ -66,28 +66,20 @@ import junit.framework.TestCase;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBasePropertiesConfiguration.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: TestBasePropertiesConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
  */
-public abstract class TestBasePropertiesConfiguration
-    extends TestCase
+public abstract class TestBasePropertiesConfiguration extends TestCase
 {
     protected BasePropertiesConfiguration conf;
-
-    public TestBasePropertiesConfiguration(String s)
-    {
-        super(s);
-    }
 
     /**
      * Assigns the {@link #conf} field to a {@link
      * org.apache.commons.configuration.BasePropertiesConfiguration}
      * sub-class.
      */
-    protected abstract void setUp()
-        throws Exception;
+    protected abstract void setUp() throws Exception;
 
-    public void testLoad()
-      throws Exception
+    public void testLoad() throws Exception
     {
         String loaded = conf.getString("configuration.loaded");
         assertEquals("true", loaded);
@@ -97,8 +89,7 @@ public abstract class TestBasePropertiesConfiguration
      * Tests that empty properties are treated as the empty string
      * (rather than as null).
      */
-    public void testEmpty()
-      throws Exception
+    public void testEmpty() throws Exception
     {
         String empty = conf.getString("test.empty");
         assertNotNull(empty);
@@ -108,8 +99,7 @@ public abstract class TestBasePropertiesConfiguration
     /**
      * Tests that references to other properties work
      */
-    public void testReference()
-      throws Exception
+    public void testReference() throws Exception
     {
 		assertEquals("baseextra", conf.getString("base.reference"));
 	}
@@ -117,8 +107,7 @@ public abstract class TestBasePropertiesConfiguration
     /**
      * test if includes properties get loaded too
      */
-    public void testLoadInclude()
-      throws Exception
+    public void testLoadInclude() throws Exception
     {
         String loaded = conf.getString("include.loaded");
         assertEquals("true", loaded);
