@@ -35,6 +35,15 @@ limitations under the License.
   <!-- END: C O M M O N S - B U I L D                                     -->
   <!-- ================================================================== -->
   
+  <!-- Ensures that the conf directory is included in the source distro. -->
+  <postGoal name="dist:prepare-src-filesystem">
+    <mkdir dir="${maven.dist.src.assembly.dir}/conf"/>
+    <copy todir="${maven.dist.src.assembly.dir}/conf">
+      <fileset dir="${basedir}/conf">
+      </fileset>
+    </copy>
+  </postGoal>
+  
   <!-- NonStringTestHolder.java contains tests shared by JUnit and Cactus
   tests.  This ugly hack moves the src from /src/test to /src/test-cactus
   so the Cactus tests will compile.  Not sure what is worse, this hack, or
