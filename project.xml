@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.26 2004/08/16 22:16:30 henning Exp $ -->
+<!-- $Id: project.xml,v 1.27 2004/09/03 15:22:17 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -34,7 +34,7 @@
     various formats
   </description>
   <logo>/images/logo.png</logo>
-    
+
   <url>http://jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</url>
   <package>org.apache.commons.${pom.artifactId.substring(8)}</package>
 
@@ -43,7 +43,7 @@
     <url>http://jakarta.apache.org</url>
     <logo>http://jakarta.apache.org/images/original-jakarta-logo.gif</logo>
   </organization>
-  
+
   <licenses>
 	<license>
     	<name>The Apache Software License, Version 2.0</name>
@@ -51,18 +51,18 @@
     	<distribution>repo</distribution>
 	</license>
   </licenses>
-  
+
   <gumpRepositoryId>jakarta</gumpRepositoryId>
   <issueTrackingUrl>http://issues.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;product=Commons&amp;component=Configuration</issueTrackingUrl>
   <siteAddress>jakarta.apache.org</siteAddress>
   <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/${pom.artifactId.substring(8)}/</distributionDirectory>
-  
+
   <repository>
     <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons/${pom.artifactId.substring(8)}</connection>
     <url>http://cvs.apache.org/viewcvs/jakarta-commons/${pom.artifactId.substring(8)}/</url>
   </repository>
-  
+
   <mailingLists>
     <mailingList>
       <name>Commons Dev List</name>
@@ -80,7 +80,7 @@
 
   <branches>
   </branches>
-  
+
   <developers>
 
     <developer>
@@ -132,168 +132,166 @@
       <email>bdunbar@dunbarconsulting.org</email>
       <organization>dunbarconsulting.org</organization>
     </developer>
-  </developers>
-  
-  <contributors>  
-    <contributor>
+
+    <developer>
       <name>Emmanuel Bourg</name>
       <id>ebourg</id>
-      <email>e.bourg@cross-systems.com</email>
-    </contributor> 
+      <email>smanux@lfjr.net</email>
+    </developer>
+
+  </developers>
+
+  <contributors>
+
     <contributor>
       <name>Oliver Heger</name>
       <id>oheger</id>
       <email>oliver.heger@t-online.de</email>
-    </contributor> 
+    </contributor>
+
     <contributor>
       <name>J&ouml;rg Schaible</name>
       <id>jschaible</id>
       <email>joerg.schaible@gmx.de</email>
       <organization>Elsag-Solutions AG</organization>
       <timezone>+1</timezone>
-    </contributor>            
+    </contributor>
+
     <contributor>
       <name>Konstantin Shaposhnikov</name>
       <id>kshaposhnikov</id>
       <email>ksh@scand.com</email>
       <organization>scand.com</organization>
     </contributor>
+
   </contributors>
-  
+
   <dependencies>
     <dependency>
       <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>    	
+      <artifactId>commons-collections</artifactId>
       <version>3.0</version>
-      <properties>        
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>      
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>    	
+      <artifactId>commons-lang</artifactId>
       <version>2.0</version>
-      <properties>        
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>      
-    </dependency>
-
-    <dependency>
-      <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>  
-      <version>1.0.3</version>
-      <properties>        
-        <war.bundle>true</war.bundle>
-      </properties>      
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>dom4j</groupId>
-      <artifactId>dom4j</artifactId>     	
+      <artifactId>dom4j</artifactId>
       <version>1.4</version>
-      <properties>        
+    </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.0.4</version>
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>            
+      </properties>
     </dependency>
 
     <dependency>
    	  <groupId>commons-digester</groupId>
-      <artifactId>commons-digester</artifactId>  
+      <artifactId>commons-digester</artifactId>
       <version>1.5</version>
-      <properties>        
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>            
+      </properties>
     </dependency>
 
     <dependency>
    	  <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>    	  
-      <version>1.7-dev</version>
-      <properties>        
+      <artifactId>commons-beanutils</artifactId>
+      <version>1.7</version>
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>            
+      </properties>
     </dependency>
 
     <dependency>
    	  <groupId>xerces</groupId>
-      <artifactId>xerces</artifactId>     	
+      <artifactId>xerces</artifactId>
       <version>2.2.1</version>
       <url>http://xml.apache.org/xerces2-j/</url>
-      <properties>        
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties> 
+      </properties>
     </dependency>
 
     <dependency>
    	  <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>    	
+      <artifactId>xml-apis</artifactId>
       <version>2.0.2</version>
       <url>http://xml.apache.org/commons/</url>
-      <properties>        
+      <properties>
         <war.bundle>true</war.bundle>
-      </properties>  
+      </properties>
     </dependency>
 
     <!-- Needed for testing -->
 
-    <!--dependency>
-      <id>simple-jndi</id>
-      <version>0.9.1</version>
-      <url>http://www.osjava.org/simple-jndi/</url> 
-    </dependency-->
-
     <dependency>
       <groupId>spice</groupId>
-      <artifactId>spice-jndikit</artifactId>    
+      <artifactId>spice-jndikit</artifactId>
       <version>1.1</version>
     </dependency>
 
     <dependency>
       <groupId>commons-dbcp</groupId>
-      <artifactId>commons-dbcp</artifactId>      	
+      <artifactId>commons-dbcp</artifactId>
       <version>1.1</version>
     </dependency>
 
     <dependency>
       <groupId>commons-pool</groupId>
-      <artifactId>commons-pool</artifactId>        	
+      <artifactId>commons-pool</artifactId>
       <version>1.1</version>
     </dependency>
 
     <dependency>
       <groupId>hsqldb</groupId>
-      <artifactId>hsqldb</artifactId>  	
+      <artifactId>hsqldb</artifactId>
       <version>1.7.1</version>
     </dependency>
 
     <dependency>
       <groupId>dbunit</groupId>
-      <artifactId>dbunit</artifactId>    	
+      <artifactId>dbunit</artifactId>
       <version>2.0</version>
     </dependency>
 
     <dependency>
       <groupId>junit-addons</groupId>
-      <artifactId>junit-addons</artifactId>    	
+      <artifactId>junit-addons</artifactId>
       <version>1.4</version>
     </dependency>
-    
 
-   <dependency> 
-      <groupId>maven-plugins</groupId> 
-      <artifactId>maven-tasks-plugin</artifactId> 
-      <version>1.1.0</version> 
-      <url>http://maven-plugins.sourceforge.net/maven-tasks-plugin/</url> 
+
+   <dependency>
+      <groupId>maven-plugins</groupId>
+      <artifactId>maven-tasks-plugin</artifactId>
+      <version>1.1.0</version>
+      <url>http://maven-plugins.sourceforge.net/maven-tasks-plugin/</url>
       <type>plugin</type>
-    </dependency> 
-    <dependency> 
-      <groupId>maven-plugins</groupId> 
-      <artifactId>maven-findbugs-plugin</artifactId> 
-      <version>0.8.4</version> 
-      <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url> 
+    </dependency>
+
+    <dependency>
+      <groupId>maven-plugins</groupId>
+      <artifactId>maven-findbugs-plugin</artifactId>
+      <version>0.8.4</version>
+      <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url>
       <type>plugin</type>
-    </dependency> 
+    </dependency>
 
   </dependencies>
 
@@ -331,7 +329,7 @@
         </resource>
         <resource>
           <directory>conf</directory>
-          <targetPath>org/apache/commons/configuration</targetPath> 
+          <targetPath>org/apache/commons/configuration</targetPath>
           <includes>
             <include>test.properties</include>
             <include>include.properties</include>
@@ -339,11 +337,11 @@
         </resource>
         <resource>
           <directory>conf/config</directory>
-          <targetPath>config</targetPath> 
+          <targetPath>config</targetPath>
           <includes>
             <include>**/*.properties</include>
           </includes>
-        </resource>        
+        </resource>
       </resources>
     </unitTest>
 
@@ -371,7 +369,7 @@
     <report>maven-simian-plugin</report>
     <report>maven-faq-plugin</report>
     <report>maven-jcoverage-plugin</report>
-    <report>maven-tasks-plugin</report>   
-    <report>maven-findbugs-plugin</report> 
+    <report>maven-tasks-plugin</report>
+    <report>maven-findbugs-plugin</report>
   </reports>
 </project>
