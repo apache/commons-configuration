@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="epugh" type="fix">
+        PropertiesConfiguration.save() method has issues with preserving the filename
+      </action>         
       <action dev="epugh" type="fix" issue="30597" due-to="Mark Woodman">
         Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes
       </action>         

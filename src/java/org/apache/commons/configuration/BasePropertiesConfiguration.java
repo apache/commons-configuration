@@ -123,7 +123,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.17 2004/08/12 15:30:36 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.18 2004/09/16 21:35:57 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -245,7 +245,9 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
     public void save(String filename) throws ConfigurationException
     {
         FileWriter writer = null;
-
+        if (filename==null){
+            throw new ConfigurationException("File name was not provided.");
+        }
         try
         {
             writer = new FileWriter(filename);

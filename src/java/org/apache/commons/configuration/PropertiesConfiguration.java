@@ -50,7 +50,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.12 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.13 2004/09/16 21:35:57 epugh Exp $
  */
 public class PropertiesConfiguration extends BasePropertiesConfiguration
 {
@@ -85,6 +85,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
      */
     public PropertiesConfiguration(String fileName) throws ConfigurationException
     {
+        this.fileName = fileName;
         load(fileName);
     }
 

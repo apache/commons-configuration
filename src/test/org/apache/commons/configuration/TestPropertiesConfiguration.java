@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.10 2004/06/22 11:23:47 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.11 2004/09/16 21:35:57 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -66,7 +66,23 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
         	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
+        
+        // Save it again, verifing a save with a filename works.
+        checkConfig.save();
     }
+    
+    public void testSaveMissingFilename(){
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        try {
+            pc.save();
+            fail("Should have throw ConfigurationException");
+        }
+        catch (ConfigurationException ce){
+            //good
+        }
+    }
+
+    
 
     public void testLoadViaProperty() throws Exception
     {
