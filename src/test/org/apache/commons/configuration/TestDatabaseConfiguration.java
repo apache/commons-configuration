@@ -25,7 +25,10 @@ import java.util.Vector;
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
+
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -37,12 +40,16 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.8 $, $Date: 2004/08/20 13:55:42 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/11 09:17:09 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
+    public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
+    public final String DATABASE_URL = "jdbc:hsqldb:target/test-classes/testdb";
+
+    private static HsqlDB hsqlDB = null;
+
     private DataSource datasource;
-    private IDataSet dataSet;	
 
     protected void setUp() throws Exception
     {
@@ -53,9 +60,15 @@ public class TestDatabaseConfiguration extends TestCase
     	//Thread.sleep(1000);
     	
         // set up the datasource
+        
+        if (hsqlDB == null)
+        {
+            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, "conf/testdb.script");
+        }
+
         BasicDataSource datasource = new BasicDataSource();
-        datasource.setDriverClassName("org.hsqldb.jdbcDriver");
-        datasource.setUrl("jdbc:hsqldb:target/test-classes/testdb");
+        datasource.setDriverClassName(DATABASE_DRIVER);
+        datasource.setUrl(DATABASE_URL);
         datasource.setUsername("sa");
         datasource.setPassword("");
 
@@ -64,7 +77,7 @@ public class TestDatabaseConfiguration extends TestCase
 
         // prepare the database
         IDatabaseConnection connection = new DatabaseConnection(datasource.getConnection());
-        dataSet = new XmlDataSet(new FileInputStream("conf/dataset.xml"));
+        IDataSet dataSet = new XmlDataSet(new FileInputStream("conf/dataset.xml"));
 
         try
         {
