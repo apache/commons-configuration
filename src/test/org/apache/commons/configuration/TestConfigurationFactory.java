@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.9 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.10 2004/05/04 22:14:29 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -55,11 +55,14 @@ public class TestConfigurationFactory extends TestCase
 
     public void setUp() throws Exception
     {
+        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
         configurationFactory = new ConfigurationFactory();
     }
 
     public void testJNDI()
     {
+        
+        
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
         jndiConfiguration.setPrefix("");
         Object o = jndiConfiguration.getProperty("test.boolean");
@@ -235,8 +238,14 @@ public class TestConfigurationFactory extends TestCase
             config.getProperty("tables.table(0).fields.field(2).name"));
         assertNotNull(config.getProperty("element2.subelement.subsubelement"));
         assertNotNull(config.getProperty("mail.account.user"));
-        // Fails, because we don't seem to reach the underlying JNDIConfiguraiton        
-        //assertNotNull(config.getProperty("test.boolean"));
+                
+        assertNotNull(config.getProperty("test.onlyinjndi"));
+        assertTrue(config.getBoolean("test.onlyinjndi"));
+        
+        Configuration subset = config.subset("test");
+        assertNotNull(subset.getProperty("onlyinjndi"));
+        assertTrue(subset.getBoolean("onlyinjndi"));
+        
     }
 
     private void checkUnionConfig() throws Exception

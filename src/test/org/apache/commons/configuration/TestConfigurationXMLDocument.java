@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * Test class for ConfigurationXMLDocument.
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestConfigurationXMLDocument.java,v 1.5 2004/03/08 23:42:16 epugh Exp $
+ * @version $Id: TestConfigurationXMLDocument.java,v 1.6 2004/05/04 22:14:29 epugh Exp $
  */
 public class TestConfigurationXMLDocument extends TestCase
 {
@@ -80,7 +80,7 @@ public class TestConfigurationXMLDocument extends TestCase
         ConfigurationXMLDocument doc = 
         new ConfigurationXMLDocument(config.subset("database"));
         reader = doc.createXMLReader();
-        assertTrue(reader instanceof HierarchicalConfigurationXMLReader);
+        assertTrue("Class of reader is " + reader.getClass().getName(),reader instanceof HierarchicalConfigurationXMLReader);
         
         try
         {

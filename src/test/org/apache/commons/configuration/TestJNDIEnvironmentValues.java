@@ -16,29 +16,36 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
 public class TestJNDIEnvironmentValues extends TestCase
 {
+    private JNDIConfiguration conf = null;
     public TestJNDIEnvironmentValues(String testName)
     {
         super(testName);
     }
+    
+    public void setUp() throws Exception{
+        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        
+        conf = new JNDIConfiguration();
+        conf.setPrefix("");
+    }
 
     public void testSimpleGet() throws Exception
     {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("");
+        
         String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
     public void testMoreGets() throws Exception
     {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("");
+
         String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
@@ -47,8 +54,6 @@ public class TestJNDIEnvironmentValues extends TestCase
 
     public void testGetMissingKey() throws Exception
     {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("");
         try
         {
             conf.getString("test.imaginarykey");
@@ -56,14 +61,12 @@ public class TestJNDIEnvironmentValues extends TestCase
         }
         catch (NoSuchElementException nsee)
         {
-
+            assertTrue(nsee.getMessage(),nsee.getMessage().indexOf("test.imaginarykey")!=-1);
         }
 
     }
     public void testGetMissingKeyWithDefault() throws Exception
     {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("");
 
         String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
@@ -71,12 +74,39 @@ public class TestJNDIEnvironmentValues extends TestCase
     }
     public void testContainsKey() throws Exception
     {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("");
 
         assertTrue(conf.containsKey("test.key"));
 
         assertTrue(!conf.containsKey("test.imaginerykey"));
 
+    }
+    
+    public void testClearProperty() {
+
+        assertNotNull("null short for the 'test.short' key", conf.getShort("test.short", null));
+        conf.clearProperty("test.short");
+        assertNull("'test.short' property not cleared", conf.getShort("test.short", null));
+    }
+    
+    public void testIsEmpty() {
+        assertFalse("the configuration shouldn't be empty", conf.isEmpty());
+    }
+    
+    /**
+     * Currently failing in that we don't get back any keys!
+     * @throws Exception
+     */
+    public void testGetKeys() throws Exception {
+
+        boolean found = false;
+        Iterator it = conf.getKeys();
+
+        assertTrue("no key found", it.hasNext());
+
+        while (it.hasNext() && !found) {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
     }
 }

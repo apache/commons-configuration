@@ -18,8 +18,6 @@ package org.apache.commons.configuration;
 
 import junit.framework.TestCase;
 
-import java.util.Iterator;
-
 /**
  * Test to see if the JNDIConfiguration works properly.  Currently excluded
  * in the project.xml unitTest section as our JNDI provider doesn't 
@@ -27,7 +25,7 @@ import java.util.Iterator;
  * 
  * This does work fine with Tomcat's JNDI provider however.
  *
- * @version $Id: TestJNDIConfiguration.java,v 1.6 2004/03/28 14:42:45 epugh Exp $
+ * @version $Id: TestJNDIConfiguration.java,v 1.7 2004/05/04 22:14:29 epugh Exp $
  */
 public class TestJNDIConfiguration extends TestCase {
 
@@ -35,8 +33,9 @@ public class TestJNDIConfiguration extends TestCase {
     private NonStringTestHolder nonStringTestHolder;
 
     public void setUp() throws Exception {
-        //InitialContext context = new InitialContext();
-        //assertNotNull(context);
+        
+        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        
 
         conf = new JNDIConfiguration();
         conf.setPrefix("");
@@ -111,32 +110,10 @@ public class TestJNDIConfiguration extends TestCase {
         assertEquals("true", o.toString());
     }
 
-    /**
-     * Currently failing in that we don't get back any keys!
-     * @throws Exception
-     */
-    public void testGetKeys() throws Exception {
 
-        boolean found = false;
-        Iterator it = conf.getKeys();
 
-        assertTrue("no key found", it.hasNext());
+   
 
-        while (it.hasNext() && !found) {
-            found = "test.boolean".equals(it.next());
-        }
-
-        assertTrue("'test.boolean' key not found", found);
-    }
-
-    public void testClearProperty() {
-        assertNotNull("null boolean for the 'test.boolean' key", conf.getBoolean("test.boolean", null));
-        conf.clearProperty("test.boolean");
-        assertNull("'test.boolean' property not cleared", conf.getBoolean("test.boolean", null));
-    }
-
-    public void testIsEmpty() {
-        assertFalse("the configuration shouldn't be empty", conf.isEmpty());
-    }
+ 
 
 }
