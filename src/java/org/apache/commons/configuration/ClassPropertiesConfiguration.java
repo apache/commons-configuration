@@ -20,6 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 /**
  * Loads the configuration from the classpath utilizing a specified class to get
  * the classloader from. The properties file will be attempted to be loaded
@@ -32,7 +35,7 @@ import java.io.InputStream;
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: ClassPropertiesConfiguration.java,v 1.9 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.10 2004/07/13 09:20:37 henning Exp $
  */
 public class ClassPropertiesConfiguration extends BasePropertiesConfiguration implements Configuration
 {
@@ -40,7 +43,7 @@ public class ClassPropertiesConfiguration extends BasePropertiesConfiguration im
     private Class baseClass;
 
     /** Class Loader which we will use to load the resources */
-    private ClassLoader classLoader;
+    private ClassLoader classLoader = null;
 
     /**
      * Creates and loads an extended properties file from the Class
@@ -53,12 +56,11 @@ public class ClassPropertiesConfiguration extends BasePropertiesConfiguration im
     public ClassPropertiesConfiguration(Class baseClass, String resource) throws ConfigurationException
     {
         this.baseClass = baseClass;
-        // According to javadocs, getClassLoader() might return null
-        // if it represents the "bootstrap class loader"
-        // Use the System class loader in this case.
-        classLoader = (baseClass.getClassLoader() == null)
-            ? ClassLoader.getSystemClassLoader()
-            : baseClass.getClassLoader();
+
+        if (baseClass != null)
+        {
+            classLoader = baseClass.getClassLoader();
+        }
 
         setIncludesAllowed(true);
         try
@@ -84,11 +86,14 @@ public class ClassPropertiesConfiguration extends BasePropertiesConfiguration im
         InputStream resource = null;
 
         //First try to load from within the package of the provided class
-        resource = baseClass.getResourceAsStream(resourceName);
+        if (baseClass != null)
+        {
+            resource = baseClass.getResourceAsStream(resourceName);
+        }
 
         if (resource == null)
         {
-          resource = classLoader.getResourceAsStream(resourceName);
+            resource = getResourceAsStream(classLoader, resourceName);
         }
 
         if (resource == null)
@@ -97,5 +102,25 @@ public class ClassPropertiesConfiguration extends BasePropertiesConfiguration im
         }
 
         return resource;
+    }
+
+    private InputStream getResourceAsStream(final ClassLoader loader,
+            final String name)
+    {
+        return (InputStream) AccessController.doPrivileged(
+                new PrivilegedAction()
+                {
+                    public Object run()
+                    {
+                        if (loader != null)
+                        {
+                            return loader.getResourceAsStream(name);
+                        }
+                        else
+                        {
+                            return ClassLoader.getSystemResourceAsStream(name);
+                        }
+                    }
+                });
     }
 }
