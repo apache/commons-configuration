@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="epugh" type="fix" issue="30545" due-to="Ricardo Gladwell">
+        Clarify for ConfigurationDynaBean that the get method should throw an illegalArgumentException
+        if there is no property specified.
+      </action>        
       <action dev="ebourg" type="fix" issue="30839">
         Fixed a ClassCastException when adding a non String property to an XMLConfiguration.
       </action>

@@ -31,7 +31,7 @@ import org.apache.commons.configuration.BaseConfiguration;
  * because the two classes provide similar levels of functionality.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class TestConfigurationDynaBean extends TestCase {
 
@@ -796,6 +796,19 @@ public class TestConfigurationDynaBean extends TestCase {
             return;
         }
         fail("Should have thrown NullPointerException");
+    }
+    /**
+     * Test the retrieval of a non-existent property.
+     */
+    public void testGetNonExistentProperty() {
+        try {
+            Object value = bean.get("nonexistProperty");
+        } catch (IllegalArgumentException e) {
+        	return;
+        } catch(Exception e) {
+            fail("Threw '" + e + "' instead of java.lang.IllegalArgumentException");
+        }
+        fail("Get non-existent property failed to throw java.lang.IllegalArgumentException");
     }
 
     /**

@@ -121,10 +121,10 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
         if(log.isTraceEnabled()) log.trace("get("+name+")");
         // get configuration property
         Object result = configuration.getProperty(name);
-        if(result == null && name != null) {
+        if(result == null) {
             // otherwise attempt to create bean from configuration subset
             Configuration subset = configuration.subset(name);
-            if(subset != null)
+            if(!subset.isEmpty())
                 result = new ConfigurationDynaBean(configuration.subset(name));
         }
         if(log.isDebugEnabled()) log.debug(name+"=["+result+"]");
