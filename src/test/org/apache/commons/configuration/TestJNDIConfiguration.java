@@ -20,25 +20,26 @@ import junit.framework.TestCase;
 
 /**
  * Test to see if the JNDIConfiguration works properly.  Currently excluded
- * in the project.xml unitTest section as our JNDI provider doesn't 
+ * in the project.xml unitTest section as our JNDI provider doesn't
  * properly support the listBindings() method.
- * 
+ *
  * This does work fine with Tomcat's JNDI provider however.
  *
- * @version $Id: TestJNDIConfiguration.java,v 1.7 2004/05/04 22:14:29 epugh Exp $
+ * @version $Id: TestJNDIConfiguration.java,v 1.8 2004/07/08 15:29:50 ebourg Exp $
  */
 public class TestJNDIConfiguration extends TestCase {
+
+    public static final String CONTEXT_FACTORY =
+            "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory";
 
     private JNDIConfiguration conf;
     private NonStringTestHolder nonStringTestHolder;
 
     public void setUp() throws Exception {
-        
-        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
-        
+
+        System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
 
         conf = new JNDIConfiguration();
-        conf.setPrefix("");
 
         nonStringTestHolder = new NonStringTestHolder();
         nonStringTestHolder.setConfiguration(conf);
@@ -110,10 +111,13 @@ public class TestJNDIConfiguration extends TestCase {
         assertEquals("true", o.toString());
     }
 
+    public void testContainsKey()
+    {
+        String key = "test.boolean";
+        assertTrue("'" + key + "' not found", conf.containsKey(key));
 
-
-   
-
- 
+        conf.clearProperty(key);
+        assertFalse("'" + key + "' still found", conf.containsKey(key));
+    }
 
 }
