@@ -19,7 +19,11 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -50,7 +54,7 @@ import org.xml.sax.SAXException;
  * @author Jörg Schaible
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Revision: 1.5 $, $Date: 2004/07/12 14:40:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/13 14:08:47 $
  */
 public class XMLConfiguration extends BasePathConfiguration
 {
@@ -365,11 +369,12 @@ public class XMLConfiguration extends BasePathConfiguration
     }
 
     /**
-     * Save the configuration if the automatic persistence is enabled.
+     * Save the configuration if the automatic persistence is enabled and a
+     * file is specified.
      */
     private void possiblySave()
     {
-        if (autoSave)
+        if (autoSave && fileName != null)
         {
             try
             {
@@ -392,15 +397,34 @@ public class XMLConfiguration extends BasePathConfiguration
         this.autoSave = autoSave;
     }
 
-    public synchronized void save() throws ConfigurationException
+    /**
+     * Save the configuration to the file specified by the fileName attribute.
+     *
+     * @throws ConfigurationException
+     */
+    public void save() throws ConfigurationException
+    {
+        save(getFile().toString());
+    }
+
+    /**
+     * Save the configuration to a file.
+     *
+     * @param filename the name of the xml file
+     *
+     * @throws ConfigurationException
+     */
+    public void save(String filename) throws ConfigurationException
     {
         FileWriter writer = null;
+
         try
         {
-            writer = new FileWriter(getFile());
-            writer.write(toString());
+            writer = new FileWriter(filename);
+            save(writer);
         }
-        catch (IOException ioe){
+        catch (IOException ioe)
+        {
         	throw new ConfigurationException("Could not save to " + getFile());
         }
         finally
@@ -417,6 +441,38 @@ public class XMLConfiguration extends BasePathConfiguration
         		throw new ConfigurationException(ioe);
         	}
         }
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param out the output stream used to save the configuration
+     */
+    public void save(OutputStream out) throws IOException
+    {
+        save(out, null);
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param out the output stream used to save the configuration
+     * @param encoding the charset used to write the configuration
+     */
+    public void save(OutputStream out, String encoding) throws IOException
+    {
+        OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
+        save(writer);
+    }
+
+    /**
+     * Save the configuration to the specified stream.
+     *
+     * @param writer the output stream used to save the configuration
+     */
+    public void save(Writer writer) throws IOException
+    {
+        writer.write(toString());
     }
 
     /**

@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="add">
+        Added save methods in XMLConfiguration similar to PropertiesConfiguration
+        to save the configuration to another file (bug 29721).
+      </action>
       <action dev="ebourg" type="update">
         Removed the DOM4J implementations in favor of the DOM ones.
         DOMConfiguration has been renamed to XMLConfiguration, and
