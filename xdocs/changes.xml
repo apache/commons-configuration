@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" due-to="Kunihara Tetsuya" issue="34204">
+        XMLConfiguration now parse the configuration using the encoding
+        declared in the XML header instead of the OS default encoding.
+      </action>
       <action dev="ebourg" type="update" due-to="Zsolt Koppany">
         XMLConfiguration now uses the delimiter set by setDelimiter(char).
       </action>

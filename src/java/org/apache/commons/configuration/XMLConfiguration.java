@@ -840,6 +840,11 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     private class FileConfigurationDelegate extends AbstractFileConfiguration
     {
+        public void load(InputStream in) throws ConfigurationException
+        {
+            XMLConfiguration.this.load(in);
+        }
+
         public void load(Reader in) throws ConfigurationException
         {
             XMLConfiguration.this.load(in);
