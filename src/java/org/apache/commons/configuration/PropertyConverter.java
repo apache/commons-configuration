@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
  * A utility class to convert the configuration properties into any type.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 09:54:37 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 10:44:31 $
  * @since 1.1
  */
 public final class PropertyConverter
@@ -84,7 +84,15 @@ public final class PropertyConverter
         {
             try
             {
-                return new Byte((String) value);
+                String string = (String) value;
+                if (string.startsWith("0x"))
+                {
+                    return new Byte((byte) Integer.parseInt(string.substring(2), 16));
+                }
+                else
+                {
+                    return new Byte(string);
+                }
             }
             catch (NumberFormatException e)
             {
@@ -113,7 +121,16 @@ public final class PropertyConverter
         {
             try
             {
-                return new Short((String) value);
+                String string = (String) value;
+                if (string.startsWith("0x"))
+                {
+                    return new Short((short) Integer.parseInt(string.substring(2), 16));
+                }
+                else
+                {
+                    return new Short(string);
+                }
+
             }
             catch (NumberFormatException e)
             {
@@ -142,7 +159,15 @@ public final class PropertyConverter
         {
             try
             {
-                return new Integer((String) value);
+                String string = (String) value;
+                if (string.startsWith("0x"))
+                {
+                    return new Integer((int) Long.parseLong(string.substring(2), 16));
+                }
+                else
+                {
+                    return new Integer(string);
+                }
             }
             catch (NumberFormatException e)
             {
@@ -171,7 +196,15 @@ public final class PropertyConverter
         {
             try
             {
-                return new Long((String) value);
+                String string = (String) value;
+                if (string.startsWith("0x"))
+                {
+                    return new Long(new BigInteger(string.substring(2), 16).longValue());
+                }
+                else
+                {
+                    return new Long(string);
+                }
             }
             catch (NumberFormatException e)
             {
@@ -258,7 +291,15 @@ public final class PropertyConverter
         {
             try
             {
-                return new BigInteger((String) value);
+                String string = (String) value;
+                if (string.startsWith("0x"))
+                {
+                    return new BigInteger(string.substring(2), 16);
+                }
+                else
+                {
+                    return new BigInteger(string);
+                }
             }
             catch (NumberFormatException e)
             {

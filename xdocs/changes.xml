@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="28026">
+        Numeric properties can now be specified in hexadecimal format,
+        for example "number = 0xC5F0".
+      </action>
       <action dev="oheger" type="fix" issue="31745">
         Fixed HierarchicalConfiguration.getKeys(String), it returned an empty
         iterator if the prefix string contained indices.
