@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="fix">
+        Calling getProperties on a JNDIConfiguration no longer throws an
+        UnsupportedOperationException.        
+      </action>
       <action dev="ebourg" type="remove">
         Removed the getPropertyDirect method from AbstractConfiguration,
         concrete configurations now implement directly the getProperty method

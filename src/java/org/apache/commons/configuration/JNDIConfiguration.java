@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.22 2004/12/02 22:05:52 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.23 2004/12/03 02:07:18 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -105,17 +105,6 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         this.context = context;
         this.prefix = prefix;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    public void addProperty(String key, Object token)
-    {
-        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     /**
@@ -274,17 +263,6 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
 
         return null;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    public Properties getProperties(String key)
-    {
-        throw new UnsupportedOperationException("This operation is not supported");
     }
 
     /**
