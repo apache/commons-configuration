@@ -71,7 +71,7 @@ import org.apache.commons.logging.LogFactory;
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.5 2004/02/15 11:58:37 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.6 2004/02/24 13:08:03 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -407,14 +407,7 @@ public class JNDIConfiguration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getBoolean(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {

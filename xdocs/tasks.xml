@@ -10,7 +10,8 @@
     <section name="TODO list">
       <p>
         The following is a list of items that need to be completed in
-        Configuration.  Contributions are welcome! 
+        Configuration.  Contributions are welcome!  There are also a couple enhancements
+        in <a href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Commons&amp;component=Configuration&amp;short_desc=&amp;short_desc_type=allwordssubstr&amp;long_desc=&amp;long_desc_type=allwordssubstr&amp;bug_file_loc=&amp;bug_file_loc_type=allwordssubstr&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time">BugZilla</a>.
       </p>
     
     <subsection name="High priority"> 
@@ -37,14 +38,18 @@
     <subsection name="Medium priority"> 
        <ul>
           <li>
-              <strong>JDBC Integration</strong>
+              <STRIKE><strong>JDBC Integration</strong>
               Need to be able to retrieve configuration values from JDBC 
-              datasource.
+              datasource.</STRIKE> <i>Done!</i>
           </li>
           <li>
               <strong>JDBC backed by Hibernate</strong>
               Would love to have a JDBC version backed with Hibernate.
-          </li>          
+          </li>      
+          <li>
+              <strong>ReloadableDecorator</strong>  Need to able to figure out when to reload properties,
+              or maybe a caching decorator instead!
+          </li>                
        </ul>
     </subsection>
     

@@ -6,7 +6,18 @@
   </properties>
 
   <body>
-    <release version="1.0-dev-4" date="">     
+    <release version="1.0-dev-4" date="">  
+     <action dev="epugh" type="add">
+      	Changed CompositeConfiguration to extend from AbstractConfiuration.  This means that the behavior of 
+      	CompositeConfiguration is much similar to others like PropertiesConfiguration in handling of missing
+      	keys, interpolotion, etc..  Previously CompositeConfiguration had quite a few differences.
+     </action>   
+     <action dev="epugh" type="update">
+      	Removed "defaults" from BaseConfiguration.  Defaults are now done via using a CompositeConfiguration, either
+      	directly or via a ConfigurationFactory.  If you want to save changes made to a Configuration, then you use
+      	a CompositeConfiguration and get back the inMemoryConfiguration that has the delta of changes.  Added a 
+      	bit of documentation on this.
+     </action>          
 	 <action dev="epugh" type="update">
       	Bugzilla 16504 Enhancement: Configuration Comparator
      </action>        

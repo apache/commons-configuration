@@ -53,15 +53,11 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.NoSuchElementException;
-import java.util.Properties;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -72,9 +68,9 @@ import java.util.Properties;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.5 2004/02/12 12:59:19 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.6 2004/02/24 13:08:03 epugh Exp $
  */
-public class CompositeConfiguration implements Configuration
+public class CompositeConfiguration extends AbstractConfiguration
 {
     /** Array holding all the configuration */
     private LinkedList configList = new LinkedList();
@@ -83,7 +79,7 @@ public class CompositeConfiguration implements Configuration
      * Configuration that holds in memory stuff.  Inserted as first so any
      * setProperty() override anything else added. 
      */
-    private BaseConfiguration inMemoryConfiguration;
+    private Configuration inMemoryConfiguration;
 
     /**
      * Creates an empty CompositeConfiguration object which can then
@@ -93,6 +89,18 @@ public class CompositeConfiguration implements Configuration
     {
         clear();
     }
+    
+    /**
+     * Creates an CompositeConfiguration object with a specified InMemory
+     * configuration.  This configuration will store any changes made to
+     * the CompositeConfiguration.
+     */
+    public CompositeConfiguration(Configuration inMemoryConfiguration)
+    {
+        configList.clear();
+        this.inMemoryConfiguration=inMemoryConfiguration;
+        configList.addLast(inMemoryConfiguration);
+    }    
 
     public void addConfiguration(Configuration config)
     {
@@ -125,15 +133,47 @@ public class CompositeConfiguration implements Configuration
         inMemoryConfiguration = new BaseConfiguration();
         configList.addLast(inMemoryConfiguration);
     }
+
+    
     /**
-     * CompositeConfigurations can not be added to
+     * Add this property to the inmemory Configuration.
      *
      * @param key The Key to add the property to.
      * @param token The Value to add.
      */
-    public void addProperty(String key, Object token)
+    protected void addPropertyDirect(String key, Object token)
     {
         inMemoryConfiguration.addProperty(key, token);
+    }    
+    
+    /**
+     * Read property from underlying composite
+     *
+     * @param key key to use for mapping
+     *
+     * @return object associated with the given configuration key.
+     */
+    protected Object getPropertyDirect(String key) 
+    {
+        Configuration firstMatchingConfiguration=null;
+        for (ListIterator i = configList.listIterator(); i.hasNext();)
+        {
+            Configuration config = (Configuration) i.next();
+            if (config.containsKey(key))
+            {
+                firstMatchingConfiguration= config;
+                break;
+            }
+
+        }
+       if(firstMatchingConfiguration!=null){
+           return firstMatchingConfiguration.getProperty(key);
+       }
+       else {
+           return null;
+       }
+        /*throw new NoSuchElementException(
+            '\'' + key + "' doesn't map to an existing object");*/
     }
     /**
      * Get the list of the keys contained in the configuration
@@ -181,22 +221,7 @@ public class CompositeConfiguration implements Configuration
         }
         return keys.iterator();
     }
-    /**
-     * Get a list of properties associated with the given
-     * configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated properties if key is found.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/List.
-     * @exception IllegalArgumentException if one of the tokens is
-     * malformed (does not contain an equals sign).
-     * @see #getProperties(String, Properties)
-     */
-    public Properties getProperties(String key)
-    {
-        return getFirstMatchingConfig(key).getProperties(key);
-    }
+   
     public boolean isEmpty()
     {
         boolean isEmpty = true;
@@ -219,7 +244,7 @@ public class CompositeConfiguration implements Configuration
      */
     public Object getProperty(String key)
     {
-        return getFirstMatchingConfig(key).getProperty(key);
+        return getPropertyDirect(key);
     }
     /**
      * Set a property, this will replace any previously
@@ -285,458 +310,6 @@ public class CompositeConfiguration implements Configuration
         return subsetCompositeConfiguration;
     }
     /**
-    * Get a float associated with the given configuration key.
-    * 
-    * @param key The configuration key.
-    * @return The associated float.
-    * @exception NoSuchElementException is thrown if the key doesn 't
-    * map to an existing object.
-    * @exception ClassCastException is thrown if the key maps to an
-    * object that is not a Float.
-    * @exception NumberFormatException is thrown if the value mapped
-    * by the key has not a valid number format.
-     */
-    public float getFloat(String key)
-    {
-        return getFirstMatchingConfig(key).getFloat(key);
-    }
-    /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated boolean.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Boolean.
-     */
-    public boolean getBoolean(String key)
-    {
-        return getFirstMatchingConfig(key).getBoolean(key);
-    }
-    /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated boolean.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Boolean.
-     */
-    public boolean getBoolean(String key, boolean defaultValue)
-    {
-        return getBoolean(key, new Boolean(defaultValue)).booleanValue();
-    }
-    /**
-     * Get a boolean associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated boolean if key is found and has valid
-     * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Boolean.
-     */
-    public Boolean getBoolean(String key, Boolean defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getBoolean(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated byte.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Byte.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public byte getByte(String key)
-    {
-        return getFirstMatchingConfig(key).getByte(key);
-    }
-    /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated byte.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Byte.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public byte getByte(String key, byte defaultValue)
-    {
-        return getByte(key, new Byte(defaultValue).byteValue());
-    }
-    /**
-     * Get a byte associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated byte if key is found and has valid format, default
-     *         value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
-     *            is not a Byte.
-     * @exception NumberFormatException is thrown if the value mapped by the key
-     *            has not a valid number format.
-     */
-    public Byte getByte(String key, Byte defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getByte(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated double.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Double.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public double getDouble(String key)
-    {
-        return getFirstMatchingConfig(key).getDouble(key);
-    }
-    /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated double.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Double.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public double getDouble(String key, double defaultValue)
-    {
-        return getDouble(key, new Double(defaultValue)).doubleValue();
-    }
-    /**
-     * Get a double associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated double if key is found and has valid
-     * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Double.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public Double getDouble(String key, Double defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getDouble(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Float.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public float getFloat(String key, float defaultValue)
-    {
-        return getFloat(key, new Float(defaultValue)).floatValue();
-    }
-    /**
-     * Get a float associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated float if key is found and has valid
-     * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Float.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public Float getFloat(String key, Float defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getFloat(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated int.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Integer.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public int getInt(String key)
-    {
-        return getFirstMatchingConfig(key).getInt(key);
-    }
-    /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated int.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Integer.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public int getInt(String key, int defaultValue)
-    {
-        return getInteger(key, new Integer(defaultValue)).intValue();
-    }
-    /**
-     * Get a int associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated int if key is found and has valid format, default
-     *         value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
-     *         is not a Integer.
-     * @exception NumberFormatException is thrown if the value mapped by the key
-     *         has not a valid number format.
-     */
-    public Integer getInteger(String key, Integer defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getInteger(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated long.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Long.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public long getLong(String key)
-    {
-        return getFirstMatchingConfig(key).getLong(key);
-    }
-    /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated long.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Long.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public long getLong(String key, long defaultValue)
-    {
-        return getLong(key, new Long(defaultValue)).longValue();
-    }
-    /**
-     * Get a long associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated long if key is found and has valid
-     * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Long.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public Long getLong(String key, Long defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getLong(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated short.
-     * @exception NoSuchElementException is thrown if the key doesn't
-     * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Short.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public short getShort(String key)
-    {
-        return getFirstMatchingConfig(key).getShort(key);
-    }
-    /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated short.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Short.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public short getShort(String key, short defaultValue)
-    {
-        return getShort(key, new Short(defaultValue)).shortValue();
-    }
-    /**
-     * Get a short associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated short if key is found and has valid
-     * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a Short.
-     * @exception NumberFormatException is thrown if the value mapped
-     * by the key has not a valid number format.
-     */
-    public Short getShort(String key, Short defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getShort(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-
-    public BigDecimal getBigDecimal(String key) throws NoSuchElementException {
-        return getFirstMatchingConfig(key).getBigDecimal(key);
-    }
-
-    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getBigDecimal(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-
-    public BigInteger getBigInteger(String key) throws NoSuchElementException {
-        return getFirstMatchingConfig(key).getBigInteger(key);
-    }
-
-    public BigInteger getBigInteger(String key, BigInteger defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getBigInteger(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-
-    /**
-     * Get a string associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated string.
-     * @exception ClassCastException is thrown if the key maps to an object that
-     *            is not a String.
-     */
-    public String getString(String key)
-    {
-        return getString(key, null);
-    }
-    /**
-     * Get a string associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated string if key is found, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
-     *            is not a String.
-     */
-    public String getString(String key, String defaultValue)
-    {
-        try
-        {
-            return getFirstMatchingConfig(key).getString(key, defaultValue);
-        }
-        catch (NoSuchElementException nsee)
-        {
-            return defaultValue;
-        }
-    }
-    /**
-     * Get an array of strings associated with the given configuration
-     * key.
-     *
-     * @param key The configuration key.
-     * @return The associated string array if key is found.
-     * @exception ClassCastException is thrown if the key maps to an
-     * object that is not a String/List of Strings.
-     */
-    public String[] getStringArray(String key)
-    {
-        List list = getList(key);
-        return (String []) list.toArray(new String [0]);
-    }
-
-    /**
      * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
@@ -775,23 +348,31 @@ public class CompositeConfiguration implements Configuration
 
         return (list.size() == 0) ? defaultValue : list;
     }
-
-    private Configuration getFirstMatchingConfig(String key)
+    
+    /**
+     * Get an array of strings associated with the given configuration
+     * key.
+     *
+     * @param key The configuration key.
+     * @return The associated string array if key is found.
+     * @exception ClassCastException is thrown if the key maps to an
+     * object that is not a String/List of Strings.
+     */
+    public String[] getStringArray(String key)
     {
-        for (ListIterator i = configList.listIterator(); i.hasNext();)
-        {
-            Configuration config = (Configuration) i.next();
-            if (config.containsKey(key))
-            {
-                return config;
-            }
-        }
-        throw new NoSuchElementException(
-            '\'' + key + "' doesn't map to an existing object");
-    }
+        List list = getList(key);
+        return (String []) list.toArray(new String [0]);
+    }    
+
 
     public Configuration getConfiguration(int index)
     {
         return (Configuration) configList.get(index);
+    }
+    /**
+     * @return Returns the inMemoryConfiguration.
+     */
+    public Configuration getInMemoryConfiguration() {
+        return inMemoryConfiguration;
     }
 }

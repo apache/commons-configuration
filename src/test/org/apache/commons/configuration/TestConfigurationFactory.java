@@ -65,7 +65,7 @@ import org.xml.sax.SAXParseException;
  * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.7 2004/02/15 11:58:37 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.8 2004/02/24 13:08:03 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -356,14 +356,10 @@ public class TestConfigurationFactory extends TestCase
             "Make sure we have loaded our key",
             compositeConfiguration.getBoolean("test.boolean"));
 
-        try
-        {
-            compositeConfiguration.getProperty(
-                "element2.subelement.subsubelement");
-            fail("Should have thrown an exception");
-        }
-        catch (java.util.NoSuchElementException nsee)
-        {
-        }
+        
+        Object property = compositeConfiguration.getProperty(
+            "element2.subelement.subsubelement");
+        assertNull("Should have returned a null",property);
+        
     }
 }

@@ -73,17 +73,13 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.4 2004/02/12 12:59:19 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.5 2004/02/24 13:08:03 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
     /** how big the initial arraylist for splitting up name value pairs */
     private static final int INITIAL_LIST_SIZE = 2;
 
-    /**
-     * stores the configuration key-value pairs
-     */
-    protected Configuration defaults = null;
 
     /** start token */
     protected static final String START_TOKEN = "${";
@@ -95,18 +91,6 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public AbstractConfiguration()
     {
-    }
-
-    /**
-     * Creates an empty AbstractConfiguration object with
-     * a Super-Object which is queries for every key.
-     *
-     * @param defaults Configuration defaults to use if key not in file
-     */
-    public AbstractConfiguration(Configuration defaults)
-    {
-        this();
-        this.defaults = defaults;
     }
 
     /**
@@ -177,7 +161,8 @@ public abstract class AbstractConfiguration implements Configuration
      */
     protected String interpolate(String base)
     {
-        return (interpolateHelper(base, null));
+        String result = interpolateHelper(base, null);
+        return (result);
     }
 
     /**
@@ -266,20 +251,14 @@ public abstract class AbstractConfiguration implements Configuration
                 // prop.name=${some.other.prop1}/blahblah/${some.other.prop2}
                 priorVariables.remove(priorVariables.size() - 1);
             }
-            else if (defaults != null && defaults.getString(variable,
-                null) != null)
-            {
-                result.append(defaults.getString(variable));
-            }
-            else
-            {
+            else {
                 //variable not defined - so put it back in the value
                 result.append(START_TOKEN).append(variable).append(END_TOKEN);
             }
+       
             prec = end;
         }
         result.append(base.substring(prec + END_TOKEN.length(), base.length()));
-
         return result.toString();
     }
 
@@ -546,15 +525,6 @@ public abstract class AbstractConfiguration implements Configuration
         // first, try to get from the 'user value' store
         Object o = getPropertyDirect(key);
 
-        if (o == null)
-        {
-            // if there isn't a value there, get it from the defaults if we have
-            // them
-            if (defaults != null)
-            {
-                o = defaults.getProperty(key);
-            }
-        }
 
         //
         // We must never give a Container Object out. So if the
@@ -635,15 +605,8 @@ public abstract class AbstractConfiguration implements Configuration
             return BooleanUtils.toBooleanObject((String) value);
         }
         else if (value == null)
-        {
-            if (defaults != null)
-            {
-                return defaults.getBoolean(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+        {           
+            return defaultValue;
         }
         else
         {
@@ -727,14 +690,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getByte(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -818,14 +774,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getDouble(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -909,14 +858,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getFloat(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+           return defaultValue;
         }
         else
         {
@@ -1007,14 +949,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getInteger(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -1098,14 +1033,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getLong(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -1189,14 +1117,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getShort(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -1232,14 +1153,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getBigDecimal(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -1275,14 +1189,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return defaults.getBigInteger(key, defaultValue);
-            }
-            else
-            {
-                return defaultValue;
-            }
+            return defaultValue;
         }
         else
         {
@@ -1338,14 +1245,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                return interpolate(defaults.getString(key, defaultValue));
-            }
-            else
-            {
-                return interpolate(defaultValue);
-            }
+           return interpolate(defaultValue);
         }
         else
         {
@@ -1388,14 +1288,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                tokens = defaults.getStringArray(key);
-            }
-            else
-            {
-                tokens = new String[0];
-            }
+            tokens = new String[0];
         }
         else
         {
@@ -1458,14 +1351,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-            if (defaults != null)
-            {
-                list = defaults.getList(key, defaultValue);
-            }
-            else
-            {
-                list = ((defaultValue == null) ? new ArrayList() : defaultValue);
-            }
+            list = ((defaultValue == null) ? new ArrayList() : defaultValue);
         }
         else
         {

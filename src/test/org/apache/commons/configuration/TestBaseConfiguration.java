@@ -56,12 +56,9 @@ package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-
-import org.apache.commons.collections.iterators.IteratorChain;
 
 import junit.framework.TestCase;
 
@@ -71,7 +68,7 @@ import junit.framework.TestCase;
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBaseConfiguration.java,v 1.5 2004/02/14 18:54:21 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.6 2004/02/24 13:08:03 epugh Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -364,11 +361,11 @@ public class TestBaseConfiguration extends TestCase
         String dbProp = "/home/applicationRoot/db/hypersonic";
 
         //construct a new config, using eprop as the defaults config for it.
-        BaseConfiguration superProp = new PropertiesConfiguration(eprop);
+        BaseConfiguration superProp = eprop;
 
-        assertTrue(
-            "Checking interpolated variable",
-            superProp.getString("db").equals(dbProp));
+        assertEquals(
+            "Checking interpolated variable",dbProp,
+            superProp.getString("db"));
         assertEquals(
             "lookup fails, leave variable as is",
             superProp.getString("dbFailedInterpolate"),
@@ -416,64 +413,5 @@ public class TestBaseConfiguration extends TestCase
         fail("IllegalStateException should have been thrown for looped property references");
     }
 
-    public void testGetString()
-    {
-        BaseConfiguration defaults = new BaseConfiguration();
-        defaults.addProperty("default", "default string");
-
-        eprop = new BaseConfiguration(defaults);
-
-        eprop.addProperty("string", "test string");
-
-        assertEquals("test string", eprop.getString("string"));
-        try
-        {
-            eprop.getString("XXX");
-            fail("Should throw NoSuchElementException exception");
-        }
-        catch (NoSuchElementException e)
-        {
-            //ok
-        }
-        catch (Exception e)
-        {
-            fail("Should throw NoSuchElementException exception, not " + e);
-        }
-
-        //test defaults
-        assertEquals(
-            "test string",
-            eprop.getString("string", "some default value"));
-        assertEquals("default string", eprop.getString("default"));
-        assertEquals(
-            "default string",
-            eprop.getString("default", "some default value"));
-        assertEquals(
-            "some default value",
-            eprop.getString("XXX", "some default value"));
-    }
     
-    public void testCheckingDefaultConfiguration() throws Exception{
-        String TEST_KEY = "testKey";
-        Configuration defaults = new PropertiesConfiguration();
-        defaults.setProperty(TEST_KEY,"testValue");
-        Configuration testConfiguration = new MockConfiguration(defaults);
-        assertTrue(testConfiguration.containsKey(TEST_KEY));
-        assertFalse(testConfiguration.isEmpty());
-        boolean foundTestKey = false;
-        Iterator i = testConfiguration.getKeys();
-        assertTrue(i instanceof IteratorChain);
-        IteratorChain ic = (IteratorChain)i;
-        assertEquals(2,ic.size());
-        for (;i.hasNext();){
-            String key = (String)i.next();
-            if(key.equals(TEST_KEY)){
-                foundTestKey = true;
-            }
-        }
-        assertTrue(foundTestKey);
-        testConfiguration.clearProperty(TEST_KEY);
-        assertFalse(testConfiguration.containsKey(TEST_KEY));
-        
-    }
 }

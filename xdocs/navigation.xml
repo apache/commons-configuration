@@ -20,7 +20,9 @@
 	<menu name="Configuration">
       <item name="Home"                href="/index.html"/>
       <item name="Overview"            href="/overview.html"/>
-      <item name="Examples"            href="/examples.html"/>
+      <item name="Simple Howto"        href="/howto_properties.html"/>
+      <item name="ConfigurationFactory Howto"        href="/howto_configurationfactory.html"/>      
+      <item name="Composite Configuration Details"        href="/howto_compositeconfiguration.html"/>
       <item name="To Do List"          href="/tasks.html"/>      
     </menu>
     <menu name="Extensions">

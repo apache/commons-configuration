@@ -31,6 +31,7 @@
           <li>Properties files</li>
           <li>XML documents</li>
           <li>JNDI</li>
+          <li>JDBC Datasource</li>
         </ul>
 
         Different configuration sources can be mixed using a

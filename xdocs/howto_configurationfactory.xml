@@ -3,52 +3,23 @@
 <document>
 
  <properties>
-  <title>Configuration Examples</title>
+  <title>Configuration Factory and Hierarchical Structured Data Howto</title>
   <author email="oliver.heger@t-online.de">Oliver Heger</author>
  </properties>
 
-<body>
-
-    <section name="Steps for loading a properties file">
-    	<p>
-    		This section contains some very simple examples of configuration
-    		files and demonstrates how the properties defined there can be
-    		read from Java code. It also explains how a
+<body>		
+	<section name="Using a Configuration Factory">
+		<p>
+ 	 		This section explains how a
     		<code>ConfigurationFactory</code> object is setup that provides access
-    		to a collection of different configuration sources.
+    		to a collection of different configuration sources.  It also discusses using Hierarchical
+    		and Structured datasets.
     	</p>
-    	<subsection name="A simple properties file">
-    		<p>
-    			At first lets consider that the whole configuration data of an
-    			application consists of a single properties file named 
-    			<code>usergui.properties</code> with the following content:
-    		</p>
-    			<source>
-<![CDATA[
-#Properties definining the GUI
-colors.background=#FFFFFF
-]]>
-				</source>
-			<p>
-				Note that this file complies to the typical format of
-				properties files.
-			</p>
-			<p>
-				You can also have in a simple properties file various characters
-				that are typically escaped like \n, \t etc:
-			</p>
-    			<source>
-<![CDATA[
-#Unescaped string that will be escaped
-test.unescape = This \n string \t contains \" escaped \\ characters
-]]>
-				</source>			
-		</subsection>
-		
+    		
 		<subsection name="The configuration definition file">
 			<p>
-				Because this configuration file is the only
-				source of configuration data at the moment we could simply
+				When a single configuration file is the only
+				source of configuration data it is very simple to
 				load it using a <code>PropertiesConfiguration</code> object
 				(this is the class that handles files of this type). But because
 				we think that later other sources will be added (otherwise
@@ -110,7 +81,7 @@ Configuration config = factory.getConfiguration();
 				the definition file.
 			</p>
 			<p>
-				Here we assummed the configuration definition file to be located
+				Here we assumed the configuration definition file to be located
 				in the current directory. It is also possible (and probably a
 				better approach) to load the file from the class path. This
 				could be done as follows:
@@ -405,9 +376,9 @@ if(prop instanceof Collection)
 				method of <code>Configuration</code>. If a property is known to
 				have multiple values (as is the table name property in this example),
 				<code>getList()</code> allows to retrieve all values at once.
-				By the way, it is completely legal to call <code>getString()</code>
+				<b>Note:</b> it is NOT legal to call <code>getString()</code>
 				or one of the other getter methods on a property with multiple
-				values; in this case only the first value is returned.
+				values; as the entire list is attempted to be returned.
 			</p>
 		</subsection>
 		<subsection name="Accessing structured properties">

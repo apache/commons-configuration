@@ -72,7 +72,7 @@ import org.dom4j.io.SAXReader;
  * the base class <code>HierarchicalProperties</code>.
  * 
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.3 2004/02/24 13:08:03 epugh Exp $
  */
 public class HierarchicalDOM4JConfiguration
     extends HierarchicalConfiguration
@@ -90,16 +90,6 @@ public class HierarchicalDOM4JConfiguration
     public HierarchicalDOM4JConfiguration()
     {
         super();
-    }
-
-    /**
-     * Creates a new instance of <code>HierarchicalDOM4JConfiguration</code>
-     * and sets the default properties.
-     * @param defaults the default properties
-     */
-    public HierarchicalDOM4JConfiguration(Configuration defaults)
-    {
-        super(defaults);
     }
 
     /**

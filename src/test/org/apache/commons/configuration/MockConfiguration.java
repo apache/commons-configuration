@@ -19,8 +19,5 @@ public class MockConfiguration extends BaseConfiguration
         super();
     }
     
-    public MockConfiguration(Configuration defaults){
-        super(defaults);
-    }
 
 }

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<document>
+
+ <properties>
+  <title>Configuration Examples</title>
+  <author email="oliver.heger@t-online.de">Oliver Heger</author>
+ </properties>
+
+<body>
+
+    <section name="Steps for loading a properties file">
+    	<p>
+    		This section contains some very simple examples of configuration
+    		files and demonstrates how the properties defined there can be
+    		read from Java code.
+    	</p>
+    	<subsection name="A simple properties file">
+    		<p>
+    			At first lets consider that the whole configuration data of an
+    			application consists of a single properties file named 
+    			<code>usergui.properties</code> with the following content:
+    		</p>
+    			<source>
+<![CDATA[
+#Properties definining the GUI
+colors.background=#FFFFFF
+]]>
+				</source>
+			<p>
+				Note that this file complies to the typical format of
+				properties files.
+			</p>
+			<p>
+				You can also have in a simple properties file various characters
+				that are typically escaped like \n, \t etc:
+			</p>
+    			<source>
+<![CDATA[
+#Unescaped string that will be escaped
+test.unescape = This \n string \t contains \" escaped \\ characters
+]]>
+				</source>			
+		</subsection>
+	</section>
+	
+</body>
+
+</document>

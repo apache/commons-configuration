@@ -58,8 +58,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Loads the configuration from the classpath utilizing a specified class to get
  * the classloader from. The properties file will be attempted to be loaded 
@@ -72,7 +70,7 @@ import org.apache.commons.lang.StringUtils;
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: ClassPropertiesConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.3 2004/02/24 13:08:03 epugh Exp $
  */
 public class ClassPropertiesConfiguration
     extends BasePropertiesConfiguration
@@ -112,44 +110,6 @@ public class ClassPropertiesConfiguration
         }
     }
 
-    /**
-     * Creates and loads an extended properties file from the Class
-     * Resources. Uses the class loader.
-     *
-     * @param baseClass The class providing the FileStream.
-     * @param resource The name of the Resource.
-     * @param defaults Configuration defaults to use if key not in file
-     * @throws IOException Error while loading the properties file
-     */
-    public ClassPropertiesConfiguration(Class baseClass, String resource, 
-                                        Configuration defaults)
-        throws ConfigurationException
-    {
-        this(baseClass, resource);
-        this.defaults = defaults;
-    }
-
-    /**
-     * Creates and loads an extended properties file from the Class
-     * Resources. Uses the class loader.
-     *
-     * @param baseClass The class providing the FileStream.
-     * @param resource The name of the Resource.
-     * @param defaultFile Configuration defaults to use if key not in file
-     * @throws IOException Error while loading the properties file
-     */
-    public ClassPropertiesConfiguration(Class baseClass, String resource,
-                                        String defaultFile)
-        throws ConfigurationException
-    {
-        this(baseClass, resource);
-
-        if (StringUtils.isNotEmpty(defaultFile))
-        {
-            this.defaults =
-                new ClassPropertiesConfiguration(baseClass, defaultFile);
-        }
-    }
 
     /**
      * Gets a resource relative to the supplied base class or

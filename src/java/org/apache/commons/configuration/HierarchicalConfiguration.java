@@ -127,7 +127,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.2 2004/02/24 13:08:03 epugh Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -143,16 +143,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     public HierarchicalConfiguration()
     {
         super();
-    }
-
-    /**
-     * Creates a new instance of <code>HierarchicalConfiguration</code>
-     * and initializes it with default properties.
-     * @param defaults default properties to be used
-     */
-    public HierarchicalConfiguration(Configuration defaults)
-    {
-        super(defaults);
     }
 
     /**

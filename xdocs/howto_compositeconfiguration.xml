@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<document>
+
+ <properties>
+  <title>Composite Configuration Details</title>
+  <author email="epugh@opensourceconnections.com">Eric Pugh</author>
+ </properties>
+
+<body>
+
+    <section name="Composite Configuration Details">
+    	<p>
+    		We will discuss how you can establish a "default" choice for your
+    		Composite Configuration as well as save changes made to your
+    		Composite Configuration.
+    	</p>
+    	<subsection name="Setting Up Defaults">
+    		<p>
+    			Defaults are very simple.  You can just add them as your last configuration object, 
+    			either through the ConfigurationFactory or manually:
+    		</p>
+    			<source>
+<![CDATA[
+Configuration defaults = new PropertiesConfiguration(fileToDefaults);
+Configuration otherProperties = new PropertiesConfiguration(fileToOtherProperties);
+CompositeConfiguration cc = new CompositeConfiguration();
+cc.addConfiguration(otherProperties);
+cc.addDefaults(fileToDefaults);
+]]>
+				</source>					
+		</subsection>
+		
+		<subsection name="Saving Changes">
+			<p>
+				If you have a non static Configuration where you want to 
+				save changes made to a configuration, and you are using a
+				CompositeConfiguration, then you will need to pass into
+				the constructor of the CompositeConfiguration what Configuration
+				to save the changes via.  
+			</p>
+    			<source>
+<![CDATA[
+PropertiesConfiguration saveConfiguration = new PropertiesConfiguration(fileToSaveChangesIn);
+Configuration cc = new CompositeConfiguration(saveConfiguration);
+cc.setProperty("newProperty","new value");
+
+saveConfiguration.save();
+]]>
+				</source>				
+			<p>
+				Alternatively, you can just request the
+				inMemoryConfiguration that stores the changes:
+    			<source>
+<![CDATA[
+Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
+DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+for (Iterator i = changes.getKeys().iterator();i.hasNext()){
+	String key = (key)i.next();
+	Object value = changes.get(key);
+	config.setProperty(key,value);
+}
+
+
+]]>
+				</source>				
+			</p>
+		
+		</subsection>		
+	</section>
+</body>
+
+</document>

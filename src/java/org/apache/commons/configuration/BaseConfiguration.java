@@ -57,7 +57,6 @@ package org.apache.commons.configuration;
 import java.util.Iterator;
 
 import org.apache.commons.collections.SequencedHashMap;
-import org.apache.commons.collections.iterators.IteratorChain;
 
 /**
  * Basic configuration classe. Stores the configuration data but does not
@@ -82,7 +81,7 @@ import org.apache.commons.collections.iterators.IteratorChain;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  *
- * @version $Id: BaseConfiguration.java,v 1.2 2004/02/14 18:54:21 epugh Exp $
+ * @version $Id: BaseConfiguration.java,v 1.3 2004/02/24 13:08:03 epugh Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
@@ -97,16 +96,6 @@ public class BaseConfiguration extends AbstractConfiguration
         super();
     }
     
-    /**
-     * Creates an empty BaseConfiguration object with
-     * a Super-Object which is queries for every key.
-     *
-     * @param defaults Configuration defaults to use if key not in file
-     */
-    public BaseConfiguration(Configuration defaults) 
-    {
-        super(defaults);
-    }
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -172,7 +161,7 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public boolean isEmpty()
     {
-        return store.isEmpty() &((defaults != null) && defaults.isEmpty());
+        return store.isEmpty();
     }
 
     /**
@@ -185,8 +174,7 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public boolean containsKey(String key)
     {
-        return store.containsKey(key)
-        || ((defaults != null) && defaults.containsKey(key));
+        return store.containsKey(key);
         
     }
 
@@ -199,10 +187,7 @@ public class BaseConfiguration extends AbstractConfiguration
     {
         if (containsKey(key))
         {
-            store.remove(key);
-            if(defaults != null){
-                defaults.clearProperty(key);
-            }
+            store.remove(key);            
         }
     }
 
@@ -213,12 +198,7 @@ public class BaseConfiguration extends AbstractConfiguration
      * @return An Iterator.
      */
     public Iterator getKeys()
-    {
-        if(defaults != null){
-            return new IteratorChain(defaults.getKeys(),store.iterator());
-        }
-        else {
-            return store.iterator();
-        }
+    {        
+        return store.iterator();        
     }
 }

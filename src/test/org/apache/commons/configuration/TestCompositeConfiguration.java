@@ -55,9 +55,10 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 
@@ -65,7 +66,7 @@ import junit.framework.TestCase;
  * Test loading multiple configurations.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestCompositeConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.4 2004/02/24 13:08:03 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -101,16 +102,24 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals(1, cc.getNumberOfConfigurations());
     }
 
+    public void testGetPropertyWIncludes() throws Exception
+    {
+        cc.addConfiguration(conf1);
+        cc.addConfiguration(conf2);
+        List l = cc.getList("packages");
+        assertTrue(l.contains("packagea"));
+    }
+    
     public void testGetProperty() throws Exception
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        assertEquals("Make sure we get the property from conf1 first", "packagea", cc.getString("packages"));
+        assertEquals("Make sure we get the property from conf1 first", "test.properties", cc.getString("propertyInOrder"));
         cc.clear();
 
         cc.addConfiguration(conf2);
         cc.addConfiguration(conf1);
-        assertEquals("Make sure we get the property from conf1 first", "override.packages", cc.getString("packages"));
+        assertEquals("Make sure we get the property from conf2 first", "test2.properties", cc.getString("propertyInOrder"));
     }
 
     public void testCantRemoveMemoryConfig() throws Exception
@@ -129,8 +138,13 @@ public class TestCompositeConfiguration extends TestCase
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-
-        assertNull(cc.getString("bogus.property"));
+        try{
+            assertNull(cc.getString("bogus.property"));
+            fail("Should have thrown a NoSuchElementException");
+        }
+        catch(NoSuchElementException nsee){
+            assertTrue(nsee.getMessage().indexOf("bogus.property")>-1);
+        }
 
         assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));
         assertTrue("Should be true", cc.getBoolean("test.missing.boolean.true", true));
@@ -330,4 +344,65 @@ public class TestCompositeConfiguration extends TestCase
             assertEquals(orderedList.get(i),iteratedList.get(i));
         }        
     }        
+    
+    public void testGetStringWithDefaults()
+    {
+        BaseConfiguration defaults = new BaseConfiguration();
+        defaults.addProperty("default", "default string");
+
+        Configuration c = new CompositeConfiguration(defaults);
+        
+        c.addProperty("string", "test string");
+
+        assertEquals("test string", c.getString("string"));
+        try
+        {
+            c.getString("XXX");
+            fail("Should throw NoSuchElementException exception");
+        }
+        catch (NoSuchElementException e)
+        {
+            //ok
+        }
+        catch (Exception e)
+        {
+            fail("Should throw NoSuchElementException exception, not " + e);
+        }
+
+        //test defaults
+        assertEquals(
+            "test string",
+            c.getString("string", "some default value"));
+        assertEquals("default string", c.getString("default"));
+        assertEquals(
+            "default string",
+            c.getString("default", "some default value"));
+        assertEquals(
+            "some default value",
+            c.getString("XXX", "some default value"));
+    }
+    
+    public void testCheckingInMemoryConfiguration() throws Exception{
+        String TEST_KEY = "testKey";
+        Configuration defaults = new PropertiesConfiguration();
+        defaults.setProperty(TEST_KEY,"testValue");
+        Configuration testConfiguration = new CompositeConfiguration(defaults);
+        assertTrue(testConfiguration.containsKey(TEST_KEY));
+        assertFalse(testConfiguration.isEmpty());
+        boolean foundTestKey = false;
+        Iterator i = testConfiguration.getKeys();
+        //assertTrue(i instanceof IteratorChain);
+        //IteratorChain ic = (IteratorChain)i;
+        //assertEquals(2,i.size());
+        for (;i.hasNext();){
+            String key = (String)i.next();
+            if(key.equals(TEST_KEY)){
+                foundTestKey = true;
+            }
+        }
+        assertTrue(foundTestKey);
+        testConfiguration.clearProperty(TEST_KEY);
+        assertFalse(testConfiguration.containsKey(TEST_KEY));
+        
+    }    
 }

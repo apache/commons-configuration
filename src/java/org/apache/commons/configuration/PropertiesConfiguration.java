@@ -91,7 +91,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.2 2004/01/30 14:46:37 epugh Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.3 2004/02/24 13:08:03 epugh Exp $
  */
 public class PropertiesConfiguration
         extends BasePropertiesConfiguration
@@ -120,18 +120,6 @@ public class PropertiesConfiguration
         setIncludesAllowed(false);
     }
 
-    /**
-     * Creates an empty PropertyConfiguration object with
-     * a Super-Object which is queries for every key.
-     *
-     * @param defaults Configuration defaults to use if key not in file
-     * @throws IOException Error while loading the properties file
-     */
-    public PropertiesConfiguration(Configuration defaults)
-    {
-        this();
-        this.defaults = defaults;
-    }
 
     /**
      * Creates and loads the extended properties from the specified file.
@@ -171,36 +159,6 @@ public class PropertiesConfiguration
     	catch (IOException ioe){
     		throw new ConfigurationException("Could not load from file " + fileName,ioe);
     	}
-    }
-
-    /**
-     * Creates and loads the extended properties from the specified file.
-     *
-     * @param file The name of the Properties File to load.
-     * @param defaults Configuration defaults to use if key not in file
-     * @throws IOException Error while loading the properties file
-     */
-    public PropertiesConfiguration(String file, Configuration defaults) throws ConfigurationException
-    {
-        this(file);
-        this.defaults = defaults;
-    }
-
-    /**
-     * Creates and loads the extended properties from the specified file.
-     *
-     * @param file The name of the Properties File to load.
-     * @param defaultFile The name of a properties file whose values
-     *                    should be used if a key is not in the file.
-     * @throws IOException Error while loading the properties file
-     */
-    public PropertiesConfiguration(String file, String defaultFile) throws ConfigurationException
-    {
-        this(file);
-        if (StringUtils.isNotEmpty(defaultFile))
-        {
-            this.defaults = new PropertiesConfiguration(defaultFile);
-        }
     }
 
     /**
