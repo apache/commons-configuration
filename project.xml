@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.18 2004/05/04 22:15:26 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.19 2004/05/13 12:16:47 epugh Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -161,7 +161,8 @@
   
   <dependencies>
     <dependency>
-      <id>commons-collections</id>
+      <groupId>commons-collections</groupId>
+      <artifactId>commons-collections</artifactId>    	
       <version>2.1</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -169,7 +170,8 @@
     </dependency>
 
     <dependency>
-      <id>commons-lang</id>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>    	
       <version>2.0</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -177,7 +179,8 @@
     </dependency>
 
     <dependency>
-      <id>commons-logging</id>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>  
       <version>1.0.3</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -185,7 +188,8 @@
     </dependency>
 
     <dependency>
-      <id>dom4j</id>
+      <groupId>dom4j</groupId>
+      <artifactId>dom4j</artifactId>     	
       <version>1.4</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -193,7 +197,8 @@
     </dependency>
 
     <dependency>
-      <id>commons-digester</id>      
+   	  <groupId>commons-digester</groupId>
+      <artifactId>commons-digester</artifactId>  
       <version>1.5</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -201,7 +206,8 @@
     </dependency>
 
     <dependency>
-      <id>commons-beanutils</id>      
+   	  <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>    	  
       <version>1.7-dev</version>
       <properties>        
         <war.bundle>true</war.bundle>
@@ -209,7 +215,8 @@
     </dependency>
 
     <dependency>
-      <id>xerces</id>
+   	  <groupId>xerces</groupId>
+      <artifactId>xerces</artifactId>     	
       <version>2.2.1</version>
       <url>http://xml.apache.org/xerces2-j/</url>
       <properties>        
@@ -218,7 +225,8 @@
     </dependency>
 
     <dependency>
-      <id>xml-apis</id>
+   	  <groupId>xml-apis</groupId>
+      <artifactId>xml-apis</artifactId>    	
       <version>2.0.2</version>
       <url>http://xml.apache.org/commons/</url>
       <properties>        
@@ -227,11 +235,6 @@
     </dependency>
 
     <!-- Needed for testing -->
-    <dependency>
-      <id>junit</id>
-      <version>3.8.1</version>
-      <url>http://www.junit.org</url>
-    </dependency>
 
     <!--dependency>
       <id>simple-jndi</id>
@@ -246,29 +249,41 @@
     </dependency>
 
     <dependency>
-      <id>commons-dbcp</id>
+      <groupId>commons-dbcp</groupId>
+      <artifactId>commons-dbcp</artifactId>      	
       <version>1.1</version>
     </dependency>
 
     <dependency>
-      <id>commons-pool</id>
+      <groupId>commons-pool</groupId>
+      <artifactId>commons-pool</artifactId>        	
       <version>1.1</version>
     </dependency>
 
     <dependency>
-      <id>hsqldb</id>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>  	
       <version>1.7.1</version>
     </dependency>
 
     <dependency>
-      <id>dbunit</id>
+      <groupId>dbunit</groupId>
+      <artifactId>dbunit</artifactId>    	
       <version>1.5.5</version>
     </dependency>
 
     <dependency>
-      <id>exml</id>
+      <groupId>exml</groupId>
+      <artifactId>exml</artifactId>       	
       <version>dbunit1.5.1</version>
     </dependency>
+
+    <dependency>
+      <groupId>junit-addons</groupId>
+      <artifactId>junit-addons</artifactId>    	
+      <version>1.4</version>
+    </dependency>
+    
 
    <dependency> 
       <groupId>maven</groupId> 
@@ -280,7 +295,7 @@
     <dependency> 
       <groupId>maven</groupId> 
       <artifactId>maven-findbugs-plugin</artifactId> 
-      <version>0.7.1</version> 
+      <version>0.7.2</version> 
       <url>http://maven-plugins.sourceforge.net/maven-findbugs-plugin/</url> 
       <type>plugin</type>
     </dependency> 
