@@ -63,7 +63,7 @@ import junit.framework.Assert;
  * can share.
  * 
  * @author Eric Pugh
- * @version $Id: NonStringTestHolder.java,v 1.2 2003/12/24 14:28:21 epugh Exp $
+ * @version $Id: NonStringTestHolder.java,v 1.3 2004/01/16 17:31:09 epugh Exp $
  */
 public class NonStringTestHolder
 {
@@ -199,7 +199,7 @@ public class NonStringTestHolder
 
     public void testIsEmpty() throws Exception
     {
-        Assert.assertTrue(!configuration.isEmpty());
+        Assert.assertTrue("Configuration should not be empty",!configuration.isEmpty());
 
     }
     /**
