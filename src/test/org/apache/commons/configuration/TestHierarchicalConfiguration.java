@@ -18,15 +18,17 @@ package org.apache.commons.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.5 2004/03/13 17:04:04 epugh Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.6 2004/10/18 10:19:27 ebourg Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -158,6 +160,28 @@ public class TestHierarchicalConfiguration extends TestCase
         assertTrue(keys.contains("tables.table.fields.field.name"));
     }
     
+    public void testGetKeysString()
+    {
+        // add some more properties to make it more interesting
+        config.addProperty("tables.table(0).fields.field(1).type", "VARCHAR");
+        config.addProperty("tables.table(0)[@type]", "system");
+        config.addProperty("tables.table(0).size", "42");
+        config.addProperty("tables.table(0).fields.field(0).size", "128");
+        config.addProperty("connections.connection.param.url", "url1");
+        config.addProperty("connections.connection.param.user", "me");
+        config.addProperty("connections.connection.param.pwd", "secret");
+        config.addProperty("connections.connection(-1).param.url", "url2");
+        config.addProperty("connections.connection(1).param.user", "guest");
+        
+        checkKeys("tables.table(1)", new String[] { "name", "fields.field.name" });
+        checkKeys("tables.table(0)",
+                new String[] { "name", "fields.field.name", "[@type]", "size", "fields.field.type", "fields.field.size" });
+        checkKeys("connections.connection(0).param",
+                new String[] {"url", "user", "pwd" });
+        checkKeys("connections.connection(1).param",
+                new String[] {"url", "user" });
+    }
+    
     public void testAddProperty()
     {
         config.addProperty("tables.table(0).fields.field(-1).name", "phone");
@@ -245,5 +269,35 @@ public class TestHierarchicalConfiguration extends TestCase
         
         conf = config.subset("tables.table.fields.field.name");
         assertTrue("subset is not empty", conf.isEmpty());
+    }
+    
+    /**
+     * Helper method for testing the getKeys(String) method.
+     * @param prefix the key to pass into getKeys()
+     * @param expected the expected result
+     */
+    private void checkKeys(String prefix, String[] expected)
+    {
+        Set values = new HashSet();
+        for(int i = 0; i < expected.length; i++)
+        {
+            values.add(expected[i]);
+        }
+        
+        Iterator itKeys = config.getKeys(prefix);
+        while(itKeys.hasNext())
+        {
+            String key = (String) itKeys.next();
+            if(!values.contains(key))
+            {
+                fail("Found unexpected key: " + key);
+            }
+            else
+            {
+                values.remove(key);
+            }
+        }
+        
+        assertTrue("Remaining keys " + values, values.isEmpty());
     }
 }

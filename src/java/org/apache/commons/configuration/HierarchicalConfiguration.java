@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.11 2004/10/11 09:27:20 henning Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.12 2004/10/18 10:19:26 ebourg Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -375,6 +375,31 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         getRoot().visit(visitor, new ConfigurationKey());
+        return visitor.getKeyList().iterator();
+    }
+    
+    /**
+     * Returns an iterator with all keys defined in this configuration that
+     * start with the given prefix. The returned keys will not contain any
+     * indices.
+     * @param prefix the prefix of the keys to start with
+     * @return an iterator with the found keys
+     */
+    public Iterator getKeys(String prefix)
+    {
+        DefinedKeysVisitor visitor = new DefinedKeysVisitor();
+        List nodes = fetchNodeList(prefix);
+        ConfigurationKey key = new ConfigurationKey();
+        
+        for(Iterator itNodes = nodes.iterator(); itNodes.hasNext();)
+        {
+            Node node = (Node) itNodes.next();
+            for(Iterator it = node.getChildren().iterator(); it.hasNext();)
+            {
+                ((Node) it.next()).visit(visitor, key);
+            }
+        }
+        
         return visitor.getKeyList().iterator();
     }
 
