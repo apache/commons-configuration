@@ -8,6 +8,11 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="remove">
+        Removed the getPropertyDirect method from AbstractConfiguration,
+        concrete configurations now implement directly the getProperty method
+        from the Configuration interface.
+      </action>
 	  <action dev="oheger" type="add" issue="31130">
 		Added implementation of a save() method for HierarchicalXMLConfiguration.
 	  </action>

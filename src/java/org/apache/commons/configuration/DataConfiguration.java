@@ -41,7 +41,7 @@ import org.apache.commons.lang.ArrayUtils;
  * version.</p>
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.1 $, $Date: 2004/10/18 09:54:37 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration
@@ -67,7 +67,7 @@ public class DataConfiguration extends AbstractConfiguration
         return configuration;
     }
 
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         return configuration.getProperty(key);
     }
@@ -127,7 +127,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getBooleanList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -203,7 +203,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public boolean[] getBooleanArray(String key, boolean[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         boolean[] array;
 
@@ -277,7 +277,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getByteList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -352,7 +352,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public byte[] getByteArray(String key, byte[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         byte[] array;
 
@@ -426,7 +426,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getShortList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -501,7 +501,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public short[] getShortArray(String key, short[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         short[] array;
 
@@ -576,7 +576,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getIntegerList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -651,7 +651,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public int[] getIntArray(String key, int[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         int[] array;
 
@@ -725,7 +725,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getLongList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -800,7 +800,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public long[] getLongArray(String key, long[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         long[] array;
 
@@ -874,7 +874,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getFloatList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -949,7 +949,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public float[] getFloatArray(String key, float[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         float[] array;
 
@@ -1024,7 +1024,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getDoubleList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -1099,7 +1099,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public double[] getDoubleArray(String key, double[] defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         double[] array;
 
@@ -1173,7 +1173,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getBigIntegerList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -1283,7 +1283,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getBigDecimalList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -1440,7 +1440,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getURLList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -1678,7 +1678,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getDateList(String key, List defaultValue, String format)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -1970,7 +1970,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getCalendarList(String key, List defaultValue, String format)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -2189,7 +2189,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getLocaleList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 
@@ -2346,7 +2346,7 @@ public class DataConfiguration extends AbstractConfiguration
      */
     public List getColorList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         List list = null;
 

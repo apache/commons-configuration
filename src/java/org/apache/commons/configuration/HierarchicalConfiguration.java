@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.13 2004/11/13 17:02:51 oheger Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.14 2004/12/02 22:05:52 ebourg Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -137,7 +137,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * @param key the key to be looked up
      * @return the found value
      */
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         List nodes = fetchNodeList(key);
 
@@ -346,7 +346,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      */
     public boolean containsKey(String key)
     {
-        return getPropertyDirect(key) != null;
+        return getProperty(key) != null;
     }
 
     /**

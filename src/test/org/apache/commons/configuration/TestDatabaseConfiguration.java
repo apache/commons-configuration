@@ -38,7 +38,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.11 $, $Date: 2004/10/18 21:38:45 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/02 22:05:52 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -120,9 +120,9 @@ public class TestDatabaseConfiguration extends TestCase
     {
         DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
 
-        assertEquals("property1", "value1", config.getPropertyDirect("key1"));
-        assertEquals("property2", "value2", config.getPropertyDirect("key2"));
-        assertEquals("unknown property", null, config.getPropertyDirect("key3"));
+        assertEquals("property1", "value1", config.getProperty("key1"));
+        assertEquals("property2", "value2", config.getProperty("key2"));
+        assertEquals("unknown property", null, config.getProperty("key3"));
     }
 
     public void testGetPropertyDirectMultiple()

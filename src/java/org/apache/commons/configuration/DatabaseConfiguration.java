@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.12 $, $Date: 2004/10/21 18:02:09 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/02 22:05:52 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -99,7 +99,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * {@inheritDoc}
      */
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         Object result = null;
 

@@ -38,7 +38,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.28 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.29 2004/12/02 22:05:52 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -128,16 +128,6 @@ public abstract class AbstractConfiguration implements Configuration
             addPropertyDirect(key, token);
         }
     }
-
-    /**
-     * Read property. Should return <code>null</code> if the key doesn't
-     * map to an existing object.
-     *
-     * @param key key to use for mapping
-     *
-     * @return object associated with the given configuration key.
-     */
-    protected abstract Object getPropertyDirect(String key);
 
     /**
      * Adds a key/value pair to the Configuration. Override this method to
@@ -233,7 +223,6 @@ public abstract class AbstractConfiguration implements Configuration
                 priorVariables.add(variable);
             }
 
-            //QUESTION: getProperty or getPropertyDirect
             Object value = getProperty(variable);
             if (value != null)
             {
@@ -409,19 +398,10 @@ public abstract class AbstractConfiguration implements Configuration
             }
             else
             {
-                throw new IllegalArgumentException(
-                    '\'' + token + "' does not contain an equals sign");
+                throw new IllegalArgumentException('\'' + token + "' does not contain an equals sign");
             }
         }
         return props;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Object getProperty(String key)
-    {
-        return getPropertyDirect(key);
     }
 
     /**
@@ -436,8 +416,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -902,7 +881,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public String[] getStringArray(String key)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
 
         String[] array;
 
@@ -946,7 +925,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public List getList(String key, List defaultValue)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
         List list = null;
 
         if (value instanceof String)
@@ -985,7 +964,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     protected Object resolveContainerStore(String key)
     {
-        Object value = getPropertyDirect(key);
+        Object value = getProperty(key);
         if (value != null && value instanceof List)
         {
             List list = (List) value;

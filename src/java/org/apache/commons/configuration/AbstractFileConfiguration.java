@@ -39,7 +39,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.10 $, $Date: 2004/11/19 13:19:50 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/02 22:05:52 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -597,10 +597,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
     }
 
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         reload();
-        return super.getPropertyDirect(key);
+        return super.getProperty(key);
     }
 
     public boolean isEmpty()

@@ -28,7 +28,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.3 $, $Date: 2004/10/21 18:42:09 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/02 22:05:52 $
  * @since 1.1
  */
 public class ServletRequestConfiguration extends AbstractConfiguration
@@ -45,7 +45,7 @@ public class ServletRequestConfiguration extends AbstractConfiguration
         this.request = request;
     }
 
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         return request.getParameter(key);
     }
@@ -68,7 +68,7 @@ public class ServletRequestConfiguration extends AbstractConfiguration
 
     public boolean containsKey(String key)
     {
-        return getPropertyDirect(key) != null;
+        return getProperty(key) != null;
     }
 
     /**

@@ -24,7 +24,7 @@ import java.util.List;
  * A Map based Configuration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration
@@ -52,7 +52,7 @@ public class MapConfiguration extends AbstractConfiguration
         return map;
     }
 
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         Object value = map.get(key);
         if (value instanceof String)

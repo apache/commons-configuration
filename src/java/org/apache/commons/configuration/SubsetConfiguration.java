@@ -29,7 +29,7 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * @see Configuration#subset(String)
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.6 $, $Date: 2004/10/05 21:17:25 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/02 22:05:52 $
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {
@@ -190,7 +190,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     /**
      * {@inheritDoc}
      */
-    public Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         return parent.getProperty(getParentKey(key));
     }

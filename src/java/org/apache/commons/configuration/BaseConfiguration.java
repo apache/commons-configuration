@@ -45,7 +45,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfiguration.java,v 1.9 2004/10/18 14:05:23 ebourg Exp $
+ * @version $Id: BaseConfiguration.java,v 1.10 2004/12/02 22:05:52 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
@@ -69,7 +69,7 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     protected void addPropertyDirect(String key, Object obj)
     {
-        Object o = getPropertyDirect(key);
+        Object o = getProperty(key);
         Object objAdd = null;
 
         if (o == null)
@@ -111,7 +111,7 @@ public class BaseConfiguration extends AbstractConfiguration
      *
      * @return object associated with the given configuration key.
      */
-    protected Object getPropertyDirect(String key)
+    public Object getProperty(String key)
     {
         return store.get(key);
     }

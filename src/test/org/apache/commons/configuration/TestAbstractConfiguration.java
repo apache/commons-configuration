@@ -24,7 +24,7 @@ import java.util.Iterator;
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
  */
 public abstract class TestAbstractConfiguration extends TestCase
 {
@@ -42,19 +42,19 @@ public abstract class TestAbstractConfiguration extends TestCase
      */
     protected abstract AbstractConfiguration getEmptyConfiguration();
 
-    public void testGetPropertyDirect()
+    public void testGetProperty()
     {
         AbstractConfiguration config = getConfiguration();
-        assertEquals("key1", "value1", config.getPropertyDirect("key1"));
-        assertEquals("key2", "value2", config.getPropertyDirect("key2"));
-        assertNull("key3", config.getPropertyDirect("key3"));
+        assertEquals("key1", "value1", config.getProperty("key1"));
+        assertEquals("key2", "value2", config.getProperty("key2"));
+        assertNull("key3", config.getProperty("key3"));
     }
 
     public void testAddPropertyDirect()
     {
         AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
-        assertEquals("key3", "value3", config.getPropertyDirect("key3"));
+        assertEquals("key3", "value3", config.getProperty("key3"));
     }
 
     public void testIsEmpty()
