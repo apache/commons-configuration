@@ -16,23 +16,25 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import junit.framework.TestCase;
+
 /**
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2004/09/23 11:37:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/23 11:41:05 $
  */
-public class TestSubsetConfiguration extends TestCase {
+public class TestSubsetConfiguration extends TestCase
+{
 
-    public void testGetProperty() {
-        BaseConfiguration conf = new BaseConfiguration();
+    public void testGetProperty()
+    {
+        Configuration conf = new BaseConfiguration();
         conf.setProperty("test.key1", "value1");
         conf.setProperty("testing.key2", "value1");
 
@@ -42,8 +44,9 @@ public class TestSubsetConfiguration extends TestCase {
         assertFalse("'ng.key2' found in the subset", subset.containsKey("ng.key2"));
     }
 
-    public void testSetProperty() {
-        BaseConfiguration conf = new BaseConfiguration();
+    public void testSetProperty()
+    {
+        Configuration conf = new BaseConfiguration();
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
         // set a property in the subset and check the parent
@@ -57,7 +60,8 @@ public class TestSubsetConfiguration extends TestCase {
         assertEquals("key2 in the subset configuration", "value2", subset.getProperty("key2"));
     }
 
-    public void testGetParentKey() {
+    public void testGetParentKey()
+    {
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(null, "prefix", ".");
         assertEquals("parent key for \"key\"", "prefix.key", subset.getParentKey("key"));
@@ -69,7 +73,8 @@ public class TestSubsetConfiguration extends TestCase {
         assertEquals("parent key for \"\"", "prefix", subset.getParentKey(""));
     }
 
-    public void testGetChildKey() {
+    public void testGetChildKey()
+    {
         // subset with delimiter
         SubsetConfiguration subset = new SubsetConfiguration(null, "prefix", ".");
         assertEquals("parent key for \"prefixkey\"", "key", subset.getChildKey("prefix.key"));
@@ -81,8 +86,9 @@ public class TestSubsetConfiguration extends TestCase {
         assertEquals("parent key for \"prefix\"", "", subset.getChildKey("prefix"));
     }
 
-    public void testGetKeys() {
-        BaseConfiguration conf = new BaseConfiguration();
+    public void testGetKeys()
+    {
+        Configuration conf = new BaseConfiguration();
         conf.setProperty("test", "value0");
         conf.setProperty("test.key1", "value1");
         conf.setProperty("testing.key2", "value1");
@@ -95,8 +101,9 @@ public class TestSubsetConfiguration extends TestCase {
         assertFalse("too many elements", it.hasNext());
     }
 
-    public void testGetKeysWithPrefix() {
-        BaseConfiguration conf = new BaseConfiguration();
+    public void testGetKeysWithPrefix()
+    {
+        Configuration conf = new BaseConfiguration();
         conf.setProperty("test.abc", "value0");
         conf.setProperty("test.abc.key1", "value1");
         conf.setProperty("test.abcdef.key2", "value1");
@@ -108,35 +115,52 @@ public class TestSubsetConfiguration extends TestCase {
         assertEquals("2nd key", "abc.key1", it.next());
         assertFalse("too many elements", it.hasNext());
     }
-    
-    public void testGetList() {
-        BaseConfiguration conf = new BaseConfiguration();
+
+    public void testGetList()
+    {
+        Configuration conf = new BaseConfiguration();
         conf.setProperty("test.abc", "value0,value1");
-        conf.addProperty("test.abc","value3");
+        conf.addProperty("test.abc", "value3");
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
         List list = subset.getList("abc", new ArrayList());
         assertEquals(3, list.size());
     }
 
-    public void testGetVector() {
-        BaseConfiguration conf = new BaseConfiguration();
+    public void testGetVector()
+    {
+        Configuration conf = new BaseConfiguration();
         conf.setProperty("test.abc", "value0,value1");
-        conf.addProperty("test.abc","value3");
+        conf.addProperty("test.abc", "value3");
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
         Vector vector = subset.getVector("abc", new Vector());
         assertEquals(3, vector.size());
     }
 
-    public void testEmptySubset() {
-        BaseConfiguration conf = new BaseConfiguration();
-        Configuration subset = new SubsetConfiguration(conf, "test", ".");
+    public void testGetParent()
+    {
+        Configuration conf = new BaseConfiguration();
+        SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
 
-        assertTrue("the subset is not empty", subset.isEmpty());
+        assertEquals("parent", conf, subset.getParent());
+    }
 
-        conf.addProperty("foo", "bar");
-        assertTrue("the subset is not empty", subset.isEmpty());
+    public void testGetPrefix()
+    {
+        Configuration conf = new BaseConfiguration();
+        SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
+
+        assertEquals("prefix", "prefix", subset.getPrefix());
+    }
+
+    public void testSetPrefix()
+    {
+        Configuration conf = new BaseConfiguration();
+        SubsetConfiguration subset = new SubsetConfiguration(conf, null, ".");
+        subset.setPrefix("prefix");
+
+        assertEquals("prefix", "prefix", subset.getPrefix());
     }
 
 }
