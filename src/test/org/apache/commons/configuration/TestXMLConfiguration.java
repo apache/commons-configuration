@@ -22,12 +22,11 @@ import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
-import junitx.framework.ArrayAssert;
 
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.16 2004/12/23 18:42:25 oheger Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -40,7 +39,9 @@ public class TestXMLConfiguration extends TestCase
 
     protected void setUp() throws Exception
     {
-        conf = new XMLConfiguration(new File(testProperties));
+        conf = new XMLConfiguration();
+        conf.setFile(new File(testProperties));
+        conf.load();
     }
 
     public void testGetProperty()
@@ -64,94 +65,94 @@ public class TestXMLConfiguration extends TestCase
         String key = "clearly";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
 
         // test single element
         conf.load();
         key = "clear.element";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
 
         // test single element with attribute
         conf.load();
         key = "clear.element2";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
         key = "clear.element2[@id]";
         assertNotNull(key, conf.getProperty(key));
-        assertNotNull(key, conf.getXmlProperty(key));
+        assertNotNull(key, conf.getProperty(key));
 
         // test non-text/cdata element
         conf.load();
         key = "clear.comment";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
 
         // test cdata element
         conf.load();
         key = "clear.cdata";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
 
         // test multiple sibling elements
         conf.load();
         key = "clear.list.item";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
         key = "clear.list.item[@id]";
         assertNotNull(key, conf.getProperty(key));
-        assertNotNull(key, conf.getXmlProperty(key));
+        assertNotNull(key, conf.getProperty(key));
 
         // test multiple, disjoined elements
         conf.load();
         key = "list.item";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
     }
 
-    public void testGetXmlProperty() {
+    public void testgetProperty() {
         // test non-leaf element
-        Object property = conf.getXmlProperty("clear");
+        Object property = conf.getProperty("clear");
         assertNull(property);
 
         // test non-existent element
-        property = conf.getXmlProperty("e");
+        property = conf.getProperty("e");
         assertNull(property);
 
         // test non-existent element
-        property = conf.getXmlProperty("element3[@n]");
+        property = conf.getProperty("element3[@n]");
         assertNull(property);
 
         // test single element
-        property = conf.getXmlProperty("element");
+        property = conf.getProperty("element");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("value", property);
 
         // test single attribute
-        property = conf.getXmlProperty("element3[@name]");
+        property = conf.getProperty("element3[@name]");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("foo", property);
 
         // test non-text/cdata element
-        property = conf.getXmlProperty("test.comment");
+        property = conf.getProperty("test.comment");
         assertNull(property);
 
         // test cdata element
-        property = conf.getXmlProperty("test.cdata");
+        property = conf.getProperty("test.cdata");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("<cdata value>", property);
 
         // test multiple sibling elements
-        property = conf.getXmlProperty("list.sublist.item");
+        property = conf.getProperty("list.sublist.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
         List list = (List)property;
@@ -160,7 +161,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("six", list.get(1));
 
         // test multiple, disjoined elements
-        property = conf.getXmlProperty("list.item");
+        property = conf.getProperty("list.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
         list = (List)property;
@@ -171,7 +172,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("four", list.get(3));
 
         // test multiple, disjoined attributes
-        property = conf.getXmlProperty("list.item[@name]");
+        property = conf.getProperty("list.item[@name]");
         assertNotNull(property);
         assertTrue(property instanceof List);
         list = (List)property;
@@ -191,29 +192,29 @@ public class TestXMLConfiguration extends TestCase
         String key = "clear[@id]";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
 
         // test single attribute
         conf.load();
         key = "clear.element2[@id]";
-        Object p = conf.getXmlProperty(key);
-        p = conf.getXmlProperty("clear.element2");
+        Object p = conf.getProperty(key);
+        p = conf.getProperty("clear.element2");
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
         key = "clear.element2";
         assertNotNull(key, conf.getProperty(key));
-        assertNotNull(key, conf.getXmlProperty(key));
+        assertNotNull(key, conf.getProperty(key));
 
         // test multiple, disjoined attributes
         conf.load();
         key = "clear.list.item[@id]";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
-        assertNull(key, conf.getXmlProperty(key));
+        assertNull(key, conf.getProperty(key));
         key = "clear.list.item";
         assertNotNull(key, conf.getProperty(key));
-        assertNotNull(key, conf.getXmlProperty(key));
+        assertNotNull(key, conf.getProperty(key));
     }
 
     public void testSetAttribute()
@@ -317,7 +318,7 @@ public class TestXMLConfiguration extends TestCase
         conf.setProperty("element.string", "hello");
 
         assertEquals("'element.string'", "hello", conf.getString("element.string"));
-        assertEquals("XML value of element.string", "hello", conf.getXmlProperty("element.string"));
+        assertEquals("XML value of element.string", "hello", conf.getProperty("element.string"));
     }
 
     public void testAddProperty()
@@ -381,38 +382,5 @@ public class TestXMLConfiguration extends TestCase
         // reload the configuration
         XMLConfiguration conf2 = new XMLConfiguration(conf.getFile());
         assertEquals("'autosave' property", "ok", conf2.getString("autosave"));
-    }
-
-    public void testParseElementsNames()
-    {
-        // without attribute
-        String key = "x.y.z";
-        String[] array = new String[] {"x", "y", "z"};
-        ArrayAssert.assertEquals("key without attribute", array, XMLConfiguration.parseElementNames(key));
-
-        // with attribute
-        key = "x.y.z[@name]";
-        ArrayAssert.assertEquals("key with attribute", array, XMLConfiguration.parseElementNames(key));
-
-        // null key
-        ArrayAssert.assertEquals("null key", new String[] {}, XMLConfiguration.parseElementNames(null));
-    }
-
-    public void testParseAttributeName()
-    {
-        // no attribute
-        String key = "x.y.z";
-        assertEquals("no attribute", null, XMLConfiguration.parseAttributeName(key));
-
-        // simple attribute
-        key = "x.y.z[@name]";
-        assertEquals("simple attribute", "name", XMLConfiguration.parseAttributeName(key));
-
-        // missing end marker
-        key = "x.y.z[@name";
-        assertEquals("missing end marker", "name", XMLConfiguration.parseAttributeName(key));
-
-        // null key
-        assertEquals("null key", null, XMLConfiguration.parseAttributeName(null));
     }
 }

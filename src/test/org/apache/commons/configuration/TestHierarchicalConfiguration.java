@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.8 2004/12/13 16:40:14 oheger Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.9 2004/12/23 18:42:25 oheger Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -216,7 +216,7 @@ public class TestHierarchicalConfiguration extends TestCase
         
         checkKeys("tables.table(1)", new String[] { "name", "fields.field.name" });
         checkKeys("tables.table(0)",
-                new String[] { "name", "fields.field.name", "[@type]", "size", "fields.field.type", "fields.field.size" });
+                new String[] { "name", "fields.field.name", "tables.table(0)[@type]", "size", "fields.field.type", "fields.field.size" });
         checkKeys("connections.connection(0).param",
                 new String[] {"url", "user", "pwd" });
         checkKeys("connections.connection(1).param",
@@ -322,7 +322,7 @@ public class TestHierarchicalConfiguration extends TestCase
         Set values = new HashSet();
         for(int i = 0; i < expected.length; i++)
         {
-            values.add(prefix + "." + expected[i]);
+            values.add((expected[i].startsWith(prefix)) ? expected[i] :  prefix + "." + expected[i]);
         }
         
         Iterator itKeys = config.getKeys(prefix);

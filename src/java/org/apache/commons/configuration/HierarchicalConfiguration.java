@@ -1193,7 +1193,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             else
             {
                 StringBuffer buf = new StringBuffer(prefix);
-                buf.append('.').append(key);
+                if (!key.isAttributeKey())
+                {
+                    buf.append(ConfigurationKey.PROPERTY_DELIMITER);
+                }
+                buf.append(key);
                 keyList.add(buf.toString());
             }
         }

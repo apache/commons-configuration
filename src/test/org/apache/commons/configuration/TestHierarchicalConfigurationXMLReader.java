@@ -29,7 +29,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfigurationXMLReader.
  *
- * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.4 2004/07/12 12:14:38 ebourg Exp $
+ * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.5 2004/12/23 18:42:25 oheger Exp $
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
@@ -39,8 +39,8 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
     
     protected void setUp() throws Exception
     {
-        HierarchicalXMLConfiguration config =
-        new HierarchicalXMLConfiguration();
+        XMLConfiguration config =
+        new XMLConfiguration();
         config.setFileName(TEST_FILE);
         config.load();
         parser = new HierarchicalConfigurationXMLReader(config);

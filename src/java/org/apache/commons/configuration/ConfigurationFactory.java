@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.19 2004/11/19 19:25:47 oheger Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.20 2004/12/23 18:42:25 oheger Exp $
  */
 public class ConfigurationFactory
 {
@@ -291,7 +291,7 @@ public class ConfigurationFactory
         setupDigesterInstance(
             digester,
             matchString + "hierarchicalXml",
-            new FileConfigurationFactory(HierarchicalXMLConfiguration.class),
+            new FileConfigurationFactory(XMLConfiguration.class),
             null,
             additional);
 

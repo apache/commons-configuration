@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <!-- Test file for XMLConfiguration -->
-<configuration>
+<testconfig>
     <element>value</element>
     <element2>
         <subelement>
@@ -58,4 +58,4 @@ And even longer.
 			<item id="4">four</item>
 		</list>
 	</clear>
-</configuration>
+</testconfig>

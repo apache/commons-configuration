@@ -23,11 +23,14 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * Test class for HierarchicalXMLConfiguration,
+ * Test class for XMLConfiguration. In addition to TestXMLConfiguration this
+ * class especially tests the hierarchical nature of this class and structured
+ * data access.
  *
  * @author Emmanuel Bourg
  * @author Mark Woodman
- * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.5 2004/12/18 16:33:03 oheger Exp $
+ * @author Oliver Heger
+ * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.6 2004/12/23 18:42:25 oheger Exp $
  */
 public class TestHierarchicalXMLConfiguration extends TestCase
 {
@@ -56,15 +59,15 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     private static final String TEST_SAVE = "target" + File.separator + TEST_SAVENAME;
 
     /** Instance config used for tests. */
-    private HierarchicalXMLConfiguration config;
+    private XMLConfiguration config;
 
     /** Fixture setup. */
     protected void setUp() throws Exception
     {
-        config = new HierarchicalXMLConfiguration();
+        config = new XMLConfiguration();
     }
 
-    private void configTest(HierarchicalXMLConfiguration config)
+    private void configTest(XMLConfiguration config)
     {
         assertEquals(1, config.getMaxIndex("tables.table"));
         assertEquals("system", config.getProperty("tables.table(0)[@tableType]"));
@@ -169,7 +172,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             File saveFile = new File(TEST_SAVE);
             config.save(saveFile);
 
-            config = new HierarchicalXMLConfiguration();
+            config = new XMLConfiguration();
             config.load(saveFile.toURL());
             assertEquals("value", config.getProperty("element"));
             assertEquals("I'm complex!", config.getProperty("element2.subelement.subsubelement"));
@@ -213,7 +216,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             config.setRootElementName("myconfig");
             config.save();
 
-            config = new HierarchicalXMLConfiguration();
+            config = new XMLConfiguration();
             config.load(saveFile);
             assertEquals(1, config.getMaxIndex("tables.table.name"));
             assertEquals("tests", config.getString("tables.table(0).name"));
@@ -222,6 +225,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             assertTrue(config.getBoolean("tables.table(1).fields.field(1)[@null]"));
             assertEquals("tiger", config.getString("connection.passwd"));
             assertEquals("system", config.getProperty("connection[@type]"));
+            assertEquals("myconfig", config.getRootElementName());
         }
         finally
         {
@@ -254,7 +258,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         try
         {
             config.save(new File(TEST_SAVE));
-            config = new HierarchicalXMLConfiguration();
+            config = new XMLConfiguration();
             config.load(TEST_SAVE);
             assertFalse(config.containsKey("test.entity[@name]"));
             assertEquals("1<2", config.getProperty("test.entity"));
@@ -272,6 +276,30 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         finally
         {
             removeTestSaveFile();
+        }
+    }
+    
+    /**
+     * Tests manipulation of the root element's name.
+     *
+     */
+    public void testRootElement() throws Exception
+    {
+        assertEquals("configuration", config.getRootElementName());
+        config.setRootElementName("newRootName");
+        assertEquals("newRootName", config.getRootElementName());
+        
+        config.setFile(new File(TEST_FILE3));
+        config.load();
+        assertEquals("testconfig", config.getRootElementName());
+        try
+        {
+            config.setRootElementName("anotherRootElement");
+            fail("Setting root element name when loaded from file!");
+        }
+        catch(UnsupportedOperationException uex)
+        {
+            //fine
         }
     }
 

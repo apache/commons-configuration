@@ -35,18 +35,18 @@ import java.util.NoSuchElementException;
  * each part it can be checked whether it has an associated index.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationKey.java,v 1.6 2004/11/19 19:26:48 oheger Exp $
+ * @version $Id: ConfigurationKey.java,v 1.7 2004/12/23 18:42:25 oheger Exp $
  */
 public class ConfigurationKey implements Serializable
 {
+    /** Constant for a property delimiter.*/
+    public static final char PROPERTY_DELIMITER = '.';
+
     /** Constant for an attribute start marker.*/
     private static final String ATTRIBUTE_START = "[@";
 
     /** Constant for an attribute end marker.*/
     private static final String ATTRIBUTE_END = "]";
-
-    /** Constant for a property delimiter.*/
-    private static final char PROPERTY_DELIMITER = '.';
 
     /** Constant for an index start marker.*/
     private static final char INDEX_START = '(';
@@ -122,6 +122,16 @@ public class ConfigurationKey implements Serializable
     {
         keyBuffer.append(constructAttributeKey(attr));
         return this;
+    }
+    
+    /**
+     * Checks if this key is an attribute key.
+     * 
+     * @return a flag if this key is an attribute key
+     */
+    public boolean isAttributeKey()
+    {
+        return isAttributeKey(keyBuffer.toString());
     }
 
     /**
