@@ -31,13 +31,13 @@ import org.apache.commons.collections.map.LinkedMap;
  * instead of overwriting them.
  *
  *
- * @version $Id: BaseConfiguration.java,v 1.5 2004/06/02 17:04:51 ebourg Exp $
+ * @version $Id: BaseConfiguration.java,v 1.6 2004/06/23 11:15:45 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
     /** stores the configuration key-value pairs */
     private Map store = new LinkedMap();
-    
+
     /**
      * Empty constructor.  You must add all the values to this configuration.
      */
@@ -45,7 +45,7 @@ public class BaseConfiguration extends AbstractConfiguration
     {
         super();
     }
-    
+
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -58,8 +58,8 @@ public class BaseConfiguration extends AbstractConfiguration
     {
         Object o = getPropertyDirect(key);
         Object objAdd = null;
-        
-        if(o == null)
+
+        if (o == null)
         {
             objAdd = obj;
         }
@@ -84,8 +84,8 @@ public class BaseConfiguration extends AbstractConfiguration
                 objAdd = c;
             }
         }
-        
-        if(objAdd != null)
+
+        if (objAdd != null)
         {
             store.put(key, objAdd);
         }
@@ -98,7 +98,7 @@ public class BaseConfiguration extends AbstractConfiguration
      *
      * @return object associated with the given configuration key.
      */
-    protected Object getPropertyDirect(String key) 
+    protected Object getPropertyDirect(String key)
     {
         return store.get(key);
     }
@@ -118,14 +118,14 @@ public class BaseConfiguration extends AbstractConfiguration
      * check if the configuration contains the key
      *
      * @param key the configuration key
-     * 
+     *
      * @return <code>true</code> if Configuration contain given key,
      * <code>false</code> otherwise.
      */
     public boolean containsKey(String key)
     {
         return store.containsKey(key);
-        
+
     }
 
     /**
@@ -137,7 +137,7 @@ public class BaseConfiguration extends AbstractConfiguration
     {
         if (containsKey(key))
         {
-            store.remove(key);            
+            store.remove(key);
         }
     }
 
@@ -148,7 +148,7 @@ public class BaseConfiguration extends AbstractConfiguration
      * @return An Iterator.
      */
     public Iterator getKeys()
-    {        
+    {
         return store.keySet().iterator();
     }
 }

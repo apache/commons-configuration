@@ -40,7 +40,8 @@ import org.apache.commons.logging.LogFactory;
  * UnsupportedOperationException. The clear operations are supported but the
  * underlying JNDI data source is not changed.
  *
- * @version $Id: JNDIConfiguration.java,v 1.13 2004/06/15 15:53:58 ebourg Exp $
+ * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
+ * @version $Id: JNDIConfiguration.java,v 1.14 2004/06/23 11:15:45 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -82,7 +83,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         while (enumeration.hasMoreElements())
         {
             Object o = enumeration.next();
-            
+
             NameClassPair nameClassPair = (NameClassPair) o;
             StringBuffer newKey = new StringBuffer();
             newKey.append(key);
@@ -142,7 +143,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             }
             else
             {
-                context = getStartingContextPoint(keys, getContext(),getContext().list(""));
+                context = getStartingContextPoint(keys, getContext(), getContext().list(""));
             }
 
             if (context != null)
@@ -172,7 +173,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         String keyToSearchFor = (String) keys.get(0);
         log.debug("Key to search for is " + keyToSearchFor);
         while (enumeration.hasMoreElements())
-        {            
+        {
             NameClassPair nameClassPair = (NameClassPair) enumeration.next();
             Object o = parentContext.lookup(nameClassPair.getName());
             log.debug(
@@ -189,7 +190,7 @@ public class JNDIConfiguration extends AbstractConfiguration
                 Context c = (Context) o;
                 if (!keys.isEmpty())
                 {
-                    return getStartingContextPoint(keys,c, c.list(""));
+                    return getStartingContextPoint(keys, c, c.list(""));
                 }
                 else
                 {
@@ -317,7 +318,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
     }
 
-    protected void addPropertyDirect(String key, Object obj) {
+    protected void addPropertyDirect(String key, Object obj)
+    {
         throw new UnsupportedOperationException("This operation is not supported");
     }
 

@@ -26,25 +26,25 @@ import org.apache.commons.lang.StringUtils;
 /**
  * This is the "classic" Properties loader which loads the values from
  * a single or multiple files (which can be chained with "include =".
- * All given path references are either absolute or relative to the 
+ * All given path references are either absolute or relative to the
  * file name supplied in the Constructor.
  * <p>
  * In this class, empty PropertyConfigurations can be built, properties
  * added and later saved. include statements are (obviously) not supported
  * if you don't construct a PropertyConfiguration from a file.
  * <p>
- * If you want to use the getResourceAsStream() trick to load your 
+ * If you want to use the getResourceAsStream() trick to load your
  * resources without an absolute path, please take a look at the
  * ClassPropertiesConfiguration which is intended to be used for this.
- * 
- * @version $Id: PropertiesConfiguration.java,v 1.9 2004/06/21 17:45:29 ebourg Exp $
+ *
+ * @version $Id: PropertiesConfiguration.java,v 1.10 2004/06/23 11:15:45 ebourg Exp $
  */
 public class PropertiesConfiguration extends BasePropertiesConfiguration
 {
     /** File separator. */
     protected String fileSeparator = System.getProperty("file.separator");
 
-    /** 
+    /**
      * The name of the file to be loaded.  This is used in conjuction with
      * the load method. */
     protected String fileName = null;
@@ -52,7 +52,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
     /**
      * Creates an empty PropertyConfiguration object which can be
      * used to synthesize a new Properties file by adding values and
-     * then saving(). An object constructed by this C'tor can not be 
+     * then saving(). An object constructed by this C'tor can not be
      * tickled into loading included files because it cannot supply a
      * base for relative includes.
      */
@@ -75,7 +75,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
     }
 
     /**
-     * Load the properties from the fileName set by setFileName 
+     * Load the properties from the fileName set by setFileName
      *
      * @throws ConfigurationException
      */
@@ -92,31 +92,31 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
      */
     public void load(String fileName) throws ConfigurationException
     {
-		InputStream in = null;
-    	try
+        InputStream in = null;
+        try
         {
-    	    in = getPropertyStream(fileName);
-    		load(in);
-    	}
-    	catch (IOException e)
+            in = getPropertyStream(fileName);
+            load(in);
+        }
+        catch (IOException e)
         {
-    		throw new ConfigurationException("Could not load from file " + fileName, e);
-    	}
-    	finally
+            throw new ConfigurationException("Could not load from file " + fileName, e);
+        }
+        finally
         {
-    	    // close the input stream
+            // close the input stream
             if (in != null)
             {
-    	        try
+                try
                 {
-    	            in.close();
-    	        }
-    	        catch (IOException e)
+                    in.close();
+                }
+                catch (IOException e)
                 {
-    	            e.printStackTrace();
-    	        }
-    	    }
-    	}
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     /**
@@ -139,7 +139,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
     {
         InputStream resource = null;
         URL url = null;
-        
+
         try
         {
             url = ConfigurationUtils.getURL(getBasePath(), resourceName);
@@ -149,7 +149,7 @@ public class PropertiesConfiguration extends BasePropertiesConfiguration
             throw new IOException("Cannot obtain URL for resource "
             + resourceName);
         }  /* catch */
-        
+
         resource = url.openStream();
 
         setBasePath(url.toString());

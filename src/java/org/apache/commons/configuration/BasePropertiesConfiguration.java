@@ -111,7 +111,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.12 2004/06/21 17:45:29 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.13 2004/06/23 11:15:45 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -132,8 +132,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      *
      * @throws IOException Error while loading the properties file
      */
-    protected abstract InputStream getPropertyStream(String resourceName)
-        throws IOException;
+    protected abstract InputStream getPropertyStream(String resourceName) throws IOException;
 
     /**
      * Load the properties from the given input stream.
@@ -490,9 +489,10 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * 
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      */
-    protected static String unescapeJava(String str) {
-
-        if (str == null) {
+    protected static String unescapeJava(String str)
+    {
+        if (str == null)
+        {
             return null;
         }
         int sz = str.length();
@@ -500,31 +500,40 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
         StringBuffer unicode = new StringBuffer(4);
         boolean hadSlash = false;
         boolean inUnicode = false;
-        for (int i = 0; i < sz; i++) {
+        for (int i = 0; i < sz; i++)
+        {
             char ch = str.charAt(i);
-            if (inUnicode) {
+            if (inUnicode)
+            {
                 // if in unicode, then we're reading unicode
                 // values in somehow
                 unicode.append(ch);
-                if (unicode.length() == 4) {
+                if (unicode.length() == 4)
+                {
                     // unicode now contains the four hex digits
                     // which represents our unicode character
-                    try {
+                    try
+                    {
                         int value = Integer.parseInt(unicode.toString(), 16);
                         out.append((char) value);
                         unicode.setLength(0);
                         inUnicode = false;
                         hadSlash = false;
-                    } catch (NumberFormatException nfe) {
+                    }
+                    catch (NumberFormatException nfe)
+                    {
                         throw new ConfigurationRuntimeException("Unable to parse unicode value: " + unicode, nfe);
                     }
                 }
                 continue;
             }
-            if (hadSlash) {
+
+            if (hadSlash)
+            {
                 // handle an escaped value
                 hadSlash = false;
-                switch (ch) {
+                switch (ch)
+                {
                     case '\\':
                         out.append('\\');
                         break;
@@ -564,13 +573,17 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                         break;
                 }
                 continue;
-            } else if (ch == '\\') {
+            }
+            else if (ch == '\\')
+            {
                 hadSlash = true;
                 continue;
             }
             out.append(ch);
         }
-        if (hadSlash) {
+
+        if (hadSlash)
+        {
             // then we're in the weird case of a \ at the end of the
             // string, let's output it anyway.
             out.append('\\');

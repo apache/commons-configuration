@@ -1,4 +1,3 @@
-package org.apache.commons.configuration;
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -14,6 +13,9 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +34,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+
 /**
  * Factory class to create a CompositeConfiguration from a .xml file using
  * Digester.  By default it can handle the Configurations from commons-
@@ -39,7 +42,10 @@ import org.xml.sax.SAXException;
  * digester rules to use.  It is also namespace aware, by providing a
  * digesterRuleNamespaceURI.
  *
- * @version $Id: ConfigurationFactory.java,v 1.11 2004/06/16 18:13:53 ebourg Exp $
+ * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: ConfigurationFactory.java,v 1.12 2004/06/23 11:15:45 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -60,45 +66,51 @@ public class ConfigurationFactory implements BasePathLoader
 
     /** The XML file with the details about the configuration to load */
     private String configurationFileName;
-    /** The URL to the XML file with the details about the configuration to
-     * load.
-     */
+
+    /** The URL to the XML file with the details about the configuration to load. */
     private URL configurationURL;
+
     /**
      * The implicit base path for included files. This path is determined by
      * the configuration to load and used unless no other base path was
      * explicitely specified.
      */
     private String implicitBasePath;
+
     /** The basePath to prefix file paths for file based property files. */
     private String basePath;
+
     /** static logger */
     private static Log log = LogFactory.getLog(ConfigurationFactory.class);
+
     /** URL for xml digester rules file */
     private URL digesterRules;
+
     /** The digester namespace to parse */
     private String digesterRuleNamespaceURI;
+
     /**
-     * C'tor
+     * Constructor
      */
     public ConfigurationFactory()
     {
         setBasePath(DEF_BASE_PATH);
     }
     /**
-     * C'tor with ConfigurationFile Name passed
+     * Constructor with ConfigurationFile Name passed
      *
      * @param configurationFileName The path to the configuration file
      */
     public ConfigurationFactory(String configurationFileName)
-    {        
+    {
         this.configurationFileName = configurationFileName;
     }
+
     /**
-     * Return the configuration provided by this factory. It
-     * loads the configuration file which is a XML description of
-     * the actual configurations to load. It can contain various
-     * different types of configuration, currently Properties, XML and JNDI.
+     * Return the configuration provided by this factory. It loads the
+     * configuration file which is a XML description of the actual
+     * configurations to load. It can contain various different types of
+     * configuration, currently Properties, XML and JNDI.
      *
      * @return A Configuration object
      * @throws ConfigurationException A generic exception that we had trouble during the
@@ -110,18 +122,19 @@ public class ConfigurationFactory implements BasePathLoader
         InputStream input = null;
         ConfigurationBuilder builder = new ConfigurationBuilder();
         URL url = getConfigurationURL();
-        try {
-        if(url == null)
+        try
         {
-            url = ConfigurationUtils.getURL(implicitBasePath,
-            getConfigurationFileName());
-        }  /* if */
-        input = url.openStream();
+            if (url == null)
+            {
+                url = ConfigurationUtils.getURL(implicitBasePath,
+                getConfigurationFileName());
+            }
+            input = url.openStream();
         }
         catch (Exception e)
         {
-        	log.error("Exception caught opening stream to URL", e);
-        	throw new ConfigurationException("Exception caught opening stream to URL",e);
+            log.error("Exception caught opening stream to URL", e);
+            throw new ConfigurationException("Exception caught opening stream to URL", e);
         }
 
         if (getDigesterRules() == null)
@@ -148,15 +161,16 @@ public class ConfigurationFactory implements BasePathLoader
         catch (SAXException saxe)
         {
             log.error("SAX Exception caught", saxe);
-            throw new ConfigurationException("SAX Exception caught",saxe);
+            throw new ConfigurationException("SAX Exception caught", saxe);
         }
         catch (IOException ioe)
         {
-        	log.error("IO Exception caught", ioe);
-        	throw new ConfigurationException("IO Exception caught",ioe);
+            log.error("IO Exception caught", ioe);
+            throw new ConfigurationException("IO Exception caught", ioe);
         }
         return builder.getConfiguration();
     }
+
     /**
      * Returns the configurationFile.
      *
@@ -166,8 +180,10 @@ public class ConfigurationFactory implements BasePathLoader
     {
         return configurationFileName;
     }
+
     /**
      * Sets the configurationFile.
+     *
      * @param configurationFileName  The name of the configurationFile to use.
      */
     public void setConfigurationFileName(String configurationFileName)
@@ -179,6 +195,7 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * Returns the URL of the configuration file to be loaded.
+     *
      * @return the URL of the configuration to load
      */
     public URL getConfigurationURL()
@@ -189,6 +206,7 @@ public class ConfigurationFactory implements BasePathLoader
     /**
      * Sets the URL of the configuration to load. This configuration can be
      * either specified by a file name or by a URL.
+     *
      * @param url the URL of the configuration to load
      */
     public void setConfigurationURL(URL url)
@@ -200,28 +218,32 @@ public class ConfigurationFactory implements BasePathLoader
         // compatibility: Per default the base path is set to the current
         // directory. For loading from a URL this makes no sense. So
         // unless no specific base path was set we clear it.
-        if(DEF_BASE_PATH.equals(getBasePath()))
+        if (DEF_BASE_PATH.equals(getBasePath()))
         {
             setBasePath(null);
-        }  /* if */
+        }
     }
 
     /**
      * Returns the digesterRules.
+     *
      * @return URL
      */
     public URL getDigesterRules()
     {
         return digesterRules;
     }
+
     /**
      * Sets the digesterRules.
+     *
      * @param digesterRules The digesterRules to set
      */
     public void setDigesterRules(URL digesterRules)
     {
         this.digesterRules = digesterRules;
     }
+
     /**
      * Initializes the parsing rules for the default digester
      *
@@ -242,13 +264,13 @@ public class ConfigurationFactory implements BasePathLoader
     /**
      * Sets up digester rules for a specified section of the configuration
      * info file.
+     *
      * @param digester the current digester instance
      * @param matchString specifies the section
      * @param additional a flag if rules for the additional section are to be
      * added
      */
-    protected void initDigesterSectionRules(Digester digester,
-    String matchString, boolean additional)
+    protected void initDigesterSectionRules(Digester digester, String matchString, boolean additional)
     {
         setupDigesterInstance(
             digester,
@@ -263,11 +285,11 @@ public class ConfigurationFactory implements BasePathLoader
             METH_LOAD,
             additional);
         setupDigesterInstance(
-        	digester,
-			matchString + "hierarchicalDom4j",
-			new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
-			METH_LOAD,
-			additional);
+            digester,
+            matchString + "hierarchicalDom4j",
+            new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
+            METH_LOAD,
+            additional);
         setupDigesterInstance(
             digester,
             matchString + "jndi",
@@ -278,6 +300,7 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * Sets up digester rules for a configuration to be loaded.
+     *
      * @param digester the current digester
      * @param matchString the pattern to match with this rule
      * @param factory an ObjectCreationFactory instance to use for creating new
@@ -293,16 +316,16 @@ public class ConfigurationFactory implements BasePathLoader
         String method,
         boolean additional)
     {
-        if(additional)
+        if (additional)
         {
             setupUnionRules(digester, matchString);
-        }  /* if */
+        }
         digester.addFactoryCreate(matchString, factory);
         digester.addSetProperties(matchString);
-        if(method != null)
+        if (method != null)
         {
             digester.addCallMethod(matchString, method);
-        }  /* if */
+        }
         digester.addSetNext(
             matchString,
             "addConfiguration",
@@ -311,6 +334,7 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * Sets up rules for configurations in the additional section.
+     *
      * @param digester the current digester
      * @param matchString the pattern to match with this rule
      */
@@ -322,6 +346,7 @@ public class ConfigurationFactory implements BasePathLoader
         digester.addSetNext(matchString, "addAdditionalConfig",
         AdditionalConfigurationData.class.getName());
     }
+
     /**
      * Returns the digesterRuleNamespaceURI.
      *
@@ -331,6 +356,7 @@ public class ConfigurationFactory implements BasePathLoader
     {
         return digesterRuleNamespaceURI;
     }
+
     /**
      * Sets the digesterRuleNamespaceURI.
      *
@@ -340,6 +366,7 @@ public class ConfigurationFactory implements BasePathLoader
     {
         this.digesterRuleNamespaceURI = digesterRuleNamespaceURI;
     }
+
     /**
      * Configure the current digester to be namespace aware and to have
      * a Configuration object to which all of the other configurations
@@ -369,10 +396,11 @@ public class ConfigurationFactory implements BasePathLoader
      */
     public String getBasePath()
     {
-        String path = StringUtils.isEmpty(basePath) ? 
+        String path = StringUtils.isEmpty(basePath) ?
         implicitBasePath : basePath;
         return StringUtils.isEmpty(path) ? "." : path;
     }
+
     /**
      * Sets the basePath for all file references from this Configuration Factory.
      * Normally a base path need not to be set because it is determined by
@@ -394,15 +422,14 @@ public class ConfigurationFactory implements BasePathLoader
      * a default class for the objects to be created.
      * There will be sub classes for specific configuration implementations.
      */
-    public class DigesterConfigurationFactory
-        extends AbstractObjectCreationFactory
-        implements ObjectCreationFactory
+    public class DigesterConfigurationFactory extends AbstractObjectCreationFactory
     {
         /** Actual class to use. */
         private Class clazz;
 
         /**
          * Creates a new instance of <code>DigesterConfigurationFactory</code>.
+         *
          * @param clazz the class which we should instantiate
          */
         public DigesterConfigurationFactory(Class clazz)
@@ -412,6 +439,7 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Creates an instance of the specified class.
+         *
          * @param attribs the attributes (ignored)
          * @return the new object
          * @throws Exception if object creation fails
@@ -428,8 +456,7 @@ public class ConfigurationFactory implements BasePathLoader
      * that already have the correct base Path set.
      *
      */
-    public class BasePathConfigurationFactory
-        extends DigesterConfigurationFactory
+    public class BasePathConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
          * C'tor
@@ -450,8 +477,7 @@ public class ConfigurationFactory implements BasePathLoader
          */
         public Object createObject(Attributes attributes) throws Exception
         {
-            BasePathLoader bpl =
-                (BasePathLoader) super.createObject(attributes);
+            BasePathLoader bpl = (BasePathLoader) super.createObject(attributes);
             bpl.setBasePath(getBasePath());
             return bpl;
         }
@@ -462,8 +488,7 @@ public class ConfigurationFactory implements BasePathLoader
      * let the digester construct JNDIPathConfiguration objects.
      *
      */
-    public class JNDIConfigurationFactory
-        extends DigesterConfigurationFactory
+    public class JNDIConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
          * C'tor
@@ -550,6 +575,7 @@ public class ConfigurationFactory implements BasePathLoader
         /**
          * Adds a new configuration to this object. This method is called by
          * Digester.
+         *
          * @param conf the configuration to be added
          */
         public void addConfiguration(Configuration conf)
@@ -560,6 +586,7 @@ public class ConfigurationFactory implements BasePathLoader
         /**
          * Adds information about an additional configuration. This method is
          * called by Digester.
+         *
          * @param data the data about the additional configuration
          */
         public void addAdditionalConfig(AdditionalConfigurationData data)
@@ -569,20 +596,20 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Returns the final composite configuration.
+         *
          * @return the final configuration object
          */
         public CompositeConfiguration getConfiguration()
         {
-            if(!additionalConfigs.isEmpty())
+            if (!additionalConfigs.isEmpty())
             {
-                Configuration unionConfig =
-                createAdditionalConfiguration(additionalConfigs);
-                if(unionConfig != null)
+                Configuration unionConfig = createAdditionalConfiguration(additionalConfigs);
+                if (unionConfig != null)
                 {
                     addConfiguration(unionConfig);
-                }  /* if */
+                }
                 additionalConfigs.clear();
-            }  /* if */
+            }
 
             return config;
         }
@@ -592,41 +619,40 @@ public class ConfigurationFactory implements BasePathLoader
          * defined in the <code>&lt;additional&gt;</code> section. This
          * implementation returns a <code>HierarchicalConfiguration</code>
          * object.
+         *
          * @param configs a collection with
          * <code>AdditionalConfigurationData</code> objects
          * @return the union configuration (can be <b>null</b>)
          */
-        protected Configuration createAdditionalConfiguration(
-        Collection configs)
+        protected Configuration createAdditionalConfiguration(Collection configs)
         {
             HierarchicalConfiguration result = new HierarchicalConfiguration();
 
-            for(Iterator it = configs.iterator(); it.hasNext();)
+            for (Iterator it = configs.iterator(); it.hasNext();)
             {
                 AdditionalConfigurationData cdata =
                 (AdditionalConfigurationData) it.next();
                 result.addNodes(cdata.getAt(),
                 createRootNode(cdata).getChildren().asList());
-            }  /* for */
+            }
 
-            return (result.isEmpty()) ? null : result;
+            return result.isEmpty() ? null : result;
         }
 
         /**
          * Creates a configuration root node for the specified configuration.
+         *
          * @param cdata the configuration data object
          * @return a root node for this configuration
          */
         private HierarchicalConfiguration.Node createRootNode(
         AdditionalConfigurationData cdata)
         {
-            if(cdata.getConfiguration() instanceof HierarchicalConfiguration)
+            if (cdata.getConfiguration() instanceof HierarchicalConfiguration)
             {
                 // we can directly use this configuration's root node
-                return ((HierarchicalConfiguration) cdata.getConfiguration())
-                .getRoot();
-            }  /* if */
-
+                return ((HierarchicalConfiguration) cdata.getConfiguration()).getRoot();
+            }
             else
             {
                 // transform configuration to a hierarchical root node
@@ -634,7 +660,7 @@ public class ConfigurationFactory implements BasePathLoader
                 new HierarchicalConfigurationNodeConverter();
                 conv.process(cdata.getConfiguration());
                 return conv.getRootNode();
-            }  /* else */
+            }
         }
     }
 
@@ -645,8 +671,7 @@ public class ConfigurationFactory implements BasePathLoader
      * add additional configuration objects to the hierarchical configuration
      * managed by the <code>ConfigurationBuilder</code>.
      */
-    static class HierarchicalConfigurationNodeConverter
-    extends HierarchicalConfigurationConverter
+    static class HierarchicalConfigurationNodeConverter extends HierarchicalConfigurationConverter
     {
         /** A stack for constructing the hierarchy.*/
         private Stack nodes;
@@ -667,25 +692,25 @@ public class ConfigurationFactory implements BasePathLoader
         /**
          * Callback for an element start event. Creates a new node and adds
          * it to the actual parent.
+         *
          * @param name the name of the new node
          * @param value the node's value
          */
         protected void elementStart(String name, Object value)
         {
-            HierarchicalConfiguration.Node parent =
-            (HierarchicalConfiguration.Node) nodes.peek();
-            HierarchicalConfiguration.Node child =
-            new HierarchicalConfiguration.Node(name);
-            if(value != null)
+            HierarchicalConfiguration.Node parent = (HierarchicalConfiguration.Node) nodes.peek();
+            HierarchicalConfiguration.Node child = new HierarchicalConfiguration.Node(name);
+            if (value != null)
             {
                 child.setValue(value);
-            }  /* if */
+            }
             parent.addChild(child);
             nodes.push(child);
         }
 
         /**
          * Callback for an element end event. Clears the stack.
+         *
          * @param name the name of the element
          */
         protected void elementEnd(String name)
@@ -695,6 +720,7 @@ public class ConfigurationFactory implements BasePathLoader
 
         /**
          * Returns the constructed root node.
+         *
          * @return the root node
          */
         public HierarchicalConfiguration.Node getRootNode()

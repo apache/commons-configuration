@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,19 +14,19 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 /**
- * This is exactly the same as the BaseConfiguration but the backing 
+ * This is exactly the same as the BaseConfiguration but the backing
  * store is based on a path (e.g. a file path) from which it is loaded.
  *
- * @version $Id: BasePathConfiguration.java,v 1.2 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: BasePathConfiguration.java,v 1.3 2004/06/23 11:15:45 ebourg Exp $
  */
-public abstract class BasePathConfiguration
-        extends BaseConfiguration
-        implements BasePathLoader
+public abstract class BasePathConfiguration extends BaseConfiguration implements BasePathLoader
 {
-    /** 
-     * Base path of the configuration file used to 
-     * create this Configuration object. Might be null, then a 
+    /**
+     * Base path of the configuration file used to
+     * create this Configuration object. Might be null, then a
      * "synthetic" PropertyConfiguration has been created which
      * is not loaded from a file
      */
@@ -36,7 +34,7 @@ public abstract class BasePathConfiguration
 
     /**
      * Returns the Base path from which this Configuration Factory operates.
-     * This is never null. If you set the BasePath to null, then "." 
+     * This is never null. If you set the BasePath to null, then "."
      * is returned.
      *
      * @return The base Path of this configuration factory.
@@ -48,7 +46,7 @@ public abstract class BasePathConfiguration
 
     /**
      * Sets the basePath for all file references from this Configuration
-     * Factory. If you pass null in, this is interpreted as "current 
+     * Factory. If you pass null in, this is interpreted as "current
      * directory".
      *
      * @param basePath The new basePath to set.
@@ -59,6 +57,3 @@ public abstract class BasePathConfiguration
     }
 
 }
-
-
-    

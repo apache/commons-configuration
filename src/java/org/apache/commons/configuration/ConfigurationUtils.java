@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -29,8 +29,11 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Miscellaneous utility methods for configurations.
  *
+ * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Revision: 1.4 $, $Date: 2004/06/23 11:15:45 $
  */
-public class ConfigurationUtils
+public final class ConfigurationUtils
 {
     /** File separator. */
     protected static final String fileSeparator = System.getProperty("file.separator");
@@ -48,20 +51,21 @@ public class ConfigurationUtils
      */
     public static void dump(Configuration configuration, PrintStream out)
     {
-        for (Iterator i = configuration.getKeys(); i.hasNext(); )
+        Iterator keys = configuration.getKeys();
+        while (keys.hasNext())
         {
-            String key = (String) i.next();
+            String key = (String) keys.next();
             Object value = configuration.getProperty(key);
             out.print(key);
             out.print("=");
             out.print(value);
-            if (i.hasNext())
+            if (keys.hasNext())
             {
                 out.println();
             }
         }
     }
-    
+
     /**
      * Dump the configuration key/value mappings to some writer.
      *
@@ -70,15 +74,16 @@ public class ConfigurationUtils
      */
     public static void dump(Configuration configuration, PrintWriter out)
     {
-        for (Iterator i = configuration.getKeys(); i.hasNext();)
+        Iterator keys = configuration.getKeys();
+        while (keys.hasNext())
         {
-            String key = (String) i.next();
+            String key = (String) keys.next();
             Object value = configuration.getProperty(key);
             out.print(key);
             out.print("=");
             out.print(value);
 
-            if (i.hasNext())
+            if (keys.hasNext())
             {
                 out.println();
             }
@@ -103,42 +108,43 @@ public class ConfigurationUtils
      * Constructs a URL from a base path and a file name. The file name can
      * be absolute, relative or a full URL. If necessary the base path URL is
      * applied.
+     *
      * @param basePath the base path URL (can be <b>null</b>)
      * @param file the file name
      * @return the resulting URL
      * @throws MalformedURLException if URLs are invalid
      */
-    public static URL getURL(String basePath, String file)
-    throws MalformedURLException
+    public static URL getURL(String basePath, String file) throws MalformedURLException
     {
         File f = new File(file);
-        if(f.isAbsolute())                          // already absolute?
+        if (f.isAbsolute())     // already absolute?
         {
             return f.toURL();
-        }  /* if */
+        }
 
         try
         {
-            if(basePath == null)
+            if (basePath == null)
             {
                 return new URL(file);
-            }  /* if */
+            }
             else
             {
                 URL base = new URL(basePath);
                 return new URL(base, file);
-            }  /* else */
-        }  /* try */
-        catch(MalformedURLException uex)
+            }
+        }
+        catch (MalformedURLException uex)
         {
             return constructFile(basePath, file).toURL();
-        }  /* catch */
+        }
     }
 
     /**
      * Helper method for constructing a file object from a base path and a
      * file name. This method is called if the base path passed to
      * <code>getURL()</code> does not seem to be a valid URL.
+     *
      * @param basePath the base path
      * @param fileName the file name
      * @return the resulting file

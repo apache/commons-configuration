@@ -41,7 +41,7 @@ import org.w3c.dom.NodeList;
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible
- * @version $Revision: 1.2 $, $Date: 2004/06/21 18:44:30 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/23 11:15:45 $
  */
 public class HierarchicalDOMConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
@@ -55,7 +55,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
     /**
      * Constructs a HierarchicalDOMConfiguration.
      */
-    public HierarchicalDOMConfiguration() 
+    public HierarchicalDOMConfiguration()
     {
         super();
     }
@@ -64,7 +64,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
      * Returns the name of the file to be parsed by this object.
      * @return the file to be parsed
      */
-    public String getFileName() 
+    public String getFileName()
     {
         return file;
     }
@@ -111,7 +111,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
         catch (MalformedURLException mue)
         {
             throw new ConfigurationException(
-                    "Could not load from " + getBasePath() + 
+                    "Could not load from " + getBasePath() +
                     ", " + getFileName());
         }
     }
@@ -167,7 +167,7 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
                 constructHierarchy(childNode, child);
                 node.addChild(childNode);
                 processAttributes(childNode, child);
-            } 
+            }
             else if (w3cNode instanceof CharacterData)
             {
                 CharacterData data = (CharacterData) w3cNode;
@@ -191,10 +191,10 @@ public class HierarchicalDOMConfiguration extends HierarchicalConfiguration impl
     private void processAttributes(Node node, Element element)
     {
         NamedNodeMap attributes = element.getAttributes();
-        for (int i = 0; i < attributes.getLength(); ++i) 
+        for (int i = 0; i < attributes.getLength(); ++i)
         {
             org.w3c.dom.Node w3cNode = attributes.item(i);
-            if (w3cNode instanceof Attr) 
+            if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
                 Node child =

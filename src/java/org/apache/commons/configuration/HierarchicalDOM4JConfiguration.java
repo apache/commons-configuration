@@ -32,8 +32,9 @@ import org.dom4j.io.SAXReader;
  * <p>The parsed document will be stored keeping its structure. The
  * contained properties can be accessed using all methods supported by
  * the base class <code>HierarchicalProperties</code>.
- * 
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.6 2004/06/21 18:42:39 ebourg Exp $
+ *
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.7 2004/06/23 11:15:45 ebourg Exp $
  */
 public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
@@ -73,7 +74,7 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
 
     /**
      * Returns the base path.
-     * 
+     *
      * @return the base path
      */
     public String getBasePath()
@@ -100,14 +101,14 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
      */
     public void load() throws ConfigurationException
     {
-    	try
+        try
         {
-    		load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
-    	}
-    	catch (MalformedURLException e)
+            load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
+        }
+        catch (MalformedURLException e)
         {
-    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), e);
-    	}
+            throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), e);
+        }
     }
 
     /**
@@ -118,14 +119,14 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
      */
     public void load(URL url) throws ConfigurationException
     {
-    	try
+        try
         {
-    		initProperties(new SAXReader().read(url));
-    	}
-    	catch (DocumentException e)
+            initProperties(new SAXReader().read(url));
+        }
+        catch (DocumentException e)
         {
-    		throw new ConfigurationException("Could not load from " + url, e);
-    	}
+            throw new ConfigurationException("Could not load from " + url, e);
+        }
     }
 
     /**

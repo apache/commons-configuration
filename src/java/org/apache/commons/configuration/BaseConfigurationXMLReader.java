@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,15 +14,18 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
 
 /**
  * <p>A specialized SAX2 XML parser that processes configuration objects.</p>
+ *
  * <p>This class mimics to be a SAX compliant XML parser. It is able to iterate
  * over the keys in a configuration object and to generate corresponding SAX
  * events. By registering a <code>ContentHandler</code> at an instance
  * it is possible to perform XML processing on a configuration object.</p>
  *
- * @version $Id: BaseConfigurationXMLReader.java,v 1.3 2004/02/27 17:41:35 epugh Exp $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @version $Id: BaseConfigurationXMLReader.java,v 1.4 2004/06/23 11:15:45 ebourg Exp $
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 {
@@ -42,6 +43,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
     /**
      * Creates a new instance of <code>BaseConfigurationXMLReader</code> and
      * sets the configuration object to be parsed.
+     *
      * @param conf the configuration to be parsed
      */
     public BaseConfigurationXMLReader(Configuration conf)
@@ -52,6 +54,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 
     /**
      * Returns the actual configuration to be processed.
+     *
      * @return the actual configuration
      */
     public Configuration getConfiguration()
@@ -61,6 +64,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 
     /**
      * Sets the configuration to be processed.
+     *
      * @param conf the configuration
      */
     public void setConfiguration(Configuration conf)
@@ -70,6 +74,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 
     /**
      * Returns the configuration to be processed.
+     *
      * @return the actual configuration
      */
     public Configuration getParsedConfiguration()
@@ -99,20 +104,22 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
     {
         /**
          * Callback for the start of an element.
+         *
          * @param name the element name
          * @param value the element value
          */
         protected void elementStart(String name, Object value)
         {
             fireElementStart(name, null);
-            if(value != null)
+            if (value != null)
             {
                 fireCharacters(value.toString());
-            }  /* if */
+            }
         }
 
         /**
          * Callback for the end of an element.
+         *
          * @param name the element name
          */
         protected void elementEnd(String name)

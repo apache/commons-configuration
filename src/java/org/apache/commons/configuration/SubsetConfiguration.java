@@ -29,10 +29,10 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * @see Configuration#subset(String)
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/06/16 18:13:53 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/23 11:15:45 $
  */
-public class SubsetConfiguration extends AbstractConfiguration {
-
+public class SubsetConfiguration extends AbstractConfiguration
+{
     protected Configuration parent;
     protected String prefix;
     protected String delimiter;
@@ -43,7 +43,8 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * @param parent The parent configuration
      * @param prefix The prefix used to select the properties.
      */
-    public SubsetConfiguration(Configuration parent, String prefix) {
+    public SubsetConfiguration(Configuration parent, String prefix)
+    {
         this.parent = parent;
         this.prefix = prefix;
     }
@@ -55,7 +56,8 @@ public class SubsetConfiguration extends AbstractConfiguration {
      * @param prefix    The prefix used to select the properties.
      * @param delimiter The prefix delimiter
      */
-    public SubsetConfiguration(Configuration parent, String prefix, String delimiter) {
+    public SubsetConfiguration(Configuration parent, String prefix, String delimiter)
+    {
         this.parent = parent;
         this.prefix = prefix;
         this.delimiter = delimiter;
@@ -67,10 +69,14 @@ public class SubsetConfiguration extends AbstractConfiguration {
      *
      * @param key The key in the subset.
      */
-    protected String getParentKey(String key) {
-        if ("".equals(key) || key == null) {
+    protected String getParentKey(String key)
+    {
+        if ("".equals(key) || key == null)
+        {
             return prefix;
-        } else {
+        }
+        else
+        {
             return delimiter == null ? prefix + key : prefix + delimiter + key;
         }
     }
@@ -81,14 +87,21 @@ public class SubsetConfiguration extends AbstractConfiguration {
      *
      * @param key The key in the parent configuration.
      */
-    protected String getChildKey(String key) {
-        if (!key.startsWith(prefix)) {
+    protected String getChildKey(String key)
+    {
+        if (!key.startsWith(prefix))
+        {
             throw new IllegalArgumentException("The parent key '" + key + "' is not in the subset.");
-        } else {
+        }
+        else
+        {
             String modifiedKey = null;
-            if (key.length() == prefix.length()) {
+            if (key.length() == prefix.length())
+            {
                 modifiedKey = "";
-            } else {
+            }
+            else
+            {
                 int i = prefix.length() + (delimiter != null ? delimiter.length() : 0);
                 modifiedKey = key.substring(i);
             }
@@ -100,63 +113,79 @@ public class SubsetConfiguration extends AbstractConfiguration {
     /**
      * Return the parent configuation for this subset.
      */
-    public Configuration getParent() {
+    public Configuration getParent()
+    {
         return parent;
     }
 
     /**
      * Return the prefix used to select the properties in the parent configuration.
      */
-    public String getPrefix() {
+    public String getPrefix()
+    {
         return prefix;
     }
 
     /**
      * Set the prefix used to select the properties in the parent configuration.
      */
-    public void setPrefix(String prefix) {
+    public void setPrefix(String prefix)
+    {
         this.prefix = prefix;
     }
 
-    public Configuration subset(String prefix) {
+    public Configuration subset(String prefix)
+    {
         return parent.subset(getParentKey(prefix));
     }
 
-    public boolean isEmpty() {
+    public boolean isEmpty()
+    {
         return !getKeys().hasNext();
     }
 
-    public boolean containsKey(String key) {
+    public boolean containsKey(String key)
+    {
         return parent.containsKey(getParentKey(key));
     }
 
-    public void addPropertyDirect(String key, Object value) {
+    public void addPropertyDirect(String key, Object value)
+    {
         parent.addProperty(getParentKey(key), value);
     }
 
-    public void setProperty(String key, Object value) {
+    public void setProperty(String key, Object value)
+    {
         parent.setProperty(getParentKey(key), value);
     }
 
-    public void clearProperty(String key) {
+    public void clearProperty(String key)
+    {
         parent.clearProperty(getParentKey(key));
     }
 
-    public Object getPropertyDirect(String key) {
+    public Object getPropertyDirect(String key)
+    {
         return parent.getProperty(getParentKey(key));
     }
 
-    public Iterator getKeys(String prefix) {
-        return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer() {
-            public Object transform(Object obj) {
+    public Iterator getKeys(String prefix)
+    {
+        return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer()
+        {
+            public Object transform(Object obj)
+            {
                 return getChildKey((String) obj);
             }
         });
     }
 
-    public Iterator getKeys() {
-        return new TransformIterator(parent.getKeys(prefix), new Transformer() {
-            public Object transform(Object obj) {
+    public Iterator getKeys()
+    {
+        return new TransformIterator(parent.getKeys(prefix), new Transformer()
+        {
+            public Object transform(Object obj)
+            {
                 return getChildKey((String) obj);
             }
         });
@@ -164,9 +193,12 @@ public class SubsetConfiguration extends AbstractConfiguration {
 
     protected String interpolate(String base)
     {
-        if (delimiter == null && "".equals(prefix)) {
+        if (delimiter == null && "".equals(prefix))
+        {
             return super.interpolate(base);
-        } else {
+        }
+        else
+        {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
             return config.interpolate(base);
         }

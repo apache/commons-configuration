@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,14 +14,16 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Loads the configuration from the classpath utilizing a specified class to get
- * the classloader from. The properties file will be attempted to be loaded 
- * first from the classes package directory and then from the class path in 
+ * the classloader from. The properties file will be attempted to be loaded
+ * first from the classes package directory and then from the class path in
  * general.
  * <p>
  * This class does not support an empty constructor and saving of a
@@ -31,11 +31,9 @@ import java.io.InputStream;
  *
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
- * @version $Id: ClassPropertiesConfiguration.java,v 1.6 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.7 2004/06/23 11:15:45 ebourg Exp $
  */
-public class ClassPropertiesConfiguration
-    extends BasePropertiesConfiguration
-    implements Configuration
+public class ClassPropertiesConfiguration extends BasePropertiesConfiguration implements Configuration
 {
     /** Base class, which is used to load all relative class references */
     private Class baseClass = null;
@@ -51,26 +49,26 @@ public class ClassPropertiesConfiguration
      * @param resource The name of the Resource.
      * @throws ConfigurationException Error while loading the properties file
      */
-    public ClassPropertiesConfiguration(Class baseClass, String resource)
-        throws ConfigurationException
+    public ClassPropertiesConfiguration(Class baseClass, String resource) throws ConfigurationException
     {
         this.baseClass = baseClass;
         // According to javadocs, getClassLoader() might return null
         // if it represents the "bootstrap class loader"
         // Use the System class loader in this case.
-        classLoader = (baseClass.getClassLoader() == null) 
+        classLoader = (baseClass.getClassLoader() == null)
             ? ClassLoader.getSystemClassLoader()
             : baseClass.getClassLoader();
-        
+
         setIncludesAllowed(true);
-        try {
-        	load(getPropertyStream(resource));
+        try
+        {
+            load(getPropertyStream(resource));
         }
-        catch (IOException ioe){
-        	throw new ConfigurationException("Could not load input stream from resource " + resource,ioe);
+        catch (IOException ioe)
+        {
+            throw new ConfigurationException("Could not load input stream from resource " + resource, ioe);
         }
     }
-
 
     /**
      * Gets a resource relative to the supplied base class or
@@ -80,14 +78,13 @@ public class ClassPropertiesConfiguration
      * @return An Input Stream
      * @throws IOException Error while loading the properties file
      */
-    protected InputStream getPropertyStream(String resourceName)
-        throws IOException
+    protected InputStream getPropertyStream(String resourceName) throws IOException
     {
         InputStream resource = null;
-        
+
         //First try to load from within the package of the provided class
         resource = baseClass.getResourceAsStream(resourceName);
-        
+
         if (resource == null)
         {
           resource = classLoader.getResourceAsStream(resourceName);
@@ -102,7 +99,3 @@ public class ClassPropertiesConfiguration
         return resource;
     }
 }
-
-     
-
-    

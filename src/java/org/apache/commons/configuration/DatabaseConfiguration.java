@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2004/06/22 12:56:54 $
+ * @version $Revision: 1.5 $, $Date: 2004/06/23 11:15:45 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -79,7 +79,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Build a configuration from a table.
+     * Build a configuration from a table.-
      *
      * @param datasource    the datasource to connect to the database
      * @param table         the name of the table containing the configurations
