@@ -63,7 +63,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * 
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
- * @version $Revision: 1.20 $, $Date: 2004/12/23 18:40:21 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/31 16:00:00 $
  */
 public class XMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
@@ -206,6 +206,15 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         delegate.possiblySave();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public void clearTree(String key)
+    {
+        super.clearTree(key);
+        delegate.possiblySave();
+    }
+    
     /**
      * @inheritDoc
      */

@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.16 2004/12/23 18:42:25 oheger Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.17 2004/12/31 16:00:00 oheger Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -382,5 +382,10 @@ public class TestXMLConfiguration extends TestCase
         // reload the configuration
         XMLConfiguration conf2 = new XMLConfiguration(conf.getFile());
         assertEquals("'autosave' property", "ok", conf2.getString("autosave"));
+        
+        conf.clearTree("clear");
+        conf2 = new XMLConfiguration(conf.getFile());
+        Configuration sub = conf2.subset("clear");
+        assertTrue(sub.isEmpty());
     }
 }
