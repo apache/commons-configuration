@@ -53,6 +53,8 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -70,7 +72,7 @@ import java.util.Properties;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.4 2004/02/07 13:43:15 dirkv Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.5 2004/02/12 12:59:19 epugh Exp $
  */
 public class CompositeConfiguration implements Configuration
 {
@@ -654,6 +656,39 @@ public class CompositeConfiguration implements Configuration
             return defaultValue;
         }
     }
+
+    public BigDecimal getBigDecimal(String key) throws NoSuchElementException {
+        return getFirstMatchingConfig(key).getBigDecimal(key);
+    }
+
+    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
+    {
+        try
+        {
+            return getFirstMatchingConfig(key).getBigDecimal(key, defaultValue);
+        }
+        catch (NoSuchElementException nsee)
+        {
+            return defaultValue;
+        }
+    }
+
+    public BigInteger getBigInteger(String key) throws NoSuchElementException {
+        return getFirstMatchingConfig(key).getBigInteger(key);
+    }
+
+    public BigInteger getBigInteger(String key, BigInteger defaultValue)
+    {
+        try
+        {
+            return getFirstMatchingConfig(key).getBigInteger(key, defaultValue);
+        }
+        catch (NoSuchElementException nsee)
+        {
+            return defaultValue;
+        }
+    }
+
     /**
      * Get a string associated with the given configuration key.
      *

@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+      <action dev="ebourg" type="add">
+        The Configuration interface now supports BigDecimal and BigInteger numbers.
+      </action>
 	 <action dev="epugh" type="add">
       	ConfigurationException is now thrown by public methods instead of Exception or
       	IOException or whatnot.

@@ -61,6 +61,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.apache.commons.lang.BooleanUtils;
 
@@ -71,7 +73,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.3 2004/01/16 14:27:57 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.4 2004/02/12 12:59:19 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -1200,6 +1202,92 @@ public abstract class AbstractConfiguration implements Configuration
         {
             throw new ClassCastException(
                 '\'' + key + "' doesn't map to a Short object");
+        }
+    }
+
+    public BigDecimal getBigDecimal(String key) throws NoSuchElementException {
+        BigDecimal number = getBigDecimal(key, null);
+        if (number != null)
+        {
+            return number;
+        }
+        else
+        {
+            throw new NoSuchElementException(
+                '\'' + key + "' doesn't map to an existing object");
+        }
+    }
+
+    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+        Object value = resolveContainerStore(key);
+
+        if (value instanceof BigDecimal)
+        {
+            return (BigDecimal) value;
+        }
+        else if (value instanceof String)
+        {
+            BigDecimal number = new BigDecimal((String) value);
+            return number;
+        }
+        else if (value == null)
+        {
+            if (defaults != null)
+            {
+                return defaults.getBigDecimal(key, defaultValue);
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+        else
+        {
+            throw new ClassCastException(
+                '\'' + key + "' doesn't map to a BigDecimal object");
+        }
+    }
+
+    public BigInteger getBigInteger(String key) throws NoSuchElementException {
+        BigInteger number = getBigInteger(key, null);
+        if (number != null)
+        {
+            return number;
+        }
+        else
+        {
+            throw new NoSuchElementException(
+                '\'' + key + "' doesn't map to an existing object");
+        }
+    }
+
+    public BigInteger getBigInteger(String key, BigInteger defaultValue) {
+        Object value = resolveContainerStore(key);
+
+        if (value instanceof BigDecimal)
+        {
+            return (BigInteger) value;
+        }
+        else if (value instanceof String)
+        {
+            BigInteger number = new BigInteger((String) value);
+            return number;
+        }
+        else if (value == null)
+        {
+            if (defaults != null)
+            {
+                return defaults.getBigInteger(key, defaultValue);
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+        else
+        {
+            throw new ClassCastException(
+                '\'' + key + "' doesn't map to a BigDecimal object");
         }
     }
 

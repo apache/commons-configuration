@@ -57,6 +57,9 @@ package org.apache.commons.configuration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.NoSuchElementException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Configuration interface.
@@ -66,7 +69,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Id: Configuration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
+ * @version $Id: Configuration.java,v 1.3 2004/02/12 12:59:19 epugh Exp $
  */
 public interface Configuration
 {
@@ -454,6 +457,52 @@ public interface Configuration
      * map to an existing object.
      */
     Short getShort(String key, Short defaultValue);
+
+    /**
+     * Get a BigDecimal associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     *
+     * @return The associated BigDecimal if key is found and has valid format
+     *
+     * @exception NoSuchElementException is thrown if the key doesn't
+     * map to an existing object.
+     */
+    BigDecimal getBigDecimal(String key) throws NoSuchElementException;
+
+    /**
+     * Get a BigDecimal associated with the given configuration key.
+     *
+     * @param key          The configuration key.
+     * @param defaultValue The default value.
+     *
+     * @return The associated BigDecimal if key is found and has valid
+     * format, default value otherwise.
+     */
+    BigDecimal getBigDecimal(String key, BigDecimal defaultValue);
+
+    /**
+     * Get a BigInteger associated with the given configuration key.
+     *
+     * @param key The configuration key.
+     *
+     * @return The associated BigInteger if key is found and has valid format
+     *
+     * @exception NoSuchElementException is thrown if the key doesn't
+     * map to an existing object.
+     */
+    BigInteger getBigInteger(String key) throws NoSuchElementException;
+
+    /**
+     * Get a BigInteger associated with the given configuration key.
+     *
+     * @param key          The configuration key.
+     * @param defaultValue The default value.
+     *
+     * @return The associated BigInteger if key is found and has valid
+     * format, default value otherwise.
+     */
+    BigInteger getBigInteger(String key, BigInteger defaultValue);
 
     /**
      * Get a string associated with the given configuration key.

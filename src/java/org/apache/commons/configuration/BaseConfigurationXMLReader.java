@@ -54,9 +54,6 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
-import java.io.IOException;
-
-import org.xml.sax.SAXException;
 
 /**
  * <p>A specialized SAX2 XML parser that processes configuration objects.</p>
@@ -66,7 +63,7 @@ import org.xml.sax.SAXException;
  * it is possible to perform XML processing on a configuration object.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfigurationXMLReader.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: BaseConfigurationXMLReader.java,v 1.2 2004/02/12 12:59:19 epugh Exp $
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 {
@@ -124,10 +121,8 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      * <code>HierarchicalConfigurationConverter</code> object to iterate over
      * all keys in the actual configuration and to generate corresponding SAX
      * events.
-     * @throws IOException if no configuration object is specified
-     * @throws SAXException if a SAXException occurs during parsing
      */
-    protected void processKeys() throws IOException, SAXException
+    protected void processKeys()
     {
         fireElementStart(getRootName(), null);
         new SAXConverter().process(getConfiguration());

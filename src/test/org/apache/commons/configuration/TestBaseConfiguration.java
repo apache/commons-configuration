@@ -54,9 +54,11 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -66,7 +68,7 @@ import junit.framework.TestCase;
  * @author <a href="mailto:geirm@optonline.net">Geir Magnusson Jr.</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Id: TestBaseConfiguration.java,v 1.3 2004/01/16 14:23:39 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.4 2004/02/12 12:59:19 epugh Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -160,6 +162,26 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("This returns 1(Double)",
                      eprop.getDouble("numberD",new Double("2")),
                      new Double(oneD));
+    }
+
+    public void testGetBigDecimal() {
+        eprop.setProperty("numberBigD", "123.456");
+        BigDecimal number = new BigDecimal("123.456");
+        BigDecimal defaultValue = new BigDecimal("654.321");
+
+        assertEquals("Existing key", number, eprop.getBigDecimal("numberBigD"));
+        assertEquals("Existing key with default value", number, eprop.getBigDecimal("numberBigD", defaultValue));
+        assertEquals("Missing key with default value", defaultValue, eprop.getBigDecimal("numberNotInConfig", defaultValue));
+    }
+
+    public void testGetBigInteger() {
+        eprop.setProperty("numberBigI", "1234567890");
+        BigInteger number = new BigInteger("1234567890");
+        BigInteger defaultValue = new BigInteger("654321");
+
+        assertEquals("Existing key", number, eprop.getBigInteger("numberBigI"));
+        assertEquals("Existing key with default value", number, eprop.getBigInteger("numberBigI", defaultValue));
+        assertEquals("Missing key with default value", defaultValue, eprop.getBigInteger("numberNotInConfig", defaultValue));
     }
 
     public void testGetBoolean() {

@@ -65,7 +65,7 @@ import org.xml.sax.SAXParseException;
  * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.5 2004/01/30 14:46:37 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.6 2004/02/12 12:59:19 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -183,7 +183,7 @@ public class TestConfigurationFactory extends TestCase
 	{
     	configurationFactory.setConfigurationFileName(testDigesterBadXML.toString());
     	try {
-    		Configuration c = configurationFactory.getConfiguration();
+    		configurationFactory.getConfiguration();
     		fail("Should have throw an Exception");
     	}
     	catch (ConfigurationException cle){

@@ -54,11 +54,8 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 
-import java.io.IOException;
-
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
@@ -74,7 +71,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * that these methods ignore their argument.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.2 2004/02/12 12:59:19 epugh Exp $
  */
 public class HierarchicalConfigurationXMLReader
 extends ConfigurationXMLReader
@@ -137,7 +134,7 @@ extends ConfigurationXMLReader
      * @throws IOException if no configuration has been specified
      * @throws SAXException if an error occurs during parsing
      */
-    protected void processKeys() throws IOException, SAXException
+    protected void processKeys()
     {
         getConfiguration().getRoot().visit(new SAXVisitor(), null);
     }
