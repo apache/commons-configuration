@@ -25,6 +25,9 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
@@ -65,7 +68,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.8 $, $Date: 2004/08/12 15:45:21 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/14 11:21:26 $
  */
 public class XMLConfiguration extends BasePathConfiguration
 {
@@ -251,6 +254,120 @@ public class XMLConfiguration extends BasePathConfiguration
         possiblySave();
     }
 
+    public Object getXmlProperty(String name)
+    {
+        // parse the key
+        String[] nodes = parseElementNames(name);
+        String attName = parseAttributeName(name);
+
+        // get all the matching elements
+        ArrayList children = findElementsForPropertyNodes(nodes);
+
+        ArrayList properties = new ArrayList();
+        if (attName == null)
+        {
+            // return text contents of elements
+            Iterator cIter = children.iterator();
+            while (cIter.hasNext())
+            {
+                Element child = (Element)cIter.next();
+                // add non-empty strings
+                String text = getChildText(child);
+                if (StringUtils.isNotEmpty(text)) {
+                    properties.add(text);
+                }
+            }
+        }
+        else
+        {
+            // return text contents of attributes
+            Iterator cIter = children.iterator();
+            while (cIter.hasNext())
+            {
+                Element child = (Element)cIter.next();
+                if (child.hasAttribute(attName)) {
+                    properties.add(child.getAttribute(attName));
+                }
+            }
+        }
+        
+        switch(properties.size()) {
+        case 0:
+            return null;
+        case 1:
+            return properties.get(0);
+        default:
+            return properties;
+        }
+    }
+
+    /**
+     * TODO Add comment.
+     *
+     * @param nodes
+     * @return
+     */
+    private ArrayList findElementsForPropertyNodes(String[] nodes) {
+        ArrayList children = new ArrayList();
+        ArrayList elements = new ArrayList();
+        
+        children.add(document.getDocumentElement());
+        for (int i = 0; i < nodes.length; i++)
+        {
+            elements.clear();
+            elements.addAll(children);
+            children.clear();
+            
+            String eName = nodes[i];
+            Iterator eIter = elements.iterator();
+            while(eIter.hasNext())
+            {
+                Element element = (Element)eIter.next();
+                NodeList list = element.getChildNodes();
+                for (int j = 0; j < list.getLength(); j++)
+                {
+                    Node node = list.item(j);
+                    if (node instanceof Element)
+                    {
+                        Element child = (Element) node;
+                        if (eName.equals(child.getTagName()))
+                        {
+                            children.add(child);
+                        }
+                    }
+                }
+            }
+        }
+        return children;
+    }
+
+    private static String getChildText(Node node) {
+
+        // is there anything to do?
+        if (node == null) {
+            return null;
+        }
+
+        // concatenate children text
+        StringBuffer str = new StringBuffer();
+        Node child = node.getFirstChild();
+        while (child != null) {
+            short type = child.getNodeType();
+            if (type == Node.TEXT_NODE) {
+                str.append(child.getNodeValue());
+            }
+            else if (type == Node.CDATA_SECTION_NODE) {
+                str.append(child.getNodeValue());
+            }
+            child = child.getNextSibling();
+        }
+
+        // return text value
+        return StringUtils.trimToNull(str.toString());
+
+    } // getChildText(Node):String
+
+    
     /**
      * Calls super method, and also ensures the underlying {@link
      * Document} is modified so changes are persisted when saved.
@@ -392,39 +509,61 @@ public class XMLConfiguration extends BasePathConfiguration
         String[] nodes = parseElementNames(name);
         String attName = parseAttributeName(name);
 
-        Element element = null;
-        Element child = document.getDocumentElement();
-        for (int i = 0; i < nodes.length; i++)
-        {
-            element = child;
-            String eName = nodes[i];
-
-            NodeList list = element.getChildNodes();
-            for (int j = 0; j < list.getLength(); j++) {
-                Node node = list.item(j);
-                if (node instanceof Element)
-                {
-                    child = (Element) node;
-                    if (eName.equals(child.getTagName()))
-                    {
-                        break;
-                    }
-                    child = null;
-                }
-            }
-            if (child == null)
-            {
-                return;
-            }
-        }
+        // get all the matching elements
+        ArrayList children = findElementsForPropertyNodes(nodes);
 
         if (attName == null)
         {
-            element.removeChild(child);
+            // remove children with no subelements
+            Iterator cIter = children.iterator();
+            while (cIter.hasNext())
+            {
+                Element child = (Element)cIter.next();
+                
+                // determine if child has subelments
+                boolean hasSubelements = false;
+                Node subchild = child.getFirstChild();
+                while(subchild != null)
+                {
+                    if (subchild.getNodeType() == Node.ELEMENT_NODE)
+                    {
+                        hasSubelements = true;
+                        break;
+                    }
+                    subchild = subchild.getNextSibling();
+                }
+                
+                if (!hasSubelements)
+                {
+                    // safe to remove
+                    if (!child.hasAttributes())
+                    {
+                        // remove entire node
+                        Node parent = child.getParentNode();
+                        parent.removeChild(child);
+                    }
+                    else
+                    {
+                        // only remove node contents
+                        subchild = child.getLastChild();
+                        while(subchild != null)
+                        {
+                            child.removeChild(subchild);
+                            subchild = child.getLastChild();
+                        }
+                    }
+                }
+            }
         }
         else
         {
-            child.removeAttribute(attName);
+            // remove attributes from children
+            Iterator cIter = children.iterator();
+            while (cIter.hasNext())
+            {
+                Element child = (Element)cIter.next();
+                child.removeAttribute(attName);
+            }
         }
     }
 

@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
 
@@ -26,7 +27,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.6 2004/08/12 16:53:52 epugh Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.7 2004/08/14 11:21:27 epugh Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -57,15 +58,128 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("1<2", conf.getProperty("test.entity"));
     }
 
-    public void testClearProperty()
+    public void testClearProperty() throws ConfigurationException, IOException
     {
-        conf.clearProperty("element");
-        assertEquals("element", null, conf.getProperty("element"));
+        // test non-existent element
+        String key = "clearly";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
         
-        conf.clearProperty("list.item");
-        assertEquals("list.item", null, conf.getProperty("list.item"));
+        // test single element
+        conf.load();
+        key = "clear.element";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+
+        // test single element with attribute
+        conf.load();
+        key = "clear.element2";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        key = "clear.element2[@id]";
+        assertNotNull(key, conf.getProperty(key));
+        assertNotNull(key, conf.getXmlProperty(key));
+        
+        // test non-text/cdata element
+        conf.load();
+        key = "clear.comment";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        
+        // test cdata element
+        conf.load();
+        key = "clear.cdata";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        
+        // test multiple sibling elements
+        conf.load();
+        key = "clear.list.item";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        key = "clear.list.item[@id]";
+        assertNotNull(key, conf.getProperty(key));
+        assertNotNull(key, conf.getXmlProperty(key));
+        
+        // test multiple, disjoined elements
+        conf.load();
+        key = "list.item";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
     }
 
+    public void testGetXmlProperty() {
+        // test non-leaf element
+        Object property = conf.getXmlProperty("clear");
+        assertNull(property);
+        
+        // test non-existent element
+        property = conf.getXmlProperty("e");
+        assertNull(property);
+
+        // test non-existent element
+        property = conf.getXmlProperty("element3[@n]");
+        assertNull(property);
+        
+        // test single element
+        property = conf.getXmlProperty("element");
+        assertNotNull(property);
+        assertTrue(property instanceof String);
+        assertEquals("value", property);
+        
+        // test single attribute
+        property = conf.getXmlProperty("element3[@name]");
+        assertNotNull(property);
+        assertTrue(property instanceof String);
+        assertEquals("foo", property);
+        
+        // test non-text/cdata element
+        property = conf.getXmlProperty("test.comment");
+        assertNull(property);
+        
+        // test cdata element
+        property = conf.getXmlProperty("test.cdata");
+        assertNotNull(property);
+        assertTrue(property instanceof String);
+        assertEquals("<cdata value>", property);
+        
+        // test multiple sibling elements
+        property = conf.getXmlProperty("list.sublist.item");
+        assertNotNull(property);
+        assertTrue(property instanceof List);
+        List list = (List)property;
+        assertEquals(2, list.size());
+        assertEquals("five", list.get(0));
+        assertEquals("six", list.get(1));
+        
+        // test multiple, disjoined elements
+        property = conf.getXmlProperty("list.item");
+        assertNotNull(property);
+        assertTrue(property instanceof List);
+        list = (List)property;
+        assertEquals(4, list.size());
+        assertEquals("one", list.get(0));
+        assertEquals("two", list.get(1));
+        assertEquals("three", list.get(2));
+        assertEquals("four", list.get(3));
+
+        // test multiple, disjoined attributes
+        property = conf.getXmlProperty("list.item[@name]");
+        assertNotNull(property);
+        assertTrue(property instanceof List);
+        list = (List)property;
+        assertEquals(2, list.size());
+        assertEquals("one", list.get(0));
+        assertEquals("three", list.get(1));
+    }
+    
     public void testGetAttribute() throws Exception
     {
         assertEquals("element3[@name]", "foo", conf.getProperty("element3[@name]"));
@@ -73,8 +187,33 @@ public class TestXMLConfiguration extends TestCase
 
     public void testClearAttribute() throws Exception
     {
-        conf.clearProperty("element3[@name]");
-        assertEquals("element3[@name]", null, conf.getProperty("element3[@name]"));
+        // test non-existent attribute
+        String key = "clear[@id]";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+
+        // test single attribute
+        conf.load();
+        key = "clear.element2[@id]";
+        Object p = conf.getXmlProperty(key);
+        p = conf.getXmlProperty("clear.element2");
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        key = "clear.element2";
+        assertNotNull(key, conf.getProperty(key));
+        assertNotNull(key, conf.getXmlProperty(key));
+        
+        // test multiple, disjoined attributes
+        conf.load();
+        key = "clear.list.item[@id]";
+        conf.clearProperty(key);
+        assertNull(key, conf.getProperty(key));
+        assertNull(key, conf.getXmlProperty(key));
+        key = "clear.list.item";
+        assertNotNull(key, conf.getProperty(key));
+        assertNotNull(key, conf.getXmlProperty(key));
     }
 
     public void testSetAttribute() throws Exception
@@ -175,18 +314,17 @@ public class TestXMLConfiguration extends TestCase
     	conf.addProperty("string", "value1");
         for (int i = 1; i < 5; i++)
         {
-          //  conf.addProperty("test.array", "value" + i);
+            conf.addProperty("test.array", "value" + i);
         }
 
         // add an array of strings in an attribute
         for (int i = 1; i < 5; i++)
         {
-          //  conf.addProperty("test.attribute[@array]", "value" + i);
+           conf.addProperty("test.attribute[@array]", "value" + i);
         }
 
         // save the configuration
         conf.save(testSaveConf.getAbsolutePath());
-        System.out.println("fulldir: " + testSaveConf.getAbsolutePath());
 
         // read the configuration and compare the properties
         XMLConfiguration checkConfig = new XMLConfiguration();
@@ -197,7 +335,6 @@ public class TestXMLConfiguration extends TestCase
         {
         	String key = (String) i.next();
         	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-        	System.out.println(conf.getProperty(key).getClass().getName() + ":" + checkConfig.getProperty(key).getClass().getName());
         	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
     }

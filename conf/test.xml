@@ -33,4 +33,24 @@
 			<item>six</item>
 		</sublist>
 	</list>
+
+	<!-- clear tests -->
+	<clear>
+		<element>value</element>
+		<element2 id="element2">value</element2>
+		<comment><!-- this value is commented --></comment>
+		<cdata><![CDATA[<cdata value>]]></cdata>
+		<list>
+			<item id="1">one</item>
+			<item>two</item>
+			<item id="3">three</item>
+			<item>four</item>
+		</list>
+		<list>
+			<item>one</item>
+			<item id="2">two</item>
+			<item>three</item>
+			<item id="4">four</item>
+		</list>
+	</clear>
 </configuration>
