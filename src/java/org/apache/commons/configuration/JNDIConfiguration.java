@@ -26,10 +26,8 @@ import java.util.Set;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
-import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.NotContextException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -42,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.19 2004/10/04 20:06:09 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.20 2004/10/21 18:36:14 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -110,10 +108,10 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * JNDIConfigurations can not be added to.
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
      *
-     * @param key The Key to add the property to.
-     * @param token The Value to add.
+     * @throws UnsupportedOperationException
      */
     public void addProperty(String key, Object token)
     {
@@ -221,7 +219,8 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            throw new ConfigurationRuntimeException(e.getMessage(), e);
+            log.error(e.getMessage(), e);
+            return new ArrayList().iterator();
         }
     }
 
@@ -278,9 +277,10 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
      *
-     * <b>This operation is not supported</b>
+     * @throws UnsupportedOperationException
      */
     public Properties getProperties(String key)
     {
@@ -310,9 +310,9 @@ public class JNDIConfiguration extends AbstractConfiguration
                 }
             }
         }
-        catch (NamingException ne)
+        catch (NamingException e)
         {
-            log.warn(ne);
+            log.error(e.getMessage(), e);
             return true;
         }
     }
@@ -326,7 +326,10 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
+     *
+     * @throws UnsupportedOperationException
      */
     public void setProperty(String key, Object value)
     {
@@ -357,8 +360,9 @@ public class JNDIConfiguration extends AbstractConfiguration
             getBaseContext().lookup(key);
             return true;
         }
-        catch (NamingException ne)
+        catch (NamingException e)
         {
+            log.error(e.getMessage(), e);
             return false;
         }
     }
@@ -399,23 +403,18 @@ public class JNDIConfiguration extends AbstractConfiguration
             key = StringUtils.replace(key, ".", "/");
             return getBaseContext().lookup(key);
         }
-        catch (NameNotFoundException e)
-        {
-            return null;
-        }
-        catch (NotContextException e)
-        {
-            return null;
-        }
         catch (NamingException e)
         {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
             return null;
         }
     }
 
     /**
-     * {@inheritDoc}
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
+     *
+     * @throws UnsupportedOperationException
      */
     protected void addPropertyDirect(String key, Object obj)
     {

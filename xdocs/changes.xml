@@ -9,6 +9,11 @@
 
     <release version="1.1-dev" date="in CVS">
       <action dev="ebourg" type="fix">
+        JNDIConfiguration.getKeys() now returns an empty iterator instead of
+        throwing a ConfigurationRuntimeException when a NamingException occurs.
+        The NamingExceptions are now logged.
+      </action>
+      <action dev="ebourg" type="fix">
         DatabaseConfiguration.isEmpty() now returns true if an SQLException occurs.
       </action>
       <action dev="ebourg" type="add">
