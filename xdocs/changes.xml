@@ -8,8 +8,19 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="update">
+        Constructing a file based configuration with a File no longer throws
+        an exception when the file doesn't exist.
+      </action>
+      <action dev="ebourg" type="add">
+        Saving a configuration now creates the path to the file if it doesn't exist.
+      </action>
+      <action dev="ebourg" type="update" issue="32020">
+        AbstractFileConfiguration.save(File) no longer fails silently when
+        an error occurs, a ConfigurationException is thrown instead.
+      </action>
       <action dev="ebourg" type="fix">
-        ConfigurationUtils.locate() now checks if the URL based ressources exist.
+        ConfigurationUtils.locate() now checks if the URL based resources exist.
         This fixes a bug preventing configuration files from being found if
         the configuration descriptor is in a JAR file (reported by Grant Ingersoll).
       </action>

@@ -17,12 +17,13 @@
 package org.apache.commons.configuration;
 
 import java.net.URL;
+import java.io.File;
 
 import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/04 21:45:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/19 13:19:50 $
  */
 public class TestFileConfiguration extends TestCase
 {
@@ -39,5 +40,57 @@ public class TestFileConfiguration extends TestCase
         config.setURL(new URL("file:/temp/test.properties"));
         assertEquals("base path", "/temp/", config.getBasePath());
         assertEquals("file name", "test.properties", config.getFileName());
+    }
+
+    public void testCreateFile1() throws Exception
+    {
+        File file = new File("target/test-resources/foo/bar/test.properties");
+        if (file.exists())
+        {
+            file.delete();
+            file.getParentFile().delete();
+        }
+
+        assertFalse("The file should not exist", file.exists());
+
+        FileConfiguration config = new PropertiesConfiguration(file);
+        config.save();
+
+        assertTrue("The file doesn't exist", file.exists());
+    }
+
+    public void testCreateFile2() throws Exception
+    {
+        File file = new File("target/test-resources/foo/bar/test.properties");
+        if (file.exists())
+        {
+            file.delete();
+            file.getParentFile().delete();
+        }
+
+        assertFalse("The file should not exist", file.exists());
+
+        FileConfiguration config = new PropertiesConfiguration();
+        config.setFile(file);
+        config.save();
+
+        assertTrue("The file doesn't exist", file.exists());
+    }
+
+    public void testCreateFile3() throws Exception
+    {
+        File file = new File("target/test-resources/foo/bar/test.properties");
+        if (file.exists())
+        {
+            file.delete();
+            file.getParentFile().delete();
+        }
+
+        assertFalse("The file should not exist", file.exists());
+
+        FileConfiguration config = new PropertiesConfiguration();
+        config.save(file);
+
+        assertTrue("The file doesn't exist", file.exists());
     }
 }

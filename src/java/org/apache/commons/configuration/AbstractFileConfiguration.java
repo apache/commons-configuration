@@ -17,7 +17,6 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +26,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -41,7 +39,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.9 $, $Date: 2004/11/17 00:18:00 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/19 13:19:50 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -100,7 +98,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         setFile(file);
 
         // load the file
-        load();
+        if (file.exists())
+        {
+            load();
+        }
     }
 
     /**
@@ -176,7 +177,11 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             load(file.toURL());
         }
-        catch (MalformedURLException e)
+        catch (ConfigurationException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
         {
             throw new ConfigurationException(e.getMessage(), e);
         }
@@ -197,6 +202,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             in = url.openStream();
             load(in);
+        }
+        catch (ConfigurationException e)
+        {
+            throw e;
         }
         catch (Exception e)
         {
@@ -319,8 +328,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration to the specified file. This doesn't change the
-     * source of the configuration, use setFile() if you need it.
+     * Save the configuration to the specified file. The file is created
+     * automatically if it doesn't exist. This doesn't change the source
+     * of the configuration, use {@link #setFile} if you need it.
      *
      * @param file
      *
@@ -332,12 +342,14 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
         try
         {
+            // create the file if necessary
+            createPath(file);
             out = new FileOutputStream(file);
             save(out);
         }
-        catch (FileNotFoundException e)
+        catch (IOException e)
         {
-            e.printStackTrace();
+            throw new ConfigurationException(e.getMessage(), e);
         }
         finally
         {
@@ -469,7 +481,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             {
                 setURL(file.toURL());
             }
-            catch (MalformedURLException e)
+            catch (IOException e)
             {
                 e.printStackTrace();
             }
@@ -607,5 +619,24 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         reload();
         return super.getKeys();
+    }
+
+    /**
+     * Create the path to the specified file.
+     */
+    private void createPath(File file)
+    {
+        if (file != null)
+        {
+            // create the path to the file if the file doesn't exist
+            if (!file.exists())
+            {
+                File parent = file.getParentFile();
+                if (parent != null && !parent.exists())
+                {
+                    parent.mkdirs();
+                }
+            }
+        }
     }
 }
