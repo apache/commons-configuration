@@ -26,7 +26,7 @@ import java.util.Vector;
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.10 2004/08/16 22:16:31 henning Exp $
+ * @version $Id: Configuration.java,v 1.11 2004/10/18 09:52:02 ebourg Exp $
  */
 public interface Configuration
 {
@@ -171,6 +171,8 @@ public interface Configuration
 
     /**
      * Get a boolean associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -210,6 +212,8 @@ public interface Configuration
 
     /**
      * Get a byte associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -249,6 +253,8 @@ public interface Configuration
 
     /**
      * Get a double associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -287,6 +293,8 @@ public interface Configuration
 
     /**
      * Get a float associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -299,6 +307,8 @@ public interface Configuration
 
     /**
      * Get a {@link Float} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -326,6 +336,8 @@ public interface Configuration
 
     /**
      * Get a int associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -338,6 +350,8 @@ public interface Configuration
 
     /**
      * Get an {@link Integer} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -365,6 +379,8 @@ public interface Configuration
 
     /**
      * Get a long associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -377,6 +393,8 @@ public interface Configuration
 
     /**
      * Get a {@link Long} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -416,6 +434,8 @@ public interface Configuration
 
     /**
      * Get a {@link Short} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -443,6 +463,8 @@ public interface Configuration
 
     /**
      * Get a {@link BigDecimal} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key          The configuration key.
      * @param defaultValue The default value.
@@ -466,6 +488,8 @@ public interface Configuration
 
     /**
      * Get a {@link BigInteger} associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key          The configuration key.
      * @param defaultValue The default value.
@@ -491,6 +515,8 @@ public interface Configuration
 
     /**
      * Get a string associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
@@ -528,10 +554,12 @@ public interface Configuration
 
     /**
      * Get a List of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated List.
+     * @return The associated List of strings.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
@@ -556,6 +584,8 @@ public interface Configuration
 
     /**
      * Get a Vector of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value
+     * is returned.
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
