@@ -30,7 +30,7 @@ import java.util.List;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.21 2004/12/02 15:50:09 ebourg Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.22 2004/12/02 17:34:18 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -230,15 +230,6 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
 
         return isEmpty;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setProperty(String key, Object value)
-    {
-        clearProperty(key);
-        addProperty(key, value);
     }
 
     /**
