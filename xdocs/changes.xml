@@ -7,6 +7,7 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30545">new ConfigurationDynaBean </action>        
       <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="29611">new ConfigurationMap and ConfigurationSet</action>        
       <action dev="epugh" type="fix" due-to="Ricardo Gladwell" issue="30598">Problem adding property XMLConfiguration</action>        
       <action dev="epugh" type="remove">ConfigurationXMLDocument removed until post 1.0.</action>
