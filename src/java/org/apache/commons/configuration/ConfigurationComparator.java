@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,9 +14,15 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 /**
  * Comparator for configurations interface.
  *
+ * @since 1.0
+ * 
+ * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
+ * @version $Revision: 1.3 $, $Date: 2004/06/22 09:56:38 $
  */
 public interface ConfigurationComparator
 {

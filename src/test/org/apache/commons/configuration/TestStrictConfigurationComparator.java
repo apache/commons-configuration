@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,19 +14,21 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import junit.framework.TestCase;
 
 /**
  * Tests the StrintConfigurationComparator class
  *
+ * @version $Revision: 1.4 $, $Date: 2004/06/22 09:56:38 $
  */
 public class TestStrictConfigurationComparator extends TestCase
 {
     /**
      * The comparator.
      */
-    protected StrictConfigurationComparator comparator =
-        new StrictConfigurationComparator();
+    protected ConfigurationComparator comparator = new StrictConfigurationComparator();
 
     /**
      * The first configuration.
@@ -78,5 +78,12 @@ public class TestStrictConfigurationComparator extends TestCase
         assertTrue(
             "Compare our configuration with another that is identical",
             comparator.compare(configuration, other));
+    }
+
+    public void testCompareNull()
+    {
+        assertTrue(comparator.compare(null, null));
+        assertFalse(comparator.compare(configuration, null));
+        assertFalse(comparator.compare(null, configuration));
     }
 }

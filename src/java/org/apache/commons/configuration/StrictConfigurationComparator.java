@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,11 +14,18 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.Iterator;
 
 /**
  * Strict comparator for configurations.
  *
+ * @since 1.0
+ *
+ * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
+ * @author <a href="mailto:shapira@mpi.com">Yoav Shapira</a>
+ * @version $Revision: 1.3 $, $Date: 2004/06/22 09:56:38 $
  */
 public class StrictConfigurationComparator implements ConfigurationComparator
 {
@@ -42,33 +47,35 @@ public class StrictConfigurationComparator implements ConfigurationComparator
      */
     public boolean compare(Configuration a, Configuration b)
     {
-        if ((a == null) && (b == null))
+        if (a == null && b == null)
         {
             return true;
         }
-        else if (a == null)
-        {
-            return false;
-        }
-        else if (b == null)
+        else if (a == null || b == null)
         {
             return false;
         }
 
-        for (Iterator i = a.getKeys(); i.hasNext();)
+        for (Iterator keys = a.getKeys(); keys.hasNext();)
         {
-            String key = (String) i.next();
+            String key = (String) keys.next();
             Object value = a.getProperty(key);
             if (!value.equals(b.getProperty(key)))
+            {
                 return false;
+            }
         }
-        for (Iterator i = b.getKeys(); i.hasNext();)
+
+        for (Iterator keys = b.getKeys(); keys.hasNext();)
         {
-            String key = (String) i.next();
+            String key = (String) keys.next();
             Object value = b.getProperty(key);
             if (!value.equals(a.getProperty(key)))
+            {
                 return false;
+            }
         }
+
         return true;
     }
 }
