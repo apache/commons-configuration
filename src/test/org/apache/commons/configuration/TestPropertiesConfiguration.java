@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.7 2004/06/15 10:12:29 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.8 2004/06/17 14:39:54 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -119,5 +119,16 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
     public void testUnescapeJava()
     {
         assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test"));
+    }
+
+    public void testMixedArray()
+    {
+        String[] array = conf.getStringArray("test.mixed.array");
+
+        assertEquals("array length", 4, array.length);
+        assertEquals("1st element", "a", array[0]);
+        assertEquals("1st element", "b", array[1]);
+        assertEquals("1st element", "c", array[2]);
+        assertEquals("1st element", "d", array[3]);
     }
 }
