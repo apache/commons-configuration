@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.27 2004/09/03 15:22:17 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.28 2004/09/06 11:36:21 henning Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -201,7 +201,7 @@
     </dependency>
 
     <dependency>
-   	  <groupId>commons-digester</groupId>
+     <groupId>commons-digester</groupId>
       <artifactId>commons-digester</artifactId>
       <version>1.5</version>
       <properties>
@@ -210,9 +210,18 @@
     </dependency>
 
     <dependency>
-   	  <groupId>commons-beanutils</groupId>
-      <artifactId>commons-beanutils</artifactId>
-      <version>1.7</version>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils-core</artifactId>
+      <version>1.7.0</version>
+      <properties>
+        <war.bundle>true</war.bundle>
+      </properties>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils-bean-collections</artifactId>
+      <version>1.7.0</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
