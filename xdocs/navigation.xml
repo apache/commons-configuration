@@ -30,15 +30,12 @@
 	<menu name="Configuration">
       <item name="Home"                         href="/index.html"/>  
       <item name="Download"                     href="http://jakarta.apache.org/site/sourceindex.cgi#commons-configuration"/>  
-      <item name="Using Configuration"          href="/overview.html"/>
-      <item name="Properties Howto"             href="/howto_properties.html"/>
-      <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
-      <item name="XML Howto"                    href="/howto_xml.html"/>
-      <item name="Composite Config Howto"       href="/howto_compositeconfiguration.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
       <item name="Javadoc (latest)"             href="/apidocs/index.html"/>
+      <item name="User guide (latest)"          href="/howtos_index.html"/>
       <item name="Javadoc (Release 1.0)"        href="/apidocs_1.0/index.html"/>
+      <item name="User guide (Release 1.0)"     href="/howtos_index_1.0.html"/>
       <item name="SVN"                          href="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/"/>
     </menu>
 
