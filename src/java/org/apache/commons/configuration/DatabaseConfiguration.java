@@ -24,6 +24,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
@@ -35,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/06/24 14:01:03 $
+ * @version $Revision: 1.8 $, $Date: 2004/07/24 16:26:10 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -128,6 +130,15 @@ public class DatabaseConfiguration extends AbstractConfiguration
             if (rs.next())
             {
                 result = rs.getObject(valueColumn);
+            }
+            if(rs.next()){
+            	List results = new ArrayList();
+            	results.add(result);
+            	results.add(rs.getObject(valueColumn));
+            	while (rs.next()){
+            		results.add(rs.getObject(valueColumn));
+            	}
+            	result = results;
             }
         }
         catch (SQLException e)
@@ -330,7 +341,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         Collection keys = new ArrayList();
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT " + keyColumn + " FROM " + table);
+        StringBuffer query = new StringBuffer("SELECT DISTINCT " + keyColumn + " FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");

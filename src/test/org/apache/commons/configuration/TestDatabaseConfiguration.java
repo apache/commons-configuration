@@ -19,6 +19,8 @@ package org.apache.commons.configuration;
 import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.Iterator;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import junit.framework.TestCase;
@@ -30,17 +32,25 @@ import org.dbunit.dataset.xml.XmlDataSet;
 import org.dbunit.operation.DatabaseOperation;
 
 /**
- * Test for database stored configurations.
+ * Test for database stored configurations.  Note, when running this Unit 
+ * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
+ * database is already in use by another process errors.
  *
- * @version $Revision: 1.5 $, $Date: 2004/02/27 17:41:34 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/24 16:26:10 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
     private DataSource datasource;
-    private IDataSet dataSet;
+    private IDataSet dataSet;	
 
     protected void setUp() throws Exception
     {
+    	/*
+    	 * Thread.sleep may or may not help with the database is already in
+    	 * use exception.
+    	 */
+    	//Thread.sleep(1000);
+    	
         // set up the datasource
         BasicDataSource datasource = new BasicDataSource();
         datasource.setDriverClassName("org.hsqldb.jdbcDriver");
@@ -166,5 +176,22 @@ public class TestDatabaseConfiguration extends TestCase
         DatabaseConfiguration config2 = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "testIsEmpty");
         assertTrue("The configuration named 'testIsEmpty' is not empty", config2.isEmpty());
     }
+    
+    public void testGetList()
+    {
+        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
+        List list = config1.getList("key3");
+        assertEquals(3,list.size());
+    }    
+    
+    public void testGetKeys()
+    {
+        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
+        Iterator i = config1.getKeys();
+        assertTrue(i.hasNext());
+        Object key = i.next();
+        assertEquals("key3",key.toString());
+        assertFalse(i.hasNext());
+    }     
 
 }

@@ -14,7 +14,7 @@
         <row>
             <value>key2</value>
             <value>value2</value>
-        </row>
+        </row>		
     </table>
 
     <table name="configurations">
@@ -32,5 +32,25 @@
             <value>value2</value>
         </row>
     </table>
+    <table name="configurationList">
+		<column>id</column>
+        <column>key</column>
+        <column>value</column>
+        <row>
+			<value>1</value>
+            <value>key3</value>
+            <value>value1</value>
+        </row>		
+        <row>
+			<value>2</value>
+            <value>key3</value>
+            <value>value2</value>
+        </row>			
+        <row>
+			<value>3</value>			
+            <value>key3</value>
+            <value>value3</value>
+        </row>			
+    </table>	
 
 </dataset>
