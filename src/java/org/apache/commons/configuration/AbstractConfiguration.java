@@ -26,19 +26,23 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.collections.iterators.IteratorChain;
+import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- * Abstract configuration class. Provide basic functionality but does not
- * store any data. If you want to write your own Configuration class
- * then you should implement only abstract methods from this class.
- *
- * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.29 2004/12/02 22:05:52 ebourg Exp $
+ * Abstract configuration class. Provide basic functionality but does not store
+ * any data. If you want to write your own Configuration class then you should
+ * implement only abstract methods from this class.
+ * 
+ * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
+ * @version $Id: AbstractConfiguration.java,v 1.29 2004/12/02 22:05:52 ebourg
+ * Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -61,9 +65,9 @@ public abstract class AbstractConfiguration implements Configuration
     private boolean throwExceptionOnMissing = false;
 
     /**
-     * For configurations extending AbstractConfiguration, allow them to
-     * change the delimiter from the default comma (",").
-     *
+     * For configurations extending AbstractConfiguration, allow them to change
+     * the delimiter from the default comma (",").
+     * 
      * @param delimiter The new delimiter
      */
     public static void setDelimiter(char delimiter)
@@ -72,7 +76,7 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Retrieve the current delimiter.  By default this is a comma (",").
+     * Retrieve the current delimiter. By default this is a comma (",").
      * 
      * @return The delimiter in use
      */
@@ -83,7 +87,7 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * If set to false, missing elements return null if possible (for objects).
-     *
+     * 
      * @param throwExceptionOnMissing The new value for the property
      */
     public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
@@ -93,7 +97,7 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Returns true if missing values throw Exceptions.
-     *
+     * 
      * @return true if missing values throw Exceptions
      */
     public boolean isThrowExceptionOnMissing()
@@ -101,38 +105,75 @@ public abstract class AbstractConfiguration implements Configuration
         return throwExceptionOnMissing;
     }
 
-
     /**
      * {@inheritDoc}
      */
     public void addProperty(String key, Object token)
     {
+        for (Iterator it = fetchInsertIterator(token); it.hasNext();)
+        {
+            addPropertyDirect(key, it.next());
+        }
+    }
+
+    /**
+     * Determines all properties to be added to this configuration. This method
+     * is called by <code>addProperty()</code> and <code>setProperty()</code>
+     * to obtain all values to be inserted. The passed in token is specially
+     * treated depending on its type: <ul><li>Strings are checked for
+     * enumeration characters and splitted if necessary.</li><li>For
+     * collections the single elements are checked.</li><li>Arrays are
+     * treated like collections.</li><li>All other types are directly
+     * inserted.</li><li>Recursive combinations are supported, e.g. a
+     * collection containing array that contain strings.</li></ul>
+     * 
+     * @param token the token to be checked
+     * @return an iterator for the values to be inserted
+     */
+    protected Iterator fetchInsertIterator(Object token)
+    {
+        if (token == null)
+        {
+            return IteratorUtils.emptyIterator();
+        }
         if (token instanceof String)
         {
-            Iterator it = split((String) token).iterator();
-            while (it.hasNext())
-            {
-                addPropertyDirect(key, it.next());
-            }
+            return split((String) token).iterator();
         }
         else if (token instanceof Collection)
         {
-            Iterator it = ((Collection) token).iterator();
-            while (it.hasNext())
-            {
-                addProperty(key, it.next());
-            }
+            return fetchInsertIterator(((Collection) token).iterator());
+        }
+        else if (token.getClass().isArray())
+        {
+            return fetchInsertIterator(IteratorUtils.arrayIterator(token));
         }
         else
         {
-            addPropertyDirect(key, token);
+            return new SingletonIterator(token);
         }
+    }
+
+    /**
+     * Recursivle fetches an insert iterator if the token itself is a composite.
+     * 
+     * @param iterator the iterator to be processed
+     * @return a chain iterator for all elements
+     */
+    private Iterator fetchInsertIterator(Iterator iterator)
+    {
+        IteratorChain itResult = new IteratorChain();
+        while (iterator.hasNext())
+        {
+            itResult.addIterator(fetchInsertIterator(iterator.next()));
+        }
+        return itResult;
     }
 
     /**
      * Adds a key/value pair to the Configuration. Override this method to
      * provide write acces to underlying Configuration store.
-     *
+     * 
      * @param key key to use for mapping
      * @param obj object to store
      */
@@ -140,9 +181,9 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * interpolate key names to handle ${key} stuff
-     *
+     * 
      * @param base string to interpolate
-     *
+     * 
      * @return returns the key name with the ${key} substituted
      */
     protected String interpolate(String base)
@@ -152,16 +193,15 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Recursive handler for multple levels of interpolation.
-     *
+     * 
      * When called the first time, priorVariables should be null.
-     *
+     * 
      * @param base string with the ${key} variables
-     * @param priorVariables serves two purposes: to allow checking for
-     * loops, and creating a meaningful exception message should a loop
-     * occur.  It's 0'th element will be set to the value of base from
-     * the first call.  All subsequent interpolated variables are added
-     * afterward.
-     *
+     * @param priorVariables serves two purposes: to allow checking for loops,
+     * and creating a meaningful exception message should a loop occur. It's
+     * 0'th element will be set to the value of base from the first call. All
+     * subsequent interpolated variables are added afterward.
+     * 
      * @return the string with the interpolation taken care of
      */
     protected String interpolateHelper(String base, List priorVariables)
@@ -186,9 +226,8 @@ public abstract class AbstractConfiguration implements Configuration
         StringBuffer result = new StringBuffer();
 
         // FIXME: we should probably allow the escaping of the start token
-        while (((begin = base.indexOf(START_TOKEN, prec + END_TOKEN.length()))
-            > -1)
-            && ((end = base.indexOf(END_TOKEN, begin)) > -1))
+        while (((begin = base.indexOf(START_TOKEN, prec + END_TOKEN.length())) > -1)
+                && ((end = base.indexOf(END_TOKEN, begin)) > -1))
         {
             result.append(base.substring(prec + END_TOKEN.length(), begin));
             variable = base.substring(begin + START_TOKEN.length(), end);
@@ -211,10 +250,7 @@ public abstract class AbstractConfiguration implements Configuration
                     }
                 }
 
-                throw new IllegalStateException(
-                    "infinite loop in property interpolation of "
-                        + initialBase
-                        + ": "
+                throw new IllegalStateException("infinite loop in property interpolation of " + initialBase + ": "
                         + priorVariableSb.toString());
             }
             // otherwise, add this variable to the interpolation list.
@@ -226,8 +262,7 @@ public abstract class AbstractConfiguration implements Configuration
             Object value = getProperty(variable);
             if (value != null)
             {
-                result.append(interpolateHelper(value.toString(),
-                    priorVariables));
+                result.append(interpolateHelper(value.toString(), priorVariables));
 
                 // pop the interpolated variable off the stack
                 // this maintains priorVariables correctness for
@@ -251,9 +286,9 @@ public abstract class AbstractConfiguration implements Configuration
      * Returns a List of Strings built from the supplied String. Splits up CSV
      * lists. If no commas are in the String, simply returns a List with the
      * String as its first element.
-     *
+     * 
      * @param token The String to tokenize
-     *
+     * 
      * @return A List of Strings
      */
     protected List split(String token)
@@ -312,7 +347,7 @@ public abstract class AbstractConfiguration implements Configuration
     /**
      * {@inheritDoc}
      */
-    public  abstract void clearProperty(String key);
+    public abstract void clearProperty(String key);
 
     /**
      * {@inheritDoc}
@@ -356,18 +391,18 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Get a list of properties associated with the given configuration key.
-     *
+     * 
      * @param key The configuration key.
      * @param defaults Any default values for the returned
-     * <code>Properties</code> object.  Ignored if <code>null</code>.
-     *
+     * <code>Properties</code> object. Ignored if <code>null</code>.
+     * 
      * @return The associated properties if key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a String/List of Strings.
-     *
-     * @throws IllegalArgumentException if one of the tokens is
-     *         malformed (does not contain an equals sign).
+     * 
+     * @throws ConversionException is thrown if the key maps to an object that
+     * is not a String/List of Strings.
+     * 
+     * @throws IllegalArgumentException if one of the tokens is malformed (does
+     * not contain an equals sign).
      */
     public Properties getProperties(String key, Properties defaults)
     {
@@ -581,7 +616,7 @@ public abstract class AbstractConfiguration implements Configuration
 
         if (value == null)
         {
-           return defaultValue;
+            return defaultValue;
         }
         else
         {
@@ -868,7 +903,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value == null)
         {
-           return interpolate(defaultValue);
+            return interpolate(defaultValue);
         }
         else
         {
@@ -943,23 +978,18 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ConversionException(
-                '\''
-                    + key
-                    + "' doesn't map to a List object: "
-                    + value
-                    + ", a "
+            throw new ConversionException('\'' + key + "' doesn't map to a List object: " + value + ", a "
                     + value.getClass().getName());
         }
         return list;
     }
 
     /**
-     * Returns an object from the store described by the key. If the value is
-     * a List object, replace it with the first object in the list.
-     *
+     * Returns an object from the store described by the key. If the value is a
+     * List object, replace it with the first object in the list.
+     * 
      * @param key The property key.
-     *
+     * 
      * @return value Value, transparently resolving a possible List dependency.
      */
     protected Object resolveContainerStore(String key)
@@ -974,15 +1004,15 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * This class divides into tokens a property value.  Token
-     * separator is "," but commas into the property value are escaped
-     * using the backslash in front.
+     * This class divides into tokens a property value. Token separator is ","
+     * but commas into the property value are escaped using the backslash in
+     * front.
      */
     static class PropertiesTokenizer extends StringTokenizer
     {
         /**
          * Constructor.
-         *
+         * 
          * @param string A String.
          */
         public PropertiesTokenizer(String string)
@@ -992,7 +1022,7 @@ public abstract class AbstractConfiguration implements Configuration
 
         /**
          * Get next token.
-         *
+         * 
          * @return A String.
          */
         public String nextToken()

@@ -14,6 +14,11 @@
         <cdata><![CDATA[<cdata value>]]></cdata>
         <entity name="foo&quot;bar">1&lt;2</entity>
     </test>
+    <mean>This is
+<![CDATA[ A long story...]]>
+      <submean>really complex structure</submean>
+And even longer.
+    </mean>
 
     <!-- non string properties -->
     <test>

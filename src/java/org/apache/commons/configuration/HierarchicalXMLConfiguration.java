@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -37,6 +39,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,41 +50,50 @@ import org.xml.sax.InputSource;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
- * A specialized hierarchical configuration class that is able to parse
- * XML documents.
- *
- * <p>The parsed document will be stored keeping its structure. The
- * contained properties can be accessed using all methods supported by
- * the base class <code>HierarchicalConfiguration</code>.
- *
+ * A specialized hierarchical configuration class that is able to parse XML
+ * documents.
+ * 
+ * <p>The parsed document will be stored keeping its structure. The contained
+ * properties can be accessed using all methods supported by the base class
+ * <code>HierarchicalConfiguration</code>.
+ * 
  * @since commons-configuration 1.0
- *
+ * 
  * @author J&ouml;rg Schaible
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.6 $, $Date: 2004/11/19 19:26:48 $
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
+ * @version $Revision: 1.7 $, $Date: 2004/12/13 16:40:13 $
  */
-public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
+public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements
+        FileConfiguration
 {
-    /** Constant for the default root element name.*/
+    /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
-    
+
     private FileConfiguration delegate = new FileConfigurationDelegate();
-    
-    /** Stores the name of the root element.*/
+
+    /** The document from this configuration's data source. */
+    private Document document;
+
+    /** Stores the name of the root element. */
     private String rootElementName;
-    
+
     /**
      * Returns the name of the root element.
+     * 
      * @return the name of the root element
      */
     public String getRootElementName()
     {
         return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
     }
-    
+
     /**
      * Sets the name of the root element. This name is used when this
-     * configuration object is stored in an XML file.
+     * configuration object is stored in an XML file. Note that setting the
+     * name of the root element works only if this configuration has been newly
+     * created. If the configuration was loaded from an XML file, the name
+     * cannot be changed.
+     * 
      * @param name the name of the root element
      */
     public void setRootElementName(String name)
@@ -91,7 +103,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
 
     /**
      * Initializes this configuration from an XML document.
-     *
+     * 
      * @param document the document to be parsed
      */
     public void initProperties(Document document)
@@ -102,7 +114,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     /**
      * Helper method for building the internal storage hierarchy. The XML
      * elements are transformed into node objects.
-     *
+     * 
      * @param node the actual node
      * @param element the actual XML element
      */
@@ -116,7 +128,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
             if (w3cNode instanceof Element)
             {
                 Element child = (Element) w3cNode;
-                Node childNode = new Node(child.getTagName());
+                Node childNode = new XMLNode(child.getTagName(), child);
                 constructHierarchy(childNode, child);
                 node.addChild(childNode);
                 processAttributes(childNode, child);
@@ -137,7 +149,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     /**
      * Helper method for constructing node objects for the attributes of the
      * given XML element.
-     *
+     * 
      * @param node the actual node
      * @param element the actual XML element
      */
@@ -150,17 +162,17 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                Node child =
-                    new Node(
-                        ConfigurationKey.constructAttributeKey(attr.getName()));
+                Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()),
+                        element);
                 child.setValue(attr.getValue());
                 node.addChild(child);
             }
         }
     }
-    
+
     /**
      * Creates a DOM document from the internal tree of configuration nodes.
+     * 
      * @return the new document
      * @throws ConfigurationException if an error occurs
      */
@@ -168,59 +180,40 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     {
         try
         {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document document = builder.newDocument();
-            Element rootElem = document.createElement(getRootElementName());
-            document.appendChild(rootElem);
-            constructDOM(document, getRoot(), rootElem);
+            if (document == null)
+            {
+                DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                document = builder.newDocument();
+                Element rootElem = document.createElement(getRootElementName());
+                document.appendChild(rootElem);
+            }
+
+            XMLBuilderVisitor builder = new XMLBuilderVisitor(document);
+            builder.processDocument(getRoot());
             return document;
-        }  /* try */
-        catch(DOMException domEx)
+        } /* try */
+        catch (DOMException domEx)
         {
             throw new ConfigurationException(domEx);
         }
-        catch(ParserConfigurationException pex)
+        catch (ParserConfigurationException pex)
         {
             throw new ConfigurationException(pex);
         }
     }
-    
+
     /**
-     * Creates a DOM from the tree of configuration nodes.
-     * @param document the document
-     * @param node the actual node
-     * @param element the actual XML element
-     * @throws DOMException if an error occurs
+     * Creates a new node object. This implementation returns an instance of the
+     * <code>XMLNode</code> class.
+     * 
+     * @param name the node's name
+     * @return the new node
      */
-    private void constructDOM(Document document, Node node, Element element)
-    throws DOMException
+    protected Node createNode(String name)
     {
-        for(Iterator it = node.getChildren().iterator(); it.hasNext();)
-        {
-            Node child = (Node) it.next();
-            if(ConfigurationKey.isAttributeKey(child.getName()))
-            {
-                if (child.getValue() != null)
-                {
-                    element.setAttribute(ConfigurationKey.removeAttributeMarkers(
-                            child.getName()), child.getValue().toString());
-                }
-            }
-            else
-            {
-                Element childElem = document.createElement(child.getName());
-                if(child.getValue() != null)
-                {
-                    Text text = document.createTextNode(child.getValue().toString());
-                    childElem.appendChild(text);
-                    
-                }
-                constructDOM(document, child, childElem);
-                element.appendChild(childElem);
-            }
-        }
+        return new XMLNode(name, null);
     }
-    
+
     public void load() throws ConfigurationException
     {
         delegate.load();
@@ -256,7 +249,10 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         try
         {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            initProperties(builder.parse(new InputSource(in)));
+            Document newDocument = builder.parse(new InputSource(in));
+            document = null;
+            initProperties(newDocument);
+            document = newDocument;
         }
         catch (Exception e)
         {
@@ -294,29 +290,28 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         delegate.save(out, encoding);
     }
 
-        /**
-         * Saves the configuration to the specified writer.
-         * 
-         * @param writer
-         *            the writer used to save the configuration
-         * @throws ConfigurationException if an error occurs
-         */
-        public void save(Writer writer) throws ConfigurationException
+    /**
+     * Saves the configuration to the specified writer.
+     * 
+     * @param writer the writer used to save the configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    public void save(Writer writer) throws ConfigurationException
+    {
+        try
         {
-            try 
-            {
-                Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                Source source = new DOMSource(createDocument());
-                Result result = new StreamResult(writer);
-    
-                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                transformer.transform(source, result);
-            } 
-            catch (TransformerException e) 
-            {
-                throw new ConfigurationException(e.getMessage(), e);
-            }
-         }
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Source source = new DOMSource(createDocument());
+            Result result = new StreamResult(writer);
+
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.transform(source, result);
+        }
+        catch (TransformerException e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
+    }
 
     public String getFileName()
     {
@@ -383,7 +378,275 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         delegate.reload();
     }
 
-    private class FileConfigurationDelegate extends AbstractFileConfiguration {
+    /**
+     * A specialized <code>Node</code> class that is connected with an XML
+     * element. Changes on a node are also performed on the associated element.
+     */
+    class XMLNode extends Node
+    {
+        /**
+         * Creates a new instance of <code>XMLNode</code> and initializes it
+         * with the corresponding XML element.
+         * 
+         * @param elem the XML element
+         */
+        public XMLNode(Element elem)
+        {
+            super();
+            setReference(elem);
+        }
+
+        /**
+         * Creates a new instance of <code>XMLNode</code> and initializes it
+         * with a name and the corresponding XML element.
+         * 
+         * @param name the node's name
+         * @param elem the XML element
+         */
+        public XMLNode(String name, Element elem)
+        {
+            super(name);
+            setReference(elem);
+        }
+
+        /**
+         * Sets the value of this node. If this node is associated with an XML
+         * element, this element will be updated, too.
+         * 
+         * @param value the node's new value
+         */
+        public void setValue(Object value)
+        {
+            super.setValue(value);
+
+            if (getReference() != null && document != null)
+            {
+                if (ConfigurationKey.isAttributeKey(getName()))
+                {
+                    updateAttribute(value);
+                }
+                else
+                {
+                    updateElement(value);
+                }
+            }
+        }
+
+        /**
+         * Updates the associated XML elements when a node is removed.
+         */
+        protected void removeReference()
+        {
+            if (getReference() != null)
+            {
+                Element element = (Element) getReference();
+                if (ConfigurationKey.isAttributeKey(getName()))
+                {
+                    element.removeAttribute(ConfigurationKey.removeAttributeMarkers(getName()));
+                }
+                else
+                {
+                    org.w3c.dom.Node parentElem = element.getParentNode();
+                    if (parentElem != null)
+                    {
+                        parentElem.removeChild(element);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Updates the node's value if it represents an element node.
+         * 
+         * @param value the new value
+         */
+        private void updateElement(Object value)
+        {
+            Text txtNode = findTextNodeForUpdate();
+            if (value == null)
+            {
+                // remove text
+                if (txtNode != null)
+                {
+                    ((Element) getReference()).removeChild(txtNode);
+                }
+            }
+            else
+            {
+                if (txtNode == null)
+                {
+                    txtNode = document.createTextNode(value.toString());
+                    if (((Element) getReference()).getFirstChild() != null)
+                    {
+                        ((Element) getReference()).insertBefore(txtNode, ((Element) getReference())
+                                .getFirstChild());
+                    }
+                    else
+                    {
+                        ((Element) getReference()).appendChild(txtNode);
+                    }
+                }
+                else
+                {
+                    txtNode.setNodeValue(value.toString());
+                }
+            }
+        }
+
+        /**
+         * Updates the node's value if it represents an attribute.
+         * 
+         * @param value the new value
+         */
+        private void updateAttribute(Object value)
+        {
+            Element elem = (Element) getReference();
+            if (value == null)
+            {
+                elem.removeAttribute(ConfigurationKey.removeAttributeMarkers(getName()));
+            }
+            else
+            {
+                elem.setAttribute(ConfigurationKey.removeAttributeMarkers(getName()), value
+                        .toString());
+            }
+        }
+
+        /**
+         * Returns the only text node of this element for update. This method is
+         * called when the element's text changes. Then all text nodes except
+         * for the first are removed. A reference to the first is returned or
+         * <b>null </b> if there is no text node at all.
+         * 
+         * @return the first and only text node
+         */
+        private Text findTextNodeForUpdate()
+        {
+            Text result = null;
+            Element elem = (Element) getReference();
+            // Find all Text nodes
+            NodeList children = elem.getChildNodes();
+            Collection textNodes = new ArrayList();
+            for (int i = 0; i < children.getLength(); i++)
+            {
+                org.w3c.dom.Node nd = children.item(i);
+                if (nd instanceof Text)
+                {
+                    if (result == null)
+                    {
+                        result = (Text) nd;
+                    }
+                    else
+                    {
+                        textNodes.add(nd);
+                    }
+                }
+            }
+
+            // We don't want CDATAs
+            if (result instanceof CDATASection)
+            {
+                textNodes.add(result);
+                result = null;
+            }
+
+            // Remove all but the first Text node
+            for (Iterator it = textNodes.iterator(); it.hasNext();)
+            {
+                elem.removeChild((org.w3c.dom.Node) it.next());
+            }
+            return result;
+        }
+    }
+
+    /**
+     * A concrete <code>BuilderVisitor</code> that can construct XML
+     * documents.
+     */
+    static class XMLBuilderVisitor extends BuilderVisitor
+    {
+        /** Stores the document to be constructed. */
+        private Document document;
+
+        /**
+         * Creates a new instance of <code>XMLBuilderVisitor</code>
+         * 
+         * @param doc the document to be created
+         */
+        public XMLBuilderVisitor(Document doc)
+        {
+            document = doc;
+        }
+
+        /**
+         * Processes the node hierarchy and adds new nodes to the document.
+         * 
+         * @param rootNode the root node
+         */
+        public void processDocument(Node rootNode)
+        {
+            rootNode.visit(this, null);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
+        {
+            if (ConfigurationKey.isAttributeKey(newNode.getName()))
+            {
+                if (newNode.getValue() != null)
+                {
+                    getElement(parent).setAttribute(
+                            ConfigurationKey.removeAttributeMarkers(newNode.getName()),
+                            newNode.getValue().toString());
+                    return getElement(parent);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+
+            else
+            {
+                Element elem = document.createElement(newNode.getName());
+                if (newNode.getValue() != null)
+                {
+                    elem.appendChild(document.createTextNode(newNode.getValue().toString()));
+                }
+                if (sibling2 == null)
+                {
+                    getElement(parent).appendChild(elem);
+                }
+                else if (sibling1 != null)
+                {
+                    getElement(parent).insertBefore(elem, getElement(sibling1).getNextSibling());
+                }
+                else
+                {
+                    getElement(parent).insertBefore(elem, getElement(parent).getFirstChild());
+                }
+                return elem;
+            }
+        }
+
+        /**
+         * Helper method for accessing the element of the specified node.
+         * 
+         * @param node the node
+         * @return the element of this node
+         */
+        private Element getElement(Node node)
+        {
+            // special treatement for root node of the hierarchy
+            return (node.getName() != null) ? (Element) node.getReference() : document
+                    .getDocumentElement();
+        }
+    }
+
+    private class FileConfigurationDelegate extends AbstractFileConfiguration
+    {
 
         public void load(Reader in) throws ConfigurationException
         {

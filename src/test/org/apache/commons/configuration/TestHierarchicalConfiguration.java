@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.7 2004/11/13 17:03:18 oheger Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.8 2004/12/13 16:40:14 oheger Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -112,24 +112,65 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("creationDate", prop.toString());
     }
     
+    public void testSetProperty()
+    {
+        config.setProperty("tables.table(0).name", "resources");
+        assertEquals("resources", config.getString("tables.table(0).name"));
+        config.setProperty("tables.table.name", "tab1,tab2");
+        assertEquals("tab1", config.getString("tables.table(0).name"));
+        assertEquals("tab2", config.getString("tables.table(1).name"));
+        
+        config.setProperty("test.items.item", new int[] { 2, 4, 8, 16 });
+        assertEquals(3, config.getMaxIndex("test.items.item"));
+        assertEquals(8, config.getInt("test.items.item(2)"));
+        config.setProperty("test.items.item(2)", new Integer(6));
+        assertEquals(6, config.getInt("test.items.item(2)"));
+        config.setProperty("test.items.item(2)", new int[] { 7, 9, 11 });
+        assertEquals(5, config.getMaxIndex("test.items.item"));
+        
+        config.setProperty("test", Boolean.TRUE);
+        config.setProperty("test.items", "01/01/05");
+        assertEquals(5, config.getMaxIndex("test.items.item"));
+        assertTrue(config.getBoolean("test"));
+        assertEquals("01/01/05", config.getProperty("test.items"));
+    }
+    
     public void testClearProperty()
+    {
+        config.clearProperty("tables.table(0).fields.field(0).name");
+        assertEquals("uname", config.getProperty("tables.table(0).fields.field(0).name"));
+        config.clearProperty("tables.table(0).name");
+        assertFalse(config.containsKey("tables.table(0).name"));
+        assertEquals("firstName", config.getProperty("tables.table(0).fields.field(1).name"));
+        assertEquals("documents", config.getProperty("tables.table.name"));
+        config.clearProperty("tables.table");
+        assertEquals("documents", config.getProperty("tables.table.name"));
+        
+        config.addProperty("test", "first");
+        config.addProperty("test.level", "second");
+        config.clearProperty("test");
+        assertEquals("second", config.getString("test.level"));
+        assertFalse(config.containsKey("test"));
+    }
+    
+    public void testClearTree()
     {
         Object prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
-        config.clearProperty("tables.table(0).fields.field(3)");
+        config.clearTree("tables.table(0).fields.field(3)");
         prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(4, ((Collection) prop).size());
         
-        config.clearProperty("tables.table(0).fields");
+        config.clearTree("tables.table(0).fields");
         assertNull(config.getProperty("tables.table(0).fields.field.name"));
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(5, ((Collection) prop).size());
         
-        config.clearProperty("tables.table(1)");
+        config.clearTree("tables.table(1)");
         assertNull(config.getProperty("tables.table.fields.field.name"));
     }
     
@@ -141,7 +182,7 @@ public class TestHierarchicalConfiguration extends TestCase
         
         assertTrue(config.containsKey("tables.table(0).fields.field.name"));
         assertFalse(config.containsKey("tables.table(0).fields.field"));
-        config.clearProperty("tables.table(0).fields");
+        config.clearTree("tables.table(0).fields");
         assertFalse(config.containsKey("tables.table(0).fields.field.name"));
         
         assertTrue(config.containsKey("tables.table.fields.field.name"));

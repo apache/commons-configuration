@@ -18,10 +18,13 @@ package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
@@ -30,7 +33,7 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys will
  * throw Exceptions
  *
- * @version $Id: TestBaseConfiguration.java,v 1.17 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.18 2004/12/13 16:40:14 oheger Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -437,6 +440,44 @@ public class TestBaseConfiguration extends TestCase
             fail("Should return a list");
         }
 
+    }
+    
+    public void testAddProperty() throws Exception
+    {
+        Collection props = new ArrayList();
+        props.add("one");
+        props.add("two,three,four");
+        props.add(new String[] { "5.1", "5.2", "5.3,5.4", "5.5" });
+        props.add("six");
+        config.addProperty("complex.property", props);
+        
+        Object val = config.getProperty("complex.property");
+        assertTrue(val instanceof Collection);
+        Collection col = (Collection) val;
+        assertEquals(10, col.size());
+        
+        props = new ArrayList();
+        props.add("quick");
+        props.add("brown");
+        props.add("fox,jumps");
+        Object[] data = new Object[] {
+                "The", props, "over,the", "lazy", "dog."
+        };
+        config.setProperty("complex.property", data);
+        val = config.getProperty("complex.property");
+        assertTrue(val instanceof Collection);
+        col = (Collection) val;
+        Iterator it = col.iterator();
+        StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
+        while(tok.hasMoreTokens())
+        {
+            assertTrue(it.hasNext());
+            assertEquals(tok.nextToken(), it.next());
+        }
+        assertFalse(it.hasNext());
+        
+        config.setProperty("complex.property", null);
+        assertFalse(config.containsKey("complex.property"));
     }
 
     public void testPropertyAccess()
