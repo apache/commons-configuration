@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.8 2004/01/22 11:41:23 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.9 2004/02/14 18:54:32 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -21,7 +21,7 @@
   <inceptionYear>2001</inceptionYear>
   <package>org.apache.commons.configuration</package>
 
-  <shortDescription>Common ConfigurationTools</shortDescription>
+  <shortDescription>Common Configuration</shortDescription>
 
   <!-- Gump integration -->
   <gumpRepositoryId>jakarta</gumpRepositoryId>
@@ -33,7 +33,7 @@
   </description>
 
   <url>http://jakarta.apache.org/commons/configuration/</url>
-  <issueTrackingUrl>http://nagoya.apache.org/scarab/servlet/scarab/</issueTrackingUrl>
+  <issueTrackingUrl>http://nagoya.apache.org/bugzilla/</issueTrackingUrl>
   <siteAddress>jakarta.apache.org</siteAddress>
   <siteDirectory>/www/jakarta.apache.org/commons/configuration/</siteDirectory>
   <distributionDirectory>/www/jakarta.apache.org/builds/jakarta-commons/</distributionDirectory>
