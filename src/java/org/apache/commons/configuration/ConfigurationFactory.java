@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.18 2004/11/14 19:06:32 oheger Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.19 2004/11/19 19:25:47 oheger Exp $
  */
 public class ConfigurationFactory
 {
@@ -59,7 +59,7 @@ public class ConfigurationFactory
     private static final String SEC_ADDITIONAL = SEC_ROOT + "additional/";
     
     /** Constant for the optional attribute.*/
-    private static final String ATTR_REQUIRED = "required";
+    private static final String ATTR_OPTIONAL = "optional";
     
     /** Constant for the fileName attribute.*/
     private static final String ATTR_FILENAME = "fileName";
@@ -499,8 +499,8 @@ public class ConfigurationFactory
             }
             catch(ConfigurationException cex)
             {
-                if(attributes.getValue(ATTR_REQUIRED) == null
-                        || !PropertyConverter.toBoolean(attributes.getValue(ATTR_REQUIRED)).booleanValue())
+                if(attributes.getValue(ATTR_OPTIONAL) != null
+                        && PropertyConverter.toBoolean(attributes.getValue(ATTR_OPTIONAL)).booleanValue())
                 {
                     log.warn("Could not load optional configuration " + conf.getFileName());
                 }

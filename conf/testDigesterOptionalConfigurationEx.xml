@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Configuration test file that is used to test whether invalid
+     file names cause exceptions to be thrown -->
+
+<configuration>
+  <!-- This should not cause an exception -->
+  <properties fileName="unexisting.properties" optional="true"/>
+  <!-- But this should! -->
+  <properties fileName="unexisting.properties"/>
+</configuration>

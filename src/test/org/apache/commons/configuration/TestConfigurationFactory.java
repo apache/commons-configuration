@@ -27,7 +27,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.18 2004/11/19 01:56:30 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.19 2004/11/19 19:25:47 oheger Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -47,6 +47,8 @@ public class TestConfigurationFactory extends TestCase
             new File("conf/testDigesterConfiguration3.xml");
     private File testDigesterFileOptional =
             new File("conf/testDigesterOptionalConfiguration.xml");
+    private File testDigesterFileOptionalEx =
+        	new File("conf/testDigesterOptionalConfigurationEx.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
@@ -259,6 +261,17 @@ public class TestConfigurationFactory extends TestCase
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
+        
+        factory.setConfigurationURL(testDigesterFileOptionalEx.toURL());
+        try
+        {
+            config = factory.getConfiguration();
+            fail("Unexisting properties loaded!");
+        }
+        catch(ConfigurationException cex)
+        {
+            // fine
+        }
     }
 
     private void checkUnionConfig() throws Exception

@@ -231,6 +231,50 @@ int rowsPerPage = config.getInt("rowsPerPage");
 				still be returned from the second file (the defaults file).
 			</p>
 		</subsection>
+		<subsection name="Optional configuration sources">
+			<p>
+				The example above with two configuration sources - one for user
+				settings and one with default values - raises an interesting
+				question: What will happen if the user has not defined specific
+				properties yet? Or what if a new user starts our application for
+				the first time and thus no user specific properties exist?
+			</p>
+			<p>
+				The default behavior of <code>ConfigurationFactory</code> is to
+				throw a <code>ConfigurationException</code> exception if one of
+				the sources defined in the configuration definition file cannot
+				be loaded. For our example this behavior is not desired: the
+				properties file with specific user settings is not required. If it
+				cannot be loaded, the example application will still work because
+				a complete set of configuration properties is defined in the
+				second file.
+			</p>
+			<p>
+				<code>ConfigurationFactory</code> supports such optional
+				configuration sources. For this purpose in the definition of a
+				(file based) configuration source the <code>optional</code>
+				attribute can be placed. An example of this is shown below:
+			</p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties fileName="usersettings.properties" optional="true"/>
+  <properties fileName="default.properties"/>
+</configuration>
+]]></source>
+			<p>
+				In this configuration definition file the first properties file
+				with user specific settings is marked as optional. This means that
+				if it cannot be loaded, <code>ConfigurationFactory</code> will
+				not throw an exception, but only write a warning message to its
+				logger. Note that the <code>optional</code> attribute is absent
+				for the second properties file. Thus it is mandatory, and the
+				<code>getConfiguration()</code> method of
+				<code>ConfigurationFactory</code> would throw an exception if it
+				could not be found.
+			</p>
+		</subsection>
 	</section>
 </body>
 
