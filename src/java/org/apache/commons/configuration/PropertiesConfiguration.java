@@ -16,11 +16,13 @@
 
 package org.apache.commons.configuration;
 
+import java.io.File;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -126,7 +128,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: PropertiesConfiguration.java,v 1.14 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.15 2004/09/23 11:45:07 ebourg Exp $
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
@@ -156,7 +158,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * The specified file can contain "include = " properties which then
      * are loaded and merged into the properties.
      *
-     * @param fileName The name of the Properties File to load.
+     * @param fileName The name of the properties file to load.
      * @throws ConfigurationException Error while loading the properties file
      */
     public PropertiesConfiguration(String fileName) throws ConfigurationException
@@ -172,6 +174,46 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         // update the base path
         setBasePath(ConfigurationUtils.getBasePath(url));
+
+        // load the file
+        load();
+    }
+
+    /**
+     * Creates and loads the extended properties from the specified file.
+     * The specified file can contain "include = " properties which then
+     * are loaded and merged into the properties.
+     *
+     * @param file The properties file to load.
+     * @throws ConfigurationException Error while loading the properties file
+     */
+    public PropertiesConfiguration(File file) throws ConfigurationException
+    {
+        // enable includes
+        setIncludesAllowed(true);
+
+        // set the file and update the url, the base path and the file name
+        setFile(file);
+
+        // load the file
+        load();
+    }
+
+    /**
+     * Creates and loads the extended properties from the specified URL.
+     * The specified file can contain "include = " properties which then
+     * are loaded and merged into the properties.
+     *
+     * @param url The location of the properties file to load.
+     * @throws ConfigurationException Error while loading the properties file
+     */
+    public PropertiesConfiguration(URL url) throws ConfigurationException
+    {
+        // enable includes
+        setIncludesAllowed(true);
+
+        // set the URL and update the base path and the file name
+        setURL(url);
 
         // load the file
         load();
