@@ -93,4 +93,23 @@ public class TestConfigurationUtils extends TestCase
 		assertEquals(absFile.toURL(),
 		ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
+
+    public void testGetBasePath() throws Exception
+    {
+        URL url = new URL("http://xyz.net/foo/bar.xml");
+        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
+
+        url = new URL("http://xyz.net/foo/");
+        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
+
+        url = new URL("http://xyz.net/foo");
+        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
+
+        url = new URL("http://xyz.net/");
+        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
+
+        url = new URL("http://xyz.net");
+        assertEquals("base path of " + url, "http://xyz.net", ConfigurationUtils.getBasePath(url));
+    }
+
 }

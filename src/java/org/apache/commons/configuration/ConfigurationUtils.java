@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/09/22 17:17:30 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/23 08:41:55 $
  */
 public final class ConfigurationUtils
 {
@@ -323,7 +323,8 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Return the path without the file name, for example http://xyz.net/foo/bar.xml results in http://xyz.net/foo/
+     * Return the path without the file name, for example http://xyz.net/foo/bar.xml
+     * results in http://xyz.net/foo/
      *
      * @param url
      * @return
@@ -332,13 +333,13 @@ public final class ConfigurationUtils
     {
         String s = url.toString();
 
-        if (s.endsWith("/"))
+        if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
         {
             return s;
         }
         else
         {
-            return s.substring(0, s.lastIndexOf("/") + 1); // todo: doesn't work for http://xyz.net !
+            return s.substring(0, s.lastIndexOf("/") + 1);
         }
     }
 
