@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -27,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.7 2004/08/14 11:21:27 epugh Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.8 2004/08/16 22:16:31 henning Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -238,6 +239,17 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("list size", 2, list.size());
     }
 
+    public void testAddVectorAttribute() throws Exception
+    {
+        conf.addProperty("element3[@name]", "bar");
+
+        Vector vector = conf.getVector("element3[@name]");
+        assertNotNull("null vector", vector);
+        assertTrue("'foo' element missing", vector.contains("foo"));
+        assertTrue("'bar' element missing", vector.contains("bar"));
+        assertEquals("vector size", 2, vector.size());
+    }
+
     public void testAddList() throws Exception
     {
         conf.addProperty("test.array", "value1");
@@ -248,6 +260,18 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("'value1' element missing", list.contains("value1"));
         assertTrue("'value2' element missing", list.contains("value2"));
         assertEquals("list size", 2, list.size());
+    }
+
+    public void testAddVector() throws Exception
+    {
+        conf.addProperty("test.array", "value1");
+        conf.addProperty("test.array", "value2");
+
+        Vector vector = conf.getVector("test.array");
+        assertNotNull("null vector", vector);
+        assertTrue("'value1' element missing", vector.contains("value1"));
+        assertTrue("'value2' element missing", vector.contains("value2"));
+        assertEquals("vector size", 2, vector.size());
     }
 
     public void testGetComplexProperty() throws Exception

@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.25 2004/08/14 12:22:50 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.26 2004/08/16 22:16:30 henning Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -116,6 +116,7 @@
       <id>henning</id>
       <email>hps@intermeta.de</email>
       <organization>INTERMETA - Gesellschaft fuer Mehrwertdienste mbH</organization>
+      <timezone>2</timezone>
     </developer>
 
     <developer>

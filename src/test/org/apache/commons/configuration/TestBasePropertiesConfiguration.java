@@ -17,6 +17,7 @@ package org.apache.commons.configuration;
  */
 
 import java.util.List;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -25,7 +26,7 @@ import junit.framework.TestCase;
  * org.apache.commons.configuration.BasePropertiesConfiguration}
  * extensions.
  *
- * @version $Id: TestBasePropertiesConfiguration.java,v 1.4 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestBasePropertiesConfiguration.java,v 1.5 2004/08/16 22:16:31 henning Exp $
  */
 public abstract class TestBasePropertiesConfiguration extends TestCase
 {
@@ -78,6 +79,16 @@ public abstract class TestBasePropertiesConfiguration extends TestCase
     public void testList() throws Exception
     {
         List packages = conf.getList("packages");
+        // we should get 3 packages here
+        assertEquals(3, packages.size());
+    }
+
+    /**
+     * Tests <code>Vector</code> parsing.
+     */
+    public void testVector() throws Exception
+    {
+        Vector packages = conf.getVector("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }

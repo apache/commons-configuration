@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import java.util.List;
 import java.util.Properties;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 import org.apache.commons.collections.ExtendedProperties;
@@ -27,7 +28,7 @@ import org.apache.commons.collections.ExtendedProperties;
  *
  * @author Martin Poeschl
  * @author Emmanuel Bourg
- * @version $Revision: 1.5 $, $Date: 2004/06/16 15:17:09 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/16 22:16:31 $
  */
 public class TestConfigurationConverter extends TestCase
 {
@@ -44,6 +45,10 @@ public class TestConfigurationConverter extends TestCase
         assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
         List item1 = config.getList("list");
         assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+
+        Vector item2 = config.getVector("list");
+        assertEquals("This returns 'item 1'", (String) item2.get(0), "item 1");
+
         assertEquals("This returns 123", config.getInt("int"), 123);
     }
 
@@ -59,6 +64,10 @@ public class TestConfigurationConverter extends TestCase
         assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
         List item1 = config.getList("list");
         assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+
+        Vector item2 = config.getVector("list");
+        assertEquals("This returns 'item 1'", (String) item2.get(0), "item 1");
+
         assertEquals("This returns 123", config.getInt("int"), 123);
     }
 

@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -37,7 +38,8 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.19 2004/08/12 15:45:58 epugh Exp $
+ * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
+ * @version $Id: AbstractConfiguration.java,v 1.20 2004/08/16 22:16:30 henning Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -991,6 +993,54 @@ public abstract class AbstractConfiguration implements Configuration
                     + value.getClass().getName());
         }
         return list;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Vector getVector(String key)
+    {
+        return getVector(key, new Vector());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Vector getVector(String key, Vector defaultValue)
+    {
+        Object value = getPropertyDirect(key);
+        Vector vector = null;
+
+        if (value instanceof String)
+        {
+            vector = new Vector(1);
+            vector.add(value);
+        }
+        else if (value instanceof List)
+        {
+            vector = new Vector(((List) value).size());
+
+            for (Iterator it = ((List) value).iterator(); it.hasNext(); )
+            {
+                Object obj = it.next();
+                vector.add(obj);
+            }
+        }
+        else if (value == null)
+        {
+            vector = defaultValue;
+        }
+        else
+        {
+            throw new ConversionException(
+                '\''
+                    + key
+                    + "' doesn't map to a Vector object: "
+                    + value
+                    + ", a "
+                    + value.getClass().getName());
+        }
+        return vector;
     }
 
     /**

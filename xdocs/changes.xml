@@ -6,6 +6,11 @@
   </properties>
 
   <body>
+    <release version="1.0-rc2" date="in CVS">
+      <action dev="henning" type="add">Bring back the getVector() methods in the Configuration interface. These methods are needed for &quot;drop-on&quot; replacement
+                                     of the various pre-1.0 commons-configuration snapshots and are already deprecated. These methods will be removed for 1.1
+      </action>
+    </release>
     <release version="1.0-rc1" date="2004-08-14">
       <action dev="epugh" type="add" due-to="Oliver Heger" issue="30597">HierarchicalConfigurationXMLReader stores comments as text nodes</action>        
       <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30648">project.xml contains bad dependencies</action>        

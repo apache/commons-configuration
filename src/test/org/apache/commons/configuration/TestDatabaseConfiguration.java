@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import javax.sql.DataSource;
 
@@ -36,7 +37,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.6 $, $Date: 2004/07/24 16:26:10 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/16 22:16:31 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -182,6 +183,13 @@ public class TestDatabaseConfiguration extends TestCase
         DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
         List list = config1.getList("key3");
         assertEquals(3,list.size());
+    }    
+    
+    public void testGetVector()
+    {
+        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
+        Vector vector = config1.getVector("key3");
+        assertEquals(3,vector.size());
     }    
     
     public void testGetKeys()

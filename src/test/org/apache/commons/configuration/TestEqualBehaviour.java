@@ -20,6 +20,7 @@ import java.io.File;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -27,7 +28,7 @@ import junit.framework.TestCase;
  * Compare the behaviour of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  * 
- * @version $Id: TestEqualBehaviour.java,v 1.4 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestEqualBehaviour.java,v 1.5 2004/08/16 22:16:31 henning Exp $
  */
 public class TestEqualBehaviour  extends TestCase
 {
@@ -95,6 +96,35 @@ public class TestEqualBehaviour  extends TestCase
             String val1 = (String) it1.next();
             String val2 = (String) it2.next();
             assertEquals(msg + ", List: ", val1, val2);
+        }
+        assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
+    }
+
+    private void checkSameKeyVector(String msg, String key, Configuration c1, Configuration c2)
+    {
+        String [] s1 = c1.getStringArray(key);
+        String [] s2 = c2.getStringArray(key);
+
+        assertEquals(msg + ", length: ", s1.length, s2.length);
+
+        for (int i = 0; i < s1.length ; i++)
+        {
+            assertEquals(msg + ", String Array: ", s1[i], s2[i]);
+        }
+
+        Vector vector1 = c1.getVector(key);
+        Vector vector2 = c2.getVector(key);
+
+        assertEquals(msg + ", Size: ", vector1.size(), vector2.size());
+
+        Iterator it1 = vector1.iterator();
+        Iterator it2 = vector2.iterator();
+
+        while(it1.hasNext() && it2.hasNext())
+        {
+            String val1 = (String) it1.next();
+            String val2 = (String) it2.next();
+            assertEquals(msg + ", Vector: ", val1, val2);
         }
         assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
     }

@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: BaseNonStringProperties.java,v 1.5 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: BaseNonStringProperties.java,v 1.6 2004/08/16 22:16:31 henning Exp $
  */
 public abstract class BaseNonStringProperties extends TestCase
 {
@@ -46,6 +46,7 @@ public abstract class BaseNonStringProperties extends TestCase
         boolean booleanValue = conf.getBoolean("test.boolean");
         assertEquals(true, booleanValue);
         assertEquals(2, conf.getList("test.boolean.array").size());
+        assertEquals(2, conf.getVector("test.boolean.array").size());
     }
 
     public void testByte() throws Exception
@@ -59,6 +60,7 @@ public abstract class BaseNonStringProperties extends TestCase
         byte byteValue = conf.getByte("test.byte");
         assertEquals(testValue, byteValue);
         assertEquals(2, conf.getList("test.byte.array").size());
+        assertEquals(2, conf.getVector("test.byte.array").size());
     }
 
     public void testDouble() throws Exception
@@ -77,6 +79,7 @@ public abstract class BaseNonStringProperties extends TestCase
         double doubleValue = conf.getDouble("test.double");
         assertEquals(testValue, doubleValue, 0.01);
         assertEquals(2, conf.getList("test.double.array").size());
+        assertEquals(2, conf.getVector("test.double.array").size());
     }
 
     public void testFloat() throws Exception
@@ -96,6 +99,7 @@ public abstract class BaseNonStringProperties extends TestCase
         float floatValue = conf.getFloat("test.float");
         assertEquals(testValue, floatValue, 0.01);
         assertEquals(2, conf.getList("test.float.array").size());
+        assertEquals(2, conf.getVector("test.float.array").size());
     }
 
     public void testInteger() throws Exception
@@ -113,6 +117,7 @@ public abstract class BaseNonStringProperties extends TestCase
         int intValue = conf.getInt("test.integer");
         assertEquals(10, intValue);
         assertEquals(2, conf.getList("test.integer.array").size());
+        assertEquals(2, conf.getVector("test.integer.array").size());
     }
 
     public void testLong() throws Exception
@@ -128,6 +133,7 @@ public abstract class BaseNonStringProperties extends TestCase
         long longValue = conf.getLong("test.long");
         assertEquals(1000000, longValue);
         assertEquals(2, conf.getList("test.long.array").size());
+        assertEquals(2, conf.getVector("test.long.array").size());
     }
 
     public void testShort() throws Exception
@@ -144,11 +150,17 @@ public abstract class BaseNonStringProperties extends TestCase
         short shortValue = conf.getShort("test.short");
         assertEquals(1, shortValue);
         assertEquals(2, conf.getList("test.short.array").size());
+        assertEquals(2, conf.getVector("test.short.array").size());
     }
 
     public void testListMissing() throws Exception
     {
         nonStringTestHolder.testListMissing();
+    }
+
+    public void testVectorMissing() throws Exception
+    {
+        nonStringTestHolder.testVectorMissing();
     }
 
     public void testSubset() throws Exception

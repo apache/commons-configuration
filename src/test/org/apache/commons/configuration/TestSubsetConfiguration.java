@@ -21,12 +21,13 @@ import junit.framework.TestCase;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 /**
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/05/04 22:27:10 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/16 22:16:31 $
  */
 public class TestSubsetConfiguration extends TestCase {
 
@@ -117,4 +118,15 @@ public class TestSubsetConfiguration extends TestCase {
         List list = subset.getList("abc", new ArrayList());
         assertEquals(3, list.size());
     }
+
+    public void testGetVector() {
+        BaseConfiguration conf = new BaseConfiguration();
+        conf.setProperty("test.abc", "value0,value1");
+        conf.addProperty("test.abc","value3");
+
+        Configuration subset = new SubsetConfiguration(conf, "test", ".");
+        Vector vector = subset.getVector("abc", new Vector());
+        assertEquals(3, vector.size());
+    }
+
 }
