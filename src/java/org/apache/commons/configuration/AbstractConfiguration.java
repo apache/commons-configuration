@@ -39,7 +39,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.20 2004/08/16 22:16:30 henning Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.21 2004/09/16 22:35:35 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -50,11 +50,27 @@ public abstract class AbstractConfiguration implements Configuration
     protected static final String END_TOKEN = "}";
 
     /** The property delimiter used while parsing (a comma). */
-    protected static final char DELIMITER = ',';
+    protected static char DELIMITER = ',';
 
     /** how big the initial arraylist for splitting up name value pairs */
     private static final int INITIAL_LIST_SIZE = 2;
 
+    /**
+     * For configurations extending AbstractConfiguration, allow them to
+     * change the delimiter from the default comma (",").
+     * @param delimiter The new delimiter
+     */
+    public static void setDelimiter(char delimiter){
+        AbstractConfiguration.DELIMITER = delimiter;
+    }
+    
+    /**
+     * Retrieve the current delimiter.  By default this is a comma (",").
+     * @return The delimiter in use
+     */
+    public static char getDelimiter(){
+        return AbstractConfiguration.DELIMITER;
+    }
     /**
      * {@inheritDoc}
      */

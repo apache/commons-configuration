@@ -52,7 +52,7 @@ import org.apache.commons.lang.StringUtils;
  *  </li>
  *  <li>
  *   If <i>value</i> is a list of strings, each token is separated
- *   by a comma ','.
+ *   by a comma ',' by default.
  *  </li>
  *  <li>
  *   Commas in each token are escaped placing a backslash right before
@@ -123,7 +123,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.18 2004/09/16 21:35:57 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.19 2004/09/16 22:35:35 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -549,46 +549,43 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
             {
                 // handle an escaped value
                 hadSlash = false;
-                switch (ch)
-                {
-                    case '\\':
-                        out.append('\\');
-                        break;
-                    case '\'':
-                        out.append('\'');
-                        break;
-                    case '\"':
-                        out.append('"');
-                        break;
-                    case 'r':
-                        out.append('\r');
-                        break;
-                    case 'f':
-                        out.append('\f');
-                        break;
-                    case 't':
-                        out.append('\t');
-                        break;
-                    case 'n':
-                        out.append('\n');
-                        break;
-                    case 'b':
-                        out.append('\b');
-                        break;
-                    case DELIMITER:
-                        out.append("\\");
-                        out.append(DELIMITER);
-                        break;
-                    case 'u':
-                        {
-                            // uh-oh, we're in unicode country....
-                            inUnicode = true;
-                            break;
-                        }
-                    default :
-                        out.append(ch);
-                        break;
+                
+                if(ch=='\\'){
+                    out.append('\\');
                 }
+                else if (ch=='\''){
+                    out.append('\'');
+                }
+                else if (ch=='\"'){
+                    out.append('"');
+                }
+                else if (ch=='r'){
+                    out.append('\r');
+                }
+                else if (ch=='f'){
+                    out.append('\f');
+                }
+                else if (ch=='t'){
+                    out.append('\t');
+                }
+                else if (ch=='n'){
+                    out.append('\n');
+                }
+                else if (ch=='b'){
+                    out.append('\b');
+                }
+                else if (ch==DELIMITER){
+                    out.append('\\');
+                    out.append(DELIMITER);
+                }
+                else if (ch=='u'){
+//                  uh-oh, we're in unicode country....
+                    inUnicode = true;
+                }     
+                else {
+                    out.append(ch);
+                }
+                                             
                 continue;
             }
             else if (ch == '\\')

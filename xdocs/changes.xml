@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="epugh" type="add" issue="29714">
+        Allow configurations extending AbstractConfiguration to change the delimiter
+        used from "," to something else.
+      </action>         
       <action dev="epugh" type="fix">
         PropertiesConfiguration.save() method has issues with preserving the filename
       </action>         

@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.11 2004/09/16 21:35:57 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.12 2004/09/16 22:35:35 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -155,6 +155,18 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
                 + "a backslash character.";
 
         assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
+    }
+    
+    public void testChangingDelimiter() throws Exception{
+        PropertiesConfiguration pc = new PropertiesConfiguration(testProperties);
+        assertEquals(4,pc.getList("test.mixed.array").size());
+        
+        char delimiter = PropertiesConfiguration.getDelimiter();
+        PropertiesConfiguration.setDelimiter('^');
+        pc = new PropertiesConfiguration(testProperties);
+        assertEquals(2,pc.getList("test.mixed.array").size());
+        PropertiesConfiguration.setDelimiter(delimiter);
+        
     }
 
 }
