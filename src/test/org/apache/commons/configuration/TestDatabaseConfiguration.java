@@ -70,7 +70,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test for database stored configurations.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/01/18 16:15:46 $
+ * @version $Revision: 1.2 $, $Date: 2004/01/18 16:18:56 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {

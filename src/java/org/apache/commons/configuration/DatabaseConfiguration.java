@@ -70,7 +70,7 @@ import org.apache.commons.logging.LogFactory;
  * Configuration stored in a database.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/01/18 16:15:46 $
+ * @version $Revision: 1.2 $, $Date: 2004/01/18 16:18:46 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
