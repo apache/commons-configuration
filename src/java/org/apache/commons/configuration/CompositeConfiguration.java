@@ -70,7 +70,7 @@ import java.util.Properties;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.3 2004/01/16 14:56:45 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.4 2004/02/07 13:43:15 dirkv Exp $
  */
 public class CompositeConfiguration implements Configuration
 {
@@ -285,13 +285,13 @@ public class CompositeConfiguration implements Configuration
     /**
     * Get a float associated with the given configuration key.
     * 
-    * @ param key The configuration key.
-    * @ return The associated float.
-    * @ exception NoSuchElementException is thrown if the key doesn 't
+    * @param key The configuration key.
+    * @return The associated float.
+    * @exception NoSuchElementException is thrown if the key doesn 't
     * map to an existing object.
-    * @ exception ClassCastException is thrown if the key maps to an
+    * @exception ClassCastException is thrown if the key maps to an
     * object that is not a Float.
-    * @ exception NumberFormatException is thrown if the value mapped
+    * @exception NumberFormatException is thrown if the value mapped
     * by the key has not a valid number format.
      */
     public float getFloat(String key)
