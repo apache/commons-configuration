@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.16 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.17 2004/10/18 12:50:41 ebourg Exp $
  */
 public class ConfigurationFactory
 {
@@ -298,6 +298,13 @@ public class ConfigurationFactory
             new JNDIConfigurationFactory(),
             null,
             additional);
+
+        setupDigesterInstance(
+            digester,
+            matchString + "system",
+            new SystemConfigurationFactory(),
+            null,
+            additional);
     }
 
     /**
@@ -487,16 +494,25 @@ public class ConfigurationFactory
 
     /**
      * A tiny inner class that allows the Configuration Factory to
-     * let the digester construct JNDIPathConfiguration objects.
+     * let the digester construct JNDIConfiguration objects.
      */
     private class JNDIConfigurationFactory extends DigesterConfigurationFactory
     {
-        /**
-         * C'tor
-         */
         public JNDIConfigurationFactory()
         {
             super(JNDIConfiguration.class);
+        }
+    }
+
+    /**
+     * A tiny inner class that allows the Configuration Factory to
+     * let the digester construct SystemConfiguration objects.
+     */
+    private class SystemConfigurationFactory extends DigesterConfigurationFactory
+    {
+        public SystemConfigurationFactory()
+        {
+            super(SystemConfiguration.class);
         }
     }
 

@@ -26,24 +26,24 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.15 2004/09/21 17:18:27 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.16 2004/10/18 12:50:41 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
     /** The Files that we test with */
     private File digesterRules = new File("conf/digesterRules.xml");
     private File testDigesterFile =
-        new File("conf/testDigesterConfiguration.xml");
+            new File("conf/testDigesterConfiguration.xml");
     private File testDigesterFileReverseOrder =
-        new File("conf/testDigesterConfigurationReverseOrder.xml");
+            new File("conf/testDigesterConfigurationReverseOrder.xml");
     private File testDigesterFileNamespaceAware =
-        new File("conf/testDigesterConfigurationNamespaceAware.xml");
+            new File("conf/testDigesterConfigurationNamespaceAware.xml");
     private File testDigesterFileBasePath =
-        new File("conf/testDigesterConfigurationBasePath.xml");
+            new File("conf/testDigesterConfigurationBasePath.xml");
     private File testDigesterFileEnhanced =
-        new File("conf/testDigesterConfiguration2.xml");
+            new File("conf/testDigesterConfiguration2.xml");
     private File testDigesterFileComplete =
-        new File("conf/testDigesterConfiguration3.xml");
+            new File("conf/testDigesterConfiguration3.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
@@ -55,7 +55,7 @@ public class TestConfigurationFactory extends TestCase
 
     public void setUp() throws Exception
     {
-        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        System.setProperty("java.naming.factory.initial", "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
         factory = new ConfigurationFactory();
     }
 
@@ -64,50 +64,50 @@ public class TestConfigurationFactory extends TestCase
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
         Object o = jndiConfiguration.getProperty("test.boolean");
         assertNotNull(o);
-        assertEquals("true",o.toString());
+        assertEquals("true", o.toString());
     }
 
     public void testLoadingConfiguration() throws Exception
     {
         factory.setConfigurationFileName(
-            testDigesterFile.toString());
+                testDigesterFile.toString());
 
         compositeConfiguration =
-            (CompositeConfiguration) factory.getConfiguration();
+                (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
-            "Verify how many configs",
-            3,
-            compositeConfiguration.getNumberOfConfigurations());
+                "Verify how many configs",
+                3,
+                compositeConfiguration.getNumberOfConfigurations());
         assertEquals(
-            PropertiesConfiguration.class,
-            compositeConfiguration.getConfiguration(0).getClass());
+                PropertiesConfiguration.class,
+                compositeConfiguration.getConfiguration(0).getClass());
         PropertiesConfiguration pc =
-            (PropertiesConfiguration) compositeConfiguration.getConfiguration(
-                0);
+                (PropertiesConfiguration) compositeConfiguration.getConfiguration(
+                        0);
 
         assertNotNull(
-            "Make sure we have a fileName:" + pc.getFileName(),
-            pc.getFileName());
+                "Make sure we have a fileName:" + pc.getFileName(),
+                pc.getFileName());
 
         assertTrue(
-            "Make sure we have loades our key",
-            compositeConfiguration.getBoolean("test.boolean"));
+                "Make sure we have loades our key",
+                compositeConfiguration.getBoolean("test.boolean"));
         assertEquals(
-            "I'm complex!",
-            compositeConfiguration.getProperty(
-                "element2.subelement.subsubelement"));
+                "I'm complex!",
+                compositeConfiguration.getProperty(
+                        "element2.subelement.subsubelement"));
 
         configuration = compositeConfiguration;
         assertEquals(
-            "I'm complex!",
-            configuration.getProperty("element2.subelement.subsubelement"));
+                "I'm complex!",
+                configuration.getProperty("element2.subelement.subsubelement"));
     }
 
     public void testLoadingConfigurationReverseOrder() throws Exception
     {
         factory.setConfigurationFileName(
-            testDigesterFileReverseOrder.toString());
+                testDigesterFileReverseOrder.toString());
 
         configuration = factory.getConfiguration();
 
@@ -127,37 +127,37 @@ public class TestConfigurationFactory extends TestCase
         compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
-            "Verify how many configs",
-            3,
-            compositeConfiguration.getNumberOfConfigurations());
+                "Verify how many configs",
+                3,
+                compositeConfiguration.getNumberOfConfigurations());
 
         assertEquals(
-            PropertiesConfiguration.class,
-            compositeConfiguration.getConfiguration(0).getClass());
+                PropertiesConfiguration.class,
+                compositeConfiguration.getConfiguration(0).getClass());
 
         PropertiesConfiguration pc =
-            (PropertiesConfiguration) compositeConfiguration.getConfiguration(
-                0);
+                (PropertiesConfiguration) compositeConfiguration.getConfiguration(
+                        0);
         assertNotNull(
-            "Make sure we have a fileName:" + pc.getFileName(),
-            pc.getFileName());
+                "Make sure we have a fileName:" + pc.getFileName(),
+                pc.getFileName());
         assertTrue(
-            "Make sure we have loaded our key",
-            pc.getBoolean("test.boolean"));
+                "Make sure we have loaded our key",
+                pc.getBoolean("test.boolean"));
 
         assertTrue(
-            "Make sure we have loaded our key",
-            compositeConfiguration.getBoolean("test.boolean"));
+                "Make sure we have loaded our key",
+                compositeConfiguration.getBoolean("test.boolean"));
 
         assertEquals(
-            "I'm complex!",
-            compositeConfiguration.getProperty(
-                "element2.subelement.subsubelement"));
+                "I'm complex!",
+                compositeConfiguration.getProperty(
+                        "element2.subelement.subsubelement"));
 
         configuration = compositeConfiguration;
         assertEquals(
-            "I'm complex!",
-            configuration.getProperty("element2.subelement.subsubelement"));
+                "I'm complex!",
+                configuration.getProperty("element2.subelement.subsubelement"));
     }
 
     public void testLoadingConfigurationNamespaceAware() throws Exception
@@ -211,13 +211,12 @@ public class TestConfigurationFactory extends TestCase
     // Tests if properties from all sources can be loaded
     public void testAllConfiguration() throws Exception
     {
-
         factory.setConfigurationURL(testDigesterFileComplete.toURL());
         Configuration config = factory.getConfiguration();
         assertFalse(config.isEmpty());
         assertTrue(config instanceof CompositeConfiguration);
-        CompositeConfiguration cc = (CompositeConfiguration)config;
-        assertTrue(cc.getNumberOfConfigurations()>1);
+        CompositeConfiguration cc = (CompositeConfiguration) config;
+        assertTrue(cc.getNumberOfConfigurations() > 1);
         // Currently fails, should be 4?  Only 2?
         //assertEquals(4, cc.getNumberOfConfigurations());
 
@@ -226,62 +225,67 @@ public class TestConfigurationFactory extends TestCase
         assertEquals("value", config.getProperty("element3"));
         assertEquals("foo", config.getProperty("element3[@name]"));
         assertNotNull(config.getProperty("mail.account.user"));
-                
+
+        // test JNDIConfiguration
         assertNotNull(config.getProperty("test.onlyinjndi"));
         assertTrue(config.getBoolean("test.onlyinjndi"));
-        
+
         Configuration subset = config.subset("test");
         assertNotNull(subset.getProperty("onlyinjndi"));
         assertTrue(subset.getBoolean("onlyinjndi"));
+
+        // test SystemConfiguration
+        assertNotNull(config.getProperty("java.version"));
+        assertEquals(System.getProperty("java.version"), config.getString("java.version"));
     }
 
     private void checkUnionConfig() throws Exception
     {
         compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
         assertEquals(
-            "Verify how many configs",
-            3,
-            compositeConfiguration.getNumberOfConfigurations());
+                "Verify how many configs",
+                3,
+                compositeConfiguration.getNumberOfConfigurations());
 
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
         assertTrue(prop instanceof Collection);
         assertEquals(3, ((Collection) prop).size());
         assertEquals(
-            "users",
-            compositeConfiguration.getProperty("tables.table(0).name"));
+                "users",
+                compositeConfiguration.getProperty("tables.table(0).name"));
         assertEquals(
-            "documents",
-            compositeConfiguration.getProperty("tables.table(1).name"));
+                "documents",
+                compositeConfiguration.getProperty("tables.table(1).name"));
         assertEquals(
-            "tasks",
-            compositeConfiguration.getProperty("tables.table(2).name"));
+                "tasks",
+                compositeConfiguration.getProperty("tables.table(2).name"));
 
         prop =
-            compositeConfiguration.getProperty(
-                "tables.table.fields.field.name");
+                compositeConfiguration.getProperty(
+                        "tables.table.fields.field.name");
         assertTrue(prop instanceof Collection);
         assertEquals(17, ((Collection) prop).size());
 
         assertEquals(
-            "smtp.mydomain.org",
-            compositeConfiguration.getString("mail.host.smtp"));
+                "smtp.mydomain.org",
+                compositeConfiguration.getString("mail.host.smtp"));
         assertEquals(
-            "pop3.mydomain.org",
-            compositeConfiguration.getString("mail.host.pop"));
+                "pop3.mydomain.org",
+                compositeConfiguration.getString("mail.host.pop"));
 
         // This was overriden
         assertEquals(
-            "masterOfPost",
-            compositeConfiguration.getString("mail.account.user"));
+                "masterOfPost",
+                compositeConfiguration.getString("mail.account.user"));
         assertEquals(
-            "topsecret",
-            compositeConfiguration.getString("mail.account.psswd"));
+                "topsecret",
+                compositeConfiguration.getString("mail.account.psswd"));
 
         // This was overriden, too, but not in additional section
         assertEquals(
-            "enhanced factory",
-            compositeConfiguration.getString("test.configuration"));
+                "enhanced factory",
+                compositeConfiguration.getString("test.configuration"));
     }
 
     private void checkCompositeConfiguration() throws Exception
@@ -289,31 +293,31 @@ public class TestConfigurationFactory extends TestCase
         compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
-            "Verify how many configs",
-            2,
-            compositeConfiguration.getNumberOfConfigurations());
+                "Verify how many configs",
+                2,
+                compositeConfiguration.getNumberOfConfigurations());
 
         assertEquals(
-            PropertiesConfiguration.class,
-            compositeConfiguration.getConfiguration(0).getClass());
+                PropertiesConfiguration.class,
+                compositeConfiguration.getConfiguration(0).getClass());
 
         PropertiesConfiguration pc =
-            (PropertiesConfiguration) compositeConfiguration.getConfiguration(
-                0);
+                (PropertiesConfiguration) compositeConfiguration.getConfiguration(
+                        0);
         assertNotNull(
-            "Make sure we have a fileName:" + pc.getFileName(),
-            pc.getFileName());
+                "Make sure we have a fileName:" + pc.getFileName(),
+                pc.getFileName());
         assertTrue(
-            "Make sure we have loaded our key",
-            pc.getBoolean("test.boolean"));
+                "Make sure we have loaded our key",
+                pc.getBoolean("test.boolean"));
 
         assertTrue(
-            "Make sure we have loaded our key",
-            compositeConfiguration.getBoolean("test.boolean"));
+                "Make sure we have loaded our key",
+                compositeConfiguration.getBoolean("test.boolean"));
 
-        
+
         Object property = compositeConfiguration.getProperty(
-            "element2.subelement.subsubelement");
-        assertNull("Should have returned a null",property);
+                "element2.subelement.subsubelement");
+        assertNull("Should have returned a null", property);
     }
 }

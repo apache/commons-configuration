@@ -16,7 +16,6 @@
 
 package org.apache.commons.configuration;
 
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ import org.apache.commons.collections.ExtendedProperties;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Revision: 1.7 $, $Date: 2004/08/12 16:06:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/18 12:50:41 $
  */
 public final class ConfigurationConverter
 {
@@ -47,17 +46,7 @@ public final class ConfigurationConverter
      */
     public static Configuration getConfiguration(ExtendedProperties eprops)
     {
-        Configuration config = new BaseConfiguration();
-
-        Iterator keys = eprops.getKeys();
-
-        while (keys.hasNext())
-        {
-            String key = (String) keys.next();
-            config.setProperty(key, eprops.getProperty(key));
-        }
-
-        return config;
+        return new MapConfiguration(eprops);
     }
 
     /**
@@ -68,17 +57,7 @@ public final class ConfigurationConverter
      */
     public static Configuration getConfiguration(Properties props)
     {
-        Configuration config = new BaseConfiguration();
-
-        Enumeration keys = props.keys();
-
-        while (keys.hasMoreElements())
-        {
-            String key = (String) keys.nextElement();
-            config.setProperty(key, props.getProperty(key));
-        }
-
-        return config;
+        return new MapConfiguration(props);
     }
 
     /**
@@ -152,7 +131,8 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Map created from the Configuration
      */
-    public static Map getMap(Configuration config) {
+    public static Map getMap(Configuration config)
+    {
         return new ConfigurationMap(config);
     }
 

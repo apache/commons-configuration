@@ -8,6 +8,19 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="26066">
+        Added a SystemConfiguration wrapping the system properties.
+        ConfigurationFactory recognizes the corresponding &lt;system/&gt;
+        element.
+      </action>
+      <action dev="ebourg" type="add">
+        Added a MapConfiguration to turn any Map into a Configuration. The
+        getConfiguration() methods in ConfigurationConverter now use
+        MapConfiguration, as a result the Configuration returned is always
+        synchronized with the underlying Properties or ExtendedProperties,
+        changes made to the Configuration are available in the Properties,
+        and reciprocally.
+      </action>
       <action dev="ebourg" type="add" issue="31532">
         The "autoSave" feature of XMLConfiguration has been generalized
         to all file based configurations.

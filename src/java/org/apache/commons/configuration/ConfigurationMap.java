@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2004 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * <p>The <code>ConfigurationMap</code> wraps a
  * configuration-collection
@@ -32,12 +31,11 @@ import java.util.Set;
  * @todo This implementation is incomplete. 
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
+ * @version $Revision: 1.7 $, $Date: 2004/10/18 12:50:41 $
+ * @since 1.0
  */
-
-public class ConfigurationMap
-        extends AbstractMap
+public class ConfigurationMap extends AbstractMap
 {
-
     /**
      * The <code>Configuration</code> wrapped by this class.
      */
@@ -82,13 +80,11 @@ public class ConfigurationMap
         return configuration.getProperty(String.valueOf(key));
     }
 
-    static class ConfigurationSet
-            extends AbstractSet
+    static class ConfigurationSet extends AbstractSet
     {
         private Configuration configuration = null;
 
-        private class Entry
-                implements Map.Entry
+        private class Entry implements Map.Entry
         {
             private Object key = null;
             
@@ -116,8 +112,7 @@ public class ConfigurationMap
 
         }
 
-        private class ConfigurationSetIterator
-                implements Iterator
+        private class ConfigurationSetIterator implements Iterator
         {
             private Iterator keys;
 

@@ -32,6 +32,9 @@
           <li>XML documents</li>
           <li>JNDI</li>
           <li>JDBC Datasource</li>
+          <li>System properties</li>
+          <li>Applet parameters</li>
+          <li>Servlet parameters</li>
         </ul>
 
         Different configuration sources can be mixed using a
