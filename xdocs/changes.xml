@@ -23,7 +23,7 @@
         configuration file.
       </action>
       <action dev="oheger" type="add" issue="31136">
-        Access to the top leven element of the XML document is now provided. For
+        Access to the top level element of the XML document is now provided. For
         newly created configurations this element can be changed before the
         document is written.
       </action>

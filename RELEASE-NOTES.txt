@@ -1,7 +1,7 @@
-$Id: RELEASE-NOTES.txt,v 1.1 2003/12/23 15:09:05 epugh Exp $
+$Id$
 
                            Commons Configuration Package
-                               Version 1.0
+                               Version 1.1
                                  Release Notes
 
 
@@ -11,14 +11,8 @@ INTRODUCTION
 This document contains the release notes for this version of the Commons
 Configuration component, and highlights changes since the previous version.
 
+Release 1.1 contains new features and bug fixes as well. A complete list of
+changes can be obtained from the changelog report that is created when building
+with maven or can be viewed at
 
-NEW FEATURES
-============
-
-This is the first milestone release of this component.
-
-
-BUG FIXES
-=========
-
-Not applicable.
+  http://jakarta.apache.org/commons/configuration/changes-report.html
