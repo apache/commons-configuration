@@ -6,9 +6,12 @@
   </properties>
 
   <body>
-    <release version="1.0" date="IN CVS">
+    <release version="1.0.1-dev" date="in CVS">
+    </release>
+
+    <release version="1.0" date="2004-10-11">
       <action dev="ebourg" type="fix" issue="29616">
-        The getStringArray() method in CompositeConfiguration now interpotales
+        The getStringArray() method in CompositeConfiguration now interpolates
         the strings.
       </action>
       <action dev="ebourg" type="fix" issue="31540">
