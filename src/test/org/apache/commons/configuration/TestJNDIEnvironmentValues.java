@@ -27,10 +27,9 @@ public class TestJNDIEnvironmentValues extends TestCase
 
     public void setUp() throws Exception
     {
-        System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        System.setProperty("java.naming.factory.initial", TestJNDIConfiguration.CONTEXT_FACTORY);
         
         conf = new JNDIConfiguration();
-        conf.setPrefix("");
     }
 
     public void testSimpleGet() throws Exception
@@ -54,9 +53,9 @@ public class TestJNDIEnvironmentValues extends TestCase
             conf.getString("test.imaginarykey");
             fail("Should have thrown NoSuchElementException");
         }
-        catch (NoSuchElementException nsee)
+        catch (NoSuchElementException e)
         {
-            assertTrue(nsee.getMessage(),nsee.getMessage().indexOf("test.imaginarykey")!=-1);
+            assertTrue(e.getMessage(), e.getMessage().indexOf("test.imaginarykey") != -1);
         }
     }
 
@@ -91,17 +90,45 @@ public class TestJNDIEnvironmentValues extends TestCase
 
         assertTrue("no key found", it.hasNext());
 
-        while (it.hasNext() && !found) {
+        while (it.hasNext() && !found)
+        {
             found = "test.boolean".equals(it.next());
         }
 
         assertTrue("'test.boolean' key not found", found);
     }
 
-    public void testGetKeysWithPrefix()
+    public void testGetKeysWithUnknownPrefix()
     {
+        // test for a unknown prefix
         Iterator it = conf.getKeys("foo.bar");
         assertFalse("no key should be found", it.hasNext());
+    }
+
+    public void testGetKeysWithExistingPrefix()
+    {
+        // test for an existing prefix
+        Iterator it = conf.getKeys("test");
+        boolean found = false;
+        while (it.hasNext() && !found)
+        {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
+    }
+
+    public void testGetKeysWithKeyAsPrefix()
+    {
+        // test for a prefix matching exactly the key of a property
+        Iterator it = conf.getKeys("test.boolean");
+        boolean found = false;
+        while (it.hasNext() && !found)
+        {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
     }
 
 }
