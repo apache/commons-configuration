@@ -27,7 +27,7 @@ import java.util.Iterator;
  *
  * @author Emmanuel Bourg
  * @author Mark Woodman
- * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.4 2004/12/13 16:40:14 oheger Exp $
+ * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.5 2004/12/18 16:33:03 oheger Exp $
  */
 public class TestHierarchicalXMLConfiguration extends TestCase
 {
@@ -53,7 +53,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     private static final String TEST_SAVENAME = "testhierarchicalsave.xml";
 
     /** File path for saving.*/
-    private static final String TEST_SAVE = TEST_DIR + File.separator + TEST_SAVENAME;
+    private static final String TEST_SAVE = "target" + File.separator + TEST_SAVENAME;
 
     /** Instance config used for tests. */
     private HierarchicalXMLConfiguration config;
@@ -247,6 +247,8 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         config.addProperty("list(1).sublist.item", "seven");
         config.setProperty("clear", "yes");
         config.setProperty("mean", "now it's simple");
+        config.addProperty("[@topattr]", "available");
+        config.addProperty("[@topattr]", "successfull");
 
         removeTestSaveFile();
         try
@@ -264,6 +266,8 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             assertEquals("seven", config.getProperty("list(1).sublist.item(2)"));
             assertEquals("yes", config.getProperty("clear"));
             assertEquals("now it's simple", config.getString("mean"));
+            assertEquals("available", config.getString("[@topattr](0)"));
+            assertEquals("successfull", config.getString("[@topattr](1)"));
         }
         finally
         {

@@ -496,8 +496,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
      * @param node the actual node
      * @param data here the found nodes are stored
      */
-    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart, Node node,
-            Collection data)
+    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart, Node node, Collection data)
     {
         if (!keyPart.hasNext())
         {
@@ -511,16 +510,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             {
                 if (keyPart.getIndex() < children.size() && keyPart.getIndex() >= 0)
                 {
-                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(),
-                            (Node) children.get(keyPart.getIndex()), data);
+                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) children.get(keyPart
+                            .getIndex()), data);
                 }
             }
             else
             {
                 for (Iterator it = children.iterator(); it.hasNext();)
                 {
-                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) it
-                            .next(), data);
+                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) it.next(), data);
                 }
             }
         }
@@ -685,9 +683,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         /** Stores the children of this node. */
         private LinkedMap children; // Explict type here or we
-							        // will get a findbugs error
-							        // because Map doesn't imply
-							        // Serializable
+
+        // will get a findbugs error
+        // because Map doesn't imply
+        // Serializable
 
         /**
          * Creates a new instance of <code>Node</code>.
@@ -930,11 +929,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         {
             if (children != null)
             {
-                for (Iterator it = children.values().iterator(); it.hasNext();)
+                Iterator it = children.values().iterator();
+                children = null;
+                while (it.hasNext())
                 {
                     nodesRemoved((Collection) it.next());
                 }
-                children = null;
             }
         }
 
@@ -965,8 +965,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
             if (children != null)
             {
-                for (Iterator it = children.values().iterator(); it.hasNext()
-                        && !visitor.terminate();)
+                for (Iterator it = children.values().iterator(); it.hasNext() && !visitor.terminate();)
                 {
                     Collection col = (Collection) it.next();
                     for (Iterator it2 = col.iterator(); it2.hasNext() && !visitor.terminate();)
@@ -1325,10 +1324,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                     for (Iterator it = newNodes.iterator(); it.hasNext();)
                     {
                         Node insertNode = (Node) it.next();
-                        Object ref = insert(insertNode, node, sibling1, sibling2);
-                        if (ref != null)
+                        if (insertNode.getReference() == null)
                         {
-                            insertNode.setReference(ref);
+                            Object ref = insert(insertNode, node, sibling1, sibling2);
+                            if (ref != null)
+                            {
+                                insertNode.setReference(ref);
+                            }
                         }
                     }
                 }

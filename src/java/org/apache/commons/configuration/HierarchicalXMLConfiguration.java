@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -61,21 +62,76 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * 
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
- * @version $Revision: 1.7 $, $Date: 2004/12/13 16:40:13 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/18 16:33:03 $
  */
-public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements
-        FileConfiguration
+public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
-    private FileConfiguration delegate = new FileConfigurationDelegate();
+    /** Delimiter character for attributes. */
+    private static char ATTR_DELIMITER = ',';
+
+    private FileConfigurationDelegate delegate = new FileConfigurationDelegate();
 
     /** The document from this configuration's data source. */
     private Document document;
 
     /** Stores the name of the root element. */
     private String rootElementName;
+
+    /**
+     * Creates a new instance of <code>HierarchicalXMLConfiguration</code>.
+     */
+    public HierarchicalXMLConfiguration()
+    {
+        super();
+    }
+
+    /**
+     * Creates a new instance of <code>HierarchicalXMLConfiguration</code>.
+     * The configuration is loaded from the specified file
+     * 
+     * @param fileName the name of the file to load
+     * @throws ConfigurationException if the file cannot be loaded
+     */
+    public HierarchicalXMLConfiguration(String fileName) throws ConfigurationException
+    {
+        this();
+        setFileName(fileName);
+        load();
+    }
+
+    /**
+     * Creates a new instance of <code>HierarchicalXMLConfiguration</code>.
+     * The configuration is loaded from the specified file.
+     * 
+     * @param file the file
+     * @throws ConfigurationException if an error occurs while loading the file
+     */
+    public HierarchicalXMLConfiguration(File file) throws ConfigurationException
+    {
+        this();
+        setFile(file);
+        if (file.exists())
+        {
+            load();
+        }
+    }
+
+    /**
+     * Creates a new instance of <code>HierarchicalXMLConfiguration</code>.
+     * The configuration is loaded from the specified URL.
+     * 
+     * @param url the URL
+     * @throws ConfigurationException if loading causes an error
+     */
+    public HierarchicalXMLConfiguration(URL url) throws ConfigurationException
+    {
+        this();
+        setURL(url);
+        load();
+    }
 
     /**
      * Returns the name of the root element.
@@ -89,8 +145,8 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
 
     /**
      * Sets the name of the root element. This name is used when this
-     * configuration object is stored in an XML file. Note that setting the
-     * name of the root element works only if this configuration has been newly
+     * configuration object is stored in an XML file. Note that setting the name
+     * of the root element works only if this configuration has been newly
      * created. If the configuration was loaded from an XML file, the name
      * cannot be changed.
      * 
@@ -99,6 +155,33 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     public void setRootElementName(String name)
     {
         rootElementName = name;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected void addPropertyDirect(String key, Object obj)
+    {
+        super.addPropertyDirect(key, obj);
+        delegate.possiblySave();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void clearProperty(String key)
+    {
+        super.clearProperty(key);
+        delegate.possiblySave();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setProperty(String key, Object value)
+    {
+        super.setProperty(key, value);
+        delegate.possiblySave();
     }
 
     /**
@@ -120,6 +203,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
      */
     private void constructHierarchy(Node node, Element element)
     {
+        processAttributes(node, element);
         StringBuffer buffer = new StringBuffer();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
@@ -131,7 +215,6 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
                 Node childNode = new XMLNode(child.getTagName(), child);
                 constructHierarchy(childNode, child);
                 node.addChild(childNode);
-                processAttributes(childNode, child);
             }
             else if (w3cNode instanceof Text)
             {
@@ -162,10 +245,12 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()),
-                        element);
-                child.setValue(attr.getValue());
-                node.addChild(child);
+                for (Iterator it = PropertyConverter.split(attr.getValue(), ATTR_DELIMITER).iterator(); it.hasNext();)
+                {
+                    Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()), element);
+                    child.setValue(it.next());
+                    node.addChild(child);
+                }
             }
         }
     }
@@ -423,7 +508,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
             {
                 if (ConfigurationKey.isAttributeKey(getName()))
                 {
-                    updateAttribute(value);
+                    updateAttribute();
                 }
                 else
                 {
@@ -442,7 +527,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
                 Element element = (Element) getReference();
                 if (ConfigurationKey.isAttributeKey(getName()))
                 {
-                    element.removeAttribute(ConfigurationKey.removeAttributeMarkers(getName()));
+                    updateAttribute();
                 }
                 else
                 {
@@ -478,8 +563,7 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
                     txtNode = document.createTextNode(value.toString());
                     if (((Element) getReference()).getFirstChild() != null)
                     {
-                        ((Element) getReference()).insertBefore(txtNode, ((Element) getReference())
-                                .getFirstChild());
+                        ((Element) getReference()).insertBefore(txtNode, ((Element) getReference()).getFirstChild());
                     }
                     else
                     {
@@ -495,21 +579,11 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
 
         /**
          * Updates the node's value if it represents an attribute.
-         * 
-         * @param value the new value
+         *  
          */
-        private void updateAttribute(Object value)
+        private void updateAttribute()
         {
-            Element elem = (Element) getReference();
-            if (value == null)
-            {
-                elem.removeAttribute(ConfigurationKey.removeAttributeMarkers(getName()));
-            }
-            else
-            {
-                elem.setAttribute(ConfigurationKey.removeAttributeMarkers(getName()), value
-                        .toString());
-            }
+            XMLBuilderVisitor.updateAttribute(getParent(), getName());
         }
 
         /**
@@ -595,17 +669,8 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         {
             if (ConfigurationKey.isAttributeKey(newNode.getName()))
             {
-                if (newNode.getValue() != null)
-                {
-                    getElement(parent).setAttribute(
-                            ConfigurationKey.removeAttributeMarkers(newNode.getName()),
-                            newNode.getValue().toString());
-                    return getElement(parent);
-                }
-                else
-                {
-                    return null;
-                }
+                updateAttribute(parent, getElement(parent), newNode.getName());
+                return null;
             }
 
             else
@@ -632,6 +697,61 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         }
 
         /**
+         * Helper method for updating the value of the specified node's
+         * attribute with the given name.
+         * 
+         * @param node the affected node
+         * @param elem the element that is associated with this node
+         * @param name the name of the affected attribute
+         */
+        private static void updateAttribute(Node node, Element elem, String name)
+        {
+            if (node != null && elem != null)
+            {
+                List attrs = node.getChildren(name);
+                StringBuffer buf = new StringBuffer();
+                for (Iterator it = attrs.iterator(); it.hasNext();)
+                {
+                    Node attr = (Node) it.next();
+                    if (attr.getValue() != null)
+                    {
+                        if (buf.length() > 0)
+                        {
+                            buf.append(ATTR_DELIMITER);
+                        }
+                        buf.append(attr.getValue());
+                    }
+                    attr.setReference(elem);
+                }
+
+                if (buf.length() < 1)
+                {
+                    elem.removeAttribute(ConfigurationKey.removeAttributeMarkers(name));
+                }
+                else
+                {
+                    elem.setAttribute(ConfigurationKey.removeAttributeMarkers(name), buf.toString());
+                }
+            }
+        }
+
+        /**
+         * Updates the value of the specified attribute of the given node.
+         * Because there can be multiple child nodes representing this attribute
+         * the new value is determined by iterating over all those child nodes.
+         * 
+         * @param node the affected node
+         * @param name the name of the attribute
+         */
+        static void updateAttribute(Node node, String name)
+        {
+            if (node != null)
+            {
+                updateAttribute(node, (Element) node.getReference(), name);
+            }
+        }
+
+        /**
          * Helper method for accessing the element of the specified node.
          * 
          * @param node the node
@@ -640,14 +760,12 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         private Element getElement(Node node)
         {
             // special treatement for root node of the hierarchy
-            return (node.getName() != null) ? (Element) node.getReference() : document
-                    .getDocumentElement();
+            return (node.getName() != null) ? (Element) node.getReference() : document.getDocumentElement();
         }
     }
 
     private class FileConfigurationDelegate extends AbstractFileConfiguration
     {
-
         public void load(Reader in) throws ConfigurationException
         {
             HierarchicalXMLConfiguration.this.load(in);
@@ -657,6 +775,5 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         {
             HierarchicalXMLConfiguration.this.save(out);
         }
-
     }
 }
