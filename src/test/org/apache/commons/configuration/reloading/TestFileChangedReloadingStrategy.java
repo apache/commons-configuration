@@ -48,10 +48,12 @@ public class TestFileChangedReloadingStrategy extends TestCase
 
         // load the configuration
         PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
-        config.setReloadingStrategy(new FileChangedReloadingStrategy());
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
+        config.setReloadingStrategy(strategy);
         assertEquals("Initial value", "value1", config.getString("string"));
 
-        Thread.sleep(5000);
+        Thread.sleep(2000);
 
         // change the file
         out = new FileWriter(file);
@@ -61,6 +63,43 @@ public class TestFileChangedReloadingStrategy extends TestCase
 
         // test the automatic reloading
         assertEquals("Modified value with enabled reloading", "value2", config.getString("string"));
+    }
+
+    public void testNewFileReloading() throws Exception
+    {
+        // create a new configuration
+        File file = new File("target/testReload.properties");
+
+        if (file.exists())
+        {
+            file.delete();
+        }
+
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFile(file);
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
+        config.setReloadingStrategy(strategy);
+
+        assertNull("Initial value", config.getString("string"));
+
+        // change the file
+        FileWriter out = new FileWriter(file);
+        out.write("string=value1");
+        out.flush();
+        out.close();
+
+        Thread.sleep(2000);
+
+        // test the automatic reloading
+        assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
+    }
+
+    public void testGetRefreshDelay()
+    {
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
+        assertEquals("refresh delay", 500, strategy.getRefreshDelay());
     }
 
 }
