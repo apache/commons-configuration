@@ -19,13 +19,13 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.30 2004/09/23 12:05:07 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.31 2004/09/24 18:01:12 epugh Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
 
   <id>commons-configuration</id>
-  <currentVersion>1.0-SNAPSHOT</currentVersion>
+  <currentVersion>1.0-rc2</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
@@ -62,7 +62,18 @@
     <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons/${pom.artifactId.substring(8)}</connection>
     <url>http://cvs.apache.org/viewcvs/jakarta-commons/${pom.artifactId.substring(8)}/</url>
   </repository>
-
+  <versions>
+    <version>
+      <id>1.0-rc1</id>
+      <name>1.0-rc1</name>
+      <tag>CONFIGURATION_1_0_RC1</tag>
+    </version>  
+    <version>
+      <id>1.0-rc2</id>
+      <name>1.0-rc2</name>
+      <tag>CONFIGURATION_1_0_RC2</tag>
+    </version>    
+  </versions>
   <mailingLists>
     <mailingList>
       <name>Commons Dev List</name>
