@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+	 <action dev="epugh" type="add">
+      	Bugzilla 26694 (BaseConfiguration: containsKey ignores default properties).  I have changed it so that
+      	now the defaults are paid attention to.   
+     </action>        
       <action dev="ebourg" type="add">
         The Configuration interface now supports BigDecimal and BigInteger numbers.
       </action>

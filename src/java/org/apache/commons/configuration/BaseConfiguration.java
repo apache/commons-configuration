@@ -57,6 +57,7 @@ package org.apache.commons.configuration;
 import java.util.Iterator;
 
 import org.apache.commons.collections.SequencedHashMap;
+import org.apache.commons.collections.iterators.IteratorChain;
 
 /**
  * Basic configuration classe. Stores the configuration data but does not
@@ -81,7 +82,7 @@ import org.apache.commons.collections.SequencedHashMap;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  *
- * @version $Id: BaseConfiguration.java,v 1.1 2003/12/23 15:09:05 epugh Exp $
+ * @version $Id: BaseConfiguration.java,v 1.2 2004/02/14 18:54:21 epugh Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
@@ -171,7 +172,7 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public boolean isEmpty()
     {
-        return store.isEmpty();
+        return store.isEmpty() &((defaults != null) && defaults.isEmpty());
     }
 
     /**
@@ -184,7 +185,9 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public boolean containsKey(String key)
     {
-        return store.containsKey(key);
+        return store.containsKey(key)
+        || ((defaults != null) && defaults.containsKey(key));
+        
     }
 
     /**
@@ -197,6 +200,9 @@ public class BaseConfiguration extends AbstractConfiguration
         if (containsKey(key))
         {
             store.remove(key);
+            if(defaults != null){
+                defaults.clearProperty(key);
+            }
         }
     }
 
@@ -208,6 +214,11 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public Iterator getKeys()
     {
-        return store.iterator();
+        if(defaults != null){
+            return new IteratorChain(defaults.getKeys(),store.iterator());
+        }
+        else {
+            return store.iterator();
+        }
     }
 }
