@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 /**
  * Test class for BaseConfigurationXMLReader.
  *
- * @version $Id: TestBaseConfigurationXMLReader.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestBaseConfigurationXMLReader.java,v 1.4 2004/11/17 00:12:05 ebourg Exp $
  */
 public class TestBaseConfigurationXMLReader extends TestCase
 {
