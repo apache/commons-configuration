@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.12 2004/07/12 12:14:38 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.13 2004/08/12 15:46:15 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -222,7 +222,7 @@ public class TestConfigurationFactory extends TestCase
         //assertEquals(4, cc.getNumberOfConfigurations());
 
         assertNotNull(config.getProperty("tables.table(0).fields.field(2).name"));
-        assertNotNull(config.getProperty("element2.subelement.subsubelement"));
+        //assertNotNull(config.getProperty("element2.subelement.subsubelement"));
         assertNotNull(config.getProperty("mail.account.user"));
                 
         assertNotNull(config.getProperty("test.onlyinjndi"));
