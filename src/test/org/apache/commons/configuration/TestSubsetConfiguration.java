@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -27,7 +28,7 @@ import junit.framework.TestCase;
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.5 $, $Date: 2004/09/23 11:41:05 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/05 21:17:25 $
  */
 public class TestSubsetConfiguration extends TestCase
 {
@@ -162,5 +163,39 @@ public class TestSubsetConfiguration extends TestCase
 
         assertEquals("prefix", "prefix", subset.getPrefix());
     }
+
+    public void testThrowtExceptionOnMissing()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.setThrowExceptionOnMissing(true);
+
+        SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
+
+        try
+        {
+            subset.getString("foo");
+            fail("NoSuchElementException expected");
+        }
+        catch (NoSuchElementException e)
+        {
+            // expected
+        }
+
+        config.setThrowExceptionOnMissing(false);
+        assertNull(subset.getString("foo"));
+
+
+        subset.setThrowExceptionOnMissing(true);
+        try
+        {
+            config.getString("foo");
+            fail("NoSuchElementException expected");
+        }
+        catch (NoSuchElementException e)
+        {
+            // expected
+        }
+    }
+
 
 }

@@ -29,7 +29,7 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * @see Configuration#subset(String)
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.5 $, $Date: 2004/06/24 14:01:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/05 21:17:25 $
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {
@@ -236,6 +236,40 @@ public class SubsetConfiguration extends AbstractConfiguration
         {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
             return config.interpolate(base);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * Change the behaviour of the parent configuration if it supports this feature.
+     */
+    public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
+    {
+        if (parent instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) parent).setThrowExceptionOnMissing(throwExceptionOnMissing);
+        }
+        else
+        {
+            super.setThrowExceptionOnMissing(throwExceptionOnMissing);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * The subset inherits this feature from its parent if it supports this feature.
+     */
+    public boolean isThrowExceptionOnMissing()
+    {
+        if (parent instanceof AbstractConfiguration)
+        {
+            return ((AbstractConfiguration) parent).isThrowExceptionOnMissing();
+        }
+        else
+        {
+            return super.isThrowExceptionOnMissing();
         }
     }
 }

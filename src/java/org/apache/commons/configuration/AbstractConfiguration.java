@@ -39,7 +39,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.24 2004/09/21 17:58:10 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.25 2004/10/05 21:17:25 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -56,14 +56,15 @@ public abstract class AbstractConfiguration implements Configuration
     private static final int INITIAL_LIST_SIZE = 2;
 
     /**
-     * Whether the configuration should throw NoSuchElementExceptions or simply return null
-     * when a property does not exist. Defaults to return null.
+     * Whether the configuration should throw NoSuchElementExceptions or simply
+     * return null when a property does not exist. Defaults to return null.
      */
     private boolean throwExceptionOnMissing = false;
 
     /**
      * For configurations extending AbstractConfiguration, allow them to
      * change the delimiter from the default comma (",").
+     *
      * @param delimiter The new delimiter
      */
     public static void setDelimiter(char delimiter)
@@ -73,6 +74,7 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Retrieve the current delimiter.  By default this is a comma (",").
+     * 
      * @return The delimiter in use
      */
     public static char getDelimiter()
@@ -832,7 +834,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return number;
         }
-        else if (throwExceptionOnMissing)
+        else if (isThrowExceptionOnMissing())
         {
             throw new NoSuchElementException(
                 '\'' + key + "' doesn't map to an existing object");
@@ -886,7 +888,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return number;
         }
-        else if (throwExceptionOnMissing)
+        else if (isThrowExceptionOnMissing())
         {
             throw new NoSuchElementException(
                     '\'' + key + "' doesn't map to an existing object");
@@ -941,7 +943,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             return s;
         }
-        else if (throwExceptionOnMissing)
+        else if (isThrowExceptionOnMissing())
         {
             throw new NoSuchElementException(
                 '\'' + key + "' doesn't map to an existing object");
