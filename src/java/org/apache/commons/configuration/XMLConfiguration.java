@@ -17,16 +17,20 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -35,463 +39,389 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
-import org.w3c.dom.CharacterData;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
- * Reads a XML configuration file.
- *
- * To retrieve the value of an attribute of an element, use
- * <code>X.Y.Z[@attribute]</code>. The '@' symbol was chosen for consistency
- * with XPath.
- *
+ * A specialized hierarchical configuration class that is able to parse XML
+ * documents.
+ * 
+ * <p>The parsed document will be stored keeping its structure. The class also
+ * tries to preserve as much information from the loaded XML document as
+ * possible, including comments and processing instructions. These will be
+ * contained in documents created by the <code>save()</code> methods, too.
+ * 
  * @since commons-configuration 1.0
- *
- * @author Jörg Schaible
- * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
- * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.19 $, $Date: 2004/10/19 11:44:31 $
+ * 
+ * @author J&ouml;rg Schaible
+ * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
+ * @version $Revision: 1.20 $, $Date: 2004/12/23 18:40:21 $
  */
-public class XMLConfiguration extends AbstractFileConfiguration
+public class XMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
-    // For conformance with xpath
-    private static final String ATTRIBUTE_START = "[@";
+    /** Constant for the default root element name. */
+    private static final String DEFAULT_ROOT_NAME = "configuration";
 
-    private static final String ATTRIBUTE_END = "]";
+    /** Delimiter character for attributes. */
+    private static char ATTR_DELIMITER = ',';
 
-    /**
-     * For consistency with properties files. Access nodes via an "A.B.C"
-     * notation.
-     */
-    private static final String NODE_DELIMITER = ".";
+    private FileConfigurationDelegate delegate = new FileConfigurationDelegate();
 
-    /**
-     * The XML document from our data source.
-     */
+    /** The document from this configuration's data source. */
     private Document document;
 
+    /** Stores the name of the root element. */
+    private String rootElementName;
+
     /**
-     * Creates an empty XML configuration.
+     * Creates a new instance of <code>XMLConfiguration</code>.
      */
     public XMLConfiguration()
     {
-        // build an empty document.
-        DocumentBuilder builder = null;
-        try
-        {
-            builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        }
-        catch (ParserConfigurationException e)
-        {
-            throw new ConfigurationRuntimeException(e.getMessage(), e);
-        }
-
-        document = builder.newDocument();
-        document.appendChild(document.createElement("configuration"));
+        super();
     }
 
     /**
-     * Creates and loads the XML configuration from the specified file.
-     *
-     * @param fileName The name of the file to load.
-     *
-     * @throws ConfigurationException Error while loading the XML file
+     * Creates a new instance of <code>XMLConfiguration</code>.
+     * The configuration is loaded from the specified file
+     * 
+     * @param fileName the name of the file to load
+     * @throws ConfigurationException if the file cannot be loaded
      */
     public XMLConfiguration(String fileName) throws ConfigurationException
     {
-        super(fileName);
+        this();
+        setFileName(fileName);
+        load();
     }
 
     /**
-     * Creates and loads the XML configuration from the specified file.
-     *
-     * @param file The XML file to load.
-     * @throws ConfigurationException Error while loading the XML file
+     * Creates a new instance of <code>XMLConfiguration</code>.
+     * The configuration is loaded from the specified file.
+     * 
+     * @param file the file
+     * @throws ConfigurationException if an error occurs while loading the file
      */
     public XMLConfiguration(File file) throws ConfigurationException
     {
-        super(file);
+        this();
+        setFile(file);
+        if (file.exists())
+        {
+            load();
+        }
     }
 
     /**
-     * Creates and loads the XML configuration from the specified URL.
-     *
-     * @param url The location of the XML file to load.
-     * @throws ConfigurationException Error while loading the XML file
+     * Creates a new instance of <code>XMLConfiguration</code>.
+     * The configuration is loaded from the specified URL.
+     * 
+     * @param url the URL
+     * @throws ConfigurationException if loading causes an error
      */
     public XMLConfiguration(URL url) throws ConfigurationException
     {
-        super(url);
+        this();
+        setURL(url);
+        load();
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the name of the root element. If this configuration was loaded
+     * from a XML document, the name of this document's root element is
+     * returned. Otherwise it is possible to set a name for the root element
+     * that will be used when this configuration is stored.
+     * 
+     * @return the name of the root element
      */
+    public String getRootElementName()
+    {
+        if (getDocument() == null)
+        {
+            return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
+        }
+        else
+        {
+            return getDocument().getDocumentElement().getNodeName();
+        }
+    }
+
+    /**
+     * Sets the name of the root element. This name is used when this
+     * configuration object is stored in an XML file. Note that setting the name
+     * of the root element works only if this configuration has been newly
+     * created. If the configuration was loaded from an XML file, the name
+     * cannot be changed and an <code>UnsupportedOperationException</code>
+     * exception is thrown. Whether this configuration has been loaded from an
+     * XML document or not can be found out using the <code>getDocument()</code>
+     * method.
+     * 
+     * @param name the name of the root element
+     */
+    public void setRootElementName(String name)
+    {
+        if (getDocument() != null)
+        {
+            throw new UnsupportedOperationException("The name of the root element "
+                    + "cannot be changed when loaded from an XML document!");
+        }
+        rootElementName = name;
+    }
+    
+    /**
+     * Returns the XML document this configuration was loaded from. The return
+     * value is <b>null</b> if this configuration was not loaded from a XML
+     * document.
+     * 
+     * @return the XML document this configuration was loaded from
+     */
+    public Document getDocument()
+    {
+        return document;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected void addPropertyDirect(String key, Object obj)
+    {
+        super.addPropertyDirect(key, obj);
+        delegate.possiblySave();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void clearProperty(String key)
+    {
+        super.clearProperty(key);
+        delegate.possiblySave();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public void setProperty(String key, Object value)
+    {
+        super.setProperty(key, value);
+        delegate.possiblySave();
+    }
+
+    /**
+     * Initializes this configuration from an XML document.
+     * 
+     * @param document the document to be parsed
+     */
+    public void initProperties(Document document)
+    {
+        constructHierarchy(getRoot(), document.getDocumentElement());
+    }
+
+    /**
+     * Helper method for building the internal storage hierarchy. The XML
+     * elements are transformed into node objects.
+     * 
+     * @param node the actual node
+     * @param element the actual XML element
+     */
+    private void constructHierarchy(Node node, Element element)
+    {
+        processAttributes(node, element);
+        StringBuffer buffer = new StringBuffer();
+        NodeList list = element.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++)
+        {
+            org.w3c.dom.Node w3cNode = list.item(i);
+            if (w3cNode instanceof Element)
+            {
+                Element child = (Element) w3cNode;
+                Node childNode = new XMLNode(child.getTagName(), child);
+                constructHierarchy(childNode, child);
+                node.addChild(childNode);
+            }
+            else if (w3cNode instanceof Text)
+            {
+                Text data = (Text) w3cNode;
+                buffer.append(data.getData());
+            }
+        }
+        String text = buffer.toString().trim();
+        if (text.length() > 0)
+        {
+            node.setValue(text);
+        }
+    }
+
+    /**
+     * Helper method for constructing node objects for the attributes of the
+     * given XML element.
+     * 
+     * @param node the actual node
+     * @param element the actual XML element
+     */
+    private void processAttributes(Node node, Element element)
+    {
+        NamedNodeMap attributes = element.getAttributes();
+        for (int i = 0; i < attributes.getLength(); ++i)
+        {
+            org.w3c.dom.Node w3cNode = attributes.item(i);
+            if (w3cNode instanceof Attr)
+            {
+                Attr attr = (Attr) w3cNode;
+                for (Iterator it = PropertyConverter.split(attr.getValue(), ATTR_DELIMITER).iterator(); it.hasNext();)
+                {
+                    Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()), element);
+                    child.setValue(it.next());
+                    node.addChild(child);
+                }
+            }
+        }
+    }
+
+    /**
+     * Creates a DOM document from the internal tree of configuration nodes.
+     * 
+     * @return the new document
+     * @throws ConfigurationException if an error occurs
+     */
+    protected Document createDocument() throws ConfigurationException
+    {
+        try
+        {
+            if (document == null)
+            {
+                DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+                Document newDocument = builder.newDocument();
+                Element rootElem = newDocument.createElement(getRootElementName());
+                newDocument.appendChild(rootElem);
+                document = newDocument;
+            }
+
+            XMLBuilderVisitor builder = new XMLBuilderVisitor(document);
+            builder.processDocument(getRoot());
+            return document;
+        } /* try */
+        catch (DOMException domEx)
+        {
+            throw new ConfigurationException(domEx);
+        }
+        catch (ParserConfigurationException pex)
+        {
+            throw new ConfigurationException(pex);
+        }
+    }
+
+    /**
+     * Creates a new node object. This implementation returns an instance of the
+     * <code>XMLNode</code> class.
+     * 
+     * @param name the node's name
+     * @return the new node
+     */
+    protected Node createNode(String name)
+    {
+        return new XMLNode(name, null);
+    }
+
+    public void load() throws ConfigurationException
+    {
+        delegate.load();
+    }
+
+    public void load(String fileName) throws ConfigurationException
+    {
+        delegate.load(fileName);
+    }
+
+    public void load(File file) throws ConfigurationException
+    {
+        delegate.load(file);
+    }
+
+    public void load(URL url) throws ConfigurationException
+    {
+        delegate.load(url);
+    }
+
+    public void load(InputStream in) throws ConfigurationException
+    {
+        delegate.load(in);
+    }
+
+    public void load(InputStream in, String encoding) throws ConfigurationException
+    {
+        delegate.load(in, encoding);
+    }
+
     public void load(Reader in) throws ConfigurationException
     {
         try
         {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            document = builder.parse(new InputSource(in));
+            Document newDocument = builder.parse(new InputSource(in));
+            document = null;
+            initProperties(newDocument);
+            document = newDocument;
         }
         catch (Exception e)
         {
             throw new ConfigurationException(e.getMessage(), e);
         }
+    }
 
-        initProperties(document.getDocumentElement(), new StringBuffer());
+    public void save() throws ConfigurationException
+    {
+        delegate.save();
+    }
+
+    public void save(String fileName) throws ConfigurationException
+    {
+        delegate.save(fileName);
+    }
+
+    public void save(File file) throws ConfigurationException
+    {
+        delegate.save(file);
+    }
+
+    public void save(URL url) throws ConfigurationException
+    {
+        delegate.save(url);
+    }
+
+    public void save(OutputStream out) throws ConfigurationException
+    {
+        delegate.save(out);
+    }
+
+    public void save(OutputStream out, String encoding) throws ConfigurationException
+    {
+        delegate.save(out, encoding);
     }
 
     /**
-     * Loads and initializes from the XML file.
-     *
-     * @param element The element to start processing from. Callers should supply the root element of the document.
-     * @param hierarchy
-     */
-    private void initProperties(Element element, StringBuffer hierarchy)
-    {
-        StringBuffer buffer = new StringBuffer();
-        NodeList list = element.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++)
-        {
-            Node node = list.item(i);
-            if (node instanceof Element)
-            {
-                Element child = (Element) node;
-
-                StringBuffer subhierarchy = new StringBuffer(hierarchy.toString());
-                subhierarchy.append(child.getTagName());
-                processAttributes(subhierarchy.toString(), child);
-                initProperties(child, subhierarchy.append(NODE_DELIMITER));
-            }
-            else if (node instanceof CDATASection || node instanceof Text)
-            {
-                CharacterData data = (CharacterData) node;
-                buffer.append(data.getData());
-            }
-        }
-
-        String text = buffer.toString().trim();
-        if (text.length() > 0 && hierarchy.length() > 0)
-        {
-            super.addProperty(hierarchy.substring(0, hierarchy.length() - 1), text);
-        }
-    }
-
-    /**
-     * Helper method for constructing properties for the attributes of the given
-     * XML element.
-     *
-     * @param hierarchy the actual hierarchy
-     * @param element   the actual XML element
-     */
-    private void processAttributes(String hierarchy, Element element)
-    {
-        // Add attributes as x.y{ATTRIBUTE_START}att{ATTRIBUTE_END}
-        NamedNodeMap attributes = element.getAttributes();
-        for (int i = 0; i < attributes.getLength(); ++i)
-        {
-            Attr attr = (Attr) attributes.item(i);
-            String attrName = hierarchy + ATTRIBUTE_START + attr.getName() + ATTRIBUTE_END;
-            super.addProperty(attrName, attr.getValue());
-        }
-    }
-
-    /**
-     * Calls super method, and also ensures the underlying {@link Document} is
-     * modified so changes are persisted when saved.
-     *
-     * @param name
-     * @param value
-     */
-    public void addProperty(String name, Object value)
-    {
-        addXmlProperty(name, value);
-        super.addProperty(name, value);
-    }
-
-    Object getXmlProperty(String name)
-    {
-        // parse the key
-        String[] nodes = parseElementNames(name);
-        String attName = parseAttributeName(name);
-
-        // get all the matching elements
-        List children = findElementsForPropertyNodes(nodes);
-
-        List properties = new ArrayList();
-        if (attName == null)
-        {
-            // return text contents of elements
-            Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element) cIter.next();
-                // add non-empty strings
-                String text = getChildText(child);
-                if (StringUtils.isNotEmpty(text))
-                {
-                    properties.add(text);
-                }
-            }
-        }
-        else
-        {
-            // return text contents of attributes
-            Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element) cIter.next();
-                if (child.hasAttribute(attName))
-                {
-                    properties.add(child.getAttribute(attName));
-                }
-            }
-        }
-
-        switch (properties.size())
-        {
-            case 0:
-                return null;
-            case 1:
-                return properties.get(0);
-            default:
-                return properties;
-        }
-    }
-
-    /**
-     * TODO Add comment.
-     *
-     * @param nodes
-     * @return
-     */
-    private List findElementsForPropertyNodes(String[] nodes)
-    {
-        List children = new ArrayList();
-        List elements = new ArrayList();
-
-        children.add(document.getDocumentElement());
-        for (int i = 0; i < nodes.length; i++)
-        {
-            elements.clear();
-            elements.addAll(children);
-            children.clear();
-
-            String eName = nodes[i];
-            Iterator eIter = elements.iterator();
-            while (eIter.hasNext())
-            {
-                Element element = (Element) eIter.next();
-                NodeList list = element.getChildNodes();
-                for (int j = 0; j < list.getLength(); j++)
-                {
-                    Node node = list.item(j);
-                    if (node instanceof Element)
-                    {
-                        Element child = (Element) node;
-                        if (eName.equals(child.getTagName()))
-                        {
-                            children.add(child);
-                        }
-                    }
-                }
-            }
-        }
-
-        return children;
-    }
-
-    private static String getChildText(Node node)
-    {
-        // is there anything to do?
-        if (node == null)
-        {
-            return null;
-        }
-
-        // concatenate children text
-        StringBuffer str = new StringBuffer();
-        Node child = node.getFirstChild();
-        while (child != null)
-        {
-            short type = child.getNodeType();
-            if (type == Node.TEXT_NODE)
-            {
-                str.append(child.getNodeValue());
-            }
-            else if (type == Node.CDATA_SECTION_NODE)
-            {
-                str.append(child.getNodeValue());
-            }
-            child = child.getNextSibling();
-        }
-
-        // return text value
-        return StringUtils.trimToNull(str.toString());
-
-    }
-
-    private Element getChildElementWithName(String eName, Element element)
-    {
-        Element child = null;
-
-        NodeList list = element.getChildNodes();
-        for (int j = 0; j < list.getLength(); j++)
-        {
-            Node node = list.item(j);
-            if (node instanceof Element)
-            {
-                child = (Element) node;
-                if (eName.equals(child.getTagName()))
-                {
-                    break;
-                }
-                child = null;
-            }
-        }
-        return child;
-    }
-
-    /**
-     * Adds the property value in our document tree.
-     *
-     * @param name  The name of the element to set a value for.
-     * @param value The value to set.
-     */
-    private void addXmlProperty(String name, Object value)
-    {
-        // parse the key
-        String[] nodes = parseElementNames(name);
-        String attName = parseAttributeName(name);
-
-        Element element = document.getDocumentElement();
-        Element parent = element;
-
-        for (int i = 0; i < nodes.length; i++)
-        {
-            if (element == null)
-            {
-                break;
-            }
-            parent = element;
-            String eName = nodes[i];
-            Element child = getChildElementWithName(eName, element);
-
-            element = child;
-        }
-
-        Element child = document.createElement(nodes[nodes.length - 1]);
-        parent.appendChild(child);
-        if (attName == null)
-        {
-            CharacterData data = document.createTextNode(String.valueOf(value));
-            child.appendChild(data);
-        }
-        else
-        {
-            child.setAttribute(attName, String.valueOf(value));
-        }
-    }
-
-    /**
-     * Calls super method, and also ensures the underlying {@link Document}is
-     * modified so changes are persisted when saved.
-     *
-     * @param name The name of the property to clear.
-     */
-    public void clearProperty(String name)
-    {
-        clearXmlProperty(name);
-        super.clearProperty(name);
-    }
-
-    private void clearXmlProperty(String name)
-    {
-        // parse the key
-        String[] nodes = parseElementNames(name);
-        String attName = parseAttributeName(name);
-
-        // get all the matching elements
-        List children = findElementsForPropertyNodes(nodes);
-
-        if (attName == null)
-        {
-            // remove children with no subelements
-            Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element) cIter.next();
-
-                // determine if child has subelments
-                boolean hasSubelements = false;
-                Node subchild = child.getFirstChild();
-                while (subchild != null)
-                {
-                    if (subchild.getNodeType() == Node.ELEMENT_NODE)
-                    {
-                        hasSubelements = true;
-                        break;
-                    }
-                    subchild = subchild.getNextSibling();
-                }
-
-                if (!hasSubelements)
-                {
-                    // safe to remove
-                    if (!child.hasAttributes())
-                    {
-                        // remove entire node
-                        Node parent = child.getParentNode();
-                        parent.removeChild(child);
-                    }
-                    else
-                    {
-                        // only remove node contents
-                        subchild = child.getLastChild();
-                        while (subchild != null)
-                        {
-                            child.removeChild(subchild);
-                            subchild = child.getLastChild();
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
-            // remove attributes from children
-            Iterator cIter = children.iterator();
-            while (cIter.hasNext())
-            {
-                Element child = (Element) cIter.next();
-                child.removeAttribute(attName);
-            }
-        }
-    }
-
-    /**
-     * {@inheritDoc}
+     * Saves the configuration to the specified writer.
+     * 
+     * @param writer the writer used to save the configuration
+     * @throws ConfigurationException if an error occurs
      */
     public void save(Writer writer) throws ConfigurationException
     {
         try
         {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            Source source = new DOMSource(document);
+            Source source = new DOMSource(createDocument());
             Result result = new StreamResult(writer);
 
-            transformer.setOutputProperty("indent", "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(source, result);
         }
         catch (TransformerException e)
@@ -500,75 +430,382 @@ public class XMLConfiguration extends AbstractFileConfiguration
         }
     }
 
-    public String toString()
+    public String getFileName()
     {
-        StringWriter writer = new StringWriter();
-        try
-        {
-            save(writer);
-        }
-        catch (ConfigurationException e)
-        {
-            e.printStackTrace();
-        }
-        return writer.toString();
+        return delegate.getFileName();
+    }
+
+    public void setFileName(String fileName)
+    {
+        delegate.setFileName(fileName);
+    }
+
+    public String getBasePath()
+    {
+        return delegate.getBasePath();
+    }
+
+    public void setBasePath(String basePath)
+    {
+        delegate.setBasePath(basePath);
+    }
+
+    public File getFile()
+    {
+        return delegate.getFile();
+    }
+
+    public void setFile(File file)
+    {
+        delegate.setFile(file);
+    }
+
+    public URL getURL()
+    {
+        return delegate.getURL();
+    }
+
+    public void setURL(URL url)
+    {
+        delegate.setURL(url);
+    }
+
+    public void setAutoSave(boolean autoSave)
+    {
+        delegate.setAutoSave(autoSave);
+    }
+
+    public boolean isAutoSave()
+    {
+        return delegate.isAutoSave();
+    }
+
+    public ReloadingStrategy getReloadingStrategy()
+    {
+        return delegate.getReloadingStrategy();
+    }
+
+    public void setReloadingStrategy(ReloadingStrategy strategy)
+    {
+        delegate.setReloadingStrategy(strategy);
+    }
+
+    public void reload()
+    {
+        delegate.reload();
     }
 
     /**
-     * Parse a property key and return an array of the element hierarchy it
-     * specifies. For example the key "x.y.z[@abc]" will result in [x, y, z].
-     *
-     * @param key the key to parse
-     *
-     * @return the elements in the key
+     * A specialized <code>Node</code> class that is connected with an XML
+     * element. Changes on a node are also performed on the associated element.
      */
-    protected static String[] parseElementNames(String key)
+    class XMLNode extends Node
     {
-        if (key == null)
+        /**
+         * Creates a new instance of <code>XMLNode</code> and initializes it
+         * with the corresponding XML element.
+         * 
+         * @param elem the XML element
+         */
+        public XMLNode(Element elem)
         {
-            return new String[]{};
+            super();
+            setReference(elem);
         }
-        else
-        {
-            // find the beginning of the attribute name
-            int attStart = key.indexOf(ATTRIBUTE_START);
 
-            if (attStart > -1)
+        /**
+         * Creates a new instance of <code>XMLNode</code> and initializes it
+         * with a name and the corresponding XML element.
+         * 
+         * @param name the node's name
+         * @param elem the XML element
+         */
+        public XMLNode(String name, Element elem)
+        {
+            super(name);
+            setReference(elem);
+        }
+
+        /**
+         * Sets the value of this node. If this node is associated with an XML
+         * element, this element will be updated, too.
+         * 
+         * @param value the node's new value
+         */
+        public void setValue(Object value)
+        {
+            super.setValue(value);
+
+            if (getReference() != null && document != null)
             {
-                // remove the attribute part of the key
-                key = key.substring(0, attStart);
+                if (ConfigurationKey.isAttributeKey(getName()))
+                {
+                    updateAttribute();
+                }
+                else
+                {
+                    updateElement(value);
+                }
+            }
+        }
+
+        /**
+         * Updates the associated XML elements when a node is removed.
+         */
+        protected void removeReference()
+        {
+            if (getReference() != null)
+            {
+                Element element = (Element) getReference();
+                if (ConfigurationKey.isAttributeKey(getName()))
+                {
+                    updateAttribute();
+                }
+                else
+                {
+                    org.w3c.dom.Node parentElem = element.getParentNode();
+                    if (parentElem != null)
+                    {
+                        parentElem.removeChild(element);
+                    }
+                }
+            }
+        }
+
+        /**
+         * Updates the node's value if it represents an element node.
+         * 
+         * @param value the new value
+         */
+        private void updateElement(Object value)
+        {
+            Text txtNode = findTextNodeForUpdate();
+            if (value == null)
+            {
+                // remove text
+                if (txtNode != null)
+                {
+                    ((Element) getReference()).removeChild(txtNode);
+                }
+            }
+            else
+            {
+                if (txtNode == null)
+                {
+                    txtNode = document.createTextNode(value.toString());
+                    if (((Element) getReference()).getFirstChild() != null)
+                    {
+                        ((Element) getReference()).insertBefore(txtNode, ((Element) getReference()).getFirstChild());
+                    }
+                    else
+                    {
+                        ((Element) getReference()).appendChild(txtNode);
+                    }
+                }
+                else
+                {
+                    txtNode.setNodeValue(value.toString());
+                }
+            }
+        }
+
+        /**
+         * Updates the node's value if it represents an attribute.
+         *  
+         */
+        private void updateAttribute()
+        {
+            XMLBuilderVisitor.updateAttribute(getParent(), getName());
+        }
+
+        /**
+         * Returns the only text node of this element for update. This method is
+         * called when the element's text changes. Then all text nodes except
+         * for the first are removed. A reference to the first is returned or
+         * <b>null </b> if there is no text node at all.
+         * 
+         * @return the first and only text node
+         */
+        private Text findTextNodeForUpdate()
+        {
+            Text result = null;
+            Element elem = (Element) getReference();
+            // Find all Text nodes
+            NodeList children = elem.getChildNodes();
+            Collection textNodes = new ArrayList();
+            for (int i = 0; i < children.getLength(); i++)
+            {
+                org.w3c.dom.Node nd = children.item(i);
+                if (nd instanceof Text)
+                {
+                    if (result == null)
+                    {
+                        result = (Text) nd;
+                    }
+                    else
+                    {
+                        textNodes.add(nd);
+                    }
+                }
             }
 
-            return StringUtils.split(key, NODE_DELIMITER);
+            // We don't want CDATAs
+            if (result instanceof CDATASection)
+            {
+                textNodes.add(result);
+                result = null;
+            }
+
+            // Remove all but the first Text node
+            for (Iterator it = textNodes.iterator(); it.hasNext();)
+            {
+                elem.removeChild((org.w3c.dom.Node) it.next());
+            }
+            return result;
         }
     }
 
     /**
-     * Parse a property key and return the attribute name if it existst.
-     *
-     * @param key the key to parse
-     *
-     * @return the attribute name, or null if the key doesn't contain one
+     * A concrete <code>BuilderVisitor</code> that can construct XML
+     * documents.
      */
-    protected static String parseAttributeName(String key)
+    static class XMLBuilderVisitor extends BuilderVisitor
     {
-        String name = null;
+        /** Stores the document to be constructed. */
+        private Document document;
 
-        if (key != null)
+        /**
+         * Creates a new instance of <code>XMLBuilderVisitor</code>
+         * 
+         * @param doc the document to be created
+         */
+        public XMLBuilderVisitor(Document doc)
         {
-            // find the beginning of the attribute name
-            int attStart = key.indexOf(ATTRIBUTE_START);
+            document = doc;
+        }
 
-            if (attStart > -1)
+        /**
+         * Processes the node hierarchy and adds new nodes to the document.
+         * 
+         * @param rootNode the root node
+         */
+        public void processDocument(Node rootNode)
+        {
+            rootNode.visit(this, null);
+        }
+
+        /**
+         * @inheritDoc
+         */
+        protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
+        {
+            if (ConfigurationKey.isAttributeKey(newNode.getName()))
             {
-                // find the end of the attribute name
-                int attEnd = key.indexOf(ATTRIBUTE_END);
-                attEnd = attEnd > -1 ? attEnd : key.length();
+                updateAttribute(parent, getElement(parent), newNode.getName());
+                return null;
+            }
 
-                name = key.substring(attStart + ATTRIBUTE_START.length(), attEnd);
+            else
+            {
+                Element elem = document.createElement(newNode.getName());
+                if (newNode.getValue() != null)
+                {
+                    elem.appendChild(document.createTextNode(newNode.getValue().toString()));
+                }
+                if (sibling2 == null)
+                {
+                    getElement(parent).appendChild(elem);
+                }
+                else if (sibling1 != null)
+                {
+                    getElement(parent).insertBefore(elem, getElement(sibling1).getNextSibling());
+                }
+                else
+                {
+                    getElement(parent).insertBefore(elem, getElement(parent).getFirstChild());
+                }
+                return elem;
             }
         }
 
-        return name;
+        /**
+         * Helper method for updating the value of the specified node's
+         * attribute with the given name.
+         * 
+         * @param node the affected node
+         * @param elem the element that is associated with this node
+         * @param name the name of the affected attribute
+         */
+        private static void updateAttribute(Node node, Element elem, String name)
+        {
+            if (node != null && elem != null)
+            {
+                List attrs = node.getChildren(name);
+                StringBuffer buf = new StringBuffer();
+                for (Iterator it = attrs.iterator(); it.hasNext();)
+                {
+                    Node attr = (Node) it.next();
+                    if (attr.getValue() != null)
+                    {
+                        if (buf.length() > 0)
+                        {
+                            buf.append(ATTR_DELIMITER);
+                        }
+                        buf.append(attr.getValue());
+                    }
+                    attr.setReference(elem);
+                }
+
+                if (buf.length() < 1)
+                {
+                    elem.removeAttribute(ConfigurationKey.removeAttributeMarkers(name));
+                }
+                else
+                {
+                    elem.setAttribute(ConfigurationKey.removeAttributeMarkers(name), buf.toString());
+                }
+            }
+        }
+
+        /**
+         * Updates the value of the specified attribute of the given node.
+         * Because there can be multiple child nodes representing this attribute
+         * the new value is determined by iterating over all those child nodes.
+         * 
+         * @param node the affected node
+         * @param name the name of the attribute
+         */
+        static void updateAttribute(Node node, String name)
+        {
+            if (node != null)
+            {
+                updateAttribute(node, (Element) node.getReference(), name);
+            }
+        }
+
+        /**
+         * Helper method for accessing the element of the specified node.
+         * 
+         * @param node the node
+         * @return the element of this node
+         */
+        private Element getElement(Node node)
+        {
+            // special treatement for root node of the hierarchy
+            return (node.getName() != null) ? (Element) node.getReference() : document.getDocumentElement();
+        }
+    }
+
+    private class FileConfigurationDelegate extends AbstractFileConfiguration
+    {
+        public void load(Reader in) throws ConfigurationException
+        {
+            XMLConfiguration.this.load(in);
+        }
+
+        public void save(Writer out) throws ConfigurationException
+        {
+            XMLConfiguration.this.save(out);
+        }
     }
 }
