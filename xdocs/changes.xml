@@ -8,7 +8,7 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
-      <action dev="ebourg" type="remove">
+      <action dev="epugh" type="remove">
         Remove deprecated getVector() implementations. 
       </action>        
       <action dev="ebourg" type="add" issue="25661">
