@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+	  <action dev="oheger" type="fix" issue="30858">
+		Some cleanup of the handling of the base path in file based configurations.
+		The base path is now always taken into account.
+	  </action>
       <action dev="ebourg" type="fix">
         Calling getProperties on a JNDIConfiguration no longer throws an
         UnsupportedOperationException.        
