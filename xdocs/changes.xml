@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="update">
+        Moved the constructors implementations from PropertiesConfiguration and
+        XMLConfiguration to AbstractFileConfiguration.
+      </action>
       <action dev="epugh" type="remove">
         Remove deprecated getVector() implementations. 
       </action>        

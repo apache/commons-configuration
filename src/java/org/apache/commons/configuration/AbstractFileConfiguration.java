@@ -41,7 +41,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.6 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/19 11:44:31 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -53,9 +53,75 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     protected ReloadingStrategy strategy;
     private Object reloadLock = new Object();
 
+    /**
+     * Default constructor
+     *
+     * @since 1.1
+     */
     public AbstractFileConfiguration()
     {
         setReloadingStrategy(new InvariantReloadingStrategy());
+    }
+
+    /**
+     * Creates and loads the configuration from the specified file.
+     *
+     * @param fileName The name of the file to load.
+     *
+     * @throws ConfigurationException Error while loading the file
+     * @since 1.1
+     */
+    public AbstractFileConfiguration(String fileName) throws ConfigurationException
+    {
+        this();
+
+        // store the file name
+        this.fileName = fileName;
+
+        // locate the file
+        url = ConfigurationUtils.locate(fileName);
+
+        // update the base path
+        setBasePath(ConfigurationUtils.getBasePath(url));
+
+        // load the file
+        load();
+    }
+
+    /**
+     * Creates and loads the configuration from the specified file.
+     *
+     * @param file The file to load.
+     * @throws ConfigurationException Error while loading the file
+     * @since 1.1
+     */
+    public AbstractFileConfiguration(File file) throws ConfigurationException
+    {
+        this();
+
+        // set the file and update the url, the base path and the file name
+        setFile(file);
+
+        // load the file
+        load();
+    }
+
+    /**
+     * Creates and loads the configuration from the specified URL.
+     *
+     * @param url The location of the file to load.
+     * @throws ConfigurationException Error while loading the file
+     * @since 1.1
+     */
+    public AbstractFileConfiguration(URL url) throws ConfigurationException
+    {
+        this();
+        
+        // set the URL and update the base path and the file name
+        setURL(url);
+
+        // load the file
+        load();
     }
 
     /**

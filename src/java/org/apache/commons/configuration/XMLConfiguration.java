@@ -60,7 +60,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.18 $, $Date: 2004/10/18 11:12:08 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/19 11:44:31 $
  */
 public class XMLConfiguration extends AbstractFileConfiguration
 {
@@ -101,17 +101,15 @@ public class XMLConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Creates and loads the XML configuration from the specified resource.
+     * Creates and loads the XML configuration from the specified file.
      *
-     * @param resource The name of the resource to load.
+     * @param fileName The name of the file to load.
      *
      * @throws ConfigurationException Error while loading the XML file
      */
-    public XMLConfiguration(String resource) throws ConfigurationException
+    public XMLConfiguration(String fileName) throws ConfigurationException
     {
-        this.fileName = resource;
-        url = ConfigurationUtils.locate(resource);
-        load();
+        super(fileName);
     }
 
     /**
@@ -122,8 +120,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
      */
     public XMLConfiguration(File file) throws ConfigurationException
     {
-        setFile(file);
-        load();
+        super(file);
     }
 
     /**
@@ -134,8 +131,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
      */
     public XMLConfiguration(URL url) throws ConfigurationException
     {
-        setURL(url);
-        load();
+        super(url);
     }
 
     /**
