@@ -30,6 +30,7 @@ import java.util.Iterator;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * loads the configuration from a properties file. <p>
@@ -101,14 +102,14 @@ import org.apache.commons.lang.StringUtils;
  *
  *      # commas may be escaped in tokens
  *      commas.excaped = Hi\, what'up?
- * 
+ *
  *      # properties can reference other properties
  *      base.prop = /base
  *      first.prop = ${base.prop}/first
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.7 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.8 2004/06/03 15:32:46 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -150,19 +151,17 @@ public abstract class BasePropertiesConfiguration
      * encoding.
      *
      * @param input An InputStream.
-     * @param enc An encoding.
+     * @param encoding An encoding.
      * @exception ConfigurationException
      */
-    public synchronized void load(InputStream input, String enc)
-        throws ConfigurationException
+    public synchronized void load(InputStream input, String encoding) throws ConfigurationException
     {
         PropertiesReader reader = null;
-        if (enc != null)
+        if (encoding != null)
         {
             try
             {
-                reader =
-                  new PropertiesReader(new InputStreamReader(input, enc));
+                reader = new PropertiesReader(new InputStreamReader(input, encoding));
             }
             catch (UnsupportedEncodingException e)
             {
@@ -174,45 +173,46 @@ public abstract class BasePropertiesConfiguration
         {
             reader = new PropertiesReader(new InputStreamReader(input));
         }
+
         try {
-        while (true)
-        {
-            String line = reader.readProperty();
-            
-            if (line == null)
+            while (true)
             {
-                break; // EOF
-            }
-            
-            int equalSign = line.indexOf('=');
-            if (equalSign > 0)
-            {
-                String key = line.substring(0, equalSign).trim();
-                String value = line.substring(equalSign + 1).trim();
+                String line = reader.readProperty();
 
-                // Though some software (e.g. autoconf) may produce
-                // empty values like foo=\n, emulate the behavior of
-                // java.util.Properties by setting the value to the
-                // empty string.
-
-                if (StringUtils.isNotEmpty(getInclude())
-                    && key.equalsIgnoreCase(getInclude()))
+                if (line == null)
                 {
-                    if (getIncludesAllowed())
+                    break; // EOF
+                }
+
+                int equalSign = line.indexOf('=');
+                if (equalSign > 0)
+                {
+                    String key = line.substring(0, equalSign).trim();
+                    String value = line.substring(equalSign + 1).trim();
+
+                    // Though some software (e.g. autoconf) may produce
+                    // empty values like foo=\n, emulate the behavior of
+                    // java.util.Properties by setting the value to the
+                    // empty string.
+
+                    if (StringUtils.isNotEmpty(getInclude())
+                        && key.equalsIgnoreCase(getInclude()))
                     {
-                        String [] files = StringUtils.split(value, ",");
-                        for (int cnt = 0 ; cnt < files.length ; cnt++)
+                        if (getIncludesAllowed())
                         {
-                            load(getPropertyStream(files[cnt].trim()));
+                            String [] files = StringUtils.split(value, DELIMITER);
+                            for (int i = 0; i < files.length; i++)
+                            {
+                                load(getPropertyStream(files[i].trim()));
+                            }
                         }
                     }
-                }
-                else
-                {
-                    addProperty(key, StringEscapeUtils.unescapeJava(value));
+                    else
+                    {
+                        addProperty(key, unescapeJava(value));
+                    }
                 }
             }
-        }
         }
         catch (IOException ioe){
         	throw new ConfigurationException("Could not load configuration from input stream.",ioe);
@@ -226,8 +226,7 @@ public abstract class BasePropertiesConfiguration
      * @param filename name of the properties file
      * @throws ConfigurationException
      */
-    public void save(String filename)
-        throws ConfigurationException
+    public void save(String filename) throws ConfigurationException
     {
         PropertiesWriter out = null;
         File file = new File(filename);
@@ -240,20 +239,20 @@ public abstract class BasePropertiesConfiguration
         	for (Iterator i = this.getKeys(); i.hasNext();)
         	{
         		String key = (String) i.next();
-        		String value = StringUtils.join(this.getStringArray(key), ", ");
-        		out.writeProperty(key, value);
+        		out.writeProperty(key, this.getStringArray(key));
         	}
         	out.flush();
         	out.close();
         }
-        catch (IOException ioe){
+        catch (IOException ioe)
+        {
             try {
-                if (out !=null){
+                if (out != null){
                     out.close();
                 }
             }
             catch (IOException ioe2){
-                
+
             }
         	throw new ConfigurationException("Could not save to file " + filename,ioe);
         }
@@ -309,8 +308,7 @@ public abstract class BasePropertiesConfiguration
      * backslash sign a the end of the line.  This is used to
      * concatenate multiple lines for readability.
      */
-    class PropertiesReader
-        extends LineNumberReader
+    class PropertiesReader extends LineNumberReader
     {
         /**
          * Constructor.
@@ -331,8 +329,7 @@ public abstract class BasePropertiesConfiguration
          *
          * @exception IOException
          */
-        public String readProperty()
-            throws IOException
+        public String readProperty() throws IOException
         {
             StringBuffer buffer = new StringBuffer();
 
@@ -371,8 +368,7 @@ public abstract class BasePropertiesConfiguration
     /**
      * This class is used to write properties lines.
      */
-    class PropertiesWriter
-        extends FileWriter
+    class PropertiesWriter extends FileWriter
     {
         /**
          * Constructor.
@@ -380,8 +376,7 @@ public abstract class BasePropertiesConfiguration
          * @param file the proerties file
          * @throws IOException
          */
-        public PropertiesWriter(File file)
-            throws IOException
+        public PropertiesWriter(File file) throws IOException
         {
             super(file);
         }
@@ -393,13 +388,32 @@ public abstract class BasePropertiesConfiguration
          * @param value
          * @exception IOException
          */
-        public void writeProperty(String key, String value)
-            throws IOException
+        public void writeProperty(String key, String value) throws IOException
         {
             write(key);
             write(" = ");
-            write(value != null ? StringEscapeUtils.escapeJava(value) : "");             
+            if (value != null)
+            {
+                String v = StringEscapeUtils.escapeJava(value);
+                v = StringUtils.replace(v, String.valueOf(DELIMITER), "\\" + DELIMITER);
+                write(v);
+            }
+
             write('\n');
+        }
+
+        /**
+         * Write a property.
+         *
+         * @param key The key of the property
+         * @param values The array of values of the property
+         */
+        public void writeProperty(String key, String[] values) throws IOException
+        {
+            for (int i = 0; i < values.length; i++)
+            {
+                writeProperty(key, values[i]);
+            }
         }
 
         /**
@@ -408,10 +422,108 @@ public abstract class BasePropertiesConfiguration
          * @param comment
          * @exception IOException
          */
-        public void writeComment(String comment)
-            throws IOException
+        public void writeComment(String comment) throws IOException
         {
             write("# " + comment + "\n");
         }
     } // class PropertiesWriter
+
+    /**
+     * <p>Unescapes any Java literals found in the <code>String</code> to a
+     * <code>Writer</code>.</p> This is a slightly modified version of the
+     * StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
+     * drop escaped commas (i.e '\,').
+     *
+     * @param str  the <code>String</code> to unescape, may be null
+     * @throws IllegalArgumentException if the Writer is <code>null</code>
+     */
+    protected static String unescapeJava(String str) {
+
+        if (str == null) {
+            return null;
+        }
+        int sz = str.length();
+        StringBuffer out = new StringBuffer(sz);
+        StringBuffer unicode = new StringBuffer(4);
+        boolean hadSlash = false;
+        boolean inUnicode = false;
+        for (int i = 0; i < sz; i++) {
+            char ch = str.charAt(i);
+            if (inUnicode) {
+                // if in unicode, then we're reading unicode
+                // values in somehow
+                unicode.append(ch);
+                if (unicode.length() == 4) {
+                    // unicode now contains the four hex digits
+                    // which represents our unicode character
+                    try {
+                        int value = Integer.parseInt(unicode.toString(), 16);
+                        out.append((char) value);
+                        unicode.setLength(0);
+                        inUnicode = false;
+                        hadSlash = false;
+                    } catch (NumberFormatException nfe) {
+                        throw new NestableRuntimeException("Unable to parse unicode value: " + unicode, nfe);
+                    }
+                }
+                continue;
+            }
+            if (hadSlash) {
+                // handle an escaped value
+                hadSlash = false;
+                switch (ch) {
+                    case '\\':
+                        out.append('\\');
+                        break;
+                    case '\'':
+                        out.append('\'');
+                        break;
+                    case '\"':
+                        out.append('"');
+                        break;
+                    case 'r':
+                        out.append('\r');
+                        break;
+                    case 'f':
+                        out.append('\f');
+                        break;
+                    case 't':
+                        out.append('\t');
+                        break;
+                    case 'n':
+                        out.append('\n');
+                        break;
+                    case 'b':
+                        out.append('\b');
+                        break;
+                    case DELIMITER:
+                        out.append("\\");
+                        out.append(DELIMITER);
+                        break;
+                    case 'u':
+                        {
+                            // uh-oh, we're in unicode country....
+                            inUnicode = true;
+                            break;
+                        }
+                    default :
+                        out.append(ch);
+                        break;
+                }
+                continue;
+            } else if (ch == '\\') {
+                hadSlash = true;
+                continue;
+            }
+            out.append(ch);
+        }
+        if (hadSlash) {
+            // then we're in the weird case of a \ at the end of the
+            // string, let's output it anyway.
+            out.append('\\');
+        }
+
+        return out.toString();
+    }
+
 }

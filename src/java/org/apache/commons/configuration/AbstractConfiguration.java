@@ -35,25 +35,20 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.8 2004/05/04 22:27:10 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.9 2004/06/03 15:32:46 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
     /** how big the initial arraylist for splitting up name value pairs */
     private static final int INITIAL_LIST_SIZE = 2;
 
-
     /** start token */
     protected static final String START_TOKEN = "${";
     /** end token */
     protected static final String END_TOKEN = "}";
 
-    /**
-     * Empty constructor.
-     */
-    public AbstractConfiguration()
-    {
-    }
+    /** The property delimiter used while parsing (a comma). */
+    protected static final char DELIMITER = ',';
 
     /**
      * Add a property to the configuration. If it already exists then the value
@@ -76,8 +71,7 @@ public abstract class AbstractConfiguration implements Configuration
     {
         if (token instanceof String)
         {
-            for(Iterator it = processString((String) token).iterator();
-            it.hasNext();)
+            for(Iterator it = processString((String) token).iterator(); it.hasNext();)
             {
                 addPropertyDirect(key, it.next());
             }
@@ -238,7 +232,7 @@ public abstract class AbstractConfiguration implements Configuration
     {
         List retList = new ArrayList(INITIAL_LIST_SIZE);
 
-        if (token.indexOf(PropertiesTokenizer.DELIMITER) > 0)
+        if (token.indexOf(DELIMITER) > 0)
         {
             PropertiesTokenizer tokenizer = new PropertiesTokenizer(token);
 
@@ -1300,11 +1294,8 @@ public abstract class AbstractConfiguration implements Configuration
      * separator is "," but commas into the property value are escaped
      * using the backslash in front.
      */
-    class PropertiesTokenizer extends StringTokenizer
+    static class PropertiesTokenizer extends StringTokenizer
     {
-        /** The property delimiter used while parsing (a comma). */
-        static final String DELIMITER = ",";
-
         /**
          * Constructor.
          *
@@ -1312,7 +1303,7 @@ public abstract class AbstractConfiguration implements Configuration
          */
         public PropertiesTokenizer(String string)
         {
-            super(string, DELIMITER);
+            super(string, String.valueOf(DELIMITER));
         }
 
         /**

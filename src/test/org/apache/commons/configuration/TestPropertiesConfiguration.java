@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.5 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.6 2004/06/03 15:32:46 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -38,7 +38,6 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
     protected void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
- 
     }
 
     public void testSave() throws Exception
@@ -55,9 +54,9 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         conf.addProperty("array", list);
 
         conf.save(testSavePropertiesFile.getAbsolutePath());
-        
+
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile.getAbsolutePath());
-        for (Iterator i = conf.getKeys();i.hasNext();){
+        for (Iterator i = conf.getKeys(); i.hasNext();){
         	String key = (String)i.next();
         	assertTrue(checkConfig.containsKey(key));
         	assertEquals(conf.getString(key),checkConfig.getString(key));
@@ -75,7 +74,6 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     public void testLoadViaPropertyWithBasePath() throws Exception
     {
-
         PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setBasePath(testBasePath);
         pc.setFileName("test.properties");
@@ -86,7 +84,6 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {
-
         PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setBasePath(testBasePath2);
         pc.setFileName("conf/test.properties");
@@ -104,6 +101,18 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     public void testGetStringWithEscapedChars()
     {
-        assertEquals("String with escaped characters", "This \n string \t contains \" escaped \\ characters", conf.getString("test.unescape"));
+        String property = conf.getString("test.unescape");
+        assertEquals("String with escaped characters", "This \n string \t contains \" escaped \\ characters", property);
+    }
+
+    public void testGetStringWithEscapedComma()
+    {
+        String property = conf.getString("test.unescape.list-separator");
+        assertEquals("String with an escaped list separator", "This string contains , an escaped list separator", property);
+    }
+
+    public void testUnescapeJava()
+    {
+        assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test"));
     }
 }
