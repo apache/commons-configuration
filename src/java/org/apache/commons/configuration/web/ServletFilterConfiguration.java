@@ -17,10 +17,12 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Iterator;
+import java.util.List;
 import javax.servlet.FilterConfig;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper around a {@link FilterConfig}. This configuration is
@@ -28,7 +30,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.4 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.4 $, $Date$
  * @since 1.1
  */
 public class ServletFilterConfiguration extends AbstractConfiguration
@@ -45,7 +47,10 @@ public class ServletFilterConfiguration extends AbstractConfiguration
 
     public Object getProperty(String key)
     {
-        return config.getInitParameter(key);
+        Object value = config.getInitParameter(key);
+        List list = PropertyConverter.split((String) value, getDelimiter());
+
+        return list.size() > 1 ? list : value;
     }
 
     /**

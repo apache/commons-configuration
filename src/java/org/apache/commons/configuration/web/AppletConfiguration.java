@@ -18,9 +18,11 @@ package org.apache.commons.configuration.web;
 
 import java.applet.Applet;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper to read applet parameters. This configuration is
@@ -28,7 +30,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.4 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.4 $, $Date$
  * @since 1.1
  */
 public class AppletConfiguration extends AbstractConfiguration
@@ -48,7 +50,10 @@ public class AppletConfiguration extends AbstractConfiguration
 
     public Object getProperty(String key)
     {
-        return applet.getParameter(key);
+        Object value = applet.getParameter(key);
+        List list = PropertyConverter.split((String) value, getDelimiter());
+
+        return list.size() > 1 ? list : value;
     }
 
     /**

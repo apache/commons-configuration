@@ -26,7 +26,7 @@ import java.util.Properties;
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {
@@ -35,6 +35,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
+        parameters.setProperty("list", "value1, value2");
 
         Applet applet = new Applet()
         {
@@ -48,7 +49,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                 return new String[][]
                 {
                     {"key1", "String", ""},
-                    {"key2", "String", ""}
+                    {"key2", "String", ""},
+                    {"list", "String[]", ""}
                 };
             }
         };

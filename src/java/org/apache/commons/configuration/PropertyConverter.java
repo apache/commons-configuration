@@ -41,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
  * A utility class to convert the configuration properties into any type.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/12/14 17:03:50 $
+ * @version $Revision: 1.3 $, $Date$
  * @since 1.1
  */
 public final class PropertyConverter
@@ -420,7 +420,7 @@ public final class PropertyConverter
      * @param s          the string to split
      * @param delimiter  the delimiter
      */
-    static List split(String s, char delimiter)
+    public static List split(String s, char delimiter)
     {
         if (s == null)
         {

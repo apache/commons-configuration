@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Iterator;
+import java.util.Arrays;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
@@ -28,7 +29,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.4 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.4 $, $Date$
  * @since 1.1
  */
 public class ServletRequestConfiguration extends AbstractConfiguration
@@ -47,7 +48,20 @@ public class ServletRequestConfiguration extends AbstractConfiguration
 
     public Object getProperty(String key)
     {
-        return request.getParameter(key);
+        String values[] = request.getParameterValues(key);
+
+        if (values == null || values.length == 0)
+        {
+            return null;
+        }
+        else if (values.length == 1)
+        {
+            return values[0];
+        }
+        else
+        {
+            return Arrays.asList(values);
+        }
     }
 
     /**

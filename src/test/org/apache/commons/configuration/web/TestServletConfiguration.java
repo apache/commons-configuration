@@ -28,7 +28,7 @@ import org.apache.commons.configuration.TestAbstractConfiguration;
  * Test case for the {@link ServletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestServletConfiguration extends TestAbstractConfiguration
 {
@@ -37,6 +37,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration
         final MockServletConfig config = new MockServletConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
+        config.setInitParameter("list", "value1, value2");
 
         Servlet servlet = new HttpServlet() {
             public ServletConfig getServletConfig()

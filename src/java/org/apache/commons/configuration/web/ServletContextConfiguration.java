@@ -17,11 +17,13 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Iterator;
+import java.util.List;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper to read the initialization parameters of a servlet
@@ -29,7 +31,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * throw an UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.4 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.4 $, $Date$
  * @since 1.1
  */
 public class ServletContextConfiguration extends AbstractConfiguration
@@ -60,7 +62,10 @@ public class ServletContextConfiguration extends AbstractConfiguration
 
     public Object getProperty(String key)
     {
-        return context.getInitParameter(key);
+        Object value = context.getInitParameter(key);
+        List list = PropertyConverter.split((String) value, getDelimiter());
+
+        return list.size() > 1 ? list : value;
     }
 
     /**

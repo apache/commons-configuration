@@ -16,15 +16,18 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
-
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
+import junit.framework.TestCase;
+import junitx.framework.ListAssert;
 
 /**
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.2 $, $Date$
  */
 public abstract class TestAbstractConfiguration extends TestCase
 {
@@ -33,6 +36,7 @@ public abstract class TestAbstractConfiguration extends TestCase
      * <pre>
      * key1 = value1
      * key2 = value2
+     * list = value1, value2
      * </pre>
      */
     protected abstract AbstractConfiguration getConfiguration();
@@ -44,10 +48,21 @@ public abstract class TestAbstractConfiguration extends TestCase
 
     public void testGetProperty()
     {
-        AbstractConfiguration config = getConfiguration();
+        Configuration config = getConfiguration();
         assertEquals("key1", "value1", config.getProperty("key1"));
         assertEquals("key2", "value2", config.getProperty("key2"));
         assertNull("key3", config.getProperty("key3"));
+    }
+
+    public void testList()
+    {
+        Configuration config = getConfiguration();
+
+        List list = config.getList("list");
+        assertNotNull("list not found", config.getProperty("list"));
+        assertEquals("list size", 2, list.size());
+        assertTrue("'value1' is not in the list", list.contains("value1"));
+        assertTrue("'value2' is not in the list", list.contains("value2"));
     }
 
     public void testAddPropertyDirect()
@@ -59,38 +74,45 @@ public abstract class TestAbstractConfiguration extends TestCase
 
     public void testIsEmpty()
     {
-        AbstractConfiguration config = getConfiguration();
+        Configuration config = getConfiguration();
         assertFalse("the configuration is empty", config.isEmpty());
         assertTrue("the configuration is not empty", getEmptyConfiguration().isEmpty());
     }
 
     public void testContainsKey()
     {
-        AbstractConfiguration config = getConfiguration();
+        Configuration config = getConfiguration();
         assertTrue("key1 not found", config.containsKey("key1"));
         assertFalse("key3 found", config.containsKey("key3"));
     }
 
     public void testClearProperty()
     {
-        AbstractConfiguration config = getConfiguration();
+        Configuration config = getConfiguration();
         config.clearProperty("key2");
         assertFalse("key2 not cleared", config.containsKey("key2"));
     }
 
     public void testGetKeys()
     {
-        AbstractConfiguration config = getConfiguration();
+        Configuration config = getConfiguration();
         Iterator keys = config.getKeys();
 
-        assertNotNull("null iterator", keys);
-        String k = keys.next() + ":" + keys.next();
-        assertTrue("elements", "key1:key2".equals(k) | "key2:key1".equals(k));
-        assertFalse("too many elements", keys.hasNext());
+        List expectedKeys = new ArrayList();
+        expectedKeys.add("key1");
+        expectedKeys.add("key2");
+        expectedKeys.add("list");
 
-        keys = getEmptyConfiguration().getKeys();
         assertNotNull("null iterator", keys);
-        assertFalse("too many elements", keys.hasNext());
+        assertTrue("empty iterator", keys.hasNext());
+
+        List actualKeys = new ArrayList();
+        while (keys.hasNext())
+        {
+            actualKeys.add(keys.next());
+        }
+
+        ListAssert.assertEquals("keys", expectedKeys, actualKeys);
     }
 
 }

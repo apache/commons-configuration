@@ -23,7 +23,7 @@ import java.util.Map;
  * Tests for MapConfiguration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/18 12:50:41 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {
@@ -32,6 +32,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         Map map = new HashMap();
         map.put("key1", "value1");
         map.put("key2", "value2");
+        map.put("list", "value1, value2");
 
         return new MapConfiguration(map);
     }

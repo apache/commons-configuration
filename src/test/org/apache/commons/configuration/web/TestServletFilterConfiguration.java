@@ -28,7 +28,7 @@ import java.util.Properties;
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration
 {
@@ -37,6 +37,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
         MockFilterConfig config = new MockFilterConfig();
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
+        config.setInitParameter("list", "value1, value2");
 
         return new ServletFilterConfiguration(config);
     }

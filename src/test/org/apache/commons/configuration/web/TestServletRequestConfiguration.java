@@ -16,38 +16,42 @@
 
 package org.apache.commons.configuration.web;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.TestAbstractConfiguration;
-
-import javax.servlet.ServletRequest;
 import java.util.Enumeration;
-import java.util.Properties;
+import javax.servlet.ServletRequest;
+
+import com.mockobjects.servlet.MockHttpServletRequest;
+import org.apache.commons.collections.iterators.IteratorEnumeration;
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.TestAbstractConfiguration;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration
 {
     protected AbstractConfiguration getConfiguration()
     {
-        final Properties parameters = new Properties();
-        parameters.setProperty("key1", "value1");
-        parameters.setProperty("key2", "value2");
+        final Configuration configuration = new BaseConfiguration();
+        configuration.setProperty("key1", "value1");
+        configuration.setProperty("key2", "value2");
+        configuration.addProperty("list", "value1");
+        configuration.addProperty("list", "value2");
 
         ServletRequest request = new MockHttpServletRequest()
         {
-            public String getParameter(String key)
+            public String[] getParameterValues(String key)
             {
-                return parameters.getProperty(key);
+                return configuration.getStringArray(key);
             }
 
             public Enumeration getParameterNames()
             {
-                return parameters.keys();
+                return new IteratorEnumeration(configuration.getKeys());
             }
         };
 
@@ -56,7 +60,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        final Properties parameters = new Properties();
+        final Configuration configuration = new BaseConfiguration();
 
         ServletRequest request = new MockHttpServletRequest()
         {
@@ -67,7 +71,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
             public Enumeration getParameterNames()
             {
-                return parameters.keys();
+                return new IteratorEnumeration(configuration.getKeys());
             }
         };
 

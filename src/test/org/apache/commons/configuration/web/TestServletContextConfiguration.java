@@ -32,7 +32,7 @@ import org.apache.commons.configuration.TestAbstractConfiguration;
  * Test case for the {@link ServletContextConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.1 $, $Date$
  */
 public class TestServletContextConfiguration extends TestAbstractConfiguration
 {
@@ -41,6 +41,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
+        parameters.setProperty("list", "value1, value2");
 
         // create a servlet context
         ServletContext context = new MockServletContext()
