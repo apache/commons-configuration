@@ -65,8 +65,9 @@ public class ConfigurationMap
      */
     public Object put(Object key, Object value)
     {
-        Object old = configuration.getProperty((String) key);
-        configuration.setProperty((String) key,value);
+        String strKey = String.valueOf(key);
+        Object old = configuration.getProperty(strKey);
+        configuration.setProperty(strKey, value);
         return old;
     }
 
@@ -75,7 +76,7 @@ public class ConfigurationMap
      */
     public Object get(Object key)
     {
-        return configuration.getProperty((String) key);
+        return configuration.getProperty(String.valueOf(key));
     }
 
 }
