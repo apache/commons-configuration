@@ -29,7 +29,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * throw an UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.2 $, $Date: 2004/10/14 15:54:06 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/21 18:42:09 $
  * @since 1.1
  */
 public class ServletContextConfiguration extends AbstractConfiguration
@@ -63,6 +63,12 @@ public class ServletContextConfiguration extends AbstractConfiguration
         return context.getInitParameter(key);
     }
 
+    /**
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
+     *
+     * @throws UnsupportedOperationException
+     */
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("Read only configuration");
@@ -78,6 +84,12 @@ public class ServletContextConfiguration extends AbstractConfiguration
         return getPropertyDirect(key) != null;
     }
 
+    /**
+     * <p><strong>This operation is not supported and will throw an
+     * UnsupportedOperationException.</strong></p>
+     *
+     * @throws UnsupportedOperationException
+     */
     public void clearProperty(String key)
     {
         throw new UnsupportedOperationException("Read only configuration");
