@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.11 2004/09/19 22:01:50 henning Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.12 2004/09/19 22:07:54 henning Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -432,10 +432,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("test string", c.getString("string"));
         try
         {
-            System.out.println(cc.getClass().getName());
-            assertTrue(cc.isThrowExceptionOnMissing());
-            String foo = c.getString("XXX");
-            assertNull(foo);
+            c.getString("XXX");
             fail("Should throw NoSuchElementException exception");
         }
         catch (NoSuchElementException e)
