@@ -35,7 +35,7 @@ import java.util.NoSuchElementException;
  * each part it can be checked whether it has an associated index.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationKey.java,v 1.4 2004/06/23 11:15:45 ebourg Exp $
+ * @version $Id: ConfigurationKey.java,v 1.5 2004/08/14 11:23:14 epugh Exp $
  */
 public class ConfigurationKey implements Serializable
 {
@@ -447,7 +447,7 @@ public class ConfigurationKey implements Serializable
             hasIndex = false;
             indexValue = -1;
             findNextIndices();
-            String key = keyBuffer.substring(startIndex, endIndex).toString();
+            String key = keyBuffer.substring(startIndex, endIndex);
 
             attribute = checkAttribute(key);
             if (!attribute)
