@@ -108,7 +108,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.5 2004/03/13 17:34:37 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -166,7 +166,7 @@ public abstract class BasePropertiesConfiguration
             }
             catch (UnsupportedEncodingException e)
             {
-                // Get one with the default encoding...
+                throw new ConfigurationException("Should look up and use default encoding.",e);
             }
         }
 
