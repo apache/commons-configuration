@@ -145,9 +145,9 @@ if(prop instanceof Collection)
 				method of <code>Configuration</code>. If a property is known to
 				have multiple values (as is the table name property in this example),
 				<code>getList()</code> allows to retrieve all values at once.
-				<b>Note:</b> it is NOT legal to call <code>getString()</code>
+				<b>Note:</b> it is legal to call <code>getString()</code>
 				or one of the other getter methods on a property with multiple
-				values; as the entire list is attempted to be returned.
+				values; it returns the first element of the list.
 			</p>
 		</subsection>
 		<subsection name="Accessing structured properties">
