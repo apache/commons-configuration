@@ -27,6 +27,7 @@ import java.io.UnsupportedEncodingException;
 
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -109,10 +110,9 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.8 2004/06/03 15:32:46 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.9 2004/06/15 10:12:29 ebourg Exp $
  */
-public abstract class BasePropertiesConfiguration
-    extends BasePathConfiguration
+public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
     /** Allow file inclusion or not */
     private boolean includesAllowed = false;
@@ -239,7 +239,16 @@ public abstract class BasePropertiesConfiguration
         	for (Iterator i = this.getKeys(); i.hasNext();)
         	{
         		String key = (String) i.next();
-        		out.writeProperty(key, this.getStringArray(key));
+                Object value = getProperty(key);
+
+                if (value instanceof List)
+                {
+                    out.writeProperty(key, (List) value);
+                }
+                else
+                {
+                    out.writeProperty(key, value);
+                }
         	}
         	out.flush();
         	out.close();
@@ -388,13 +397,13 @@ public abstract class BasePropertiesConfiguration
          * @param value
          * @exception IOException
          */
-        public void writeProperty(String key, String value) throws IOException
+        public void writeProperty(String key, Object value) throws IOException
         {
             write(key);
             write(" = ");
             if (value != null)
             {
-                String v = StringEscapeUtils.escapeJava(value);
+                String v = StringEscapeUtils.escapeJava(String.valueOf(value));
                 v = StringUtils.replace(v, String.valueOf(DELIMITER), "\\" + DELIMITER);
                 write(v);
             }
@@ -408,11 +417,11 @@ public abstract class BasePropertiesConfiguration
          * @param key The key of the property
          * @param values The array of values of the property
          */
-        public void writeProperty(String key, String[] values) throws IOException
+        public void writeProperty(String key, List values) throws IOException
         {
-            for (int i = 0; i < values.length; i++)
+            for (int i = 0; i < values.size(); i++)
             {
-                writeProperty(key, values[i]);
+                writeProperty(key, values.get(i));
             }
         }
 

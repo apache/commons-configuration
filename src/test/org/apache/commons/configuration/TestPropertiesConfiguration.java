@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.6 2004/06/03 15:32:46 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.7 2004/06/15 10:12:29 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -42,9 +42,12 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
     public void testSave() throws Exception
     {
-    	if(testSavePropertiesFile.exists()){
+    	// remove the file previously saved if necessary
+        if(testSavePropertiesFile.exists()){
     		assertTrue(testSavePropertiesFile.delete());
     	}
+
+        // add an array of strings to the configuration
     	conf.addProperty("string", "value1");
         List list = new ArrayList();
         for (int i = 1; i < 5; i++)
@@ -53,13 +56,15 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         }
         conf.addProperty("array", list);
 
+        // save the configuration
         conf.save(testSavePropertiesFile.getAbsolutePath());
 
+        // read the configuration and compare the properties
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile.getAbsolutePath());
-        for (Iterator i = conf.getKeys(); i.hasNext();){
-        	String key = (String)i.next();
-        	assertTrue(checkConfig.containsKey(key));
-        	assertEquals(conf.getString(key),checkConfig.getString(key));
+        for (Iterator i = conf.getKeys(); i.hasNext();) {
+        	String key = (String) i.next();
+        	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+        	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
     }
 

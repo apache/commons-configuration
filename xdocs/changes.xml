@@ -6,7 +6,10 @@
   </properties>
 
   <body>
-    <release version="1.0-dev-4" date="">  
+    <release version="1.0-dev-4" date="">
+     <action dev="ebourg" type="fix">
+        Tokens like ${ref} in a PropertyConfiguration are now properly saved (Bugzilla 29366).
+     </action>
      <action dev="epugh" type="fix">
         SubsetConfiguration returns a List on getList().  AbstractConfiguration wouldn't properly
         deal with a List, only with a Container for getList()!  Thanks to jschaible for the unit test.
