@@ -21,22 +21,32 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Attr;
+import org.w3c.dom.CDATASection;
 import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 /**
@@ -54,13 +64,14 @@ import org.xml.sax.SAXException;
  * @author Jörg Schaible
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Revision: 1.6 $, $Date: 2004/07/13 14:08:47 $
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.7 $, $Date: 2004/07/21 12:38:56 $
  */
 public class XMLConfiguration extends BasePathConfiguration
 {
     // For conformance with xpath
-    private static final char ATTRIB_MARKER = '@';
-    private static final String ATTRIB_START_MARKER = "[" + ATTRIB_MARKER;
+    private static final String ATTRIBUTE_START = "[@";
+    private static final String ATTRIBUTE_END = "]";
 
     /**
      * For consistency with properties files.  Access nodes via an
@@ -91,9 +102,12 @@ public class XMLConfiguration extends BasePathConfiguration
     {
         // build an empty document.
         DocumentBuilder builder = null;
-        try {
+        try
+        {
             builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        }
+        catch (ParserConfigurationException e)
+        {
             throw new ConfigurationRuntimeException(e.getMessage(), e);
         }
 
@@ -183,24 +197,24 @@ public class XMLConfiguration extends BasePathConfiguration
             Node node = list.item(i);
             if (node instanceof Element)
             {
-                StringBuffer subhierarchy = new StringBuffer(hierarchy.toString());
                 Element child = (Element) node;
+
+                StringBuffer subhierarchy = new StringBuffer(hierarchy.toString());
                 subhierarchy.append(child.getTagName());
                 processAttributes(subhierarchy.toString(), child);
-                initProperties(child,
-                        new StringBuffer(subhierarchy.toString()).append('.'));
+                initProperties(child, subhierarchy.append(NODE_DELIMITER));
             }
-            else if (node instanceof CharacterData)
+            else if (node instanceof CDATASection || node instanceof Text)
             {
                 CharacterData data = (CharacterData)node;
                 buffer.append(data.getData());
             }
         }
+
         String text = buffer.toString().trim();
         if (text.length() > 0 && hierarchy.length() > 0)
         {
-            super.addProperty(
-                    hierarchy.substring(0, hierarchy.length()-1), text);
+            super.addProperty(hierarchy.substring(0, hierarchy.length() - 1), text);
         }
     }
 
@@ -213,12 +227,12 @@ public class XMLConfiguration extends BasePathConfiguration
      */
     private void processAttributes(String hierarchy, Element element)
     {
-        // Add attributes as x.y{ATTRIB_START_MARKER}att{ATTRIB_END_MARKER}
+        // Add attributes as x.y{ATTRIBUTE_START}att{ATTRIBUTE_END}
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
         {
             Attr attr = (Attr) attributes.item(i);
-            String attrName = hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
+            String attrName = hierarchy + ATTRIBUTE_START + attr.getName() + ATTRIBUTE_END;
             super.addProperty(attrName, attr.getValue());
         }
     }
@@ -260,18 +274,14 @@ public class XMLConfiguration extends BasePathConfiguration
      */
     private void setXmlProperty(String name, Object value)
     {
-        String[] nodes = StringUtils.split(name, NODE_DELIMITER);
-        String attName = null;
+        // parse the key
+        String[] nodes = parseElementNames(name);
+        String attName = parseAttributeName(name);
+
         Element element = document.getDocumentElement();
         for (int i = 0; i < nodes.length; i++)
         {
             String eName = nodes[i];
-            int index = eName.indexOf(ATTRIB_START_MARKER);
-            if (index > -1)
-            {
-                attName = eName.substring(index + ATTRIB_START_MARKER.length(), eName.length() - 1);
-                eName = eName.substring(0, index);
-            }
 
             Element child = null;
             NodeList list = element.getChildNodes();
@@ -290,7 +300,7 @@ public class XMLConfiguration extends BasePathConfiguration
             }
             // If we don't find this part of the property in the XML hierarchy
             // we add it as a new node
-            if (child == null && attName == null)
+            if (child == null)
             {
                 child = document.createElement(eName);
                 element.appendChild(child);
@@ -324,20 +334,16 @@ public class XMLConfiguration extends BasePathConfiguration
 
     private void clearXmlProperty(String name)
     {
-        String[] nodes = StringUtils.split(name, NODE_DELIMITER);
-        String attName = null;
+        // parse the key
+        String[] nodes = parseElementNames(name);
+        String attName = parseAttributeName(name);
+
         Element element = null;
         Element child = document.getDocumentElement();
         for (int i = 0; i < nodes.length; i++)
         {
             element = child;
             String eName = nodes[i];
-            int index = eName.indexOf(ATTRIB_START_MARKER);
-            if (index > -1)
-            {
-                attName = eName.substring(index + ATTRIB_START_MARKER.length(), eName.length() - 1);
-                eName = eName.substring(0, index);
-            }
 
             NodeList list = element.getChildNodes();
             for (int j = 0; j < list.getLength(); j++) {
@@ -448,7 +454,7 @@ public class XMLConfiguration extends BasePathConfiguration
      *
      * @param out the output stream used to save the configuration
      */
-    public void save(OutputStream out) throws IOException
+    public void save(OutputStream out) throws ConfigurationException
     {
         save(out, null);
     }
@@ -459,10 +465,17 @@ public class XMLConfiguration extends BasePathConfiguration
      * @param out the output stream used to save the configuration
      * @param encoding the charset used to write the configuration
      */
-    public void save(OutputStream out, String encoding) throws IOException
+    public void save(OutputStream out, String encoding) throws ConfigurationException
     {
-        OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
-        save(writer);
+        try
+        {
+            OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
+            save(writer);
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -470,9 +483,21 @@ public class XMLConfiguration extends BasePathConfiguration
      *
      * @param writer the output stream used to save the configuration
      */
-    public void save(Writer writer) throws IOException
+    public void save(Writer writer) throws ConfigurationException
     {
-        writer.write(toString());
+        try
+        {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Source source = new DOMSource(document);
+            Result result = new StreamResult(writer);
+
+            transformer.setOutputProperty("indent", "yes");
+            transformer.transform(source, result);
+        }
+        catch (TransformerException e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -510,40 +535,75 @@ public class XMLConfiguration extends BasePathConfiguration
         return fileName;
     }
 
-    public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        toXML(document, buffer);
-    	return buffer.toString();
+    public String toString()
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            save(writer);
+        }
+        catch (ConfigurationException e)
+        {
+            e.printStackTrace();
+        }
+        return writer.toString();
     }
 
-    private void toXML(Node element, StringBuffer buffer)
-	{
-    	NodeList nodeList = element.getChildNodes();
-    	for (int i = 0; i < nodeList.getLength(); i++)
+    /**
+     * Parse a property key and return an array of the element hierarchy it
+     * specifies. For example the key "x.y.z[@abc]" will result in [x, y, z].
+     *
+     * @param key the key to parse
+     *
+     * @return the elements in the key
+     */
+    protected static String[] parseElementNames(String key)
+    {
+        if (key == null)
         {
-    		Node node = nodeList.item(i);
-    		if (node instanceof Element)
+            return new String[] {};
+        }
+        else
+        {
+            // find the beginning of the attribute name
+            int attStart = key.indexOf(ATTRIBUTE_START);
+
+            if (attStart > -1)
             {
-    			buffer.append("<" + node.getNodeName());
-                if (node.hasAttributes())
-                {
-                	NamedNodeMap map = node.getAttributes();
-                    for (int j = 0; j < map.getLength(); j++)
-                    {
-                    	Attr attr = (Attr) map.item(j);
-                        buffer.append(" " + attr.getName());
-                        buffer.append("=\"" + attr.getValue() + "\"");
-                    }
-                }
-                buffer.append(">");
-    			toXML(node, buffer);
-    			buffer.append("</" + node.getNodeName() + ">");
-    		}
-    		else if (node instanceof CharacterData)
-    		{
-    			CharacterData data = (CharacterData) node;
-    			buffer.append(data.getData());
-    		}
-    	}
+                // remove the attribute part of the key
+                key = key.substring(0, attStart);
+            }
+
+            return StringUtils.split(key, NODE_DELIMITER);
+        }
+    }
+
+    /**
+     * Parse a property key and return the attribute name if it existst.
+     *
+     * @param key the key to parse
+     *
+     * @return the attribute name, or null if the key doesn't contain one
+     */
+    protected static String parseAttributeName(String key)
+    {
+        String name = null;
+
+        if (key != null)
+        {
+            // find the beginning of the attribute name
+            int attStart = key.indexOf(ATTRIBUTE_START);
+
+            if (attStart > -1)
+            {
+                // find the end of the attribute name
+                int attEnd = key.indexOf(ATTRIBUTE_END);
+                attEnd = attEnd > -1 ? attEnd : key.length();
+
+                name = key.substring(attStart + ATTRIBUTE_START.length(), attEnd);
+            }
+        }
+
+        return name;
     }
 }
