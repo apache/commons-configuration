@@ -19,8 +19,10 @@ package org.apache.commons.configuration;
 /**
  * Exception thrown when a property is incompatible with the type requested.
  *
+ * @since 1.0
+ *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/06/15 10:40:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/15 11:48:09 $
  */
 public class ConversionException extends ConfigurationRuntimeException
 {

@@ -21,8 +21,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 /**
  * A configuration related runtime exception.
  *
+ * @since 1.0
+ *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/06/15 10:40:54 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/15 11:48:09 $
  */
 public class ConfigurationRuntimeException extends NestableRuntimeException
 {
