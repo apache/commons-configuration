@@ -123,7 +123,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.16 2004/07/24 15:49:01 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.17 2004/08/12 15:30:36 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -131,7 +131,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * This is the name of the property that can point to other
      * properties file for including other properties files.
      */
-    protected static String include = "include";
+    static String include = "include";
 
     /** Allow file inclusion or not */
     private boolean includesAllowed;
