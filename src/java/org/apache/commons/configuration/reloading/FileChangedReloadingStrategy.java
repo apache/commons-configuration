@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 
 package org.apache.commons.configuration.reloading;
-
-import java.io.File;
 
 import org.apache.commons.configuration.FileConfiguration;
 
@@ -96,13 +94,11 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected void updateLastModified()
     {
-        File file = new File(configuration.getFileName());
-        lastModified = file.lastModified();
+        lastModified = configuration.getFile().lastModified();
     }
 
     /**
-     * Check if the configuration has changed since the last
-     * time it was loaded.
+     * Check if the configuration has changed since the last time it was loaded.
      */
     protected boolean hasChanged()
     {

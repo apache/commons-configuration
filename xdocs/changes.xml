@@ -7,7 +7,22 @@
 
   <body>
 
-    <release version="1.1-dev" date="in CVS">
+    <release version="1.1-rc2" date="in CVS">
+      <action dev="ebourg" type="update">
+        Fixed a bug in FileChangedReloadingStrategy preventing the detection
+        of a file change in some cases.
+      </action>
+      <action dev="ebourg" type="update">
+        Changed getXXXArray() and getXXXList() in DataConfiguration to return
+        an empty array/list for empty values.
+      </action>
+      <action dev="ebourg" type="update" issue="33524">
+        Fixed getLongArray(), getFloatArray() and getDoubleArray() in DataConfiguration,
+        the values were cast into integers. 
+      </action>
+    </release>
+
+    <release version="1.1-rc1" date="2004-02-13">
       <action dev="oheger" type="add" issue="33475">
         ConfigurationFactory now always configures digester to use the context
         classloader. This avoids problems in application server environments,
