@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  * Test class for ConfigurationXMLDocument.
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: TestConfigurationXMLDocument.java,v 1.6 2004/05/04 22:14:29 epugh Exp $
+ * @version $Id: TestConfigurationXMLDocument.java,v 1.7 2004/06/02 17:18:01 ebourg Exp $
  */
 public class TestConfigurationXMLDocument extends TestCase
 {
@@ -45,13 +45,8 @@ public class TestConfigurationXMLDocument extends TestCase
     private ConfigurationFactory configFactory;
     private ConfigurationXMLDocument configDoc;
     
-    private ArrayList tables;
+    private List tables;
     private int counter;
-    
-    public TestConfigurationXMLDocument(String arg0)
-    {
-        super(arg0);
-    }
 
     protected void setUp() throws Exception
     {
@@ -143,8 +138,7 @@ public class TestConfigurationXMLDocument extends TestCase
         assertEquals("tiger", cd.getPasswd()); 
     }
     
-    private void checkDocument(Document doc, String root)
-    throws Exception
+    private void checkDocument(Document doc, String root) throws Exception
     {
         Element rt = doc.getRootElement();
         assertEquals(root, rt.getName());
@@ -161,8 +155,7 @@ public class TestConfigurationXMLDocument extends TestCase
         checkAttribute(rt, "connection.class.property(1)", "value", "scott");
     }
     
-    private void checkDocument(org.w3c.dom.Document doc, String root)
-    throws Exception
+    private void checkDocument(org.w3c.dom.Document doc, String root) throws Exception
     {
         DOMReader reader = new DOMReader();
         checkDocument(reader.read(doc), root);
@@ -289,6 +282,7 @@ public class TestConfigurationXMLDocument extends TestCase
     /**
      * Helper method for counting the number of occurrences of a certain
      * element constellation in a XML string.
+     *
      * @param match the match string for the element constellation
      * @param doc the XML as string
      * @return the number of occurrences
@@ -390,7 +384,7 @@ public class TestConfigurationXMLDocument extends TestCase
     public static class Table
     {
         /** Stores the list of fields.*/
-        private ArrayList fields;
+        private List fields;
         
         /** Stores the table name.*/
         private String name;

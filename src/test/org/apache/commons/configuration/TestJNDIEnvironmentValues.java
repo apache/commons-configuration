@@ -24,11 +24,7 @@ import junit.framework.TestCase;
 public class TestJNDIEnvironmentValues extends TestCase
 {
     private JNDIConfiguration conf = null;
-    public TestJNDIEnvironmentValues(String testName)
-    {
-        super(testName);
-    }
-    
+
     public void setUp() throws Exception{
         System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
         
@@ -38,14 +34,12 @@ public class TestJNDIEnvironmentValues extends TestCase
 
     public void testSimpleGet() throws Exception
     {
-        
         String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
     }
 
     public void testMoreGets() throws Exception
     {
-
         String s = conf.getString("test.key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
@@ -63,26 +57,22 @@ public class TestJNDIEnvironmentValues extends TestCase
         {
             assertTrue(nsee.getMessage(),nsee.getMessage().indexOf("test.imaginarykey")!=-1);
         }
-
     }
+
     public void testGetMissingKeyWithDefault() throws Exception
     {
-
         String result = conf.getString("test.imaginarykey", "bob");
         assertEquals("bob", result);
-
     }
+
     public void testContainsKey() throws Exception
     {
-
         assertTrue(conf.containsKey("test.key"));
-
         assertTrue(!conf.containsKey("test.imaginerykey"));
-
     }
     
-    public void testClearProperty() {
-
+    public void testClearProperty()
+    {
         assertNotNull("null short for the 'test.short' key", conf.getShort("test.short", null));
         conf.clearProperty("test.short");
         assertNull("'test.short' property not cleared", conf.getShort("test.short", null));

@@ -36,16 +36,6 @@ public class TestStrictConfigurationComparator extends TestCase
     protected Configuration configuration = new BaseConfiguration();
 
     /**
-     * Constructor.
-     *
-     * @param testName The test name
-     */
-    public TestStrictConfigurationComparator(String testName)
-    {
-        super(testName);
-    }
-
-    /**
      * Tests the comparator.
      */
     public void testCompare()
