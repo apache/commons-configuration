@@ -29,14 +29,14 @@ import junitx.framework.ObjectAssert;
 /**
  * Tests some basic functions of the BaseConfiguration class
  *
- * @version $Id: TestBaseConfiguration.java,v 1.10 2004/06/03 14:04:52 ebourg Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.11 2004/06/15 15:53:58 ebourg Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
 	protected BaseConfiguration config = new BaseConfiguration();
 
 	private Class missingElementException = NoSuchElementException.class;
-	private Class incompatibleElementException = IllegalArgumentException.class;
+	private Class incompatibleElementException = ConversionException.class;
 
 	public void testGetProperty()
 	{

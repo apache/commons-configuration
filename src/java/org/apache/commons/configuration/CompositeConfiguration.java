@@ -23,21 +23,21 @@ import java.util.List;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
- * to this CompositeConfiguration.  If you add Configuration1, and then Configuration2, 
+ * to this CompositeConfiguration.  If you add Configuration1, and then Configuration2,
  * any properties shared will mean that Configuration1 will be returned.
  * You can add multiple different types or the same type of properties file.
  * If Configuration1 doesn't have the property, then Configuration2 will be checked.
- * 
- * @version $Id: CompositeConfiguration.java,v 1.12 2004/06/04 12:58:53 ebourg Exp $
+ *
+ * @version $Id: CompositeConfiguration.java,v 1.13 2004/06/15 15:53:58 ebourg Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
     /** List holding all the configuration */
     private List configList = new LinkedList();
 
-    /** 
+    /**
      * Configuration that holds in memory stuff.  Inserted as first so any
-     * setProperty() override anything else added. 
+     * setProperty() override anything else added.
      */
     private Configuration inMemoryConfiguration;
 
@@ -49,7 +49,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     {
         clear();
     }
-    
+
     /**
      * Creates an CompositeConfiguration object with a specified InMemory
      * configuration.  This configuration will store any changes made to
@@ -60,7 +60,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         configList.clear();
         this.inMemoryConfiguration = inMemoryConfiguration;
         configList.add(inMemoryConfiguration);
-    }    
+    }
 
     public void addConfiguration(Configuration config)
     {
@@ -96,7 +96,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         inMemoryConfiguration = new BaseConfiguration();
         configList.add(inMemoryConfiguration);
     }
-    
+
     /**
      * Add this property to the inmemory Configuration.
      *
@@ -106,8 +106,8 @@ public class CompositeConfiguration extends AbstractConfiguration
     protected void addPropertyDirect(String key, Object token)
     {
         inMemoryConfiguration.addProperty(key, token);
-    }    
-    
+    }
+
     /**
      * Read property from underlying composite
      *
@@ -115,7 +115,7 @@ public class CompositeConfiguration extends AbstractConfiguration
      *
      * @return object associated with the given configuration key.
      */
-    protected Object getPropertyDirect(String key) 
+    protected Object getPropertyDirect(String key)
     {
         Configuration firstMatchingConfiguration = null;
         for (Iterator i = configList.iterator(); i.hasNext();)
@@ -187,7 +187,7 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
         return keys.iterator();
     }
-   
+
     public boolean isEmpty()
     {
         boolean isEmpty = true;
@@ -257,13 +257,13 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
         return false;
     }
- 
+
     /**
      * Get a List of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated List.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a List.
      */
     public List getList(String key)
@@ -293,7 +293,7 @@ public class CompositeConfiguration extends AbstractConfiguration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a List.
      */
     public List getList(String key, List defaultValue)
@@ -302,20 +302,20 @@ public class CompositeConfiguration extends AbstractConfiguration
 
         return list.isEmpty() ? defaultValue : list;
     }
-    
+
     /**
      * Get an array of strings associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
     {
         List list = getList(key);
         return (String []) list.toArray(new String [0]);
-    }    
+    }
 
 
     public Configuration getConfiguration(int index)

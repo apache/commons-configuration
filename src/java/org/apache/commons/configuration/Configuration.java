@@ -29,7 +29,7 @@ import java.math.BigInteger;
  * extended properties and be compatible with the preferences API if at all
  * possible.
  *
- * @version $Id: Configuration.java,v 1.5 2004/03/01 11:15:16 epugh Exp $
+ * @version $Id: Configuration.java,v 1.6 2004/06/15 15:53:58 ebourg Exp $
  */
 public interface Configuration
 {
@@ -125,7 +125,7 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated properties if key is found.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a String/List.
      * @exception IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
@@ -142,7 +142,7 @@ public interface Configuration
      * @return The associated boolean.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     boolean getBoolean(String key);
@@ -153,7 +153,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated boolean.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     boolean getBoolean(String key, boolean defaultValue);
@@ -165,7 +165,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated boolean if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     Boolean getBoolean(String key, Boolean defaultValue);
@@ -177,7 +177,7 @@ public interface Configuration
      * @return The associated byte.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Byte.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -190,7 +190,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated byte.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Byte.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -204,7 +204,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated byte if key is found and has valid format, default
      *         value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
+     * @exception ConversionException is thrown if the key maps to an object that
      *            is not a Byte.
      * @exception NumberFormatException is thrown if the value mapped by the key
      *            has not a valid number format.
@@ -218,7 +218,7 @@ public interface Configuration
      * @return The associated double.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -231,7 +231,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated double.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -245,7 +245,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated double if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -259,7 +259,7 @@ public interface Configuration
      * @return The associated float.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -272,7 +272,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated float.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -286,7 +286,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated float if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -300,7 +300,7 @@ public interface Configuration
      * @return The associated int.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Integer.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -313,7 +313,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated int.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Integer.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -327,7 +327,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated int if key is found and has valid format, default
      *         value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
+     * @exception ConversionException is thrown if the key maps to an object that
      *         is not a Integer.
      * @exception NumberFormatException is thrown if the value mapped by the key
      *         has not a valid number format.
@@ -341,7 +341,7 @@ public interface Configuration
      * @return The associated long.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -354,7 +354,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated long.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -368,7 +368,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated long if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -382,7 +382,7 @@ public interface Configuration
      * @return The associated short.
      * @exception NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -395,7 +395,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated short.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -409,7 +409,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated short if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @exception NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -469,7 +469,7 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated string.
-     * @exception ClassCastException is thrown if the key maps to an object that
+     * @exception ConversionException is thrown if the key maps to an object that
      *            is not a String.
      * @exception NoSuchElementException is thrown if the key doesn't
      *         map to an existing object.
@@ -483,7 +483,7 @@ public interface Configuration
      * @param defaultValue The default value.
      * @return The associated string if key is found and has valid
      * format, default value otherwise.
-     * @exception ClassCastException is thrown if the key maps to an object that
+     * @exception ConversionException is thrown if the key maps to an object that
      *            is not a String.
      */
     String getString(String key, String defaultValue);
@@ -494,7 +494,7 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated string array if key is found.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a String/List of Strings.
      */
     String[] getStringArray(String key);
@@ -504,7 +504,7 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated List.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a List.
      */
     List getList(String key);
@@ -515,7 +515,7 @@ public interface Configuration
      * @param key The configuration key.
      * @param defaultValue The default value.
      * @return The associated List.
-     * @exception ClassCastException is thrown if the key maps to an
+     * @exception ConversionException is thrown if the key maps to an
      * object that is not a List.
      */
     List getList(String key, List defaultValue);

@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * UnsupportedOperationException. The clear operations are supported but the
  * underlying JNDI data source is not changed.
  *
- * @version $Id: JNDIConfiguration.java,v 1.12 2004/06/02 16:33:46 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.13 2004/06/15 15:53:58 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -200,14 +200,6 @@ public class JNDIConfiguration extends AbstractConfiguration
         return null;
     }
 
-    /**
-     * Get a list of properties associated with the given configuration key.
-     *
-     * @param key The configuration key.
-     * @return The associated properties if key is found.
-     * @throws ClassCastException is thrown if the key maps to an object that is not a String/List.
-     * @throws IllegalArgumentException if one of the tokens is malformed (does not contain an equals sign).
-     */
     public Properties getProperties(String key)
     {
         throw new UnsupportedOperationException("This operation is not supported");

@@ -35,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.9 2004/06/03 15:32:46 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.10 2004/06/15 15:53:58 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -348,7 +348,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated properties if key is found.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a String/List.
      * @throws IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
@@ -370,7 +370,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated properties if key is found.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a String/List of Strings.
      * @throws IllegalArgumentException if one of the tokens is
      * malformed (does not contain an equals sign).
@@ -446,7 +446,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     public boolean getBoolean(String key)
@@ -471,7 +471,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated boolean.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     public boolean getBoolean(String key, boolean defaultValue)
@@ -488,7 +488,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated boolean if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Boolean.
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
@@ -501,15 +501,20 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            return BooleanUtils.toBooleanObject((String) value);
+            Boolean b = BooleanUtils.toBooleanObject((String) value);
+            if (b == null)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Boolean object");
+            }
+            return b;
         }
         else if (value == null)
-        {           
+        {
             return defaultValue;
         }
         else
         {
-            throw new ClassCastException(
+            throw new ConversionException(
                 '\'' + key + "' doesn't map to a Boolean object");
         }
     }
@@ -523,7 +528,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Byte.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -550,7 +555,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated byte.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Byte.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -569,7 +574,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated byte if key is found and has valid format, default
      *         value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an object that
+     * @throws ConversionException is thrown if the key maps to an object that
      *            is not a Byte.
      * @throws NumberFormatException is thrown if the value mapped by the key
      *            has not a valid number format.
@@ -584,8 +589,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Byte b = new Byte((String) value);
-            return b;
+            try
+            {
+                Byte b = new Byte((String) value);
+                return b;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Byte object", e);
+            }
         }
         else if (value == null)
         {
@@ -593,8 +605,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Byte object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Byte object");
         }
     }
 
@@ -607,7 +618,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -634,7 +645,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated double.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -653,7 +664,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated double if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Double.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -668,8 +679,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Double d = new Double((String) value);
-            return d;
+            try
+            {
+                Double d = new Double((String) value);
+                return d;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Double object", e);
+            }
         }
         else if (value == null)
         {
@@ -677,8 +695,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Double object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Double object");
         }
     }
 
@@ -691,7 +708,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -718,7 +735,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated float.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -737,7 +754,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated float if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Float.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -752,8 +769,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Float f = new Float((String) value);
-            return f;
+            try
+            {
+                Float f = new Float((String) value);
+                return f;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Float object", e);
+            }
         }
         else if (value == null)
         {
@@ -761,8 +785,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Float object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Float object");
         }
     }
 
@@ -775,7 +798,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Integer.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -802,7 +825,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated int.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Integer.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -828,7 +851,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated int if key is found and has valid format, default
      *         value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an object that
+     * @throws ConversionException is thrown if the key maps to an object that
      *         is not a Integer.
      * @throws NumberFormatException is thrown if the value mapped by the key
      *         has not a valid number format.
@@ -843,8 +866,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Integer i = new Integer((String) value);
-            return i;
+            try
+            {
+                Integer i = new Integer((String) value);
+                return i;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Integer object", e);
+            }
         }
         else if (value == null)
         {
@@ -852,8 +882,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Integer object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Integer object");
         }
     }
 
@@ -866,7 +895,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -893,7 +922,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated long.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -912,7 +941,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated long if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Long.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -927,8 +956,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Long l = new Long((String) value);
-            return l;
+            try
+            {
+                Long l = new Long((String) value);
+                return l;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Long object", e);
+            }
         }
         else if (value == null)
         {
@@ -936,8 +972,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Long object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Long object");
         }
     }
 
@@ -950,7 +985,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @throws NoSuchElementException is thrown if the key doesn't
      * map to an existing object.
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -977,7 +1012,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated short.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -996,7 +1031,7 @@ public abstract class AbstractConfiguration implements Configuration
      * @return The associated short if key is found and has valid
      * format, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a Short.
      * @throws NumberFormatException is thrown if the value mapped
      * by the key has not a valid number format.
@@ -1011,8 +1046,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            Short s = new Short((String) value);
-            return s;
+            try
+            {
+                Short s = new Short((String) value);
+                return s;
+            }
+            catch (NumberFormatException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Short object", e);
+            }
         }
         else if (value == null)
         {
@@ -1020,8 +1062,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a Short object");
+            throw new ConversionException('\'' + key + "' doesn't map to a Short object");
         }
     }
 
@@ -1047,8 +1088,15 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            BigDecimal number = new BigDecimal((String) value);
-            return number;
+            try
+            {
+                BigDecimal number = new BigDecimal((String) value);
+                return number;
+            }
+            catch (Exception e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
+            }
         }
         else if (value == null)
         {
@@ -1056,8 +1104,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
-                '\'' + key + "' doesn't map to a BigDecimal object");
+            throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object");
         }
     }
 
@@ -1077,14 +1124,21 @@ public abstract class AbstractConfiguration implements Configuration
     public BigInteger getBigInteger(String key, BigInteger defaultValue) {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof BigDecimal)
+        if (value instanceof BigInteger)
         {
             return (BigInteger) value;
         }
         else if (value instanceof String)
         {
-            BigInteger number = new BigInteger((String) value);
-            return number;
+            try
+            {
+                BigInteger number = new BigInteger((String) value);
+                return number;
+            }
+            catch (Exception e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
+            }
         }
         else if (value == null)
         {
@@ -1092,7 +1146,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
+            throw new ConversionException(
                 '\'' + key + "' doesn't map to a BigDecimal object");
         }
     }
@@ -1104,7 +1158,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated string.
      *
-     * @throws ClassCastException is thrown if the key maps to an object that
+     * @throws ConversionException is thrown if the key maps to an object that
      *            is not a String.
      * @throws NoSuchElementException is thrown if the key doesn't
      *         map to an existing object.
@@ -1131,7 +1185,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated string if key is found, default value otherwise.
      *
-     * @throws ClassCastException is thrown if the key maps to an object that
+     * @throws ConversionException is thrown if the key maps to an object that
      *            is not a String.
      */
     public String getString(String key, String defaultValue)
@@ -1148,7 +1202,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
+            throw new ConversionException(
                 '\'' + key + "' doesn't map to a String object");
         }
     }
@@ -1161,7 +1215,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated string array if key is found.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a String/List of Strings.
      */
     public String[] getStringArray(String key)
@@ -1191,7 +1245,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
+            throw new ConversionException(
                 '\'' + key + "' doesn't map to a String/List object");
         }
         return tokens;
@@ -1204,7 +1258,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated List.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a List.
      * @throws NoSuchElementException is thrown if the key doesn't
      *         map to an existing object.
@@ -1231,7 +1285,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return The associated List.
      *
-     * @throws ClassCastException is thrown if the key maps to an
+     * @throws ConversionException is thrown if the key maps to an
      * object that is not a List.
      */
     public List getList(String key, List defaultValue)
@@ -1258,7 +1312,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ClassCastException(
+            throw new ConversionException(
                 '\''
                     + key
                     + "' doesn't map to a List object: "

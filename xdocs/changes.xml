@@ -6,120 +6,130 @@
   </properties>
 
   <body>
-    <release version="1.0-dev-4" date="">
-     <action dev="ebourg" type="fix">
-        Tokens like ${ref} in a PropertyConfiguration are now properly saved (Bugzilla 29366).
-     </action>
-     <action dev="epugh" type="fix">
-        SubsetConfiguration returns a List on getList().  AbstractConfiguration wouldn't properly
-        deal with a List, only with a Container for getList()!  Thanks to jschaible for the unit test.
-     </action>       
-     <action dev="jschaible" type="add">
+    <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="update">
+        Introduced a ConversionException thrown when the value of a property is
+        not compatible the type requested. It replaces the ClassCastException
+        and the NumberFormatException thrown previously.
+      </action>
+      <action dev="ebourg" type="fix">
+        Tokens like ${ref} in a PropertyConfiguration are now properly saved
+        (Bug 29366).
+      </action>
+      <action dev="ebourg" type="fix">
+        The getList() method of a CompositeConfiguration now returns the list
+        composed of the elements in the first matching configuration and the
+        additional elements found in the in memory configuration (Bug 28660).
+      </action>
+      <action dev="epugh" type="fix">
+        SubsetConfiguration returns a List on getList(). AbstractConfiguration
+        wouldn't properly deal with a List, only with a Container for getList()!
+        Thanks to jschaible for the unit test.
+      </action>
+      <action dev="jschaible" type="add">
         Direct support of XML via DOM. New classes DOMConfiguration and HierarchicalDOMConfiguration.
-     </action>     
-	 <action dev="jschaible" type="update">
+      </action>
+      <action dev="jschaible" type="update">
         Update build to not include test configuration files in resulting jar.
-     </action>       
-	 <action dev="ebourg" type="update">
+      </action>
+      <action dev="ebourg" type="update">
         Refactored JNDIConfiguration to use AbstractConfiguration.
-     </action>      
-	 <action dev="ebourg" type="update">
+      </action>
+      <action dev="ebourg" type="update">
         Fixed bug 27427 by refactoring out the subset logic into a SubsetConfiguration.
-     </action>    	
-     <action dev="oheger" type="fix">
-      	Reapply the ConfigurationXMLDocument that went missing during migration out of sandbox.
-     </action>        	
-     <action dev="epugh" type="update">
-      	Apply ASL 2.0 license.  Thanks to Jeff Painter for scripting the conversion!
-     </action>     
-     <action dev="epugh" type="add">
-      	Changed CompositeConfiguration to extend from AbstractConfiuration.  This means that the behavior of 
-      	CompositeConfiguration is much similar to others like PropertiesConfiguration in handling of missing
-      	keys, interpolotion, etc..  Previously CompositeConfiguration had quite a few differences.
-     </action>   
-     <action dev="epugh" type="update">
-      	Removed "defaults" from BaseConfiguration.  Defaults are now done via using a CompositeConfiguration, either
-      	directly or via a ConfigurationFactory.  If you want to save changes made to a Configuration, then you use
-      	a CompositeConfiguration and get back the inMemoryConfiguration that has the delta of changes.  Added a 
-      	bit of documentation on this.
-     </action>          
-	 <action dev="epugh" type="update">
-      	Bugzilla 16504 Enhancement: Configuration Comparator
-     </action>        
-	 <action dev="epugh" type="update">
-      	Bugzilla 26694 (BaseConfiguration: containsKey ignores default properties).  I have changed it so that
-      	now the defaults are paid attention to.   
-     </action>        
+      </action>
+      <action dev="oheger" type="fix">
+        Reapply the ConfigurationXMLDocument that went missing during migration out of sandbox.
+      </action>
+      <action dev="epugh" type="update">
+        Apply ASL 2.0 license.  Thanks to Jeff Painter for scripting the conversion!
+      </action>
+      <action dev="epugh" type="add">
+        Changed CompositeConfiguration to extend from AbstractConfiuration. This means that the behavior of
+        CompositeConfiguration is much similar to others like PropertiesConfiguration in handling of missing
+        keys, interpolation, etc.. Previously CompositeConfiguration had quite a few differences.
+      </action>
+      <action dev="epugh" type="update">
+        Removed "defaults" from BaseConfiguration. Defaults are now done via using a CompositeConfiguration, either
+        directly or via a ConfigurationFactory. if you want to save changes made to a Configuration, then you use
+        a CompositeConfiguration and get back the inMemoryConfiguration that has the delta of changes. Added a
+        bit of documentation on this.
+      </action>
+      <action dev="epugh" type="update">
+        Bugzilla 16504 Enhancement: Configuration Comparator
+      </action>
+      <action dev="epugh" type="update">
+        Bugzilla 26694 (BaseConfiguration: containsKey ignores default properties).
+        I have changed it so that now the defaults are paid attention to.
+      </action>
       <action dev="ebourg" type="add">
         The Configuration interface now supports BigDecimal and BigInteger numbers.
       </action>
-	 <action dev="epugh" type="add">
-      	ConfigurationException is now thrown by public methods instead of Exception or
-      	IOException or whatnot.
-     </action>       
-	 <action dev="ebourg" type="add">
-      	For configuration based on properties files, allow characters like \n etc
-      	to be escaped and unescaped.
-     </action>             	
-	 <action dev="ebourg" type="add">
-      	New DatabaseConfiguration that uses a database to store the properties. It supports 2 table structures :
-      	<ul>
-		<li>one table per configuration (2 colums key/value)</li>
-		<li>one table for multiple configurations (2 columns key/value + 1 column 
-for the name of the configuration)</li>
-		</ul>
-      	
-     </action>      	
-	 <action dev="oheger" type="add">
-      	ConfigurationFactory now supports the hierarchicalDom4j element in configuration 
-      	definition file
-     </action>     	
-	 <action dev="ebourg" type="update">
-      	Change all Vector objects to List objects.
-     </action>     	
-	 <action dev="oheger" type="add">
-      	ConfigurationFactory now supports two types of properties files, additional and 
-      	override.  Additional properties add each other together.  Override override each
-      	other.  This allows you to have a single property that is either aggregated from a 
-      	number of sources, or have a property that is overridden according to a specific 
-      	order of sources.
-     </action>        	
-     <action dev="oheger" type="update">
-      	AbstractConfiguration addProperty now delegates to an abstract addPropertyDirect
-      	implemented by BaseConfiguration.  
-     </action>    	
-     <action dev="kshaposhnikov" type="update">
-      	Changed getString() method to throw a NoSuchElementException instead of "" if the
-      	configuration property doesn't exist.     
-     </action>      	
-     <action dev="kshaposhnikov" type="add">
-      	Added AbstractConfiguration to make it easier to create subclasses by only
-      	having to implement the methods required.      
-     </action>  
-     <action dev="bdunbar" type="fix">
-	   <strong>ClassPropertiesConfiguration Additions</strong>
-	   <ul>
-	     <li>Use the classloader of class that is provided by the constructor.</li>
-		 <li>Add a constructor that indicates whether to use relative or absolute.</li>
-		 <li>Change getPropertyStream to utilize the relative or absolute flag.</li>
-		 <li>Add a test case that checks that absolute paths work.</li>
-	   </ul>
-     </action>    
-     <action dev="epugh" type="fix">
-      	<strong>JNDIConfiguration.getKeys() Addition</strong>
-	  	The JNDIConfiguration.getKeys() method was returning an unsupported
-	  	operation error.  However, this is an important method to have 
-	 	supported.
-     </action>    
-     <action dev="epugh" type="fix">
-      	<strong>CompositeConfiguration.getKeys() Fix</strong>
-	  	The CompositeConfiguration.getKeys() method was returning an
-	  	unordered list of configuration values.  However, many apps
-	  	expect the order that keys are returned to be the order they
-	  	are added into the properties file.
-     </action>         
+      <action dev="epugh" type="add">
+        ConfigurationException is now thrown by public methods instead of Exception or
+        IOException or whatnot.
+      </action>
+      <action dev="ebourg" type="add">
+        For configuration based on properties files, allow characters like \n etc
+        to be escaped and unescaped.
+      </action>
+      <action dev="ebourg" type="add">
+        New DatabaseConfiguration that uses a database to store the properties.
+        It supports 2 table structures :
+        <ul>
+          <li>one table per configuration (2 colums key/value)</li>
+          <li>one table for multiple configurations (2 columns key/value + 1 column
+              for the name of the configuration)</li>
+        </ul>
+      </action>
+      <action dev="oheger" type="add">
+        ConfigurationFactory now supports the hierarchicalDom4j element in configuration
+        definition file
+      </action>
+      <action dev="ebourg" type="update">
+        Change all Vector objects to List objects.
+      </action>
+      <action dev="oheger" type="add">
+        ConfigurationFactory now supports two types of properties files, additional and
+        override.  Additional properties add each other together.  Override override each
+        other.  This allows you to have a single property that is either aggregated from a
+        number of sources, or have a property that is overridden according to a specific
+        order of sources.
+      </action>
+      <action dev="oheger" type="update">
+        AbstractConfiguration addProperty now delegates to an abstract addPropertyDirect
+        implemented by BaseConfiguration.
+      </action>
+      <action dev="kshaposhnikov" type="update">
+        Changed getString() method to throw a NoSuchElementException instead of "" if the
+        configuration property doesn't exist.
+      </action>
+      <action dev="kshaposhnikov" type="add">
+        Added AbstractConfiguration to make it easier to create subclasses by only
+        having to implement the methods required.
+      </action>
+      <action dev="bdunbar" type="fix">
+        <strong>ClassPropertiesConfiguration Additions</strong>
+        <ul>
+          <li>Use the classloader of class that is provided by the constructor.</li>
+          <li>Add a constructor that indicates whether to use relative or absolute.</li>
+          <li>Change getPropertyStream to utilize the relative or absolute flag.</li>
+          <li>Add a test case that checks that absolute paths work.</li>
+        </ul>
+      </action>
+      <action dev="epugh" type="fix">
+        <strong>JNDIConfiguration.getKeys() Addition</strong>
+        The JNDIConfiguration.getKeys() method was returning an unsupported
+        operation error.  However, this is an important method to have
+        supported.
+      </action>
+      <action dev="epugh" type="fix">
+        <strong>CompositeConfiguration.getKeys() Fix</strong>
+        The CompositeConfiguration.getKeys() method was returning an
+        unordered list of configuration values.  However, many apps
+        expect the order that keys are returned to be the order they
+        are added into the properties file.
+      </action>
     </release>
-
   </body>
 </document>
-
