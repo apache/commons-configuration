@@ -123,7 +123,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.19 2004/09/16 22:35:35 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.20 2004/09/20 09:37:07 henning Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -169,68 +169,113 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      */
     public synchronized void load(InputStream input, String encoding) throws ConfigurationException
     {
+        InputStreamReader isr = null;
         PropertiesReader reader = null;
-        if (encoding != null)
-        {
-            try
-            {
-                reader = new PropertiesReader(new InputStreamReader(input, encoding));
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw new ConfigurationException("Should look up and use default encoding.", e);
-            }
-        }
-
-        if (reader == null)
-        {
-            reader = new PropertiesReader(new InputStreamReader(input));
-        }
 
         try
         {
-            while (true)
+            if (encoding != null)
             {
-                String line = reader.readProperty();
-
-                if (line == null)
+                try
                 {
-                    break; // EOF
+                    isr = new InputStreamReader(input, encoding);
+                    reader = new PropertiesReader(isr);
                 }
-
-                int equalSign = line.indexOf('=');
-                if (equalSign > 0)
+                catch (UnsupportedEncodingException e)
                 {
-                    String key = line.substring(0, equalSign).trim();
-                    String value = line.substring(equalSign + 1).trim();
+                    throw new ConfigurationException("Should look up and use default encoding.", e);
+                }
+            }
 
-                    // Though some software (e.g. autoconf) may produce
-                    // empty values like foo=\n, emulate the behavior of
-                    // java.util.Properties by setting the value to the
-                    // empty string.
+            if (reader == null)
+            {
+                isr = new InputStreamReader(input);
+                reader = new PropertiesReader(isr);
+            }
 
-                    if (StringUtils.isNotEmpty(getInclude())
-                        && key.equalsIgnoreCase(getInclude()))
+            try
+            {
+                while (true)
+                {
+                    String line = reader.readProperty();
+
+                    if (line == null)
                     {
-                        if (getIncludesAllowed())
+                        break; // EOF
+                    }
+
+                    int equalSign = line.indexOf('=');
+                    if (equalSign > 0)
+                    {
+                        String key = line.substring(0, equalSign).trim();
+                        String value = line.substring(equalSign + 1).trim();
+
+                        // Though some software (e.g. autoconf) may produce
+                        // empty values like foo=\n, emulate the behavior of
+                        // java.util.Properties by setting the value to the
+                        // empty string.
+
+                        if (StringUtils.isNotEmpty(getInclude())
+                                && key.equalsIgnoreCase(getInclude()))
                         {
-                            String [] files = StringUtils.split(value, DELIMITER);
-                            for (int i = 0; i < files.length; i++)
+                            if (getIncludesAllowed())
                             {
-                                load(getPropertyStream(files[i].trim()));
+                                String [] files = StringUtils.split(value, getDelimiter());
+                                for (int i = 0; i < files.length; i++)
+                                {
+                                    InputStream in = null;
+                                    try
+                                    {
+                                        in = getPropertyStream(files[i].trim());
+                                        load(in);
+                                    }
+                                    finally
+                                    {
+                                        if (in != null)
+                                        {
+                                            in.close();
+                                        }
+                                    }
+                                }
                             }
                         }
-                    }
-                    else
-                    {
-                        addProperty(key, unescapeJava(value));
+                        else
+                        {
+                            addProperty(key, unescapeJava(value));
+                        }
                     }
                 }
             }
+            catch (IOException ioe)
+            {
+                throw new ConfigurationException("Could not load configuration from input stream.", ioe);
+            }
         }
-        catch (IOException ioe)
+        finally
         {
-            throw new ConfigurationException("Could not load configuration from input stream.", ioe);
+            if (isr != null)
+            {
+                try
+                {
+                    isr.close();
+                }
+                catch (IOException ie)
+                {
+                    // do nothing
+                }
+            }
+
+            if (reader != null)
+            {
+                try
+                {
+                    reader.close();
+                }
+                catch (IOException ie)
+                {
+                    // do nothing
+                }
+            }
         }
     }
 
@@ -267,9 +312,9 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                     writer.close();
                 }
             }
-            catch (IOException ioe2) 
-			{
-            	throw new ConfigurationException("Could not close writer while saving to file " + filename,ioe2);
+            catch (IOException ioe2)
+            {
+                throw new ConfigurationException("Could not close writer while saving to file " + filename,ioe2);
             }
         }
     }
@@ -303,28 +348,39 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      */
     public void save(Writer writer) throws IOException
     {
-        PropertiesWriter out = new PropertiesWriter(writer);
+        PropertiesWriter out = null;
 
-        out.writeComment("written by PropertiesConfiguration");
-        out.writeComment(new Date().toString());
-
-        Iterator keys = getKeys();
-        while (keys.hasNext())
+        try
         {
-            String key = (String) keys.next();
-            Object value = getProperty(key);
+            out = new PropertiesWriter(writer);
 
-            if (value instanceof List)
+            out.writeComment("written by PropertiesConfiguration");
+            out.writeComment(new Date().toString());
+
+            Iterator keys = getKeys();
+            while (keys.hasNext())
             {
-                out.writeProperty(key, (List) value);
-            }
-            else
-            {
-                out.writeProperty(key, value);
+                String key = (String) keys.next();
+                Object value = getProperty(key);
+
+                if (value instanceof List)
+                {
+                    out.writeProperty(key, (List) value);
+                }
+                else
+                {
+                    out.writeProperty(key, value);
+                }
             }
         }
-
-        out.flush();
+        finally
+        {
+            if (out != null)
+            {
+                out.flush();
+                out.close();
+            }
+        }
     }
 
     /**
@@ -377,7 +433,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * backslash sign a the end of the line.  This is used to
      * concatenate multiple lines for readability.
      */
-    class PropertiesReader extends LineNumberReader
+    public static class PropertiesReader extends LineNumberReader
     {
         /**
          * Constructor.
@@ -414,7 +470,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                 line = line.trim();
 
                 if (StringUtils.isEmpty(line)
-                    || (line.charAt(0) == '#'))
+                        || (line.charAt(0) == '#'))
                 {
                     continue;
                 }
@@ -437,7 +493,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
     /**
      * This class is used to write properties lines.
      */
-    class PropertiesWriter extends FilterWriter
+    public static class PropertiesWriter extends FilterWriter
     {
         /**
          * Constructor.
@@ -463,7 +519,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
             if (value != null)
             {
                 String v = StringEscapeUtils.escapeJava(String.valueOf(value));
-                v = StringUtils.replace(v, String.valueOf(DELIMITER), "\\" + DELIMITER);
+                v = StringUtils.replace(v, String.valueOf(getDelimiter()), "\\" + getDelimiter());
                 write(v);
             }
 
@@ -549,8 +605,8 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
             {
                 // handle an escaped value
                 hadSlash = false;
-                
-                if(ch=='\\'){
+
+                if (ch=='\\'){
                     out.append('\\');
                 }
                 else if (ch=='\''){
@@ -574,18 +630,18 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                 else if (ch=='b'){
                     out.append('\b');
                 }
-                else if (ch==DELIMITER){
+                else if (ch==getDelimiter()){
                     out.append('\\');
-                    out.append(DELIMITER);
+                    out.append(getDelimiter());
                 }
                 else if (ch=='u'){
-//                  uh-oh, we're in unicode country....
+                    //                  uh-oh, we're in unicode country....
                     inUnicode = true;
-                }     
+                }
                 else {
                     out.append(ch);
                 }
-                                             
+
                 continue;
             }
             else if (ch == '\\')

@@ -39,7 +39,7 @@ import java.util.Set;
  * @see HierarchicalConfiguration
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationConverter.java,v 1.5 2004/08/23 08:06:22 ebourg Exp $
+ * @version $Id: HierarchicalConfigurationConverter.java,v 1.6 2004/09/20 09:37:07 henning Exp $
  */
 abstract class HierarchicalConfigurationConverter
 {
@@ -65,13 +65,13 @@ abstract class HierarchicalConfigurationConverter
                 String key = (String) it.next();
                 if (keySet.contains(key))
                 {
-                	// this key has already been processed by openElements
-                	continue;
+                    // this key has already been processed by openElements
+                    continue;
                 }
                 ConfigurationKey keyAct = new ConfigurationKey(key);
                 closeElements(keyLast, keyAct);
                 String elem = openElements(keyLast, keyAct, config, keySet);
-               	fireValue(elem, config.getProperty(key));
+                fireValue(elem, config.getProperty(key));
                 keyLast = keyAct;
             }
 
@@ -162,10 +162,10 @@ abstract class HierarchicalConfigurationConverter
     protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
-    	ConfigurationKey k = keyLast.commonKey(keyAct);
+        ConfigurationKey k = keyLast.commonKey(keyAct);
         for (it.nextKey(); it.hasNext(); it.nextKey())
         {
-        	k.append(it.currentKey(true));
+            k.append(it.currentKey(true));
             elementStart(it.currentKey(true), config.getProperty(k.toString()));
             keySet.add(k.toString());
         }

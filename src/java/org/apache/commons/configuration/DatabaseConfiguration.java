@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.9 $, $Date: 2004/08/20 13:55:41 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/20 09:37:07 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -73,7 +73,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param name          the name of the configuration
      */
     public DatabaseConfiguration(DataSource datasource, String table, String nameColumn,
-                                 String keyColumn, String valueColumn, String name)
+            String keyColumn, String valueColumn, String name)
     {
         this.datasource = datasource;
         this.table = table;
@@ -135,14 +135,14 @@ public class DatabaseConfiguration extends AbstractConfiguration
             // build a list if there is more than one row in the resultset
             if (rs.next())
             {
-            	List results = new ArrayList();
-            	results.add(result);
-            	results.add(rs.getObject(valueColumn));
-            	while (rs.next())
+                List results = new ArrayList();
+                results.add(result);
+                results.add(rs.getObject(valueColumn));
+                while (rs.next())
                 {
-            		results.add(rs.getObject(valueColumn));
-            	}
-            	result = results;
+                    results.add(rs.getObject(valueColumn));
+                }
+                result = results;
             }
         }
         catch (SQLException e)

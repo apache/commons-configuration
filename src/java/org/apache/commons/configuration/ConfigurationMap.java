@@ -25,7 +25,7 @@ import java.util.Set;
  * configuration-collection
  * {@link org.apache.commons.configuration.Configuration}
  * instance to provide a <code>Map</code> interface.</p>
- * 
+ *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class ConfigurationMap extends AbstractMap {
@@ -46,12 +46,12 @@ public class ConfigurationMap extends AbstractMap {
         this.configuration = configuration;
     }
 
-	/**
-	 * @see java.util.Map#entrySet()
-	 */
-	public Set entrySet() {
-		return new ConfigurationSet(configuration);
-	}
+    /**
+     * @see java.util.Map#entrySet()
+     */
+    public Set entrySet() {
+        return new ConfigurationSet(configuration);
+    }
 
     /**
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)

@@ -89,7 +89,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.9 2004/07/05 09:54:17 ebourg Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.10 2004/09/20 09:37:07 henning Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -583,7 +583,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         private Object value;
 
         /** Stores the children of this node.*/
-        private Map children;
+        private LinkedMap children; // Explict type here or we
+                                    // will get a findbugs error 
+                                    // because Map doesn't imply 
+                                    // Serializable
 
         /**
          * Creates a new instance of <code>Node</code>.

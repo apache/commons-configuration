@@ -26,12 +26,10 @@ import java.util.Map;
  */
 class ConfigurationSet extends AbstractSet {
 
-
     class Entry implements Map.Entry {
 
         Object key;
-        Object value;
-        
+
         public Entry(Object key) {
             this.key = key;
         }
@@ -43,13 +41,13 @@ class ConfigurationSet extends AbstractSet {
         public Object getValue() {
             return configuration.getProperty((String) key);
         }
-  
+
         public Object setValue(Object value) {
             Object old = getValue();
             configuration.setProperty((String) key, value);
             return old;
         }
-        
+
     }
 
     class ConfigurationSetIterator implements Iterator {

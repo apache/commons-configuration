@@ -32,7 +32,7 @@ import org.apache.commons.logging.LogFactory;
  * configuration-collection
  * {@link org.apache.commons.configuration.Configuration}
  * instance.</p>
- * 
+ *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class ConfigurationDynaClass implements DynaClass {
@@ -48,7 +48,7 @@ public class ConfigurationDynaClass implements DynaClass {
      */
     public ConfigurationDynaClass(Configuration configuration) {
         super();
-        if(log.isTraceEnabled()) log.trace("ConfigurationDynaClass("+configuration+")");
+        if (log.isTraceEnabled()) log.trace("ConfigurationDynaClass("+configuration+")");
         this.configuration = configuration;
     }
 
@@ -56,20 +56,20 @@ public class ConfigurationDynaClass implements DynaClass {
      * @see org.apache.commons.beanutils.DynaClass#getDynaProperty(java.lang.String)
      */
     public DynaProperty getDynaProperty(String name) {
-        if(log.isTraceEnabled()) log.trace("getDynaProperty("+name+")");
-        if(name == null)
+        if (log.isTraceEnabled()) log.trace("getDynaProperty("+name+")");
+        if (name == null)
             throw new IllegalArgumentException("No such property name=["+name+"]");
         Object value = configuration.getProperty(name);
-        if(value == null)
+        if (value == null)
             return null;
         else {
             Class type = value.getClass();
 
-            if(type == Byte.class) {
+            if (type == Byte.class) {
                 type = Byte.TYPE;
-            } if(type == Character.class) {
+            } if (type == Character.class) {
                 type = Character.TYPE;
-            } else if(type == Boolean.class) {
+            } else if (type == Boolean.class) {
                 type = Boolean.TYPE;
             } else if (type == Double.class) {
                 type = Double.TYPE;
@@ -91,7 +91,7 @@ public class ConfigurationDynaClass implements DynaClass {
      * @see org.apache.commons.beanutils.DynaClass#getDynaProperties()
      */
     public DynaProperty[] getDynaProperties() {
-        if(log.isTraceEnabled()) log.trace("getDynaProperties()");
+        if (log.isTraceEnabled()) log.trace("getDynaProperties()");
         Iterator keys = configuration.getKeys();
         ArrayList properties = new ArrayList();
         while(keys.hasNext()) {
@@ -101,8 +101,8 @@ public class ConfigurationDynaClass implements DynaClass {
         }
         DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
-        if(log.isDebugEnabled()) log.debug("Found "+properties.size()+" properties.");
-        return propertyArray; 
+        if (log.isDebugEnabled()) log.debug("Found "+properties.size()+" properties.");
+        return propertyArray;
     }
 
    /**

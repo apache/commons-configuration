@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * instance. It also implements a {@link java.util.Map} interface
  * so that it can be used in JSP 2.0 Expression Language
  * expressions.</p>
- * 
+ *
  * <p>The <code>ConfigurationDynaBean</code> maps nested and mapped
  * properties to the appropriate <code>Configuration</code> subset
  * using the
@@ -44,7 +44,7 @@ import org.apache.commons.logging.LogFactory;
  * configuration properties using the
  * {@link org.apache.commons.configuration.Configuration#getList(String)}
  * method. Setting an indexed property always throws an exception.</p>
- * 
+ *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean {
@@ -55,7 +55,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
 
     public ConfigurationDynaBean(Configuration configuration) {
         super(configuration);
-        if(log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
+        if (log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
         this.configuration = configuration;
     }
 
@@ -63,52 +63,52 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, java.lang.Object)
      */
     public void set(String name, Object value) {
-        if(log.isTraceEnabled()) log.trace("set("+name+","+value+")");
-        if(value == null) throw new NullPointerException("Error trying to set property to null.");
-        if(value instanceof List) {
+        if (log.isTraceEnabled()) log.trace("set("+name+","+value+")");
+        if (value == null) throw new NullPointerException("Error trying to set property to null.");
+        if (value instanceof List) {
             List list = (List) value;
             Iterator iterator = list.iterator();
             while(iterator.hasNext())
                 configuration.addProperty(name,iterator.next());
-        } else if(value instanceof int[]) {
+        } else if (value instanceof int[]) {
             int[] array = (int[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Integer(array[i]));
-        } else if(value instanceof boolean[]) {
+        } else if (value instanceof boolean[]) {
             boolean[] array = (boolean[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,Boolean.valueOf(array[i]));
-        } else if(value instanceof char[]) {
+        } else if (value instanceof char[]) {
             char[] array = (char[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Character(array[i]));
-        } else if(value instanceof byte[]) {
+        } else if (value instanceof byte[]) {
             byte[] array = (byte[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Byte(array[i]));
-        } else if(value instanceof short[]) {
+        } else if (value instanceof short[]) {
             short[] array = (short[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Short(array[i]));
-        } else if(value instanceof int[]) {
+        } else if (value instanceof int[]) {
             int[] array = (int[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Integer(array[i]));
-        } else if(value instanceof long[]) {
+        } else if (value instanceof long[]) {
             long[] array = (long[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Long(array[i]));
-        } else if(value instanceof float[]) {
+        } else if (value instanceof float[]) {
             float[] array = (float[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,new Float(array[i]));
-        } else if(value instanceof double[]) {
+        } else if (value instanceof double[]) {
             double[] array = (double[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name, new Double(array[i]));
-        } else if(value instanceof Object[]) {
+        } else if (value instanceof Object[]) {
             Object[] array = (Object[]) value;
-            for(int i = 0; i < array.length; i++)
+            for (int i = 0; i < array.length; i++)
                 configuration.addProperty(name,array[i]);
         } else
             configuration.setProperty(name, value);
@@ -118,17 +118,17 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String)
      */
     public Object get(String name) {
-        if(log.isTraceEnabled()) log.trace("get("+name+")");
+        if (log.isTraceEnabled()) log.trace("get("+name+")");
         // get configuration property
         Object result = configuration.getProperty(name);
-        if(result == null) {
+        if (result == null) {
             // otherwise attempt to create bean from configuration subset
             Configuration subset = configuration.subset(name);
-            if(!subset.isEmpty())
+            if (!subset.isEmpty())
                 result = new ConfigurationDynaBean(configuration.subset(name));
         }
-        if(log.isDebugEnabled()) log.debug(name+"=["+result+"]");
-        if(result == null)
+        if (log.isDebugEnabled()) log.debug(name+"=["+result+"]");
+        if (result == null)
             throw new IllegalArgumentException
                 ("Property '" + name +"' does not exist.");
         return result;
@@ -139,7 +139,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      */
     public boolean contains(String name, String key) {
         Configuration subset = configuration.subset(name);
-        if(subset == null)
+        if (subset == null)
             throw new IllegalArgumentException
                     ("Mapped property '" + name +"' does not exist.");
         return subset.containsKey(key);
@@ -151,7 +151,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     public Object get(String name, int index) {
         try {
             List list = configuration.getList(name);
-            if(list.isEmpty())
+            if (list.isEmpty())
                 throw new IllegalArgumentException
                     ("Indexed property '" + name +"' does not exist.");
             return list.get(index);
@@ -165,7 +165,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      */
     public Object get(String name, String key) {
         Configuration subset = configuration.subset(name);
-        if(subset == null)
+        if (subset == null)
             throw new IllegalArgumentException
                     ("Mapped property '" + name +"' does not exist.");
         return subset.getProperty(key);
@@ -183,7 +183,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
      */
     public void remove(String name, String key) {
         Configuration subset = configuration.subset(name);
-        if(subset == null)
+        if (subset == null)
             throw new IllegalArgumentException
                     ("Mapped property '" + name +"' does not exist.");
         subset.setProperty(key, null);
@@ -197,7 +197,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     public void set(String name, int index, Object value) {
         try {
             List list = configuration.getList(name);
-            if(list == null) 
+            if (list == null)
                 throw new IllegalArgumentException
                     ("Property '" + name +"' does not exist.");
             list.set(index,value);

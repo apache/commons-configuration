@@ -54,21 +54,21 @@ import org.xml.sax.SAXException;
 
 /**
  * Reads a XML configuration file.
- * 
+ *
  * To retrieve the value of an attribute of an element, use
  * <code>X.Y.Z[@attribute]</code>. The '@' symbol was chosen for consistency
  * with XPath.
- * 
+ *
  * Setting property values will <b>NOT </b> automatically persist changes to
  * disk, unless <code>autoSave=true</code>.
- * 
+ *
  * @since commons-configuration 1.0
- * 
+ *
  * @author Jörg Schaible
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.12 $, $Date: 2004/09/06 11:40:34 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/20 09:37:07 $
  */
 public class XMLConfiguration extends BasePathConfiguration {
     // For conformance with xpath
@@ -117,7 +117,7 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Attempts to load the XML file as a resource from the classpath. The XML
      * file must be located somewhere in the classpath.
-     * 
+     *
      * @param resource
      *            Name of the resource
      * @throws ConfigurationException
@@ -130,7 +130,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Attempts to load the XML file.
-     * 
+     *
      * @param file
      *            File object representing the XML file.
      * @throws ConfigurationException
@@ -149,13 +149,19 @@ public class XMLConfiguration extends BasePathConfiguration {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             document = builder.parse(file);
         } catch (IOException de) {
-            throw new ConfigurationException("Could not load from " + file.getAbsolutePath(), de);
+            throw new ConfigurationException("Could not load from "
+                    + ((file != null)
+                    ? file.getAbsolutePath()
+                    : "unknown file"), de);
         } catch (ParserConfigurationException ex) {
             throw new ConfigurationException("Could not configure parser", ex);
         } catch (FactoryConfigurationError ex) {
             throw new ConfigurationException("Could not create parser", ex);
         } catch (SAXException ex) {
-            throw new ConfigurationException("Error parsing file " + file.getAbsolutePath(), ex);
+            throw new ConfigurationException("Error parsing file "
+                    + ((file != null)
+                    ? file.getAbsolutePath()
+                    : "unknown file"), ex);
         }
 
         initProperties(document.getDocumentElement(), new StringBuffer());
@@ -176,7 +182,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Loads and initializes from the XML file.
-     * 
+     *
      * @param element
      *            The element to start processing from. Callers should supply
      *            the root element of the document.
@@ -209,7 +215,7 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Helper method for constructing properties for the attributes of the given
      * XML element.
-     * 
+     *
      * @param hierarchy
      *            the actual hierarchy
      * @param element
@@ -228,7 +234,7 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Calls super method, and also ensures the underlying {@linkDocument} is
      * modified so changes are persisted when saved.
-     * 
+     *
      * @param name
      * @param value
      */
@@ -281,7 +287,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * TODO Add comment.
-     * 
+     *
      * @param nodes
      * @return
      */
@@ -342,7 +348,7 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Calls super method, and also ensures the underlying {@linkDocument} is
      * modified so changes are persisted when saved.
-     * 
+     *
      * @param name
      * @param value
      */
@@ -354,7 +360,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Sets the property value in our document tree, auto-saving if appropriate.
-     * 
+     *
      * @param name
      *            The name of the element to set a value for.
      * @param value
@@ -405,7 +411,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Adds the property value in our document tree, auto-saving if appropriate.
-     * 
+     *
      * @param name
      *            The name of the element to set a value for.
      * @param value
@@ -442,7 +448,7 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Calls super method, and also ensures the underlying {@link Document}is
      * modified so changes are persisted when saved.
-     * 
+     *
      * @param name
      *            The name of the property to clear.
      */
@@ -519,7 +525,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * If true, changes are automatically persisted.
-     * 
+     *
      * @param autoSave
      */
     public void setAutoSave(boolean autoSave) {
@@ -528,7 +534,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Save the configuration to the file specified by the fileName attribute.
-     * 
+     *
      * @throws ConfigurationException
      */
     public void save() throws ConfigurationException {
@@ -537,10 +543,10 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Save the configuration to a file.
-     * 
+     *
      * @param filename
      *            the name of the xml file
-     * 
+     *
      * @throws ConfigurationException
      */
     public void save(String filename) throws ConfigurationException {
@@ -564,7 +570,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Save the configuration to the specified stream.
-     * 
+     *
      * @param out
      *            the output stream used to save the configuration
      */
@@ -574,7 +580,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Save the configuration to the specified stream.
-     * 
+     *
      * @param out
      *            the output stream used to save the configuration
      * @param encoding
@@ -591,7 +597,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Save the configuration to the specified stream.
-     * 
+     *
      * @param writer
      *            the output stream used to save the configuration
      */
@@ -610,7 +616,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Returns the file.
-     * 
+     *
      * @return File
      */
     public File getFile() {
@@ -619,7 +625,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Sets the file.
-     * 
+     *
      * @param file
      *            The file to set
      */
@@ -633,7 +639,7 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Returns the fileName.
-     * 
+     *
      * @return String
      */
     public String getFileName() {
@@ -653,10 +659,10 @@ public class XMLConfiguration extends BasePathConfiguration {
     /**
      * Parse a property key and return an array of the element hierarchy it
      * specifies. For example the key "x.y.z[@abc]" will result in [x, y, z].
-     * 
+     *
      * @param key
      *            the key to parse
-     * 
+     *
      * @return the elements in the key
      */
     protected static String[] parseElementNames(String key) {
@@ -677,10 +683,10 @@ public class XMLConfiguration extends BasePathConfiguration {
 
     /**
      * Parse a property key and return the attribute name if it existst.
-     * 
+     *
      * @param key
      *            the key to parse
-     * 
+     *
      * @return the attribute name, or null if the key doesn't contain one
      */
     protected static String parseAttributeName(String key) {
