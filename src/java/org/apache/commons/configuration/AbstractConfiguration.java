@@ -39,7 +39,7 @@ import org.apache.commons.lang.BooleanUtils;
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: AbstractConfiguration.java,v 1.25 2004/10/05 21:17:25 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.26 2004/10/18 09:54:37 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -445,27 +445,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Boolean)
-        {
-            return (Boolean) value;
-        }
-        else if (value instanceof String)
-        {
-            Boolean b = BooleanUtils.toBooleanObject((String) value);
-            if (b == null)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Boolean object");
-            }
-            return b;
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException(
-                '\'' + key + "' doesn't map to a Boolean object");
+            try
+            {
+                return PropertyConverter.toBoolean(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Boolean object", e);
+            }
         }
     }
 
@@ -481,8 +474,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + " doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + " doesn't map to an existing object");
         }
     }
 
@@ -501,29 +493,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Byte)
-        {
-            return (Byte) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Byte b = new Byte((String) value);
-                return b;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Byte object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Byte object");
+            try
+            {
+                return PropertyConverter.toByte(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Byte object", e);
+            }
         }
     }
 
@@ -539,8 +522,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -559,29 +541,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Double)
-        {
-            return (Double) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Double d = new Double((String) value);
-                return d;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Double object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Double object");
+            try
+            {
+                return PropertyConverter.toDouble(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Double object", e);
+            }
         }
     }
 
@@ -597,8 +570,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -617,29 +589,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Float)
-        {
-            return (Float) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Float f = new Float((String) value);
-                return f;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Float object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
            return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Float object");
+            try
+            {
+                return PropertyConverter.toFloat(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Float object", e);
+            }
         }
     }
 
@@ -655,8 +618,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -682,29 +644,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Integer)
-        {
-            return (Integer) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Integer i = new Integer((String) value);
-                return i;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Integer object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Integer object");
+            try
+            {
+                return PropertyConverter.toInteger(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to an Integer object", e);
+            }
         }
     }
 
@@ -720,8 +673,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -740,29 +692,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Long)
-        {
-            return (Long) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Long l = new Long((String) value);
-                return l;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Long object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Long object");
+            try
+            {
+                return PropertyConverter.toLong(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Long object", e);
+            }
         }
     }
 
@@ -778,8 +721,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
     }
 
@@ -798,29 +740,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof Short)
-        {
-            return (Short) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                Short s = new Short((String) value);
-                return s;
-            }
-            catch (NumberFormatException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Short object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a Short object");
+            try
+            {
+                return PropertyConverter.toShort(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a Short object", e);
+            }
         }
     }
 
@@ -836,8 +769,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (isThrowExceptionOnMissing())
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
         else
         {
@@ -852,29 +784,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof BigDecimal)
-        {
-            return (BigDecimal) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                BigDecimal number = new BigDecimal((String) value);
-                return number;
-            }
-            catch (Exception e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object");
+            try
+            {
+                return PropertyConverter.toBigDecimal(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
+            }
         }
     }
 
@@ -890,8 +813,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (isThrowExceptionOnMissing())
         {
-            throw new NoSuchElementException(
-                    '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
         else
         {
@@ -906,30 +828,20 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = resolveContainerStore(key);
 
-        if (value instanceof BigInteger)
-        {
-            return (BigInteger) value;
-        }
-        else if (value instanceof String)
-        {
-            try
-            {
-                BigInteger number = new BigInteger((String) value);
-                return number;
-            }
-            catch (Exception e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
-            }
-        }
-        else if (value == null)
+        if (value == null)
         {
             return defaultValue;
         }
         else
         {
-            throw new ConversionException(
-                '\'' + key + "' doesn't map to a BigDecimal object");
+            try
+            {
+                return PropertyConverter.toBigInteger(value);
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
+            }
         }
     }
 
@@ -945,8 +857,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (isThrowExceptionOnMissing())
         {
-            throw new NoSuchElementException(
-                '\'' + key + "' doesn't map to an existing object");
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
         }
         else
         {
@@ -971,8 +882,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else
         {
-            throw new ConversionException(
-                '\'' + key + "' doesn't map to a String object");
+            throw new ConversionException('\'' + key + "' doesn't map to a String object");
         }
     }
 
@@ -983,34 +893,33 @@ public abstract class AbstractConfiguration implements Configuration
     {
         Object value = getPropertyDirect(key);
 
-        String[] tokens;
+        String[] array;
 
         if (value instanceof String)
         {
-            tokens = new String[1];
+            array = new String[1];
 
-            tokens[0] = interpolate((String) value);
+            array[0] = interpolate((String) value);
         }
         else if (value instanceof List)
         {
             List list = (List) value;
-            tokens = new String[list.size()];
+            array = new String[list.size()];
 
-            for (int i = 0; i < tokens.length; i++)
+            for (int i = 0; i < array.length; i++)
             {
-                tokens[i] = interpolate((String) list.get(i));
+                array[i] = interpolate((String) list.get(i));
             }
         }
         else if (value == null)
         {
-            tokens = new String[0];
+            array = new String[0];
         }
         else
         {
-            throw new ConversionException(
-                '\'' + key + "' doesn't map to a String/List object");
+            throw new ConversionException('\'' + key + "' doesn't map to a String/List object");
         }
-        return tokens;
+        return array;
     }
 
     /**
@@ -1111,7 +1020,7 @@ public abstract class AbstractConfiguration implements Configuration
      *
      * @return value Value, transparently resolving a possible List dependency.
      */
-    private Object resolveContainerStore(String key)
+    protected Object resolveContainerStore(String key)
     {
         Object value = getPropertyDirect(key);
         if (value != null && value instanceof List)
