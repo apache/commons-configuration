@@ -41,7 +41,7 @@
   <property name="targetconfdir" value="${defaulttargetdir}/${confdir}"/>
   <!-- Manual changes end -->
   
-  <property name="final.name" value="commons-configuration-1.1RC3">
+  <property name="final.name" value="commons-configuration-1.1">
   </property>
   <path id="build.classpath">
     <fileset dir="${libdir}">

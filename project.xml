@@ -22,7 +22,7 @@
   <pomVersion>3</pomVersion>
 
   <id>commons-configuration</id>
-  <currentVersion>1.1RC3</currentVersion>
+  <currentVersion>1.1</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
@@ -51,7 +51,7 @@
 
   <gumpRepositoryId>jakarta</gumpRepositoryId>
   <issueTrackingUrl>http://issues.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;product=Commons&amp;component=Configuration</issueTrackingUrl>
-  <siteAddress>jakarta.apache.org</siteAddress>
+  <siteAddress>cvs.apache.org</siteAddress>
   <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
   <distributionSite>www.apache.org</distributionSite>
   <distributionDirectory>/www/www.apache.org/dist/java-repository/</distributionDirectory>
@@ -76,6 +76,11 @@
       <id>1.0</id>
       <name>1.0</name>
       <tag>CONFIGURATION_1_0</tag>
+    </version>
+    <version>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>CONFIGURATION_1_1</tag>
     </version>
   </versions>
     

@@ -22,7 +22,10 @@
 
   <body>
 
-    <release version="1.1" date="in CVS">
+    <release version="1.2-dev" date="in CVS">
+    </release>
+
+    <release version="1.1" date="2005-04-02">
       <action dev="ebourg" type="update" issue="33925">
         Fixed a ConcurrentModificationException thrown when calling clear()
         on a SubsetConfiguration applied to a BaseConfiguration.
