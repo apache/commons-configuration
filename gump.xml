@@ -2,9 +2,9 @@
 
 <module name="commons-configuration">
   <description>Common ConfigurationTools</description>
-  <url href="http://jakarta.apache.org/commons/sandbox/configuration/">
+  <url href="http://jakarta.apache.org/commons/configuration/">
   </url>
-  <cvs module="jakarta-commons-sandbox" repository="jakarta">
+  <cvs module="jakarta-commons" repository="jakarta">
   </cvs>
   <project name="commons-configuration">
     <ant buildfile="build.xml" target="dist">
@@ -40,7 +40,7 @@
     </home>
     <jar name="commons-configuration-@@DATE@@.jar">
     </jar>
-    <javadoc module="jakarta-commons-sandbox" nested="target/docs/apidocs">
+    <javadoc module="jakarta-commons" nested="target/docs/apidocs">
     </javadoc>
     <nag to="commons-dev@jakarta.apache.org" from="commons-configuration development &lt;commons-dev@jakarta.apache.org&gt;">
     </nag>
