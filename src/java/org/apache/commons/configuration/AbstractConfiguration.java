@@ -37,7 +37,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.18 2004/07/12 14:36:58 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.19 2004/08/12 15:45:58 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -385,7 +385,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public boolean getBoolean(String key, boolean defaultValue)
     {
-        return getBoolean(key, new Boolean(defaultValue)).booleanValue();
+        return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
     }
 
     /**
