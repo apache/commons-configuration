@@ -18,6 +18,8 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.collections.map.LinkedMap;
 
@@ -43,7 +45,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: BaseConfiguration.java,v 1.7 2004/06/24 12:35:14 ebourg Exp $
+ * @version $Id: BaseConfiguration.java,v 1.8 2004/07/05 09:54:17 ebourg Exp $
  */
 public class BaseConfiguration extends AbstractConfiguration
 {
@@ -77,23 +79,23 @@ public class BaseConfiguration extends AbstractConfiguration
         }
         else
         {
-            if (o instanceof Container)
+            if (o instanceof List)
             {
-                ((Container) o).add(obj);
+                ((List) o).add(obj);
             }
             else
             {
-                // The token key is not a container.
-                Container c = new Container();
+                // The token key is not a list.
+                List list = new ArrayList();
 
-                // There is an element. Put it into the container
+                // There is an element. Put it into the list
                 // at the first position
-                c.add(o);
+                list.add(o);
 
                 // Now gobble up the supplied object
-                c.add(obj);
+                list.add(obj);
 
-                objAdd = c;
+                objAdd = list;
             }
         }
 

@@ -89,7 +89,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.8 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.9 2004/07/05 09:54:17 ebourg Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -148,23 +148,23 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         }
         else
         {
-            Container cont = new Container();
+            List list = new ArrayList();
             for (Iterator it = nodes.iterator(); it.hasNext();)
             {
-                Node nd = (Node) it.next();
-                if (nd.getValue() != null)
+                Node node = (Node) it.next();
+                if (node.getValue() != null)
                 {
-                    cont.add(nd.getValue());
+                    list.add(node.getValue());
                 }
             }
 
-            if (cont.size() < 1)
+            if (list.size() < 1)
             {
                 return null;
             }
             else
             {
-                return (cont.size() == 1) ? cont.get(0) : cont;
+                return (list.size() == 1) ? list.get(0) : list;
             }
         }
     }
@@ -322,7 +322,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
             Node nd = (Node) it.next();
             nd.visit(visitor, null);
 
-            Container children = visitor.getClone().getChildren();
+            List children = visitor.getClone().getChildren();
             if (children.size() > 0)
             {
                 for (int i = 0; i < children.size(); i++)
@@ -431,7 +431,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         else
         {
             String key = keyPart.nextKey(true);
-            Container children = node.getChildren(key);
+            List children = node.getChildren(key);
             if (keyPart.hasIndex())
             {
                 if (keyPart.getIndex() < children.size()
@@ -524,15 +524,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration
 
         if (keyIt.hasNext())
         {
-            Container c = node.getChildren(keyPart);
-            int idx = (keyIt.hasIndex()) ? keyIt.getIndex() : c.size() - 1;
-            if (idx < 0 || idx >= c.size())
+            List list = node.getChildren(keyPart);
+            int idx = (keyIt.hasIndex()) ? keyIt.getIndex() : list.size() - 1;
+            if (idx < 0 || idx >= list.size())
             {
                 return node;
             }
             else
             {
-                return findLastPathNode(keyIt, (Node) c.get(idx));
+                return findLastPathNode(keyIt, (Node) list.get(idx));
             }
         }
 
@@ -563,20 +563,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration
         else
         {
             return root;
-        }
-    }
-
-    /**
-     * Helper method for adding all elements of a collection to a container.
-     *
-     * @param cont the container
-     * @param items the collection to be added
-     */
-    private static void addContainer(Container cont, Collection items)
-    {
-        for (Iterator it = items.iterator(); it.hasNext();)
-        {
-            cont.add(it.next());
         }
     }
 
@@ -707,15 +693,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration
          * @return a list with the children (can be empty, but never
          * <b>null</b>)
          */
-        public Container getChildren()
+        public List getChildren()
         {
-            Container result = new Container();
+            List result = new ArrayList();
 
             if (children != null)
             {
                 for (Iterator it = children.values().iterator(); it.hasNext();)
                 {
-                    addContainer(result, (Collection) it.next());
+                    result.addAll((Collection) it.next());
                 }
             }
 
@@ -729,21 +715,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration
          * @return a list with all chidren with this name; may be empty, but
          * never <b>null</b>
          */
-        public Container getChildren(String name)
+        public List getChildren(String name)
         {
             if (name == null || children == null)
             {
                 return getChildren();
             }
 
-            Container cont = new Container();
+            List list = new ArrayList();
             List c = (List) children.get(name);
             if (c != null)
             {
-                addContainer(cont, c);
+                list.addAll(c);
             }
 
-            return cont;
+            return list;
         }
 
         /**

@@ -37,7 +37,7 @@ import org.apache.commons.lang.BooleanUtils;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.16 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.17 2004/07/05 09:54:17 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -238,8 +238,8 @@ public abstract class AbstractConfiguration implements Configuration
 
         //
         // We keep the sequence of the keys here and
-        // we also keep it in the Container. So the
-        // Keys are added to the store in the sequence that
+        // we also keep it in the List. So the
+        // keys are added to the store in the sequence that
         // is given in the properties
         return list;
     }
@@ -367,21 +367,8 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public Object getProperty(String key)
     {
-        // first, try to get from the 'user value' store
-        Object o = getPropertyDirect(key);
-
-
-        //
-        // We must never give a Container Object out. So if the
-        // Return Value is a Container, we fix it up to be a
-        // List
-        //
-        if (o instanceof Container)
-        {
-            o = ((Container) o).asList();
-        }
-        return o;
-   }
+        return getPropertyDirect(key);
+    }
 
     /**
      * {@inheritDoc}
@@ -949,13 +936,14 @@ public abstract class AbstractConfiguration implements Configuration
 
             tokens[0] = interpolate((String) value);
         }
-        else if (value instanceof Container)
+        else if (value instanceof List)
         {
-            tokens = new String[((Container) value).size()];
+            List list = (List) value;
+            tokens = new String[list.size()];
 
             for (int i = 0; i < tokens.length; i++)
             {
-                tokens[i] = interpolate((String) ((Container) value).get(i));
+                tokens[i] = interpolate((String) list.get(i));
             }
         }
         else if (value == null)
@@ -991,10 +979,6 @@ public abstract class AbstractConfiguration implements Configuration
             list = new ArrayList(1);
             list.add(value);
         }
-        else if (value instanceof Container)
-        {
-            list = ((Container) value).asList();
-        }
         else if (value instanceof List)
         {
             list = (List) value;
@@ -1017,21 +1001,20 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Returns an object from the store described by the key.
-     * If the value is a Container object, replace it with the
-     * first object in the container
+     * Returns an object from the store described by the key. If the value is
+     * a List object, replace it with the first object in the list.
      *
      * @param key The property key.
      *
-     * @return value Value, transparently resolving a possible
-     *         Container dependency.
+     * @return value Value, transparently resolving a possible List dependency.
      */
     private Object resolveContainerStore(String key)
     {
         Object value = getPropertyDirect(key);
-        if (value != null && value instanceof Container)
+        if (value != null && value instanceof List)
         {
-            value = ((Container) value).get(0);
+            List list = (List) value;
+            value = list.isEmpty() ? null : list.get(0);
         }
         return value;
     }
@@ -1080,74 +1063,4 @@ public abstract class AbstractConfiguration implements Configuration
         }
     } // class PropertiesTokenizer
 
-    /**
-     * Private Wrapper class for List, so we can distinguish between
-     * List objects and our container
-     */
-    static class Container
-    {
-        /** We're wrapping a List object (A List) */
-        private List list;
-
-        /**
-         * Constructor
-         */
-        public Container()
-        {
-            list = new ArrayList(INITIAL_LIST_SIZE);
-        }
-
-        /**
-         * Add an Object to the Container
-         *
-         * @param o The Object
-         */
-        public void add(Object o)
-        {
-            list.add(o);
-        }
-
-        /**
-         * Returns the current size of the Container
-         *
-         * @return The Number of elements in the container
-         */
-        public int size()
-        {
-            return list.size();
-        }
-
-        /**
-         * Returns the Element at an index
-         *
-         * @param index The Index
-         * @return The element at that index
-         */
-        public Object get(int index)
-        {
-            return list.get(index);
-        }
-
-        /**
-         * Returns an Iterator over the container objects
-         *
-         * @return An Iterator
-         */
-        public Iterator iterator()
-        {
-            return list.iterator();
-        }
-
-        /**
-         * Returns the Elements of the Container as a List. This is not the
-         * internal list element but a shallow copy of the internal list. You
-         * may modify the returned list without modifying the container.
-         *
-         * @return A List containing the elements of the Container.
-         */
-        public List asList()
-        {
-            return new ArrayList(list);
-        }
-    }
 }

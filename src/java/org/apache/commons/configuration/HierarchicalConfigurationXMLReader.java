@@ -16,6 +16,8 @@
 
 package org.apache.commons.configuration;
 
+import java.util.List;
+
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
@@ -33,7 +35,7 @@ import org.xml.sax.helpers.AttributesImpl;
  * that these methods ignore their argument.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.4 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Id: HierarchicalConfigurationXMLReader.java,v 1.5 2004/07/05 09:54:17 ebourg Exp $
  */
 public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
 {
@@ -163,17 +165,15 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
         protected Attributes fetchAttributes(Node node)
         {
             AttributesImpl attrs = new AttributesImpl();
-            AbstractConfiguration.Container children = node.getChildren();
+            List children = node.getChildren();
 
             for (int i = 0; i < children.size(); i++)
             {
                 Node child = (Node) children.get(i);
                 if (isAttributeNode(child) && child.getValue() != null)
                 {
-                    String attr = ConfigurationKey.attributeName(
-                    child.getName());
-                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE,
-                    child.getValue().toString());
+                    String attr = ConfigurationKey.attributeName(child.getName());
+                    attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE, child.getValue().toString());
                 }
             }
 

@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.13 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.14 2004/07/05 09:54:17 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -637,7 +637,7 @@ public class ConfigurationFactory implements BasePathLoader
                 AdditionalConfigurationData cdata =
                 (AdditionalConfigurationData) it.next();
                 result.addNodes(cdata.getAt(),
-                createRootNode(cdata).getChildren().asList());
+                createRootNode(cdata).getChildren());
             }
 
             return result.isEmpty() ? null : result;
