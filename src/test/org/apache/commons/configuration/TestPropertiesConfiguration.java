@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.16 2004/11/14 18:29:02 oheger Exp $
  */
 public class TestPropertiesConfiguration extends TestCase
 {
@@ -206,6 +206,19 @@ public class TestPropertiesConfiguration extends TestCase
         conf = new PropertiesConfiguration(file);
 
         assertEquals("true", conf.getString("configuration.loaded"));
+    }
+    
+    public void testLoadUnexistingFile()
+    {
+        try
+        {
+            conf = new PropertiesConfiguration("Unexisting file");
+            fail("Unexisting file was loaded.");
+        }
+        catch(ConfigurationException cex)
+        {
+            // fine
+        }
     }
 
     public void testGetStringWithEscapedChars()

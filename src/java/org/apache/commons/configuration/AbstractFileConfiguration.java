@@ -41,7 +41,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/10/19 11:44:31 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/14 18:29:02 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -80,6 +80,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
         // locate the file
         url = ConfigurationUtils.locate(fileName);
+        if(url == null)
+        {
+            throw new ConfigurationException(fileName + " could not be found!");
+        }
 
         // update the base path
         setBasePath(ConfigurationUtils.getBasePath(url));
