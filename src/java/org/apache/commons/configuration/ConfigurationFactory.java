@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.3 2004/01/16 14:56:45 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.4 2004/01/23 11:08:56 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -289,6 +289,12 @@ public class ConfigurationFactory implements BasePathLoader
             new BasePathConfigurationFactory(DOM4JConfiguration.class),
             METH_LOAD,
             additional);
+        setupDigesterInstance(
+        	digester,
+			matchString + "hierarchicalDom4j",
+			new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
+			METH_LOAD,
+			additional);        
         setupDigesterInstance(
             digester,
             matchString + "jndi",
