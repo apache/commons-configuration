@@ -1,0 +1,7 @@
+Extension-Name: org.apache.commons.configuration
+Specification-Title: Jakarta Commons Configuration
+Specification-Vendor: Apache Software Foundation
+Specification-Version: 1.0
+Implementation-Vendor: Apache Software Foundation
+Implementation-Title: org.apache.commons.configuration
+Implementation-Version: 1.0
