@@ -5,21 +5,6 @@
     </properties>
     <body>
 
-        <category name="Version 1.0" description="Roadmap to release the 1.0 version">
-            <task status="partly done">
-                remaining bugs
-            </task>
-            <task status="partly done">
-                more documentation, examples and tutorials
-            </task>
-            <task status="done">
-                Base JNDIConfiguration on AbstractConfiguration
-            </task>
-            <task status="">
-                Unify the file based configurations (shared persistence logic)
-            </task>
-        </category>
-
         <category name="Version 1.1" description="">
             <task status="">
                 delimiter for comma separated values revamp

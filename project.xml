@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.36 2004/10/12 00:33:06 henning Exp $ -->
+<!-- $Id: project.xml,v 1.37 2004/10/12 12:23:22 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -187,7 +187,7 @@
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>3.0</version>
+      <version>3.1</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
@@ -262,6 +262,11 @@
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
+    </dependency>
+
+    <dependency>
+      <id>jniregistry</id>
+      <version>3.1.3</version>
     </dependency>
 
     <!-- Needed for testing -->
@@ -343,7 +348,7 @@
     <!-- Unit test classes -->
     <unitTest>
       <includes>
-        <include>**/*Test*.java</include>
+        <include>**/*TestWin*.java</include>
       </includes>
       <excludes>
         <exclude>**/TestBasePropertiesConfiguration.java</exclude>
