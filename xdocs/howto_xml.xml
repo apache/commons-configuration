@@ -10,15 +10,15 @@
 <body>		
 	<section name="Using XML based Configurations">
 		<p>
- 	 		This section explains how to use Hierarchical
-    		and Structured XML datasets.
+ 	 		This section explains how to use hierarchical
+    		and structured XML datasets.
     	</p>
     </section>	
 		
 	
 	<section name="Hierarchical properties">
 		<p>
-			The XML document we used in the section about composite configuration was quite simple. Because of its
+			The XML document we used in the section about ConfigurationFactory was quite simple. Because of its
 			tree-like nature XML documents can represent data that is
 			structured in many ways. This section explains how to deal with
 			such structured documents.
@@ -156,38 +156,13 @@ if(prop instanceof Collection)
 				which table?
 			</p>
 			<p>
-				The answer is, with our actual approach we have no chance to
-				obtain this knowledge! If XML documents are loaded this way,
-				their exact structure is lost. Though all field names are found
-				and stored the information which field belongs to which table
-				is not saved. Fortunately Configuration provides a way of
-				dealing with structured XML documents. To enable this feature
-				the configuration definition file has to be slightly altered.
-				It becomes:
-			</p>
-   			<source><![CDATA[
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-
-<configuration>
-  <properties fileName="usergui.properties"/>
-  <xml fileName="gui.xml"/>
-  <hierarchicalXml fileName="tables.xml"/>
-</configuration>
-]]></source>
-			<p>
-				Note that one <code>xml</code> element was replaced by a
-				<code>hierarchicalXml</code> element. This element tells the configuration
-				factory that not the default class for processing XML documents
-				should be used, but the class <code>HierarchicalXMLConfiguration</code>.
-				As the name implies this class is capable of saving the
-				hierarchy of XML documents thus keeping their structure.
-			</p>
-			<p>
-				When working with such hierarchical properties configuration keys
-				used to query properties support an extended syntax. All components
+				When working with such hierarchical structures the configuration keys
+				used to query properties can have an extended syntax. All components
 				of a key can be appended by a numerical value in parentheses that
-				determines the index of the affected property. This is explained best
-				by some examples:
+				determines the index of the affected property. So if we have two
+				<code>table</code> elements we can exactly specify, which one we
+				want to address by appending the corresponding index. This is
+				explained best by some examples:
 			</p>
 			<p>
 				We will now provide some configuration keys and show the results
@@ -243,13 +218,161 @@ if(prop instanceof Collection)
 				Because each configuration key can contain an arbitrary number
 				of indices it is possible to navigate through complex structures of
 				XML documents; each XML element can be uniquely identified.
-				So at the end of this section we can draw the following facit:
-				For simple XML documents that define only some simple properties
-				and do not have a complex structure the default XML configuration
-				class is suitable. If documents are more complex and their structure
-				is important, the hierarchy aware class should be used, which is
-				enabled by an additional <code>className</code> attribute as
-				shown in the example configuration definition file above.
+			</p>
+			<p>
+				<b>Note:</b> In earlier versions of Configuration there have been
+				two different Configuration classes for dealing with XML documents:
+				<code>XMLConfiguration</code> that did not support the extended
+				query syntax described above and <code>HierarchicalXMLConfiguration</code>,
+				which could operate on truely hierarchical structures. These classes
+				have now been merged into a single class with the name
+				<code>XMLConfiguration</code>, which now supports all types of XML
+				documents. So there is no longer the need to select one of the
+				XML configurations; <code>XMLConfiguration</code> is always the
+				right (and only) choice. The <code>&lt;hierarchicalXml&gt;</code>
+				XML element that was used in the configuration definition
+				files for <code>ConfigurationFactory</code> to create an instance
+				of <code>HierarchicalXMLConfiguration</code> is now deprecated.
+			</p>
+		</subsection>
+		<subsection name="Adding new properties">
+			<p>
+				So far we have learned how to use indices to avoid ambiguities when
+				querying properties. The same problem occurs when adding new
+				properties to a structured configuration. As an example let's
+				assume we want to add a new field to the second table. New properties
+				can be added to a configuration using the <code>addProperty()</code>
+				method. Of course, we have to exactly specify where in the tree like structure new
+				data is to be inserted. A statement like
+			</p>
+   			<source><![CDATA[
+// Warning: This might cause trouble!
+config.addProperty("tables.table.fields.field.name", "size");
+]]></source>
+			<p>
+				would not be sufficient because it does not contain all needed
+				information. How is such a statement processed by the
+				<code>addProperty()</code> method?
+			</p>
+			<p>
+				<code>addProperty()</code> splits the provided key into its
+				single parts and navigates through the properties tree along the
+				corresponding element names. In this example it will start at the
+				root element and then find the <code>tables</code> element. The
+				next key part to be processed is <code>table</code>, but here a
+				problem occurs: the configuration contains two <code>table</code>
+				properties below the <code>tables</code> element. To get rid off
+				this ambiguity an index can be specified at this position in the
+				key that makes clear, which of the two properties should be
+				followed. <code>tables.table(1).fields.field.name</code> e.g.
+				would select the second <code>table</code> property. If an index
+				is missing, <code>addProperty()</code> always follows the last
+				available element. In our example this would be the second
+				<code>table</code>, too.
+			</p>
+			<p>
+				The following parts of the key are processed in exactly the same
+				manner. Under the selected <code>table</code> property there is
+				exactly one <code>fields</code> property, so this step is not
+				problematic at all. In the next step the <code>field</code> part
+				has to be processed. At the actual position in the properties tree
+				there are multiple <code>field</code> (sub) properties. So we here
+				have the same situation as for the <code>table</code> part.
+				Because no explicit index is defined the last <code>field</code>
+				property is selected. The last part of the key passed to
+				<code>addProperty()</code> (<code>name</code> in this example)
+				will always be added as new property at the position that has
+				been reached in the former processing steps. So in our example
+				the last <code>field</code> property of the second table would
+				be given a new <code>name</code> sub property and the resulting
+				structure would look like the following listing:
+			</p>
+   			<source><![CDATA[
+	...
+    <table tableType="application">
+      <name>documents</name>
+      <fields>
+        <field>
+          <name>docid</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>name</name>
+          <type>java.lang.String</type>
+        </field>
+        <field>
+          <name>creationDate</name>
+          <type>java.util.Date</type>
+        </field>
+        <field>
+          <name>authorID</name>
+          <type>long</type>
+        </field>
+        <field>
+          <name>version</name>
+		  <name>size</name>    <== Newly added property
+          <type>int</type>
+        </field>
+      </fields>
+    </table>
+  </tables>
+</database>
+]]></source>
+			<p>
+				This result is obviously not what was desired, but it demonstrates
+				how <code>addProperty()</code> works: the method follows an
+				existing branch in the properties tree and adds new leaves to it.
+				(If the passed in key does not match a branch in the existing tree,
+				a new branch will be added. E.g. if we pass the key
+				<code>tables.table.data.first.test</code>, the existing tree can be
+				navigated until the <code>data</code> part of the key. From here a
+				new branch is started with the remaining parts <code>data</code>,
+				<code>first</code> and <code>test</code>.)
+			</p>
+			<p>
+				If we want a different behavior, we must explicitely tell
+				<code>addProperty()</code> what to do. In our example with the
+				new field our intension was to create a new branch for the
+				<code>field</code> part in the key, so that a new <code>field</code>
+				property is added to the structure rather than adding sub properties
+				to the last existing <code>field</code> property. This can be
+				achieved by specifying the special index <code>(-1)</code> at the
+				corresponding position in the key as shown below:
+			</p>
+   			<source><![CDATA[
+config.addProperty("tables.table(1).fields.field(-1).name", "size");
+config.addProperty("tables.table(1).fields.field.type", "int");
+]]></source>
+			<p>
+				The first line in this fragment specifies that a new branch is
+				to be created for the <code>field</code> property (index -1).
+				In the second line no index is specified for the field, so the
+				last one is used - which happens to be the field that has just
+				been created. So these two statements add a fully defined field
+				to the second table. This is the default pattern for adding new
+				properties or whole hierarchies of properties: first create a new
+				branch in the properties tree and then populate its sub properties.
+				As an additional example let's add a complete new table definition
+				to our example configuration:
+			</p>
+   			<source><![CDATA[
+// Add a new table element and define the name
+config.addProperty("tables.table(-1).name", "versions");
+
+// Add a new field to the new table
+// (an index for the table is not necessary because the latest is used)
+config.addProperty("tables.table.fields.field(-1).name", "id");
+config.addProperty("tables.table.fields.field.type", "int");
+
+// Add another field to the new table
+config.addProperty("tables.table.fields.field(-1).name", "date");
+config.addProperty("tables.table.fields.field.type", "java.sql.Date");
+...
+]]></source>
+			<p>
+				For more information about adding properties to a hierarchical
+				configuration also have a look at the javadocs for
+				<code>HierarchicalConfiguration</code>.
 			</p>
 		</subsection>
 	</section>
@@ -343,8 +466,8 @@ if(prop instanceof Collection)
   </override>
   
   <additional>
-    <hierarchicalXml fileName="tables.xml"/>
-    <hierarchicalXml fileName="tasktables.xml" at="tables"/>
+    <xml fileName="tables.xml"/>
+    <xml fileName="tasktables.xml" at="tables"/>
   </additional>
 </configuration>
 ]]></source>
