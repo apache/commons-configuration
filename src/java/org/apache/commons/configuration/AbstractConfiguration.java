@@ -35,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.13 2004/06/21 13:49:24 ebourg Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.14 2004/06/22 09:35:54 ebourg Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -1307,16 +1307,6 @@ public abstract class AbstractConfiguration implements Configuration
         public PropertiesTokenizer(String string)
         {
             super(string, String.valueOf(DELIMITER));
-        }
-
-        /**
-         * Check whether the object has more tokens.
-         *
-         * @return True if the object has more tokens.
-         */
-        public boolean hasMoreTokens()
-        {
-            return super.hasMoreTokens();
         }
 
         /**
