@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,11 +27,8 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import org.apache.commons.lang.NotImplementedException;
 
 /**
  * Partial implementation of the <code>FileConfiguration</code> interface.
@@ -39,7 +37,7 @@ import org.apache.commons.lang.NotImplementedException;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/09/22 17:29:08 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/23 11:49:45 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -203,7 +201,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration to the specified file.
+     * Save the configuration to the specified file. This doesn't change the
+     * source of the configuration, use setFileName() if you need it.
      *
      * @param fileName
      *
@@ -228,6 +227,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Save the configuration to the specified URL if it's a file URL.
+     * This doesn't change the source of the configuration, use setURL()
+     * if you need it.
      *
      * @param url
      *
@@ -242,7 +243,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration to the specified file.
+     * Save the configuration to the specified file. This doesn't change the
+     * source of the configuration, use setFile() if you need it.
      *
      * @param file
      *
@@ -338,6 +340,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public void setFileName(String fileName)
     {
         this.fileName = fileName;
+
+        // update the URL
+        url = ConfigurationUtils.locate(basePath, fileName);
     }
 
     /**
@@ -365,8 +370,14 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public File getFile()
     {
-        // todo: implement getFile();
-        throw new NotImplementedException("coming soon!");
+        if (url != null && "file".equals(url.getProtocol()))
+        {
+            return new File(url.getFile());
+        }
+        else
+        {
+            return ConfigurationUtils.constructFile(getBasePath(), getFileName());
+        }
     }
 
     /**
@@ -380,14 +391,12 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             try
             {
-                url = file.toURL();
+                setURL(file.toURL());
             }
             catch (MalformedURLException e)
             {
                 e.printStackTrace();
             }
-
-            // todo: update the filename and the basepath
         }
         else
         {
@@ -412,6 +421,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         this.url = url;
 
-        // todo: update the filename and the basepath
+        // update the base path
+        basePath = ConfigurationUtils.getBasePath(url);
+
+        // update the file name
+        fileName = ConfigurationUtils.getFileName(url);
     }
 }
