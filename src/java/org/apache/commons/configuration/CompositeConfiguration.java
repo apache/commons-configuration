@@ -70,7 +70,7 @@ import java.util.Properties;
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.3 2004/01/16 14:56:45 epugh Exp $
  */
 public class CompositeConfiguration implements Configuration
 {
@@ -271,8 +271,6 @@ public class CompositeConfiguration implements Configuration
     {
         CompositeConfiguration subsetCompositeConfiguration =
             new CompositeConfiguration();
-        Configuration subConf = null;
-        int count = 0;
         for (ListIterator i = configList.listIterator(); i.hasNext();)
         {
             Configuration config = (Configuration) i.next();
@@ -280,11 +278,9 @@ public class CompositeConfiguration implements Configuration
             if (subset != null)
             {
                 subsetCompositeConfiguration.addConfiguration(subset);
-                subConf = subset;
-                count++;
             }
         }
-        return (count == 1) ? subConf : subsetCompositeConfiguration;
+        return subsetCompositeConfiguration;
     }
     /**
     * Get a float associated with the given configuration key.

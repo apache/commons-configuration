@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+	 <action dev="oheger" type="add">
+      	ConfigurationFactory now supports the hierarchicalDom4j element in configuration 
+      	definition file
+     </action>     	
 	 <action dev="ebourg" type="update">
       	Change all Vector objects to List objects.
      </action>     	

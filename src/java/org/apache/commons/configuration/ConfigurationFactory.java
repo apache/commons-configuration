@@ -79,7 +79,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.3 2004/01/16 14:56:45 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -291,12 +291,6 @@ public class ConfigurationFactory implements BasePathLoader
             additional);
         setupDigesterInstance(
             digester,
-            matchString + "hierarchicalDom4j",
-            new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
-            METH_LOAD,
-            additional);
-        setupDigesterInstance(
-            digester,
             matchString + "jndi",
             new JNDIConfigurationFactory(),
             null,
@@ -418,13 +412,17 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * A base class for digester factory classes. This base class maintains
-     * a default class for the objects to be created.
+     * a default class for the objects to be created. It also supports a
+     * <code>className</code> attribute for specifying a different class.
      * There will be sub classes for specific configuration implementations.
      */
     public class DigesterConfigurationFactory
         extends AbstractObjectCreationFactory
         implements ObjectCreationFactory
     {
+        /** Constant for the className attribute.*/
+        protected static final String ATTR_CLASSNAME = "className";
+
         /** Actual class to use. */
         private Class clazz;
 
@@ -438,14 +436,23 @@ public class ConfigurationFactory implements BasePathLoader
         }
 
         /**
-         * Creates an instance of the specified class.
-         * @param attribs the attributes (ignored)
+         * Creates an instance of the specified class. If the passed in
+         * attributes contain a <code>className</code> attribute, the value of
+         * this attribute is interpreted as the full qualified class name of
+         * the class to be instantiated. Otherwise the default class is used.
+         * @param attribs the attributes
          * @return the new object
          * @exception Exception if object creation fails
          */
         public Object createObject(Attributes attribs) throws Exception
         {
-            return clazz.newInstance();
+            Class actCls;
+            
+            int idx = attribs.getIndex(ATTR_CLASSNAME);
+            actCls = (idx < 0) ? clazz :
+            Class.forName(attribs.getValue(idx));
+
+            return actCls.newInstance();
         }
     }
 
