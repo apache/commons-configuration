@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.16 $, $Date: 2004/09/26 16:29:24 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/04 19:35:45 $
  */
 public class XMLConfiguration extends AbstractFileConfiguration
 {
@@ -167,9 +167,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
     /**
      * Loads and initializes from the XML file.
      *
-     * @param element
-     *            The element to start processing from. Callers should supply
-     *            the root element of the document.
+     * @param element The element to start processing from. Callers should supply the root element of the document.
      * @param hierarchy
      */
     private void initProperties(Element element, StringBuffer hierarchy)
@@ -206,10 +204,8 @@ public class XMLConfiguration extends AbstractFileConfiguration
      * Helper method for constructing properties for the attributes of the given
      * XML element.
      *
-     * @param hierarchy
-     *            the actual hierarchy
-     * @param element
-     *            the actual XML element
+     * @param hierarchy the actual hierarchy
+     * @param element   the actual XML element
      */
     private void processAttributes(String hierarchy, Element element)
     {
@@ -237,7 +233,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
         possiblySave();
     }
 
-    public Object getXmlProperty(String name)
+    Object getXmlProperty(String name)
     {
         // parse the key
         String[] nodes = parseElementNames(name);
@@ -357,60 +353,6 @@ public class XMLConfiguration extends AbstractFileConfiguration
         // return text value
         return StringUtils.trimToNull(str.toString());
 
-    } // getChildText(Node):String
-
-    /**
-     * Calls super method, and also ensures the underlying {@linkDocument} is
-     * modified so changes are persisted when saved.
-     *
-     * @param name
-     * @param value
-     */
-    public void setProperty(String name, Object value)
-    {
-        super.setProperty(name, value);
-        setXmlProperty(name, value);
-        possiblySave();
-    }
-
-    /**
-     * Sets the property value in our document tree, auto-saving if appropriate.
-     *
-     * @param name
-     *            The name of the element to set a value for.
-     * @param value
-     *            The value to set.
-     */
-    private void setXmlProperty(String name, Object value)
-    {
-        // parse the key
-        String[] nodes = parseElementNames(name);
-        String attName = parseAttributeName(name);
-
-        Element element = document.getDocumentElement();
-        for (int i = 0; i < nodes.length; i++)
-        {
-            String eName = nodes[i];
-            Element child = getChildElementWithName(eName, element);
-            // If we don't find this part of the property in the XML hierarchy
-            // we add it as a new node
-            if (child == null)
-            {
-                child = document.createElement(eName);
-                element.appendChild(child);
-            }
-            element = child;
-        }
-
-        if (attName == null)
-        {
-            CharacterData data = document.createTextNode(String.valueOf(value));
-            element.appendChild(data);
-        }
-        else
-        {
-            element.setAttribute(attName, String.valueOf(value));
-        }
     }
 
     private Element getChildElementWithName(String eName, Element element)
@@ -435,12 +377,10 @@ public class XMLConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Adds the property value in our document tree, auto-saving if appropriate.
+     * Adds the property value in our document tree.
      *
-     * @param name
-     *            The name of the element to set a value for.
-     * @param value
-     *            The value to set.
+     * @param name  The name of the element to set a value for.
+     * @param value The value to set.
      */
     private void addXmlProperty(String name, Object value)
     {
@@ -454,7 +394,9 @@ public class XMLConfiguration extends AbstractFileConfiguration
         for (int i = 0; i < nodes.length; i++)
         {
             if (element == null)
+            {
                 break;
+            }
             parent = element;
             String eName = nodes[i];
             Element child = getChildElementWithName(eName, element);
@@ -479,8 +421,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
      * Calls super method, and also ensures the underlying {@link Document}is
      * modified so changes are persisted when saved.
      *
-     * @param name
-     *            The name of the property to clear.
+     * @param name The name of the property to clear.
      */
     public void clearProperty(String name)
     {
@@ -620,8 +561,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
      * Parse a property key and return an array of the element hierarchy it
      * specifies. For example the key "x.y.z[@abc]" will result in [x, y, z].
      *
-     * @param key
-     *            the key to parse
+     * @param key the key to parse
      *
      * @return the elements in the key
      */
@@ -649,8 +589,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
     /**
      * Parse a property key and return the attribute name if it existst.
      *
-     * @param key
-     *            the key to parse
+     * @param key the key to parse
      *
      * @return the attribute name, or null if the key doesn't contain one
      */
