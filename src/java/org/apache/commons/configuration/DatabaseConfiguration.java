@@ -20,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,7 +32,10 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Configuration stored in a database.
  *
- * @version $Revision: 1.3 $, $Date: 2004/02/27 17:41:35 $
+ * @since 1.0
+ *
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.4 $, $Date: 2004/06/22 12:56:54 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -126,15 +130,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         finally
         {
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
 
         return result;
@@ -179,15 +175,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
     }
 
@@ -230,15 +218,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
 
         return empty;
@@ -281,15 +261,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
 
         return found;
@@ -328,15 +300,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
     }
 
@@ -379,17 +343,26 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            try
-            {
-                if (pstmt != null) { pstmt.close(); }
-                if (conn != null) { conn.close(); }
-            }
-            catch (SQLException e)
-            {
-                log.error(e.getMessage(), e);
-            }
+            closeQuietly(conn, pstmt);
         }
 
         return keys.iterator();
+    }
+
+    /**
+     * Close a <code>Connection</code> and, <code>Statement</code>.
+     * Avoid closing if null and hide any SQLExceptions that occur.
+     */
+    private void closeQuietly(Connection conn, Statement stmt)
+    {
+        try
+        {
+            if (stmt != null) { stmt.close(); }
+            if (conn != null) { conn.close(); }
+        }
+        catch (SQLException e)
+        {
+            log.error(e.getMessage(), e);
+        }
     }
 }
