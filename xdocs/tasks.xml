@@ -1,61 +1,71 @@
-<?xml version="1.0"?>
-
 <document>
   <properties>
-    <title>TODO</title>
-    <author email="epugh@upstate.com">Eric Pugh</author>
+    <title>Roadmap for Configuration</title>
+    <author email="epugh@opensourceconnections.com">Eric Pugh</author>
   </properties>
-
   <body>
-    <section name="TODO list">
-      <p>
-        The following is a list of items that need to be completed in
-        Configuration.  Contributions are welcome!  There are also a couple enhancements
-        in <a href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Commons&amp;component=Configuration&amp;short_desc=&amp;short_desc_type=allwordssubstr&amp;long_desc=&amp;long_desc_type=allwordssubstr&amp;bug_file_loc=&amp;bug_file_loc_type=allwordssubstr&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time">BugZilla</a>.
-      </p>
-    
-    <subsection name="High priority"> 
-      <ul>
-        <li>Using XML based digester rules will probably blow this bugger
-            apart.  You do need a factory from an inner class of the
-            Configuration factory to get the base Path right; even if 
-            the test with the rule configuration file works, I'm pretty
-            sure that the resulting rule set will not read configuration
-            files if you're not running from the current (".") directory
-            as base path. This needs more thinking and checking.</li>
 
-        <li>I'm also 99% sure that using XML based Digester rules and
-            Namespace awareness in the configuration file can't be used
-            together. As far as I can see, the namespace awareness must
-            be set/reset before the rules are added. In the case of the
-            DigestLoader (using a DigesterRules() URI), the rules are 
-            already added when configureNamespace() is called on the
-            digester. This might even be a bug in the Digester itself.
-         </li>
-       </ul>
-    </subsection>
-    
-    <subsection name="Medium priority"> 
-       <ul>
-          <li>
-              <STRIKE><strong>JDBC Integration</strong>
-              Need to be able to retrieve configuration values from JDBC 
-              datasource.</STRIKE> <i>Done!</i>
-          </li>
-          <li>
-              <strong>JDBC backed by Hibernate</strong>
-              Would love to have a JDBC version backed with Hibernate.
-          </li>      
-          <li>
-              <strong>ReloadableDecorator</strong>  Need to able to figure out when to reload properties,
-              or maybe a caching decorator instead!
-          </li>                
-       </ul>
-    </subsection>
-    
-    <subsection name="Low priority"> 
-    </subsection>
-</section>
+    <category name="Version 1.0" description="Roadmap to release the 1.0 version">
+        <task status="">
+Make PropertiesConfiguration a full replacement for 
+ExtendedProperties: add headers to .properties files (Bug 26092)
+        </task>
+        <task status="">
+comma separated values revamp
+        </task>
+        <task status="">
+add DatabaseConfiguration support to the ConfigurationFactory
+        </task>
+        <task status="">
+remaining bugs (26944, 26534, 27427)
+        </task>        
+        <task status="">
+more documentation, examples and tutorials
+        </task>              
+    </category>
+
+    <category name="Version 1.1" description="">
+        <task status="">
+Base JNDIConfiguration on AbstractConfiguration
+        </task>    
+        <task status="">
+reloadable configurations
+        </task>
+        <task status="">
+web configurations
+        </task>
+        <task status="">
+Database configuration backed by Hibernate.
+        </task>        
+        <task status="">
+additionnal types (URL, Locale, Date, Calendar, Color)
+        </task>
+        <task status="">
+list setters/getters for all types
+        </task>        
+        <task status="">
+INI file support
+        </task>   
+        <task status="">
+system properties interpolation (Bug 26066)
+        </task>     
+        <task status="">
+ConfigurationFactory refactoring for pluggable extensions
+        </task>          
+    </category>    
+    <category name="Version 1.2" description="">
+        <task status="">
+comments and layout preservation in .properties files
+        </task>
+        <task status="">
+JMX integration ?
+        </task>
+        <task status="">
+Preference API integration ?
+        </task>
+        <task status="">
+observable configurations ?
+        </task>              
+    </category>       
   </body>
 </document>
-
