@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.35 2004/10/12 00:05:05 henning Exp $ -->
+<!-- $Id: project.xml,v 1.36 2004/10/12 00:33:06 henning Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -56,8 +56,8 @@
   <issueTrackingUrl>http://issues.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;product=Commons&amp;component=Configuration</issueTrackingUrl>
   <siteAddress>jakarta.apache.org</siteAddress>
   <siteDirectory>/www/jakarta.apache.org/commons/${pom.artifactId.substring(8)}/</siteDirectory>
-  <distributionSite>java.intermeta.de</distributionSite>
-  <distributionDirectory>/webserver/java.intermeta.de/html/maven</distributionDirectory>
+  <distributionSite>www.apache.org</distributionSite>
+  <distributionDirectory>/www/www.apache.org/dist/java-repository/</distributionDirectory>
 
   <repository>
     <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons/${pom.artifactId.substring(8)}</connection>
