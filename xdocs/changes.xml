@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">  
+     <action dev="epugh" type="update">
+      	Apply ASL 2.0 license.  Thanks to Jeff Painter for scripting the conversion!
+     </action>     
      <action dev="epugh" type="add">
       	Changed CompositeConfiguration to extend from AbstractConfiuration.  This means that the behavior of 
       	CompositeConfiguration is much similar to others like PropertiesConfiguration in handling of missing
