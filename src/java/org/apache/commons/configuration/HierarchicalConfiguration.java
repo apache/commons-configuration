@@ -88,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * allowed index that can be added to a given property key. This method can be
  * used to iterate over all values defined for a certain property.</p>
  *
- * @version $Id: HierarchicalConfiguration.java,v 1.5 2004/03/13 17:04:04 epugh Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.6 2004/03/28 14:43:04 epugh Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
@@ -322,13 +322,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
                 {
                     result.getRoot().addChild((Node) children.get(i));
                 } /* for */
-            } /* if */
-            else
-            {
-                // In this case we cannot shorten the key because only
-                // values are found without further child nodes.
-                // result.getRoot().addChild(visitor.getClone());
-            } /* else */
+            } /* if */           
         } /* for */
 
         return (result.isEmpty()) ? new HierarchicalConfiguration() : result;

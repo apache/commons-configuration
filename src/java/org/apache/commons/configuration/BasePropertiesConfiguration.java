@@ -108,7 +108,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.5 2004/03/13 17:34:37 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.6 2004/03/28 14:43:04 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -229,9 +229,10 @@ public abstract class BasePropertiesConfiguration
     public void save(String filename)
         throws ConfigurationException
     {
+        PropertiesWriter out = null;
         File file = new File(filename);
         try {
-        	PropertiesWriter out = new PropertiesWriter(file);
+        	out = new PropertiesWriter(file);
 
         	out.writeComment("written by PropertiesConfiguration");
         	out.writeComment(new Date().toString());
@@ -246,6 +247,14 @@ public abstract class BasePropertiesConfiguration
         	out.close();
         }
         catch (IOException ioe){
+            try {
+                if (out !=null){
+                    out.close();
+                }
+            }
+            catch (IOException ioe2){
+                
+            }
         	throw new ConfigurationException("Could not save to file " + filename,ioe);
         }
     }

@@ -21,9 +21,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -40,14 +37,13 @@ import org.apache.commons.lang.StringUtils;
  * resources without an absolute path, please take a look at the
  * ClassPropertiesConfiguration which is intended to be used for this.
  * 
- * @version $Id: PropertiesConfiguration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.5 2004/03/28 14:43:04 epugh Exp $
  */
 public class PropertiesConfiguration
         extends BasePropertiesConfiguration
         implements Configuration
 {
-    /** Static logger */
-    Log log = LogFactory.getLog(PropertiesConfiguration.class);
+    
 
     /** File separator. */
     protected String fileSeparator = System.getProperty("file.separator");

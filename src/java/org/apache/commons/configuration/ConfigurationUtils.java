@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
 public class ConfigurationUtils
 {
     /** File separator. */
-    protected static String fileSeparator = System.getProperty("file.separator");
+    protected static final String fileSeparator = System.getProperty("file.separator");
 
     private ConfigurationUtils()
     {
