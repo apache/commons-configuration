@@ -45,6 +45,16 @@
 		The full Configuration API is available <a href="apidocs/org/apache/commons/configuration/Configuration.html#method_summary">here</a>.
 	  </p>
     </section>  	
+    
+    <section name="Latest Release">
+      <p>
+        The latest release of Apache Jakarta Commons Configuration is version 1.0-rc1. 
+        It is available from <a href="http://www.ibiblio.org/maven/commons-configuration/jars">IBiblio</a>.
+        The <a href="changes-report.html">Changes Report</a> 
+        explains all of the changes and bug fixes that have been made.  
+      </p>
+    </section>
+    
     <section name="History">
       <p>
         Commons Configuration started as code in Apache JServ.  The
