@@ -7,13 +7,14 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+	 <action dev="epugh" type="add">
+      	ConfigurationException is now thrown by public methods instead of Exception or
+      	IOException or whatnot.
+     </action>       
 	 <action dev="ebourg" type="add">
       	For configuration based on properties files, allow characters like \n etc
       	to be escaped and unescaped.
-     </action>      
-	 <action dev="epugh" type="add">
-      	ConfigurationFactory now throws ConfigurationLoadException.
-     </action>       	
+     </action>             	
 	 <action dev="ebourg" type="add">
       	New DatabaseConfiguration that uses a database to store the properties. It supports 2 table structures :
       	<ul>
