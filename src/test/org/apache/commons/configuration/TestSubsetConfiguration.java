@@ -27,7 +27,7 @@ import java.util.Vector;
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/08/16 22:16:31 $
+ * @version $Revision: 1.4 $, $Date: 2004/09/23 11:37:40 $
  */
 public class TestSubsetConfiguration extends TestCase {
 
@@ -127,6 +127,16 @@ public class TestSubsetConfiguration extends TestCase {
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
         Vector vector = subset.getVector("abc", new Vector());
         assertEquals(3, vector.size());
+    }
+
+    public void testEmptySubset() {
+        BaseConfiguration conf = new BaseConfiguration();
+        Configuration subset = new SubsetConfiguration(conf, "test", ".");
+
+        assertTrue("the subset is not empty", subset.isEmpty());
+
+        conf.addProperty("foo", "bar");
+        assertTrue("the subset is not empty", subset.isEmpty());
     }
 
 }
