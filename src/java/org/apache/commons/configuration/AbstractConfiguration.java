@@ -906,11 +906,55 @@ public abstract class AbstractConfiguration implements Configuration
     protected Object resolveContainerStore(String key)
     {
         Object value = getProperty(key);
-        if (value != null && value instanceof List)
+        if (value != null)
         {
-            List list = (List) value;
-            value = list.isEmpty() ? null : list.get(0);
+            if (value instanceof List)
+            {
+                List list = (List) value;
+                value = list.isEmpty() ? null : list.get(0);
+            }
+            else if (value instanceof Object[])
+            {
+                Object[] array = (Object[]) value;
+                value = array.length == 0 ? null : array[0];
+            }
+            else if (value instanceof boolean[])
+            {
+                boolean[] array = (boolean[]) value;
+                value = array.length == 0 ? null : new Boolean(array[0]);
+            }
+            else if (value instanceof byte[])
+            {
+                byte[] array = (byte[]) value;
+                value = array.length == 0 ? null : new Byte(array[0]);
+            }
+            else if (value instanceof short[])
+            {
+                short[] array = (short[]) value;
+                value = array.length == 0 ? null : new Short(array[0]);
+            }
+            else if (value instanceof int[])
+            {
+                int[] array = (int[]) value;
+                value = array.length == 0 ? null : new Integer(array[0]);
+            }
+            else if (value instanceof long[])
+            {
+                long[] array = (long[]) value;
+                value = array.length == 0 ? null : new Long(array[0]);
+            }
+            else if (value instanceof float[])
+            {
+                float[] array = (float[]) value;
+                value = array.length == 0 ? null : new Float(array[0]);
+            }
+            else if (value instanceof double[])
+            {
+                double[] array = (double[]) value;
+                value = array.length == 0 ? null : new Double(array[0]);
+            }
         }
+
         return value;
     }
 

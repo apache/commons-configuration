@@ -27,6 +27,12 @@
         Fixed a ConcurrentModificationException thrown when calling clear()
         on a SubsetConfiguration applied to a BaseConfiguration.
       </action>
+      <action dev="ebourg" type="update" issue="34104">
+        The resolveContainerStore() method in AbstractConfiguration now works
+        properly with arrays of objects and arrays of primitives. This means
+        it is possible to store an array of value in the configuration and
+        retrieve the first element with the getString(), getInt()... methods.
+      </action>
     </release>
 
     <release version="1.1-rc2" date="2005-03-06">
