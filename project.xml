@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.4 2004/01/11 00:59:10 tobrien Exp $ -->
+<!-- $Id: project.xml,v 1.5 2004/01/16 17:32:37 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -112,7 +112,7 @@
       <name>Emmanuel Bourg</name>
       <id>ebourg</id>
       <email>e.bourg@cross-systems.com</email>
-    </contributor>  	
+    </contributor>    
     <contributor>
       <name>Konstantin Shaposhnikov</name>
       <id>kshaposhnikov</id>
@@ -194,6 +194,12 @@
         <war.bundle>true</war.bundle>
       </properties>  
     </dependency>
+    <!-- Needed for testing -->
+    <dependency>
+      <id>simple-jndi</id>
+      <version>0.8</version>
+      <url>http://www.osjava.org/simple-jndi/</url> 
+    </dependency>    
   </dependencies>
 
   <build>
@@ -232,6 +238,18 @@
             <exclude>testClasspath.properties</exclude>
           </excludes>          
         </resource>
+      </resources>
+      <resources>
+        <resource>
+          <directory>conf/config</directory>
+          <targetPath>config</targetPath> 
+          <includes>
+            <include>*.properties</include>
+          </includes>
+          <excludes>
+            <exclude>testClasspath.properties</exclude>
+          </excludes>          
+        </resource>        
       </resources>
     </unitTest>
 

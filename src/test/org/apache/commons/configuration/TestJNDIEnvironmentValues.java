@@ -56,9 +56,11 @@ package org.apache.commons.configuration;
  * ====================================================================
  */
 
-import org.apache.cactus.ServletTestCase;
+import java.util.NoSuchElementException;
 
-public class TestJNDIEnvironmentValues extends ServletTestCase
+import junit.framework.TestCase;
+
+public class TestJNDIEnvironmentValues extends TestCase
 {
     public TestJNDIEnvironmentValues(String testName)
     {
@@ -68,23 +70,15 @@ public class TestJNDIEnvironmentValues extends ServletTestCase
     public void testSimpleGet() throws Exception
     {
         JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("java:comp/env");
+        conf.setPrefix("");
         String s = conf.getString("test/key");
-        assertEquals("jndivalue", s);
-    }
-
-    public void testSimpleGet2() throws Exception
-    {
-        JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("java:comp");
-        String s = conf.getString("env/test/key");
         assertEquals("jndivalue", s);
     }
 
     public void testMoreGets() throws Exception
     {
         JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("java:comp/env");
+        conf.setPrefix("");
         String s = conf.getString("test/key");
         assertEquals("jndivalue", s);
         assertEquals("jndivalue2", conf.getString("test.key2"));
@@ -94,15 +88,31 @@ public class TestJNDIEnvironmentValues extends ServletTestCase
     public void testGetMissingKey() throws Exception
     {
         JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("java:comp/env");
+        conf.setPrefix("");
+        try
+        {
+            conf.getString("test/imaginarykey");
+            fail("Should have thrown NoSuchElementException");
+        }
+        catch (NoSuchElementException nsee)
+        {
 
-        assertNull(conf.getString("test/imaginarykey"));
+        }
+
+    }
+    public void testGetMissingKeyWithDefault() throws Exception
+    {
+        JNDIConfiguration conf = new JNDIConfiguration();
+        conf.setPrefix("");
+
+        String result = conf.getString("test/imaginarykey", "bob");
+        assertEquals("bob", result);
 
     }
     public void testContainsKey() throws Exception
     {
         JNDIConfiguration conf = new JNDIConfiguration();
-        conf.setPrefix("java:comp/env");
+        conf.setPrefix("");
 
         assertTrue(conf.containsKey("test/key"));
 
