@@ -5,7 +5,7 @@
 
 <configuration>
   <additional>
-    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration" fileName="testHierarchicalDOM4JConfiguration.xml"/>
+    <xml className="org.apache.commons.configuration.HierarchicalXMLConfiguration" fileName="testHierarchicalXMLConfiguration.xml"/>
    
 </configuration>
 

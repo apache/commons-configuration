@@ -7,6 +7,13 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="update">
+        Removed the DOM4J implementations in favor of the DOM ones.
+        DOMConfiguration has been renamed to XMLConfiguration, and
+        HierarchicalDOMConfiguration to HierarchicalXMLConfiguration. The
+        elements parsed by the ConfigurationFactory have been changed
+        accordingly.
+      </action>
       <action dev="ebourg" type="add">
         Added a save() method to PropertiesConfiguration and save(Writer out),
         save(OutputStream out), save(OutputStream out, String encoding) to

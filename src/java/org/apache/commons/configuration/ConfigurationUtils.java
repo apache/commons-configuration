@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.4 $, $Date: 2004/06/23 11:15:45 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/12 12:14:38 $
  */
 public final class ConfigurationUtils
 {
@@ -151,7 +151,7 @@ public final class ConfigurationUtils
      */
     static File constructFile(String basePath, String fileName)
     {
-        // code from DOM4JConfiguration
+        // code from XMLConfiguration
         File file = null;
         if (StringUtils.isEmpty(basePath))
         {

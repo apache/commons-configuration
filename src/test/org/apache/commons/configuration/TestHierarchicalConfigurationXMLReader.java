@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,19 +29,18 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfigurationXMLReader.
  *
- * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestHierarchicalConfigurationXMLReader.java,v 1.4 2004/07/12 12:14:38 ebourg Exp $
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
-    private static final String TEST_FILE =
-    "conf/testHierarchicalDOM4JConfiguration.xml";
+    private static final String TEST_FILE = "conf/testHierarchicalXMLConfiguration.xml";
     
     private HierarchicalConfigurationXMLReader parser;
     
     protected void setUp() throws Exception
     {
-        HierarchicalDOM4JConfiguration config =
-        new HierarchicalDOM4JConfiguration();
+        HierarchicalXMLConfiguration config =
+        new HierarchicalXMLConfiguration();
         config.setFileName(TEST_FILE);
         config.load();
         parser = new HierarchicalConfigurationXMLReader(config);

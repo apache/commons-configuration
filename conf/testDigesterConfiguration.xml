@@ -2,11 +2,5 @@
 
 <configuration>
   <properties fileName="conf/test.properties"/>
-  <dom4j fileName="conf/test.xml"/>
+  <xml fileName="conf/test.xml"/>
 </configuration>
-
-  
-  
-
-
-

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 
 import junit.framework.TestCase;
@@ -23,18 +23,18 @@ import junit.framework.TestCase;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestDOM4JConfiguration.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.1 2004/07/12 12:14:38 ebourg Exp $
  */
-public class TestDOM4JConfiguration extends TestCase
+public class TestXMLConfiguration extends TestCase
 {
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
     private String testBasePath = new File("conf").getAbsolutePath();
-    private DOM4JConfiguration conf;
+    private XMLConfiguration conf;
 
     protected void setUp() throws Exception
     {
-        conf = new DOM4JConfiguration(new File(testProperties));
+        conf = new XMLConfiguration(new File(testProperties));
     }
 
     public void testGetProperty() throws Exception
@@ -49,7 +49,7 @@ public class TestDOM4JConfiguration extends TestCase
 
     public void testSettingFileNames() throws Exception
     {
-        conf = new DOM4JConfiguration();
+        conf = new XMLConfiguration();
         conf.setFileName(testProperties);
         assertEquals(testProperties.toString(), conf.getFileName());
 
@@ -68,7 +68,7 @@ public class TestDOM4JConfiguration extends TestCase
 
     public void testLoad() throws Exception
     {
-        conf = new DOM4JConfiguration();
+        conf = new XMLConfiguration();
         conf.setFileName(testProperties);
         conf.load();
 
@@ -77,7 +77,7 @@ public class TestDOM4JConfiguration extends TestCase
     
     public void testLoadWithBasePath() throws Exception
     {
-        conf = new DOM4JConfiguration();
+        conf = new XMLConfiguration();
         
         conf.setFileName("test.xml");
         conf.setBasePath(testBasePath);

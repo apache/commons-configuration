@@ -1,22 +1,26 @@
 <?xml version="1.0"?>
 <!DOCTYPE digester-rules PUBLIC "-//Jakarta Apache //DTD digester-rules XML V1.0//EN" "http://jakarta.apache.org/commons/digester/dtds/digester-rules.dtd">
+
 <digester-rules>
-  <pattern value="configuration/properties">
-    <object-create-rule classname="org.apache.commons.configuration.PropertiesConfiguration"/>
-    <set-properties-rule/>
-    <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
-    <call-method-rule methodname="load"/>
-  </pattern>
-  <pattern value="configuration/dom4j">
-    <object-create-rule classname="org.apache.commons.configuration.DOM4JConfiguration"/>
-    <set-properties-rule/>
-    <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
-    <call-method-rule methodname="load"/>
-  </pattern>  
-  <pattern value="configuration/jndi">
-    <object-create-rule classname="org.apache.commons.configuration.JNDIConfiguration"/>
-    <set-properties-rule/>
-    <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
-    
-  </pattern>    
+
+    <pattern value="configuration/properties">
+        <object-create-rule classname="org.apache.commons.configuration.PropertiesConfiguration"/>
+        <set-properties-rule/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+        <call-method-rule methodname="load"/>
+    </pattern>
+
+    <pattern value="configuration/xml">
+        <object-create-rule classname="org.apache.commons.configuration.XMLConfiguration"/>
+        <set-properties-rule/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+        <call-method-rule methodname="load"/>
+    </pattern>
+
+    <pattern value="configuration/jndi">
+        <object-create-rule classname="org.apache.commons.configuration.JNDIConfiguration"/>
+        <set-properties-rule/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+    </pattern>
+
 </digester-rules>

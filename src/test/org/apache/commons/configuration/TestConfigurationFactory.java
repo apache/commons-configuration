@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.util.Collection;
 
@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.11 2004/06/02 16:42:25 ebourg Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.12 2004/07/12 12:14:38 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -51,32 +51,29 @@ public class TestConfigurationFactory extends TestCase
 
     private Configuration configuration;
     private CompositeConfiguration compositeConfiguration;
-    private ConfigurationFactory configurationFactory;
+    private ConfigurationFactory factory;
 
     public void setUp() throws Exception
     {
         System.setProperty("java.naming.factory.initial","org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
-        configurationFactory = new ConfigurationFactory();
+        factory = new ConfigurationFactory();
     }
 
     public void testJNDI()
     {
-        
-        
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
-        jndiConfiguration.setPrefix("");
         Object o = jndiConfiguration.getProperty("test.boolean");
         assertNotNull(o);
         assertEquals("true",o.toString());
-
     }
+
     public void testLoadingConfiguration() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
+        factory.setConfigurationFileName(
             testDigesterFile.toString());
 
         compositeConfiguration =
-            (CompositeConfiguration) configurationFactory.getConfiguration();
+            (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
             "Verify how many configs",
@@ -109,28 +106,25 @@ public class TestConfigurationFactory extends TestCase
 
     public void testLoadingConfigurationReverseOrder() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
+        factory.setConfigurationFileName(
             testDigesterFileReverseOrder.toString());
 
-        configuration = configurationFactory.getConfiguration();
+        configuration = factory.getConfiguration();
 
         assertEquals("8", configuration.getProperty("test.short"));
 
-        configurationFactory.setConfigurationFileName(
-            testDigesterFile.toString());
+        factory.setConfigurationFileName(testDigesterFile.toString());
 
-        configuration = configurationFactory.getConfiguration();
+        configuration = factory.getConfiguration();
         assertEquals("1", configuration.getProperty("test.short"));
     }
 
     public void testLoadingConfigurationWithRulesXML() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
-            testDigesterFile.toString());
-        configurationFactory.setDigesterRules(digesterRules.toURL());
+        factory.setConfigurationFileName(testDigesterFile.toString());
+        factory.setDigesterRules(digesterRules.toURL());
 
-        compositeConfiguration =
-            (CompositeConfiguration) configurationFactory.getConfiguration();
+        compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
             "Verify how many configs",
@@ -168,50 +162,44 @@ public class TestConfigurationFactory extends TestCase
 
     public void testLoadingConfigurationNamespaceAware() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
-            testDigesterFileNamespaceAware.toString());
-        //configurationFactory.setDigesterRules(digesterRules.toURL());
-        configurationFactory.setDigesterRuleNamespaceURI("namespace-one");
+        factory.setConfigurationFileName(testDigesterFileNamespaceAware.toString());
+        //factory.setDigesterRules(digesterRules.toURL());
+        factory.setDigesterRuleNamespaceURI("namespace-one");
 
         checkCompositeConfiguration();
     }
 
     public void testLoadingConfigurationBasePath() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
-            testDigesterFileBasePath.toString());
+        factory.setConfigurationFileName(testDigesterFileBasePath.toString());
 
-        configurationFactory.setBasePath(testBasePath);
+        factory.setBasePath(testBasePath);
 
-        //configurationFactory.setDigesterRules(digesterRules.toURL());
-        //configurationFactory.setDigesterRuleNamespaceURI("namespace-one");
+        //factory.setDigesterRules(digesterRules.toURL());
+        //factory.setDigesterRuleNamespaceURI("namespace-one");
 
         checkCompositeConfiguration();
     }
 
     public void testLoadingAdditional() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
-            testDigesterFileEnhanced.toString());
-        configurationFactory.setBasePath(null);
+        factory.setConfigurationFileName(testDigesterFileEnhanced.toString());
+        factory.setBasePath(null);
         checkUnionConfig();
     }
 
     public void testLoadingURL() throws Exception
     {
-        configurationFactory.setConfigurationURL(
-            testDigesterFileEnhanced.toURL());
+        factory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
     }
 
-    public void testThrowingConfigurationInitializationException()
-        throws Exception
+    public void testThrowingConfigurationInitializationException() throws Exception
     {
-        configurationFactory.setConfigurationFileName(
-            testDigesterBadXML.toString());
+        factory.setConfigurationFileName(testDigesterBadXML.toString());
         try
         {
-            configurationFactory.getConfiguration();
+            factory.getConfiguration();
             fail("Should have throw an Exception");
         }
         catch (ConfigurationException cle)
@@ -224,18 +212,16 @@ public class TestConfigurationFactory extends TestCase
     public void testAllConfiguration() throws Exception
     {
 
-        configurationFactory.setConfigurationURL(
-            testDigesterFileComplete.toURL());
-        Configuration config = configurationFactory.getConfiguration();
+        factory.setConfigurationURL(testDigesterFileComplete.toURL());
+        Configuration config = factory.getConfiguration();
         assertFalse(config.isEmpty());
         assertTrue(config instanceof CompositeConfiguration);
         CompositeConfiguration cc = (CompositeConfiguration)config;
         assertTrue(cc.getNumberOfConfigurations()>1);
         // Currently fails, should be 4?  Only 2?
-        //assertEquals(4,cc.getNumberOfConfigurations());
+        //assertEquals(4, cc.getNumberOfConfigurations());
 
-        assertNotNull(
-            config.getProperty("tables.table(0).fields.field(2).name"));
+        assertNotNull(config.getProperty("tables.table(0).fields.field(2).name"));
         assertNotNull(config.getProperty("element2.subelement.subsubelement"));
         assertNotNull(config.getProperty("mail.account.user"));
                 
@@ -245,13 +231,11 @@ public class TestConfigurationFactory extends TestCase
         Configuration subset = config.subset("test");
         assertNotNull(subset.getProperty("onlyinjndi"));
         assertTrue(subset.getBoolean("onlyinjndi"));
-        
     }
 
     private void checkUnionConfig() throws Exception
     {
-        compositeConfiguration =
-            (CompositeConfiguration) configurationFactory.getConfiguration();
+        compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
         assertEquals(
             "Verify how many configs",
             3,
@@ -300,8 +284,7 @@ public class TestConfigurationFactory extends TestCase
 
     private void checkCompositeConfiguration() throws Exception
     {
-        compositeConfiguration =
-            (CompositeConfiguration) configurationFactory.getConfiguration();
+        compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
 
         assertEquals(
             "Verify how many configs",
@@ -330,6 +313,5 @@ public class TestConfigurationFactory extends TestCase
         Object property = compositeConfiguration.getProperty(
             "element2.subelement.subsubelement");
         assertNull("Should have returned a null",property);
-        
     }
 }

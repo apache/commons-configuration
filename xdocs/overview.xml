@@ -18,31 +18,31 @@
       <subsection name="Configuration Sources">
       <p>
         Currently there are quite a number of different sources of Configuration objects.  But,
-        by just using a Configuration object versus a specific type like XmlConfiguration or
+        by just using a Configuration object versus a specific type like XMLConfiguration or
         JNDIConfiguration, you are sheltered from the mechanics of actually retrieving the 
-        configuration values.  These various sources include:
+        configuration values. These various sources include:
         <ul>
           <li>
               <strong>PropertiesConfiguration</strong>
               Loads configuration values from a properties file.
           </li>
           <li>
-              <strong>BasePropertiesConfiguration</strong>
+              <strong>BaseConfiguration</strong>
               An in-memory method of populating a Configuration object.
           </li>
           <li>
-              <strong>ConfigurationConverter</strong>
-              Takes an o.a.c.collections.ExtendedProperties and converts it to a Configuration
-              object.
-          </li>
-          <li>
-              <strong>DOM4JConfiguration</strong>
-              Takes values from an XML documentation using DOM4J.
+              <strong>XMLConfiguration</strong>
+              Takes values from an XML document.
           </li>
           <li>
               <strong>JNDIConfiguration</strong>
-              Using a key in the JNDI tree, can retrieve values as configuration properties.              
-          </li>          
+              Using a key in the JNDI tree, can retrieve values as configuration properties.
+          </li>
+          <li>
+              <strong>ConfigurationConverter</strong>
+              Takes a java.util.Properties or an o.a.c.collections.ExtendedProperties
+              and converts it to a Configuration object.
+          </li>
        </ul>
         
       </p>
@@ -55,8 +55,6 @@
         this is a very rigid way of doing things.  Instead, with the CompositeConfiguration you can
         provide many different ways of setting up a configuration.  You can either do it manually (see
         JUnit testcase "TestCompositeConfiguration.java", or via the ConfigurationFactory class.
-              
-              
       </p>
       <p>
         Using the ConfigurationFactory, (see the Junit testcase "TestConfigurationFactory.java") you load
@@ -69,13 +67,13 @@
 <configuration>
   <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
+  <xml className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
 </configuration>
 ]]>   
         </source>
         
         What this says is that we are loading up all JNDI values under java:comp/env key, as well 
-        as a properties file in conf/test.properties as well as a dom4j XML file in conf/test.xml.  
+        as a properties file in conf/test.properties as well as a XML file in conf/test.xml.
         Please inspect the test cases and the files in the conf/ directory for more information on how
         to structure your configuration xml file..
       </p>
@@ -91,7 +89,7 @@
       <p>
       Configuration is done by taking the configuration XML file and using included Digester rules,
       parsing the individual configurations.  Make sure to include the various dependencies required for
-      each type of configuration!  If you have an XML file, you'll need dom4j.jar for instance!
+      each type of configuration!
       </p>
       <subsection name="Classic Properties File">
         <source>
@@ -106,7 +104,7 @@
       <subsection name="XML Properties File">
         <source>
 <![CDATA[       
-  <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
+  <xml className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
 ]]>   
         </source>     
         <p>

@@ -45,7 +45,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.14 2004/07/05 09:54:17 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.15 2004/07/12 12:14:37 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -278,18 +278,21 @@ public class ConfigurationFactory implements BasePathLoader
             new BasePathConfigurationFactory(PropertiesConfiguration.class),
             METH_LOAD,
             additional);
+
         setupDigesterInstance(
             digester,
-            matchString + "dom4j",
-            new BasePathConfigurationFactory(DOM4JConfiguration.class),
+            matchString + "xml",
+            new BasePathConfigurationFactory(XMLConfiguration.class),
             METH_LOAD,
             additional);
+
         setupDigesterInstance(
             digester,
-            matchString + "hierarchicalDom4j",
-            new BasePathConfigurationFactory(HierarchicalDOM4JConfiguration.class),
+            matchString + "hierarchicalXml",
+            new BasePathConfigurationFactory(HierarchicalXMLConfiguration.class),
             METH_LOAD,
             additional);
+
         setupDigesterInstance(
             digester,
             matchString + "jndi",
@@ -310,11 +313,11 @@ public class ConfigurationFactory implements BasePathLoader
      * added
      */
     protected void setupDigesterInstance(
-        Digester digester,
-        String matchString,
-        ObjectCreationFactory factory,
-        String method,
-        boolean additional)
+            Digester digester,
+            String matchString,
+            ObjectCreationFactory factory,
+            String method,
+            boolean additional)
     {
         if (additional)
         {
@@ -486,9 +489,8 @@ public class ConfigurationFactory implements BasePathLoader
     /**
      * A tiny inner class that allows the Configuration Factory to
      * let the digester construct JNDIPathConfiguration objects.
-     *
      */
-    public class JNDIConfigurationFactory extends DigesterConfigurationFactory
+    private class JNDIConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
          * C'tor

@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
-  <dom4j fileName="conf/test.xml"/>
+  <xml fileName="conf/test.xml"/>
   <properties fileName="conf/test.properties"/>
-  
 </configuration>
-
-  
-  
-
-
-

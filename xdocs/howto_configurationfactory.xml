@@ -164,7 +164,7 @@ String backColor = config.getString("color.background");
 			<p>
 				To make this XML document part of our global configuration we
 				have to modify our configuration definition file to also include
-				the new file. For XML documents the element <code>dom4j</code>
+				the new file. For XML documents the element <code>xml</code>
 				can be used so that we have now:
 			</p>
    			<source>
@@ -173,7 +173,7 @@ String backColor = config.getString("color.background");
 
 <configuration>
   <properties fileName="usergui.properties"/>
-  <dom4j fileName="gui.xml"/>
+  <xml fileName="gui.xml"/>
 </configuration>
 ]]>
 			</source>

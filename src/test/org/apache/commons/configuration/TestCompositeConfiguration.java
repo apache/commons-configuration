@@ -27,13 +27,13 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.8 2004/06/04 12:58:53 ebourg Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.9 2004/07/12 12:14:38 ebourg Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
     protected BasePropertiesConfiguration conf1;
     protected BasePropertiesConfiguration conf2;
-    protected DOM4JConfiguration dom4jConf;
+    protected XMLConfiguration xmlConf;
     protected CompositeConfiguration cc;
 
     /** The File that we test with */
@@ -46,7 +46,7 @@ public class TestCompositeConfiguration extends TestCase
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration(testProperties);
         conf2 = new PropertiesConfiguration(testProperties2);
-        dom4jConf = new DOM4JConfiguration(new File(testPropertiesXML));
+        xmlConf = new XMLConfiguration(new File(testPropertiesXML));
     }
 
     public void testAddRemoveConfigurations() throws Exception
@@ -118,13 +118,13 @@ public class TestCompositeConfiguration extends TestCase
     public void testMultipleTypesOfConfigs() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         assertEquals("Make sure we get the property from conf1 first", 1, cc.getInt("test.short"));
         cc.clear();
 
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         cc.addConfiguration(conf1);
-        assertEquals("Make sure we get the property from dom4j", 8, cc.getInt("test.short"));
+        assertEquals("Make sure we get the property from xml", 8, cc.getInt("test.short"));
     }
 
     /**
@@ -133,7 +133,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testPropertyExistsInOnlyOneConfig() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         assertEquals("value", cc.getString("element"));
     }
 
@@ -143,7 +143,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testDefaultValueWhenKeyMissing() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         assertEquals("default", cc.getString("bogus", "default"));
         assertTrue(1.4 == cc.getDouble("bogus", 1.4));
         assertTrue(1.4 == cc.getDouble("bogus", 1.4));
@@ -155,9 +155,9 @@ public class TestCompositeConfiguration extends TestCase
     public void testGettingConfiguration() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         assertEquals(PropertiesConfiguration.class, cc.getConfiguration(0).getClass());
-        assertEquals(DOM4JConfiguration.class, cc.getConfiguration(1).getClass());
+        assertEquals(XMLConfiguration.class, cc.getConfiguration(1).getClass());
     }
 
     /**
@@ -166,7 +166,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testClearingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         cc.clearProperty("test.short");
         assertTrue("Make sure test.short is gone!", !cc.containsKey("test.short"));
     }
@@ -178,7 +178,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testAddingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
 
         String[] values = cc.getStringArray("test.short");
 
@@ -200,7 +200,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testSettingMissingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
         cc.setProperty("my.new.property", "supernew");
         assertEquals("supernew", cc.getString("my.new.property"));
     }
@@ -211,7 +211,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testGettingSubset() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
 
         Configuration subset = null;
         subset = cc.subset("test");
@@ -245,7 +245,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testList() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
 
         List packages = cc.getList("packages");
         // we should get 3 packages here
@@ -266,7 +266,7 @@ public class TestCompositeConfiguration extends TestCase
     public void testStringArray() throws Exception
     {
         cc.addConfiguration(conf1);
-        cc.addConfiguration(dom4jConf);
+        cc.addConfiguration(xmlConf);
 
         String[] packages = cc.getStringArray("packages");
         // we should get 3 packages here

@@ -22,26 +22,26 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 /**
- * Test class for HierarchicalDOM4JConfiguration,
+ * Test class for HierarchicalXMLConfiguration,
  *
- * @version $Id: TestHierarchicalDOMConfiguration.java,v 1.1 2004/04/01 18:43:03 epugh Exp $
+ * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.1 2004/07/12 12:14:38 ebourg Exp $
  */
-public class TestHierarchicalDOMConfiguration extends TestCase
+public class TestHierarchicalXMLConfiguration extends TestCase
 {
     private static final String TEST_DIR = "conf";
     
-    private static final String TEST_FILENAME = "testHierarchicalDOM4JConfiguration.xml";
+    private static final String TEST_FILENAME = "testHierarchicalXMLConfiguration.xml";
     
     private static final String TEST_FILE = TEST_DIR + File.separator + TEST_FILENAME;
     
-    private HierarchicalDOMConfiguration config;
+    private HierarchicalXMLConfiguration config;
     
     protected void setUp() throws Exception
     {
-        config = new HierarchicalDOMConfiguration();
+        config = new HierarchicalXMLConfiguration();
     }
 
-    private void configTest(HierarchicalDOMConfiguration config)
+    private void configTest(HierarchicalXMLConfiguration config)
     {
         assertEquals(1, config.getMaxIndex("tables.table"));
         assertEquals("system", config.getProperty("tables.table(0)[@tableType]"));

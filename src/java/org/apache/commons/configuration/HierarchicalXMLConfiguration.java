@@ -18,26 +18,32 @@ package org.apache.commons.configuration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
 
 /**
- * <p>A specialized hierarchical configuration class that is able to parse
- * XML documents using DOM4J.</p>
- * 
+ * A specialized hierarchical configuration class that is able to parse
+ * XML documents.
+ *
  * <p>The parsed document will be stored keeping its structure. The
  * contained properties can be accessed using all methods supported by
- * the base class <code>HierarchicalProperties</code>.
+ * the base class <code>HierarchicalConfiguration</code>.
  *
+ * @since commons-configuration 1.0
+ *
+ * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.8 2004/06/24 12:35:15 ebourg Exp $
+ * @version $Revision: 1.1 $, $Date: 2004/07/12 12:14:38 $
  */
-public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration implements BasePathLoader
+public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
     /** Stores the file name of the document to be parsed.*/
     private String file;
@@ -45,17 +51,17 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
     /** Stores the base path of this configuration.*/
     private String basePath;
 
+
     /**
-     * Creates a new instance of <code>HierarchicalDOM4JConfiguration</code>.
+     * Constructs a HierarchicalXMLConfiguration.
      */
-    public HierarchicalDOM4JConfiguration()
+    public HierarchicalXMLConfiguration()
     {
         super();
     }
 
     /**
      * Returns the name of the file to be parsed by this object.
-     *
      * @return the file to be parsed
      */
     public String getFileName()
@@ -65,7 +71,6 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
 
     /**
      * Sets the name of the file to be parsed by this object.
-     *
      * @param file the file to be parsed
      */
     public void setFileName(String file)
@@ -75,7 +80,6 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
 
     /**
      * Returns the base path.
-     *
      * @return the base path
      */
     public String getBasePath()
@@ -86,7 +90,6 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
     /**
      * Allows to set a base path. Relative file names are resolved based on
      * this path.
-     *
      * @param path the base path; this can be a URL or a file path
      */
     public void setBasePath(String path)
@@ -97,8 +100,7 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
     /**
      * Loads and parses an XML document. The file to be loaded must have
      * been specified before.
-     *
-     * @throws ConfigurationException if an error occurs
+     * @throws ConfigurationException Thrown if an error occurs
      */
     public void load() throws ConfigurationException
     {
@@ -106,27 +108,28 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
         {
             load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
         }
-        catch (MalformedURLException e)
+        catch (MalformedURLException mue)
         {
-            throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), e);
+            throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), mue);
         }
     }
 
     /**
      * Loads and parses the specified XML document.
-     *
      * @param url the URL to the XML document
-     * @throws ConfigurationException if an error occurs
+     *
+     * @throws ConfigurationException Thrown if an error occurs
      */
     public void load(URL url) throws ConfigurationException
     {
         try
         {
-            initProperties(new SAXReader().read(url));
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            initProperties(builder.parse(url.toExternalForm()));
         }
-        catch (DocumentException e)
+        catch (Exception e)
         {
-            throw new ConfigurationException("Could not load from " + url, e);
+            throw new ConfigurationException("Could not load from " + url);
         }
     }
 
@@ -137,7 +140,7 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
      */
     public void initProperties(Document document)
     {
-        constructHierarchy(getRoot(), document.getRootElement());
+        constructHierarchy(getRoot(), document.getDocumentElement());
     }
 
     /**
@@ -149,18 +152,29 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
      */
     private void constructHierarchy(Node node, Element element)
     {
-        if (element.getTextTrim().length() > 0)
+        StringBuffer buffer = new StringBuffer();
+        NodeList list = element.getChildNodes();
+        for (int i = 0; i < list.getLength(); i++)
         {
-            node.setValue(element.getTextTrim());
+            org.w3c.dom.Node w3cNode = list.item(i);
+            if (w3cNode instanceof Element)
+            {
+                Element child = (Element) w3cNode;
+                Node childNode = new Node(child.getTagName());
+                constructHierarchy(childNode, child);
+                node.addChild(childNode);
+                processAttributes(childNode, child);
+            }
+            else if (w3cNode instanceof CharacterData)
+            {
+                CharacterData data = (CharacterData) w3cNode;
+                buffer.append(data.getData());
+            }
         }
-        processAttributes(node, element);
-
-        for (Iterator it = element.elementIterator(); it.hasNext();)
+        String text = buffer.toString().trim();
+        if (text.length() > 0)
         {
-            Element child = (Element) it.next();
-            Node childNode = new Node(child.getName());
-            constructHierarchy(childNode, child);
-            node.addChild(childNode);
+            node.setValue(text);
         }
     }
 
@@ -173,14 +187,19 @@ public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration im
      */
     private void processAttributes(Node node, Element element)
     {
-        for (Iterator it = element.attributeIterator(); it.hasNext();)
+        NamedNodeMap attributes = element.getAttributes();
+        for (int i = 0; i < attributes.getLength(); ++i)
         {
-            Attribute attr = (Attribute) it.next();
-            Node child =
-                new Node(
-                    ConfigurationKey.constructAttributeKey(attr.getName()));
-            child.setValue(attr.getValue());
-            node.addChild(child);
+            org.w3c.dom.Node w3cNode = attributes.item(i);
+            if (w3cNode instanceof Attr)
+            {
+                Attr attr = (Attr) w3cNode;
+                Node child =
+                    new Node(
+                        ConfigurationKey.constructAttributeKey(attr.getName()));
+                child.setValue(attr.getValue());
+                node.addChild(child);
+            }
         }
     }
 }

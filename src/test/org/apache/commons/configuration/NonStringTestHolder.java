@@ -16,7 +16,6 @@
 
 package org.apache.commons.configuration;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,11 +25,16 @@ import junit.framework.Assert;
  * Pulling out the calls to do the tests so both JUnit and Cactus tests 
  * can share.
  * 
- * @version $Id: NonStringTestHolder.java,v 1.6 2004/06/21 09:58:54 ebourg Exp $
+ * @version $Id: NonStringTestHolder.java,v 1.7 2004/07/12 12:14:38 ebourg Exp $
  */
 public class NonStringTestHolder
 {
     private Configuration configuration;
+
+    public void setConfiguration(Configuration configuration)
+    {
+        this.configuration = configuration;
+    }
 
     public void testBoolean() throws Exception
     {
@@ -150,22 +154,6 @@ public class NonStringTestHolder
     public void testIsEmpty() throws Exception
     {
         Assert.assertTrue("Configuration should not be empty", !configuration.isEmpty());
-    }
-
-    /**
-     * @return
-     */
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
-
-    /**
-     * @param configuration
-     */
-    public void setConfiguration(Configuration configuration)
-    {
-        this.configuration = configuration;
     }
 
 }

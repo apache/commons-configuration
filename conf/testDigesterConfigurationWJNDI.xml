@@ -3,13 +3,5 @@
 <configuration>
   <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
   <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <dom4j className="org.apache.commons.configuration.DOM4JConfiguration" fileName="conf/test.xml"/>
-  
-  
+  <dom className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
 </configuration>
-
-  
-  
-
-
-
