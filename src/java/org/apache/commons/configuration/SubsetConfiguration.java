@@ -16,11 +16,7 @@
 
 package org.apache.commons.configuration;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
@@ -31,9 +27,9 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * is removed from the keys in the subset.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/03/09 10:31:31 $
+ * @version $Revision: 1.2 $, $Date: 2004/04/01 18:43:04 $
  */
-public class SubsetConfiguration implements Configuration {
+public class SubsetConfiguration extends AbstractConfiguration {
 
     protected Configuration parent;
     protected String prefix;
@@ -132,7 +128,7 @@ public class SubsetConfiguration implements Configuration {
         return parent.containsKey(getParentKey(key));
     }
 
-    public void addProperty(String key, Object value) {
+    public void addPropertyDirect(String key, Object value) {
         parent.addProperty(getParentKey(key), value);
     }
 
@@ -144,7 +140,7 @@ public class SubsetConfiguration implements Configuration {
         parent.clearProperty(getParentKey(key));
     }
 
-    public Object getProperty(String key) {
+    public Object getPropertyDirect(String key) {
         return parent.getProperty(getParentKey(key));
     }
 
@@ -164,130 +160,13 @@ public class SubsetConfiguration implements Configuration {
         });
     }
 
-    public Properties getProperties(String key) {
-        return parent.getProperties(getParentKey(key));
+    protected String interpolate(String base)
+    {
+        if (delimiter == null && "".equals(prefix)) {
+            return super.interpolate(base);
+        } else {
+            SubsetConfiguration config = new SubsetConfiguration(parent, "");
+            return config.interpolate(base);
+        }
     }
-
-    public boolean getBoolean(String key) {
-        return parent.getBoolean(getParentKey(key));
-    }
-
-    public boolean getBoolean(String key, boolean defaultValue) {
-        return parent.getBoolean(getParentKey(key), defaultValue);
-    }
-
-    public Boolean getBoolean(String key, Boolean defaultValue) {
-        return parent.getBoolean(getParentKey(key), defaultValue);
-    }
-
-    public byte getByte(String key) {
-        return parent.getByte(getParentKey(key));
-    }
-
-    public byte getByte(String key, byte defaultValue) {
-        return parent.getByte(getParentKey(key), defaultValue);
-    }
-
-    public Byte getByte(String key, Byte defaultValue) {
-        return parent.getByte(getParentKey(key), defaultValue);
-    }
-
-    public double getDouble(String key) {
-        return parent.getDouble(getParentKey(key));
-    }
-
-    public double getDouble(String key, double defaultValue) {
-        return parent.getDouble(getParentKey(key), defaultValue);
-    }
-
-    public Double getDouble(String key, Double defaultValue) {
-        return parent.getDouble(getParentKey(key), defaultValue);
-    }
-
-    public float getFloat(String key) {
-        return parent.getFloat(getParentKey(key));
-    }
-
-    public float getFloat(String key, float defaultValue) {
-        return parent.getFloat(getParentKey(key), defaultValue);
-    }
-
-    public Float getFloat(String key, Float defaultValue) {
-        return parent.getFloat(getParentKey(key), defaultValue);
-    }
-
-    public int getInt(String key) {
-        return parent.getInt(getParentKey(key));
-    }
-
-    public int getInt(String key, int defaultValue) {
-        return parent.getInt(getParentKey(key), defaultValue);
-    }
-
-    public Integer getInteger(String key, Integer defaultValue) {
-        return parent.getInteger(getParentKey(key), defaultValue);
-    }
-
-    public long getLong(String key) {
-        return parent.getLong(getParentKey(key));
-    }
-
-    public long getLong(String key, long defaultValue) {
-        return parent.getLong(getParentKey(key), defaultValue);
-    }
-
-    public Long getLong(String key, Long defaultValue) {
-        return parent.getLong(getParentKey(key), defaultValue);
-    }
-
-    public short getShort(String key) {
-        return parent.getShort(getParentKey(key));
-    }
-
-    public short getShort(String key, short defaultValue) {
-        return parent.getShort(getParentKey(key), defaultValue);
-    }
-
-    public Short getShort(String key, Short defaultValue) {
-        return parent.getShort(getParentKey(key), defaultValue);
-    }
-
-    public BigDecimal getBigDecimal(String key) {
-        return parent.getBigDecimal(getParentKey(key));
-    }
-
-    public BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
-        return parent.getBigDecimal(getParentKey(key), defaultValue);
-    }
-
-    public BigInteger getBigInteger(String key) {
-        return parent.getBigInteger(getParentKey(key));
-    }
-
-    public BigInteger getBigInteger(String key, BigInteger defaultValue) {
-        return parent.getBigInteger(getParentKey(key), defaultValue);
-    }
-
-    public String getString(String key) {
-        return parent.getString(getParentKey(key));
-    }
-
-    public String getString(String key, String defaultValue) {
-        return parent.getString(getParentKey(key), defaultValue);
-    }
-
-    public String[] getStringArray(String key) {
-        return parent.getStringArray(getParentKey(key));
-    }
-
-    public List getList(String key) {
-        return parent.getList(getParentKey(key));
-    }
-
-    public List getList(String key, List defaultValue) {
-        return parent.getList(getParentKey(key), defaultValue);
-    }
-
-
-
 }

@@ -1,10 +1,13 @@
 <?xml version="1.0"?>
+<!DOCTYPE project [
+    <!ENTITY ouml "&#246;">
+]>
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!-- $Id: project.xml,v 1.16 2004/04/01 18:43:04 epugh Exp $ -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
 
-<!-- ===================================================================== -->
-<!--                                                                       -->
-<!-- $Id: project.xml,v 1.15 2004/04/01 18:26:15 epugh Exp $ -->
-<!--                                                                       -->
-<!-- ===================================================================== -->
 
 <project>
   <pomVersion>3</pomVersion>
@@ -119,9 +122,11 @@
       <email>oliver.heger@t-online.de</email>
     </contributor> 
     <contributor>
-      <name>Jorg Schaible</name>
+      <name>J&ouml;rg Schaible</name>
       <id>jschaible</id>
       <email>joerg.schaible@gmx.de</email>
+      <organization>Elsag-Solutions AG</organization>
+      <timezone>+1</timezone>
     </contributor>            
     <contributor>
       <name>Konstantin Shaposhnikov</name>

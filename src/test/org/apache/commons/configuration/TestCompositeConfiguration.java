@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.6 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.7 2004/04/01 18:43:03 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -226,6 +226,21 @@ public class TestCompositeConfiguration extends TestCase
         cc.setProperty("test.short", "43");
         subset = cc.subset("test");
         assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "43", subset.getString("short"));
+    }
+
+    /**
+     * Tests subsets and still can resolve elements
+     */
+    public void testSubsetCanResolve() throws Exception
+    {
+        cc = new CompositeConfiguration();
+        final BaseConfiguration config = new BaseConfiguration();
+        config.addProperty("subset.tempfile", "${java.io.tmpdir}/file.tmp");
+        cc.addConfiguration(config);
+        cc.addConfiguration(ConfigurationConverter.getConfiguration(System.getProperties()));
+
+        Configuration subset = cc.subset("subset");
+        assertEquals(System.getProperty("java.io.tmpdir") + "/file.tmp", subset.getString("tempfile"));
     }
 
     /**
