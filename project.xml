@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.14 2004/04/01 18:21:46 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.15 2004/04/01 18:26:15 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -119,7 +119,7 @@
       <email>oliver.heger@t-online.de</email>
     </contributor> 
     <contributor>
-      <name>Jörg Schaible</name>
+      <name>Jorg Schaible</name>
       <id>jschaible</id>
       <email>joerg.schaible@gmx.de</email>
     </contributor>            
