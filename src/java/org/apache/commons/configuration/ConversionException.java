@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2004 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,53 +16,50 @@
 
 package org.apache.commons.configuration;
 
-import org.apache.commons.lang.exception.NestableException;
-
 /**
- * Any exception that occurs while initializing a Configuration
- * object.
+ * Exception thrown when a property is incompatible with the type requested.
  *
- * @author Eric Pugh
- * @version $Revision: 1.4 $, $Date: 2004/06/15 10:40:54 $
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.1 $, $Date: 2004/06/15 10:40:54 $
  */
-public class ConfigurationException extends NestableException
+public class ConversionException extends ConfigurationRuntimeException
 {
     /**
-     * Constructs a new <code>ConfigurationException</code> without specified
+     * Constructs a new <code>ConversionException</code> without specified
      * detail message.
      */
-    public ConfigurationException() { }
+    public ConversionException() { }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
+     * Constructs a new <code>ConversionException</code> with specified
      * detail message.
      *
      * @param message  the error message
      */
-    public ConfigurationException(String message)
+    public ConversionException(String message)
     {
         super(message);
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
+     * Constructs a new <code>ConversionException</code> with specified
      * nested <code>Throwable</code>.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(Throwable cause)
+    public ConversionException(Throwable cause)
     {
         super(cause);
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
+     * Constructs a new <code>ConversionException</code> with specified
      * detail message and nested <code>Throwable</code>.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(String message, Throwable cause)
+    public ConversionException(String message, Throwable cause)
     {
         super(message, cause);
     }

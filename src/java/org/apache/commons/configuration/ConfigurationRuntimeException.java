@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2004 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,53 +16,52 @@
 
 package org.apache.commons.configuration;
 
-import org.apache.commons.lang.exception.NestableException;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
- * Any exception that occurs while initializing a Configuration
- * object.
+ * A configuration related runtime exception.
  *
- * @author Eric Pugh
- * @version $Revision: 1.4 $, $Date: 2004/06/15 10:40:54 $
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.1 $, $Date: 2004/06/15 10:40:54 $
  */
-public class ConfigurationException extends NestableException
+public class ConfigurationRuntimeException extends NestableRuntimeException
 {
     /**
-     * Constructs a new <code>ConfigurationException</code> without specified
-     * detail message.
+     * Constructs a new <code>ConfigurationRuntimeException</code> without
+     * specified detail message.
      */
-    public ConfigurationException() { }
+    public ConfigurationRuntimeException() { }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
-     * detail message.
+     * Constructs a new <code>ConfigurationRuntimeException</code> with
+     * specified detail message.
      *
      * @param message  the error message
      */
-    public ConfigurationException(String message)
+    public ConfigurationRuntimeException(String message)
     {
         super(message);
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
-     * nested <code>Throwable</code>.
+     * Constructs a new <code>ConfigurationRuntimeException</code> with
+     * specified nested <code>Throwable</code>.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(Throwable cause)
+    public ConfigurationRuntimeException(Throwable cause)
     {
         super(cause);
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
-     * detail message and nested <code>Throwable</code>.
+     * Constructs a new <code>ConfigurationRuntimeException</code> with
+     * specified detail message and nested <code>Throwable</code>.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
      */
-    public ConfigurationException(String message, Throwable cause)
+    public ConfigurationRuntimeException(String message, Throwable cause)
     {
         super(message, cause);
     }
