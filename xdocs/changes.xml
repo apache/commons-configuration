@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="25661">
+        File based configurations can now be automatically reloaded when the
+        underlying file is modified.
+      </action>
       <action dev="ebourg" type="add" issue="26102">
         Added a clear() method to the Configuration interface to remove
         all properties.

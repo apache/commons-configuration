@@ -23,11 +23,13 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.io.File;
 
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
+
 /**
  * A persistent configuration loaded and saved to a file.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/10/18 11:12:08 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/18 15:45:10 $
  * @since 1.0-rc2
  */
 public interface FileConfiguration extends Configuration
@@ -222,5 +224,26 @@ public interface FileConfiguration extends Configuration
      * @since 1.1
      */
     boolean isAutoSave();
+
+    /**
+     * Return the reloading strategy.
+     *
+     * @since 1.1
+     */
+    ReloadingStrategy getReloadingStrategy();
+
+    /**
+     * Set the reloading strategy.
+     *
+     * @since 1.1
+     */
+    void setReloadingStrategy(ReloadingStrategy strategy);
+
+    /**
+     * Reload the configuration.
+     *
+     * @since 1.1
+     */
+    void reload();
 
 }

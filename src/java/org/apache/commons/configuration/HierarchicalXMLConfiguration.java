@@ -32,6 +32,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
  * A specialized hierarchical configuration class that is able to parse
@@ -45,7 +46,7 @@ import org.xml.sax.InputSource;
  *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.4 $, $Date: 2004/10/18 11:12:08 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 15:45:10 $
  */
 public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
@@ -247,6 +248,21 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     public boolean isAutoSave()
     {
         return delegate.isAutoSave();
+    }
+
+    public ReloadingStrategy getReloadingStrategy()
+    {
+        return delegate.getReloadingStrategy();
+    }
+
+    public void setReloadingStrategy(ReloadingStrategy strategy)
+    {
+        delegate.setReloadingStrategy(strategy);
+    }
+
+    public void reload()
+    {
+        delegate.reload();
     }
 
     private class FileConfigurationDelegate extends AbstractFileConfiguration {

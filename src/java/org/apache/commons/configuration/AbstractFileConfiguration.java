@@ -29,6 +29,10 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Iterator;
+
+import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
  * Partial implementation of the <code>FileConfiguration</code> interface.
@@ -37,7 +41,7 @@ import java.net.URL;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.5 $, $Date: 2004/10/18 11:12:08 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/18 15:45:10 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -46,6 +50,13 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     protected String basePath;
     protected URL url;
     protected boolean autoSave;
+    protected ReloadingStrategy strategy;
+    private Object reloadLock = new Object();
+
+    public AbstractFileConfiguration()
+    {
+        setReloadingStrategy(new InvariantReloadingStrategy());
+    }
 
     /**
      * Load the configuration from the underlying URL. If the URL is not
@@ -199,6 +210,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public void save() throws ConfigurationException
     {
         save(fileName);
+        strategy.init();
     }
 
     /**
@@ -472,5 +484,64 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         super.clearProperty(key);
         possiblySave();
+    }
+
+    public ReloadingStrategy getReloadingStrategy()
+    {
+        return strategy;
+    }
+
+    public void setReloadingStrategy(ReloadingStrategy strategy)
+    {
+        this.strategy = strategy;
+        strategy.setConfiguration(this);
+        strategy.init();
+    }
+
+    public void reload()
+    {
+        synchronized (reloadLock)
+        {
+            if (strategy.reloadingRequired())
+            {
+                try
+                {
+                    clear();
+                    load();
+
+                    // notify the strategy
+                    strategy.reloadingPerformed();
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    // todo rollback the changes if the file can't be reloaded
+                }
+            }
+        }
+    }
+
+    protected Object getPropertyDirect(String key)
+    {
+        reload();
+        return super.getPropertyDirect(key);
+    }
+
+    public boolean isEmpty()
+    {
+        reload();
+        return super.isEmpty();
+    }
+
+    public boolean containsKey(String key)
+    {
+        reload();
+        return super.containsKey(key);
+    }
+
+    public Iterator getKeys()
+    {
+        reload();
+        return super.getKeys();
     }
 }
