@@ -16,7 +16,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.41 2005/01/01 14:02:16 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.42 2005/01/03 18:32:46 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -60,6 +60,7 @@
     <connection>scm:cvs:pserver:anoncvs@cvs.apache.org:/home/cvspublic:jakarta-commons/${pom.artifactId.substring(8)}</connection>
     <url>http://cvs.apache.org/viewcvs/jakarta-commons/${pom.artifactId.substring(8)}/</url>
   </repository>
+
   <versions>
     <version>
       <id>1.0-rc1</id>
@@ -77,6 +78,7 @@
       <tag>CONFIGURATION_1_0</tag>
     </version>
   </versions>
+    
   <mailingLists>
     <mailingList>
       <name>Commons Dev List</name>
@@ -357,7 +359,7 @@
     <!-- Unit test classes -->
     <unitTest>
       <includes>
-        <include>**/Test*.java</include>
+        <include>**/*Test*.java</include>
       </includes>
       <excludes>
         <exclude>**/TestBasePropertiesConfiguration.java</exclude>
@@ -377,6 +379,7 @@
             <include>testClasspath.properties</include>
             <include>testdb.script</include>
             <include>*.properties</include>
+            <include>*.dtd</include>
           </includes>
         </resource>
         <resource>
@@ -402,6 +405,7 @@
         <directory>conf</directory>
         <includes>
           <include>digesterRules.xml</include>
+          <include>properties.dtd</include>
         </includes>
       </resource>
     </resources>

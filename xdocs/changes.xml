@@ -8,6 +8,11 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="32318">
+        Added a new configuration, XMLPropertiesConfiguration, supporting the
+        new XML format for java.util.Properties introduced in Java 1.5.
+        A 1.5 runtime is not required to use this class.
+      </action>
       <action dev="ebourg" type="add" issue="26092">
         Added a comment header to PropertiesConfiguration. The header is not
         parsed when the file is loaded yet.
