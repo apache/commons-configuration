@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.10 $, $Date: 2004/10/19 13:41:44 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/17 00:14:03 $
  */
 public final class ConfigurationUtils
 {
@@ -372,6 +372,11 @@ public final class ConfigurationUtils
      */
     static String getBasePath(URL url)
     {
+        if (url == null)
+        {
+            return null;
+        }
+        
         String s = url.toString();
 
         if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
