@@ -29,7 +29,7 @@ import java.math.BigInteger;
  * extended properties and be compatible with the preferences API if at all
  * possible.
  *
- * @version $Id: Configuration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: Configuration.java,v 1.5 2004/03/01 11:15:16 epugh Exp $
  */
 public interface Configuration
 {
@@ -72,7 +72,7 @@ public interface Configuration
      * ["file", "classpath"]
      *
      * @param key The Key to add the property to.
-     * @param token The Value to add.
+     * @param value The Value to add.
      */
     void addProperty(String key, Object value);
 
