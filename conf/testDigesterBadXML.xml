@@ -5,12 +5,6 @@
 
 <configuration>
   <additional>
-    <xml className="org.apache.commons.configuration.HierarchicalXMLConfiguration" fileName="testHierarchicalXMLConfiguration.xml"/>
+    <hierarchicalXml fileName="testHierarchicalXMLConfiguration.xml"/>
    
 </configuration>
-
-  
-  
-
-
-

@@ -65,9 +65,9 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
-  <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <xml className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
+  <jndi prefix="java:comp/env"/>
+  <properties fileName="conf/test.properties"/>
+  <xml fileName="conf/test.xml"/>
 </configuration>
 ]]>   
         </source>
@@ -94,7 +94,7 @@
       <subsection name="Classic Properties File">
         <source>
 <![CDATA[       
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
+  <properties fileName="conf/test.properties"/>
 ]]>   
         </source>
         <p>
@@ -104,7 +104,7 @@
       <subsection name="XML Properties File">
         <source>
 <![CDATA[       
-  <xml className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
+  <xml fileName="conf/test.xml"/>
 ]]>   
         </source>     
         <p>
@@ -134,7 +134,7 @@
       <subsection name="JNDI Properties File">
         <source>
 <![CDATA[       
-  <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
+  <jndi prefix="java:comp/env"/>
 ]]>   
         </source>     
         <p>

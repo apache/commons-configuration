@@ -2,6 +2,6 @@
 
 <configuration xmlns:foo="namespace-one"
                xmlns:bar="namespace-two">
-  <foo:properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <bar:dom className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
+  <foo:properties fileName="conf/test.properties"/>
+  <bar:xml fileName="conf/test.xml"/>
 </configuration>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
-  <jndi className="org.apache.commons.configuration.JNDIConfiguration" prefix="java:comp/env"/>
-  <properties className="org.apache.commons.configuration.PropertiesConfiguration" fileName="conf/test.properties"/>
-  <dom className="org.apache.commons.configuration.XMLConfiguration" fileName="conf/test.xml"/>
+  <jndi prefix="java:comp/env"/>
+  <properties fileName="conf/test.properties"/>
+  <xml fileName="conf/test.xml"/>
 </configuration>
