@@ -39,7 +39,7 @@ import org.apache.commons.lang.NotImplementedException;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/09/22 17:17:30 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/22 17:29:08 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -75,8 +75,19 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void load(String fileName) throws ConfigurationException
     {
-        URL url = ConfigurationUtils.locate(basePath, fileName);
-        load(url);
+        try
+        {
+            URL url = ConfigurationUtils.locate(basePath, fileName);
+            load(url);
+        }
+        catch (ConfigurationException e)
+        {
+            throw e;
+        }
+        catch (Exception e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
     }
 
     /**
