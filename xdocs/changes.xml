@@ -7,19 +7,42 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
-      <action dev="henning" type="add">Bring back the getVector() methods in the Configuration interface. These methods are needed for &quot;drop-on&quot; replacement
-                                     of the various pre-1.0 commons-configuration snapshots and are already deprecated. These methods will be removed for 1.1
+      <action dev="ebourg" type="fix" issue="30676">
+        Fixed a ClassCastException thrown on adding a non string property
+        in a DatabaseConfiguration.
+      </action>
+      <action dev="henning" type="add">
+        Bring back the getVector() methods in the Configuration interface.
+        These methods are needed for &quot;drop-on&quot; replacement of the
+        various pre-1.0 commons-configuration snapshots and are already
+        deprecated. These methods will be removed for 1.1.
       </action>
     </release>
     <release version="1.0-rc1" date="2004-08-14">
-      <action dev="epugh" type="add" due-to="Oliver Heger" issue="30597">HierarchicalConfigurationXMLReader stores comments as text nodes</action>        
-      <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30648">project.xml contains bad dependencies</action>        
-      <action dev="epugh" type="add" due-to="Brent Worden" issue="30234 ">clearXmlProperty doesn't remove list properties completely</action>        
-      <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30545">new ConfigurationDynaBean </action>        
-      <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="29611">new ConfigurationMap and ConfigurationSet</action>        
-      <action dev="epugh" type="fix" due-to="Ricardo Gladwell" issue="30598">Problem adding property XMLConfiguration</action>        
-      <action dev="epugh" type="remove">ConfigurationXMLDocument removed until post 1.0.</action>
-	  <action dev="epugh" type="fix" issue="29734">DatabaseConfiguration doesn't support List properties.</action>
+      <action dev="epugh" type="add" issue="30597" due-to="Oliver Heger">
+        HierarchicalConfigurationXMLReader stores comments as text nodes
+      </action>
+      <action dev="epugh" type="add" issue="30648" due-to="Ricardo Gladwell">
+        project.xml contains bad dependencies
+      </action>
+      <action dev="epugh" type="add" issue="30234" due-to="Brent Worden">
+        clearXmlProperty doesn't remove list properties completely
+      </action>
+      <action dev="epugh" type="add" issue="30545" due-to="Ricardo Gladwell">
+        new ConfigurationDynaBean
+      </action>
+      <action dev="epugh" type="add" issue="29611" due-to="Ricardo Gladwell">
+        new ConfigurationMap and ConfigurationSet
+      </action>
+      <action dev="epugh" type="fix" issue="30598" due-to="Ricardo Gladwell">
+        Problem adding property XMLConfiguration
+      </action>
+      <action dev="epugh" type="remove">
+        ConfigurationXMLDocument removed until post 1.0.
+      </action>
+	  <action dev="epugh" type="fix" issue="29734">
+        DatabaseConfiguration doesn't support List properties.
+      </action>
       <action dev="ebourg" type="fix">
         Fixed several bugs related to XMLConfiguration:
         <ul>

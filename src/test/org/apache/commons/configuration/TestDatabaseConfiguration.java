@@ -37,7 +37,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.7 $, $Date: 2004/08/16 22:16:31 $
+ * @version $Revision: 1.8 $, $Date: 2004/08/20 13:55:42 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -95,6 +95,14 @@ public class TestDatabaseConfiguration extends TestCase
         config.addPropertyDirect("key", "value");
 
         assertTrue("missing property", config.containsKey("key"));
+    }
+
+    public void testAddNonStringProperty()
+    {
+        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        config.addPropertyDirect("boolean", Boolean.TRUE);
+
+        assertTrue("missing property", config.containsKey("boolean"));
     }
 
     public void testGetPropertyDirectSingle()

@@ -37,7 +37,7 @@ import org.apache.commons.logging.LogFactory;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.8 $, $Date: 2004/07/24 16:26:10 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/20 13:55:41 $
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -131,11 +131,15 @@ public class DatabaseConfiguration extends AbstractConfiguration
             {
                 result = rs.getObject(valueColumn);
             }
-            if(rs.next()){
+
+            // build a list if there is more than one row in the resultset
+            if (rs.next())
+            {
             	List results = new ArrayList();
             	results.add(result);
             	results.add(rs.getObject(valueColumn));
-            	while (rs.next()){
+            	while (rs.next())
+                {
             		results.add(rs.getObject(valueColumn));
             	}
             	result = results;
@@ -184,7 +188,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.setString(index++, name);
             }
             pstmt.setString(index++, key);
-            pstmt.setString(index++, (String) obj);
+            pstmt.setString(index++, String.valueOf(obj));
 
             pstmt.executeUpdate();
         }
