@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Test class for HierarchicalConfiguration.
  * 
- * @version $Id: TestHierarchicalConfiguration.java,v 1.6 2004/10/18 10:19:27 ebourg Exp $
+ * @version $Id: TestHierarchicalConfiguration.java,v 1.7 2004/11/13 17:03:18 oheger Exp $
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
@@ -281,7 +281,7 @@ public class TestHierarchicalConfiguration extends TestCase
         Set values = new HashSet();
         for(int i = 0; i < expected.length; i++)
         {
-            values.add(expected[i]);
+            values.add(prefix + "." + expected[i]);
         }
         
         Iterator itKeys = config.getKeys(prefix);

@@ -16,10 +16,13 @@
 
 package org.apache.commons.configuration;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -27,10 +30,12 @@ import junit.framework.TestCase;
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.7 $, $Date: 2004/10/18 21:38:45 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/13 17:03:18 $
  */
 public class TestSubsetConfiguration extends TestCase
 {
+    static final String TEST_DIR = "conf";
+    static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
     public void testGetProperty()
     {
@@ -185,5 +190,25 @@ public class TestSubsetConfiguration extends TestCase
         }
     }
 
-
+    public void testNested() throws Exception
+    {
+        ConfigurationFactory factory = new ConfigurationFactory();
+        File src = new File(new File(TEST_DIR), TEST_FILE);
+        factory.setConfigurationURL(src.toURL());
+        Configuration config = factory.getConfiguration();
+        Configuration subConf = config.subset("tables.table(0)");
+        assertTrue(subConf.getKeys().hasNext());
+        Configuration subSubConf = subConf.subset("fields.field(1)");
+        Iterator itKeys = subSubConf.getKeys();
+        Set keys = new HashSet();
+        keys.add("name");
+        keys.add("type");
+        while(itKeys.hasNext())
+        {
+            String k = (String) itKeys.next();
+            assertTrue(keys.contains(k));
+            keys.remove(k);
+        }
+        assertTrue(keys.isEmpty());
+    }
 }
