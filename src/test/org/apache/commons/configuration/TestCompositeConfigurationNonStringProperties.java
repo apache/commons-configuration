@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,26 +14,26 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.4 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.5 2005/01/03 16:35:04 ebourg Exp $
  */
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {
-	/** The File that we test with */
-	private String testProperties = new File("conf/test.properties").getAbsolutePath();
+    /** The File that we test with */
+    private String testProperties = new File("conf/test.properties").getAbsolutePath();
 
-	public void setUp() throws Exception
-	{
-		PropertiesConfiguration pc =
-			new PropertiesConfiguration(testProperties);
-		CompositeConfiguration cc = new CompositeConfiguration();
-		cc.addConfiguration(pc);
-		conf = cc;
-		nonStringTestHolder.setConfiguration(conf);
-	}
+    public void setUp() throws Exception
+    {
+        CompositeConfiguration cc = new CompositeConfiguration();
+        cc.addConfiguration(new PropertiesConfiguration(testProperties));
+        conf = cc;
+        nonStringTestHolder.setConfiguration(conf);
+    }
 
 }

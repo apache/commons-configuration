@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 1999-2004 The Apache Software Foundation.
  *
@@ -16,21 +14,18 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import org.apache.cactus.ServletTestCase;
 import java.io.File;
 
 public class TestJNDIAndCompositeConfiguration extends ServletTestCase
 {
-    private String testProperties =
-        new File("conf/test.properties").getAbsolutePath();
+    private String testProperties = new File("conf/test.properties").getAbsolutePath();
 
     private CompositeConfiguration cc;
     private PropertiesConfiguration conf1;
     private JNDIConfiguration jndiConf;
-    public TestJNDIAndCompositeConfiguration(String testName)
-    {
-        super(testName);
-    }
 
     public void setUp() throws Exception
     {
@@ -42,7 +37,6 @@ public class TestJNDIAndCompositeConfiguration extends ServletTestCase
 
         cc.addConfiguration(jndiConf);
         cc.addConfiguration(conf1);
-
     }
 
     public void testSimpleGet() throws Exception
@@ -54,7 +48,6 @@ public class TestJNDIAndCompositeConfiguration extends ServletTestCase
         cc.addConfiguration(conf1);
         cc.addConfiguration(jndiConf);
         assertEquals("1", cc.getString("test.overwrite"));
-
     }
 
     /**
@@ -64,9 +57,7 @@ public class TestJNDIAndCompositeConfiguration extends ServletTestCase
     {
 
         cc.clearProperty("test.short");
-        assertTrue(
-            "Make sure test.short is gone!",
-            !cc.containsKey("test.short"));
+        assertTrue("Make sure test.short is gone!", !cc.containsKey("test.short"));
     }
 
     /**
@@ -74,12 +65,8 @@ public class TestJNDIAndCompositeConfiguration extends ServletTestCase
      */
     public void testAddingProperty() throws Exception
     {
-
         cc.addProperty("test.short", "88");
-        assertEquals(
-            "Make sure test.short is overridden!",
-            "88",
-            cc.getString("test.short"));
+        assertEquals("Make sure test.short is overridden!", "88", cc.getString("test.short"));
     }
 
     /**

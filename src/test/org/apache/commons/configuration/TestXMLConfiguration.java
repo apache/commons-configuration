@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.17 2004/12/31 16:00:00 oheger Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.18 2005/01/03 16:35:04 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -339,13 +339,13 @@ public class TestXMLConfiguration extends TestCase
 
     public void testSave() throws Exception
     {
-    	// remove the file previously saved if necessary
+        // remove the file previously saved if necessary
         if(testSaveConf.exists()){
-    		assertTrue(testSaveConf.delete());
-    	}
+            assertTrue(testSaveConf.delete());
+        }
 
         // add an array of strings to the configuration
-    	conf.addProperty("string", "value1");
+        conf.addProperty("string", "value1");
         for (int i = 1; i < 5; i++)
         {
             conf.addProperty("test.array", "value" + i);
@@ -367,9 +367,9 @@ public class TestXMLConfiguration extends TestCase
 
         for (Iterator i = conf.getKeys(); i.hasNext();)
         {
-        	String key = (String) i.next();
-        	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-        	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
+            String key = (String) i.next();
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
     }
 

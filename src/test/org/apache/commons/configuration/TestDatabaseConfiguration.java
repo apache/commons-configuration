@@ -35,10 +35,10 @@ import org.dbunit.operation.DatabaseOperation;
 
 /**
  * Test for database stored configurations.  Note, when running this Unit 
- * Test in Eclipse it sometimes takes a couple tries.  Otherwise you ma get
+ * Test in Eclipse it sometimes takes a couple tries. Otherwise you may get
  * database is already in use by another process errors.
  *
- * @version $Revision: 1.12 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/03 16:35:04 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -51,12 +51,12 @@ public class TestDatabaseConfiguration extends TestCase
 
     protected void setUp() throws Exception
     {
-    	/*
-    	 * Thread.sleep may or may not help with the database is already in
-    	 * use exception.
-    	 */
-    	//Thread.sleep(1000);
-    	
+        /*
+         * Thread.sleep may or may not help with the database is already in
+         * use exception.
+         */
+        //Thread.sleep(1000);
+        
         // set up the datasource
         
         if (hsqlDB == null)

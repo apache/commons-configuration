@@ -5,6 +5,7 @@
  * Software License version 1.1, a copy of which has been included
  * with this distribution in the LICENSE.txt file.
  */
+
 package org.apache.commons.configuration;
 
 import java.util.Hashtable;
@@ -17,7 +18,6 @@ import org.codehaus.spice.jndikit.DefaultNameParser;
 import org.codehaus.spice.jndikit.DefaultNamespace;
 import org.codehaus.spice.jndikit.memory.MemoryContext;
 
-
 /**
  * Initial context factory for memorycontext. This factory will
  * retrieve the {@link MemoryContext} from a static variable.
@@ -25,7 +25,7 @@ import org.codehaus.spice.jndikit.memory.MemoryContext;
  * memory context.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
 public class MockStaticMemoryInitialContextFactory
     implements InitialContextFactory
@@ -51,7 +51,7 @@ public class MockStaticMemoryInitialContextFactory
         
         try
         {
-			Context testContext = me.createSubcontext("test");
+            Context testContext = me.createSubcontext("test");
             testContext.bind("key", "jndivalue");
             testContext.bind("key2","jndivalue2");
             testContext.bind("short","1");

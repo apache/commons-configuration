@@ -27,7 +27,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.19 2004/11/19 19:25:47 oheger Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.20 2005/01/03 16:35:04 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -48,7 +48,7 @@ public class TestConfigurationFactory extends TestCase
     private File testDigesterFileOptional =
             new File("conf/testDigesterOptionalConfiguration.xml");
     private File testDigesterFileOptionalEx =
-        	new File("conf/testDigesterOptionalConfigurationEx.xml");
+            new File("conf/testDigesterOptionalConfigurationEx.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 

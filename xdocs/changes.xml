@@ -13,26 +13,26 @@
         FileConfiguration interface to control the encoding of the
         configuration file.
       </action>
-	  <action dev="oheger" type="add" issue="31136">
-		Access to the top leven element of the XML document is now provided. For
-		newly created configurations this element can be changed before the
-		document is written.
-	  </action>
-	  <action dev="oheger" type="update" issue="31429">
-		Merged the two XML related configuration classes into one new class
-		XMLConfiguration. This new class should provide the best of its
-		ancestors.
-	  </action>
+      <action dev="oheger" type="add" issue="31136">
+        Access to the top leven element of the XML document is now provided. For
+        newly created configurations this element can be changed before the
+        document is written.
+      </action>
+      <action dev="oheger" type="update" issue="31429">
+        Merged the two XML related configuration classes into one new class
+        XMLConfiguration. This new class should provide the best of its
+        ancestors.
+      </action>
       <action dev="ebourg" type="update">
         Replaced the PropertyTokenizer inner class in AbstractConfiguration
         with the split method in PropertyConverter. Also moved the method
         building an iterator on the elements of a composite value in
         PropertyConverter as toIterator().
       </action>
-	  <action dev="oheger" type="fix" issue="30858">
-		Some cleanup of the handling of the base path in file based configurations.
-		The base path is now always taken into account.
-	  </action>
+      <action dev="oheger" type="fix" issue="30858">
+        Some cleanup of the handling of the base path in file based configurations.
+        The base path is now always taken into account.
+      </action>
       <action dev="ebourg" type="fix">
         Calling getProperties on a JNDIConfiguration no longer throws an
         UnsupportedOperationException.        
@@ -42,9 +42,9 @@
         concrete configurations now implement directly the getProperty method
         from the Configuration interface.
       </action>
-	  <action dev="oheger" type="add" issue="31130">
-		Added implementation of a save() method for HierarchicalXMLConfiguration.
-	  </action>
+      <action dev="oheger" type="add" issue="31130">
+        Added implementation of a save() method for HierarchicalXMLConfiguration.
+      </action>
       <action dev="ebourg" type="update">
         Constructing a file based configuration with a File no longer throws
         an exception when the file doesn't exist.
@@ -61,15 +61,15 @@
         This fixes a bug preventing configuration files from being found if
         the configuration descriptor is in a JAR file (reported by Grant Ingersoll).
       </action>
-	  <action dev="oheger" type="fix" issue="32236">
-		Fixed NPE that were caused in the constructors of file based
-		configurations if an invalid file name was specified.
-	  </action>
-	  <action dev="oheger" type="add" issue="31797">
-		Added support for optional configuration sources in definition files for
-		ConfigurationFactory. A new optional attribute allows to specify whether a
-		configuration source is mandatory or optional.
-	  </action>
+      <action dev="oheger" type="fix" issue="32236">
+        Fixed NPE that were caused in the constructors of file based
+        configurations if an invalid file name was specified.
+      </action>
+      <action dev="oheger" type="add" issue="31797">
+        Added support for optional configuration sources in definition files for
+        ConfigurationFactory. A new optional attribute allows to specify whether a
+        configuration source is mandatory or optional.
+      </action>
       <action dev="ebourg" type="fix">
         JNDIConfiguration.getKeys() now returns an empty iterator instead of
         throwing a ConfigurationRuntimeException when a NamingException occurs.
@@ -244,7 +244,7 @@
       <action dev="epugh" type="remove">
         ConfigurationXMLDocument removed until post 1.0.
       </action>
-	  <action dev="epugh" type="fix" issue="29734">
+      <action dev="epugh" type="fix" issue="29734">
         DatabaseConfiguration doesn't support List properties.
       </action>
       <action dev="ebourg" type="fix">
