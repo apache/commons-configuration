@@ -49,7 +49,7 @@ import org.dom4j.io.XMLWriter;
  *
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
- * @version $Revision: 1.6 $, $Date: 2004/06/15 11:49:25 $
+ * @version $Revision: 1.7 $, $Date: 2004/06/16 18:13:53 $
  */
 public class DOM4JConfiguration extends XMLConfiguration
 {
@@ -93,7 +93,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      * classpath.
      *
      * @param resource Name of the resource
-     * @exception ConfigurationException If error reading data source.
+     * @throws ConfigurationException If error reading data source.
      * @see DOM4JConfiguration#DOM4JConfiguration(File)
      */
     public DOM4JConfiguration(String resource) throws ConfigurationException
@@ -106,7 +106,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      * Attempts to load the XML file.
      *
      * @param file File object representing the XML file.
-     * @exception ConfigurationException If error reading data source.
+     * @throws ConfigurationException If error reading data source.
      */
     public DOM4JConfiguration(File file) throws ConfigurationException
     {
@@ -123,7 +123,7 @@ public class DOM4JConfiguration extends XMLConfiguration
     	}
     	catch (MalformedURLException mue){
     		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
-    	}    	
+    	}
     	catch (DocumentException de){
     		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
     	}
@@ -370,7 +370,7 @@ public class DOM4JConfiguration extends XMLConfiguration
     {
 
         this.fileName = fileName;
-        
+
     }
 
     /**

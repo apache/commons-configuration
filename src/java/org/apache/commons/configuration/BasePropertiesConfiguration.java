@@ -108,7 +108,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.10 2004/06/15 11:49:25 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.11 2004/06/16 18:13:53 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -136,6 +136,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * Load the properties from the given input stream.
      *
      * @param input An InputStream.
+     *
      * @throws ConfigurationException
      */
     public void load(InputStream input)
@@ -150,7 +151,8 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      *
      * @param input An InputStream.
      * @param encoding An encoding.
-     * @exception ConfigurationException
+     *
+     * @throws ConfigurationException
      */
     public synchronized void load(InputStream input, String encoding) throws ConfigurationException
     {
@@ -222,6 +224,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * properties with multiple values are saved comma seperated.
      *
      * @param filename name of the properties file
+     *
      * @throws ConfigurationException
      */
     public void save(String filename) throws ConfigurationException
@@ -334,7 +337,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
          *
          * @return A string containing a property value or null
          *
-         * @exception IOException
+         * @throws IOException
          */
         public String readProperty() throws IOException
         {
@@ -393,7 +396,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
          *
          * @param key
          * @param value
-         * @exception IOException
+         * @throws IOException
          */
         public void writeProperty(String key, Object value) throws IOException
         {
@@ -427,7 +430,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
          * Write a comment.
          *
          * @param comment
-         * @exception IOException
+         * @throws IOException
          */
         public void writeComment(String comment) throws IOException
         {
@@ -442,6 +445,7 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
      * drop escaped commas (i.e '\,').
      *
      * @param str  the <code>String</code> to unescape, may be null
+     * 
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      */
     protected static String unescapeJava(String str) {

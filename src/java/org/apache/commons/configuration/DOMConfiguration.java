@@ -47,7 +47,7 @@ import org.xml.sax.SAXException;
  * @since commons-configuration 1.0
  *
  * @author Jörg Schaible
- * @version $Revision: 1.3 $, $Date: 2004/06/15 11:49:25 $
+ * @version $Revision: 1.4 $, $Date: 2004/06/16 18:13:53 $
  */
 public class DOMConfiguration extends XMLConfiguration
 {
@@ -91,7 +91,7 @@ public class DOMConfiguration extends XMLConfiguration
      * classpath.
      *
      * @param resource Name of the resource
-     * @exception ConfigurationException If error reading data source.
+     * @throws ConfigurationException If error reading data source.
      * @see DOMConfiguration#DOMConfiguration(String)
      */
     public DOMConfiguration(String resource) throws ConfigurationException
@@ -104,7 +104,7 @@ public class DOMConfiguration extends XMLConfiguration
      * Attempts to load the XML file.
      *
      * @param file File object representing the XML file.
-     * @exception ConfigurationException If error reading data source.
+     * @throws ConfigurationException If error reading data source.
      */
     public DOMConfiguration(File file) throws ConfigurationException
     {
@@ -168,14 +168,14 @@ public class DOMConfiguration extends XMLConfiguration
             final org.w3c.dom.Node w3cNode = list.item(i);
             if(w3cNode instanceof Element)
             {
-                final StringBuffer subhierarchy = 
+                final StringBuffer subhierarchy =
                     new StringBuffer(hierarchy.toString());
                 final Element child = (Element)w3cNode;
                 subhierarchy.append(child.getTagName());
                 processAttributes(subhierarchy.toString(), child);
-                initProperties(child, 
+                initProperties(child,
                         new StringBuffer(subhierarchy.toString()).append('.'));
-            } 
+            }
             else if(w3cNode instanceof CharacterData)
             {
                 final CharacterData data = (CharacterData)w3cNode;
@@ -206,7 +206,7 @@ public class DOMConfiguration extends XMLConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                String attrName = 
+                String attrName =
                     hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
                 super.addProperty(attrName, attr.getValue());
             }
@@ -262,7 +262,7 @@ public class DOMConfiguration extends XMLConfiguration
                 attName = eName.substring(index + ATTRIB_START_MARKER.length(), eName.length() - 1);
                 eName = eName.substring(0, index);
             }
-            
+
             Element child = null;
             final NodeList list = element.getChildNodes();
             for (int j = 0; j < list.getLength(); j++)
@@ -328,7 +328,7 @@ public class DOMConfiguration extends XMLConfiguration
                 attName = eName.substring(index + ATTRIB_START_MARKER.length(), eName.length() - 1);
                 eName = eName.substring(0, index);
             }
-            
+
             final NodeList list = element.getChildNodes();
             for (int j = 0; j < list.getLength(); j++) {
                 final org.w3c.dom.Node w3cNode = list.item(j);
@@ -433,7 +433,7 @@ public class DOMConfiguration extends XMLConfiguration
     {
 
         this.fileName = fileName;
-        
+
     }
 
     /**
@@ -444,13 +444,13 @@ public class DOMConfiguration extends XMLConfiguration
     {
         return fileName;
     }
-    
+
     public String toString() {
         StringBuffer buffer = new StringBuffer();
         toXML(document, buffer);
     	return buffer.toString();
     }
-    
+
     private void toXML(final org.w3c.dom.Node element, final StringBuffer buffer)
 	{
     	final NodeList nodeList = element.getChildNodes();
@@ -472,7 +472,7 @@ public class DOMConfiguration extends XMLConfiguration
                 buffer.append(">");
     			toXML(node, buffer);
     			buffer.append("</" + node.getNodeName() + ">");
-    		} 
+    		}
     		else if(node instanceof CharacterData)
     		{
     			final CharacterData data = (CharacterData)node;

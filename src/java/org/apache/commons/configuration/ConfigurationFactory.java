@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * digester rules to use.  It is also namespace aware, by providing a
  * digesterRuleNamespaceURI.
  *
- * @version $Id: ConfigurationFactory.java,v 1.10 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.11 2004/06/16 18:13:53 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -414,7 +414,7 @@ public class ConfigurationFactory implements BasePathLoader
          * Creates an instance of the specified class.
          * @param attribs the attributes (ignored)
          * @return the new object
-         * @exception Exception if object creation fails
+         * @throws Exception if object creation fails
          */
         public Object createObject(Attributes attribs) throws Exception
         {

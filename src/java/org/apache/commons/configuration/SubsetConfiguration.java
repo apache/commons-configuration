@@ -26,8 +26,10 @@ import org.apache.commons.collections.iterators.TransformIterator;
  * every key from the parent Configuration that starts with prefix. The prefix
  * is removed from the keys in the subset.
  *
+ * @see Configuration#subset(String)
+ *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/04/01 18:43:04 $
+ * @version $Revision: 1.3 $, $Date: 2004/06/16 18:13:53 $
  */
 public class SubsetConfiguration extends AbstractConfiguration {
 
