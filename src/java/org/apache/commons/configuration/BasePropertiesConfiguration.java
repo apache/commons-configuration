@@ -108,7 +108,7 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @version $Id: BasePropertiesConfiguration.java,v 1.6 2004/03/28 14:43:04 epugh Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.7 2004/06/02 16:42:24 ebourg Exp $
  */
 public abstract class BasePropertiesConfiguration
     extends BasePathConfiguration
@@ -137,7 +137,7 @@ public abstract class BasePropertiesConfiguration
      * Load the properties from the given input stream.
      *
      * @param input An InputStream.
-     * @throws IOException
+     * @throws ConfigurationException
      */
     public void load(InputStream input)
         throws ConfigurationException
@@ -151,7 +151,7 @@ public abstract class BasePropertiesConfiguration
      *
      * @param input An InputStream.
      * @param enc An encoding.
-     * @exception IOException
+     * @exception ConfigurationException
      */
     public synchronized void load(InputStream input, String enc)
         throws ConfigurationException
@@ -224,7 +224,7 @@ public abstract class BasePropertiesConfiguration
      * properties with multiple values are saved comma seperated.
      *
      * @param filename name of the properties file
-     * @throws IOException
+     * @throws ConfigurationException
      */
     public void save(String filename)
         throws ConfigurationException

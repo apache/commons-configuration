@@ -30,7 +30,7 @@ import org.apache.commons.collections.ExtendedProperties;
  * Helper class to convert between Configuration, ExtendedProperties and
  * standard Properties.
  *
- * @version $Id: ConfigurationConverter.java,v 1.3 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: ConfigurationConverter.java,v 1.4 2004/06/02 16:42:24 ebourg Exp $
  */
 public class ConfigurationConverter
 {
@@ -42,7 +42,7 @@ public class ConfigurationConverter
      */
     public static Configuration getConfiguration(ExtendedProperties ep)
     {
-        Configuration config = (Configuration) new BaseConfiguration();
+        Configuration config = new BaseConfiguration();
         for (Iterator i = ep.getKeys(); i.hasNext();)
         {
             String key = (String) i.next();
@@ -59,7 +59,7 @@ public class ConfigurationConverter
      */
     public static Configuration getConfiguration(Properties p)
     {
-        Configuration config = (Configuration) new BaseConfiguration();
+        Configuration config = new BaseConfiguration();
         for (Enumeration e = p.keys(); e.hasMoreElements();)
         {
             String key = (String) e.nextElement();

@@ -16,14 +16,14 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import org.apache.commons.lang.exception.NestableException;;
+import org.apache.commons.lang.exception.NestableException;
 
 /**
  * Any exception that occurs while initializing a Configuration
  * object.
  *
  *
- * @version $Id: ConfigurationException.java,v 1.2 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: ConfigurationException.java,v 1.3 2004/06/02 16:42:24 ebourg Exp $
  */
 
 public class ConfigurationException extends NestableException {

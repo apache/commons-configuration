@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * digester rules to use.  It is also namespace aware, by providing a
  * digesterRuleNamespaceURI.
  *
- * @version $Id: ConfigurationFactory.java,v 1.9 2004/03/08 23:27:09 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.10 2004/06/02 16:42:24 ebourg Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -101,7 +101,7 @@ public class ConfigurationFactory implements BasePathLoader
      * different types of configuration, currently Properties, XML and JNDI.
      *
      * @return A Configuration object
-     * @throws Exception A generic exception that we had trouble during the
+     * @throws ConfigurationException A generic exception that we had trouble during the
      * loading of the configuration data.
      */
     public Configuration getConfiguration() throws ConfigurationException

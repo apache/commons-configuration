@@ -37,7 +37,7 @@ import org.apache.commons.lang.StringUtils;
  * resources without an absolute path, please take a look at the
  * ClassPropertiesConfiguration which is intended to be used for this.
  * 
- * @version $Id: PropertiesConfiguration.java,v 1.7 2004/04/01 18:43:04 epugh Exp $
+ * @version $Id: PropertiesConfiguration.java,v 1.8 2004/06/02 16:42:24 ebourg Exp $
  */
 public class PropertiesConfiguration
         extends BasePropertiesConfiguration
@@ -72,7 +72,7 @@ public class PropertiesConfiguration
      * are loaded and merged into the properties.
      *
      * @param fileName The name of the Properties File to load.
-     * @throws IOException Error while loading the properties file
+     * @throws ConfigurationException Error while loading the properties file
      */
     public PropertiesConfiguration(String fileName) throws ConfigurationException
     {
@@ -83,7 +83,7 @@ public class PropertiesConfiguration
     /**
      * Load the properties from the fileName set by setFileName 
      *
-     * @throws IOException
+     * @throws ConfigurationException
      */
     public void load() throws ConfigurationException
     {
@@ -94,7 +94,7 @@ public class PropertiesConfiguration
      * Load the properties from the given fileName
      *
      * @param fileName A properties file to load
-     * @throws IOException
+     * @throws ConfigurationException
      */
     public void load(String fileName) throws ConfigurationException
     {

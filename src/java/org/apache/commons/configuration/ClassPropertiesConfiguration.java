@@ -31,7 +31,7 @@ import java.io.InputStream;
  *
  * @see org.apache.commons.configuration.BasePropertiesConfiguration
  *
- * @version $Id: ClassPropertiesConfiguration.java,v 1.5 2004/03/13 17:31:40 epugh Exp $
+ * @version $Id: ClassPropertiesConfiguration.java,v 1.6 2004/06/02 16:42:24 ebourg Exp $
  */
 public class ClassPropertiesConfiguration
     extends BasePropertiesConfiguration
@@ -49,7 +49,7 @@ public class ClassPropertiesConfiguration
      *
      * @param baseClass The class providing the FileStream.
      * @param resource The name of the Resource.
-     * @throws IOException Error while loading the properties file
+     * @throws ConfigurationException Error while loading the properties file
      */
     public ClassPropertiesConfiguration(Class baseClass, String resource)
         throws ConfigurationException

@@ -21,7 +21,7 @@ import java.io.File;
 /**
  * Test if non-string properties are handled correctly.
  *
- * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.3 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestCompositeConfigurationNonStringProperties.java,v 1.4 2004/06/02 16:42:24 ebourg Exp $
  */
 public class TestCompositeConfigurationNonStringProperties extends BaseNonStringProperties
 {
@@ -34,7 +34,7 @@ public class TestCompositeConfigurationNonStringProperties extends BaseNonString
 			new PropertiesConfiguration(testProperties);
 		CompositeConfiguration cc = new CompositeConfiguration();
 		cc.addConfiguration(pc);
-		conf = (Configuration) cc;
+		conf = cc;
 		nonStringTestHolder.setConfiguration(conf);
 	}
 

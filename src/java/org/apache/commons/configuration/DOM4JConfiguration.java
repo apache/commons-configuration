@@ -91,7 +91,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      * classpath.
      *
      * @param resource Name of the resource
-     * @exception Exception If error reading data source.
+     * @exception ConfigurationException If error reading data source.
      * @see DOM4JConfiguration(File)
      */
     public DOM4JConfiguration(String resource) throws ConfigurationException
@@ -104,7 +104,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      * Attempts to load the XML file.
      *
      * @param file File object representing the XML file.
-     * @exception Exception If error reading data source.
+     * @exception ConfigurationException If error reading data source.
      */
     public DOM4JConfiguration(File file) throws ConfigurationException
     {

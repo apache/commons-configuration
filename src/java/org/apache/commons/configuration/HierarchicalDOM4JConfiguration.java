@@ -33,7 +33,7 @@ import org.dom4j.io.SAXReader;
  * contained properties can be accessed using all methods supported by
  * the base class <code>HierarchicalProperties</code>.
  * 
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.4 2004/02/27 17:41:35 epugh Exp $
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.5 2004/06/02 16:42:24 ebourg Exp $
  */
 public class HierarchicalDOM4JConfiguration
     extends HierarchicalConfiguration
@@ -55,6 +55,7 @@ public class HierarchicalDOM4JConfiguration
 
     /**
      * Returns the name of the file to be parsed by this object.
+     *
      * @return the file to be parsed
      */
     public String getFileName()
@@ -64,6 +65,7 @@ public class HierarchicalDOM4JConfiguration
 
     /**
      * Sets the name of the file to be parsed by this object.
+     *
      * @param file the file to be parsed
      */
     public void setFileName(String file)
@@ -73,6 +75,7 @@ public class HierarchicalDOM4JConfiguration
 
     /**
      * Returns the base path.
+     * 
      * @return the base path
      */
     public String getBasePath()
@@ -83,6 +86,7 @@ public class HierarchicalDOM4JConfiguration
     /**
      * Allows to set a base path. Relative file names are resolved based on
      * this path.
+     *
      * @param path the base path; this can be a URL or a file path
      */
     public void setBasePath(String path)
@@ -93,7 +97,8 @@ public class HierarchicalDOM4JConfiguration
     /**
      * Loads and parses an XML document. The file to be loaded must have
      * been specified before.
-     * @throws Exception if an error occurs
+     *
+     * @throws ConfigurationException if an error occurs
      */
     public void load() throws ConfigurationException
     {
@@ -107,8 +112,9 @@ public class HierarchicalDOM4JConfiguration
 
     /**
      * Loads and parses the specified XML document.
+     *
      * @param url the URL to the XML document
-     * @throws Exception if an error occurs
+     * @throws ConfigurationException if an error occurs
      */
     public void load(URL url) throws ConfigurationException
     {
@@ -122,6 +128,7 @@ public class HierarchicalDOM4JConfiguration
 
     /**
      * Initializes this configuration from an XML document.
+     *
      * @param document the document to be parsed
      */
     public void initProperties(Document document)
@@ -132,6 +139,7 @@ public class HierarchicalDOM4JConfiguration
     /**
      * Helper method for building the internal storage hierarchy. The XML
      * elements are transformed into node objects.
+     *
      * @param node the actual node
      * @param element the actual XML element
      */
@@ -155,6 +163,7 @@ public class HierarchicalDOM4JConfiguration
     /**
      * Helper method for constructing node objects for the attributes of the
      * given XML element.
+     *
      * @param node the actual node
      * @param element the actual XML element
      */

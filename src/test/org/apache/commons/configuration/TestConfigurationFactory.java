@@ -26,7 +26,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Test the ConfigurationFactory.
  *
- * @version $Id: TestConfigurationFactory.java,v 1.10 2004/05/04 22:14:29 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.11 2004/06/02 16:42:25 ebourg Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -101,7 +101,7 @@ public class TestConfigurationFactory extends TestCase
             compositeConfiguration.getProperty(
                 "element2.subelement.subsubelement"));
 
-        configuration = (Configuration) compositeConfiguration;
+        configuration = compositeConfiguration;
         assertEquals(
             "I'm complex!",
             configuration.getProperty("element2.subelement.subsubelement"));
@@ -160,7 +160,7 @@ public class TestConfigurationFactory extends TestCase
             compositeConfiguration.getProperty(
                 "element2.subelement.subsubelement"));
 
-        configuration = (Configuration) compositeConfiguration;
+        configuration = compositeConfiguration;
         assertEquals(
             "I'm complex!",
             configuration.getProperty("element2.subelement.subsubelement"));
