@@ -29,14 +29,14 @@ import junitx.framework.ObjectAssert;
 /**
  * Tests some basic functions of the BaseConfiguration class
  *
- * @version $Id: TestBaseConfiguration.java,v 1.11 2004/06/15 15:53:58 ebourg Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.12 2004/06/21 09:51:41 ebourg Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
 	protected BaseConfiguration config = new BaseConfiguration();
 
-	private Class missingElementException = NoSuchElementException.class;
-	private Class incompatibleElementException = ConversionException.class;
+	protected static Class missingElementException = NoSuchElementException.class;
+	protected static Class incompatibleElementException = ConversionException.class;
 
 	public void testGetProperty()
 	{
@@ -410,11 +410,11 @@ public class TestBaseConfiguration extends TestCase
 		{
 			fail("Should return a list");
 		}
-        
+
 		Iterator it = subEprop.getKeys();
 		it.next();
 		assertFalse(it.hasNext());
-        
+
 		subEprop = config.subset("prop.");
 		it = subEprop.getKeys();
 		assertFalse(it.hasNext());
