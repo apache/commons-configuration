@@ -7,6 +7,7 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30648">project.xml contains bad dependencies</action>        
       <action dev="epugh" type="add" due-to="Brent Worden" issue="30234 ">clearXmlProperty doesn't remove list properties completely</action>        
       <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="30545">new ConfigurationDynaBean </action>        
       <action dev="epugh" type="add" due-to="Ricardo Gladwell" issue="29611">new ConfigurationMap and ConfigurationSet</action>        
