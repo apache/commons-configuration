@@ -1,7 +1,7 @@
 package org.apache.commons.configuration;
 
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,18 @@ public class TestPropertiesConfiguration extends TestCase
     {
         String loaded = conf.getString("configuration.loaded");
         assertEquals("true", loaded);
+    }
+    
+    /**
+     * Tests if properties can be appended by simply calling load() another
+     * time.
+     */
+    public void testAppend() throws Exception
+    {
+        File file2 = new File("conf/threesome.properties");
+        conf.load(file2);
+        assertEquals("aaa", conf.getString("test.threesome.one"));
+        assertEquals("true", conf.getString("configuration.loaded"));
     }
 
     /**

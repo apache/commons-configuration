@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ public class TestXMLConfiguration extends TestCase
 {
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
+    private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
     private String testBasePath = new File("conf").getAbsolutePath();
     private File testSaveConf = new File("target/testsave.xml");
 
@@ -387,5 +388,28 @@ public class TestXMLConfiguration extends TestCase
         conf2 = new XMLConfiguration(conf.getFile());
         Configuration sub = conf2.subset("clear");
         assertTrue(sub.isEmpty());
+    }
+    
+    /**
+     * Tests if a second file can be appended to a first.
+     */
+    public void testAppend() throws Exception
+    {
+        conf = new XMLConfiguration();
+        conf.setFileName(testProperties);
+        conf.load();
+        conf.load(testProperties2);
+        assertEquals("value", conf.getString("element"));
+        assertEquals("tasks", conf.getString("table.name"));
+        
+        if (testSaveConf.exists())
+        {
+            assertTrue(testSaveConf.delete());
+        }
+        conf.save(testSaveConf);
+        
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("value", conf.getString("element"));
+        assertEquals("tasks", conf.getString("table.name"));
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -228,10 +228,11 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * Initializes this configuration from an XML document.
      * 
      * @param document the document to be parsed
+     * @param elemRefs a flag whether references to the XML elements should be set
      */
-    public void initProperties(Document document)
+    public void initProperties(Document document, boolean elemRefs)
     {
-        constructHierarchy(getRoot(), document.getDocumentElement());
+        constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
     }
 
     /**
@@ -240,8 +241,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * 
      * @param node the actual node
      * @param element the actual XML element
+     * @param elemRefs a flag whether references to the XML elements should be set
      */
-    private void constructHierarchy(Node node, Element element)
+    private void constructHierarchy(Node node, Element element, boolean elemRefs)
     {
         processAttributes(node, element);
         StringBuffer buffer = new StringBuffer();
@@ -252,8 +254,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             if (w3cNode instanceof Element)
             {
                 Element child = (Element) w3cNode;
-                Node childNode = new XMLNode(child.getTagName(), child);
-                constructHierarchy(childNode, child);
+                Node childNode = new XMLNode(child.getTagName(), 
+                        (elemRefs) ? child : null);
+                constructHierarchy(childNode, child, elemRefs);
                 node.addChild(childNode);
             }
             else if (w3cNode instanceof Text)
@@ -370,15 +373,26 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         delegate.load(in, encoding);
     }
 
+    /**
+     * Load the properties from the given reader.
+     * Note that the <code>clear()</code> method is not called, so
+     * the properties contained in the loaded file will be added to the
+     * actual set of properties.
+     *
+     * @param in An InputStream.
+     *
+     * @throws ConfigurationException
+     */
     public void load(Reader in) throws ConfigurationException
     {
         try
         {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             Document newDocument = builder.parse(new InputSource(in));
+            Document oldDocument = document;
             document = null;
-            initProperties(newDocument);
-            document = newDocument;
+            initProperties(newDocument, oldDocument == null);
+            document = (oldDocument == null) ? newDocument : oldDocument;
         }
         catch (Exception e)
         {

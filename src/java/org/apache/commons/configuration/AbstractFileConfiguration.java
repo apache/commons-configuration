@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -54,6 +54,20 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * directory or a URL. It can be set using the <code>setBasePath()</code>
  * method. The file name, non surprisingly, defines the name of the configuration
  * file.</li></ul></p>
+ * <p>Note that the <code>load()</code> methods do not wipe out the configuration's
+ * content before the new configuration file is loaded. Thus it is very easy to
+ * construct a union configuration by simply loading multiple configuration
+ * files, e.g.</p>
+ * <p><pre>
+ * config.load(configFile1);
+ * config.load(configFile2);
+ * </pre></p>
+ * <p>After executing this code fragment, the resulting configuration will
+ * contain both the properties of configFile1 and configFile2. On the other
+ * hand, if the current configuration file is to be reloaded, <code>clear()</code>
+ * should be called first. Otherwise the properties are doubled. This behavior
+ * is analogous to the behavior of the <code>load(InputStream)</code> method
+ * in <code>java.util.Properties</code>.</p>
  *
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$
