@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
@@ -89,7 +88,7 @@ import org.apache.commons.lang.StringUtils;
  * used to iterate over all values defined for a certain property.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfiguration.java,v 1.10 2004/09/20 09:37:07 henning Exp $
+ * @version $Id: HierarchicalConfiguration.java,v 1.11 2004/10/11 09:27:20 henning Exp $
  */
 public class HierarchicalConfiguration extends AbstractConfiguration
 {
