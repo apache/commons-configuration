@@ -28,12 +28,12 @@ import junit.framework.TestCase;
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.12 2004/09/19 22:07:54 henning Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.13 2004/09/22 17:17:30 ebourg Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
-    protected BasePropertiesConfiguration conf1;
-    protected BasePropertiesConfiguration conf2;
+    protected PropertiesConfiguration conf1;
+    protected PropertiesConfiguration conf2;
     protected XMLConfiguration xmlConf;
     protected CompositeConfiguration cc;
 

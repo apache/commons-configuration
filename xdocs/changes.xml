@@ -7,6 +7,13 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="ebourg" type="update">
+        Unified the mechanisms for loading and saving file based configurations.
+        PropertiesConfiguration, XMLConfiguration and HierarchicalXMLConfiguration
+        now implement the same FileConfiguration interface. BasePathLoader,
+        BasePathConfiguration, ClassPropertiesConfiguration and
+        BasePropertiesConfiguration have been removed.
+      </action>
       <action dev="ebourg" type="fix" issue="31346">
         Replaced the calls to Boolean.booleanValue(boolean) in
         AbstractConfiguration and ConfigurationDynaBean to be Java 1.3

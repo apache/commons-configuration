@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.28 2004/09/06 11:36:21 henning Exp $ -->
+<!-- $Id: project.xml,v 1.29 2004/09/22 17:17:30 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -285,6 +285,11 @@
       <version>1.4</version>
     </dependency>
 
+    <!-- Fake dependency to test loading configuration files from a JAR -->
+    <dependency>
+      <id>resources</id>
+      <version>1.0</version>
+    </dependency>
 
    <dependency>
       <groupId>maven-plugins</groupId>

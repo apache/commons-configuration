@@ -45,9 +45,9 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.15 2004/07/12 12:14:37 ebourg Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.16 2004/09/22 17:17:30 ebourg Exp $
  */
-public class ConfigurationFactory implements BasePathLoader
+public class ConfigurationFactory
 {
     /** Constant for the root element in the info file.*/
     private static final String SEC_ROOT = "configuration/";
@@ -126,8 +126,7 @@ public class ConfigurationFactory implements BasePathLoader
         {
             if (url == null)
             {
-                url = ConfigurationUtils.getURL(implicitBasePath,
-                getConfigurationFileName());
+                url = ConfigurationUtils.locate(implicitBasePath, getConfigurationFileName());
             }
             input = url.openStream();
         }
@@ -275,21 +274,21 @@ public class ConfigurationFactory implements BasePathLoader
         setupDigesterInstance(
             digester,
             matchString + "properties",
-            new BasePathConfigurationFactory(PropertiesConfiguration.class),
+            new FileConfigurationFactory(PropertiesConfiguration.class),
             METH_LOAD,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "xml",
-            new BasePathConfigurationFactory(XMLConfiguration.class),
+            new FileConfigurationFactory(XMLConfiguration.class),
             METH_LOAD,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "hierarchicalXml",
-            new BasePathConfigurationFactory(HierarchicalXMLConfiguration.class),
+            new FileConfigurationFactory(HierarchicalXMLConfiguration.class),
             METH_LOAD,
             additional);
 
@@ -455,18 +454,18 @@ public class ConfigurationFactory implements BasePathLoader
 
     /**
      * A tiny inner class that allows the Configuration Factory to
-     * let the digester construct BasePathConfiguration objects
+     * let the digester construct FileConfiguration objects
      * that already have the correct base Path set.
      *
      */
-    public class BasePathConfigurationFactory extends DigesterConfigurationFactory
+    public class FileConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
          * C'tor
          *
          * @param clazz The class which we should instantiate.
          */
-        public BasePathConfigurationFactory(Class clazz)
+        public FileConfigurationFactory(Class clazz)
         {
             super(clazz);
         }
@@ -480,9 +479,9 @@ public class ConfigurationFactory implements BasePathLoader
          */
         public Object createObject(Attributes attributes) throws Exception
         {
-            BasePathLoader bpl = (BasePathLoader) super.createObject(attributes);
-            bpl.setBasePath(getBasePath());
-            return bpl;
+            FileConfiguration conf = (FileConfiguration) super.createObject(attributes);
+            conf.setBasePath(getBasePath());
+            return conf;
         }
     }
 

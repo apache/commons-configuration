@@ -17,20 +17,14 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-
+import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -50,7 +44,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
-import org.xml.sax.SAXException;
+import org.xml.sax.InputSource;
 
 /**
  * Reads a XML configuration file.
@@ -68,9 +62,10 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.13 $, $Date: 2004/09/20 09:37:07 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/22 17:17:30 $
  */
-public class XMLConfiguration extends BasePathConfiguration {
+public class XMLConfiguration extends AbstractFileConfiguration
+{    
     // For conformance with xpath
     private static final String ATTRIBUTE_START = "[@";
 
@@ -81,11 +76,6 @@ public class XMLConfiguration extends BasePathConfiguration {
      * notation.
      */
     private static final String NODE_DELIMITER = ".";
-
-    /**
-     * A handle to our data source.
-     */
-    private String fileName;
 
     /**
      * The XML document from our data source.
@@ -124,7 +114,8 @@ public class XMLConfiguration extends BasePathConfiguration {
      *             If error reading data source.
      */
     public XMLConfiguration(String resource) throws ConfigurationException {
-        setFile(resourceURLToFile(resource));
+        this.fileName = resource;
+        url = ConfigurationUtils.locate(resource);
         load();
     }
 
@@ -141,43 +132,19 @@ public class XMLConfiguration extends BasePathConfiguration {
         load();
     }
 
-    public void load() throws ConfigurationException {
-        File file = null;
-        try {
-            URL url = ConfigurationUtils.getURL(getBasePath(), getFileName());
-            file = new File(url.getFile());
+    public void load(Reader in) throws ConfigurationException
+    {
+        try
+        {
             DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            document = builder.parse(file);
-        } catch (IOException de) {
-            throw new ConfigurationException("Could not load from "
-                    + ((file != null)
-                    ? file.getAbsolutePath()
-                    : "unknown file"), de);
-        } catch (ParserConfigurationException ex) {
-            throw new ConfigurationException("Could not configure parser", ex);
-        } catch (FactoryConfigurationError ex) {
-            throw new ConfigurationException("Could not create parser", ex);
-        } catch (SAXException ex) {
-            throw new ConfigurationException("Error parsing file "
-                    + ((file != null)
-                    ? file.getAbsolutePath()
-                    : "unknown file"), ex);
+            document = builder.parse(new InputSource(in));
+        }
+        catch (Exception e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
         }
 
         initProperties(document.getDocumentElement(), new StringBuffer());
-    }
-
-    private static File resourceURLToFile(String resource) {
-        URL confURL = XMLConfiguration.class.getClassLoader().getResource(resource);
-        if (confURL == null) {
-            confURL = ClassLoader.getSystemResource(resource);
-        }
-        if (confURL == null) {
-            throw new IllegalArgumentException("Resource: "
-                    + resource + " not found through context or "
-                    + "system classloaders.");
-        }
-        return new File(confURL.getFile());
     }
 
     /**
@@ -250,9 +217,9 @@ public class XMLConfiguration extends BasePathConfiguration {
         String attName = parseAttributeName(name);
 
         // get all the matching elements
-        ArrayList children = findElementsForPropertyNodes(nodes);
+        List children = findElementsForPropertyNodes(nodes);
 
-        ArrayList properties = new ArrayList();
+        List properties = new ArrayList();
         if (attName == null) {
             // return text contents of elements
             Iterator cIter = children.iterator();
@@ -291,9 +258,9 @@ public class XMLConfiguration extends BasePathConfiguration {
      * @param nodes
      * @return
      */
-    private ArrayList findElementsForPropertyNodes(String[] nodes) {
-        ArrayList children = new ArrayList();
-        ArrayList elements = new ArrayList();
+    private List findElementsForPropertyNodes(String[] nodes) {
+        List children = new ArrayList();
+        List elements = new ArrayList();
 
         children.add(document.getDocumentElement());
         for (int i = 0; i < nodes.length; i++) {
@@ -464,7 +431,7 @@ public class XMLConfiguration extends BasePathConfiguration {
         String attName = parseAttributeName(name);
 
         // get all the matching elements
-        ArrayList children = findElementsForPropertyNodes(nodes);
+        List children = findElementsForPropertyNodes(nodes);
 
         if (attName == null) {
             // remove children with no subelements
@@ -533,83 +500,24 @@ public class XMLConfiguration extends BasePathConfiguration {
     }
 
     /**
-     * Save the configuration to the file specified by the fileName attribute.
-     *
-     * @throws ConfigurationException
-     */
-    public void save() throws ConfigurationException {
-        save(getFile().toString());
-    }
-
-    /**
-     * Save the configuration to a file.
-     *
-     * @param filename
-     *            the name of the xml file
-     *
-     * @throws ConfigurationException
-     */
-    public void save(String filename) throws ConfigurationException {
-        FileWriter writer = null;
-
-        try {
-            writer = new FileWriter(filename);
-            save(writer);
-        } catch (IOException ioe) {
-            throw new ConfigurationException("Could not save to " + getFile());
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException ioe) {
-                throw new ConfigurationException(ioe);
-            }
-        }
-    }
-
-    /**
-     * Save the configuration to the specified stream.
-     *
-     * @param out
-     *            the output stream used to save the configuration
-     */
-    public void save(OutputStream out) throws ConfigurationException {
-        save(out, null);
-    }
-
-    /**
-     * Save the configuration to the specified stream.
-     *
-     * @param out
-     *            the output stream used to save the configuration
-     * @param encoding
-     *            the charset used to write the configuration
-     */
-    public void save(OutputStream out, String encoding) throws ConfigurationException {
-        try {
-            OutputStreamWriter writer = new OutputStreamWriter(out, encoding);
-            save(writer);
-        } catch (UnsupportedEncodingException e) {
-            throw new ConfigurationException(e.getMessage(), e);
-        }
-    }
-
-    /**
      * Save the configuration to the specified stream.
      *
      * @param writer
      *            the output stream used to save the configuration
      */
-    public void save(Writer writer) throws ConfigurationException {
-        try {
+    public void save(Writer writer) throws ConfigurationException
+    {
+        try
+        {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             Source source = new DOMSource(document);
             Result result = new StreamResult(writer);
 
             transformer.setOutputProperty("indent", "yes");
             transformer.transform(source, result);
-        } catch (TransformerException e) {
+        }
+        catch (TransformerException e)
+        {
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
@@ -631,19 +539,6 @@ public class XMLConfiguration extends BasePathConfiguration {
      */
     public void setFile(File file) {
         this.fileName = file.getAbsolutePath();
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    /**
-     * Returns the fileName.
-     *
-     * @return String
-     */
-    public String getFileName() {
-        return fileName;
     }
 
     public String toString() {

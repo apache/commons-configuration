@@ -20,23 +20,26 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Miscellaneous utility methods for configurations.
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.6 $, $Date: 2004/07/12 14:12:22 $
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.7 $, $Date: 2004/09/22 17:17:30 $
  */
 public final class ConfigurationUtils
 {
-    /** File separator. */
-    protected static final String fileSeparator = System.getProperty("file.separator");
+    private static Log log  = LogFactory.getLog(ConfigurationUtils.class);
 
     private ConfigurationUtils()
     {
@@ -141,11 +144,16 @@ public final class ConfigurationUtils
      */
     static File constructFile(String basePath, String fileName)
     {
-        // code from XMLConfiguration
         File file = null;
-        if (StringUtils.isEmpty(basePath))
+
+        File absolute = null;
+        if (fileName != null)
         {
-            // Good luck... This will fail 99 out of 100 times.
+            absolute = new File(fileName);
+        }
+
+        if (StringUtils.isEmpty(basePath) || (absolute != null && absolute.isAbsolute()))
+        {
             file = new File(fileName);
         }
         else
@@ -154,9 +162,9 @@ public final class ConfigurationUtils
             fName.append(basePath);
 
             // My best friend. Paranoia.
-            if (!basePath.endsWith(fileSeparator))
+            if (!basePath.endsWith(File.separator))
             {
-                fName.append(fileSeparator);
+                fName.append(File.separator);
             }
 
             //
@@ -165,7 +173,7 @@ public final class ConfigurationUtils
             // "./" form then just strip that off first
             // before continuing.
             //
-            if (fileName.startsWith("." + fileSeparator))
+            if (fileName.startsWith("." + File.separator))
             {
                 fName.append(fileName.substring(2));
             }
@@ -176,6 +184,162 @@ public final class ConfigurationUtils
 
             file = new File(fName.toString());
         }
+
         return file;
     }
+
+
+    /**
+     * Return the location of the specified resource by searching the user home
+     * directory, the current classpath and the system classpath.
+     *
+     * @param name the name of the resource
+     *
+     * @return the location of the resource
+     */
+    public static URL locate(String name)
+    {
+        return locate(null, name);
+    }
+
+    /**
+     * Return the location of the specified resource by searching the user home
+     * directory, the current classpath and the system classpath.
+     *
+     * @param base the base path of the resource
+     * @param name the name of the resource
+     *
+     * @return the location of the resource
+     */
+    public static URL locate(String base, String name)
+    {
+        URL url = null;
+
+        // attempt to create an URL directly
+        try
+        {
+            if (base == null)
+            {
+                url =  new URL(name);
+            }
+            else
+            {
+                URL baseURL = new URL(base);
+                url = new URL(baseURL, name);
+            }
+
+            log.debug("Configuration loaded from the URL " + url);
+        }
+        catch (MalformedURLException e)
+        {
+
+        }
+
+        // attempt to load from an absolute path
+        if (url == null)
+        {
+            File file = new File(name);
+            if (file.isAbsolute())     // already absolute?
+            {
+                try {
+                    url = file.toURL();
+                    log.debug("Configuration loaded from the absolute path " + name);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // attempt to load from the base directory
+        if (url == null)
+        {
+            try
+            {
+                File file = constructFile(base, name);
+                if (file != null && file.exists())
+                {
+                    url = file.toURL();
+                }
+
+                if (url != null)
+                {
+                    log.debug("Configuration loaded from the base path " + name);
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+
+        // attempt to load from the user home directory
+        if (url == null)
+        {
+            try
+            {
+                File file = constructFile(System.getProperty("user.home"), name);
+                if (file != null && file.exists())
+                {
+                    url = file.toURL();
+                }
+
+                if (url != null)
+                {
+                    log.debug("Configuration loaded from the home path " + name);
+                }
+
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        // attempt to load from the context classpath
+        if (url == null)
+        {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            url = loader.getResource(name);
+
+            if (url != null)
+            {
+                log.debug("Configuration loaded from the context classpath (" + name + ")");
+            }
+        }
+
+        // attempt to load from the system classpath
+        if (url == null)
+        {
+            url = ClassLoader.getSystemResource(name);
+
+            if (url != null)
+            {
+                log.debug("Configuration loaded from the system classpath (" + name + ")");
+            }
+        }
+
+        return url;
+    }
+
+    /**
+     * Return the path without the file name, for example http://xyz.net/foo/bar.xml results in http://xyz.net/foo/
+     *
+     * @param url
+     * @return
+     */
+    static String getBasePath(URL url)
+    {
+        String s = url.toString();
+
+        if (s.endsWith("/"))
+        {
+            return s;
+        }
+        else
+        {
+            return s.substring(0, s.lastIndexOf("/") + 1); // todo: doesn't work for http://xyz.net !
+        }
+    }
+
 }

@@ -16,9 +16,12 @@
 
 package org.apache.commons.configuration;
 
-import java.net.MalformedURLException;
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -28,6 +31,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.InputSource;
 
 /**
  * A specialized hierarchical configuration class that is able to parse
@@ -41,97 +45,11 @@ import org.w3c.dom.Text;
  *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.2 $, $Date: 2004/08/14 11:22:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/22 17:17:30 $
  */
-public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements BasePathLoader
+public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
-    /** Stores the file name of the document to be parsed.*/
-    private String file;
-
-    /** Stores the base path of this configuration.*/
-    private String basePath;
-
-
-    /**
-     * Constructs a HierarchicalXMLConfiguration.
-     */
-    public HierarchicalXMLConfiguration()
-    {
-        super();
-    }
-
-    /**
-     * Returns the name of the file to be parsed by this object.
-     * @return the file to be parsed
-     */
-    public String getFileName()
-    {
-        return file;
-    }
-
-    /**
-     * Sets the name of the file to be parsed by this object.
-     * @param file the file to be parsed
-     */
-    public void setFileName(String file)
-    {
-        this.file = file;
-    }
-
-    /**
-     * Returns the base path.
-     * @return the base path
-     */
-    public String getBasePath()
-    {
-        return basePath;
-    }
-
-    /**
-     * Allows to set a base path. Relative file names are resolved based on
-     * this path.
-     * @param path the base path; this can be a URL or a file path
-     */
-    public void setBasePath(String path)
-    {
-        basePath = path;
-    }
-
-    /**
-     * Loads and parses an XML document. The file to be loaded must have
-     * been specified before.
-     * @throws ConfigurationException Thrown if an error occurs
-     */
-    public void load() throws ConfigurationException
-    {
-        try
-        {
-            load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
-        }
-        catch (MalformedURLException mue)
-        {
-            throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), mue);
-        }
-    }
-
-    /**
-     * Loads and parses the specified XML document.
-     * @param url the URL to the XML document
-     *
-     * @throws ConfigurationException Thrown if an error occurs
-     */
-    public void load(URL url) throws ConfigurationException
-    {
-        try
-        {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            initProperties(builder.parse(url.toExternalForm()));
-        }
-        catch (Exception e)
-        {
-            throw new ConfigurationException("Could not load from " + url);
-        }
-    }
+    private FileConfiguration delegate = new FileConfigurationDelegate();
 
     /**
      * Initializes this configuration from an XML document.
@@ -201,5 +119,137 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
                 node.addChild(child);
             }
         }
+    }
+
+    public void load() throws ConfigurationException
+    {
+        delegate.load();
+    }
+
+    public void load(String fileName) throws ConfigurationException
+    {
+        delegate.load(fileName);
+    }
+
+    public void load(File file) throws ConfigurationException
+    {
+        delegate.load(file);
+    }
+
+    public void load(URL url) throws ConfigurationException
+    {
+        delegate.load(url);
+    }
+
+    public void load(InputStream in) throws ConfigurationException
+    {
+        delegate.load(in);
+    }
+
+    public void load(InputStream in, String encoding) throws ConfigurationException
+    {
+        delegate.load(in, encoding);
+    }
+
+    public void load(Reader in) throws ConfigurationException
+    {
+        try
+        {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            initProperties(builder.parse(new InputSource(in)));
+        }
+        catch (Exception e)
+        {
+            throw new ConfigurationException(e.getMessage(), e);
+        }
+    }
+
+    public void save() throws ConfigurationException
+    {
+        delegate.save();
+    }
+
+    public void save(String fileName) throws ConfigurationException
+    {
+        delegate.save(fileName);
+    }
+
+    public void save(File file) throws ConfigurationException
+    {
+        delegate.save(file);
+    }
+
+    public void save(URL url) throws ConfigurationException
+    {
+        delegate.save(url);
+    }
+
+    public void save(OutputStream out) throws ConfigurationException
+    {
+        delegate.save(out);
+    }
+
+    public void save(OutputStream out, String encoding) throws ConfigurationException
+    {
+        delegate.save(out, encoding);
+    }
+
+    public void save(Writer out) throws ConfigurationException
+    {
+        throw new UnsupportedOperationException("Can't save HierarchicalXMLConfigurations");
+    }
+
+    public String getFileName()
+    {
+        return delegate.getFileName();
+    }
+
+    public void setFileName(String fileName)
+    {
+        delegate.setFileName(fileName);
+    }
+
+    public String getBasePath()
+    {
+        return delegate.getBasePath();
+    }
+
+    public void setBasePath(String basePath)
+    {
+        delegate.setBasePath(basePath);
+    }
+
+    public File getFile()
+    {
+        return delegate.getFile();
+    }
+
+    public void setFile(File file)
+    {
+        delegate.setFile(file);
+    }
+
+    public URL getURL()
+    {
+        return delegate.getURL();
+    }
+
+    public void setURL(URL url)
+    {
+        delegate.setURL(url);
+    }
+
+    private class FileConfigurationDelegate extends AbstractFileConfiguration {
+
+        public void load(Reader in) throws ConfigurationException
+        {
+            HierarchicalXMLConfiguration.this.load(in);
+        }
+
+        public void save(Writer out) throws ConfigurationException
+        {
+            HierarchicalXMLConfiguration.this.save(out);
+        }
+
     }
 }

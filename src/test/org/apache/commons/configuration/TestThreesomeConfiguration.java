@@ -26,7 +26,7 @@ import junit.framework.TestCase;
  * org.apache.commons.configuration.BasePropertiesConfiguration}
  * extensions.
  *
- * @version $Id: TestThreesomeConfiguration.java,v 1.1 2004/09/19 21:54:46 henning Exp $
+ * @version $Id: TestThreesomeConfiguration.java,v 1.2 2004/09/22 17:17:30 ebourg Exp $
  */
 public class TestThreesomeConfiguration extends TestCase
 {
@@ -34,7 +34,7 @@ public class TestThreesomeConfiguration extends TestCase
 
     protected void setUp() throws Exception
     {
-        conf = new ClassPropertiesConfiguration(getClass(), "threesome.properties");
+        conf = new PropertiesConfiguration("threesome.properties");
     }
     
     /**

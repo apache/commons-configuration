@@ -20,14 +20,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
+
+import junit.framework.TestCase;
 
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.12 2004/09/16 22:35:35 epugh Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.13 2004/09/22 17:17:30 ebourg Exp $
  */
-public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
+public class TestPropertiesConfiguration extends TestCase
 {
+    private PropertiesConfiguration conf;
+
     /** The File that we test with */
     private String testProperties = new File("conf/test.properties").getAbsolutePath();
 
@@ -40,15 +45,70 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         conf = new PropertiesConfiguration(testProperties);
     }
 
+    public void testLoad() throws Exception
+    {
+        String loaded = conf.getString("configuration.loaded");
+        assertEquals("true", loaded);
+    }
+
+    /**
+     * Tests that empty properties are treated as the empty string
+     * (rather than as null).
+     */
+    public void testEmpty() throws Exception
+    {
+        String empty = conf.getString("test.empty");
+        assertNotNull(empty);
+        assertEquals("", empty);
+    }
+
+    /**
+     * Tests that references to other properties work
+     */
+    public void testReference() throws Exception
+    {
+        assertEquals("baseextra", conf.getString("base.reference"));
+    }
+
+    /**
+     * test if includes properties get loaded too
+     */
+    public void testLoadInclude() throws Exception
+    {
+        String loaded = conf.getString("include.loaded");
+        assertEquals("true", loaded);
+    }
+
+    /**
+     * Tests <code>List</code> parsing.
+     */
+    public void testList() throws Exception
+    {
+        List packages = conf.getList("packages");
+        // we should get 3 packages here
+        assertEquals(3, packages.size());
+    }
+
+    /**
+     * Tests <code>Vector</code> parsing.
+     */
+    public void testVector() throws Exception
+    {
+        Vector packages = conf.getVector("packages");
+        // we should get 3 packages here
+        assertEquals(3, packages.size());
+    }
+
     public void testSave() throws Exception
     {
-    	// remove the file previously saved if necessary
-        if(testSavePropertiesFile.exists()){
-    		assertTrue(testSavePropertiesFile.delete());
-    	}
+        // remove the file previously saved if necessary
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue(testSavePropertiesFile.delete());
+        }
 
         // add an array of strings to the configuration
-    	conf.addProperty("string", "value1");
+        conf.addProperty("string", "value1");
         List list = new ArrayList();
         for (int i = 1; i < 5; i++)
         {
@@ -57,32 +117,37 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         conf.addProperty("array", list);
 
         // save the configuration
-        conf.save(testSavePropertiesFile.getAbsolutePath());
+        String filename = testSavePropertiesFile.getAbsolutePath();
+        conf.save(filename);
+
+        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
 
         // read the configuration and compare the properties
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile.getAbsolutePath());
-        for (Iterator i = conf.getKeys(); i.hasNext();) {
-        	String key = (String) i.next();
-        	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-        	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
+        for (Iterator i = conf.getKeys(); i.hasNext();)
+        {
+            String key = (String) i.next();
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
-        
+
         // Save it again, verifing a save with a filename works.
         checkConfig.save();
     }
-    
-    public void testSaveMissingFilename(){
+
+    public void testSaveMissingFilename()
+    {
         PropertiesConfiguration pc = new PropertiesConfiguration();
-        try {
+        try
+        {
             pc.save();
             fail("Should have throw ConfigurationException");
         }
-        catch (ConfigurationException ce){
+        catch (ConfigurationException ce)
+        {
             //good
         }
     }
-
-    
 
     public void testLoadViaProperty() throws Exception
     {
@@ -156,17 +221,17 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 
         assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
     }
-    
-    public void testChangingDelimiter() throws Exception{
+
+    public void testChangingDelimiter() throws Exception
+    {
         PropertiesConfiguration pc = new PropertiesConfiguration(testProperties);
-        assertEquals(4,pc.getList("test.mixed.array").size());
-        
+        assertEquals(4, pc.getList("test.mixed.array").size());
+
         char delimiter = PropertiesConfiguration.getDelimiter();
         PropertiesConfiguration.setDelimiter('^');
         pc = new PropertiesConfiguration(testProperties);
-        assertEquals(2,pc.getList("test.mixed.array").size());
+        assertEquals(2, pc.getList("test.mixed.array").size());
         PropertiesConfiguration.setDelimiter(delimiter);
-        
     }
 
 }
