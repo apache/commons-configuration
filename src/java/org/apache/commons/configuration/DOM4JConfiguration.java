@@ -92,7 +92,7 @@ public class DOM4JConfiguration extends XMLConfiguration
      *
      * @param resource Name of the resource
      * @exception ConfigurationException If error reading data source.
-     * @see DOM4JConfiguration(File)
+     * @see DOM4JConfiguration#DOM4JConfiguration(File)
      */
     public DOM4JConfiguration(String resource) throws ConfigurationException
     {

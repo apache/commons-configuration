@@ -93,7 +93,7 @@ public class DOMConfiguration extends XMLConfiguration
      *
      * @param resource Name of the resource
      * @exception ConfigurationException If error reading data source.
-     * @see DOMConfiguration(String)
+     * @see DOMConfiguration#DOMConfiguration(String)
      */
     public DOMConfiguration(String resource) throws ConfigurationException
     {
