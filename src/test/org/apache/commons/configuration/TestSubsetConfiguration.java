@@ -18,13 +18,15 @@ package org.apache.commons.configuration;
 
 import junit.framework.TestCase;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/03/09 10:31:31 $
+ * @version $Revision: 1.2 $, $Date: 2004/05/04 22:27:10 $
  */
 public class TestSubsetConfiguration extends TestCase {
 
@@ -104,5 +106,15 @@ public class TestSubsetConfiguration extends TestCase {
         assertEquals("1st key", "abc", it.next());
         assertEquals("2nd key", "abc.key1", it.next());
         assertFalse("too many elements", it.hasNext());
+    }
+    
+    public void testGetList() {
+        BaseConfiguration conf = new BaseConfiguration();
+        conf.setProperty("test.abc", "value0,value1");
+        conf.addProperty("test.abc","value3");
+
+        Configuration subset = new SubsetConfiguration(conf, "test", ".");
+        List list = subset.getList("abc", new ArrayList());
+        assertEquals(3, list.size());
     }
 }

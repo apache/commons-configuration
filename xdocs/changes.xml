@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0-dev-4" date="">  
+     <action dev="epugh" type="fix">
+        SubsetConfiguration returns a List on getList().  AbstractConfiguration wouldn't properly
+        deal with a List, only with a Container for getList()!  Thanks to jschaible for the unit test.
+     </action>       
      <action dev="jschaible" type="add">
         Direct support of XML via DOM. New classes DOMConfiguration and HierarchicalDOMConfiguration.
      </action>     

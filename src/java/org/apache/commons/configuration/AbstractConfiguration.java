@@ -35,7 +35,7 @@ import org.apache.commons.lang.BooleanUtils;
  * store any data. If you want to write your own Configuration class
  * then you should implement only abstract methods from this class.
  *
- * @version $Id: AbstractConfiguration.java,v 1.7 2004/03/09 10:31:31 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.8 2004/05/04 22:27:10 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -1254,6 +1254,10 @@ public abstract class AbstractConfiguration implements Configuration
         {
             list = ((Container) value).asList();
         }
+        else if (value instanceof List)
+        {
+            list = (List)value;
+        }        
         else if (value == null)
         {
             list = ((defaultValue == null) ? new ArrayList() : defaultValue);
