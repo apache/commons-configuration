@@ -20,15 +20,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.NotContextException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -41,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.16 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.17 2004/07/08 15:34:20 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -74,36 +75,39 @@ public class JNDIConfiguration extends AbstractConfiguration
      * values to the list of keys found.
      *
      * @param keys All the keys that have been found.
-     * @param parentContext The parent context
-     * @param key What key we are building on.
+     * @param context The parent context
+     * @param prefix What prefix we are building on.
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(List keys, Context parentContext, String key) throws NamingException
+    private void recursiveGetKeys(Set keys, Context context, String prefix) throws NamingException
     {
-        NamingEnumeration enumeration = parentContext.list("");
-        while (enumeration.hasMoreElements())
+        // iterates through the context's elements
+        NamingEnumeration elements = context.list("");
+        while (elements.hasMore())
         {
-            Object o = enumeration.next();
+            NameClassPair nameClassPair = (NameClassPair) elements.next();
+            String name = nameClassPair.getName();
+            Object object = context.lookup(name);
 
-            NameClassPair nameClassPair = (NameClassPair) o;
-            StringBuffer newKey = new StringBuffer();
-            newKey.append(key);
-            if (newKey.length() > 0)
+            // build the key
+            StringBuffer key = new StringBuffer();
+            key.append(prefix);
+            if (key.length() > 0)
             {
-                newKey.append(".");
+                key.append(".");
             }
-            newKey.append(nameClassPair.getName());
-            if (parentContext.lookup(nameClassPair.getName()) instanceof Context)
+            key.append(name);
+
+            if (object instanceof Context)
             {
-                Context context = (Context) parentContext.lookup(nameClassPair.getName());
-                recursiveGetKeys(keys, context, newKey.toString());
+                // add the keys of the sub context
+                Context subcontext = (Context) object;
+                recursiveGetKeys(keys, subcontext, key.toString());
             }
             else
             {
-                if (!keys.contains(newKey.toString()))
-                {
-                    keys.add(newKey.toString());
-                }
+                // add the key
+                keys.add(key.toString());
             }
         }
     }
@@ -119,39 +123,41 @@ public class JNDIConfiguration extends AbstractConfiguration
     /**
      * {@inheritDoc}
      */
-    public Iterator getKeys(String key)
+    public Iterator getKeys(String prefix)
     {
-        List keys = new ArrayList();
+        // build the path
+        String[] splitPath = StringUtils.split(prefix, ".");
+
+        List path = new ArrayList();
+
+        for (int i = 0; i < splitPath.length; i++)
+        {
+            path.add(splitPath[i]);
+        }
+
         try
         {
-            String[] splitKeys = StringUtils.split(key, ".");
-            for (int i = 0; i < splitKeys.length; i++)
-            {
-                keys.add(splitKeys[i]);
-            }
+            // find the context matching the specified path
+            Context context = getContext(path, getContext());
 
-            Context context = null;
-
-            if (keys.isEmpty())
-            {
-                context = getContext();
-            }
-            else
-            {
-                context = getStartingContextPoint(keys, getContext(), getContext().list(""));
-            }
-
+            // return all the keys under the context found
+            Set keys = new HashSet();
             if (context != null)
             {
-                recursiveGetKeys(keys, context, key);
+                recursiveGetKeys(keys, context, prefix);
             }
-        }
-        catch (NamingException ne)
-        {
-            log.warn(ne);
-        }
+            else if (containsKey(prefix))
+            {
+                // add the prefix if it matches exactly a property key
+                keys.add(prefix);
+            }
 
-        return keys.iterator();
+            return keys.iterator();
+        }
+        catch (NamingException e)
+        {
+            throw new ConfigurationRuntimeException(e.getMessage(), e);
+        }
     }
 
     /**
@@ -159,42 +165,38 @@ public class JNDIConfiguration extends AbstractConfiguration
      * tree, till we find the Context specified by the key to start from.
      * Otherwise return null.
      *
-     * @param keys
-     * @param parentContext
-     * @param enumeration
+     * @param path     the path of keys to traverse in order to find the context
+     * @param context  the context to start from
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
-    private Context getStartingContextPoint(List keys, Context parentContext, NamingEnumeration enumeration) throws NamingException
+    private Context getContext(List path, Context context) throws NamingException
     {
-        String keyToSearchFor = (String) keys.get(0);
-        log.debug("Key to search for is " + keyToSearchFor);
-        while (enumeration.hasMoreElements())
+        // return the current context if the path is empty
+        if (path == null || path.isEmpty())
         {
-            NameClassPair nameClassPair = (NameClassPair) enumeration.next();
-            Object o = parentContext.lookup(nameClassPair.getName());
-            log.debug(
-                "Binding for name: "
-                    + nameClassPair.getName()
-                    + ", object:"
-                    + parentContext.lookup(nameClassPair.getName())
-                    + ", class:"
-                    + nameClassPair.getClassName());
-            if (o instanceof Context
-                && nameClassPair.getName().equals(keyToSearchFor))
+            return context;
+        }
+
+        String key = (String) path.get(0);
+
+        // search a context matching the key in the context's elements
+        NamingEnumeration elements = context.list("");
+        while (elements.hasMore())
+        {
+            NameClassPair nameClassPair = (NameClassPair) elements.next();
+            String name = nameClassPair.getName();
+            Object object = context.lookup(name);
+
+            if (object instanceof Context && name.equals(key))
             {
-                keys.remove(0);
-                Context c = (Context) o;
-                if (!keys.isEmpty())
-                {
-                    return getStartingContextPoint(keys, c, c.list(""));
-                }
-                else
-                {
-                    return c;
-                }
+                Context subcontext = (Context) object;
+
+                // recursive search in the sub context
+                return getContext(path.subList(1, path.size()), subcontext);
             }
         }
+
         return null;
     }
 
@@ -304,13 +306,17 @@ public class JNDIConfiguration extends AbstractConfiguration
             key = StringUtils.replace(key, ".", "/");
             return getContext().lookup(key);
         }
-        catch (NoSuchElementException nsse)
+        catch (NameNotFoundException e)
         {
             return null;
         }
-        catch (NamingException ne)
+        catch (NotContextException e)
         {
-            ne.printStackTrace();
+            return null;
+        }
+        catch (NamingException e)
+        {
+            e.printStackTrace();
             return null;
         }
     }
@@ -328,7 +334,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         if (context == null)
         {
             Context initCtx = new InitialContext();
-            context = (Context) initCtx.lookup(getPrefix());
+            context = (Context) initCtx.lookup(prefix == null ? "" : prefix);
         }
         return context;
     }
