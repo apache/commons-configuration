@@ -17,14 +17,14 @@
 package org.apache.commons.configuration;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A Map based Configuration.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/12/02 22:05:52 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/14 17:03:50 $
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration
@@ -57,7 +57,7 @@ public class MapConfiguration extends AbstractConfiguration
         Object value = map.get(key);
         if (value instanceof String)
         {
-            List list = split((String) value);
+            List list = PropertyConverter.split((String) value, getDelimiter());
             return list.size() > 1 ? list : value;
         }
         else

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,6 +14,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
@@ -30,26 +30,25 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys might
  * return null.
  *
- * @version $Id: TestBaseNullConfiguration.java,v 1.2 2004/10/18 21:38:45 epugh Exp $
+ * @version $Id: TestBaseNullConfiguration.java,v 1.3 2004/12/14 17:03:51 ebourg Exp $
  */
 public class TestBaseNullConfiguration extends TestCase
 {
-        protected BaseConfiguration config = null;
+    protected BaseConfiguration config = null;
 
 	protected static Class missingElementException = NoSuchElementException.class;
 	protected static Class incompatibleElementException = ConversionException.class;
 
-        protected void setUp()
-            throws Exception
-        {
-            config = new BaseConfiguration();
-            config.setThrowExceptionOnMissing(false);
-        }
+    protected void setUp() throws Exception
+    {
+        config = new BaseConfiguration();
+        config.setThrowExceptionOnMissing(false);
+    }
 
-        public void testThrowExceptionOnMissing()
-        {
-            assertFalse("Throw Exception Property is set!", config.isThrowExceptionOnMissing());
-        }
+    public void testThrowExceptionOnMissing()
+    {
+        assertFalse("Throw Exception Property is set!", config.isThrowExceptionOnMissing());
+    }
 
 	public void testGetProperty()
 	{
@@ -495,20 +494,6 @@ public class TestBaseNullConfiguration extends TestCase
 
 		fail("IllegalStateException should have been thrown for looped property references");
 	}
-
-    public void testSplit()
-    {
-        String s1 = "abc,xyz";
-        List tokens = config.split(s1);
-        assertEquals("number of tokens in '" + s1 + "'", 2, tokens.size());
-        assertEquals("1st token for '" + s1 + "'", "abc", tokens.get(0));
-        assertEquals("2nd token for '" + s1 + "'", "xyz", tokens.get(1));
-
-        String s2 = "abc\\,xyz";
-        tokens = config.split(s2);
-        assertEquals("number of tokens in '" + s2 + "'", 1, tokens.size());
-        assertEquals("1st token for '" + s2 + "'", "abc,xyz", tokens.get(0));
-    }
 
 }
 

@@ -19,18 +19,13 @@ package org.apache.commons.configuration;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.StringTokenizer;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
-import org.apache.commons.collections.iterators.IteratorChain;
-import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
@@ -54,9 +49,6 @@ public abstract class AbstractConfiguration implements Configuration
 
     /** The property delimiter used while parsing (a comma). */
     private static char DELIMITER = ',';
-
-    /** how big the initial arraylist for splitting up name value pairs */
-    private static final int INITIAL_LIST_SIZE = 2;
 
     /**
      * Whether the configuration should throw NoSuchElementExceptions or simply
@@ -108,66 +100,13 @@ public abstract class AbstractConfiguration implements Configuration
     /**
      * {@inheritDoc}
      */
-    public void addProperty(String key, Object token)
+    public void addProperty(String key, Object value)
     {
-        for (Iterator it = fetchInsertIterator(token); it.hasNext();)
+        Iterator it = PropertyConverter.toIterator(value, DELIMITER);
+        while (it.hasNext())
         {
             addPropertyDirect(key, it.next());
         }
-    }
-
-    /**
-     * Determines all properties to be added to this configuration. This method
-     * is called by <code>addProperty()</code> and <code>setProperty()</code>
-     * to obtain all values to be inserted. The passed in token is specially
-     * treated depending on its type: <ul><li>Strings are checked for
-     * enumeration characters and splitted if necessary.</li><li>For
-     * collections the single elements are checked.</li><li>Arrays are
-     * treated like collections.</li><li>All other types are directly
-     * inserted.</li><li>Recursive combinations are supported, e.g. a
-     * collection containing array that contain strings.</li></ul>
-     * 
-     * @param token the token to be checked
-     * @return an iterator for the values to be inserted
-     */
-    protected Iterator fetchInsertIterator(Object token)
-    {
-        if (token == null)
-        {
-            return IteratorUtils.emptyIterator();
-        }
-        if (token instanceof String)
-        {
-            return split((String) token).iterator();
-        }
-        else if (token instanceof Collection)
-        {
-            return fetchInsertIterator(((Collection) token).iterator());
-        }
-        else if (token.getClass().isArray())
-        {
-            return fetchInsertIterator(IteratorUtils.arrayIterator(token));
-        }
-        else
-        {
-            return new SingletonIterator(token);
-        }
-    }
-
-    /**
-     * Recursivle fetches an insert iterator if the token itself is a composite.
-     * 
-     * @param iterator the iterator to be processed
-     * @return a chain iterator for all elements
-     */
-    private Iterator fetchInsertIterator(Iterator iterator)
-    {
-        IteratorChain itResult = new IteratorChain();
-        while (iterator.hasNext())
-        {
-            itResult.addIterator(fetchInsertIterator(iterator.next()));
-        }
-        return itResult;
     }
 
     /**
@@ -283,41 +222,6 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * Returns a List of Strings built from the supplied String. Splits up CSV
-     * lists. If no commas are in the String, simply returns a List with the
-     * String as its first element.
-     * 
-     * @param token The String to tokenize
-     * 
-     * @return A List of Strings
-     */
-    protected List split(String token)
-    {
-        List list = new ArrayList(INITIAL_LIST_SIZE);
-
-        if (token.indexOf(DELIMITER) > 0)
-        {
-            PropertiesTokenizer tokenizer = new PropertiesTokenizer(token);
-
-            while (tokenizer.hasMoreTokens())
-            {
-                list.add(tokenizer.nextToken());
-            }
-        }
-        else
-        {
-            list.add(token);
-        }
-
-        //
-        // We keep the sequence of the keys here and
-        // we also keep it in the List. So the
-        // keys are added to the store in the sequence that
-        // is given in the properties
-        return list;
-    }
-
-    /**
      * {@inheritDoc}
      */
     public Configuration subset(String prefix)
@@ -341,7 +245,7 @@ public abstract class AbstractConfiguration implements Configuration
     public void setProperty(String key, Object value)
     {
         clearProperty(key);
-        addProperty(key, value); // QUESTION: or addPropertyDirect?
+        addProperty(key, value);
     }
 
     /**
@@ -1002,49 +906,5 @@ public abstract class AbstractConfiguration implements Configuration
         }
         return value;
     }
-
-    /**
-     * This class divides into tokens a property value. Token separator is ","
-     * but commas into the property value are escaped using the backslash in
-     * front.
-     */
-    static class PropertiesTokenizer extends StringTokenizer
-    {
-        /**
-         * Constructor.
-         * 
-         * @param string A String.
-         */
-        public PropertiesTokenizer(String string)
-        {
-            super(string, String.valueOf(DELIMITER));
-        }
-
-        /**
-         * Get next token.
-         * 
-         * @return A String.
-         */
-        public String nextToken()
-        {
-            StringBuffer buffer = new StringBuffer();
-
-            while (hasMoreTokens())
-            {
-                String token = super.nextToken();
-                if (token.endsWith("\\"))
-                {
-                    buffer.append(token.substring(0, token.length() - 1));
-                    buffer.append(DELIMITER);
-                }
-                else
-                {
-                    buffer.append(token);
-                    break;
-                }
-            }
-            return buffer.toString().trim();
-        }
-    } // class PropertiesTokenizer
 
 }

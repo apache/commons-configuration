@@ -365,7 +365,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     public void setProperty(String key, Object value)
     {
         Iterator itNodes = fetchNodeList(key).iterator();
-        Iterator itValues = fetchInsertIterator(value);
+        Iterator itValues = PropertyConverter.toIterator(value, getDelimiter());
         while (itNodes.hasNext() && itValues.hasNext())
         {
             ((Node) itNodes.next()).setValue(itValues.next());

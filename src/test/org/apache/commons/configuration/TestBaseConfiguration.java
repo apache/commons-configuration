@@ -33,7 +33,7 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys will
  * throw Exceptions
  *
- * @version $Id: TestBaseConfiguration.java,v 1.18 2004/12/13 16:40:14 oheger Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.19 2004/12/14 17:03:51 ebourg Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -604,20 +604,6 @@ public class TestBaseConfiguration extends TestCase
         }
 
         fail("IllegalStateException should have been thrown for looped property references");
-    }
-
-    public void testSplit()
-    {
-        String s1 = "abc,xyz";
-        List tokens = config.split(s1);
-        assertEquals("number of tokens in '" + s1 + "'", 2, tokens.size());
-        assertEquals("1st token for '" + s1 + "'", "abc", tokens.get(0));
-        assertEquals("2nd token for '" + s1 + "'", "xyz", tokens.get(1));
-
-        String s2 = "abc\\,xyz";
-        tokens = config.split(s2);
-        assertEquals("number of tokens in '" + s2 + "'", 1, tokens.size());
-        assertEquals("1st token for '" + s2 + "'", "abc,xyz", tokens.get(0));
     }
 
     public void testGetHexadecimalValue()

@@ -25,10 +25,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.collections.iterators.IteratorChain;
+import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -36,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
  * A utility class to convert the configuration properties into any type.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/10/18 10:44:31 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/14 17:03:50 $
  * @since 1.1
  */
 public final class PropertyConverter
@@ -384,13 +389,14 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            String[] elements = split((String) value, "_");
+            List elements = split((String) value, '_');
+            int size = elements.size();
 
-            if (elements.length >= 1 && (elements[0].length() == 2 || elements[0].length() == 0))
+            if (size >= 1 && (((String) elements.get(0)).length() == 2 || ((String) elements.get(0)).length() == 0))
             {
-                String language = elements[0];
-                String country = elements.length >= 2 ? elements[1] : "";
-                String variant = elements.length >= 3 ? elements[2] : "";
+                String language = (String) elements.get(0);
+                String country = (String) ((size >= 2) ? elements.get(1) : "");
+                String variant = (String) ((size >= 3) ? elements.get(2) : "");
 
                 return new Locale(language, country, variant);
             }
@@ -406,34 +412,60 @@ public final class PropertyConverter
     }
 
     /**
-     * Split a string on the specified separator. To be removed when
+     * Split a string on the specified delimiter. To be removed when
      * commons-lang has a better replacement available (Tokenizer?).
      *
      * todo: replace with a commons-lang equivalent
      *
      * @param s          the string to split
-     * @param separator  the separator
+     * @param delimiter  the delimiter
      */
-    private static String[] split(String s, String separator)
+    static List split(String s, char delimiter)
     {
         if (s == null)
         {
-            return new String[0];
+            return new ArrayList();
         }
 
         List list = new ArrayList();
 
+        StringBuffer token = new StringBuffer();
         int begin = 0;
-        while (begin < s.length())
+        int end = 0;
+        while (begin <= s.length())
         {
-            int index = s.indexOf(separator, begin);
-            int end = index != -1 ? index : s.length();
-            list.add(s.substring(begin , end));
+            // find the next delimiter
+            int index = s.indexOf(delimiter, end);
 
-            begin = end + 1;
+            // move the end index at the end of the string if the delimiter is not found
+            end = (index != -1) ? index : s.length();
+
+            // extract the chunk
+            String chunk = s.substring(begin , end);
+
+            if (chunk.endsWith("\\") && end != s.length())
+            {
+                token.append(chunk.substring(0, chunk.length() - 1));
+                token.append(delimiter);
+            }
+            else
+            {
+                // append the chunk to the token
+                token.append(chunk);
+
+                // add the token to the list
+                list.add(token.toString().trim());
+
+                // reset the token
+                token = new StringBuffer();
+            }
+
+            // move to the next chunk
+            end = end + 1;
+            begin = end;
         }
 
-        return (String[]) list.toArray(new String[list.size()]);
+        return list;
     }
 
     /**
@@ -562,4 +594,61 @@ public final class PropertyConverter
             throw new ConversionException("The value " + value + " can't be converted to a Calendar");
         }
     }
+
+    /**
+     * Return an iterator over the simple values of a composite value. The value
+     * specified is handled depending on its type:
+     * <ul>
+     *   <li>Strings are checked for delimiter characters and splitted if necessary.</li>
+     *   <li>For collections the single elements are checked.</li>
+     *   <li>Arrays are treated like collections.</li>
+     *   <li>All other types are directly inserted.</li>
+     *   <li>Recursive combinations are supported, e.g. a collection containing array that contain strings.</li>
+     * </ul>
+     *
+     * @param value     the value to "split"
+     * @param delimiter the delimiter for String values
+     */
+    public static Iterator toIterator(Object value, char delimiter)
+    {
+        if (value == null)
+        {
+            return IteratorUtils.emptyIterator();
+        }
+        if (value instanceof String)
+        {
+            String s = (String) value;
+            if (s.indexOf(delimiter) > 0)
+            {
+                return split((String) value, delimiter).iterator();
+            }
+            else
+            {
+                return new SingletonIterator(value);
+            }
+        }
+        else if (value instanceof Collection)
+        {
+            return toIterator(((Collection) value).iterator(), delimiter);
+        }
+        else if (value.getClass().isArray())
+        {
+            return toIterator(IteratorUtils.arrayIterator(value), delimiter);
+        }
+        else if (value instanceof Iterator)
+        {
+            Iterator iterator = (Iterator) value;
+            IteratorChain chain = new IteratorChain();
+            while (iterator.hasNext())
+            {
+                chain.addIterator(toIterator(iterator.next(), delimiter));
+            }
+            return chain;
+        }
+        else
+        {
+            return new SingletonIterator(value);
+        }
+    }
+
 }
