@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<database>
+  <tables>
+    <table tableType="system">
+      <name>users</name>
+      <fields>
+        <field>
+	  <name>uid</name>
+	  <type>long</type>
+	</field>
+        <field>
+	  <name>uname</name>
+	  <type>java.lang.String</type>
+	</field>
+        <field>
+	  <name>firstName</name>
+	  <type>java.lang.String</type>
+	</field>
+        <field>
+	  <name>lastName</name>
+	  <type>java.lang.String</type>
+	</field>
+        <field>
+	  <name>email</name>
+	  <type>java.lang.String</type>
+	</field>
+      </fields>
+    </table>
+    <table tableType="application">
+      <name>documents</name>
+      <fields>
+        <field>
+	  <name>docid</name>
+	  <type>long</type>
+	</field>
+        <field>
+	  <name>name</name>
+	  <type>java.lang.String</type>
+	</field>
+        <field>
+	  <name>creationDate</name>
+	  <type>java.util.Date</type>
+	</field>
+        <field>
+	  <name>authorID</name>
+	  <type>long</type>
+	</field>
+        <field>
+	  <name>version</name>
+	  <type>int</type>
+	</field>
+      </fields>
+    </table>
+  </tables>
+</database>
