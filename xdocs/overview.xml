@@ -60,8 +60,9 @@
         Using the ConfigurationFactory, (see the Junit testcase "TestConfigurationFactory.java") you load
         up a digester xml file that specifies how to load up all the Configuration objects.  Here is 
         a sample one using the default digesterRules.xml file:
-        <source>
-<![CDATA[       
+      </p>
+
+      <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
@@ -69,9 +70,9 @@
   <properties fileName="conf/test.properties"/>
   <xml fileName="conf/test.xml"/>
 </configuration>
-]]>   
-        </source>
-        
+]]></source>
+
+      <p>
         What this says is that we are loading up all JNDI values under java:comp/env key, as well 
         as a properties file in conf/test.properties as well as a XML file in conf/test.xml.
         Please inspect the test cases and the files in the conf/ directory for more information on how
@@ -92,27 +93,23 @@
       each type of configuration!
       </p>
       <subsection name="Classic Properties File">
-        <source>
-<![CDATA[       
+        <source><![CDATA[
   <properties fileName="conf/test.properties"/>
-]]>   
-        </source>
+]]></source>
+
         <p>
       This configuration file is very simple.  You just need to specify the path to the property file.
       </p>
       </subsection>
       <subsection name="XML Properties File">
-        <source>
-<![CDATA[       
+        <source><![CDATA[
   <xml fileName="conf/test.xml"/>
-]]>   
-        </source>     
+]]></source>
         <p>
         The configuration is very similar to the classic properties file.  However, the xml file must be in a specific
         format.  Currently there is no DTD.
         </p>
-        <source>
-<![CDATA[       
+        <source><![CDATA[
 <baseElement>
   <element>value</element>
   <element2>
@@ -124,25 +121,21 @@
     <short>8</short>
   </test>
 </baseElement>
-]]>   
-        </source>         
+]]></source>
         <p>
         In the above example, the root element is ignored.  So to get the value "8", you would request from your 
         Configuration object the key "test.short".  The root element can be called anything.
         </p>
       </subsection>     
       <subsection name="JNDI Properties File">
-        <source>
-<![CDATA[       
+        <source><![CDATA[
   <jndi prefix="java:comp/env"/>
-]]>   
-        </source>     
+]]></source>
         <p>
         This configuration is very useful for setting environment specific settings like mail servers! The
         prefix tells the ConfigurationFactory what the root will be to look up your configuration settings. 
         </p>
-        <source>
-<![CDATA[      
+        <source><![CDATA[
     <env-entry>
         <env-entry-name>smtp</env-entry-name>
         <env-entry-value>127.0.0.1</env-entry-value>
@@ -154,9 +147,7 @@
         <env-entry-value>80</env-entry-value>
         <env-entry-type>java.lang.Short</env-entry-type>
     </env-entry>
-
-]]>   
-        </source>     
+]]></source>
         <p>
         <strong>Note!</strong>  If you have a property called "test.short" with spaces in it, then it will be translated
         as the key "test/short".  Therefore, you should NOT use spaces in the name of properties that

@@ -35,15 +35,13 @@
 				the properties are to be collected. The following listing shows
 				the content of this file:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
   <properties fileName="usergui.properties"/>
 </configuration>
-]]>
-			</source>
+]]></source>
 			<p>
 				Definition files for <code>ConfigurationFactory</code> are
 				normal XML files. The root element must be named
@@ -65,14 +63,12 @@
 				Just create a new instance and set the name of the definition
 				file with the <code>setConfigurationFileName()</code> method.
 			</p>
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 ConfigurationFactory factory = new ConfigurationFactory();
 URL configURL = new File("config.xml").toURL();
 factory.setConfigurationFileName(configURL.toString());
 Configuration config = factory.getConfiguration();
-]]>
-				</source>
+]]></source>
 			<p>
 				As this code fragment shows the file name passed to the factory
 				can be a full URL. This is also the recommended way of
@@ -86,14 +82,12 @@ Configuration config = factory.getConfiguration();
 				better approach) to load the file from the class path. This
 				could be done as follows:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 ConfigurationFactory factory = new ConfigurationFactory();
 URL configURL = getClass().getResource("/config.xml");
 factory.setConfigurationURL(configURL);
 Configuration config = factory.getConfiguration();
-]]>
-			</source>
+]]></source>
     	</subsection>
     	<subsection name="Accessing properties">
     		<p>
@@ -115,11 +109,9 @@ Configuration config = factory.getConfiguration();
     			property that is defined in the properties file shown earlier
     			the following code fragment can be used:
     		</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 String backColor = config.getString("color.background");
-]]>
-			</source>
+]]></source>
     	</subsection>
 	</section>
 	
@@ -137,8 +129,7 @@ String backColor = config.getString("color.background");
 				each XML document can be used to define configuration settings.
 				We start here with a rather simple one:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <gui-definition>
   <colors>
@@ -149,8 +140,7 @@ String backColor = config.getString("color.background");
   </colors>
   <rowsPerPage>15</rowsPerPage>
 </gui-definition>
-]]>
-			</source>
+]]></source>
 			<p>
 				(As becomes obvious, this tutorial does not bother with good
 				design of XML documents, the example file should rather 
@@ -167,29 +157,25 @@ String backColor = config.getString("color.background");
 				the new file. For XML documents the element <code>xml</code>
 				can be used so that we have now:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
   <properties fileName="usergui.properties"/>
   <xml fileName="gui.xml"/>
 </configuration>
-]]>
-			</source>
+]]></source>
 			<p>
 				The code for setting up the <code>ConfigurationFactory</code>
 				object remains the same. The following fragment shows how the
 				new properties can be accessed:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 String backColor = config.getString("color.background");
 String textColor = config.getString("color.text");
 String linkNormal = config.getString("color.link[@normal]");
 int rowsPerPage = config.getInt("rowsPerPage");
-]]>
-			</source>
+]]></source>
 			<p>
 				This listing demonstrates some important points of constructing
 				keys for accessing properties load from XML documents:

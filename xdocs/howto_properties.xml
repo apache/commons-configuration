@@ -21,12 +21,10 @@
     			application consists of a single properties file named 
     			<code>usergui.properties</code> with the following content:
     		</p>
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 #Properties definining the GUI
 colors.background=#FFFFFF
-]]>
-				</source>
+]]></source>
 			<p>
 				Note that this file complies to the typical format of
 				properties files.
@@ -35,12 +33,10 @@ colors.background=#FFFFFF
 				You can also have in a simple properties file various characters
 				that are typically escaped like \n, \t etc:
 			</p>
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 #Unescaped string that will be escaped
 test.unescape = This \n string \t contains \" escaped \\ characters
-]]>
-				</source>			
+]]></source>			
 		</subsection>
 	</section>
 	

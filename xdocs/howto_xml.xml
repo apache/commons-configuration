@@ -30,8 +30,7 @@
 				schema from its configuration. A XML document provides this
 				information. It could look as follows:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <database>
@@ -88,8 +87,7 @@
     </table>
   </tables>
 </database>
-]]>
-			</source>
+]]></source>
 			<p>
 				This XML is quite self explanatory; there is an arbitrary number
 				of table elements, each of it has a name and a list of fields.
@@ -97,8 +95,7 @@
 				To access the data stored in this document it must be included
 				in the configuration definition file:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
@@ -106,8 +103,7 @@
   <xml fileName="gui.xml"/>
   <xml fileName="tables.xml"/>
 </configuration>
-]]>
-			</source>
+]]></source>
 			<p>
 				The additional <code>xml</code> element causes the document
 				with the table definitions to be loaded. When we now want to
@@ -131,15 +127,13 @@
 				recognizes that there are multiple values for that property and
 				returns a collection with all these values. So we could write
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 Object prop = config.getProperty("tables.table.name");
 if(prop instanceof Collection)
 {
 	System.out.println("Number of tables: " + ((Collection) prop).size());
 }
-]]>
-			</source>
+]]></source>
 			<p>
 				An alternative to this code would be the <code>getList()</code>
 				method of <code>Configuration</code>. If a property is known to
@@ -171,8 +165,7 @@ if(prop instanceof Collection)
 				the configuration definition file has to be slightly altered.
 				It becomes:
 			</p>
-   			<source>
-<![CDATA[
+   			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
@@ -180,8 +173,7 @@ if(prop instanceof Collection)
   <xml fileName="gui.xml"/>
   <hierarchicalXml fileName="tables.xml"/>
 </configuration>
-]]>
-			</source>
+]]></source>
 			<p>
 				Note that one <code>xml</code> element was replaced by a
 				<code>hierarchicalXml</code> element. This element tells the configuration
@@ -293,8 +285,7 @@ if(prop instanceof Collection)
 			the database application has defined a specific XML file with a table
 			definition named <code>tasktables.xml</code>:
 		</p>
-   		<source>
-<![CDATA[
+   		<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <config>
@@ -332,8 +323,7 @@ if(prop instanceof Collection)
     </fields>
   </table>
 </config>
-]]>
-		</source>
+]]></source>
 		<p>
 			This file defines the structure of an additional table, which should be
 			added to the so far existing table definitions. To achieve this the
@@ -341,8 +331,7 @@ if(prop instanceof Collection)
 			that contains the include elements of all configuration sources which
 			are to be combined.
 		</p>
-		<source>
-<![CDATA[
+		<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- Configuration definition file that demonstrates the
      override and additional sections -->
@@ -358,8 +347,7 @@ if(prop instanceof Collection)
     <hierarchicalXml fileName="tasktables.xml" at="tables"/>
   </additional>
 </configuration>
-]]>
-		</source>
+]]></source>
 		<p>
 			Compared to the older versions of this file a couple of changes has been
 			done. One major difference is that the elements for including configuration

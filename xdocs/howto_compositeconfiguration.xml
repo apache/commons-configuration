@@ -20,15 +20,13 @@
     			Defaults are very simple.  You can just add them as your last configuration object, 
     			either through the ConfigurationFactory or manually:
     		</p>
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 Configuration defaults = new PropertiesConfiguration(fileToDefaults);
 Configuration otherProperties = new PropertiesConfiguration(fileToOtherProperties);
 CompositeConfiguration cc = new CompositeConfiguration();
 cc.addConfiguration(otherProperties);
 cc.addDefaults(fileToDefaults);
-]]>
-				</source>					
+]]></source>
 		</subsection>
 		
 		<subsection name="Saving Changes">
@@ -39,20 +37,17 @@ cc.addDefaults(fileToDefaults);
 				the constructor of the CompositeConfiguration what Configuration
 				to save the changes via.  
 			</p>
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 PropertiesConfiguration saveConfiguration = new PropertiesConfiguration(fileToSaveChangesIn);
 Configuration cc = new CompositeConfiguration(saveConfiguration);
 cc.setProperty("newProperty","new value");
 
 saveConfiguration.save();
-]]>
-				</source>				
+]]></source>
 			<p>
 				Alternatively, you can just request the
 				inMemoryConfiguration that stores the changes:
-    			<source>
-<![CDATA[
+    			<source><![CDATA[
 Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
 DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
 for (Iterator i = changes.getKeys().iterator();i.hasNext()){
@@ -60,10 +55,7 @@ for (Iterator i = changes.getKeys().iterator();i.hasNext()){
 	Object value = changes.get(key);
 	config.setProperty(key,value);
 }
-
-
-]]>
-				</source>				
+]]></source>
 			</p>
 		
 		</subsection>		
