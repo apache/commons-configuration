@@ -20,14 +20,13 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.14 2004/09/23 11:47:57 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
  */
 public class TestPropertiesConfiguration extends TestCase
 {
@@ -100,16 +99,6 @@ public class TestPropertiesConfiguration extends TestCase
     public void testList() throws Exception
     {
         List packages = conf.getList("packages");
-        // we should get 3 packages here
-        assertEquals(3, packages.size());
-    }
-
-    /**
-     * Tests <code>Vector</code> parsing.
-     */
-    public void testVector() throws Exception
-    {
-        Vector packages = conf.getVector("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }

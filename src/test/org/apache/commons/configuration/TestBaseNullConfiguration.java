@@ -22,7 +22,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
@@ -31,7 +30,7 @@ import junitx.framework.ObjectAssert;
  * Tests some basic functions of the BaseConfiguration class. Missing keys might
  * return null.
  *
- * @version $Id: TestBaseNullConfiguration.java,v 1.1 2004/09/20 19:46:26 henning Exp $
+ * @version $Id: TestBaseNullConfiguration.java,v 1.2 2004/10/18 21:38:45 epugh Exp $
  */
 public class TestBaseNullConfiguration extends TestCase
 {
@@ -333,30 +332,6 @@ public class TestBaseNullConfiguration extends TestCase
 		/*
 		 *  now test dan's new fix where we get the first scalar
 		 *  when we access a list valued property
-		 */
-		try
-		{
-			config.getString("number");
-		}
-		catch (NoSuchElementException nsse)
-		{
-			fail("Should return a string");
-		}
-	}
-
-	public void testGetVector()
-	{
-		config.addProperty("number", "1");
-		config.addProperty("number", "2");
-		Vector vector = config.getVector("number");
-		assertNotNull("The vector is null", vector);
-		assertEquals("Vector size", 2, vector.size());
-		assertTrue("The number 1 is missing from the vector", vector.contains("1"));
-		assertTrue("The number 2 is missing from the vector", vector.contains("2"));
-
-		/*
-		 *  now test dan's new fix where we get the first scalar
-		 *  when we access a vector valued property
 		 */
 		try
 		{

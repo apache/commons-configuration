@@ -21,12 +21,11 @@ import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.12 2004/10/18 14:05:23 ebourg Exp $
+ * @version $Id: Configuration.java,v 1.13 2004/10/18 21:38:45 epugh Exp $
  */
 public interface Configuration
 {
@@ -570,38 +569,4 @@ public interface Configuration
      *         object that is not a List.
      */
     List getList(String key, List defaultValue);
-
-    /**
-     * Get a Vector of strings associated with the given configuration key.
-     * If the key doesn't map to an existing object an empty Vector is returned.
-     *
-     * @param key The configuration key.
-     * @return The associated Vector.
-     *
-     * @deprecated This method is for compatibility with applications that
-     * use the pre-1.0 versions of commons-configuration. It will be removed
-     * post 1.0
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Vector.
-     */
-    Vector getVector(String key);
-
-    /**
-     * Get a Vector of strings associated with the given configuration key.
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
-     *
-     * @param key The configuration key.
-     * @param defaultValue The default value.
-     * @return The associated Vector.
-     *
-     * @deprecated This method is for compatibility with applications that
-     * use the pre-1.0 versions of commons-configuration. It will be removed
-     * post 1.0
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a Vector.
-     */
-    Vector getVector(String key, Vector defaultValue);
 }

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -28,7 +27,7 @@ import junit.framework.TestCase;
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.6 $, $Date: 2004/10/05 21:17:25 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/18 21:38:45 $
  */
 public class TestSubsetConfiguration extends TestCase
 {
@@ -126,17 +125,6 @@ public class TestSubsetConfiguration extends TestCase
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
         List list = subset.getList("abc", new ArrayList());
         assertEquals(3, list.size());
-    }
-
-    public void testGetVector()
-    {
-        Configuration conf = new BaseConfiguration();
-        conf.setProperty("test.abc", "value0,value1");
-        conf.addProperty("test.abc", "value3");
-
-        Configuration subset = new SubsetConfiguration(conf, "test", ".");
-        Vector vector = subset.getVector("abc", new Vector());
-        assertEquals(3, vector.size());
     }
 
     public void testGetParent()

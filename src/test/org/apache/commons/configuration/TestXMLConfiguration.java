@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -28,7 +27,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.14 2004/10/11 09:26:38 henning Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -248,17 +247,6 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("test.boolean[@value]", conf.getBoolean("test.boolean[@value]"));
     }
 
-    public void testAddVectorAttribute()
-    {
-        conf.addProperty("element3[@name]", "bar");
-
-        Vector vector = conf.getVector("element3[@name]");
-        assertNotNull("null vector", vector);
-        assertTrue("'foo' element missing", vector.contains("foo"));
-        assertTrue("'bar' element missing", vector.contains("bar"));
-        assertEquals("vector size", 2, vector.size());
-    }
-
     public void testAddList()
     {
         conf.addProperty("test.array", "value1");
@@ -269,18 +257,6 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("'value1' element missing", list.contains("value1"));
         assertTrue("'value2' element missing", list.contains("value2"));
         assertEquals("list size", 2, list.size());
-    }
-
-    public void testAddVector()
-    {
-        conf.addProperty("test.array", "value1");
-        conf.addProperty("test.array", "value2");
-
-        Vector vector = conf.getVector("test.array");
-        assertNotNull("null vector", vector);
-        assertTrue("'value1' element missing", vector.contains("value1"));
-        assertTrue("'value2' element missing", vector.contains("value2"));
-        assertEquals("vector size", 2, vector.size());
     }
 
     public void testGetComplexProperty()

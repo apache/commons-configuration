@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -31,7 +30,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: CompositeConfiguration.java,v 1.19 2004/10/05 22:56:58 ebourg Exp $
+ * @version $Id: CompositeConfiguration.java,v 1.20 2004/10/18 21:38:45 epugh Exp $
  */
 public class CompositeConfiguration extends AbstractConfiguration
 {
@@ -305,14 +304,6 @@ public class CompositeConfiguration extends AbstractConfiguration
         }
 
         return list;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public Vector getVector(String key, Vector defaultValue)
-    {
-        return new Vector(getList(key, defaultValue));
     }
 
     /**

@@ -17,7 +17,6 @@ package org.apache.commons.configuration;
  */
 
 import java.util.List;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 
@@ -26,7 +25,7 @@ import junit.framework.TestCase;
  * org.apache.commons.configuration.BasePropertiesConfiguration}
  * extensions.
  *
- * @version $Id: TestThreesomeConfiguration.java,v 1.2 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: TestThreesomeConfiguration.java,v 1.3 2004/10/18 21:38:45 epugh Exp $
  */
 public class TestThreesomeConfiguration extends TestCase
 {
@@ -48,16 +47,6 @@ public class TestThreesomeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
-     */
-    public void testVector1() throws Exception
-    {
-        Vector packages = conf.getVector("test.threesome.one");
-        // we should get 3 packages here
-        assertEquals(3, packages.size());
-    }
-
-    /**
      * Tests <code>List</code> parsing.
      */
     public void testList2() throws Exception
@@ -68,31 +57,11 @@ public class TestThreesomeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>Vector</code> parsing.
-     */
-    public void testVector2() throws Exception
-    {
-        Vector packages = conf.getVector("test.threesome.two");
-        // we should get 3 packages here
-        assertEquals(3, packages.size());
-    }
-
-    /**
      * Tests <code>List</code> parsing.
      */
     public void testList3() throws Exception
     {
         List packages = conf.getList("test.threesome.three");
-        // we should get 3 packages here
-        assertEquals(3, packages.size());
-    }
-
-    /**
-     * Tests <code>Vector</code> parsing.
-     */
-    public void testVector3() throws Exception
-    {
-        Vector packages = conf.getVector("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }

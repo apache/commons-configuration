@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Vector;
 
 import junit.framework.TestCase;
 
 /**
  * Test loading multiple configurations.
  *
- * @version $Id: TestCompositeConfiguration.java,v 1.14 2004/10/05 22:56:58 ebourg Exp $
+ * @version $Id: TestCompositeConfiguration.java,v 1.15 2004/10/18 21:38:45 epugh Exp $
  */
 public class TestCompositeConfiguration extends TestCase
 {
@@ -78,10 +77,7 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
         List l = cc.getList("packages");
-        assertTrue(l.contains("packagea"));
-
-        Vector v = cc.getVector("packages");
-        assertTrue(v.contains("packagea"));
+        assertTrue(l.contains("packagea"));       
     }
 
     public void testGetProperty() throws Exception
@@ -264,10 +260,6 @@ public class TestCompositeConfiguration extends TestCase
         // we should get 3 packages here
         assertEquals(3, packages.size());
 
-        Vector vpackages = cc.getVector("packages");
-        // we should get 3 packages here
-        assertEquals(3, vpackages.size());
-
         List defaultList = new ArrayList();
         defaultList.add("1");
         defaultList.add("2");
@@ -276,13 +268,6 @@ public class TestCompositeConfiguration extends TestCase
         // we should get 2 packages here
         assertEquals(2, packages.size());
 
-        Vector defaultVector = new Vector();
-        defaultVector.add("1");
-        defaultVector.add("2");
-
-        vpackages = cc.getVector("packages.which.dont.exist", defaultVector);
-        // we should get 2 packages here
-        assertEquals(2, vpackages.size());
     }
 
     /**
@@ -332,52 +317,6 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue("'value1' not found in the list", list.contains("value1"));
         assertTrue("'value2' not found in the list", list.contains("value2"));
         assertTrue("'value5' not found in the list", list.contains("value5"));
-    }
-
-    public void testGetVector()
-    {
-        Configuration conf1 = new BaseConfiguration();
-        conf1.addProperty("array", "value1");
-        conf1.addProperty("array", "value2");
-
-        Configuration conf2 = new BaseConfiguration();
-        conf2.addProperty("array", "value3");
-        conf2.addProperty("array", "value4");
-
-        cc.addConfiguration(conf1);
-        cc.addConfiguration(conf2);
-
-        // check the composite 'array' property
-        Vector vector = cc.getVector("array");
-        assertNotNull("null vector", vector);
-        assertEquals("vector size", 2, vector.size());
-        assertTrue("'value1' not found in the vector", vector.contains("value1"));
-        assertTrue("'value2' not found in the vector", vector.contains("value2"));
-
-        // add an element to the vector in the composite configuration
-        cc.addProperty("array", "value5");
-
-        List list = cc.getList("array");
-
-        for (Iterator it = list.iterator(); it.hasNext();)
-        {
-            Object value = it.next();
-        }
-
-        Vector lVector = cc.getVector("array");
-
-        for (Iterator it = lVector.iterator(); it.hasNext();)
-        {
-            Object value = it.next();
-        }
-
-        // test the new vector
-        vector = cc.getVector("array");
-        assertNotNull("null vector", vector);
-        assertEquals("vector size", 3, vector.size());
-        assertTrue("'value1' not found in the vector", vector.contains("value1"));
-        assertTrue("'value2' not found in the vector", vector.contains("value2"));
-        assertTrue("'value5' not found in the vector", vector.contains("value5"));
     }
 
     /**
