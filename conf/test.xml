@@ -19,4 +19,18 @@
     <test>
         <short>8</short>
     </test>
+	
+	<!-- list properties -->
+	<list>
+		<item name="one">one</item>
+		<item>two</item>
+	</list>
+	<list>
+		<item name="three">three</item>
+		<item>four</item>
+		<sublist>
+			<item>five</item>
+			<item>six</item>
+		</sublist>
+	</list>
 </configuration>

@@ -26,7 +26,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.5 2004/08/12 15:45:22 epugh Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.6 2004/08/12 16:53:52 epugh Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -61,6 +61,9 @@ public class TestXMLConfiguration extends TestCase
     {
         conf.clearProperty("element");
         assertEquals("element", null, conf.getProperty("element"));
+        
+        conf.clearProperty("list.item");
+        assertEquals("list.item", null, conf.getProperty("list.item"));
     }
 
     public void testGetAttribute() throws Exception
