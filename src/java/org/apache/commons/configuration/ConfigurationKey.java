@@ -35,7 +35,7 @@ import java.util.NoSuchElementException;
  * each part it can be checked whether it has an associated index.</p>
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationKey.java,v 1.5 2004/08/14 11:23:14 epugh Exp $
+ * @version $Id: ConfigurationKey.java,v 1.6 2004/11/19 19:26:48 oheger Exp $
  */
 public class ConfigurationKey implements Serializable
 {
@@ -172,7 +172,7 @@ public class ConfigurationKey implements Serializable
      * @param key the key
      * @return the key with removed attribute markers
      */
-    private static String removeAttributeMarkers(String key)
+    static String removeAttributeMarkers(String key)
     {
         return key.substring(ATTRIBUTE_START.length(), key.length() - ATTRIBUTE_END.length());
     }

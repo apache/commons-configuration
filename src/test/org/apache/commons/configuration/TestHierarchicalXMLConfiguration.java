@@ -27,7 +27,7 @@ import java.util.Iterator;
  *
  * @author Emmanuel Bourg
  * @author Mark Woodman
- * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.2 2004/09/06 13:12:04 epugh Exp $
+ * @version $Id: TestHierarchicalXMLConfiguration.java,v 1.3 2004/11/19 19:26:48 oheger Exp $
  */
 public class TestHierarchicalXMLConfiguration extends TestCase
 {
@@ -45,6 +45,15 @@ public class TestHierarchicalXMLConfiguration extends TestCase
 
     /** Test file path #2 **/
     private static final String TEST_FILE2 = TEST_DIR + File.separator + TEST_FILENAME2;
+    
+    /** Test file path #3.*/
+    private static final String TEST_FILE3 = TEST_DIR + File.separator + "test.xml";
+
+    /** File name for saving.*/
+    private static final String TEST_SAVENAME = "testhierarchicalsave.xml";
+
+    /** File path for saving.*/
+    private static final String TEST_SAVE = TEST_DIR + File.separator + TEST_SAVENAME;
 
     /** Instance config used for tests. */
     private HierarchicalXMLConfiguration config;
@@ -144,5 +153,24 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         }
         assertEquals("Config must contain only " + KEY_COUNT + " keys.", KEY_COUNT, count);
     }
-
+    
+    public void testSave() throws Exception
+    {
+        config.setFileName(TEST_FILE3);
+        config.load();
+        File saveFile = new File(TEST_SAVE);
+        config.setRootElementName("myconfig");
+        config.save(saveFile);
+        
+        config = new HierarchicalXMLConfiguration();
+        config.load(saveFile.toURL());
+        assertEquals("value", config.getProperty("element"));
+        assertEquals("I'm complex!", config.getProperty("element2.subelement.subsubelement"));
+        assertEquals(8, config.getInt("test.short"));
+        assertEquals("one", config.getString("list(0).item(0)[@name]"));
+        assertEquals("two", config.getString("list(0).item(1)"));
+        assertEquals("six", config.getString("list(1).sublist.item(1)"));
+        
+        assertTrue(saveFile.delete());
+    }
 }

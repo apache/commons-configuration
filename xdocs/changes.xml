@@ -8,6 +8,9 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+	  <action dev="oheger" type="add" issue="31130">
+		Added implementation of a save() method for HierarchicalXMLConfiguration.
+	  </action>
       <action dev="ebourg" type="update">
         Constructing a file based configuration with a File no longer throws
         an exception when the file doesn't exist.
@@ -25,12 +28,12 @@
         the configuration descriptor is in a JAR file (reported by Grant Ingersoll).
       </action>
 	  <action dev="oheger" type="fix" issue="32236">
-		Fixed NPE that where caused in the constructors of file based
+		Fixed NPE that were caused in the constructors of file based
 		configurations if an invalid file name was specified.
 	  </action>
 	  <action dev="oheger" type="add" issue="31797">
 		Added support for optional configuration sources in definition files for
-		ConfigurationFactory. A new required attribute allows to specify whether a
+		ConfigurationFactory. A new optional attribute allows to specify whether a
 		configuration source is mandatory or optional.
 	  </action>
       <action dev="ebourg" type="fix">

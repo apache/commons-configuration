@@ -22,10 +22,22 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Iterator;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Attr;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -46,11 +58,36 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.5 $, $Date: 2004/10/18 15:45:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/19 19:26:48 $
  */
 public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
+    /** Constant for the default root element name.*/
+    private static final String DEFAULT_ROOT_NAME = "configuration";
+    
     private FileConfiguration delegate = new FileConfigurationDelegate();
+    
+    /** Stores the name of the root element.*/
+    private String rootElementName;
+    
+    /**
+     * Returns the name of the root element.
+     * @return the name of the root element
+     */
+    public String getRootElementName()
+    {
+        return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
+    }
+    
+    /**
+     * Sets the name of the root element. This name is used when this
+     * configuration object is stored in an XML file.
+     * @param name the name of the root element
+     */
+    public void setRootElementName(String name)
+    {
+        rootElementName = name;
+    }
 
     /**
      * Initializes this configuration from an XML document.
@@ -121,7 +158,69 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
             }
         }
     }
-
+    
+    /**
+     * Creates a DOM document from the internal tree of configuration nodes.
+     * @return the new document
+     * @throws ConfigurationException if an error occurs
+     */
+    protected Document createDocument() throws ConfigurationException
+    {
+        try
+        {
+            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document document = builder.newDocument();
+            Element rootElem = document.createElement(getRootElementName());
+            document.appendChild(rootElem);
+            constructDOM(document, getRoot(), rootElem);
+            return document;
+        }  /* try */
+        catch(DOMException domEx)
+        {
+            throw new ConfigurationException(domEx);
+        }
+        catch(ParserConfigurationException pex)
+        {
+            throw new ConfigurationException(pex);
+        }
+    }
+    
+    /**
+     * Creates a DOM from the tree of configuration nodes.
+     * @param document the document
+     * @param node the actual node
+     * @param element the actual XML element
+     * @throws DOMException if an error occurs
+     */
+    private void constructDOM(Document document, Node node, Element element)
+    throws DOMException
+    {
+        for(Iterator it = node.getChildren().iterator(); it.hasNext();)
+        {
+            Node child = (Node) it.next();
+            if(ConfigurationKey.isAttributeKey(child.getName()))
+            {
+                if (child.getValue() != null)
+                {
+                    element.setAttribute(ConfigurationKey.removeAttributeMarkers(
+                            child.getName()), child.getValue().toString());
+                }
+            }
+            else
+            {
+                Element childElem = document.createElement(child.getName());
+                if(child.getValue() != null)
+                {
+                    Text text = document.createTextNode(child.getValue().toString());
+                    childElem.appendChild(text);
+                    
+                }
+                constructDOM(document, child, childElem);
+                element.appendChild(childElem);
+            }
+        }
+    }
+    
     public void load() throws ConfigurationException
     {
         delegate.load();
@@ -195,10 +294,29 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
         delegate.save(out, encoding);
     }
 
-    public void save(Writer out) throws ConfigurationException
-    {
-        throw new UnsupportedOperationException("Can't save HierarchicalXMLConfigurations");
-    }
+        /**
+         * Saves the configuration to the specified writer.
+         * 
+         * @param writer
+         *            the writer used to save the configuration
+         * @throws ConfigurationException if an error occurs
+         */
+        public void save(Writer writer) throws ConfigurationException
+        {
+            try 
+            {
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                Source source = new DOMSource(createDocument());
+                Result result = new StreamResult(writer);
+    
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.transform(source, result);
+            } 
+            catch (TransformerException e) 
+            {
+                throw new ConfigurationException(e.getMessage(), e);
+            }
+         }
 
     public String getFileName()
     {
