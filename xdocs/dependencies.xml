@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<document>
+
+    <properties>
+        <title>Runtime dependencies</title>
+        <author email="ebourg@apache.org">Emmanuel Bourg</author>
+    </properties>
+
+    <body>
+
+        <section name="Runtime dependencies">
+
+            <p>The following is the list of dependencies required to run each feature of Commons Configuration:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th width="30%">Component</th>
+                        <th>Dependencies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Core</td>
+                        <td>
+                            Java 1.3<br/>
+                            commons-collections<br/>
+                            commons-lang
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>ConfigurationFactory</td>
+                        <td>
+                            commons-logging<br/>
+                            commons-digester<br/>
+                            JDK 1.4 or xml-apis
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DatabaseConfiguration</td>
+                        <td>
+                            commons-logging<br/>
+                            JDBC 3.0 (Java 1.4 or jdbc2_0-stdext.jar)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>XMLConfiguration, HierarchicalXMLConfiguration</td>
+                        <td>Java 1.4 or (xml-apis + xerces)</td>
+                    </tr>
+                    <tr>
+                        <td>JNDIConfiguration</td>
+                        <td>commons-logging</td>
+                    </tr>
+                    <tr>
+                        <td>ConfigurationDynaBean</td>
+                        <td>
+                            commons-beanutils<br/>
+                            commons-logging
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </section>
+
+    </body>
+
+</document>
