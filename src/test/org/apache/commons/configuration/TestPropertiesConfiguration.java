@@ -27,7 +27,7 @@ import junit.framework.TestCase;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.13 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.14 2004/09/23 11:47:57 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestCase
 {
@@ -77,6 +77,21 @@ public class TestPropertiesConfiguration extends TestCase
     {
         String loaded = conf.getString("include.loaded");
         assertEquals("true", loaded);
+    }
+
+    public void testSetInclude() throws Exception
+    {
+        // change the include key
+        PropertiesConfiguration.setInclude("import");
+
+        // load the configuration
+        PropertiesConfiguration conf = new PropertiesConfiguration();
+        conf.load("conf/test.properties");
+
+        // restore the previous value for the other tests
+        PropertiesConfiguration.setInclude("include");
+
+        assertNull(conf.getString("include.loaded"));
     }
 
     /**
@@ -183,6 +198,25 @@ public class TestPropertiesConfiguration extends TestCase
         pc.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
+    }
+
+    public void testLoadFromJAR() throws Exception
+    {
+        conf = new PropertiesConfiguration();
+        conf.setIncludesAllowed(true);
+        conf.setFileName("test-jar.properties");
+        conf.load();
+
+        assertEquals("jar", conf.getProperty("configuration.location"));
+        assertEquals("property in an included file", "jar", conf.getProperty("include.location"));
+    }
+
+    public void testLoadFromFile() throws Exception
+    {
+        File file = new File("conf/test.properties");
+        conf = new PropertiesConfiguration(file);
+
+        assertEquals("true", conf.getString("configuration.loaded"));
     }
 
     public void testGetStringWithEscapedChars()
