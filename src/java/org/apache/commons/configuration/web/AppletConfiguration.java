@@ -28,7 +28,8 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision: 1.1 $, $Date: 2004/10/14 09:54:35 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/14 15:54:06 $
+ * @since 1.1
  */
 public class AppletConfiguration extends AbstractConfiguration
 {
