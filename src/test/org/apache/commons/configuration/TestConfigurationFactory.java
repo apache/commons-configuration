@@ -56,13 +56,17 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.util.Collection;
+
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration.exception.ConfigurationLoadException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Test the ConfigurationFactory.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: TestConfigurationFactory.java,v 1.3 2004/01/16 17:31:39 epugh Exp $
+ * @version $Id: TestConfigurationFactory.java,v 1.4 2004/01/23 11:52:36 epugh Exp $
  */
 public class TestConfigurationFactory extends TestCase
 {
@@ -73,6 +77,7 @@ public class TestConfigurationFactory extends TestCase
     private File testDigesterFileNamespaceAware = new File("conf/testDigesterConfigurationNamespaceAware.xml");
     private File testDigesterFileBasePath = new File("conf/testDigesterConfigurationBasePath.xml");
     private File testDigesterFileEnhanced = new File("conf/testDigesterConfiguration2.xml");
+    private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
     private String testBasePath = new File("conf").getAbsolutePath();
 
@@ -173,6 +178,18 @@ public class TestConfigurationFactory extends TestCase
     {
         configurationFactory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
+    }
+    
+    public void testThrowingConfigurationInitializationException() throws Exception
+	{
+    	configurationFactory.setConfigurationFileName(testDigesterBadXML.toString());
+    	try {
+    		Configuration c = configurationFactory.getConfiguration();
+    		fail("Should have throw an Exception");
+    	}
+    	catch (ConfigurationLoadException cle){
+    		assertTrue(cle.getCause() instanceof SAXParseException);
+    	}
     }
     
     private void checkUnionConfig() throws Exception

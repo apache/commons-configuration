@@ -53,6 +53,7 @@ package org.apache.commons.configuration;
  * <http://www.apache.org/>.
  */
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
@@ -60,6 +61,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import org.apache.commons.configuration.exception.ConfigurationLoadException;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreationFactory;
@@ -79,7 +81,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: ConfigurationFactory.java,v 1.4 2004/01/23 11:08:56 epugh Exp $
+ * @version $Id: ConfigurationFactory.java,v 1.5 2004/01/23 11:52:36 epugh Exp $
  */
 public class ConfigurationFactory implements BasePathLoader
 {
@@ -144,17 +146,25 @@ public class ConfigurationFactory implements BasePathLoader
      * @throws Exception A generic exception that we had trouble during the
      * loading of the configuration data.
      */
-    public Configuration getConfiguration() throws Exception
+    public Configuration getConfiguration() throws ConfigurationLoadException
     {
         Digester digester;
+        InputStream input = null;
         ConfigurationBuilder builder = new ConfigurationBuilder();
         URL url = getConfigurationURL();
+        try {
         if(url == null)
         {
             url = ConfigurationUtils.getURL(impliciteBasePath,
             getConfigurationFileName());
         }  /* if */
-        InputStream input = url.openStream();
+        input = url.openStream();
+        }
+        catch (Exception e)
+        {
+        	log.error("Exception caught opening stream to URL", e);
+        	throw new ConfigurationLoadException("Exception caught opening stream to URL",e);
+        }
 
         if (getDigesterRules() == null)
         {
@@ -177,11 +187,16 @@ public class ConfigurationFactory implements BasePathLoader
             digester.parse(input);
             input.close();
         }
-        catch (SAXException e)
+        catch (SAXException saxe)
         {
-            log.error("SAX Exception caught", e);
-            throw e;
+            log.error("SAX Exception caught", saxe);
+            throw new ConfigurationLoadException("SAX Exception caught",saxe);
         }
+        catch (IOException ioe)
+        {
+        	log.error("IO Exception caught", ioe);
+        	throw new ConfigurationLoadException("IO Exception caught",ioe);
+        }		
         return builder.getConfiguration();
     }
     /**

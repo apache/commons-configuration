@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Configuration test file that tests that bad
+	XML generates a SAXException that is properly
+	wrapped in a ConfigurationInitializationException -->
+
+<configuration>
+  <additional>
+    <dom4j className="org.apache.commons.configuration.HierarchicalDOM4JConfiguration" fileName="testHierarchicalDOM4JConfiguration.xml"/>
+   
+</configuration>
+
+  
+  
+
+
+

@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-dev-4" date="">
+	 <action dev="epugh" type="add">
+      	ConfigurationFactory now throws ConfigurationLoadException.
+     </action>       	
 	 <action dev="ebourg" type="add">
       	New DatabaseConfiguration that uses a database to store the properties. It supports 2 table structures :
       	<ul>
