@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * UnsupportedOperationException. The clear operations are supported but the
  * underlying JNDI data source is not changed.
  *
- * @version $Id: JNDIConfiguration.java,v 1.11 2004/04/28 22:58:58 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.12 2004/06/02 16:33:46 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -72,16 +72,16 @@ public class JNDIConfiguration extends AbstractConfiguration
      * values to the list of keys found.
      *
      * @param keys All the keys that have been found.
-     * @param enum An enumeration of all the elements found at a specific context
+     * @param parentContext The parent context
      * @param key What key we are building on.
      * @throws NamingException If JNDI has an issue.
      */
     private void recursiveGetKeys(List keys, Context parentContext, String key) throws NamingException
     {
-        NamingEnumeration enum = parentContext.list("");
-        while (enum.hasMoreElements())
+        NamingEnumeration enumeration = parentContext.list("");
+        while (enumeration.hasMoreElements())
         {
-            Object o = enum.next();
+            Object o = enumeration.next();
             
             NameClassPair nameClassPair = (NameClassPair) o;
             StringBuffer newKey = new StringBuffer();
@@ -167,13 +167,13 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
-    private Context getStartingContextPoint(List keys, Context parentContext, NamingEnumeration enum) throws NamingException
+    private Context getStartingContextPoint(List keys, Context parentContext, NamingEnumeration enumeration) throws NamingException
     {
         String keyToSearchFor = (String) keys.get(0);
         log.debug("Key to search for is " + keyToSearchFor);
-        while (enum.hasMoreElements())
+        while (enumeration.hasMoreElements())
         {            
-            NameClassPair nameClassPair = (NameClassPair) enum.next();
+            NameClassPair nameClassPair = (NameClassPair) enumeration.next();
             Object o = parentContext.lookup(nameClassPair.getName());
             log.debug(
                 "Binding for name: "
@@ -217,8 +217,8 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         try
         {
-            NamingEnumeration enum = getContext().list("");
-            return !enum.hasMore();
+            NamingEnumeration enumeration = getContext().list("");
+            return !enumeration.hasMore();
         }
         catch (NamingException ne)
         {
