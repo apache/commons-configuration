@@ -28,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.11 2004/09/22 17:17:30 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.12 2004/10/04 18:14:59 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -334,6 +334,14 @@ public class TestXMLConfiguration extends TestCase
         conf.load();
 
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
+    }
+
+    public void testSetProperty() throws Exception
+    {
+        conf.setProperty("element.string", "hello");
+
+        assertEquals("'element.string'", "hello", conf.getString("element.string"));
+        assertEquals("XML value of element.string", "hello", conf.getXmlProperty("element.string"));
     }
 
     public void testAddProperty()
