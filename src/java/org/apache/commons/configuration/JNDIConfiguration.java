@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 
 import javax.naming.Context;
@@ -40,7 +39,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.23 2004/12/03 02:07:18 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.24 2004/12/04 15:54:55 oheger Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
