@@ -7,6 +7,10 @@
 
   <body>
     <release version="1.0" date="IN CVS">
+      <action dev="ebourg" type="update">
+        All NamingEnumerations in JNDIConfiguraiton are now properly closed (Suggested
+        by Eric Jung).
+      </action>
       <action dev="ebourg" type="fix" issue="30799">
         Properties added to an XMLConfiguration are no longer duplicated in the
         resulting XML file.

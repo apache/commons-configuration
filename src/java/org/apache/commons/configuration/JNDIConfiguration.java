@@ -42,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
  * underlying JNDI data source is not changed.
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.18 2004/09/21 17:18:27 ebourg Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.19 2004/10/04 20:06:09 ebourg Exp $
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
@@ -132,33 +132,47 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     private void recursiveGetKeys(Set keys, Context context, String prefix) throws NamingException
     {
-        // iterates through the context's elements
-        NamingEnumeration elements = context.list("");
-        while (elements.hasMore())
+        NamingEnumeration elements = null;
+
+        try
         {
-            NameClassPair nameClassPair = (NameClassPair) elements.next();
-            String name = nameClassPair.getName();
-            Object object = context.lookup(name);
+            elements = context.list("");
 
-            // build the key
-            StringBuffer key = new StringBuffer();
-            key.append(prefix);
-            if (key.length() > 0)
+            // iterates through the context's elements
+            while (elements.hasMore())
             {
-                key.append(".");
-            }
-            key.append(name);
+                NameClassPair nameClassPair = (NameClassPair) elements.next();
+                String name = nameClassPair.getName();
+                Object object = context.lookup(name);
 
-            if (object instanceof Context)
-            {
-                // add the keys of the sub context
-                Context subcontext = (Context) object;
-                recursiveGetKeys(keys, subcontext, key.toString());
+                // build the key
+                StringBuffer key = new StringBuffer();
+                key.append(prefix);
+                if (key.length() > 0)
+                {
+                    key.append(".");
+                }
+                key.append(name);
+
+                if (object instanceof Context)
+                {
+                    // add the keys of the sub context
+                    Context subcontext = (Context) object;
+                    recursiveGetKeys(keys, subcontext, key.toString());
+                }
+                else
+                {
+                    // add the key
+                    keys.add(key.toString());
+                }
             }
-            else
+        }
+        finally
+        {
+            // close the enumeration
+            if (elements != null)
             {
-                // add the key
-                keys.add(key.toString());
+                elements.close();
             }
         }
     }
@@ -232,19 +246,31 @@ public class JNDIConfiguration extends AbstractConfiguration
         String key = (String) path.get(0);
 
         // search a context matching the key in the context's elements
-        NamingEnumeration elements = context.list("");
-        while (elements.hasMore())
+        NamingEnumeration elements = null;
+
+        try
         {
-            NameClassPair nameClassPair = (NameClassPair) elements.next();
-            String name = nameClassPair.getName();
-            Object object = context.lookup(name);
-
-            if (object instanceof Context && name.equals(key))
+            elements = context.list("");
+            while (elements.hasMore())
             {
-                Context subcontext = (Context) object;
+                NameClassPair nameClassPair = (NameClassPair) elements.next();
+                String name = nameClassPair.getName();
+                Object object = context.lookup(name);
 
-                // recursive search in the sub context
-                return getContext(path.subList(1, path.size()), subcontext);
+                if (object instanceof Context && name.equals(key))
+                {
+                    Context subcontext = (Context) object;
+
+                    // recursive search in the sub context
+                    return getContext(path.subList(1, path.size()), subcontext);
+                }
+            }
+        }
+        finally
+        {
+            if (elements != null)
+            {
+                elements.close();
             }
         }
 
@@ -268,8 +294,21 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         try
         {
-            NamingEnumeration enumeration = getBaseContext().list("");
-            return !enumeration.hasMore();
+            NamingEnumeration enumeration = null;
+
+            try
+            {
+                enumeration = getBaseContext().list("");
+                return !enumeration.hasMore();
+            }
+            finally
+            {
+                // close the enumeration
+                if (enumeration != null)
+                {
+                    enumeration.close();
+                }
+            }
         }
         catch (NamingException ne)
         {
