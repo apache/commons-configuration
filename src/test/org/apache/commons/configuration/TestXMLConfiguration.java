@@ -18,19 +18,22 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.2 2004/07/12 14:38:29 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.3 2004/07/13 14:10:06 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
     private String testBasePath = new File("conf").getAbsolutePath();
+    private File testSaveConf = new File("target/testsave.xml");
+
     private XMLConfiguration conf;
 
     protected void setUp() throws Exception
@@ -45,7 +48,7 @@ public class TestXMLConfiguration extends TestCase
 
     public void testGetAttribute() throws Exception
     {
-        assertEquals("element3{name}", "foo", conf.getProperty("element3[@name]"));
+        assertEquals("element3[@name]", "foo", conf.getProperty("element3[@name]"));
     }
 
     public void testClearAttribute() throws Exception
@@ -56,8 +59,13 @@ public class TestXMLConfiguration extends TestCase
 
     public void testSetAttribute() throws Exception
     {
+        // replace an existing attribute
         conf.setProperty("element3[@name]", "bar");
         assertEquals("element3[@name]", "bar", conf.getProperty("element3[@name]"));
+
+        // set a new attribute
+        conf.setProperty("foo[@bar]", "value");
+        assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
     }
 
     public void testAddAttribute() throws Exception
@@ -68,6 +76,18 @@ public class TestXMLConfiguration extends TestCase
         assertNotNull("null list", list);
         assertTrue("'foo' element missing", list.contains("foo"));
         assertTrue("'bar' element missing", list.contains("bar"));
+        assertEquals("list size", 2, list.size());
+    }
+
+    public void testAddList() throws Exception
+    {
+        conf.addProperty("test.array", "value1");
+        conf.addProperty("test.array", "value2");
+
+        List list = conf.getList("test.array");
+        assertNotNull("null list", list);
+        assertTrue("'value1' element missing", list.contains("value1"));
+        assertTrue("'value2' element missing", list.contains("value2"));
         assertEquals("list size", 2, list.size());
     }
 
@@ -122,5 +142,39 @@ public class TestXMLConfiguration extends TestCase
         config.addProperty("test.string", "hello");
 
         assertEquals("'test.string'", "hello", config.getString("test.string"));
+    }
+
+    public void testSave() throws Exception
+    {
+    	// remove the file previously saved if necessary
+        if(testSaveConf.exists()){
+    		assertTrue(testSaveConf.delete());
+    	}
+
+        // add an array of strings to the configuration
+    	conf.addProperty("string", "value1");
+        for (int i = 1; i < 5; i++)
+        {
+            conf.addProperty("test.array", "value" + i);
+        }
+
+        // add an array of strings in an attribute
+        for (int i = 1; i < 5; i++)
+        {
+            //conf.addProperty("test.attribute[@array]", "value" + i);
+            conf.addProperty("element3[@name]", "value" + i);
+        }
+
+        // save the configuration
+        conf.save(testSaveConf.getAbsolutePath());
+
+        // read the configuration and compare the properties
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFileName(testSaveConf.getAbsolutePath());
+        for (Iterator i = conf.getKeys(); i.hasNext();) {
+        	String key = (String) i.next();
+        	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+        	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
+        }
     }
 }
