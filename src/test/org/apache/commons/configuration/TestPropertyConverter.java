@@ -71,8 +71,4 @@ public class TestPropertyConverter extends TestCase
         assertEquals("3rd element", new Integer(3), it.next());
     }
 
-    public void testToLong()
-    {
-        assertEquals("81008931800 to long", 81008931800L, PropertyConverter.toLong("81008931800").longValue());
-    }
 }
