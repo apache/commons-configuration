@@ -45,7 +45,7 @@ import org.xml.sax.InputSource;
  *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Revision: 1.3 $, $Date: 2004/09/22 17:17:30 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 11:12:08 $
  */
 public class HierarchicalXMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
 {
@@ -237,6 +237,16 @@ public class HierarchicalXMLConfiguration extends HierarchicalConfiguration impl
     public void setURL(URL url)
     {
         delegate.setURL(url);
+    }
+
+    public void setAutoSave(boolean autoSave)
+    {
+        delegate.setAutoSave(autoSave);
+    }
+
+    public boolean isAutoSave()
+    {
+        return delegate.isAutoSave();
     }
 
     private class FileConfigurationDelegate extends AbstractFileConfiguration {

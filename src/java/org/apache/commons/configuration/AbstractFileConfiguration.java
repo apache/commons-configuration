@@ -37,7 +37,7 @@ import java.net.URL;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.4 $, $Date: 2004/10/04 21:45:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 11:12:08 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -45,6 +45,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     protected String fileName;
     protected String basePath;
     protected URL url;
+    protected boolean autoSave;
 
     /**
      * Load the configuration from the underlying URL. If the URL is not
@@ -430,5 +431,46 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
         // update the file name
         fileName = ConfigurationUtils.getFileName(url);
+    }
+
+    public void setAutoSave(boolean autoSave)
+    {
+        this.autoSave = autoSave;
+    }
+
+    public boolean isAutoSave()
+    {
+        return autoSave;
+    }
+
+    /**
+     * Save the configuration if the automatic persistence is enabled
+     * and if a file is specified.
+     */
+    protected void possiblySave()
+    {
+        if (autoSave && fileName != null)
+        {
+            try
+            {
+                save();
+            }
+            catch (ConfigurationException e)
+            {
+                throw new ConfigurationRuntimeException("Failed to auto-save", e);
+            }
+        }
+    }
+
+    protected void addPropertyDirect(String key, Object obj)
+    {
+        super.addPropertyDirect(key, obj);
+        possiblySave();
+    }
+
+    public void clearProperty(String key)
+    {
+        super.clearProperty(key);
+        possiblySave();
     }
 }

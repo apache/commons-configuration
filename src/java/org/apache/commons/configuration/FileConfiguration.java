@@ -27,7 +27,7 @@ import java.io.File;
  * A persistent configuration loaded and saved to a file.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.1 $, $Date: 2004/09/22 17:17:30 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/18 11:12:08 $
  * @since 1.0-rc2
  */
 public interface FileConfiguration extends Configuration
@@ -206,5 +206,21 @@ public interface FileConfiguration extends Configuration
      * @param url
      */
     void setURL(URL url);
+
+    /**
+     * Enable of disable the automatical saving of modified properties to the disk.
+     *
+     * @param autoSave <code>true</code> to enable, <code>false</code> to disable
+     * @since 1.1
+     */
+    void setAutoSave(boolean autoSave);
+
+    /**
+     * Tells if properties are automatically saved to the disk.
+     *
+     * @return <code>true</code> if auto-saving is enabled, <code>false</code> otherwise
+     * @since 1.1
+     */
+    boolean isAutoSave();
 
 }

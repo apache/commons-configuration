@@ -54,16 +54,13 @@ import org.xml.sax.InputSource;
  * <code>X.Y.Z[@attribute]</code>. The '@' symbol was chosen for consistency
  * with XPath.
  *
- * Setting property values will <b>NOT </b> automatically persist changes to
- * disk, unless <code>autoSave=true</code>.
- *
  * @since commons-configuration 1.0
  *
  * @author Jörg Schaible
- * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
- * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
- * @author Emmanuel Bourg
- * @version $Revision: 1.17 $, $Date: 2004/10/04 19:35:45 $
+ * @author <a href="mailto:kelvint@apache.org">Kelvin Tan</a>
+ * @author <a href="mailto:dlr@apache.org">Daniel Rall</a>
+ * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
+ * @version $Revision: 1.18 $, $Date: 2004/10/18 11:12:08 $
  */
 public class XMLConfiguration extends AbstractFileConfiguration
 {
@@ -82,11 +79,6 @@ public class XMLConfiguration extends AbstractFileConfiguration
      * The XML document from our data source.
      */
     private Document document;
-
-    /**
-     * If true, modifications are immediately persisted.
-     */
-    private boolean autoSave = false;
 
     /**
      * Creates an empty XML configuration.
@@ -220,7 +212,7 @@ public class XMLConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Calls super method, and also ensures the underlying {@linkDocument} is
+     * Calls super method, and also ensures the underlying {@link Document} is
      * modified so changes are persisted when saved.
      *
      * @param name
@@ -228,9 +220,8 @@ public class XMLConfiguration extends AbstractFileConfiguration
      */
     public void addProperty(String name, Object value)
     {
-        super.addProperty(name, value);
         addXmlProperty(name, value);
-        possiblySave();
+        super.addProperty(name, value);
     }
 
     Object getXmlProperty(String name)
@@ -425,9 +416,8 @@ public class XMLConfiguration extends AbstractFileConfiguration
      */
     public void clearProperty(String name)
     {
-        super.clearProperty(name);
         clearXmlProperty(name);
-        possiblySave();
+        super.clearProperty(name);
     }
 
     private void clearXmlProperty(String name)
@@ -492,35 +482,6 @@ public class XMLConfiguration extends AbstractFileConfiguration
                 child.removeAttribute(attName);
             }
         }
-    }
-
-    /**
-     * Save the configuration if the automatic persistence is enabled and a file
-     * is specified.
-     */
-    private void possiblySave()
-    {
-        if (autoSave && fileName != null)
-        {
-            try
-            {
-                save();
-            }
-            catch (ConfigurationException ce)
-            {
-                throw new ConfigurationRuntimeException("Failed to auto-save", ce);
-            }
-        }
-    }
-
-    /**
-     * If true, changes are automatically persisted.
-     *
-     * @param autoSave
-     */
-    public void setAutoSave(boolean autoSave)
-    {
-        this.autoSave = autoSave;
     }
 
     /**

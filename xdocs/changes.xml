@@ -8,6 +8,10 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add" issue="31532">
+        The "autoSave" feature of XMLConfiguration has been generalized
+        to all file based configurations.
+      </action>
       <action dev="ebourg" type="add" issue="28026">
         Numeric properties can now be specified in hexadecimal format,
         for example "number = 0xC5F0".
