@@ -39,7 +39,7 @@ import java.util.Set;
  * @see HierarchicalConfiguration
  *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: HierarchicalConfigurationConverter.java,v 1.4 2004/08/20 15:49:27 ebourg Exp $
+ * @version $Id: HierarchicalConfigurationConverter.java,v 1.5 2004/08/23 08:06:22 ebourg Exp $
  */
 abstract class HierarchicalConfigurationConverter
 {
@@ -71,10 +71,7 @@ abstract class HierarchicalConfigurationConverter
                 ConfigurationKey keyAct = new ConfigurationKey(key);
                 closeElements(keyLast, keyAct);
                 String elem = openElements(keyLast, keyAct, config, keySet);
-                if (elem != null)
-                {
-                	fireValue(elem, config.getProperty(key));
-                }
+               	fireValue(elem, config.getProperty(key));
                 keyLast = keyAct;
             }
 
@@ -165,22 +162,14 @@ abstract class HierarchicalConfigurationConverter
     protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
-
-        if(it.hasNext())
+    	ConfigurationKey k = keyLast.commonKey(keyAct);
+        for (it.nextKey(); it.hasNext(); it.nextKey())
         {
-        	ConfigurationKey k = keyLast.commonKey(keyAct);
-	        for (it.nextKey(); it.hasNext(); it.nextKey())
-	        {
-	        	k.append(it.currentKey(true));
-	            elementStart(it.currentKey(true), config.getProperty(k.toString()));
-	            keySet.add(k.toString());
-	        }
-	        return it.currentKey(true);
+        	k.append(it.currentKey(true));
+            elementStart(it.currentKey(true), config.getProperty(k.toString()));
+            keySet.add(k.toString());
         }
-        else
-        {
-        	return null;
-        }
+        return it.currentKey(true);
     }
 
     /**
