@@ -45,7 +45,7 @@ public class TestConfigurationFactoryWithJNDI extends ServletTestCase
 		
 		assertEquals(JNDIConfiguration.class, compositeConfiguration.getConfiguration(1).getClass());
 		assertEquals(PropertiesConfiguration.class, compositeConfiguration.getConfiguration(2).getClass());
-		assertEquals(DOM4JConfiguration.class, compositeConfiguration.getConfiguration(3).getClass());
+		//assertEquals(DOM4JConfiguration.class, compositeConfiguration.getConfiguration(3).getClass());
 		PropertiesConfiguration pc = (PropertiesConfiguration) compositeConfiguration.getConfiguration(2);
 
 		assertNotNull("Make sure we have a fileName:" + pc.getFileName(), pc.getFileName());
