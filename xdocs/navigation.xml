@@ -9,8 +9,7 @@
 
   <body>
     <links>
-      <item name="Jakarta Commons"                   
-            href="http://jakarta.apache.org/commons/"/>
+      <item name="Jakarta Commons" href="http://jakarta.apache.org/commons/"/>
     </links>
 
 	<menu name="Configuration">
@@ -20,11 +19,12 @@
       <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
       <item name="XML Howto"                    href="/howto_xml.html"/>
       <item name="Composite Config Howto"       href="/howto_compositeconfiguration.html"/>
-      <item name="Roadmap"                      href="/tasks-report.html"/>      
+      <item name="Roadmap"                      href="/tasks-report.html"/>
+      <item name="Javadoc"                      href="/apidocs/index.html"/>
     </menu>
     <menu name="Extensions">
       <item name="Avalon Component" href="http://jakarta.apache.org/turbine/fulcrum/fulcrum-configuration/index.html"/>
-    </menu>    
+    </menu>
     
     &common-menus;
 
