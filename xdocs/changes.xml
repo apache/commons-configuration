@@ -8,6 +8,16 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+	  <action dev="oheger" type="add" issue="31136">
+		Access to the top leven element of the XML document is now provided. For
+		newly created configurations this element can be changed before the
+		document is written.
+	  </action>
+	  <action dev="oheger" type="update" issue="31429">
+		Merged the two XML related configuration classes into one new class
+		XMLConfiguration. This new class should provide the best of its
+		ancestors.
+	  </action>
       <action dev="ebourg" type="update">
         Replaced the PropertyTokenizer inner class in AbstractConfiguration
         with the split method in PropertyConverter. Also moved the method
