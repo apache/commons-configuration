@@ -4,21 +4,21 @@
   on date September 3 2004, time 1745-->
 
 <project default="jar" name="commons-configuration" basedir=".">
-  <property name="defaulttargetdir" value="target">
+  <property name="defaulttargetdir" value="${basedir}/target">
   </property>
-  <property name="libdir" value="target/lib">
+  <property name="libdir" value="${basedir}/target/lib">
   </property>
-  <property name="classesdir" value="target/classes">
+  <property name="classesdir" value="${basedir}/target/classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="testclassesdir" value="${basedir}/target/test-classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="testclassesdir" value="${basedir}/target/test-classes">
   </property>
-  <property name="testreportdir" value="target/test-reports">
+  <property name="testreportdir" value="${basedir}/target/test-reports">
   </property>
-  <property name="distdir" value="dist">
+  <property name="distdir" value="${basedir}/dist">
   </property>
-  <property name="javadocdir" value="dist/docs/api">
+  <property name="javadocdir" value="${basedir}/dist/docs/api">
   </property>
   <property name="final.name" value="commons-configuration-1.0-SNAPSHOT">
   </property>
@@ -188,8 +188,6 @@
   <target name="get-deps" unless="noget" depends="init">
     <!--Proxy settings works only with a JDK 1.2 and higher.-->
 
-    <setproxy proxyuser="ebourg" proxyport="8080" proxypassword="tl/2cm1x" proxyhost="172.16.0.82">
-    </setproxy>
     <get dest="${libdir}/commons-collections-3.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.0.jar">
     </get>
     <get dest="${libdir}/commons-lang-2.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.0.jar">
@@ -200,7 +198,9 @@
     </get>
     <get dest="${libdir}/commons-digester-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.5.jar">
     </get>
-    <get dest="${libdir}/commons-beanutils-1.7.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-1.7.jar">
+    <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-core-1.7.0.jar">
+    </get>
+    <get dest="${libdir}/commons-beanutils-bean-collections-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-bean-collections-1.7.0.jar">
     </get>
     <get dest="${libdir}/xerces-2.2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.2.1.jar">
     </get>
