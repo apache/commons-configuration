@@ -6,6 +6,8 @@
   </properties>
 
   <body>
+    <release version="1.0" date="IN CVS">
+    </release>
     <release version="1.0-rc2" date="2004-09-24">
       <action dev="ebourg" type="update">
         Unified the mechanisms for loading and saving file based configurations.

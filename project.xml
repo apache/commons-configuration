@@ -19,13 +19,13 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.31 2004/09/24 18:01:12 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.32 2004/09/24 20:52:57 epugh Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
 
   <id>commons-configuration</id>
-  <currentVersion>1.0-rc2</currentVersion>
+  <currentVersion>1.0-SNAPSHOT</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
