@@ -8,6 +8,11 @@
   <body>
 
     <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="add">
+        Added two methods copy(Configuration, Configuration) and
+        append(Configuration, Configuration) in ConfigurationUtils to copy
+        properties between configurations.
+      </action>
       <action dev="ebourg" type="update">
         Moved the constructors implementations from PropertiesConfiguration and
         XMLConfiguration to AbstractFileConfiguration.

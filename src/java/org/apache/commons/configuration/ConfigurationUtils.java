@@ -35,7 +35,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.9 $, $Date: 2004/09/23 11:42:00 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/19 13:41:44 $
  */
 public final class ConfigurationUtils
 {
@@ -95,6 +95,44 @@ public final class ConfigurationUtils
         StringWriter writer = new StringWriter();
         dump(configuration, new PrintWriter(writer));
         return writer.toString();
+    }
+
+    /**
+     * Copy all properties from the source configuration to the target
+     * configuration. Properties in the target configuration are replaced with
+     * the properties with the same key in the source configuration.
+     *
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 1.1
+     */
+    public static void copy(Configuration source, Configuration target)
+    {
+        Iterator keys = source.getKeys();
+        while (keys.hasNext())
+        {
+            String key = (String) keys.next();
+            target.setProperty(key, source.getProperty(key));
+        }
+    }
+
+    /**
+     * Append all properties from the source configuration to the target
+     * configuration. Properties in the source configuration are appended to
+     * the properties with the same key in the target configuration.
+     *
+     * @param source the source configuration
+     * @param target the target configuration
+     * @since 1.1
+     */
+    public static void append(Configuration source, Configuration target)
+    {
+        Iterator keys = source.getKeys();
+        while (keys.hasNext())
+        {
+            String key = (String) keys.next();
+            target.addProperty(key, source.getProperty(key));
+        }
     }
 
     /**

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,14 +14,20 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import junit.framework.TestCase;
+import junitx.framework.ListAssert;
 
 /**
  * Tests the ConfigurationUtils class
  *
+ * @version $Revision: 1.8 $, $Date: 2004/10/19 13:41:44 $
  */
 public class TestConfigurationUtils extends TestCase
 {
@@ -123,4 +127,48 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("file name for a valid URL " + url, "bar.xml", ConfigurationUtils.getFileName(url));
     }
 
+    public void testCopy()
+    {
+        // create the source configuration
+        Configuration conf1 = new BaseConfiguration();
+        conf1.addProperty("key1", "value1");
+        conf1.addProperty("key2", "value2");
+
+        // create the target configuration
+        Configuration conf2 = new BaseConfiguration();
+        conf2.addProperty("key1", "value3");
+        conf2.addProperty("key2", "value4");
+
+        // copy the source configuration into the target configuration
+        ConfigurationUtils.copy(conf1, conf2);
+
+        assertEquals("'key1' property", "value1", conf2.getProperty("key1"));
+        assertEquals("'key2' property", "value2", conf2.getProperty("key2"));
+    }
+
+    public void testAppend()
+    {
+        // create the source configuration
+        Configuration conf1 = new BaseConfiguration();
+        conf1.addProperty("key1", "value1");
+        conf1.addProperty("key2", "value2");
+
+        // create the target configuration
+        Configuration conf2 = new BaseConfiguration();
+        conf2.addProperty("key1", "value3");
+        conf2.addProperty("key2", "value4");
+
+        // append the source configuration to the target configuration
+        ConfigurationUtils.append(conf1, conf2);
+
+        List expected = new ArrayList();
+        expected.add("value3");
+        expected.add("value1");
+        ListAssert.assertEquals("'key1' property", expected, conf2.getList("key1"));
+
+        expected = new ArrayList();
+        expected.add("value4");
+        expected.add("value2");
+        ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
+    }
 }
