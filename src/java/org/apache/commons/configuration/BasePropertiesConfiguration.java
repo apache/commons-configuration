@@ -123,7 +123,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:jvanzyl@apache.org">Jason van Zyl</a>
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @version $Id: BasePropertiesConfiguration.java,v 1.15 2004/06/24 14:01:03 ebourg Exp $
+ * @version $Id: BasePropertiesConfiguration.java,v 1.16 2004/07/24 15:49:01 epugh Exp $
  */
 public abstract class BasePropertiesConfiguration extends BasePathConfiguration
 {
@@ -265,7 +265,10 @@ public abstract class BasePropertiesConfiguration extends BasePathConfiguration
                     writer.close();
                 }
             }
-            catch (IOException ioe2) { }
+            catch (IOException ioe2) 
+			{
+            	throw new ConfigurationException("Could not close writer while saving to file " + filename,ioe2);
+            }
         }
     }
 
