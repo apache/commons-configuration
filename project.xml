@@ -408,6 +408,13 @@
           <include>properties.dtd</include>
         </includes>
       </resource>
+      <resource>
+        <directory>${basedir}</directory>
+        <includes>
+          <include>NOTICE.txt</include>
+        </includes>
+        <targetPath>META-INF</targetPath>
+      </resource>
     </resources>
   </build>
   <reports>
