@@ -211,4 +211,17 @@ public class TestSubsetConfiguration extends TestCase
         }
         assertTrue(keys.isEmpty());
     }
+
+    public void testClear()
+    {
+        Configuration config = new BaseConfiguration();
+        config.setProperty("test.key1", "value1");
+        config.setProperty("testing.key2", "value1");
+
+        Configuration subset = config.subset("test");
+        subset.clear();
+
+        assertTrue("the subset is not empty", subset.isEmpty());
+        assertFalse("the parent configuration is empty", config.isEmpty());
+    }
 }

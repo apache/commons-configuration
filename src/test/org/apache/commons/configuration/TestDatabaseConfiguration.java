@@ -44,6 +44,8 @@ public class TestDatabaseConfiguration extends TestCase
 {
     public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
     public final String DATABASE_URL = "jdbc:hsqldb:target/test-classes/testdb";
+    public final String DATABASE_USERNAME = "sa";
+    public final String DATABASE_PASSWORD = "";
 
     private static HsqlDB hsqlDB = null;
 
@@ -67,8 +69,8 @@ public class TestDatabaseConfiguration extends TestCase
         BasicDataSource datasource = new BasicDataSource();
         datasource.setDriverClassName(DATABASE_DRIVER);
         datasource.setUrl(DATABASE_URL);
-        datasource.setUsername("sa");
-        datasource.setPassword("");
+        datasource.setUsername(DATABASE_USERNAME);
+        datasource.setPassword(DATABASE_PASSWORD);
 
         this.datasource = datasource;
         
@@ -118,7 +120,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testGetPropertyDirectSingle()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
 
         assertEquals("property1", "value1", config.getProperty("key1"));
         assertEquals("property2", "value2", config.getProperty("key2"));
@@ -127,7 +129,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testGetPropertyDirectMultiple()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
 
         assertEquals("property1", "value1", config.getProperty("key1"));
         assertEquals("property2", "value2", config.getProperty("key2"));
@@ -136,7 +138,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testClearPropertySingle()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
         config.clearProperty("key");
 
         assertFalse("property not cleared", config.containsKey("key"));
@@ -144,7 +146,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testClearPropertyMultiple()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
         config.clearProperty("key");
 
         assertFalse("property not cleared", config.containsKey("key"));
@@ -152,7 +154,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testClearSingle()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
         config.clear();
 
         assertTrue("configuration is not cleared", config.isEmpty());
@@ -160,7 +162,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testClearMultiple()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
         config.clear();
 
         assertTrue("configuration is not cleared", config.isEmpty());
@@ -168,7 +170,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testGetKeysSingle()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
         Iterator it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
@@ -177,7 +179,7 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testGetKeysMultiple()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
         Iterator it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
@@ -186,48 +188,59 @@ public class TestDatabaseConfiguration extends TestCase
 
     public void testContainsKeySingle()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
         assertTrue("missing key1", config.containsKey("key1"));
         assertTrue("missing key2", config.containsKey("key2"));
     }
 
     public void testContainsKeyMultiple()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
         assertTrue("missing key1", config.containsKey("key1"));
         assertTrue("missing key2", config.containsKey("key2"));
     }
 
     public void testIsEmptySingle()
     {
-        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+        Configuration config1 = new DatabaseConfiguration(datasource, "configuration", "key", "value");
         assertFalse("The configuration is empty", config1.isEmpty());
     }
 
     public void testIsEmptyMultiple()
     {
-        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
+        Configuration config1 = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "test");
         assertFalse("The configuration named 'test' is empty", config1.isEmpty());
 
-        DatabaseConfiguration config2 = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "testIsEmpty");
+        Configuration config2 = new DatabaseConfiguration(datasource, "configurations", "name", "key", "value", "testIsEmpty");
         assertTrue("The configuration named 'testIsEmpty' is not empty", config2.isEmpty());
     }
     
     public void testGetList()
     {
-        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
+        Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
         List list = config1.getList("key3");
         assertEquals(3,list.size());
     }    
     
     public void testGetKeys()
     {
-        DatabaseConfiguration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
+        Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", "key", "value");
         Iterator i = config1.getKeys();
         assertTrue(i.hasNext());
         Object key = i.next();
         assertEquals("key3",key.toString());
         assertFalse(i.hasNext());
-    }     
+    }
+
+    public void testClearSubset()
+    {
+        Configuration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
+
+        Configuration subset = config.subset("key1");
+        subset.clear();
+
+        assertTrue("the subset is not empty", subset.isEmpty());
+        assertFalse("the parent configuration is empty", config.isEmpty());
+    }
 
 }

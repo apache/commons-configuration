@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004 The Apache Software Foundation
+   Copyright 2004-2005 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -22,7 +22,14 @@
 
   <body>
 
-    <release version="1.1-rc2" date="in CVS">
+    <release version="1.1" date="in CVS">
+      <action dev="ebourg" type="update" issue="33925">
+        Fixed a ConcurrentModificationException thrown when calling clear()
+        on a SubsetConfiguration applied to a BaseConfiguration.
+      </action>
+    </release>
+
+    <release version="1.1-rc2" date="2005-03-06">
       <action dev="oheger" type="update" issue="33814">
         Updated documentation for FileConfiguration's load() methods. Fixed a
         problem in XMLConfiguration with the output of the save() method when
@@ -42,7 +49,7 @@
       </action>
     </release>
 
-    <release version="1.1-rc1" date="2004-02-13">
+    <release version="1.1-rc1" date="2005-02-13">
       <action dev="oheger" type="add" issue="33475">
         ConfigurationFactory now always configures digester to use the context
         classloader. This avoids problems in application server environments,
@@ -183,9 +190,6 @@
         AppletConfiguration, ServletConfiguration, ServletContextConfiguration,
         ServletRequestConfiguration, ServletFilterConfiguration.
       </action>
-    </release>
-
-    <release version="1.0.1-dev" date="in CVS">
     </release>
 
     <release version="1.0" date="2004-10-11">

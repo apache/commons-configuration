@@ -261,7 +261,14 @@ public abstract class AbstractConfiguration implements Configuration
         Iterator it = getKeys();
         while (it.hasNext())
         {
-            clearProperty((String) it.next());
+            String key = (String) it.next();
+            it.remove();
+
+            if (containsKey(key))
+            {
+                // workaround for Iterators that do not remove the property on calling remove()
+                clearProperty(key);
+            }
         }
     }
 
