@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -22,11 +22,12 @@ import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
 
 /**
- * A subset of another configuration. The new Configuration object contains
+ * <p>A subset of another configuration. The new Configuration object contains
  * every key from the parent Configuration that starts with prefix. The prefix
- * is removed from the keys in the subset.
- *
- * @see Configuration#subset(String)
+ * is removed from the keys in the subset.</p>
+ * <p>It is usually not necessary to use this class directly. Instead the
+ * <code>{@link Configuration#subset(String)}</code> method should be used,
+ * which will return a correctly initialized instance.</p>
  *
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$
