@@ -71,7 +71,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test for database stored configurations.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/01/22 11:41:23 $
+ * @version $Revision: 1.4 $, $Date: 2004/02/15 11:58:07 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -105,6 +105,7 @@ public class TestDatabaseConfiguration extends TestCase
     }
     
     protected void tearDown() throws SQLException{
+        datasource.getConnection().commit();
         datasource.getConnection().close();
     }
 
