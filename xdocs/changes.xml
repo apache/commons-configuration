@@ -7,6 +7,11 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="fix">
+        List values are now properly stored as comma separated values in the
+        Properties object returned by ConfigurationConverter.getProperties()
+        (Bug 29607)
+      </action>
       <action dev="ebourg" type="update">
         Introduced a ConversionException thrown when the value of a property is
         not compatible the type requested. It replaces the ClassCastException

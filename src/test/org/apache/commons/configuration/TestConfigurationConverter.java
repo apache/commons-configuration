@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,47 +14,82 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import java.util.ArrayList;
+package org.apache.commons.configuration;
+
 import java.util.List;
+import java.util.Properties;
 
 import junit.framework.TestCase;
 import org.apache.commons.collections.ExtendedProperties;
 
-
 /**
- * Tests the ConfigurationConverter class
+ * Tests the ConfigurationConverter class.
  *
- * @version $Id: TestConfigurationConverter.java,v 1.4 2004/02/27 17:41:34 epugh Exp $
+ * @author Martin Poeschl
+ * @author Emmanuel Bourg
+ * @version $Revision: 1.5 $, $Date: 2004/06/16 15:17:09 $
  */
 public class TestConfigurationConverter extends TestCase
 {
-    protected Configuration config = new BaseConfiguration();
-
-    public void testConverter()
+    public void testExtendedPropertiesToConfiguration()
     {
+        ExtendedProperties eprops = new ExtendedProperties();
+        eprops.setProperty("string", "teststring");
+        eprops.setProperty("int", "123");
+        eprops.addProperty("list", "item 1");
+        eprops.addProperty("list", "item 2");
+
+        Configuration config = ConfigurationConverter.getConfiguration(eprops);
+
+        assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
+        List item1 = config.getList("list");
+        assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+        assertEquals("This returns 123", config.getInt("int"), 123);
+    }
+
+    public void testPropertiesToConfiguration()
+    {
+        Properties props = new Properties();
+        props.setProperty("string", "teststring");
+        props.setProperty("int", "123");
+        props.setProperty("list", "item 1, item 2");
+
+        Configuration config = ConfigurationConverter.getConfiguration(props);
+
+        assertEquals("This returns 'teststring'", config.getString("string"), "teststring");
+        List item1 = config.getList("list");
+        assertEquals("This returns 'item 1'", (String) item1.get(0), "item 1");
+        assertEquals("This returns 123", config.getInt("int"), 123);
+    }
+
+    public void testConfigurationToExtendedProperties()
+    {
+        Configuration config = new BaseConfiguration();
         config.setProperty("string", "teststring");
         config.setProperty("int", "123");
-        List list = new ArrayList();
-        list.add("item 1");
-        list.add("item 2");
-        config.setProperty("list", list);
+        config.addProperty("list", "item 1");
+        config.addProperty("list", "item 2");
 
-        ExtendedProperties ep = ConfigurationConverter.getExtendedProperties(config);
+        ExtendedProperties eprops = ConfigurationConverter.getExtendedProperties(config);
 
-
-        assertEquals("This returns 'teststring'", ep.getString("string"),
-                "teststring");
-        List v = ep.getVector("list");
-        assertEquals("This returns 'item 1'", (String) v.get(0), "item 1");
-        assertEquals("This returns 123", ep.getInt("int"), 123);
-
-        Configuration c = ConfigurationConverter.getConfiguration(ep);
-
-
-        assertEquals("This returns 'teststring'", c.getString("string"),
-                "teststring");
-        List v1 = c.getList("list");
-        assertEquals("This returns 'item 1'", (String) v1.get(0), "item 1");
-        assertEquals("This returns 123", c.getInt("int"), 123);
+        assertEquals("This returns 'teststring'", eprops.getString("string"), "teststring");
+        List list = eprops.getVector("list");
+        assertEquals("This returns 'item 1'", (String) list.get(0), "item 1");
+        assertEquals("This returns 123", eprops.getInt("int"), 123);
     }
+
+    public void testConfigurationToProperties()
+    {
+        Configuration config = new BaseConfiguration();
+        config.addProperty("string", "teststring");
+        config.addProperty("array", "item 1");
+        config.addProperty("array", "item 2");
+
+        Properties props = ConfigurationConverter.getProperties(config);
+
+        assertNotNull("null properties", props);
+        assertEquals("'string' property", "teststring", props.getProperty("string"));
+        assertEquals("'array' property", "item 1, item 2", props.getProperty("array"));
+    }
+
 }

@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2004 The Apache Software Foundation.
  *
@@ -16,71 +14,83 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Properties;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.collections.ExtendedProperties;
 
-
 /**
- * Configuration converter. <br>
- * Helper class to convert between Configuration, ExtendedProperties and
- * standard Properties.
+ * Configuration converter. Helper class to convert between Configuration,
+ * ExtendedProperties and standard Properties.
  *
- * @version $Id: ConfigurationConverter.java,v 1.4 2004/06/02 16:42:24 ebourg Exp $
+ * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
+ * @version $Revision: 1.5 $, $Date: 2004/06/16 15:17:09 $
  */
 public class ConfigurationConverter
 {
     /**
      * Convert a ExtendedProperties class into a Configuration class.
      *
-     * @param ep ExtendedProperties object to convert
+     * @param eprops ExtendedProperties object to convert
      * @return Configuration created from the ExtendedProperties
      */
-    public static Configuration getConfiguration(ExtendedProperties ep)
+    public static Configuration getConfiguration(ExtendedProperties eprops)
     {
         Configuration config = new BaseConfiguration();
-        for (Iterator i = ep.getKeys(); i.hasNext();)
+
+        Iterator keys = eprops.getKeys();
+
+        while (keys.hasNext())
         {
-            String key = (String) i.next();
-            config.setProperty(key, ep.getProperty(key));
+            String key = (String) keys.next();
+            config.setProperty(key, eprops.getProperty(key));
         }
+
         return config;
     }
 
     /**
-     * Convert a standard properties class into a configuration class.
+     * Convert a standard Properties class into a configuration class.
      *
-     * @param p properties object to convert
+     * @param props properties object to convert
      * @return Configuration configuration created from the Properties
      */
-    public static Configuration getConfiguration(Properties p)
+    public static Configuration getConfiguration(Properties props)
     {
         Configuration config = new BaseConfiguration();
-        for (Enumeration e = p.keys(); e.hasMoreElements();)
+
+        Enumeration keys = props.keys();
+
+        while (keys.hasMoreElements())
         {
-            String key = (String) e.nextElement();
-            config.setProperty(key, p.getProperty(key));
+            String key = (String) keys.nextElement();
+            config.setProperty(key, props.getProperty(key));
         }
+
         return config;
     }
 
     /**
      * Convert a Configuration class into a ExtendedProperties class.
      *
-     * @param c Configuration object to convert
+     * @param config Configuration object to convert
      * @return ExtendedProperties created from the Configuration
      */
-    public static ExtendedProperties getExtendedProperties(Configuration c)
+    public static ExtendedProperties getExtendedProperties(Configuration config)
     {
         ExtendedProperties props = new ExtendedProperties();
-        for (Iterator i = c.getKeys(); i.hasNext();)
+
+        Iterator keys = config.getKeys();
+
+        while (keys.hasNext())
         {
-            String key = (String) i.next();
-            Object property = c.getProperty(key);
+            String key = (String) keys.next();
+            Object property = config.getProperty(key);
 
             // turn lists into vectors
             if (property instanceof List)
@@ -90,26 +100,41 @@ public class ConfigurationConverter
 
             props.setProperty(key, property);
         }
+
         return props;
     }
 
     /**
-     * Convert a Configuration class into a Properties class. Multvalue keys
-     * will be collapsed by {@link Configuration#getString}.
+     * Convert a Configuration class into a Properties class. Multivalue keys
+     * will be collapsed into comma separated values.
      *
-     * @param c Configuration object to convert
+     * @param config Configuration object to convert
      * @return Properties created from the Configuration
      */
-    public static Properties getProperties(Configuration c)
+    public static Properties getProperties(Configuration config)
     {
         Properties props = new Properties();
 
-        Iterator iter = c.getKeys();
+        Iterator keys = config.getKeys();
 
-        while (iter.hasNext())
+        while (keys.hasNext())
         {
-            String key = (String) iter.next();
-            props.setProperty(key, c.getString(key));
+            String key = (String) keys.next();
+            List list = config.getList(key);
+
+            // turn lists into a string
+            StringBuffer property = new StringBuffer();
+            Iterator it = list.iterator();
+            while (it.hasNext())
+            {
+                property.append(String.valueOf(it.next()));
+                if (it.hasNext())
+                {
+                    property.append(", ");
+                }
+            }
+
+            props.setProperty(key, property.toString());
         }
 
         return props;
