@@ -130,9 +130,11 @@
           <include name="**/*Test*.java">
           </include>
           <exclude name="**/TestBasePropertiesConfiguration.java">
-          </exclude>
+          </exclude>          
           <exclude name="**/NonStringTestHolder.java">
           </exclude>
+          <exclude name="**/TestJNDIConfiguration.java">
+          </exclude>          
         </fileset>
       </batchtest>
     </junit>
