@@ -4,21 +4,21 @@
   on date September 3 2004, time 1745-->
 
 <project default="jar" name="commons-configuration" basedir=".">
-  <property name="defaulttargetdir" value="${basedir}/target">
+  <property name="defaulttargetdir" value="target">
   </property>
-  <property name="libdir" value="${basedir}/target/lib">
+  <property name="libdir" value="target/lib">
   </property>
-  <property name="classesdir" value="${basedir}/target/classes">
+  <property name="classesdir" value="target/classes">
   </property>
-  <property name="testclassesdir" value="${basedir}/target/test-classes">
+  <property name="testclassesdir" value="target/test-classes">
   </property>
-  <property name="testclassesdir" value="${basedir}/target/test-classes">
+  <property name="testclassesdir" value="target/test-classes">
   </property>
-  <property name="testreportdir" value="${basedir}/target/test-reports">
+  <property name="testreportdir" value="target/test-reports">
   </property>
-  <property name="distdir" value="${basedir}/dist">
+  <property name="distdir" value="dist">
   </property>
-  <property name="javadocdir" value="${basedir}/dist/docs/api">
+  <property name="javadocdir" value="dist/docs/api">
   </property>
   <property name="final.name" value="commons-configuration-1.0-SNAPSHOT">
   </property>
