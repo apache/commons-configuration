@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2004 The Apache Software Foundation.
  *
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -33,11 +33,9 @@ import org.dom4j.io.SAXReader;
  * contained properties can be accessed using all methods supported by
  * the base class <code>HierarchicalProperties</code>.
  * 
- * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.5 2004/06/02 16:42:24 ebourg Exp $
+ * @version $Id: HierarchicalDOM4JConfiguration.java,v 1.6 2004/06/21 18:42:39 ebourg Exp $
  */
-public class HierarchicalDOM4JConfiguration
-    extends HierarchicalConfiguration
-    implements BasePathLoader
+public class HierarchicalDOM4JConfiguration extends HierarchicalConfiguration implements BasePathLoader
 {
     /** Stores the file name of the document to be parsed.*/
     private String file;
@@ -102,11 +100,13 @@ public class HierarchicalDOM4JConfiguration
      */
     public void load() throws ConfigurationException
     {
-    	try {
+    	try
+        {
     		load(ConfigurationUtils.getURL(getBasePath(), getFileName()));
     	}
-    	catch (MalformedURLException mue){
-    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName());
+    	catch (MalformedURLException e)
+        {
+    		throw new ConfigurationException("Could not load from " + getBasePath() + ", " + getFileName(), e);
     	}
     }
 
@@ -118,11 +118,13 @@ public class HierarchicalDOM4JConfiguration
      */
     public void load(URL url) throws ConfigurationException
     {
-    	try {
+    	try
+        {
     		initProperties(new SAXReader().read(url));
     	}
-    	catch (DocumentException de){
-    		throw new ConfigurationException("Could not load from " + url);
+    	catch (DocumentException e)
+        {
+    		throw new ConfigurationException("Could not load from " + url, e);
     	}
     }
 
