@@ -18,8 +18,8 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import junit.framework.TestCase;
@@ -28,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.12 2004/10/04 18:14:59 ebourg Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.13 2004/10/04 21:45:11 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -394,6 +394,17 @@ public class TestXMLConfiguration extends TestCase
         	assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
         	assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
+    }
+
+    public void testAutoSave() throws Exception
+    {
+        conf.setFile(new File("target/testsave.xml"));
+        conf.setAutoSave(true);
+        conf.setProperty("autosave", "ok");
+
+        // reload the configuration
+        XMLConfiguration conf2 = new XMLConfiguration(conf.getFile());
+        assertEquals("'autosave' property", "ok", conf2.getString("autosave"));
     }
 
     public void testParseElementsNames()

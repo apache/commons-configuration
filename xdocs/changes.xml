@@ -7,6 +7,11 @@
 
   <body>
     <release version="1.0" date="IN CVS">
+      <action dev="ebourg" type="fix">
+        Removed "file:" at the beginning of the base path when calling
+        setFile() on a FileConfiguration. This prevented auto saving an
+        XMLConfiguration loaded from a File (issue reported by Mark Roth).
+      </action>
       <action dev="ebourg" type="update">
         All NamingEnumerations in JNDIConfiguraiton are now properly closed (Suggested
         by Eric Jung).

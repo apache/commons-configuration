@@ -37,7 +37,7 @@ import java.net.URL;
  * and {@see AbstractFileConfiguration#save(Reader)}.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/09/23 11:49:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/04 21:45:10 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -423,6 +423,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
         // update the base path
         basePath = ConfigurationUtils.getBasePath(url);
+        if (basePath != null && basePath.startsWith("file:"))
+        {
+            basePath = basePath.substring(5);
+        }
 
         // update the file name
         fileName = ConfigurationUtils.getFileName(url);
