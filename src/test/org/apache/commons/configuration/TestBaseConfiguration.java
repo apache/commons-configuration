@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -27,7 +28,7 @@ import junit.framework.TestCase;
 /**
  * Tests some basic functions of the BaseConfiguration class
  *
- * @version $Id: TestBaseConfiguration.java,v 1.7 2004/02/27 17:41:34 epugh Exp $
+ * @version $Id: TestBaseConfiguration.java,v 1.8 2004/03/09 15:34:02 epugh Exp $
  */
 public class TestBaseConfiguration extends TestCase
 {
@@ -286,6 +287,7 @@ public class TestBaseConfiguration extends TestCase
         String prop = "hey, that's a test";
         String prop2 = "hey\\, that's a test";
         eprop.setProperty("prop.string", prop2);
+        eprop.setProperty("property.string", "hello");
 
         Configuration subEprop = eprop.subset("prop");
 
@@ -309,6 +311,14 @@ public class TestBaseConfiguration extends TestCase
         {
             fail("Should return a list");
         }
+        
+        Iterator it = subEprop.getKeys();
+        it.next();
+        assertFalse(it.hasNext());
+        
+        subEprop = eprop.subset("prop.");
+        it = subEprop.getKeys();
+        assertFalse(it.hasNext());
     }
 
     public void testInterpolation() throws Exception
