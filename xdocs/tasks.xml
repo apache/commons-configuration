@@ -6,28 +6,25 @@
   <body>
 
     <category name="Version 1.0" description="Roadmap to release the 1.0 version">
-        <task status="">
-Make PropertiesConfiguration a full replacement for 
-ExtendedProperties: add headers to .properties files (Bug 26092)
-        </task>
+        <task status="done">
+remaining bugs (26944, 26534, 27427)
+        </task>        
+        <task status="partly done">
+more documentation, examples and tutorials
+        </task>  
+        <task status="done">
+Base JNDIConfiguration on AbstractConfiguration
+        </task>                        
+    </category>
+
+    <category name="Version 1.1" description="">
         <task status="">
 comma separated values revamp
         </task>
         <task status="">
 add DatabaseConfiguration support to the ConfigurationFactory
-        </task>
-        <task status="">
-remaining bugs (26944, 26534, 27427)
         </task>        
-        <task status="">
-more documentation, examples and tutorials
-        </task>              
-    </category>
 
-    <category name="Version 1.1" description="">
-        <task status="">
-Base JNDIConfiguration on AbstractConfiguration
-        </task>    
         <task status="">
 reloadable configurations
         </task>
