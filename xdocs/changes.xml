@@ -7,6 +7,7 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+	  <action dev="epugh" type="fix" issue="29734">DatabaseConfiguration doesn't support List properties.</action>
       <action dev="ebourg" type="fix">
         Fixed several bugs related to XMLConfiguration:
         <ul>
