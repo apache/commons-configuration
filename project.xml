@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.19 2004/05/13 12:16:47 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.20 2004/05/13 12:29:12 epugh Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -269,13 +269,7 @@
     <dependency>
       <groupId>dbunit</groupId>
       <artifactId>dbunit</artifactId>    	
-      <version>1.5.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>exml</groupId>
-      <artifactId>exml</artifactId>       	
-      <version>dbunit1.5.1</version>
+      <version>2.0</version>
     </dependency>
 
     <dependency>
