@@ -31,6 +31,7 @@ import org.w3c.dom.CharacterData;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -47,7 +48,7 @@ import org.xml.sax.SAXException;
  * @since commons-configuration 1.0
  *
  * @author Jörg Schaible
- * @version $Revision: 1.4 $, $Date: 2004/06/16 18:13:53 $
+ * @version $Revision: 1.5 $, $Date: 2004/06/21 16:47:24 $
  */
 public class DOMConfiguration extends XMLConfiguration
 {
@@ -116,7 +117,7 @@ public class DOMConfiguration extends XMLConfiguration
     {
         File file = null;
         try
-            {
+        {
             file = new File(getBasePath(), getFileName());
             DocumentBuilder builder =
                 DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -159,30 +160,29 @@ public class DOMConfiguration extends XMLConfiguration
      * should supply the root element of the document.
      * @param hierarchy
      */
-    private void initProperties(final Element element, final StringBuffer hierarchy)
+    private void initProperties(Element element, StringBuffer hierarchy)
     {
-        final StringBuffer buffer = new StringBuffer();
-        final NodeList list = element.getChildNodes();
+        StringBuffer buffer = new StringBuffer();
+        NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
         {
-            final org.w3c.dom.Node w3cNode = list.item(i);
-            if(w3cNode instanceof Element)
+            Node node = list.item(i);
+            if (node instanceof Element)
             {
-                final StringBuffer subhierarchy =
-                    new StringBuffer(hierarchy.toString());
-                final Element child = (Element)w3cNode;
+                StringBuffer subhierarchy = new StringBuffer(hierarchy.toString());
+                Element child = (Element) node;
                 subhierarchy.append(child.getTagName());
                 processAttributes(subhierarchy.toString(), child);
                 initProperties(child,
                         new StringBuffer(subhierarchy.toString()).append('.'));
             }
-            else if(w3cNode instanceof CharacterData)
+            else if (node instanceof CharacterData)
             {
-                final CharacterData data = (CharacterData)w3cNode;
+                CharacterData data = (CharacterData)node;
                 buffer.append(data.getData());
             }
         }
-        final String text = buffer.toString().trim();
+        String text = buffer.toString().trim();
         if (text.length() > 0 && hierarchy.length() > 0)
         {
             super.addProperty(
@@ -199,15 +199,14 @@ public class DOMConfiguration extends XMLConfiguration
     private void processAttributes(String hierarchy, Element element)
     {
         // Add attributes as x.y{ATTRIB_START_MARKER}att{ATTRIB_END_MARKER}
-        final NamedNodeMap attributes = element.getAttributes();
+        NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
         {
-            final org.w3c.dom.Node w3cNode = attributes.item(i);
-            if (w3cNode instanceof Attr)
+            Node node = attributes.item(i);
+            if (node instanceof Attr)
             {
-                Attr attr = (Attr) w3cNode;
-                String attrName =
-                    hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
+                Attr attr = (Attr) node;
+                String attrName = hierarchy + '[' + ATTRIB_MARKER + attr.getName() + ']';
                 super.addProperty(attrName, attr.getValue());
             }
         }
@@ -264,13 +263,13 @@ public class DOMConfiguration extends XMLConfiguration
             }
 
             Element child = null;
-            final NodeList list = element.getChildNodes();
+            NodeList list = element.getChildNodes();
             for (int j = 0; j < list.getLength(); j++)
             {
-                final org.w3c.dom.Node w3cNode = list.item(j);
-                if (w3cNode instanceof Element)
+                Node node = list.item(j);
+                if (node instanceof Element)
                 {
-                    child = (Element) w3cNode;
+                    child = (Element) node;
                     if (eName.equals(child.getTagName()))
                     {
                         break;
@@ -290,7 +289,7 @@ public class DOMConfiguration extends XMLConfiguration
 
         if (attName == null)
         {
-            final CharacterData data = document.createTextNode((String) value);
+            CharacterData data = document.createTextNode((String) value);
             element.appendChild(data);
         }
         else
@@ -300,8 +299,8 @@ public class DOMConfiguration extends XMLConfiguration
     }
 
     /**
-     * Calls super method, and also ensures the underlying {@link
-     * Document} is modified so changes are persisted when saved.
+     * Calls super method, and also ensures the underlying {@link Document} is
+     * modified so changes are persisted when saved.
      *
      * @param name The name of the property to clear.
      */
@@ -329,12 +328,12 @@ public class DOMConfiguration extends XMLConfiguration
                 eName = eName.substring(0, index);
             }
 
-            final NodeList list = element.getChildNodes();
+            NodeList list = element.getChildNodes();
             for (int j = 0; j < list.getLength(); j++) {
-                final org.w3c.dom.Node w3cNode = list.item(j);
-                if (w3cNode instanceof Element)
+                Node node = list.item(j);
+                if (node instanceof Element)
                 {
-                    child = (Element) w3cNode;
+                    child = (Element) node;
                     if (eName.equals(child.getTagName()))
                     {
                         break;
@@ -411,6 +410,7 @@ public class DOMConfiguration extends XMLConfiguration
         	}
         }
     }
+
     /**
      * Returns the file.
      * @return File
@@ -431,9 +431,7 @@ public class DOMConfiguration extends XMLConfiguration
 
     public void setFileName(String fileName)
     {
-
         this.fileName = fileName;
-
     }
 
     /**
@@ -451,20 +449,21 @@ public class DOMConfiguration extends XMLConfiguration
     	return buffer.toString();
     }
 
-    private void toXML(final org.w3c.dom.Node element, final StringBuffer buffer)
+    private void toXML(Node element, StringBuffer buffer)
 	{
-    	final NodeList nodeList = element.getChildNodes();
-    	for (int i=0; i<nodeList.getLength(); i++) {
-    		final org.w3c.dom.Node node = nodeList.item(i);
+    	NodeList nodeList = element.getChildNodes();
+    	for (int i = 0; i < nodeList.getLength(); i++)
+        {
+    		Node node = nodeList.item(i);
     		if (node instanceof Element)
             {
     			buffer.append("<" + node.getNodeName());
                 if (node.hasAttributes())
                 {
-                	final NamedNodeMap map = node.getAttributes();
+                	NamedNodeMap map = node.getAttributes();
                     for (int j = 0; j < map.getLength(); j++)
                     {
-                    	final Attr attr = (Attr) map.item(j);
+                    	Attr attr = (Attr) map.item(j);
                         buffer.append(" " + attr.getName());
                         buffer.append("=\"" + attr.getValue() + "\"");
                     }
@@ -473,9 +472,9 @@ public class DOMConfiguration extends XMLConfiguration
     			toXML(node, buffer);
     			buffer.append("</" + node.getNodeName() + ">");
     		}
-    		else if(node instanceof CharacterData)
+    		else if (node instanceof CharacterData)
     		{
-    			final CharacterData data = (CharacterData)node;
+    			CharacterData data = (CharacterData) node;
     			buffer.append(data.getData());
     		}
     	}
