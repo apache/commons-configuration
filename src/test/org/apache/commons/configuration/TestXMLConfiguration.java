@@ -28,7 +28,7 @@ import junitx.framework.ArrayAssert;
 /**
  * test for loading and saving xml properties files
  *
- * @version $Id: TestXMLConfiguration.java,v 1.8 2004/08/16 22:16:31 henning Exp $
+ * @version $Id: TestXMLConfiguration.java,v 1.9 2004/09/03 16:36:21 ebourg Exp $
  */
 public class TestXMLConfiguration extends TestCase
 {
@@ -44,7 +44,7 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration(new File(testProperties));
     }
 
-    public void testGetProperty() throws Exception
+    public void testGetProperty()
     {
         assertEquals("value", conf.getProperty("element"));
     }
@@ -66,7 +66,7 @@ public class TestXMLConfiguration extends TestCase
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
         assertNull(key, conf.getXmlProperty(key));
-        
+
         // test single element
         conf.load();
         key = "clear.element";
@@ -83,21 +83,21 @@ public class TestXMLConfiguration extends TestCase
         key = "clear.element2[@id]";
         assertNotNull(key, conf.getProperty(key));
         assertNotNull(key, conf.getXmlProperty(key));
-        
+
         // test non-text/cdata element
         conf.load();
         key = "clear.comment";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
         assertNull(key, conf.getXmlProperty(key));
-        
+
         // test cdata element
         conf.load();
         key = "clear.cdata";
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
         assertNull(key, conf.getXmlProperty(key));
-        
+
         // test multiple sibling elements
         conf.load();
         key = "clear.list.item";
@@ -107,7 +107,7 @@ public class TestXMLConfiguration extends TestCase
         key = "clear.list.item[@id]";
         assertNotNull(key, conf.getProperty(key));
         assertNotNull(key, conf.getXmlProperty(key));
-        
+
         // test multiple, disjoined elements
         conf.load();
         key = "list.item";
@@ -120,7 +120,7 @@ public class TestXMLConfiguration extends TestCase
         // test non-leaf element
         Object property = conf.getXmlProperty("clear");
         assertNull(property);
-        
+
         // test non-existent element
         property = conf.getXmlProperty("e");
         assertNull(property);
@@ -128,29 +128,29 @@ public class TestXMLConfiguration extends TestCase
         // test non-existent element
         property = conf.getXmlProperty("element3[@n]");
         assertNull(property);
-        
+
         // test single element
         property = conf.getXmlProperty("element");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("value", property);
-        
+
         // test single attribute
         property = conf.getXmlProperty("element3[@name]");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("foo", property);
-        
+
         // test non-text/cdata element
         property = conf.getXmlProperty("test.comment");
         assertNull(property);
-        
+
         // test cdata element
         property = conf.getXmlProperty("test.cdata");
         assertNotNull(property);
         assertTrue(property instanceof String);
         assertEquals("<cdata value>", property);
-        
+
         // test multiple sibling elements
         property = conf.getXmlProperty("list.sublist.item");
         assertNotNull(property);
@@ -159,7 +159,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals(2, list.size());
         assertEquals("five", list.get(0));
         assertEquals("six", list.get(1));
-        
+
         // test multiple, disjoined elements
         property = conf.getXmlProperty("list.item");
         assertNotNull(property);
@@ -180,8 +180,8 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("one", list.get(0));
         assertEquals("three", list.get(1));
     }
-    
-    public void testGetAttribute() throws Exception
+
+    public void testGetAttribute()
     {
         assertEquals("element3[@name]", "foo", conf.getProperty("element3[@name]"));
     }
@@ -205,7 +205,7 @@ public class TestXMLConfiguration extends TestCase
         key = "clear.element2";
         assertNotNull(key, conf.getProperty(key));
         assertNotNull(key, conf.getXmlProperty(key));
-        
+
         // test multiple, disjoined attributes
         conf.load();
         key = "clear.list.item[@id]";
@@ -217,7 +217,7 @@ public class TestXMLConfiguration extends TestCase
         assertNotNull(key, conf.getXmlProperty(key));
     }
 
-    public void testSetAttribute() throws Exception
+    public void testSetAttribute()
     {
         // replace an existing attribute
         conf.setProperty("element3[@name]", "bar");
@@ -228,7 +228,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
     }
 
-    public void testAddAttribute() throws Exception
+    public void testAddAttribute()
     {
         conf.addProperty("element3[@name]", "bar");
 
@@ -239,7 +239,13 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("list size", 2, list.size());
     }
 
-    public void testAddVectorAttribute() throws Exception
+    public void testAddObjectAttribute()
+    {
+        conf.addProperty("test.boolean[@value]", Boolean.TRUE);
+        assertTrue("test.boolean[@value]", conf.getBoolean("test.boolean[@value]"));
+    }
+
+    public void testAddVectorAttribute()
     {
         conf.addProperty("element3[@name]", "bar");
 
@@ -250,7 +256,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("vector size", 2, vector.size());
     }
 
-    public void testAddList() throws Exception
+    public void testAddList()
     {
         conf.addProperty("test.array", "value1");
         conf.addProperty("test.array", "value2");
@@ -262,7 +268,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("list size", 2, list.size());
     }
 
-    public void testAddVector() throws Exception
+    public void testAddVector()
     {
         conf.addProperty("test.array", "value1");
         conf.addProperty("test.array", "value2");
@@ -274,12 +280,12 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("vector size", 2, vector.size());
     }
 
-    public void testGetComplexProperty() throws Exception
+    public void testGetComplexProperty()
     {
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
 
-    public void testSettingFileNames() throws Exception
+    public void testSettingFileNames()
     {
         conf = new XMLConfiguration();
         conf.setFileName(testProperties);
@@ -325,6 +331,13 @@ public class TestXMLConfiguration extends TestCase
         config.addProperty("test.string", "hello");
 
         assertEquals("'test.string'", "hello", config.getString("test.string"));
+    }
+
+    public void testAddObjectProperty()
+    {
+        // add a non string property
+        conf.addProperty("test.boolean", Boolean.TRUE);
+        assertTrue("'test.boolean'", conf.getBoolean("test.boolean"));
     }
 
     public void testSave() throws Exception

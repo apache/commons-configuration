@@ -7,6 +7,9 @@
 
   <body>
     <release version="1.0-rc2" date="in CVS">
+      <action dev="ebourg" type="fix" issue="30839">
+        Fixed a ClassCastException when adding a non String property to an XMLConfiguration.
+      </action>
       <action dev="ebourg" type="fix" issue="30655" due-to="Oliver Heger">
         Fixed the handling of attribute properties by HierarchicalConfigurationConverter.
       </action>

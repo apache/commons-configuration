@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
  * @author <a href="mailto:kelvint@apache.org">Kelvin Tan </a>
  * @author <a href="mailto:dlr@apache.org">Daniel Rall </a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.10 $, $Date: 2004/08/14 11:32:06 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/03 16:36:20 $
  */
 public class XMLConfiguration extends BasePathConfiguration {
     // For conformance with xpath
@@ -374,7 +374,7 @@ public class XMLConfiguration extends BasePathConfiguration {
         }
 
         if (attName == null) {
-            CharacterData data = document.createTextNode((String) value);
+            CharacterData data = document.createTextNode(String.valueOf(value));
             element.appendChild(data);
         } else {
             element.setAttribute(attName, (String) value);
@@ -427,10 +427,10 @@ public class XMLConfiguration extends BasePathConfiguration {
         Element child = document.createElement(nodes[nodes.length - 1]);
         parent.appendChild(child);
         if (attName == null) {
-            CharacterData data = document.createTextNode((String) value);
+            CharacterData data = document.createTextNode(String.valueOf(value));
             child.appendChild(data);
         } else {
-            child.setAttribute(attName, (String) value);
+            child.setAttribute(attName, String.valueOf(value));
         }
     }
 
