@@ -7,6 +7,15 @@
 
   <body>
     <release version="1.0rc1" date="2004-06-??">
+      <action dev="ebourg" type="fix">
+        Fixed several bugs related to XMLConfiguration:
+        <ul>
+          <li>30074 - Can't add a new property as an attribute in XMLConfiguration</li>
+          <li>30205 - XMLConfiguration doesn't support attribute names with a dot</li>
+          <li>30209 - XMLConfiguration doesn't ignore comments</li>
+          <li>30212 - XMLConfiguration.save() doesn't escape reserved characters</li>
+        </ul>
+      </action>
       <action dev="ebourg" type="add">
         Added save methods in XMLConfiguration similar to PropertiesConfiguration
         to save the configuration to another file (bug 29721).
