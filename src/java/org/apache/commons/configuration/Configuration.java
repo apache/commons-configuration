@@ -20,13 +20,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Properties;
 
 /**
  * Configuration interface.
  *
- * @version $Id: Configuration.java,v 1.8 2004/06/21 12:37:40 ebourg Exp $
+ * @version $Id: Configuration.java,v 1.9 2004/07/24 15:38:39 epugh Exp $
  */
 public interface Configuration
 {
