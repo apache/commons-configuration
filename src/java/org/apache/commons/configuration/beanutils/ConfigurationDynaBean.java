@@ -27,187 +27,277 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>The <tt>ConfigurationDynaBean</tt> dynamically reads and
- * writes configurations properties from a wrapped
- * configuration-collection
- * {@link org.apache.commons.configuration.Configuration}
- * instance. It also implements a {@link java.util.Map} interface
- * so that it can be used in JSP 2.0 Expression Language
- * expressions.</p>
+ * The <tt>ConfigurationDynaBean</tt> dynamically reads and writes
+ * configurations properties from a wrapped configuration-collection
+ * {@link org.apache.commons.configuration.Configuration} instance. It also
+ * implements a {@link java.util.Map} interface so that it can be used in
+ * JSP 2.0 Expression Language expressions.
  *
- * <p>The <code>ConfigurationDynaBean</code> maps nested and mapped
- * properties to the appropriate <code>Configuration</code> subset
- * using the
+ * <p>The <code>ConfigurationDynaBean</code> maps nested and mapped properties
+ * to the appropriate <code>Configuration</code> subset using the
  * {@link org.apache.commons.configuration.Configuration#subset}
- * method. Similarly, indexed properties reference lists of
- * configuration properties using the
+ * method. Similarly, indexed properties reference lists of configuration
+ * properties using the
  * {@link org.apache.commons.configuration.Configuration#getList(String)}
  * method. Setting an indexed property always throws an exception.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
+ * @version $Revision: 1.6 $, $Date: 2004/09/21 17:49:39 $
+ * @since 1.0-rc1
  */
-public class ConfigurationDynaBean implements DynaBean {
-
+public class ConfigurationDynaBean implements DynaBean
+{
     private final static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
     Configuration configuration;
 
-    public ConfigurationDynaBean(Configuration configuration) {
-        if(log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
+    public ConfigurationDynaBean(Configuration configuration)
+    {
+        if (log.isTraceEnabled()) log.trace("ConfigurationDynaBean(" + configuration + ")");
         this.configuration = configuration;
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, java.lang.Object)
      */
-    public void set(String name, Object value) {
-        if (log.isTraceEnabled()) log.trace("set("+name+","+value+")");
-        if (value == null) throw new NullPointerException("Error trying to set property to null.");
-        if (value instanceof List) {
+    public void set(String name, Object value)
+    {
+        if (log.isTraceEnabled())
+        {
+            log.trace("set(" + name + "," + value + ")");
+        }
+
+        if (value == null)
+        {
+            throw new NullPointerException("Error trying to set property to null.");
+        }
+
+        if (value instanceof List)
+        {
             List list = (List) value;
             Iterator iterator = list.iterator();
-            while(iterator.hasNext())
-                configuration.addProperty(name,iterator.next());
-        } else if (value instanceof int[]) {
+            while (iterator.hasNext())
+            {
+                configuration.addProperty(name, iterator.next());
+            }
+        }
+        else if (value instanceof int[])
+        {
             int[] array = (int[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Integer(array[i]));
-        } else if (value instanceof boolean[]) {
+            {
+                configuration.addProperty(name, new Integer(array[i]));
+            }
+        }
+        else if (value instanceof boolean[])
+        {
             boolean[] array = (boolean[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,Boolean.valueOf(array[i]));
-        } else if (value instanceof char[]) {
+            {
+                configuration.addProperty(name, Boolean.valueOf(array[i]));
+            }
+        }
+        else if (value instanceof char[])
+        {
             char[] array = (char[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Character(array[i]));
-        } else if (value instanceof byte[]) {
+            {
+                configuration.addProperty(name, new Character(array[i]));
+            }
+        }
+        else if (value instanceof byte[])
+        {
             byte[] array = (byte[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Byte(array[i]));
-        } else if (value instanceof short[]) {
+            {
+                configuration.addProperty(name, new Byte(array[i]));
+            }
+        }
+        else if (value instanceof short[])
+        {
             short[] array = (short[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Short(array[i]));
-        } else if (value instanceof int[]) {
+            {
+                configuration.addProperty(name, new Short(array[i]));
+            }
+        }
+        else if (value instanceof int[])
+        {
             int[] array = (int[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Integer(array[i]));
-        } else if (value instanceof long[]) {
+            {
+                configuration.addProperty(name, new Integer(array[i]));
+            }
+        }
+        else if (value instanceof long[])
+        {
             long[] array = (long[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Long(array[i]));
-        } else if (value instanceof float[]) {
+            {
+                configuration.addProperty(name, new Long(array[i]));
+            }
+        }
+        else if (value instanceof float[])
+        {
             float[] array = (float[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Float(array[i]));
-        } else if (value instanceof double[]) {
+            {
+                configuration.addProperty(name, new Float(array[i]));
+            }
+        }
+        else if (value instanceof double[])
+        {
             double[] array = (double[]) value;
             for (int i = 0; i < array.length; i++)
+            {
                 configuration.addProperty(name, new Double(array[i]));
-        } else if (value instanceof Object[]) {
+            }
+        }
+        else if (value instanceof Object[])
+        {
             Object[] array = (Object[]) value;
             for (int i = 0; i < array.length; i++)
-                configuration.addProperty(name,array[i]);
-        } else
+            {
+                configuration.addProperty(name, array[i]);
+            }
+        }
+        else
+        {
             configuration.setProperty(name, value);
+        }
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String)
      */
-    public Object get(String name) {
-        if (log.isTraceEnabled()) log.trace("get("+name+")");
+    public Object get(String name)
+    {
+        if (log.isTraceEnabled())
+        {
+            log.trace("get(" + name + ")");
+        }
+
         // get configuration property
         Object result = configuration.getProperty(name);
-        if (result == null) {
+        if (result == null)
+        {
             // otherwise attempt to create bean from configuration subset
             Configuration subset = configuration.subset(name);
             if (!subset.isEmpty())
+            {
                 result = new ConfigurationDynaBean(configuration.subset(name));
+            }
         }
-        if (log.isDebugEnabled()) log.debug(name+"=["+result+"]");
+
+        if (log.isDebugEnabled())
+        {
+            log.debug(name + "=[" + result + "]");
+        }
+
         if (result == null)
-            throw new IllegalArgumentException
-                ("Property '" + name +"' does not exist.");
+        {
+            throw new IllegalArgumentException("Property '" + name + "' does not exist.");
+        }
         return result;
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#contains(java.lang.String, java.lang.String)
      */
-    public boolean contains(String name, String key) {
+    public boolean contains(String name, String key)
+    {
         Configuration subset = configuration.subset(name);
         if (subset == null)
-            throw new IllegalArgumentException
-                    ("Mapped property '" + name +"' does not exist.");
+        {
+            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
+        }
+
         return subset.containsKey(key);
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String, int)
      */
-    public Object get(String name, int index) {
-        try {
+    public Object get(String name, int index)
+    {
+        try
+        {
             List list = configuration.getList(name);
             if (list.isEmpty())
-                throw new IllegalArgumentException
-                    ("Indexed property '" + name +"' does not exist.");
+            {
+                throw new IllegalArgumentException("Indexed property '" + name + "' does not exist.");
+            }
+
             return list.get(index);
-        } catch(ConversionException e) {
-            throw new IllegalArgumentException("Property '" + name +"' is not indexed.");
+        }
+        catch (ConversionException e)
+        {
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String, java.lang.String)
      */
-    public Object get(String name, String key) {
+    public Object get(String name, String key)
+    {
         Configuration subset = configuration.subset(name);
         if (subset == null)
-            throw new IllegalArgumentException
-                    ("Mapped property '" + name +"' does not exist.");
+        {
+            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
+        }
+
         return subset.getProperty(key);
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#getDynaClass()
      */
-    public DynaClass getDynaClass() {
+    public DynaClass getDynaClass()
+    {
         return new ConfigurationDynaClass(configuration);
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#remove(java.lang.String, java.lang.String)
      */
-    public void remove(String name, String key) {
+    public void remove(String name, String key)
+    {
         Configuration subset = configuration.subset(name);
         if (subset == null)
-            throw new IllegalArgumentException
-                    ("Mapped property '" + name +"' does not exist.");
+        {
+            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
+        }
         subset.setProperty(key, null);
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, int, java.lang.Object)
      */
-    public void set(String name, int index, Object value) {
-        try {
+    public void set(String name, int index, Object value)
+    {
+        try
+        {
             List list = configuration.getList(name);
             if (list == null)
-                throw new IllegalArgumentException
-                    ("Property '" + name +"' does not exist.");
-            list.set(index,value);
-        } catch(ConversionException e) {
-            throw new IllegalArgumentException
-                ("Property '" + name +"' is not indexed.");
+            {
+                throw new IllegalArgumentException("Property '" + name + "' does not exist.");
+            }
+
+            list.set(index, value);
+        }
+        catch (ConversionException e)
+        {
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
     }
 
     /**
      * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, java.lang.String, java.lang.Object)
      */
-    public void set(String name, String key, Object value) {
-        configuration.setProperty(name+"."+key, value);
+    public void set(String name, String key, Object value)
+    {
+        configuration.setProperty(name + "." + key, value);
     }
 
 }
