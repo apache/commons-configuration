@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 import java.util.AbstractMap;
 import java.util.Set;
 
-import org.apache.commons.configuration.Configuration;
 
 /**
  * <p>The <code>ConfigurationMap</code> wraps a

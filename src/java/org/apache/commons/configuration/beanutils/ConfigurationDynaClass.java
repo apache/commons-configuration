@@ -60,7 +60,6 @@ public class ConfigurationDynaClass implements DynaClass {
         if(name == null)
             throw new IllegalArgumentException("No such property name=["+name+"]");
         Object value = configuration.getProperty(name);
-        DynaProperty property;
         if(value == null)
             return null;
         else {

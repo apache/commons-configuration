@@ -20,7 +20,6 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.configuration.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
