@@ -2,7 +2,7 @@
 
 <!-- ===================================================================== -->
 <!--                                                                       -->
-<!-- $Id: project.xml,v 1.7 2004/01/18 16:19:04 epugh Exp $ -->
+<!-- $Id: project.xml,v 1.8 2004/01/22 11:41:23 epugh Exp $ -->
 <!--                                                                       -->
 <!-- ===================================================================== -->
 
@@ -255,6 +255,7 @@
           <directory>conf</directory>
           <includes>
             <include>testClasspath.properties</include>
+            <include>testdb.script</include>
           </includes>
         </resource>
       </resources>

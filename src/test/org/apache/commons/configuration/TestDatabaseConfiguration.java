@@ -55,6 +55,7 @@
 package org.apache.commons.configuration;
 
 import java.io.FileInputStream;
+import java.sql.SQLException;
 import java.util.Iterator;
 import javax.sql.DataSource;
 
@@ -70,7 +71,7 @@ import org.dbunit.operation.DatabaseOperation;
  * Test for database stored configurations.
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.2 $, $Date: 2004/01/18 16:18:56 $
+ * @version $Revision: 1.3 $, $Date: 2004/01/22 11:41:23 $
  */
 public class TestDatabaseConfiguration extends TestCase
 {
@@ -82,11 +83,12 @@ public class TestDatabaseConfiguration extends TestCase
         // set up the datasource
         BasicDataSource datasource = new BasicDataSource();
         datasource.setDriverClassName("org.hsqldb.jdbcDriver");
-        datasource.setUrl("jdbc:hsqldb:conf/testdb");
+        datasource.setUrl("jdbc:hsqldb:target/test-classes/testdb");
         datasource.setUsername("sa");
         datasource.setPassword("");
 
         this.datasource = datasource;
+        
 
         // prepare the database
         IDatabaseConnection connection = new DatabaseConnection(datasource.getConnection());
@@ -100,6 +102,10 @@ public class TestDatabaseConfiguration extends TestCase
         {
             connection.close();
         }
+    }
+    
+    protected void tearDown() throws SQLException{
+        datasource.getConnection().close();
     }
 
     public void testAddPropertyDirectSingle()
