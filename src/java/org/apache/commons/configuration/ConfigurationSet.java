@@ -20,15 +20,12 @@ import java.util.AbstractSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 class ConfigurationSet extends AbstractSet {
 
-    private final static Log log = LogFactory.getLog(ConfigurationSet.class);
 
     class Entry implements Map.Entry {
 
@@ -55,11 +52,11 @@ class ConfigurationSet extends AbstractSet {
         
     }
 
-    class ConfigurationEntrySetIterator implements Iterator {
+    class ConfigurationSetIterator implements Iterator {
 
         Iterator keys;
 
-        public ConfigurationEntrySetIterator() {
+        public ConfigurationSetIterator() {
         	keys = configuration.getKeys();
         }
 
@@ -80,7 +77,6 @@ class ConfigurationSet extends AbstractSet {
     Configuration configuration;
 
     public ConfigurationSet(Configuration configuration) {
-        if(log.isTraceEnabled()) log.trace("ConfigurationEntrySet("+configuration+")");
         this.configuration = configuration;
     }
 
@@ -88,10 +84,12 @@ class ConfigurationSet extends AbstractSet {
 	 * @see java.util.Collection#size()
 	 */
 	public int size() {
-        if(log.isTraceEnabled()) log.trace("size()");
         int count = 0;
 		Iterator iterator = configuration.getKeys();
-        while(iterator.hasNext()) count++;
+        while(iterator.hasNext()) {
+            iterator.next();
+            count++;
+        }
         return count;
 	}
 
@@ -99,8 +97,7 @@ class ConfigurationSet extends AbstractSet {
 	 * @see java.util.Collection#iterator()
 	 */
 	public Iterator iterator() {
-        if(log.isTraceEnabled()) log.trace("iterator()");
-		return new ConfigurationEntrySetIterator();
+		return new ConfigurationSetIterator();
 	}
 
 }

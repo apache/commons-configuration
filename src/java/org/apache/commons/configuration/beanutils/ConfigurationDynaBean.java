@@ -52,13 +52,11 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
     private final static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
     Configuration configuration;
-    ConfigurationMap map;
 
     public ConfigurationDynaBean(Configuration configuration) {
         super(configuration);
         if(log.isTraceEnabled()) log.trace("ConfigurationDynaBean("+configuration+")");
         this.configuration = configuration;
-        map = new ConfigurationMap(configuration);
     }
 
     /**
@@ -79,7 +77,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean 
         } else if(value instanceof boolean[]) {
             boolean[] array = (boolean[]) value;
             for(int i = 0; i < array.length; i++)
-                configuration.addProperty(name,new Boolean(array[i]));
+                configuration.addProperty(name,Boolean.valueOf(array[i]));
         } else if(value instanceof char[]) {
             char[] array = (char[]) value;
             for(int i = 0; i < array.length; i++)

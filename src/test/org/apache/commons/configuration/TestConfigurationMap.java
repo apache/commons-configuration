@@ -16,10 +16,6 @@
 
 package org.apache.commons.configuration;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -34,30 +30,20 @@ public class TestConfigurationMap extends TestCase
 
     String[] properties = {
             "booleanProperty",
-            "booleanSecond",
             "doubleProperty",
             "floatProperty",
             "intProperty",
             "longProperty",
-            "mappedProperty.key1",
-            "mappedProperty.key2",
-            "mappedProperty.key3",
-            "mappedIntProperty.key1",
             "shortProperty",
             "stringProperty"
     };
     
     Object[] values = {
             Boolean.TRUE,
-            Boolean.TRUE,
             new Double(Double.MAX_VALUE),
             new Float(Float.MAX_VALUE),
             new Integer(Integer.MAX_VALUE),
             new Long(Long.MAX_VALUE),
-            "First Value",
-            "Second Value",
-            "Third Value",
-            new Integer(Integer.MAX_VALUE),
             new Short(Short.MAX_VALUE),
             "This is a string"
     };
@@ -96,31 +82,6 @@ public class TestConfigurationMap extends TestCase
     public void tearDown()
     {
         map = null;
-    }
-
-    /**
-     * Class under test for Set entrySet()
-     */
-    public void testEntrySet()
-    {
-        Set entrySet = map.entrySet();
-        Iterator iterator = entrySet.iterator();
-        while(iterator.hasNext()) {
-            Object object = iterator.next();
-            assertTrue("Entry set iterator did not return EntrySet object, returned "
-                    + object.getClass().getName(), object instanceof Map.Entry);
-            Map.Entry entry = (Map.Entry) object;
-            boolean found = false;
-            for(int i = 0; i < properties.length; i++) {
-                if(entry.getKey().equals(properties[i])) {
-                    assertEquals("Incorrect value for property " +
-                            properties[i],values[i],entry.getValue());
-                    found = true;
-                    break;
-                }
-            }
-            assertTrue("Could not find property " + entry.getKey(),found);
-        }
     }
 
     /**
