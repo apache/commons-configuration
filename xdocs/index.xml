@@ -13,19 +13,19 @@
   <body>
     <section name="Intro">
       <p>
-      	Commons Configuration provides a generic configuration
-      	interface which enables an application to read configuration
-      	data from a variety of sources.  Commons Configuration
-      	provides typed access to single, and multi-valued
-      	configuration parameters as demonstrated by the following
-      	code:
+      	Commons Configuration provides a generic configuration interface which enables
+        an application to read configuration data from a variety of sources. Commons Configuration
+      	provides typed access to single, and multi-valued configuration parameters as demonstrated
+        by the following code:
 
-        <source><![CDATA[ Double double = Configuration.getDouble("some_double_value"); ]]></source>
+<source><![CDATA[
+Double double = config.getDouble("number");
+Integer integer = config.getInteger("number");
+]]></source>
 
       </p>
       <p>
-		Configuration parameters may be loaded from the following
-		sources:
+		Configuration parameters may be loaded from the following sources:
 
         <ul>
           <li>Properties files</li>
@@ -37,15 +37,13 @@
           <li>Servlet parameters</li>
         </ul>
 
-        Different configuration sources can be mixed using a
-		<code>ConfigurationFactory</code> and
-		<code>CompositeConfiguration</code>.  Additional sources of
-		configuration parameters can be created by using custom
-		configuration objects.  This customization can be achieved by
-		extending <code>AbstractConfiguration</code>.
+        Different configuration sources can be mixed using a <code>ConfigurationFactory</code> and
+		a <code>CompositeConfiguration</code>. Additional sources of configuration parameters can
+        be created by using custom configuration objects. This customization can be achieved by
+		extending <code>AbstractConfiguration</code> or <code>AbstractFileConfiguration</code>.
       </p>
 	  <p>
-		The full Configuration API is available <a href="apidocs/org/apache/commons/configuration/Configuration.html#method_summary">here</a>.
+		The full Javadoc API documentation is available <a href="apidocs/index.html">here</a>.
 	  </p>
     </section>  	
     
@@ -53,25 +51,32 @@
       <p>
         The latest release of Apache Jakarta Commons Configuration is available from <a href="downloads.html">here</a>. 
         It is also available from <a href="http://www.ibiblio.org/maven/commons-configuration/jars">IBiblio</a>.
-        The <a href="changes-report.html">Changes Report</a> 
-        explains all of the changes and bug fixes that have been made.  
+        The <a href="changes-report.html">Changes Report</a> explains all of the changes and bug fixes that have been made.
       </p>
     </section>
     
     <section name="History">
       <p>
-        Commons Configuration started as code in Apache JServ.  The
-        JServ code was subsequently added to <a
-        href="http://jakarta.apache.org/turbine">Jakarta Turbine</a>.
-        After Jakarta Turbine, this configuration interface moved to
-        <a href="http://jakarta.apache.org/velocity">Jakarta
-        Velocity</a> and underwent various improvements.  After
-        Velocity, this code was introduced to the <a
-        href="http://jakarta.apache.org/commons">Jakarta Commons</a>
-        as <code>ExtendedProperties</code>.  Configuration began life
-        in the Commons as a Sandbox component, and was promoted to the
+        Commons Configuration started as code in Apache JServ.  The JServ code was subsequently
+        added to <a href="http://jakarta.apache.org/turbine">Jakarta Turbine</a>. After Jakarta
+        Turbine, this configuration interface moved to <a href="http://jakarta.apache.org/velocity">Jakarta Velocity</a>
+        and underwent various improvements.  After Velocity, this code was introduced to the
+        <a href="http://jakarta.apache.org/commons">Jakarta Commons</a> as <code>ExtendedProperties</code>.
+        Configuration began life in the Commons as a Sandbox component, and was promoted to the
         Commons Proper in late 2003.
       </p>
     </section>
+
+    <section name="Bugs">
+      <p>Bugs may be reported via the Bugzilla Management system. The following links may prove useful:</p>
+
+      <ul>
+        <li><a href="http://issues.apache.org/bugzilla/createaccount.cgi">Create a Bugzilla account</a></li>
+        <li><a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Commons&amp;component=Configuration">Submit a bug report</a></li>
+        <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?product=Commons&amp;component=Configuration&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED">All open Configuration bugs</a></li>
+        <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?product=Commons&amp;component=Configuration">All Configuration bugs</a></li>
+      </ul>
+    </section>
+
   </body>
 </document>
