@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Test for loading and saving properties files.
  *
- * @version $Id: TestPropertiesConfiguration.java,v 1.9 2004/06/17 15:30:29 ebourg Exp $
+ * @version $Id: TestPropertiesConfiguration.java,v 1.10 2004/06/22 11:23:47 ebourg Exp $
  */
 public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
 {
@@ -131,4 +131,14 @@ public class TestPropertiesConfiguration extends TestBasePropertiesConfiguration
         assertEquals("3rd element", "c", array[2]);
         assertEquals("4th element", "d", array[3]);
     }
+
+    public void testMultilines()
+    {
+        String property = "This is a value spread out across several adjacent "
+                + "natural lines by escaping the line terminator with "
+                + "a backslash character.";
+
+        assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
+    }
+
 }
