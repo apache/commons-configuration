@@ -56,7 +56,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * file.</li></ul></p>
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.13 $, $Date: 2005/01/03 12:42:30 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/15 15:29:30 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -164,6 +164,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         try
         {
             URL url = ConfigurationUtils.locate(basePath, fileName);
+            if (url == null)
+            {
+                throw new ConfigurationException("Cannot locate configuration source " + fileName);
+            }
             load(url);
         }
         catch (ConfigurationException e)
@@ -338,6 +342,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         if (file != null)
         {
             save(file);
+        }
+        else
+        {
+            throw new ConfigurationException("Could not save to URL " + url);
         }
     }
 

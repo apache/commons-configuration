@@ -23,7 +23,7 @@ import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision: 1.3 $, $Date: 2004/12/04 15:45:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/15 15:29:30 $
  */
 public class TestFileConfiguration extends TestCase
 {
@@ -164,6 +164,33 @@ public class TestFileConfiguration extends TestCase
             {
                 assertTrue("File could not be deleted", file.delete());
             }
+        }
+    }
+    
+    /**
+     * Tests if invalid URLs cause an exception.
+     */
+    public void testSaveInvalidURL() throws Exception
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        try
+        {
+            config.save(new URL("http://jakarta.apache.org"));
+            fail("Should throw a ConfigurationException!");
+        }
+        catch (ConfigurationException cex)
+        {
+            //fine
+        }
+
+        try
+        {
+            config.save("http://www.apache.org");
+            fail("Should throw a ConfigurationException!");
+        }
+        catch (ConfigurationException cex)
+        {
+            //fine
         }
     }
 }
