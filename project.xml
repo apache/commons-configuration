@@ -22,7 +22,7 @@
   <pomVersion>3</pomVersion>
 
   <id>commons-configuration</id>
-  <currentVersion>1.1RC2</currentVersion>
+  <currentVersion>1.1RC3</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
