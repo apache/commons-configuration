@@ -63,6 +63,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -70,7 +71,7 @@ import org.apache.commons.logging.LogFactory;
  * This Configuration class allows you to interface with a JNDI datasource.
  * 
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @version $Id: JNDIConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
+ * @version $Id: JNDIConfiguration.java,v 1.3 2004/01/16 14:27:56 epugh Exp $
  */
 public class JNDIConfiguration
     extends BaseConfiguration
@@ -395,7 +396,7 @@ public class JNDIConfiguration
         }
         else if (value instanceof String)
         {
-            return testBoolean((String) value);
+            return BooleanUtils.toBooleanObject((String) value);
         }
         else if (value == null)
         {

@@ -62,6 +62,8 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.BooleanUtils;
+
 /**
  * Abstract configuration class. Provide basic functionality but does not
  * store any data. If you want to write your own Configuration class
@@ -69,7 +71,7 @@ import java.util.StringTokenizer;
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
- * @version $Id: AbstractConfiguration.java,v 1.2 2003/12/24 14:28:22 epugh Exp $
+ * @version $Id: AbstractConfiguration.java,v 1.3 2004/01/16 14:27:57 epugh Exp $
  */
 public abstract class AbstractConfiguration implements Configuration
 {
@@ -295,8 +297,7 @@ public abstract class AbstractConfiguration implements Configuration
 
         if (token.indexOf(PropertiesTokenizer.DELIMITER) > 0)
         {
-            PropertiesTokenizer tokenizer =
-                new PropertiesTokenizer((String) token);
+            PropertiesTokenizer tokenizer = new PropertiesTokenizer(token);
 
             while (tokenizer.hasMoreTokens())
             {
@@ -315,37 +316,6 @@ public abstract class AbstractConfiguration implements Configuration
         // Keys are added to the store in the sequence that
         // is given in the properties
         return retList;
-    }
-
-
-    /**
-     * Test whether the string represent by value maps to a boolean
-     * value or not. We will allow <code>true</code>, <code>on</code>,
-     * and <code>yes</code> for a <code>true</code> boolean value, and
-     * <code>false</code>, <code>off</code>, and <code>no</code> for
-     * <code>false</code> boolean values. Case of value to test for
-     * boolean status is ignored.
-     *
-     * @param value The value to test for boolean state.
-     * @return <code>true</code> or <code>false</code> if the supplied
-     * text maps to a boolean value, or <code>null</code> otherwise.
-     */
-    protected final Boolean testBoolean(String value)
-    {
-        String s = value.toLowerCase();
-
-        if (s.equals("true") || s.equals("on") || s.equals("yes"))
-        {
-            return Boolean.TRUE;
-        }
-        else if (s.equals("false") || s.equals("off") || s.equals("no"))
-        {
-            return Boolean.FALSE;
-        }
-        else
-        {
-            return null;
-        }
     }
 
     /**
@@ -610,7 +580,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public boolean getBoolean(String key)
     {
-        Boolean b = getBoolean(key, (Boolean) null);
+        Boolean b = getBoolean(key, null);
         if (b != null)
         {
             return b.booleanValue();
@@ -660,7 +630,7 @@ public abstract class AbstractConfiguration implements Configuration
         }
         else if (value instanceof String)
         {
-            return testBoolean((String) value);
+            return BooleanUtils.toBooleanObject((String) value);
         }
         else if (value == null)
         {
@@ -1276,7 +1246,7 @@ public abstract class AbstractConfiguration implements Configuration
 
         if (value instanceof String)
         {
-            return (String) interpolate((String) value);
+            return interpolate((String) value);
         }
         else if (value == null)
         {
