@@ -6,6 +6,15 @@
   </properties>
 
   <body>
+
+    <release version="1.1-dev" date="in CVS">
+      <action dev="ebourg" type="update">
+        Added 5 new configurations to be used in a web environment:
+        AppletConfiguration, ServletConfiguration, ServletContextConfiguration,
+        ServletRequestConfiguration, ServletFilterConfiguration.
+      </action>
+    </release>
+
     <release version="1.0.1-dev" date="in CVS">
     </release>
 
@@ -60,21 +69,21 @@
         can be set and then the getters throw an <code>NoSuchElementException</code>.
         The old default behaviour of returning a <code>null</code> value has
         been restored.
-      </action>         
+      </action>
       <action dev="epugh" type="add" issue="29714">
         Allow configurations extending AbstractConfiguration to change the
         delimiter used from "," to something else.
-      </action>         
+      </action>
       <action dev="epugh" type="fix">
         PropertiesConfiguration.save() method has issues with preserving the filename
-      </action>         
+      </action>
       <action dev="epugh" type="fix" issue="30597" due-to="Mark Woodman">
         Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes
-      </action>         
+      </action>
       <action dev="epugh" type="fix" issue="30545" due-to="Ricardo Gladwell">
         Clarify for ConfigurationDynaBean that the get method should throw an
         illegalArgumentException if there is no property specified.
-      </action>        
+      </action>
       <action dev="ebourg" type="fix" issue="30839">
         Fixed a ClassCastException when adding a non String property to an XMLConfiguration.
       </action>

@@ -19,7 +19,7 @@
 -->
 
 <!-- ===================================================================== -->
-<!-- $Id: project.xml,v 1.38 2004/10/12 12:29:08 ebourg Exp $ -->
+<!-- $Id: project.xml,v 1.39 2004/10/14 09:54:35 ebourg Exp $ -->
 <!-- ===================================================================== -->
 <project>
   <pomVersion>3</pomVersion>
@@ -68,17 +68,17 @@
       <id>1.0-rc1</id>
       <name>1.0-rc1</name>
       <tag>CONFIGURATION_1_0_RC1</tag>
-    </version>  
+    </version>
     <version>
       <id>1.0-rc2</id>
       <name>1.0-rc2</name>
       <tag>CONFIGURATION_1_0_RC2</tag>
-    </version>    
+    </version>
     <version>
       <id>1.0</id>
       <name>1.0</name>
       <tag>CONFIGURATION_1_0</tag>
-    </version>    
+    </version>
   </versions>
   <mailingLists>
     <mailingList>
@@ -264,6 +264,11 @@
       </properties>
     </dependency>
 
+    <dependency>
+      <id>servletapi</id>
+      <version>2.3</version>
+    </dependency>
+
     <!-- Needed for testing -->
 
     <dependency>
@@ -308,6 +313,16 @@
       <version>1.4</version>
     </dependency>
 
+    <dependency>
+      <id>mockobjects:mockobjects-core</id>
+      <version>0.09</version>
+    </dependency>
+
+    <dependency>
+      <id>mockobjects:mockobjects-jdk1.4-j2ee1.3</id>
+      <version>0.09</version>
+    </dependency>
+
     <!-- Fake dependency to test loading configuration files from a JAR -->
     <dependency>
       <id>resources</id>
@@ -348,6 +363,7 @@
       <excludes>
         <exclude>**/TestBasePropertiesConfiguration.java</exclude>
         <exclude>**/NonStringTestHolder.java</exclude>
+        <exclude>**/TestAbstractConfiguration.java</exclude>
       </excludes>
       <resources>
         <resource>
