@@ -56,7 +56,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * file.</li></ul></p>
  *
  * @author Emmanuel Bourg
- * @version $Revision: 1.14 $, $Date: 2005/01/15 15:29:30 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/21 15:51:33 $
  * @since 1.0-rc2
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
@@ -314,8 +314,12 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         try
         {
-            // create a new file
-            save(ConfigurationUtils.getFile(basePath, fileName));
+            File file = ConfigurationUtils.getFile(basePath, fileName);
+            if (file == null)
+            {
+                throw new ConfigurationException("Invalid file name for save: " + fileName);
+            }
+            save(file);
         }
         catch (ConfigurationException e)
         {

@@ -31,7 +31,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision: 1.13 $, $Date: 2004/12/04 15:45:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/01/21 15:51:33 $
  */
 public final class ConfigurationUtils
 {
@@ -430,7 +430,7 @@ public final class ConfigurationUtils
      * 
      * @param basePath the base path
      * @param fileName the file name
-     * @return the file object
+     * @return the file object (<b>null</b> if no file can be obtained)
      */
     public static File getFile(String basePath, String fileName)
     {
@@ -454,11 +454,7 @@ public final class ConfigurationUtils
 
         if (url != null)
         {
-            File result = fileFromURL(url);
-            if (result != null)
-            {
-                return result;
-            }
+            return fileFromURL(url);
         }
 
         return constructFile(basePath, fileName);
