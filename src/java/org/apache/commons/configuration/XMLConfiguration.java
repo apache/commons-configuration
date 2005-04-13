@@ -213,6 +213,16 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
     
     /**
+     * Removes all properties from this configuration. If this configuration
+     * was loaded from a file, the associated DOM document is also cleared.
+     */
+    public void clear()
+    {
+        super.clear();
+        document = null;
+    }
+    
+    /**
      * @inheritDoc
      */
     public void setProperty(String key, Object value)
@@ -242,7 +252,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      */
     private void constructHierarchy(Node node, Element element, boolean elemRefs)
     {
-        processAttributes(node, element);
+        processAttributes(node, element, elemRefs);
         StringBuffer buffer = new StringBuffer();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
@@ -275,8 +285,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * 
      * @param node the actual node
      * @param element the actual XML element
+     * @param elemRefs a flag whether references to the XML elements should be set
      */
-    private void processAttributes(Node node, Element element)
+    private void processAttributes(Node node, Element element, boolean elemRefs)
     {
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
@@ -287,7 +298,8 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                 Attr attr = (Attr) w3cNode;
                 for (Iterator it = PropertyConverter.split(attr.getValue(), getDelimiter()).iterator(); it.hasNext();)
                 {
-                    Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()), element);
+                    Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()),
+                            (elemRefs) ? element : null);
                     child.setValue(it.next());
                     node.addChild(child);
                 }

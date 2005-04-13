@@ -411,5 +411,19 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("value", conf.getString("element"));
         assertEquals("tasks", conf.getString("table.name"));
+        assertEquals("application", conf.getString("table[@tableType]"));
+    }
+    
+    /**
+     * Tests saving attributes (related to issue 34442).
+     */
+    public void testSaveAttributes() throws Exception
+    {
+        conf.clear();
+        conf.load();
+        conf.save(testSaveConf);
+        conf = new XMLConfiguration();
+        conf.load(testSaveConf);
+        assertEquals("foo", conf.getString("element3[@name]"));
     }
 }
