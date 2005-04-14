@@ -161,11 +161,11 @@
     </developer>
 	
 	<developer>
-		<name>Oliver Heger</name>
-		<id>oheger</id>
-		<email>oliver.heger@t-online.de</email>
-		<organization>University Marburg</organization>
-		<timezone>+1</timezone>
+      <name>Oliver Heger</name>
+      <id>oheger</id>
+      <email>oliver.heger@t-online.de</email>
+      <organization>University Marburg</organization>
+      <timezone>+1</timezone>
 	</developer>
 
   </developers>
@@ -216,7 +216,7 @@
 
     <dependency>
       <groupId>commons-logging</groupId>
-      <artifactId>commons-logging</artifactId>
+      <artifactId>commons-logging-api</artifactId>
       <version>1.0.4</version>
       <properties>
         <war.bundle>true</war.bundle>
@@ -271,7 +271,8 @@
     </dependency>
 
     <dependency>
-      <id>servletapi</id>
+      <groupId>servletapi</groupId>
+      <artifactId>servletapi</artifactId>
       <version>2.3</version>
     </dependency>
 
@@ -320,12 +321,14 @@
     </dependency>
 
     <dependency>
-      <id>mockobjects:mockobjects-core</id>
+      <groupId>mockobjects</groupId>
+      <artifactId>mockobjects-core</artifactId>
       <version>0.09</version>
     </dependency>
 
     <dependency>
-      <id>mockobjects:mockobjects-jdk1.4-j2ee1.3</id>
+      <groupId>mockobjects</groupId>
+      <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
       <version>0.09</version>
     </dependency>
 
