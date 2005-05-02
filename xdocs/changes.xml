@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" due-to="Alistair Young">
+        XMLPropertiesConfiguration no longer depends on Digester to parse the
+        configuration file, it's now implemented with a pure SAX parser.
+      </action>
       <action dev="oheger" type="update" due-to="Mi Zhang" issue="34442">
         Fixed a bug which causes XMLConfiguration.save to lose attribute values
         under some circumstances. The clear() method now also ensures that the

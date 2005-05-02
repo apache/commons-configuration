@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,17 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.digester.Digester;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+
+import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This configuration implements the XML properties format introduced in Java
@@ -44,17 +49,17 @@ import org.xml.sax.InputSource;
  *   &lt;entry key="key2">value2&lt;/entry>
  *   &lt;entry key="key3">value3&lt;/entry>
  * &lt;/properties>
- * &lt;/pre>
- *
+ * </pre>
+ * 
  * The Java 5.0 runtime is not required to use this class. The default encoding
  * for this configuration format is UTF-8. Note that unlike
  * <code>PropertiesConfiguration</code>, <code>XMLPropertiesConfiguration</code>
  * does not support includes.
  *
- * @since 1.1
- *
  * @author Emmanuel Bourg
+ * @author Alistair Young
  * @version $Revision$, $Date$
+ * @since 1.1
  */
 public class XMLPropertiesConfiguration extends PropertiesConfiguration
 {
@@ -121,35 +126,31 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
 
     public void load(Reader in) throws ConfigurationException
     {
-        // todo: replace with a pure SAX implementation to reduce the dependencies
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        factory.setNamespaceAware(false);
+        factory.setValidating(true);
 
-        // set up the digester
-        Digester digester = new Digester();
-        digester.setEntityResolver(new EntityResolver(){
-            public InputSource resolveEntity(String publicId, String systemId)
-            {
-                return new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd"));
-            }
-        });
-
-        digester.addCallMethod("properties/comment", "setHeader", 0);
-
-        digester.addCallMethod("properties/entry", "addProperty", 2);
-        digester.addCallParam("properties/entry", 0, "key");
-        digester.addCallParam("properties/entry", 1);
-
-        // todo: support included properties ?
-
-        // parse the file
-        digester.push(this);
         try
         {
-            digester.parse(in);
+            SAXParser parser = factory.newSAXParser();
+
+            XMLReader xmlReader = parser.getXMLReader();
+            xmlReader.setEntityResolver(new EntityResolver()
+            {
+                public InputSource resolveEntity(String publicId, String systemId)
+                {
+                    return new InputSource(getClass().getClassLoader().getResourceAsStream("properties.dtd"));
+                }
+            });
+            xmlReader.setContentHandler(new XMLPropertiesHandler());
+            xmlReader.parse(new InputSource(in));
         }
         catch (Exception e)
         {
             throw new ConfigurationException("Unable to parse the configuration file", e);
         }
+
+        // todo: support included properties ?
     }
 
     public void save(Writer out) throws ConfigurationException
@@ -216,6 +217,70 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         for (int i = 0; i < values.size(); i++)
         {
             writeProperty(out, key, values.get(i));
+        }
+    }
+
+    /**
+     * SAX Handler to parse a XML properties file.
+     *
+     * @author Alistair Young
+     * @since 1.2
+     */
+    private class XMLPropertiesHandler extends DefaultHandler
+    {
+        /** The key of the current entry being parsed. */
+        private String key;
+
+        /** The value of the current entry being parsed. */
+        private StringBuffer value = new StringBuffer();
+
+        /** Indicates that a comment is being parsed. */
+        private boolean inCommentElement;
+
+        /** Indicates that an entry is being parsed. */
+        private boolean inEntryElement;
+
+        public void startElement(String uri, String localName, String qName, Attributes attrs)
+        {
+            if ("comment".equals(qName))
+            {
+                inCommentElement = true;
+            }
+
+            if ("entry".equals(qName))
+            {
+                key = attrs.getValue("key");
+                inEntryElement = true;
+            }
+        }
+
+        public void endElement(String uri, String localName, String qName)
+        {
+            if (inCommentElement)
+            {
+                // We've just finished a <comment> element so set the header
+                setHeader(value.toString());
+                inCommentElement = false;
+            }
+
+            if (inEntryElement)
+            {
+                // We've just finished an <entry> element, so add the key/value pair
+                addProperty(key, value.toString());
+                inEntryElement = false;
+            }
+
+            // Clear the element value buffer
+            value = new StringBuffer();
+        }
+
+        public void characters(char[] chars, int start, int length)
+        {
+            /**
+             * We're currently processing an element. All character data from now until
+             * the next endElement() call will be the data for this  element.
+             */
+            value.append(chars, start, length);
         }
     }
 }
