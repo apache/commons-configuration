@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" due-to="Jamie M. Guillemette" issue="34362">
+        AbstractFileConfiguration now stores the URL of the config file in the
+        load() methods. This URL is reused by the save() method to ensure that
+        the same file is written.
+      </action>
       <action dev="ebourg" type="update" due-to="Alistair Young">
         XMLPropertiesConfiguration no longer depends on Digester to parse the
         configuration file, it's now implemented with a pure SAX parser.
