@@ -86,6 +86,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     private Object reloadLock = new Object();
 
     private String encoding;
+    
+    private URL sourceURL = null;
 
     /**
      * Default constructor
@@ -163,7 +165,14 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void load() throws ConfigurationException
     {
-        load(getFileName());
+        if (sourceURL != null)
+        {
+            load(sourceURL);
+        }
+        else
+        {
+            load(getFileName());
+        }
     }
 
     /**
@@ -178,6 +187,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         try
         {
             URL url = ConfigurationUtils.locate(basePath, fileName);
+            
             if (url == null)
             {
                 throw new ConfigurationException("Cannot locate configuration source " + fileName);
@@ -226,6 +236,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void load(URL url) throws ConfigurationException
     {
+        if (sourceURL == null)
+        {
+            sourceURL = url;
+        }
         InputStream in = null;
 
         try
@@ -312,7 +326,14 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void save() throws ConfigurationException
     {
-        save(fileName);
+        if (sourceURL != null)
+        {
+            save(sourceURL);
+        }
+        else
+        {
+            save(fileName);
+        }
         strategy.init();
     }
 
@@ -471,6 +492,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void setFileName(String fileName)
     {
+        sourceURL = null;
         this.fileName = fileName;
     }
 
@@ -483,19 +505,20 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Set the base path. Relative configurations are loaded from this path.
-     * The base path can be either a path to a directory or a URL.
-     *
+     * Set the base path. Relative configurations are loaded from this path. The
+     * base path can be either a path to a directory or a URL.
+     * 
      * @param basePath the base path.
      */
     public void setBasePath(String basePath)
     {
+        sourceURL = null;
         this.basePath = basePath;
     }
 
     /**
-     * Return the file where the configuration is stored. If the base path is
-     * a URL with a protocol different than &quot;file&quot;, the return value
+     * Return the file where the configuration is stored. If the base path is a
+     * URL with a protocol different than &quot;file&quot;, the return value
      * will not point to a valid file object.
      * 
      * @return the file where the configuration is stored
@@ -509,13 +532,15 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Set the file where the configuration is stored. The passed in file is
      * made absolute if it is not yet. Then the file's path component becomes
      * the base path and its name component becomes the file name.
-     *
+     * 
      * @param file the file where the configuration is stored
      */
     public void setFile(File file)
     {
+        sourceURL = null;
         setFileName(file.getName());
-        setBasePath((file.getParentFile() != null) ? file.getParentFile().getAbsolutePath() : null);
+        setBasePath((file.getParentFile() != null) ? file.getParentFile()
+                .getAbsolutePath() : null);
     }
 
     /**
@@ -548,7 +573,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public URL getURL()
     {
-        return ConfigurationUtils.locate(getBasePath(), getFileName());
+        return (sourceURL != null) ? sourceURL :
+            ConfigurationUtils.locate(getBasePath(), getFileName());
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,11 @@
 package org.apache.commons.configuration;
 
 import java.net.URL;
+import java.util.Properties;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import junit.framework.TestCase;
 
@@ -191,6 +195,69 @@ public class TestFileConfiguration extends TestCase
         catch (ConfigurationException cex)
         {
             //fine
+        }
+    }
+    
+    /**
+     * Tests if the URL used by the load() method is also used by save().
+     */
+    public void testFileOverwrite() throws Exception
+    {
+        FileOutputStream out = null;
+        FileInputStream in = null;
+        File tempFile = null;
+        try
+        {
+            String path = System.getProperties().getProperty("user.home");
+            File homeDir = new File(path);
+            tempFile = File.createTempFile("CONF", null, homeDir);
+            String fileName = tempFile.getName();
+            Properties props = new Properties();
+            props.setProperty("1", "one");
+            out = new FileOutputStream(tempFile);
+            props.store(out, "TestFileOverwrite");
+            out.close();
+            out = null;
+            FileConfiguration config = new PropertiesConfiguration(fileName);
+            config.load();
+            String value = config.getString("1");
+            assertTrue("one".equals(value));
+            config.setProperty("1", "two");
+            config.save();
+            props = new Properties();
+            in = new FileInputStream(tempFile);
+            props.load(in);
+            String value2 = props.getProperty("1");
+            assertTrue("two".equals(value2));
+        }
+        finally
+        {
+            if (out != null)
+            {
+                try
+                {
+                    out.close();
+                }
+                catch (IOException ioex)
+                {
+                    ioex.printStackTrace();
+                }
+            }
+            if (in != null)
+            {
+                try
+                {
+                    in.close();
+                }
+                catch (IOException ioex)
+                {
+                    ioex.printStackTrace();
+                }
+            }
+            if (tempFile.exists())
+            {
+                assertTrue(tempFile.delete());
+            }
         }
     }
 }
