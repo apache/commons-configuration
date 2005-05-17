@@ -274,6 +274,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public synchronized void load(Reader in) throws ConfigurationException
     {
         PropertiesReader reader = new PropertiesReader(in);
+        boolean oldAutoSave = isAutoSave();
+        setAutoSave(false);
 
         try
         {
@@ -320,6 +322,10 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             throw new ConfigurationException("Could not load configuration from input stream.", ioe);
         }
+        finally
+        {
+            setAutoSave(oldAutoSave);
+        }
     }
 
     /**
@@ -329,6 +335,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public void save(Writer writer) throws ConfigurationException
     {
+        enterNoReload();
         try
         {
             PropertiesWriter out = new PropertiesWriter(writer, getDelimiter());
@@ -369,6 +376,10 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         catch (IOException e)
         {
             throw new ConfigurationException(e.getMessage(), e);
+        }
+        finally
+        {
+            exitNoReload();
         }
     }
 

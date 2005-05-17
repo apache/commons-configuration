@@ -17,6 +17,8 @@ package org.apache.commons.configuration;
  */
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -183,7 +185,7 @@ public class TestPropertiesConfiguration extends TestCase
         conf.save();
         assertTrue(testSavePropertiesFile.exists());
     }
-
+    
     public void testLoadViaProperty() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
@@ -249,6 +251,39 @@ public class TestPropertiesConfiguration extends TestCase
         catch(ConfigurationException cex)
         {
             // fine
+        }
+    }
+    
+    /**
+     * Tests to load a file with enabled auto save mode.
+     */
+    public void testLoadWithAutoSave() throws Exception
+    {
+        PrintWriter out = null;
+        
+        try
+        {
+            out = new PrintWriter(new FileWriter(testSavePropertiesFile));
+            out.println("a = one");
+            out.println("b = two");
+            out.println("c = three");
+            out.close();
+            out = null;
+            
+            conf = new PropertiesConfiguration();
+            conf.setAutoSave(true);
+            conf.setFile(testSavePropertiesFile);
+            conf.load();
+            assertEquals("one", conf.getString("a"));
+            assertEquals("two", conf.getString("b"));
+            assertEquals("three", conf.getString("c"));
+        }
+        finally
+        {
+            if(out != null)
+            {
+                out.close();
+            }
         }
     }
 

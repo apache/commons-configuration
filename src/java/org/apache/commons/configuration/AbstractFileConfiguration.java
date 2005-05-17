@@ -88,6 +88,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     private String encoding;
     
     private URL sourceURL = null;
+    
+    /** A counter that prohibits reloading.*/
+    private int noReload;
 
     /**
      * Default constructor
@@ -648,7 +651,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         synchronized (reloadLock)
         {
-            if (strategy.reloadingRequired())
+            if (noReload == 0 && strategy.reloadingRequired())
             {
                 try
                 {
@@ -663,6 +666,40 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                     e.printStackTrace();
                     // todo rollback the changes if the file can't be reloaded
                 }
+            }
+        }
+    }
+    
+    /**
+     * Enters the &quot;No reloading mode&quot;. As long as this mode is active
+     * no reloading will be performed. This is necessary for some
+     * implementations of <code>save()</code> in derived classes, which may
+     * cause a reload while accessing the properties to save. This may cause the
+     * whole configuration to be erased. To avoid this, this method can be
+     * called first. After a call to this method there always must be a
+     * corresponding call of <code>{@link #exitNoReload()}</code> later! (If
+     * necessary, <code>finally</code> blocks must be used to ensure this.
+     */
+    protected void enterNoReload()
+    {
+        synchronized (reloadLock)
+        {
+            noReload++;
+        }
+    }
+
+    /**
+     * Leaves the &quot;No reloading mode&quot;.
+     * 
+     * @see #enterNoReload()
+     */
+    protected void exitNoReload()
+    {
+        synchronized (reloadLock)
+        {
+            if (noReload > 0) // paranoia check
+            {
+                noReload--;
             }
         }
     }

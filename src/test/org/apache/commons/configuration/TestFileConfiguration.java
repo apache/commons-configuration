@@ -21,7 +21,11 @@ import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
 
@@ -31,6 +35,8 @@ import junit.framework.TestCase;
  */
 public class TestFileConfiguration extends TestCase
 {
+    private static final File TARGET_DIR = new File("target");
+    
     public void testSetURL() throws Exception
     {
         // http URL
@@ -257,6 +263,44 @@ public class TestFileConfiguration extends TestCase
             if (tempFile.exists())
             {
                 assertTrue(tempFile.delete());
+            }
+        }
+    }
+    
+    /**
+     * Tests setting a file changed reloading strategy together with the auto
+     * save feature.
+     */
+    public void testReloadingWithAutoSave() throws Exception
+    {
+        File configFile = new File(TARGET_DIR, "test.properties");
+        PrintWriter out = null;
+
+        try
+        {
+            out = new PrintWriter(new FileWriter(configFile));
+            out.println("a = one");
+            out.close();
+            out = null;
+
+            PropertiesConfiguration config = new PropertiesConfiguration(
+                    configFile);
+            config.setReloadingStrategy(new FileChangedReloadingStrategy());
+            config.setAutoSave(true);
+
+            assertEquals("one", config.getProperty("a"));
+            config.setProperty("b", "two");
+            assertEquals("one", config.getProperty("a"));
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+            if (configFile.exists())
+            {
+                assertTrue(configFile.delete());
             }
         }
     }

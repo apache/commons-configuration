@@ -23,6 +23,16 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="34410">
+        Disabled auto save mode during PropertiesCconfiguration.load(). Prior
+        it was possible that the properties file to be loaded was immideately
+        overwritten.
+      </action>
+      <action dev="oheger" type="update" issue="34441">
+        Under certain circumstances it was possible that a reloading strategy
+        set for PropertiesConfiguration interferred with the save() method causing
+        the configuration file to be erased. This has now been fixed.
+      </action>
       <action dev="oheger" type="update" due-to="Jamie M. Guillemette" issue="34362">
         AbstractFileConfiguration now stores the URL of the config file in the
         load() methods. This URL is reused by the save() method to ensure that
