@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35118">
+        Fixed a bug in the collaboration between XMLConfiguration and its
+        reloading strategy: The configuration did not check its reloading
+        strategy, so no reload was performed.
+      </action>
       <action dev="oheger" type="update" issue="34410">
         Disabled auto save mode during PropertiesCconfiguration.load(). Prior
         it was possible that the properties file to be loaded was immideately

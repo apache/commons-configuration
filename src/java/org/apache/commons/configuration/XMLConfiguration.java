@@ -548,6 +548,30 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         delegate.setEncoding(encoding);
     }
+    
+    public boolean containsKey(String key)
+    {
+        reload();
+        return super.containsKey(key);
+    }
+
+    public Iterator getKeys(String prefix)
+    {
+        reload();
+        return super.getKeys(prefix);
+    }
+
+    public Object getProperty(String key)
+    {
+        reload();
+        return super.getProperty(key);
+    }
+
+    public boolean isEmpty()
+    {
+        reload();
+        return super.isEmpty();
+    }
 
     /**
      * A specialized <code>Node</code> class that is connected with an XML
@@ -865,6 +889,11 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         public void save(Writer out) throws ConfigurationException
         {
             XMLConfiguration.this.save(out);
+        }
+        
+        public void clear()
+        {
+            XMLConfiguration.this.clear();
         }
     }
 }

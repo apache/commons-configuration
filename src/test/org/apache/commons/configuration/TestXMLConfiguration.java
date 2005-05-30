@@ -17,9 +17,13 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
 
@@ -425,5 +429,52 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration();
         conf.load(testSaveConf);
         assertEquals("foo", conf.getString("element3[@name]"));
+    }
+    
+    /**
+     * Tests collaboration between XMLConfiguration and a reloading strategy.
+     */
+    public void testReloading() throws Exception
+    {
+        PrintWriter out = null;
+
+        try
+        {
+            out = new PrintWriter(new FileWriter(testSaveConf));
+            out.println("<?xml version=\"1.0\"?><config><test>1</test></config>");
+            out.close();
+            out = null;
+            conf.setFile(testSaveConf);
+            FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+            strategy.setRefreshDelay(100);
+            conf.setReloadingStrategy(strategy);
+            conf.load();
+            assertEquals(1, conf.getInt("test"));
+
+            out = new PrintWriter(new FileWriter(testSaveConf));
+            out.println("<?xml version=\"1.0\"?><config><test>2</test></config>");
+            out.close();
+            out = null;
+
+            int trial = 0, value;
+            // repeat multiple times because there are sometimes race conditions
+            do
+            {
+                Thread.sleep(1000);
+                value = conf.getInt("test");
+            } while (value != 2 && ++trial <= 10);
+            assertEquals(2, value);
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+            if (testSaveConf.exists())
+            {
+                assertTrue(testSaveConf.delete());
+            }
+        }
     }
 }
