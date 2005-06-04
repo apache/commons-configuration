@@ -21,6 +21,7 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 
 /**
  * Test case for the ReloadableConfiguration class.
@@ -102,4 +103,34 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertEquals("refresh delay", 500, strategy.getRefreshDelay());
     }
 
+    /**
+     * Tests if a file from the classpath can be monitored.
+     */
+    public void testFromClassPath() throws Exception
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName("test.properties");
+        config.load();
+        assertTrue(config.getBoolean("configuration.loaded"));
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        config.setReloadingStrategy(strategy);
+        assertEquals(config.getURL(), strategy.getFile().toURL());
+    }
+    
+    /**
+     * Tests to watch a configuration file in a jar. In this case the jar file
+     * itself should be monitored.
+     */
+    public void testFromJar() throws Exception
+    {
+        XMLConfiguration config = new XMLConfiguration();
+        config.setFileName("test-jar.xml");
+        config.load();
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        config.setReloadingStrategy(strategy);
+        File file = strategy.getFile();
+        assertNotNull(file);
+        assertTrue(file.exists());
+        assertEquals("resources.jar", file.getName());
+    }
 }

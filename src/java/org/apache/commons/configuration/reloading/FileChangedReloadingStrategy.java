@@ -16,6 +16,11 @@
 
 package org.apache.commons.configuration.reloading;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileConfiguration;
 
 /**
@@ -30,6 +35,10 @@ import org.apache.commons.configuration.FileConfiguration;
  */
 public class FileChangedReloadingStrategy implements ReloadingStrategy
 {
+    /** Constant for the jar URL protocol.*/
+    private static final String JAR_PROTOCOL = "jar";
+    
+    /** Stores a reference to the configuration to be monitored.*/
     protected FileConfiguration configuration;
 
     /** The last time the configuration file was modified. */
@@ -57,10 +66,13 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
         long now = System.currentTimeMillis();
 
-        if ((now > lastChecked + refreshDelay) && hasChanged())
+        if ((now > lastChecked + refreshDelay))
         {
             lastChecked = now;
-            reloading = true;
+            if(hasChanged())
+            {
+                reloading = true;
+            }
         }
 
         return reloading;
@@ -94,7 +106,11 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected void updateLastModified()
     {
-        lastModified = configuration.getFile().lastModified();
+        File file = getFile();
+        if (file != null)
+        {
+            lastModified = file.lastModified();
+        }
     }
 
     /**
@@ -102,12 +118,52 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected boolean hasChanged()
     {
-        if (!configuration.getFile().exists())
+        File file = getFile();
+        if (file == null || !file.exists())
         {
             return false;
         }
 
-        return (configuration.getFile().lastModified() > lastModified);
+        return (file.lastModified() > lastModified);
     }
 
+    /**
+     * Returns the file that is monitored by this strategy. Note that the return
+     * value can be <b>null </b> under some circumstances.
+     * 
+     * @return the monitored file
+     */
+    protected File getFile()
+    {
+        return (configuration.getURL() != null) ? fileFromURL(configuration
+                .getURL()) : configuration.getFile();
+    }
+
+    /**
+     * Helper method for transforming a URL into a file object. This method
+     * handles file: and jar: URLs.
+     * 
+     * @param url the URL to be converted
+     * @return the resulting file or <b>null </b>
+     */
+    private File fileFromURL(URL url)
+    {
+        if (JAR_PROTOCOL.equals(url.getProtocol()))
+        {
+            String path = url.getPath();
+            try
+            {
+                return ConfigurationUtils.fileFromURL(new URL(path.substring(0,
+                        path.indexOf('!'))));
+            }
+            catch (MalformedURLException mex)
+            {
+                return null;
+            }
+        }
+        else
+        {
+            return ConfigurationUtils.fileFromURL(url);
+        }
+    }
 }

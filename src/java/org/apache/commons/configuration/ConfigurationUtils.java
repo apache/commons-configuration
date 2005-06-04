@@ -467,7 +467,7 @@ public final class ConfigurationUtils
      * @param url the URL
      * @return the resulting file object
      */
-    static File fileFromURL(URL url)
+    public static File fileFromURL(URL url)
     {
         if (PROTOCOL_FILE.equals(url.getProtocol()))
         {

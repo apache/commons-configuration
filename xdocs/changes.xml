@@ -23,6 +23,16 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="34289">
+        Updated FileChangedReloadingStrategy to use the file based configuration's
+        source URL to find the file to watch. Before that it was possible that
+        the strategy checked the wrong file. For configuration files loaded
+        from a jar FileChangedReloadingStrategy now checks the jar file itself
+        for changes. Finally a bug was fixed which caused the strategy to
+        check the watched file's last change date on every invocation of its
+        reloadingRequired() method ignoring its refresh delay. Thanks to Jorge
+        Ferrer.
+      </action>
       <action dev="oheger" type="update" issue="35118">
         Fixed a bug in the collaboration between XMLConfiguration and its
         reloading strategy: The configuration did not check its reloading
