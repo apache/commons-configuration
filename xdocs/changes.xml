@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35210">
+        Fixed a problem related to file based configurations that are loaded
+        from a URL which is application/x-www-form-urlencoded: the save() method
+        would store such files at a wrong location.
+      </action>
       <action dev="oheger" type="update" issue="34289">
         Updated FileChangedReloadingStrategy to use the file based configuration's
         source URL to find the file to watch. Before that it was possible that

@@ -304,4 +304,55 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
+    
+    /**
+     * Tests loading and saving a configuration file with a complicated path
+     * name including spaces. (related to issue 35210)
+     */
+    public void testPathWithSpaces() throws Exception
+    {
+        File path = new File(TARGET_DIR, "path with spaces");
+        File confFile = new File(path, "config-test.properties");
+        PrintWriter out = null;
+
+        try
+        {
+            if (!path.exists())
+            {
+                assertTrue(path.mkdir());
+            }
+            out = new PrintWriter(new FileWriter(confFile));
+            out.println("saved = false");
+            out.close();
+            out = null;
+
+            URL url = new URL(TARGET_DIR.toURL()
+                    + "path%20with%20spaces/config-test.properties");
+            PropertiesConfiguration config = new PropertiesConfiguration(url);
+            config.load();
+            assertFalse(config.getBoolean("saved"));
+
+            config.setProperty("saved", Boolean.TRUE);
+            config.save();
+            config = new PropertiesConfiguration();
+            config.setFile(confFile);
+            config.load();
+            assertTrue(config.getBoolean("saved"));
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+            if (confFile.exists())
+            {
+                assertTrue(confFile.delete());
+            }
+            if (path.exists())
+            {
+                assertTrue(path.delete());
+            }
+        }
+    }
 }
