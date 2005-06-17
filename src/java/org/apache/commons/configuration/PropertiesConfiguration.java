@@ -443,7 +443,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     continue;
                 }
 
-                if (line.endsWith("\\"))
+                if (checkCombineLines(line))
                 {
                     line = line.substring(0, line.length() - 1);
                     buffer.append(line);
@@ -455,6 +455,21 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
             }
             return buffer.toString();
+        }
+        
+        /**
+         * Checks if the passed in line should be combined with the following.
+         * This is true, if the line ends with an odd number of backslashes.
+         * 
+         * @param line the line
+         * @return a flag if the lines should be combined
+         */
+        private static boolean checkCombineLines(String line)
+        {
+            int bsCount = 0;
+            for (int idx = line.length()-1; idx >= 0 && line.charAt(idx) == '\\'; idx--, bsCount++)
+                ;
+            return bsCount % 2 == 1;
         }
     } // class PropertiesReader
 

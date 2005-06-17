@@ -336,4 +336,15 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration.setDelimiter(delimiter);
     }
 
+    /**
+     * Tests escaping of an end of line with a backslash.
+     */
+    public void testNewLineEscaping()
+    {
+        List list = conf.getList("test.path");
+        assertEquals(3, list.size());
+        assertEquals("C:\\path1\\", list.get(0));
+        assertEquals("C:\\path2\\", list.get(1));
+        assertEquals("C:\\path3\\complex\\test\\", list.get(2));
+    }
 }
