@@ -147,6 +147,11 @@ public interface Configuration
 
     /**
      * Get a list of properties associated with the given configuration key.
+     * This method expects the given key to have an arbitrary number of String
+     * values, each of which is of the form <code>key=value</code>. These
+     * strings are splitted at the equals sign, and the key parts will become
+     * keys of the returned <code>Properties</code> object, the value parts
+     * become values.
      *
      * @param key The configuration key.
      * @return The associated properties if key is found.
