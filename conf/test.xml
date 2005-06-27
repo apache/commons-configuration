@@ -58,4 +58,11 @@ And even longer.
 			<item id="4">four</item>
 		</list>
 	</clear>
+    
+    <!-- Complex property names -->
+    <complexNames>
+      <my.elem>Name with dot
+        <sub.elem>Another dot</sub.elem>
+      </my.elem>
+    </complexNames>
 </testconfig>

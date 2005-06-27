@@ -390,6 +390,54 @@ config.addProperty("tables.table.fields.field.type", "java.sql.Date");
 				<code>HierarchicalConfiguration</code>.
 			</p>
 		</subsection>
+		<subsection name="Escaping dot characters in XML tags">
+			<p>
+                In XML the dot character used as delimiter by most configuration
+                classes is a legal character that can occur in any tag. So the
+                following XML document is completely valid:
+			</p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <test.value>42</test.value>
+  <test.complex>
+    <test.sub.element>many dots</test.sub.element>
+  </test.complex>
+</configuration>
+]]></source>
+			<p>
+                This XML document can be loaded by <code>XMLConfiguration</code>
+                without trouble, but when we want to access certain properties
+                we face a problem: The configuration claims that it does not
+                store any values for the properties with the keys
+                <code>test.value</code> or <code>test.complex.test.sub.element</code>!
+            </p>
+            <p>
+                Of course, it is the dot character contained in the property
+                names, which causes this problem. A dot is always interpreted
+                as a delimiter between elements. So given the property key
+                <code>test.value</code> the configuration would look for an
+                element named <code>test</code> and then for a sub element
+                with the name <code>value</code>. To change this behavior it is
+                possible to escape a dot character, thus telling the configuration
+                that it is really part of an element name. This is simply done
+                by duplicating the dot. So the following statements will return
+                the desired property values:
+            </p>
+   			<source><![CDATA[
+int testVal = config.getInt("test..value");
+String complex = config.getString("test..complex.test..sub..element");
+]]></source>
+            <p>
+                Note the duplicated dots whereever the dot does not act as
+                delimiter. This way it is possible to access properties containing
+                dots in arbitrary combination. However, as you can see, the
+                escaping can be confusing sometimes. So if you have a choice,
+                you should avoid dots in the tag names of your XML configuration
+                files.
+            </p>
+        </subsection>
 	</section>
 	
 	<section name="Union configuration">

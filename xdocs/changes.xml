@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35509">
+        Updated XMLConfiguration to correctly deal with properties containing
+        dots in their names. Such properties could not be accessed before.
+      </action>
       <action dev="oheger" type="update" issue="35119">
         PropertiesConfiguration's handling of backslash characters at the end
         of line was incorrect when there was an even number of trailing

@@ -477,4 +477,13 @@ public class TestXMLConfiguration extends TestCase
             }
         }
     }
+    
+    /**
+     * Tests access to tag names with delimiter characters.
+     */
+    public void testComplexNames()
+    {
+        assertEquals("Name with dot", conf.getString("complexNames.my..elem"));
+        assertEquals("Another dot", conf.getString("complexNames.my..elem.sub..elem"));
+    }
 }

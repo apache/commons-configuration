@@ -1,7 +1,7 @@
 package org.apache.commons.configuration;
 
 /*
- * Copyright 2002-2004 The Apache Software Foundation.
+ * Copyright 2002-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -151,5 +151,20 @@ public class TestConfigurationKey extends TestCase
         k2 = new ConfigurationKey("completely.different.key");
         kd = k1.differenceKey(k2);
         assertEquals(k2, kd);
+    }
+    
+    public void testEscapedDelimiters()
+    {
+        ConfigurationKey k = new ConfigurationKey();
+        k.append("my..elem");
+        k.append("trailing..dot..");
+        k.append("strange");
+        assertEquals("my..elem.trailing..dot...strange", k.toString());
+        
+        ConfigurationKey.KeyIterator kit = k.iterator();
+        assertEquals("my.elem", kit.nextKey());
+        assertEquals("trailing.dot.", kit.nextKey());
+        assertEquals("strange", kit.nextKey());
+        assertFalse(kit.hasNext());
     }
 }

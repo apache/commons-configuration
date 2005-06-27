@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,9 @@ public class ConfigurationKey implements Serializable
 {
     /** Constant for a property delimiter.*/
     public static final char PROPERTY_DELIMITER = '.';
+    
+    /** Constant for an escaped delimiter.*/
+    public static final String ESCAPED_DELIMITER = "..";
 
     /** Constant for an attribute start marker.*/
     private static final String ATTRIBUTE_START = "[@";
@@ -195,8 +198,11 @@ public class ConfigurationKey implements Serializable
      */
     private boolean hasDelimiter()
     {
-        return keyBuffer.length() > 0
-        && keyBuffer.charAt(keyBuffer.length() - 1) == PROPERTY_DELIMITER;
+        int count = 0;
+        for (int idx = keyBuffer.length() - 1; idx >= 0
+                && keyBuffer.charAt(idx) == PROPERTY_DELIMITER; idx--, count++)
+            ;
+        return count % 2 == 1;
     }
 
     /**
@@ -394,13 +400,15 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Helper method for determining the next indices.
+         * 
+         * @return the next key part
          */
-        private void findNextIndices()
+        private String findNextIndices()
         {
             startIndex = endIndex;
             // skip empty names
             while (startIndex < keyBuffer.length()
-            && keyBuffer.charAt(startIndex) == PROPERTY_DELIMITER)
+                    && keyBuffer.charAt(startIndex) == PROPERTY_DELIMITER)
             {
                 startIndex++;
             }
@@ -410,20 +418,57 @@ public class ConfigurationKey implements Serializable
             {
                 endIndex = keyBuffer.length();
                 startIndex = endIndex - 1;
+                return keyBuffer.substring(startIndex, endIndex);
             }
             else
             {
-                String s = keyBuffer.toString();    // for compatibility
-                endIndex = s.indexOf(PROPERTY_DELIMITER, startIndex);
-                if (endIndex < 0)
+                return nextKeyPart();
+            }
+        }
+
+        /**
+         * Helper method for extracting the next key part. Takes escaping of
+         * delimiter characters into account.
+         * 
+         * @return the next key part
+         */
+        private String nextKeyPart()
+        {
+            StringBuffer key = new StringBuffer(32);
+            int idx = startIndex;
+            int endIdx = keyBuffer.toString().indexOf(ATTRIBUTE_START,
+                    startIndex);
+            if (endIdx < 0 || endIdx == startIndex)
+            {
+                endIdx = keyBuffer.length();
+            }
+            boolean found = false;
+
+            while (!found && idx < endIdx)
+            {
+                char c = keyBuffer.charAt(idx);
+                if (c == PROPERTY_DELIMITER)
                 {
-                    endIndex = s.indexOf(ATTRIBUTE_START, startIndex);
-                    if (endIndex < 0 || endIndex == startIndex)
+                    // a duplicated delimiter means escaping
+                    if (idx == endIdx - 1
+                            || keyBuffer.charAt(idx + 1) != PROPERTY_DELIMITER)
                     {
-                        endIndex = keyBuffer.length();
+                        found = true;
+                    }
+                    else
+                    {
+                        idx++;
                     }
                 }
+                if (!found)
+                {
+                    key.append(c);
+                    idx++;
+                }
             }
+
+            endIndex = idx;
+            return key.toString();
         }
 
         /**
@@ -456,8 +501,7 @@ public class ConfigurationKey implements Serializable
 
             hasIndex = false;
             indexValue = -1;
-            findNextIndices();
-            String key = keyBuffer.substring(startIndex, endIndex);
+            String key = findNextIndices();
 
             attribute = checkAttribute(key);
             if (!attribute)
@@ -614,7 +658,7 @@ public class ConfigurationKey implements Serializable
          *
          * @return a clone of this object
          */
-        protected Object clone()
+        public Object clone()
         {
             try
             {
