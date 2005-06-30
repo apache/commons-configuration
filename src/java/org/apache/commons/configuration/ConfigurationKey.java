@@ -42,8 +42,9 @@ public class ConfigurationKey implements Serializable
     /** Constant for a property delimiter.*/
     public static final char PROPERTY_DELIMITER = '.';
     
-    /** Constant for an escaped delimiter.*/
-    public static final String ESCAPED_DELIMITER = "..";
+    /** Constant for an escaped delimiter. */
+    public static final String ESCAPED_DELIMITER = 
+        String.valueOf(PROPERTY_DELIMITER) + String.valueOf(PROPERTY_DELIMITER);
 
     /** Constant for an attribute start marker.*/
     private static final String ATTRIBUTE_START = "[@";
