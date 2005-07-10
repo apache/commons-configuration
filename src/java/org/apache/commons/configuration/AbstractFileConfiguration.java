@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
@@ -241,6 +242,11 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         if (sourceURL == null)
         {
+            if(StringUtils.isEmpty(getBasePath()))
+            {
+                // ensure that we have a valid base path
+                setBasePath(url.toString());
+            }
             sourceURL = url;
         }
         InputStream in = null;

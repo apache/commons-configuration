@@ -347,4 +347,13 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("C:\\path2\\", list.get(1));
         assertEquals("C:\\path3\\complex\\test\\", list.get(2));
     }
+    
+    /**
+     * Tests if included files are loaded when the source lies in the class path.
+     */
+    public void testLoadIncludeFromClassPath() throws ConfigurationException
+    {
+        conf = new PropertiesConfiguration("test.properties");
+        assertEquals("true", conf.getString("include.loaded"));
+    }
 }

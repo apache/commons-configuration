@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35621">
+        AbstractFileConfiguration now always sets a valid base path if the
+        configuration file could be located. This allows PropertiesConfiguration
+        to resolve include files even when loaded from class path.
+      </action>
       <action dev="oheger" type="update" issue="35509">
         Updated XMLConfiguration to correctly deal with properties containing
         dots in their names. Such properties could not be accessed before.

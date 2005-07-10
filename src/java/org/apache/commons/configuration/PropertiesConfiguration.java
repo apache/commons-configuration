@@ -141,7 +141,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     static String include = "include";
 
     /** Allow file inclusion or not */
-    private boolean includesAllowed = true;
+    private boolean includesAllowed;
 
     /** Comment header of the .properties file */
     private String header;
