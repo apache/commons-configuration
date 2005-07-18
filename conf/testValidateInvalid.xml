@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  This is an invalid XML document, it does not conform to the declared DTD
+  (a type is missing in one field element). This document is used for testing
+  XMLConfiguration with a validating parser. It should be possible to load
+  it if validation is disabled, but if validation is enabled, an exception
+  should be thrown.
+-->
+<!DOCTYPE database [
+<!ELEMENT database (table+)>
+<!ELEMENT table (name, fields)>
+
+<!ELEMENT fields (field+)>
+<!ELEMENT field (name, type)>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+]>
+<database>
+  <table>
+    <name>customers</name>
+    <fields>
+      <field>
+        <name>custID</name>
+        <type>java.lang.Long</type>
+      </field>
+      <field>
+        <name>custName</name>
+      </field>
+    </fields>
+  </table>
+</database>

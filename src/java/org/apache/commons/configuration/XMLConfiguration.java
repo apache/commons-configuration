@@ -77,7 +77,10 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /** Stores the name of the root element. */
     private String rootElementName;
-
+    
+    /** Stores the document builder that should be used for loading.*/
+    private DocumentBuilder documentBuilder;
+    
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
      */
@@ -172,7 +175,35 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         }
         rootElementName = name;
     }
-    
+
+    /**
+     * Returns the <code>DocumentBuilder</code> object that is used for
+     * loading documents. If no specific builder has been set, this method
+     * returns <b>null</b>.
+     * 
+     * @return the <code>DocumentBuilder</code> for loading new documents
+     * @since 1.2
+     */
+    public DocumentBuilder getDocumentBuilder()
+    {
+        return documentBuilder;
+    }
+
+    /**
+     * Sets the <code>DocumentBuilder</code> object to be used for loading
+     * documents. This method makes it possible to specify the exact document
+     * builder. So an application can create a builder, configure it for its
+     * special needs, and then pass it to this method.
+     * 
+     * @param documentBuilder the document builder to be used; if undefined, a
+     * default builder will be used
+     * @since 1.2
+     */
+    public void setDocumentBuilder(DocumentBuilder documentBuilder)
+    {
+        this.documentBuilder = documentBuilder;
+    }
+
     /**
      * Returns the XML document this configuration was loaded from. The return
      * value is <b>null</b> if this configuration was not loaded from a XML
@@ -306,6 +337,32 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             }
         }
     }
+    
+    /**
+     * Creates the <code>DocumentBuilder</code> to be used for loading files.
+     * This implementation checks whether a specific
+     * <code>DocumentBuilder</code> has been set. If this is the case, this
+     * one is used. Otherwise a default builder is created.
+     * 
+     * @return the <code>DocumentBuilder</code> for loading configuration
+     * files
+     * @throws ParserConfigurationException if an error occurs
+     * @since 1.2
+     */
+    protected DocumentBuilder createDocumentBuilder()
+            throws ParserConfigurationException
+    {
+        if (getDocumentBuilder() != null)
+        {
+            return getDocumentBuilder();
+        }
+        else
+        {
+            DocumentBuilderFactory factory = DocumentBuilderFactory
+                    .newInstance();
+            return factory.newDocumentBuilder();
+        }
+    }
 
     /**
      * Creates a DOM document from the internal tree of configuration nodes.
@@ -374,19 +431,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     public void load(InputStream in) throws ConfigurationException
     {
-        try
-        {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document newDocument = builder.parse(new InputSource(in));
-            Document oldDocument = document;
-            document = null;
-            initProperties(newDocument, oldDocument == null);
-            document = (oldDocument == null) ? newDocument : oldDocument;
-        }
-        catch (Exception e)
-        {
-            throw new ConfigurationException(e.getMessage(), e);
-        }
+        load(new InputSource(in));
     }
 
     public void load(InputStream in, String encoding) throws ConfigurationException
@@ -406,10 +451,20 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      */
     public void load(Reader in) throws ConfigurationException
     {
+        load(new InputSource(in));
+    }
+    
+    /**
+     * Loads a configuration file from the specified input source.
+     * @param source the input source
+     * @throws ConfigurationException if an error occurs
+     */
+    private void load(InputSource source) throws ConfigurationException
+    {
         try
         {
-            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document newDocument = builder.parse(new InputSource(in));
+            DocumentBuilder builder = createDocumentBuilder();
+            Document newDocument = builder.parse(source);
             Document oldDocument = document;
             document = null;
             initProperties(newDocument, oldDocument == null);

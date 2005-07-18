@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  A valid XML document according to its DTD.
+-->
+<!DOCTYPE database [
+<!ELEMENT database (table+)>
+<!ELEMENT table (name, fields)>
+
+<!ELEMENT fields (field+)>
+<!ELEMENT field (name, type)>
+
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT type (#PCDATA)>
+]>
+
+<database>
+  <table>
+    <name>customers</name>
+    <fields>
+      <field>
+        <name>custID</name>
+        <type>java.lang.Long</type>
+      </field>
+      <field>
+        <name>custName</name>
+        <type>java.lang.String</type>
+      </field>
+    </fields>
+  </table>
+</database>

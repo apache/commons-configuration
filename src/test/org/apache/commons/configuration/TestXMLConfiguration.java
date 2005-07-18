@@ -23,7 +23,13 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import junit.framework.TestCase;
 
@@ -450,6 +456,7 @@ public class TestXMLConfiguration extends TestCase
             conf.setReloadingStrategy(strategy);
             conf.load();
             assertEquals(1, conf.getInt("test"));
+            Thread.sleep(1000);
 
             out = new PrintWriter(new FileWriter(testSaveConf));
             out.println("<?xml version=\"1.0\"?><config><test>2</test></config>");
@@ -485,5 +492,46 @@ public class TestXMLConfiguration extends TestCase
     {
         assertEquals("Name with dot", conf.getString("complexNames.my..elem"));
         assertEquals("Another dot", conf.getString("complexNames.my..elem.sub..elem"));
+    }
+    
+    /**
+     * Tests setting a custom document builder.
+     */
+    public void testCustomDocBuilder() throws Exception
+    {
+        // Load an invalid XML file with the default (non validating)
+        // doc builder. This should work...
+        conf = new XMLConfiguration();
+        conf.load(new File("conf/testValidateInvalid.xml"));
+        assertEquals("customers", conf.getString("table.name"));
+        assertFalse(conf.containsKey("table.fields.field(1).type"));
+
+        // Now create a validating doc builder and set it.
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new DefaultHandler() {
+            public void error(SAXParseException ex) throws SAXException
+            {
+                throw ex;
+            }
+        });
+        conf = new XMLConfiguration();
+        conf.setDocumentBuilder(builder);
+        try
+        {
+            conf.load(new File("conf/testValidateInvalid.xml"));
+            fail("Could load invalid file with validating set to true!");
+        }
+        catch(ConfigurationException ex)
+        {
+            //ok
+        }
+        
+        // Try to load a valid document with a validating builder
+        conf = new XMLConfiguration();
+        conf.setDocumentBuilder(builder);
+        conf.load(new File("conf/testValidateValid.xml"));
+        assertTrue(conf.containsKey("table.fields.field(1).type"));
     }
 }
