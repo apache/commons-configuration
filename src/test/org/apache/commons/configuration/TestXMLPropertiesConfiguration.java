@@ -16,6 +16,8 @@
 
 package org.apache.commons.configuration;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 
 /**
@@ -47,10 +49,15 @@ public class TestXMLPropertiesConfiguration extends TestCase
         conf.setHeader("Description of the new property list");
 
         // save the configuration
-        conf.save("target/test2.properties.xml");
+        File saveFile = new File("target/test2.properties.xml");
+        if (saveFile.exists())
+        {
+            assertTrue(saveFile.delete());
+        }
+        conf.save(saveFile);
 
         // reload the configuration
-        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration("target/test2.properties.xml");
+        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration(saveFile);
 
         // test the configuration
         assertEquals("header", "Description of the new property list", conf2.getHeader());
