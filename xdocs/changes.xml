@@ -23,6 +23,16 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35772">
+        Because ConfigurationUtils.copy() does not fully support hierarchical
+        configurations a clone() method was added to HierarchicalConfiguration
+        that can be used instead.
+      </action>
+      <action dev="oheger" type="add" issue="31616">
+        XMLConfiguration now supports setting a custom DocumentBuilder for
+        loading XML documents. This makes it possible e.g. to enable validation
+        when a configuration file is loaded.
+      </action>
       <action dev="oheger" type="update" issue="35621">
         AbstractFileConfiguration now always sets a valid base path if the
         configuration file could be located. This allows PropertiesConfiguration

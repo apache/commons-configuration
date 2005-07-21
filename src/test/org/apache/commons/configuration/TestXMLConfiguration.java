@@ -534,4 +534,18 @@ public class TestXMLConfiguration extends TestCase
         conf.load(new File("conf/testValidateValid.xml"));
         assertTrue(conf.containsKey("table.fields.field(1).type"));
     }
+    
+    /**
+     * Tests the clone() method.
+     */
+    public void testClone()
+    {
+        Configuration c = (Configuration) conf.clone();
+        assertTrue(c instanceof XMLConfiguration);
+        XMLConfiguration copy = (XMLConfiguration) c;
+        assertNotNull(conf.getDocument());
+        assertNull(copy.getDocument());
+        assertNotNull(conf.getFileName());
+        assertNull(copy.getFileName());
+    }
 }

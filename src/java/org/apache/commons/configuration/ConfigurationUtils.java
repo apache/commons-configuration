@@ -104,6 +104,11 @@ public final class ConfigurationUtils
      * Copy all properties from the source configuration to the target
      * configuration. Properties in the target configuration are replaced with
      * the properties with the same key in the source configuration.
+     * <em>Note:</em> This method won't work well on hierarchical configurations
+     * because it is not able to copy information about the properties'
+     * structure. So when dealing with hierarchical configuration objects their
+     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * should be used.
      *
      * @param source the source configuration
      * @param target the target configuration

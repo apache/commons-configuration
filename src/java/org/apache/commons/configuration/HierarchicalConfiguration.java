@@ -92,7 +92,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id: HierarchicalConfiguration.java,v 1.14 2004/12/02 22:05:52
  * ebourg Exp $
  */
-public class HierarchicalConfiguration extends AbstractConfiguration
+public class HierarchicalConfiguration extends AbstractConfiguration implements
+        Cloneable
 {
     /** Constant for a new dummy key. */
     private static final String NEW_KEY = "newKey";
@@ -471,6 +472,34 @@ public class HierarchicalConfiguration extends AbstractConfiguration
     public int getMaxIndex(String key)
     {
         return fetchNodeList(key).size() - 1;
+    }
+    
+    /**
+     * Creates a copy of this object. This new configuration object will contain
+     * copies of all nodes in the same structure.
+     * 
+     * @return the copy
+     * @since 1.2
+     */
+    public Object clone()
+    {
+        try
+        {
+            HierarchicalConfiguration copy = (HierarchicalConfiguration) super
+                    .clone();
+
+            // clone the nodes, too
+            CloneVisitor v = new CloneVisitor();
+            getRoot().visit(v, null);
+            copy.setRoot(v.getClone());
+
+            return copy;
+        }
+        catch (CloneNotSupportedException cex)
+        {
+            // should not happen
+            throw new ConfigurationRuntimeException(cex);
+        }
     }
 
     /**

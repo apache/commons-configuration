@@ -528,6 +528,33 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
+    
+    /**
+     * Creates a copy of this object. The new configuration object will contain
+     * the same properties as the original, but it will lose any connection to a
+     * source document (if one exists). This is to avoid race conditions if both
+     * the original and the copy are modified and then saved.
+     * 
+     * @return the copy
+     */
+    public Object clone()
+    {
+        XMLConfiguration copy = (XMLConfiguration) super.clone();
+
+        // clear document related properties
+        copy.document = null;
+        copy.delegate = copy.new FileConfigurationDelegate();
+        // clear all references in the nodes, too
+        copy.getRoot().visit(new NodeVisitor()
+        {
+            public void visitBeforeChildren(Node node, ConfigurationKey key)
+            {
+                node.setReference(null);
+            }
+        }, null);
+
+        return copy;
+    }
 
     public String getFileName()
     {

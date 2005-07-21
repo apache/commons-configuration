@@ -312,6 +312,22 @@ public class TestHierarchicalConfiguration extends TestCase
         assertTrue("subset is not empty", conf.isEmpty());
     }
     
+    public void testClone()
+    {
+        Configuration copy = (Configuration) config.clone();
+        assertTrue(copy instanceof HierarchicalConfiguration);
+        for (int i = 0; i < tables.length; i++)
+        {
+            assertEquals(tables[i], copy.getString("tables.table(" + i
+                    + ").name"));
+            for (int j = 0; j < fields[i].length; j++)
+            {
+                assertEquals(fields[i][j], copy.getString("tables.table(" + i
+                        + ").fields.field(" + j + ").name"));
+            }
+        }
+    }
+    
     /**
      * Helper method for testing the getKeys(String) method.
      * @param prefix the key to pass into getKeys()
