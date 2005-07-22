@@ -530,11 +530,25 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * URL with a protocol different than &quot;file&quot;, the return value
      * will not point to a valid file object.
      * 
-     * @return the file where the configuration is stored
+     * @return the file where the configuration is stored; this can be <b>null</b>
      */
     public File getFile()
     {
-        return ConfigurationUtils.getFile(getBasePath(), getFileName());
+        if (getFileName() == null)
+        {
+            return null;
+        }
+        else
+        {
+            if (sourceURL != null)
+            {
+                return ConfigurationUtils.fileFromURL(sourceURL);
+            }
+            else
+            {
+                return ConfigurationUtils.getFile(getBasePath(), getFileName());
+            }
+        }
     }
 
     /**

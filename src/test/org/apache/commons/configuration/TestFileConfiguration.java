@@ -355,4 +355,18 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
+    
+    /**
+     * Tests the getFile() method.
+     */
+    public void testGetFile() throws ConfigurationException
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        assertNull(config.getFile());
+        File file = new File("conf/test.properties").getAbsoluteFile();
+        config.setFile(file);
+        assertEquals(file, config.getFile());
+        config.load();
+        assertEquals(file, config.getFile());
+    }
 }
