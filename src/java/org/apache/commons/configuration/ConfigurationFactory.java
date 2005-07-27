@@ -280,7 +280,7 @@ public class ConfigurationFactory
         setupDigesterInstance(
             digester,
             matchString + "properties",
-            new FileConfigurationFactory(PropertiesConfiguration.class),
+            new PropertiesConfigurationFactory(),
             null,
             additional);
 
@@ -335,16 +335,16 @@ public class ConfigurationFactory
         {
             setupUnionRules(digester, matchString);
         }
+
         digester.addFactoryCreate(matchString, factory);
         digester.addSetProperties(matchString);
+
         if (method != null)
         {
             digester.addCallMethod(matchString, method);
         }
-        digester.addSetNext(
-            matchString,
-            "addConfiguration",
-            Configuration.class.getName());
+
+        digester.addSetNext(matchString, "addConfiguration", Configuration.class.getName());
     }
 
     /**
@@ -492,7 +492,7 @@ public class ConfigurationFactory
          */
         public Object createObject(Attributes attributes) throws Exception
         {
-            FileConfiguration conf = (FileConfiguration) super.createObject(attributes);
+            FileConfiguration conf = createConfiguration(attributes);
             conf.setBasePath(getBasePath());
             conf.setFileName(attributes.getValue(ATTR_FILENAME));
             try
@@ -500,9 +500,9 @@ public class ConfigurationFactory
                 log.info("Trying to load configuration " + conf.getFileName());
                 conf.load();
             }
-            catch(ConfigurationException cex)
+            catch (ConfigurationException cex)
             {
-                if(attributes.getValue(ATTR_OPTIONAL) != null
+                if (attributes.getValue(ATTR_OPTIONAL) != null
                         && PropertyConverter.toBoolean(attributes.getValue(ATTR_OPTIONAL)).booleanValue())
                 {
                     log.warn("Could not load optional configuration " + conf.getFileName());
@@ -513,6 +513,39 @@ public class ConfigurationFactory
                 }
             }
             return conf;
+        }
+
+        protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
+        {
+            return (FileConfiguration) super.createObject(attributes);
+        }
+    }
+
+    /**
+     * A factory that returns an XMLPropertiesConfiguration for .xml files
+     * and a PropertiesConfiguration for the others.
+     *
+     * @since 1.2
+     */
+    public class PropertiesConfigurationFactory extends FileConfigurationFactory
+    {
+        public PropertiesConfigurationFactory()
+        {
+            super(null);
+        }
+
+        protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
+        {
+            String filename = attributes.getValue(ATTR_FILENAME);
+
+            if (filename != null && filename.toLowerCase().trim().endsWith(".xml"))
+            {
+                return new XMLPropertiesConfiguration();
+            }
+            else
+            {
+                return new PropertiesConfiguration();
+            }
         }
     }
 

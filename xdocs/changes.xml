@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="add">
+        Added support for XMLPropertiesConfiguration in ConfigurationFactory.
+        A &lt;properties> element will generate a XMLPropertiesConfiguration
+        if the filename ends with ".xml".
+      </action>
       <action dev="ebourg" type="add" issue="29192">
         PropertiesConfiguration now supports escaped key/value separators in the keys
         (i.e foo\:key = bar).
