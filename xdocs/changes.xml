@@ -23,6 +23,17 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="add" issue="29192">
+        PropertiesConfiguration now supports escaped key/value separators in the keys
+        (i.e foo\:key = bar).
+      </action>
+      <action dev="ebourg" type="add" issue="29171">
+        PropertiesConfiguration now supports all key/value separators supported by java.util.Properties
+        ('=', ':' and white space characters).
+      </action>
+      <action dev="ebourg" type="update">
+        Commons Configuration now depends on Commons Lang 2.1 instead of 2.0
+      </action>
       <action dev="ebourg" type="update" issue="35888">
         Comment lines for PropertiesConfiguration can start with the '!' char (compatibility with java.util.Properties)
       </action>

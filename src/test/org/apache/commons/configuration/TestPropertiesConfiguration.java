@@ -371,4 +371,27 @@ public class TestPropertiesConfiguration extends TestCase
         assertFalse("comment line starting with '#' parsed as a property", conf.containsKey("#comment"));
         assertFalse("comment line starting with '!' parsed as a property", conf.containsKey("!comment"));
     }
+
+    /**
+     * Check that key/value separators can be part of a key.
+     */
+    public void testEscapedKeyValueSeparator()
+    {
+        assertEquals("Escaped separator '=' not supported in keys", "foo", conf.getProperty("test.separator=in.key"));
+        assertEquals("Escaped separator ':' not supported in keys", "bar", conf.getProperty("test.separator:in.key"));
+        assertEquals("Escaped separator '\\t' not supported in keys", "foo", conf.getProperty("test.separator\tin.key"));
+        assertEquals("Escaped separator '\\f' not supported in keys", "bar", conf.getProperty("test.separator\fin.key"));
+        assertEquals("Escaped separator ' ' not supported in keys"  , "foo", conf.getProperty("test.separator in.key"));
+    }
+
+    /**
+     * Test all acceptable key/value separators ('=', ':' or white spaces).
+     */
+    public void testKeyValueSeparators() {
+        assertEquals("equal separator not properly parsed",      "foo", conf.getProperty("test.separator.equal"));
+        assertEquals("colon separator not properly parsed",      "foo", conf.getProperty("test.separator.colon"));
+        assertEquals("tab separator not properly parsed",        "foo", conf.getProperty("test.separator.tab"));
+        assertEquals("formfeed separator not properly parsed",   "foo", conf.getProperty("test.separator.formfeed"));
+        assertEquals("whitespace separator not properly parsed", "foo", conf.getProperty("test.separator.whitespace"));
+    }
 }

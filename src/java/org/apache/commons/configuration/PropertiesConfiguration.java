@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -42,14 +43,24 @@ import org.apache.commons.lang.StringUtils;
  * added and later saved. include statements are (obviously) not supported
  * if you don't construct a PropertyConfiguration from a file.
  *
- * <p>The properties file syntax is explained here:
+ * <p>The properties file syntax is explained here, basically it follows
+ * the syntax of the stream parsed by {@link java.util.Properties#load} and
+ * adds several useful extensions:
  *
  * <ul>
  *  <li>
- *   Each property has the syntax <code>key = value</code>
+ *   Each property has the syntax <code>key &lt;separator> value</code>. The
+ *   separators accepted are <code>'='</code>, <code>':'</code> and any white
+ *   space character. Examples:
+ * <pre>
+ *  key1 = value1
+ *  key2 : value2
+ *  key3   value3</pre>
  *  </li>
  *  <li>
- *   The <i>key</i> may use any character but the equal sign '='.
+ *   The <i>key</i> may use any character, separators must be escaped:
+ * <pre>
+ *  key\:foo = bar</pre>
  *  </li>
  *  <li>
  *   <i>value</i> may be separated on different lines if a backslash
@@ -108,7 +119,7 @@ import org.apache.commons.lang.StringUtils;
  *      tokens_on_multiple_lines = second token
  *
  *      # commas may be escaped in tokens
- *      commas.excaped = Hi\, what'up?
+ *      commas.escaped = Hi\, what'up?
  *
  *      # properties can reference other properties
  *      base.prop = /base
@@ -116,7 +127,8 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * @author <a href="mailto:e.bourg@cross-systems.com">Emmanuel Bourg</a>
+ * @see java.util.Properties#load
+ *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  * @author <a href="mailto:jon@latchkey.com">Jon S. Stevens</a>
  * @author <a href="mailto:daveb@miceda-data">Dave Bryson</a>
@@ -130,10 +142,17 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
+    /** The list of possible key/value separators */
+    private static final char[] SEPARATORS = new char[] { '=', ':' };
+
+    /** The white space characters used as key/value separators. */
+    private static final char[] WHITE_SPACE = new char[] { ' ', '\t', '\f' };
+
     /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
@@ -286,34 +305,32 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     break; // EOF
                 }
 
-                int equalSign = line.indexOf('=');
-                if (equalSign > 0)
+                // parse the line
+                String[] property = parseProperty(line);
+                String key = property[0];
+                String value = property[1];
+
+                // Though some software (e.g. autoconf) may produce
+                // empty values like foo=\n, emulate the behavior of
+                // java.util.Properties by setting the value to the
+                // empty string.
+
+                if (StringUtils.isNotEmpty(getInclude()) && key.equalsIgnoreCase(getInclude()))
                 {
-                    String key = line.substring(0, equalSign).trim();
-                    String value = line.substring(equalSign + 1).trim();
-
-                    // Though some software (e.g. autoconf) may produce
-                    // empty values like foo=\n, emulate the behavior of
-                    // java.util.Properties by setting the value to the
-                    // empty string.
-
-                    if (StringUtils.isNotEmpty(getInclude())
-                        && key.equalsIgnoreCase(getInclude()))
+                    if (getIncludesAllowed())
                     {
-                        if (getIncludesAllowed())
+                        String [] files = StringUtils.split(value, getDelimiter());
+                        for (int i = 0; i < files.length; i++)
                         {
-                            String [] files = StringUtils.split(value, getDelimiter());
-                            for (int i = 0; i < files.length; i++)
-                            {
-                                load(ConfigurationUtils.locate(getBasePath(), files[i].trim()));
-                            }
+                            load(ConfigurationUtils.locate(getBasePath(), files[i].trim()));
                         }
                     }
-                    else
-                    {
-                        addProperty(key, unescapeJava(value, getDelimiter()));
-                    }
                 }
+                else
+                {
+                    addProperty(key, unescapeJava(value, getDelimiter()));
+                }
+
             }
         }
         catch (IOException ioe)
@@ -498,7 +515,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         public void writeProperty(String key, Object value) throws IOException
         {
-            write(key);
+            write(escapeKey(key));
             write(" = ");
             if (value != null)
             {
@@ -534,6 +551,33 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             write("# " + comment + "\n");
         }
+
+        /**
+         * Escape the separators in the key.
+         */
+        private String escapeKey(String key)
+        {
+            StringBuffer newkey = new StringBuffer();
+
+            for (int i = 0; i < key.length(); i++)
+            {
+                char c = key.charAt(i);
+
+                if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
+                {
+                    // escape the separator
+                    newkey.append('\\');
+                    newkey.append(c);
+                }
+                else
+                {
+                    newkey.append(c);
+                }
+            }
+
+            return newkey.toString();
+        }
+
     } // class PropertiesWriter
 
     /**
@@ -644,6 +688,104 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         return out.toString();
+    }
+
+    /**
+     * Parse a property line and return the key and the value in an array.
+     */
+    private String[] parseProperty(String line)
+    {
+        // sorry for this spaghetti code, please replace it as soon as
+        // possible with a regexp when the Java 1.3 requirement is dropped
+
+        String[] result = new String[2];
+        StringBuffer key = new StringBuffer();
+        StringBuffer value = new StringBuffer();
+
+        // state of the automaton:
+        // 0: key parsing
+        // 1: antislash found while parsing the key
+        // 2: separator crossing
+        // 3: value parsing
+        int state = 0;
+
+        for (int pos = 0; pos < line.length(); pos++)
+        {
+            char c = line.charAt(pos);
+
+            switch (state)
+            {
+                case 0:
+                    if (c == '\\')
+                    {
+                        state = 1;
+                    }
+                    else if (ArrayUtils.contains(WHITE_SPACE, c))
+                    {
+                        // switch to the separator crossing state
+                        state = 2;
+                    }
+                    else if (ArrayUtils.contains(SEPARATORS, c))
+                    {
+                        // switch to the value parsing state
+                        state = 3;
+                    }
+                    else
+                    {
+                        key.append(c);
+                    }
+
+                    break;
+
+                case 1:
+                    if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
+                    {
+                        // this is an escaped separator or white space
+                        key.append(c);
+                    }
+                    else
+                    {
+                        // another escaped character, the '\' is preserved
+                        key.append('\\');
+                        key.append(c);
+                    }
+
+                    // return to the key parsing state
+                    state = 0;
+
+                    break;
+
+                case 2:
+                    if (ArrayUtils.contains(WHITE_SPACE, c))
+                    {
+                        // do nothing, eat all white spaces
+                    }
+                    else if (ArrayUtils.contains(SEPARATORS, c))
+                    {
+                        // switch to the value parsing state
+                        state = 3;
+                    }
+                    else
+                    {
+                        // any other character indicates we encoutered the beginning of the value
+                        value.append(c);
+
+                        // switch to the value parsing state
+                        state = 3;
+                    }
+
+                    break;
+
+                case 3:
+                    value.append(c);
+                    break;
+            }
+        }
+
+        result[0] = key.toString().trim();
+        result[1] = value.toString().trim();
+
+        return result;
     }
 
 }
