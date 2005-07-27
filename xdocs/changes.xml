@@ -23,6 +23,9 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="35888">
+        Comment lines for PropertiesConfiguration can start with the '!' char (compatibility with java.util.Properties)
+      </action>
       <action dev="oheger" type="update" issue="35772">
         Because ConfigurationUtils.copy() does not fully support hierarchical
         configurations a clone() method was added to HierarchicalConfiguration

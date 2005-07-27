@@ -19,6 +19,13 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.PipedOutputStream;
+import java.io.PipedInputStream;
+import java.io.ObjectOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -347,7 +354,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("C:\\path2\\", list.get(1));
         assertEquals("C:\\path3\\complex\\test\\", list.get(2));
     }
-    
+
     /**
      * Tests if included files are loaded when the source lies in the class path.
      */
@@ -355,5 +362,13 @@ public class TestPropertiesConfiguration extends TestCase
     {
         conf = new PropertiesConfiguration("test.properties");
         assertEquals("true", conf.getString("include.loaded"));
+    }
+
+    /**
+     * Test if the lines starting with # or ! are properly ignored.
+     */
+    public void testComment() {
+        assertFalse("comment line starting with '#' parsed as a property", conf.containsKey("#comment"));
+        assertFalse("comment line starting with '!' parsed as a property", conf.containsKey("!comment"));
     }
 }

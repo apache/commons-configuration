@@ -16,14 +16,14 @@
 
 package org.apache.commons.configuration;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.io.Writer;
 import java.io.StringReader;
-import java.io.BufferedReader;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Date;
 import java.util.Iterator;
@@ -68,7 +68,7 @@ import org.apache.commons.lang.StringUtils;
  *   like if they were on the same line separated with commas.
  *  </li>
  *  <li>
- *   Blank lines and lines starting with character '#' are skipped.
+ *   Blank lines and lines starting with character '#' or '!' are skipped.
  *  </li>
  *  <li>
  *   If a property is named "include" (or whatever is defined by
@@ -414,7 +414,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /**
          * Read a property. Returns null if Stream is
          * at EOF. Concatenates lines ending with "\".
-         * Skips lines beginning with "#" and empty lines.
+         * Skips lines beginning with "#" or "!" and empty lines.
          *
          * @return A string containing a property value or null
          *
@@ -436,7 +436,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 line = line.trim();
 
                 // skip comments and empty lines
-                if (StringUtils.isEmpty(line) || (line.charAt(0) == '#'))
+                if (StringUtils.isEmpty(line) || (line.charAt(0) == '#') || (line.charAt(0) == '!'))
                 {
                     continue;
                 }
