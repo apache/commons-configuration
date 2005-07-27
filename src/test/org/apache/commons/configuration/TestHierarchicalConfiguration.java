@@ -45,29 +45,18 @@ public class TestHierarchicalConfiguration extends TestCase
     protected void setUp() throws Exception
     {
         config = new HierarchicalConfiguration();
-        HierarchicalConfiguration.Node nodeTables =
-        new HierarchicalConfiguration.Node("tables");
+        HierarchicalConfiguration.Node nodeTables = createNode("tables", null);
         for(int i = 0; i < tables.length; i++)
         {
-            HierarchicalConfiguration.Node nodeTable = 
-            new HierarchicalConfiguration.Node("table");
+            HierarchicalConfiguration.Node nodeTable = createNode("table", null); 
             nodeTables.addChild(nodeTable);
-            HierarchicalConfiguration.Node nodeName =
-            new HierarchicalConfiguration.Node("name");
-            nodeName.setValue(tables[i]);
+            HierarchicalConfiguration.Node nodeName = createNode("name", tables[i]);
             nodeTable.addChild(nodeName);
-            HierarchicalConfiguration.Node nodeFields =
-            new HierarchicalConfiguration.Node("fields");
+            HierarchicalConfiguration.Node nodeFields = createNode("fields", null);
             nodeTable.addChild(nodeFields);
             for(int j = 0; j < fields[i].length; j++)
             {
-                HierarchicalConfiguration.Node nodeField =
-                new HierarchicalConfiguration.Node("field");
-                HierarchicalConfiguration.Node nodeFieldName =
-                new HierarchicalConfiguration.Node("name");
-                nodeFieldName.setValue(fields[i][j]);
-                nodeField.addChild(nodeFieldName);
-                nodeFields.addChild(nodeField);
+                nodeFields.addChild(createFieldNode(fields[i][j]));
             }  /* for */
         }  /* for */
         config.getRoot().addChild(nodeTables);
@@ -328,6 +317,19 @@ public class TestHierarchicalConfiguration extends TestCase
         }
     }
     
+    public void testAddNodes()
+    {
+        Collection nodes = new ArrayList();
+        nodes.add(createFieldNode("birthDate"));
+        nodes.add(createFieldNode("lastLogin"));
+        nodes.add(createFieldNode("language"));
+        config.addNodes("tables.table(0).fields", nodes);
+        assertEquals(7, config.getMaxIndex("tables.table(0).fields.field"));
+        assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
+        assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
+        assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+    }
+    
     /**
      * Helper method for testing the getKeys(String) method.
      * @param prefix the key to pass into getKeys()
@@ -356,5 +358,30 @@ public class TestHierarchicalConfiguration extends TestCase
         }
         
         assertTrue("Remaining keys " + values, values.isEmpty());
+    }
+    
+    /**
+     * Helper method for creating a field node with its children.
+     * @param name the name of the field
+     * @return the field node
+     */
+    private static HierarchicalConfiguration.Node createFieldNode(String name)
+    {
+        HierarchicalConfiguration.Node fld = createNode("field", null);
+        fld.addChild(createNode("name", name));
+        return fld;
+    }
+    
+    /**
+     * Helper method for creating a configuration node.
+     * @param name the node's name
+     * @param value the node's value
+     * @return the new node
+     */
+    private static HierarchicalConfiguration.Node createNode(String name, Object value)
+    {
+        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(name);
+        node.setValue(value);
+        return node;
     }
 }
