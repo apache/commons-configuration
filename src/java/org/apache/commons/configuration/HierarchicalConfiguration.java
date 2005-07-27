@@ -1023,7 +1023,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
         {
             try
             {
-                return super.clone();
+                Node copy = (Node) super.clone();
+                copy.children = null;
+                return copy;
             }
             catch (CloneNotSupportedException cex)
             {
@@ -1263,10 +1265,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
          */
         public void visitAfterChildren(Node node, ConfigurationKey key)
         {
-            copyStack.pop();
+            Node copy = (Node) copyStack.pop();
             if (copyStack.isEmpty())
             {
-                result = node;
+                result = copy;
             }
         }
 
@@ -1279,7 +1281,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
             Node copy = (Node) node.clone();
-            copy.removeChildren();
 
             if (!copyStack.isEmpty())
             {

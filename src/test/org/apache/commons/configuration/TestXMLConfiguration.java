@@ -547,5 +547,25 @@ public class TestXMLConfiguration extends TestCase
         assertNull(copy.getDocument());
         assertNotNull(conf.getFileName());
         assertNull(copy.getFileName());
+        
+        copy.setProperty("element3", "clonedValue");
+        assertEquals("value", conf.getString("element3"));
+        conf.setProperty("element3[@name]", "originalFoo");
+        assertEquals("foo", copy.getString("element3[@name]"));
+    }
+    
+    public void testSubset() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        conf.load(new File("conf/testHierarchicalXMLConfiguration.xml"));
+        conf.subset("tables.table(0)");
+        if(testSaveConf.exists())
+        {
+            assertTrue(testSaveConf.delete());
+        }
+        conf.save(testSaveConf);
+        
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("users", conf.getString("tables.table(0).name"));
     }
 }
