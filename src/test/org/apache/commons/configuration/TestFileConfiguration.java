@@ -369,4 +369,48 @@ public class TestFileConfiguration extends TestCase
         config.load();
         assertEquals(file, config.getFile());
     }
+    
+    /**
+     * Tests to invoke save() without explicitely setting a file name. This
+     * will cause an exception.
+     */
+    public void testSaveWithoutFileName() throws Exception
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        File file = new File("conf/test.properties");
+        config.load(file);
+        try
+        {
+            config.save();
+            fail("Could save config without setting a file name!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
+        
+        config = new PropertiesConfiguration();
+        config.load("conf/test.properties");
+        try
+        {
+            config.save();
+            fail("Could save config without setting a file name!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
+        
+        config = new PropertiesConfiguration();
+        config.load(file.toURL());
+        try
+        {
+            config.save();
+            fail("Could save config without setting a file name!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
+    }
 }

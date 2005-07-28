@@ -180,11 +180,12 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Locate the specified file and load the configuration.
+     * Locate the specified file and load the configuration. This does not
+     * change the source of the configuration (i.e. the internally maintained file name).
+     * Use one of the setter methods for this purpose.
      *
-     * @param fileName the name of the file loaded
-     *
-     * @throws ConfigurationException
+     * @param fileName the name of the file to be loaded
+     * @throws ConfigurationException if an error occurs
      */
     public void load(String fileName) throws ConfigurationException
     {
@@ -209,11 +210,12 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Load the configuration from the specified file.
+     * Load the configuration from the specified file. This does not change
+     * the source of the configuration (i.e. the internally maintained file
+     * name). Use one of the setter methods for this purpose.
      *
-     * @param file the loaded file
-     *
-     * @throws ConfigurationException
+     * @param file the file to load
+     * @throws ConfigurationException if an error occurs
      */
     public void load(File file) throws ConfigurationException
     {
@@ -232,11 +234,12 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Load the configuration from the specified URL.
+     * Load the configuration from the specified URL. This does not change the
+     * source of the configuration (i.e. the internally maintained file name).
+     * Use on of the setter methods for this purpose.
      *
-     * @param url the URL of the file loaded
-     *
-     * @throws ConfigurationException
+     * @param url the URL of the file to be loaded
+     * @throws ConfigurationException if an error occurs
      */
     public void load(URL url) throws ConfigurationException
     {
@@ -329,12 +332,19 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration.
+     * Save the configuration. Before this method can be called a valid file
+     * name must have been set.
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs or no file name has
+     * been set yet
      */
     public void save() throws ConfigurationException
     {
+        if (getFileName() == null)
+        {
+            throw new ConfigurationException("No file name has been set!");
+        }
+        
         if (sourceURL != null)
         {
             save(sourceURL);
