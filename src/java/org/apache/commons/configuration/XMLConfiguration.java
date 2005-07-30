@@ -296,6 +296,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                         (elemRefs) ? child : null);
                 constructHierarchy(childNode, child, elemRefs);
                 node.addChild(childNode);
+                handleDelimiters(node, childNode);
             }
             else if (w3cNode instanceof Text)
             {
@@ -334,6 +335,40 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                     child.setValue(it.next());
                     node.addChild(child);
                 }
+            }
+        }
+    }
+    
+    /**
+     * Deals with elements whose value is a list. In this case multiple child
+     * elements must be added.
+     * 
+     * @param parent the parent element
+     * @param child the child element
+     */
+    private void handleDelimiters(Node parent, Node child)
+    {
+        if (child.getValue() != null)
+        {
+            List values = PropertyConverter.split(child.getValue().toString(),
+                    getDelimiter());
+            if (values.size() > 1)
+            {
+                // remove the original child
+                parent.remove(child);
+                // add multiple new children
+                for (Iterator it = values.iterator(); it.hasNext();)
+                {
+                    Node c = new XMLNode(child.getName(), null);
+                    c.setValue(it.next());
+                    parent.addChild(c);
+                }
+            }
+            else if (values.size() == 1)
+            {
+                // we will have to replace the value because it might
+                // contain escaped delimiters
+                child.setValue(values.get(0));
             }
         }
     }
@@ -752,10 +787,13 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             {
                 if (txtNode == null)
                 {
-                    txtNode = document.createTextNode(value.toString());
+                    txtNode = document
+                            .createTextNode(PropertyConverter.escapeDelimiters(
+                                    value.toString(), getDelimiter()));
                     if (((Element) getReference()).getFirstChild() != null)
                     {
-                        ((Element) getReference()).insertBefore(txtNode, ((Element) getReference()).getFirstChild());
+                        ((Element) getReference()).insertBefore(txtNode,
+                                ((Element) getReference()).getFirstChild());
                     }
                     else
                     {
@@ -764,7 +802,8 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                 }
                 else
                 {
-                    txtNode.setNodeValue(value.toString());
+                    txtNode.setNodeValue(PropertyConverter.escapeDelimiters(
+                            value.toString(), getDelimiter()));
                 }
             }
         }
@@ -870,7 +909,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                 Element elem = document.createElement(newNode.getName());
                 if (newNode.getValue() != null)
                 {
-                    elem.appendChild(document.createTextNode(newNode.getValue().toString()));
+                    elem.appendChild(document.createTextNode(PropertyConverter.escapeDelimiters(newNode.getValue().toString(), getDelimiter())));
                 }
                 if (sibling2 == null)
                 {
@@ -911,18 +950,21 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                         {
                             buf.append(getDelimiter());
                         }
-                        buf.append(attr.getValue());
+                        buf.append(PropertyConverter.escapeDelimiters(attr
+                                .getValue().toString(), getDelimiter()));
                     }
                     attr.setReference(elem);
                 }
 
                 if (buf.length() < 1)
                 {
-                    elem.removeAttribute(ConfigurationKey.removeAttributeMarkers(name));
+                    elem.removeAttribute(ConfigurationKey
+                            .removeAttributeMarkers(name));
                 }
                 else
                 {
-                    elem.setAttribute(ConfigurationKey.removeAttributeMarkers(name), buf.toString());
+                    elem.setAttribute(ConfigurationKey
+                            .removeAttributeMarkers(name), buf.toString());
                 }
             }
         }

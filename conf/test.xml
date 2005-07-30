@@ -38,6 +38,14 @@ And even longer.
 			<item>six</item>
 		</sublist>
 	</list>
+    
+    <!-- Comma delimited lists -->
+    <split>
+      <list1>a,b,c</list1>
+      <list2>a\,b\,c</list2>
+      <list3 values="a,b,c"/>
+      <list4 values="a\,b\,c"/>
+    </split>
 
 	<!-- clear tests -->
 	<clear>

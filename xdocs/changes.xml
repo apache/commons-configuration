@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35938">
+        Resolved some issues with XMLConfiguration and properties containing
+        the delimiter character. These properties are now correctly treated,
+        escaping the delimiter will work, too.
+      </action>
       <action dev="ebourg" type="add">
         Added support for XMLPropertiesConfiguration in ConfigurationFactory.
         A &lt;properties> element will generate a XMLPropertiesConfiguration

@@ -1367,6 +1367,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
                             {
                                 insertNode.setReference(ref);
                             }
+                            sibling1 = insertNode;
                         }
                     }
                 }

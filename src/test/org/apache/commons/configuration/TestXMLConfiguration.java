@@ -208,8 +208,6 @@ public class TestXMLConfiguration extends TestCase
         // test single attribute
         conf.load();
         key = "clear.element2[@id]";
-        Object p = conf.getProperty(key);
-        p = conf.getProperty("clear.element2");
         conf.clearProperty(key);
         assertNull(key, conf.getProperty(key));
         assertNull(key, conf.getProperty(key));
@@ -367,6 +365,11 @@ public class TestXMLConfiguration extends TestCase
         {
            conf.addProperty("test.attribute[@array]", "value" + i);
         }
+        
+        // add comma delimited lists with escaped delimiters
+        conf.addProperty("split.list5", "a\\,b\\,c");
+        conf.setProperty("element3", "value\\,value1\\,value2");
+        conf.setProperty("element3[@name]", "foo\\,bar");
 
         // save the configuration
         conf.save(testSaveConf.getAbsolutePath());
@@ -554,6 +557,10 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("foo", copy.getString("element3[@name]"));
     }
     
+    /**
+     * Tests the subset() method. There was a bug that calling subset() had
+     * undesired side effects.
+     */
     public void testSubset() throws ConfigurationException
     {
         conf = new XMLConfiguration();
@@ -567,5 +574,18 @@ public class TestXMLConfiguration extends TestCase
         
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("users", conf.getString("tables.table(0).name"));
+    }
+    
+    /**
+     * Tests string properties with list delimiters and escaped delimiters.
+     */
+    public void testSplitLists()
+    {
+        assertEquals("a", conf.getString("split.list3[@values]"));
+        assertEquals(2, conf.getMaxIndex("split.list3[@values]"));
+        assertEquals("a,b,c", conf.getString("split.list4[@values]"));
+        assertEquals("a", conf.getString("split.list1"));
+        assertEquals(2, conf.getMaxIndex("split.list1"));
+        assertEquals("a,b,c", conf.getString("split.list2"));
     }
 }

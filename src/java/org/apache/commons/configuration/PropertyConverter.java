@@ -46,6 +46,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class PropertyConverter
 {
+    /** Constant for the list delimiter escaping character.*/
+    static final String LIST_ESCAPE = "\\";
+    
     /**
      * Convert the specified object into a Boolean.
      *
@@ -443,7 +446,7 @@ public final class PropertyConverter
             // extract the chunk
             String chunk = s.substring(begin , end);
 
-            if (chunk.endsWith("\\") && end != s.length())
+            if (chunk.endsWith(LIST_ESCAPE) && end != s.length())
             {
                 token.append(chunk.substring(0, chunk.length() - 1));
                 token.append(delimiter);
@@ -466,6 +469,23 @@ public final class PropertyConverter
         }
 
         return list;
+    }
+    
+    /**
+     * Escapes the delimiters that might be contained in the given string. This
+     * method ensures that list delimiter characters that are part of a
+     * property's value are correctly escaped when a configuration is saved to a
+     * file. Otherwise when loaded again the property will be treated as a list
+     * property.
+     * 
+     * @param s the string with the value
+     * @param delimiter the list delimiter to use
+     * @return the correctly esaped string
+     */
+    public static String escapeDelimiters(String s, char delimiter)
+    {
+        return StringUtils.replace(s, String.valueOf(delimiter), LIST_ESCAPE
+                + delimiter);
     }
 
     /**
