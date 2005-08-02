@@ -174,7 +174,6 @@
 
     <contributor>
       <name>Jörg Schaible</name>
-      <id>jschaible</id>
       <email>joerg.schaible@gmx.de</email>
       <organization>Elsag-Solutions AG</organization>
       <timezone>+1</timezone>
@@ -182,7 +181,6 @@
 
     <contributor>
       <name>Konstantin Shaposhnikov</name>
-      <id>kshaposhnikov</id>
       <email>ksh@scand.com</email>
       <organization>scand.com</organization>
     </contributor>
