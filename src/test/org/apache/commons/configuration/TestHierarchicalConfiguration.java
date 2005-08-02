@@ -1,7 +1,5 @@
-package org.apache.commons.configuration;
-
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -15,6 +13,8 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +44,18 @@ public class TestHierarchicalConfiguration extends TestCase
 
     protected void setUp() throws Exception
     {
+        /**
+         * Initialize the configuration with the following structure:
+         *
+         * tables
+         *      table
+         *         name
+         *         fields
+         *             field
+         *                 name
+         *             field
+         *                 name
+         */
         config = new HierarchicalConfiguration();
         HierarchicalConfiguration.Node nodeTables = createNode("tables", null);
         for(int i = 0; i < tables.length; i++)
@@ -54,11 +66,13 @@ public class TestHierarchicalConfiguration extends TestCase
             nodeTable.addChild(nodeName);
             HierarchicalConfiguration.Node nodeFields = createNode("fields", null);
             nodeTable.addChild(nodeFields);
-            for(int j = 0; j < fields[i].length; j++)
+
+            for (int j = 0; j < fields[i].length; j++)
             {
                 nodeFields.addChild(createFieldNode(fields[i][j]));
-            }  /* for */
-        }  /* for */
+            }
+        }
+
         config.getRoot().addChild(nodeTables);
     }
 
@@ -67,10 +81,8 @@ public class TestHierarchicalConfiguration extends TestCase
         assertFalse(config.isEmpty());
         HierarchicalConfiguration conf2 = new HierarchicalConfiguration();
         assertTrue(conf2.isEmpty());
-        HierarchicalConfiguration.Node child1 = 
-        new HierarchicalConfiguration.Node("child1");
-        HierarchicalConfiguration.Node child2 = 
-        new HierarchicalConfiguration.Node("child2");
+        HierarchicalConfiguration.Node child1 = new HierarchicalConfiguration.Node("child1");
+        HierarchicalConfiguration.Node child2 = new HierarchicalConfiguration.Node("child2");
         child1.addChild(child2);
         conf2.getRoot().addChild(child1);
         assertTrue(conf2.isEmpty());
@@ -180,14 +192,24 @@ public class TestHierarchicalConfiguration extends TestCase
     public void testGetKeys()
     {
         List keys = new ArrayList();
-        for(Iterator it = config.getKeys(); it.hasNext();)
+        for (Iterator it = config.getKeys(); it.hasNext();)
         {
             keys.add(it.next()); 
-        }  /* for */
+        }
         
         assertEquals(2, keys.size());
         assertTrue(keys.contains("tables.table.name"));
         assertTrue(keys.contains("tables.table.fields.field.name"));
+
+        // test the order of the keys returned
+        config.addProperty("order.key1", "value1");
+        config.addProperty("order.key2", "value2");
+        config.addProperty("order.key3", "value3");
+
+        Iterator it = config.getKeys("order");
+        assertEquals("1st key", "order.key1", it.next());
+        assertEquals("2nd key", "order.key2", it.next());
+        assertEquals("3rd key", "order.key3", it.next());
     }
     
     public void testGetKeysString()
@@ -270,35 +292,42 @@ public class TestHierarchicalConfiguration extends TestCase
             ConfigurationKey key = new ConfigurationKey("tables.table(0).fields");
             key.append("field").appendIndex(i).append("name");
             assertNotNull(config.getProperty(key.toString()));
-        }  /* for */
+        }
     }
     
     public void testSubset()
     {
-        Configuration conf = config.subset("tables.table(0)");
-        assertEquals("users", conf.getProperty("name"));
-        Object prop = conf.getProperty("fields.field.name");
+        // test the subset on the first table
+        Configuration subset = config.subset("tables.table(0)");
+        assertEquals(tables[0], subset.getProperty("name"));
+
+        Object prop = subset.getProperty("fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(5, ((Collection) prop).size());
         
-        for(int i = 0; i < fields[0].length; i++)
+        for (int i = 0; i < fields[0].length; i++)
         {
             ConfigurationKey key = new ConfigurationKey();
             key.append("fields").append("field").appendIndex(i);
             key.append("name");
-            assertEquals(fields[0][i], conf.getProperty(key.toString()));
-        }  /* for */
+            assertEquals(fields[0][i], subset.getProperty(key.toString()));
+        }
 
+        // test the subset on the second table
         assertTrue("subset is not empty", config.subset("tables.table(2)").isEmpty());
 
-        conf = config.subset("tables.table.fields.field");
-        prop = conf.getProperty("name");
+        // test the subset on the fields
+        subset = config.subset("tables.table.fields.field");
+        prop = subset.getProperty("name");
         assertTrue("prop is not a collection", prop instanceof Collection);
         assertEquals(10, ((Collection) prop).size());
-        
-        conf = config.subset("tables.table.fields.field.name");
-        assertTrue("subset is not empty", conf.isEmpty());
+
+        assertEquals(fields[0][0], subset.getProperty("name(0)"));
+
+        // tset the subset on the field names
+        subset = config.subset("tables.table.fields.field.name");
+        assertTrue("subset is not empty", subset.isEmpty());
     }
     
     public void testClone()
@@ -307,12 +336,10 @@ public class TestHierarchicalConfiguration extends TestCase
         assertTrue(copy instanceof HierarchicalConfiguration);
         for (int i = 0; i < tables.length; i++)
         {
-            assertEquals(tables[i], copy.getString("tables.table(" + i
-                    + ").name"));
+            assertEquals(tables[i], copy.getString("tables.table(" + i + ").name"));
             for (int j = 0; j < fields[i].length; j++)
             {
-                assertEquals(fields[i][j], copy.getString("tables.table(" + i
-                        + ").fields.field(" + j + ").name"));
+                assertEquals(fields[i][j], copy.getString("tables.table(" + i + ").fields.field(" + j + ").name"));
             }
         }
     }

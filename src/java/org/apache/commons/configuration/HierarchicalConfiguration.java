@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +26,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.collections.map.LinkedMap;
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -92,22 +92,13 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id: HierarchicalConfiguration.java,v 1.14 2004/12/02 22:05:52
  * ebourg Exp $
  */
-public class HierarchicalConfiguration extends AbstractConfiguration implements
-        Cloneable
+public class HierarchicalConfiguration extends AbstractConfiguration implements Serializable, Cloneable
 {
     /** Constant for a new dummy key. */
     private static final String NEW_KEY = "newKey";
 
     /** Stores the root node of this configuration. */
     private Node root = new Node();
-
-    /**
-     * Creates a new instance of <code>HierarchicalConfiguration</code>.
-     */
-    public HierarchicalConfiguration()
-    {
-        super();
-    }
 
     /**
      * Returns the root node of this hierarchical configuration.
@@ -421,8 +412,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
     }
 
     /**
-     * <p>Returns an iterator with all keys defined in this configuration.</p>
-     * <p>Note that the keys returned by this method will not contain any
+     * Returns an iterator with all keys defined in this configuration.
+     * Note that the keys returned by this method will not contain any
      * indices. This means that some structure will be lost.</p>
      * 
      * @return an iterator with the defined keys in this configuration
@@ -431,6 +422,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         getRoot().visit(visitor, new ConfigurationKey());
+
         return visitor.getKeyList().iterator();
     }
 
@@ -523,13 +515,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
      * 
      * @param keyPart the configuration key iterator
      * @param node the actual node
-     * @param data here the found nodes are stored
+     * @param nodes here the found nodes are stored
      */
-    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart, Node node, Collection data)
+    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart, Node node, Collection nodes)
     {
         if (!keyPart.hasNext())
         {
-            data.add(node);
+            nodes.add(node);
         }
         else
         {
@@ -540,14 +532,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
                 if (keyPart.getIndex() < children.size() && keyPart.getIndex() >= 0)
                 {
                     findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) children.get(keyPart
-                            .getIndex()), data);
+                            .getIndex()), nodes);
                 }
             }
             else
             {
                 for (Iterator it = children.iterator(); it.hasNext();)
                 {
-                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) it.next(), data);
+                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) it.next(), nodes);
                 }
             }
         }
@@ -733,6 +725,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
         public Node(String name)
         {
             setName(name);
+        }
+
+        /**
+         * Creates a new instance of {@link Node} and sets the name and the value.
+         *
+         * @param name the node's name
+         * @param value the value
+         */
+        public Node(String name, Object value)
+        {
+            setName(name);
+            setValue(value);
         }
 
         /**
@@ -1172,7 +1176,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements
          */
         public DefinedKeysVisitor()
         {
-            keyList = new HashSet();
+            keyList = new ListOrderedSet();
         }
 
         /**

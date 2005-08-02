@@ -23,6 +23,12 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="35903">
+        getKeys() in HierarchicalConfiguration now returns the keys in the same order the properties were inserted.
+      </action>
+      <action dev="ebourg" type="update">
+        Commons Configuration now depends on Commons Collections 3.1 instead of 3.0
+      </action>
       <action dev="ebourg" type="add" issue="32633">
         New configurations implementing the "property list" format used in
         NeXT/OpenStep and its XML variant used in Mac OS X.

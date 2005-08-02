@@ -198,7 +198,7 @@
     <dependency>
       <groupId>commons-collections</groupId>
       <artifactId>commons-collections</artifactId>
-      <version>3.0</version>
+      <version>3.1</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
