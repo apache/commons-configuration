@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="add" issue="32633">
+        New configurations implementing the "property list" format used in
+        NeXT/OpenStep and its XML variant used in Mac OS X.
+        (PropertyListConfiguration and XMLPropertyListConfiguration)
+      </action>
       <action dev="oheger" type="update" issue="35938">
         Resolved some issues with XMLConfiguration and properties containing
         the delimiter character. These properties are now correctly treated,

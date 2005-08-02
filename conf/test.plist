@@ -1,0 +1,41 @@
+{
+    simple-string = string1;
+    quoted-string = "string2";
+    quoted-string2 = "this is a string";
+    "complex-string" = "this is a \"complex\" string {(=,;)}";
+
+    array = ( "value1", "value2", "value3" );
+
+    empty-array = ();
+
+    nested-arrays = ( (a , b) , (c, d) );
+
+    dictionary-array =
+    (
+        { foo = bar },
+        { key = value }
+    )
+
+    dictionary =
+    {
+        foo1 = bar1;
+        foo2 = bar2;
+    }
+
+    empty-dictionary = { };
+
+    nested-dictionaries =
+    {
+        foo =
+        {
+            bar =
+            {
+                "key" = "value";
+            }
+        }
+    }
+
+    data = <666F6f 20 626172>;
+
+    empty-data = < >;
+}

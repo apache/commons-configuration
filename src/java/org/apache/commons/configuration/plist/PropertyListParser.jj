@@ -1,0 +1,255 @@
+/*
+ * Copyright 2005 The Apache Software Foundation.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License")
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+options {
+    STATIC = false;
+}
+
+
+PARSER_BEGIN(PropertyListParser)
+
+package org.apache.commons.configuration.plist;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.codec.binary.Hex;
+
+/**
+ * JavaCC based parser for the PropertyList format.
+ *
+ * @author Emmanuel Bourg
+ * @version $Revision$, $Date$
+ */
+class PropertyListParser {
+
+    /**
+     * Remove the quotes at the beginning and at the end of the specified String.
+     */
+    private String removeQuotes(String s)
+    {
+        if (s == null)
+        {
+            return null;
+        }
+
+        if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2)
+        {
+            s = s.substring(1, s.length() - 1);
+        }
+
+        return s;
+    }
+
+    private String unescapeQuotes(String s)
+    {
+        return StringUtils.replace(s, "\\\"", "\"");
+    }
+
+    /**
+     * Remove the white spaces and the data delimiters from the specified
+     * string and parse it as a byte array.
+     */
+    private byte[] filterData(String s) throws ParseException
+    {
+        if (s == null)
+        {
+            return null;
+        }
+
+        // remove the delimiters
+        if (s.startsWith("<") && s.endsWith(">") && s.length() >= 2)
+        {
+            s = s.substring(1, s.length() - 1);
+        }
+
+        // remove the white spaces
+        s = StringUtils.replaceChars(s, " \t\n\r", "");
+
+        // add a leading 0 to ensure well formed bytes
+        if (s.length() % 2 != 0)
+        {
+            s = "0" + s;
+        }
+
+        // parse and return the bytes
+        try
+        {
+            return Hex.decodeHex(s.toCharArray());
+        }
+        catch (Exception e)
+        {
+            throw new ParseException(e.getMessage());
+        }
+    }
+
+}
+
+PARSER_END(PropertyListParser)
+
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+TOKEN : { <ARRAY_BEGIN     : "(" > }
+TOKEN : { <ARRAY_END       : ")" > }
+TOKEN : { <ARRAY_SEPARATOR : "," > }
+
+TOKEN : { <DICT_BEGIN     : "{" > }
+TOKEN : { <DICT_END       : "}" > }
+TOKEN : { <DICT_SEPARATOR : ";" > }
+TOKEN : { <EQUAL : "=" > }
+
+TOKEN : { <DATA_START : "<" > }
+TOKEN : { <DATA_END : ">" > }
+
+TOKEN : { < QUOTE : "\"" > }
+TOKEN : { < #LETTER : ~[" ", "\t", "\n", "\r", "(", ")", ",", "{", "}", ";", "=", "\""] > }
+TOKEN : { < #WHITE : " " | "\t" | "\n" | "\r" > }
+TOKEN : { < #HEXA : ["0"-"9", "a"-"f", "A"-"F"] > }
+TOKEN : { < DATA : <DATA_START> (<HEXA> | <WHITE>)* <DATA_END> > }
+TOKEN : { < STRING :  (<LETTER>)+ > }
+TOKEN : { < QUOTED_STRING :
+            <QUOTE>
+            (<LETTER> | <WHITE> | <ESCAPED_QUOTE> | <EQUAL>
+            | <ARRAY_BEGIN> | <ARRAY_END> | <ARRAY_SEPARATOR>
+            | <DICT_BEGIN> | <DICT_END> | <DICT_SEPARATOR>)* <QUOTE> > }
+TOKEN : { < ESCAPED_QUOTE : "\\\"" > }
+
+PropertyListConfiguration parse() :
+{
+    PropertyListConfiguration configuration = null;
+}
+{
+    configuration = Dictionary()
+    <EOF>
+    { return configuration; }
+}
+
+PropertyListConfiguration Dictionary() :
+{
+    PropertyListConfiguration configuration = new PropertyListConfiguration();
+    List children = new ArrayList();
+    Node child = null;
+}
+{
+    <DICT_BEGIN>
+    (
+        child = Property()
+        {
+            if (child.getValue() instanceof HierarchicalConfiguration)
+            {
+                // prune & graft the nested configuration to the parent configuration
+                HierarchicalConfiguration conf = (HierarchicalConfiguration) child.getValue();
+                Node root = conf.getRoot();
+                root.setName(child.getName());
+                children.add(root);
+            }
+            else
+            {
+                children.add(child);
+            }
+        }
+    )*
+    <DICT_END>
+    {
+        for (int i = 0; i < children.size(); i++)
+        {
+            child = (Node) children.get(i);
+            configuration.getRoot().addChild(child);
+        }
+
+        return configuration;
+    }
+}
+
+Node Property() :
+{
+    String key = null;
+    Object value = null;
+    Node node = new Node();
+}
+{
+    key = String()
+    { node.setName(key); }
+    <EQUAL>
+    value = Element()
+    { node.setValue(value); }
+    (<DICT_SEPARATOR>)?
+    { return node; }
+}
+
+Object Element() :
+{
+    Object value = null;
+}
+{
+    value = Array()
+    { return value; }
+    |
+    value = Dictionary()
+    { return value; }
+    |
+    value = String()
+    { return value; }
+    |
+    value = Data()
+    { return value; }
+}
+
+List Array() :
+{
+    List list = new ArrayList();
+    Object element = null;
+}
+{
+    <ARRAY_BEGIN>
+    (
+        element = Element()
+        { list.add(element); }
+        (
+            <ARRAY_SEPARATOR>
+            element = Element()
+            { list.add(element); }
+        )*
+    )?
+    <ARRAY_END>
+    { return list; }
+}
+
+String String() :
+{
+    Token token = null;
+    String value = null;
+}
+{
+    token = <QUOTED_STRING>
+    { return unescapeQuotes(removeQuotes(token.image)); }
+    |
+    token = <STRING>
+    { return token.image; }
+}
+
+byte[] Data() :
+{
+    Token token;
+}
+{
+    token = <DATA>
+    { return filterData(token.image); }
+}

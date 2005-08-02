@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="1.1">
+    <dict>
+
+        <key>string</key>
+        <string>value1</string>
+
+        <key>integer</key>
+        <integer>12345</integer>
+
+        <key>real</key>
+        <real>-123.45E-1</real>
+
+        <key>boolean1</key>
+        <true/>
+
+        <key>boolean2</key>
+        <false/>
+
+        <key>date</key>
+        <date>2005-01-01T12:00:00-0700</date>
+
+        <key>data</key>
+        <data>RHJhY28gRG9ybWllbnMgTnVucXVhbSBUaXRpbGxhbmR1cw==</data>
+
+        <key>array</key>
+        <array>
+            <string>value1</string>
+            <string>value2</string>
+            <string>value3</string>
+        </array>
+
+        <key>nested-array</key>
+        <array>
+            <array>
+                <string>a</string>
+                <string>b</string>
+            </array>
+            <array>
+                <string>c</string>
+                <string>d</string>
+            </array>
+        </array>
+
+        <key>dictionary-array</key>
+        <array>
+            <dict>
+                <key>foo</key>
+                <string>bar</string>
+            </dict>
+            <dict>
+                <key>key</key>
+                <string>value</string>
+            </dict>
+        </array>
+
+        <key>dictionary</key>
+        <dict>
+            <key>key1</key>
+            <string>value1</string>
+            <key>key2</key>
+            <string>value2</string>
+            <key>key3</key>
+            <string>value3</string>
+        </dict>
+
+        <key>nested</key>
+        <dict>
+            <key>node1</key>
+            <dict>
+                <key>node2</key>
+                <dict>
+                    <key>node3</key>
+                    <string>value</string>
+                </dict>
+            </dict>
+        </dict>
+
+    </dict>
+</plist>

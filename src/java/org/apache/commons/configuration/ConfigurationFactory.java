@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
 
+import org.apache.commons.configuration.plist.PropertyListConfiguration;
+import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreationFactory;
@@ -281,6 +283,13 @@ public class ConfigurationFactory
             digester,
             matchString + "properties",
             new PropertiesConfigurationFactory(),
+            null,
+            additional);
+
+        setupDigesterInstance(
+            digester,
+            matchString + "plist",
+            new PropertyListConfigurationFactory(),
             null,
             additional);
 
@@ -545,6 +554,34 @@ public class ConfigurationFactory
             else
             {
                 return new PropertiesConfiguration();
+            }
+        }
+    }
+
+    /**
+     * A factory that returns an XMLPropertyListConfiguration for .xml files
+     * and a PropertyListConfiguration for the others.
+     *
+     * @since 1.2
+     */
+    public class PropertyListConfigurationFactory extends FileConfigurationFactory
+    {
+        public PropertyListConfigurationFactory()
+        {
+            super(null);
+        }
+
+        protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
+        {
+            String filename = attributes.getValue(ATTR_FILENAME);
+
+            if (filename != null && filename.toLowerCase().trim().endsWith(".xml"))
+            {
+                return new XMLPropertyListConfiguration();
+            }
+            else
+            {
+                return new PropertyListConfiguration();
             }
         }
     }
