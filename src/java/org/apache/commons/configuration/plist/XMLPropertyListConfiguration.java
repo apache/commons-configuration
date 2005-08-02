@@ -55,7 +55,7 @@ import org.xml.sax.InputSource;
  * <pre>
  * &lt;?xml version="1.0"?>
  * &lt;!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
- * &lt;plist version="1.1">
+ * &lt;plist version="1.0">
  *     &lt;dict>
  *         &lt;key>string&lt;/key>
  *         &lt;string>value1&lt;/string>
@@ -283,7 +283,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
 
         writer.println("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">");
-        writer.println("<plist version=\"1.1\">");
+        writer.println("<plist version=\"1.0\">");
 
         printNode(writer, 1, getRoot());
 
