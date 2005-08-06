@@ -230,9 +230,9 @@
 
     <setproxy>
     </setproxy>
-    <get dest="${libdir}/commons-collections-3.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.0.jar">
+    <get dest="${libdir}/commons-collections-3.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.1.jar">
     </get>
-    <get dest="${libdir}/commons-lang-2.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.0.jar">
+    <get dest="${libdir}/commons-lang-2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.1.jar">
     </get>
     <get dest="${libdir}/dom4j-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/dom4j/jars/dom4j-1.4.jar">
     </get>
@@ -243,6 +243,8 @@
     <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-core-1.7.0.jar">
     </get>
     <get dest="${libdir}/commons-beanutils-bean-collections-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-bean-collections-1.7.0.jar">
+    </get>
+    <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-codec/jars/commons-codec-1.3.jar">
     </get>
     <get dest="${libdir}/xerces-2.2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.2.1.jar">
     </get>
@@ -268,8 +270,8 @@
     </get>
     <get dest="${libdir}/mockobjects-jdk1.4-j2ee1.3-0.09.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/mockobjects/jars/mockobjects-jdk1.4-j2ee1.3-0.09.jar">
     </get>
-    <get dest="${libdir}/resources-1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/resources/jars/resources-1.0.jar">
-    </get>
+<!--    <get dest="${libdir}/resources-1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/resources/jars/resources-1.0.jar">
+    </get>  -->
     <get dest="${libdir}/maven-tasks-plugin-1.1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-tasks-plugin-1.1.0.jar">
     </get>
     <get dest="${libdir}/maven-findbugs-plugin-0.8.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-findbugs-plugin-0.8.4.jar">
