@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- Tests whether a DTD can be referenced when loaded from XMLConfiguration -->
+<!DOCTYPE properties SYSTEM "properties.dtd">
+<properties version="1.0">
+  <entry key="test1">value1</entry>
+  <entry key="test2">value2</entry>
+</properties>

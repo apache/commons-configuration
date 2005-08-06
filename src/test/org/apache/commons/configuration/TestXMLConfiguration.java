@@ -588,4 +588,14 @@ public class TestXMLConfiguration extends TestCase
         assertEquals(2, conf.getMaxIndex("split.list1"));
         assertEquals("a,b,c", conf.getString("split.list2"));
     }
+    
+    /**
+     * Tests whether a DTD can be accessed.
+     */
+    public void testDtd() throws ConfigurationException
+    {
+        conf = new XMLConfiguration("testDtd.xml");
+        assertEquals("value1", conf.getString("entry(0)"));
+        assertEquals("test2", conf.getString("entry(1)[@key]"));
+    }
 }

@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="add">
+        XMLConfiguration now sets a valid system id in the InputSource used for
+        loading files. This enables XML parsers to correctly resolve relative
+        files, e.g. DTDs.
+      </action>
       <action dev="ebourg" type="update" issue="35903">
         getKeys() in HierarchicalConfiguration now returns the keys in the same order the properties were inserted.
       </action>

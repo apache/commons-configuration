@@ -51,13 +51,20 @@ import org.xml.sax.InputSource;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
- * A specialized hierarchical configuration class that is able to parse XML
- * documents.
+ * <p>A specialized hierarchical configuration class that is able to parse XML
+ * documents.</p>
  * 
  * <p>The parsed document will be stored keeping its structure. The class also
  * tries to preserve as much information from the loaded XML document as
  * possible, including comments and processing instructions. These will be
- * contained in documents created by the <code>save()</code> methods, too.
+ * contained in documents created by the <code>save()</code> methods, too.</p>
+ * 
+ * <p>Like other file based configuration classes this class maintains the name
+ * and path to the loaded configuration file. These properties can be altered
+ * using several setter methods, but they are not modified by <code>save()</code>
+ * and <code>load()</code> methods. If XML documents contain relative paths to
+ * other documents (e.g. to a DTD), these references are resolved based on the
+ * path set for this configuration.</p>
  * 
  * @since commons-configuration 1.0
  * 
@@ -498,6 +505,12 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         try
         {
+            URL sourceURL = delegate.getURL();
+            if (sourceURL != null)
+            {
+                source.setSystemId(sourceURL.toString());
+            }
+            
             DocumentBuilder builder = createDocumentBuilder();
             Document newDocument = builder.parse(source);
             Document oldDocument = document;
