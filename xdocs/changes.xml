@@ -69,9 +69,10 @@
         that can be used instead.
       </action>
       <action dev="oheger" type="add" issue="31616">
-        XMLConfiguration now supports setting a custom DocumentBuilder for
-        loading XML documents. This makes it possible e.g. to enable validation
-        when a configuration file is loaded.
+        XMLConfiguration now provides some support for validating XML
+        documents. With the setValidating() method DTD validation can be
+        enabled. It is also possible to set a custom DocumentBuilder allowing
+        a caller to perform enhanced configuration of the XML loading process.
       </action>
       <action dev="oheger" type="update" issue="35621">
         AbstractFileConfiguration now always sets a valid base path if the

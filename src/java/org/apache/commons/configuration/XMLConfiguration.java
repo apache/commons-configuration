@@ -48,6 +48,9 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.DefaultHandler;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
@@ -87,6 +90,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     
     /** Stores the document builder that should be used for loading.*/
     private DocumentBuilder documentBuilder;
+    
+    /** Stores a flag whether DTD validation should be performed.*/
+    private boolean validating;
     
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
@@ -209,6 +215,27 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     public void setDocumentBuilder(DocumentBuilder documentBuilder)
     {
         this.documentBuilder = documentBuilder;
+    }
+
+    /**
+     * Returns the value of the validating flag.
+     * @return the validating flag
+     * @since 1.2
+     */
+    public boolean isValidating()
+    {
+        return validating;
+    }
+
+    /**
+     * Sets the value of the validating flag. This flag determines whether
+     * DTD validation should be performed when loading XML documents. This
+     * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
+     * @param validating the validating flag
+     */
+    public void setValidating(boolean validating)
+    {
+        this.validating = validating;
     }
 
     /**
@@ -384,7 +411,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * Creates the <code>DocumentBuilder</code> to be used for loading files.
      * This implementation checks whether a specific
      * <code>DocumentBuilder</code> has been set. If this is the case, this
-     * one is used. Otherwise a default builder is created.
+     * one is used. Otherwise a default builder is created. Depending on the
+     * value of the validating flag this builder will be a validating or a non
+     * validating <code>DocumentBuilder</code>.
      * 
      * @return the <code>DocumentBuilder</code> for loading configuration
      * files
@@ -402,7 +431,21 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         {
             DocumentBuilderFactory factory = DocumentBuilderFactory
                     .newInstance();
-            return factory.newDocumentBuilder();
+            factory.setValidating(isValidating());
+            DocumentBuilder result = factory.newDocumentBuilder();
+
+            if (isValidating())
+            {
+                // register an error handler which detects validation errors
+                result.setErrorHandler(new DefaultHandler()
+                {
+                    public void error(SAXParseException ex) throws SAXException
+                    {
+                        throw ex;
+                    }
+                });
+            }
+            return result;
         }
     }
 

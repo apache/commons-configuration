@@ -598,4 +598,31 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value1", conf.getString("entry(0)"));
         assertEquals("test2", conf.getString("entry(1)[@key]"));
     }
+    
+    /**
+     * Tests DTD validation using the setValidating() method.
+     */
+    public void testValidating() throws ConfigurationException
+    {
+        File nonValidFile = new File("conf/testValidateInvalid.xml");
+        conf = new XMLConfiguration();
+        assertFalse(conf.isValidating());
+        
+        // Load a non valid XML document. Should work for isValidating() == false
+        conf.load(nonValidFile);
+        assertEquals("customers", conf.getString("table.name"));
+        assertFalse(conf.containsKey("table.fields.field(1).type"));
+        
+        // Now set the validating flag to true
+        conf.setValidating(true);
+        try
+        {
+            conf.load(nonValidFile);
+            fail("Validation was not performed!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
+    }
 }
