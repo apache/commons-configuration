@@ -22,6 +22,8 @@
     </depend>
     <depend project="commons-logging">
     </depend>
+    <depend project="commons-codec">
+    </depend>
     <depend project="dom4j">
     </depend>
     <depend project="jakarta-ant">
