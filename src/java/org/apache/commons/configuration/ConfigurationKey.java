@@ -286,7 +286,7 @@ public class ConfigurationKey implements Serializable
      */
     public int hashCode()
     {
-        return keyBuffer.hashCode();
+        return keyBuffer.toString().hashCode();
     }
 
     /**
@@ -548,7 +548,7 @@ public class ConfigurationKey implements Serializable
         {
             boolean result = false;
 
-            int idx = key.indexOf(INDEX_START);
+            int idx = key.lastIndexOf(INDEX_START);
             if (idx > 0)
             {
                 int endidx = key.indexOf(INDEX_END, idx);

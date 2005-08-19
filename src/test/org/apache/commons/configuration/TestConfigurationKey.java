@@ -16,6 +16,8 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import java.util.NoSuchElementException;
+
 import junit.framework.TestCase;
 
 /**
@@ -59,6 +61,15 @@ public class TestConfigurationKey extends TestCase
         assertEquals("[@dataType]", it.currentKey(true));
         assertTrue(it.isAttribute());
         assertFalse(it.hasNext());
+        try
+        {
+            it.next();
+            fail("Could iterate over the iteration's end!");
+        }
+        catch(NoSuchElementException nex)
+        {
+            //ok
+        }
         
         key = new ConfigurationKey();
         assertFalse(key.iterator().hasNext());
@@ -66,6 +77,15 @@ public class TestConfigurationKey extends TestCase
         it = key.iterator();
         assertTrue(it.hasNext());
         assertEquals("simple", it.next());
+        try
+        {
+            it.remove();
+            fail("Could remove key component!");
+        }
+        catch(UnsupportedOperationException uex)
+        {
+            //ok
+        }
     }
     
     public void testAttribute()
@@ -103,6 +123,7 @@ public class TestConfigurationKey extends TestCase
         ConfigurationKey k2 = new ConfigurationKey(TESTKEY);
         assertTrue(k1.equals(k2));
         assertTrue(k2.equals(k1));
+        assertEquals(k1.hashCode(), k2.hashCode());
         k2.append("anotherPart");
         assertFalse(k1.equals(k2));
         assertFalse(k2.equals(k1));
@@ -132,6 +153,16 @@ public class TestConfigurationKey extends TestCase
         
         kc = k1.commonKey(k1);
         assertEquals(kc, k1);
+        
+        try
+        {
+            kc.commonKey(null);
+            fail("Could construct common key with null key!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
     }
     
     public void testDifferenceKey()
@@ -166,5 +197,29 @@ public class TestConfigurationKey extends TestCase
         assertEquals("trailing.dot.", kit.nextKey());
         assertEquals("strange", kit.nextKey());
         assertFalse(kit.hasNext());
+    }
+    
+    /**
+     * Tests some funny keys.
+     */
+    public void testIterateStrangeKeys()
+    {
+        ConfigurationKey k = new ConfigurationKey("key.");
+        ConfigurationKey.KeyIterator it = k.iterator();
+        assertTrue(it.hasNext());
+        assertEquals("key", it.next());
+        assertFalse(it.hasNext());
+        
+        k = new ConfigurationKey(".");
+        it = k.iterator();
+        assertFalse(it.hasNext());
+        
+        k = new ConfigurationKey("key().index()undefined(0).test");
+        it = k.iterator();
+        assertEquals("key()", it.next());
+        assertFalse(it.hasIndex());
+        assertEquals("index()undefined", it.nextKey(false));
+        assertTrue(it.hasIndex());
+        assertEquals(0, it.getIndex());
     }
 }
