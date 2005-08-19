@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+
 import junit.framework.TestCase;
 
 /**
@@ -74,6 +76,22 @@ public class TestHierarchicalConfiguration extends TestCase
         }
 
         config.getRoot().addChild(nodeTables);
+    }
+    
+    public void testSetRoot()
+    {
+        try
+        {
+            config.setRoot(null);
+            fail("Could set null root node!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
+        
+        config.setRoot(new HierarchicalConfiguration.Node("test"));
+        assertTrue(config.isEmpty());
     }
 
     public void testIsEmpty()
@@ -134,6 +152,10 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(5, config.getMaxIndex("test.items.item"));
         assertTrue(config.getBoolean("test"));
         assertEquals("01/01/05", config.getProperty("test.items"));
+        
+        config.setProperty("test.items.item", new Integer(42));
+        assertEquals(0, config.getMaxIndex("test.items.item"));
+        assertEquals(42, config.getInt("test.items.item"));
     }
     
     public void testClearProperty()
@@ -274,6 +296,16 @@ public class TestHierarchicalConfiguration extends TestCase
         key.appendAttribute("tableType");
         config.addProperty(key.toString(), "system");
         assertEquals("system", config.getProperty(key.toString()));
+        
+        try
+        {
+            config.addProperty(".", "InvalidKey");
+            fail("Could add invalid key!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
     }
     
     public void testGetMaxIndex()
@@ -355,6 +387,61 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
         assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
         assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+        
+        try
+        {
+            config.addNodes(".", nodes);
+            fail("Could use empty key!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
+    }
+    
+    /**
+     * Tests removing children from a configuration node.
+     */
+    public void testNodeRemove()
+    {
+        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
+                "parent", "test");
+        node.removeChildren(); // should have no effect
+        assertFalse(node.remove("child"));
+
+        for (int i = 0; i < 10; i++)
+        {
+            node.addChild(createNode("child" + i, "test" + i));
+        }
+        assertFalse(node.remove("child"));
+        assertTrue(node.remove("child2"));
+        assertTrue(node.getChildren("child2").isEmpty());
+
+        HierarchicalConfiguration.Node child = createNode("child0", "testChild");
+        assertFalse(node.remove(child));
+        node.addChild(child);
+        assertTrue(node.remove(child));
+        assertEquals(1, node.getChildren("child0").size());
+        assertEquals("test0", ((HierarchicalConfiguration.Node) node
+                .getChildren("child0").get(0)).getValue());
+
+        assertTrue(node.remove("child0"));
+        assertFalse(node.remove(child));
+
+        node.removeChildren();
+        assertTrue(node.getChildren().isEmpty());
+        assertFalse(node.remove(child));
+    }
+
+    /**
+     * Tests the visitor mechanism.
+     */
+    public void testNodeVisitor()
+    {
+        CountVisitor v = new CountVisitor();
+        config.getRoot().visit(v, null);
+        assertEquals(28, v.beforeCount);
+        assertEquals(v.beforeCount, v.afterCount);
     }
     
     /**
@@ -410,5 +497,28 @@ public class TestHierarchicalConfiguration extends TestCase
         HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(name);
         node.setValue(value);
         return node;
+    }
+    
+    /**
+     * A test visitor implementation for checking whether all visitor methods
+     * are correctly called.
+     */
+    static class CountVisitor extends HierarchicalConfiguration.NodeVisitor
+    {
+        public int beforeCount;
+
+        public int afterCount;
+
+        public void visitAfterChildren(Node node, ConfigurationKey key)
+        {
+            super.visitAfterChildren(node, key);
+            afterCount++;
+        }
+
+        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        {
+            super.visitBeforeChildren(node, key);
+            beforeCount++;
+        }
     }
 }
