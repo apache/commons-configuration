@@ -339,7 +339,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             }
         }
         String text = buffer.toString().trim();
-        if (text.length() > 0)
+        if (text.length() > 0 || !node.hasChildren())
         {
             node.setValue(text);
         }

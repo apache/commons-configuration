@@ -892,6 +892,28 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
             return list;
         }
+        
+        /**
+         * Returns a flag whether this node has child elements.
+         * 
+         * @return <b>true</b> if there a child node, <b>false</b> otherwise
+         */
+        public boolean hasChildren()
+        {
+            if (children != null)
+            {
+                for (Iterator it = children.values().iterator(); it.hasNext();)
+                {
+                    Collection nodes = (Collection) it.next();
+                    if (!nodes.isEmpty())
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
 
         /**
          * Removes the specified child from this node.

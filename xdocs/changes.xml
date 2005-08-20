@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="35963">
+        Empty elements or elements whose content consists only of comments or
+        whitespace are now taken into account by XMLConfiguration. They are
+        added to the configuration; their value is an empty string.
+      </action>
       <action dev="oheger" type="add">
         XMLConfiguration now sets a valid system id in the InputSource used for
         loading files. This enables XML parsers to correctly resolve relative

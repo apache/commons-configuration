@@ -406,13 +406,20 @@ public class TestHierarchicalConfiguration extends TestCase
     {
         HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
                 "parent", "test");
+        assertFalse(node.hasChildren());
         node.removeChildren(); // should have no effect
         assertFalse(node.remove("child"));
+        
+        node.addChild(createNode("test", "test"));
+        assertTrue(node.hasChildren());
+        assertTrue(node.remove("test"));
+        assertFalse(node.hasChildren());
 
         for (int i = 0; i < 10; i++)
         {
             node.addChild(createNode("child" + i, "test" + i));
         }
+        assertTrue(node.hasChildren());
         assertFalse(node.remove("child"));
         assertTrue(node.remove("child2"));
         assertTrue(node.getChildren("child2").isEmpty());

@@ -68,7 +68,7 @@ public class TestXMLConfiguration extends TestCase
 
     public void testGetCommentedProperty()
     {
-        assertEquals(null, conf.getProperty("test.comment"));
+        assertEquals("", conf.getProperty("test.comment"));
     }
 
     public void testGetPropertyWithXMLEntity()
@@ -160,7 +160,7 @@ public class TestXMLConfiguration extends TestCase
 
         // test non-text/cdata element
         property = conf.getProperty("test.comment");
-        assertNull(property);
+        assertEquals("", property);
 
         // test cdata element
         property = conf.getProperty("test.cdata");
@@ -723,6 +723,22 @@ public class TestXMLConfiguration extends TestCase
         {
             //ok
         }
+    }
+    
+    /**
+     * Tests handling of empty elements.
+     */
+    public void testEmptyElements() throws ConfigurationException
+    {
+        assertTrue(conf.containsKey("empty"));
+        assertEquals("", conf.getString("empty"));
+        conf.addProperty("empty2", "");
+        conf.setProperty("empty", "no more empty");
+        conf.save(testSaveConf);
+        
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("no more empty", conf.getString("empty"));
+        assertEquals("", conf.getProperty("empty2"));
     }
     
     /**
