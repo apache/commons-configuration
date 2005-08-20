@@ -754,18 +754,6 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         /**
          * Creates a new instance of <code>XMLNode</code> and initializes it
-         * with the corresponding XML element.
-         * 
-         * @param elem the XML element
-         */
-        public XMLNode(Element elem)
-        {
-            super();
-            setReference(elem);
-        }
-
-        /**
-         * Creates a new instance of <code>XMLNode</code> and initializes it
          * with a name and the corresponding XML element.
          * 
          * @param name the node's name

@@ -16,10 +16,14 @@
 
 package org.apache.commons.configuration;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,6 +31,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -53,6 +58,7 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration();
         conf.setFile(new File(testProperties));
         conf.load();
+        removeTestFile();
     }
 
     public void testGetProperty()
@@ -321,6 +327,66 @@ public class TestXMLConfiguration extends TestCase
 
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
+    
+    /**
+     * Tests constructing an XMLConfiguration from a non existing file and
+     * later saving to this file.
+     */
+    public void testLoadAndSaveFromFile() throws Exception
+    {
+        // If the file does not exist, an empty config is created
+        conf = new XMLConfiguration(testSaveConf);
+        assertTrue(conf.isEmpty());
+        conf.addProperty("test", "yes");
+        conf.save();
+        
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("yes", conf.getString("test"));
+    }
+    
+    /**
+     * Tests loading a configuration from a URL.
+     */
+    public void testLoadFromURL() throws Exception
+    {
+        URL url = new File(testProperties).toURL();
+        conf = new XMLConfiguration(url);
+        assertEquals("value", conf.getProperty("element"));
+        assertEquals(url, conf.getURL());
+    }
+    
+    /**
+     * Tests loading from a stream.
+     */
+    public void testLoadFromStream() throws Exception
+    {
+        String xml = "<?xml version=\"1.0\"?><config><test>1</test></config>";
+        conf = new XMLConfiguration();
+        conf.load(new ByteArrayInputStream(xml.getBytes()));
+        assertEquals(1, conf.getInt("test"));
+        
+        conf = new XMLConfiguration();
+        conf.load(new ByteArrayInputStream(xml.getBytes()), "UTF8");
+        assertEquals(1, conf.getInt("test"));
+    }
+    
+    /**
+     * Tests loading a non well formed XML from a string.
+     */
+    public void testLoadInvalidXML() throws Exception
+    {
+        String xml = "<?xml version=\"1.0\"?><config><test>1</rest></config>";
+        conf = new XMLConfiguration();
+        try
+        {
+            conf.load(new StringReader(xml));
+            fail("Could load invalid XML!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
+    }
 
     public void testSetProperty() throws Exception
     {
@@ -348,11 +414,6 @@ public class TestXMLConfiguration extends TestCase
 
     public void testSave() throws Exception
     {
-        // remove the file previously saved if necessary
-        if(testSaveConf.exists()){
-            assertTrue(testSaveConf.delete());
-        }
-
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
         for (int i = 1; i < 5; i++)
@@ -377,20 +438,68 @@ public class TestXMLConfiguration extends TestCase
         // read the configuration and compare the properties
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFileName(testSaveConf.getAbsolutePath());
-        checkConfig.load();
-
-        for (Iterator i = conf.getKeys(); i.hasNext();)
+        checkSavedConfig(checkConfig);
+    }
+    
+    /**
+     * Tests saving to a URL.
+     */
+    public void testSaveToURL() throws Exception
+    {
+        conf.save(testSaveConf.toURL());
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFile(testSaveConf);
+        checkSavedConfig(checkConfig);
+    }
+    
+    /**
+     * Tests saving to a stream.
+     */
+    public void testSaveToStream() throws Exception
+    {
+        assertNull(conf.getEncoding());
+        conf.setEncoding("UTF8");
+        FileOutputStream out = null;
+        try
         {
-            String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
+            out = new FileOutputStream(testSaveConf);
+            conf.save(out);
         }
+        finally
+        {
+            if(out != null)
+            {
+                out.close();
+            }
+        }
+        
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFile(testSaveConf);
+        checkSavedConfig(checkConfig);
+        
+        try
+        {
+            out = new FileOutputStream(testSaveConf);
+            conf.save(out, "UTF8");
+        }
+        finally
+        {
+            if(out != null)
+            {
+                out.close();
+            }
+        }
+        
+        checkConfig.clear();
+        checkSavedConfig(checkConfig);
     }
 
     public void testAutoSave() throws Exception
     {
         conf.setFile(new File("target/testsave.xml"));
+        assertFalse(conf.isAutoSave());
         conf.setAutoSave(true);
+        assertTrue(conf.isAutoSave());
         conf.setProperty("autosave", "ok");
 
         // reload the configuration
@@ -415,12 +524,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value", conf.getString("element"));
         assertEquals("tasks", conf.getString("table.name"));
         
-        if (testSaveConf.exists())
-        {
-            assertTrue(testSaveConf.delete());
-        }
         conf.save(testSaveConf);
-        
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("value", conf.getString("element"));
         assertEquals("tasks", conf.getString("table.name"));
@@ -445,6 +549,8 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testReloading() throws Exception
     {
+        assertNotNull(conf.getReloadingStrategy());
+        assertTrue(conf.getReloadingStrategy() instanceof InvariantReloadingStrategy);
         PrintWriter out = null;
 
         try
@@ -457,6 +563,7 @@ public class TestXMLConfiguration extends TestCase
             FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
             strategy.setRefreshDelay(100);
             conf.setReloadingStrategy(strategy);
+            assertEquals(strategy, conf.getReloadingStrategy());
             conf.load();
             assertEquals(1, conf.getInt("test"));
             Thread.sleep(1000);
@@ -480,10 +587,6 @@ public class TestXMLConfiguration extends TestCase
             if (out != null)
             {
                 out.close();
-            }
-            if (testSaveConf.exists())
-            {
-                assertTrue(testSaveConf.delete());
             }
         }
     }
@@ -566,10 +669,6 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration();
         conf.load(new File("conf/testHierarchicalXMLConfiguration.xml"));
         conf.subset("tables.table(0)");
-        if(testSaveConf.exists())
-        {
-            assertTrue(testSaveConf.delete());
-        }
         conf.save(testSaveConf);
         
         conf = new XMLConfiguration(testSaveConf);
@@ -623,6 +722,35 @@ public class TestXMLConfiguration extends TestCase
         catch(ConfigurationException cex)
         {
             //ok
+        }
+    }
+    
+    /**
+     * Removes the test output file if it exists.
+     */
+    private void removeTestFile()
+    {
+        if (testSaveConf.exists())
+        {
+            assertTrue(testSaveConf.delete());
+        }
+    }
+    
+    /**
+     * Helper method for checking if a save operation was successful. Loads a
+     * saved configuration and then tests against a reference configuration.
+     * @param checkConfig the configuration to check
+     * @throws ConfigurationException if an error occurs
+     */
+    private void checkSavedConfig(FileConfiguration checkConfig) throws ConfigurationException
+    {
+        checkConfig.load();
+
+        for (Iterator i = conf.getKeys(); i.hasNext();)
+        {
+            String key = (String) i.next();
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
     }
 }
