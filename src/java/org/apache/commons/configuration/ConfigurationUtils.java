@@ -258,6 +258,12 @@ public final class ConfigurationUtils
      */
     public static URL locate(String base, String name)
     {
+        if (name == null)
+        {
+            // undefined, always return null
+            return null;
+        }
+        
         URL url = null;
 
         // attempt to create an URL directly
