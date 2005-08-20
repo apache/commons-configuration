@@ -73,4 +73,9 @@ And even longer.
         <sub.elem>Another dot</sub.elem>
       </my.elem>
     </complexNames>
+    
+    <!-- An empty element. This should occur in the configuration with an
+         empty string as value.
+    -->
+    <empty/>
 </testconfig>
