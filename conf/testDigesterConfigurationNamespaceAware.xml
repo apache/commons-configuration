@@ -2,6 +2,6 @@
 
 <configuration xmlns:foo="namespace-one"
                xmlns:bar="namespace-two">
-  <foo:properties fileName="conf/test.properties"/>
-  <bar:xml fileName="conf/test.xml"/>
+  <foo:properties fileName="test.properties"/>
+  <bar:xml fileName="test.xml"/>
 </configuration>

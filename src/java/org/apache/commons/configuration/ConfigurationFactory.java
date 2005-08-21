@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -108,14 +108,14 @@ public class ConfigurationFactory
      */
     public ConfigurationFactory(String configurationFileName)
     {
-        this.configurationFileName = configurationFileName;
+        setConfigurationFileName(configurationFileName);
     }
 
     /**
      * Return the configuration provided by this factory. It loads the
      * configuration file which is a XML description of the actual
      * configurations to load. It can contain various different types of
-     * configuration, currently Properties, XML and JNDI.
+     * configuration, e.g. Properties, XML and JNDI.
      *
      * @return A Configuration object
      * @throws ConfigurationException A generic exception that we had trouble during the
@@ -220,15 +220,6 @@ public class ConfigurationFactory
     {
         configurationURL = url;
         implicitBasePath = url.toString();
-
-        // The following is a hack caused by the need to keep backwards
-        // compatibility: Per default the base path is set to the current
-        // directory. For loading from a URL this makes no sense. So
-        // unless no specific base path was set we clear it.
-        if (DEF_BASE_PATH.equals(getBasePath()))
-        {
-            setBasePath(null);
-        }
     }
 
     /**
@@ -421,8 +412,9 @@ public class ConfigurationFactory
      */
     public String getBasePath()
     {
-        String path = StringUtils.isEmpty(basePath) ? implicitBasePath : basePath;
-        return StringUtils.isEmpty(path) ? "." : path;
+        String path = StringUtils.isEmpty(basePath)
+                || DEF_BASE_PATH.equals(basePath) ? implicitBasePath : basePath;
+        return StringUtils.isEmpty(path) ? DEF_BASE_PATH : path;
     }
 
     /**

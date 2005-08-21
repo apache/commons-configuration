@@ -2,6 +2,6 @@
 
 <configuration>
   <jndi prefix="java:comp/env"/>
-  <properties fileName="conf/test.properties"/>
-  <xml fileName="conf/test.xml"/>
+  <properties fileName="test.properties"/>
+  <xml fileName="test.xml"/>
 </configuration>

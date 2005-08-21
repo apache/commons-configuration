@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
 <configuration>
-  <properties fileName="conf/test.properties"/>
-  <properties fileName="conf/test.properties.xml"/>
-  <xml fileName="conf/test.xml"/>
+  <properties fileName="test.properties"/>
+  <properties fileName="test.properties.xml"/>
+  <xml fileName="test.xml"/>
 </configuration>

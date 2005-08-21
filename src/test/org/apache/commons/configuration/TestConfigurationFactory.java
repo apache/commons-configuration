@@ -166,6 +166,19 @@ public class TestConfigurationFactory extends TestCase
     {
         factory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
+        
+        factory = new ConfigurationFactory();
+        File nonExistingFile = new File("conf/nonexisting.xml");
+        factory.setConfigurationURL(nonExistingFile.toURL());
+        try
+        {
+            factory.getConfiguration();
+            fail("Could load non existing file!");
+        }
+        catch(ConfigurationException cex)
+        {
+            //ok
+        }
     }
 
     public void testLoadingFromJAR() throws Exception
@@ -278,6 +291,33 @@ public class TestConfigurationFactory extends TestCase
                 testAbsConfig.delete();
             }
         }
+    }
+    
+    public void testBasePath() throws Exception
+    {
+        assertEquals(".", factory.getBasePath());
+        factory.setConfigurationFileName(testDigesterFile.getAbsolutePath());
+        // if no specific base path has been set, the base is determined
+        // from the file name
+        assertEquals(testDigesterFile.getParentFile().getAbsolutePath(),
+                factory.getBasePath());
+
+        String homeDir = System.getProperty("user.home");
+        factory = new ConfigurationFactory();
+        factory.setBasePath(homeDir);
+        factory.setConfigurationFileName(testDigesterFile.getAbsolutePath());
+        // if a base path was set, the file name does not play a role
+        assertEquals(homeDir, factory.getBasePath());
+        
+        factory = new ConfigurationFactory(testDigesterFile.getAbsolutePath());
+        assertEquals(testDigesterFile.getParentFile().getAbsolutePath(),
+                factory.getBasePath());
+        factory.setBasePath(homeDir);
+        assertEquals(homeDir, factory.getBasePath());
+        
+        factory = new ConfigurationFactory();
+        factory.setConfigurationURL(testDigesterFile.toURL());
+        assertEquals(testDigesterFile.toURL().toString(), factory.getBasePath());
     }
 
     private void checkUnionConfig() throws Exception
