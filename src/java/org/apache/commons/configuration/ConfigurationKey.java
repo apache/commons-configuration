@@ -286,7 +286,7 @@ public class ConfigurationKey implements Serializable
      */
     public int hashCode()
     {
-        return keyBuffer.toString().hashCode();
+        return String.valueOf(keyBuffer).hashCode();
     }
 
     /**
