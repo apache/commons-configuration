@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
 
 package org.apache.commons.configuration;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections.map.LinkedMap;
 
@@ -53,54 +53,33 @@ public class BaseConfiguration extends AbstractConfiguration
     private Map store = new LinkedMap();
 
     /**
-     * Empty constructor.  You must add all the values to this configuration.
-     */
-    public BaseConfiguration()
-    {
-        super();
-    }
-
-    /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
      * It ensures the keylist is maintained
      *
      * @param key key to use for mapping
-     * @param obj object to store
+     * @param value object to store
      */
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyDirect(String key, Object value)
     {
-        Object o = getProperty(key);
-        Object objAdd = null;
+        Object previousValue = getProperty(key);
 
-        if (o == null)
+        if (previousValue == null)
         {
-            objAdd = obj;
+            store.put(key, value);
+        }
+        else if (previousValue instanceof List)
+        {
+            // the value is added to the existing list
+            ((List) previousValue).add(value);
         }
         else
         {
-            if (o instanceof List)
-            {
-                ((List) o).add(obj);
-            }
-            else
-            {
-                // The token key is not a list.
-                List list = new ArrayList();
+            // the previous value is replaced by a list containing the previous value and the new value
+            List list = new ArrayList();
+            list.add(previousValue);
+            list.add(value);
 
-                // There is an element. Put it into the list
-                // at the first position
-                list.add(o);
-
-                // Now gobble up the supplied object
-                list.add(obj);
-
-                objAdd = list;
-            }
-        }
-
-        if (objAdd != null)
-        {
-            store.put(key, objAdd);
+            store.put(key, list);
         }
     }
 
