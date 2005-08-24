@@ -225,7 +225,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
                 XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
 
                 // add it to the ArrayNode
-                ArrayNode node = (ArrayNode) digester.peek();
+                ArrayNode node = (ArrayNode) getDigester().peek();
                 node.addValue(config);
 
                 // push the root on the stack

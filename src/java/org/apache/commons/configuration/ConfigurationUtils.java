@@ -38,9 +38,6 @@ public final class ConfigurationUtils
 {
     /** Constant for the file URL protocol.*/
     static final String PROTOCOL_FILE = "file";
-    
-    /** Constant for the URL encoding to be used.*/
-    static final String ENCODING = "UTF-8";
 
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
@@ -486,15 +483,7 @@ public final class ConfigurationUtils
     {
         if (PROTOCOL_FILE.equals(url.getProtocol()))
         {
-            try
-            {
-                return new File(URLDecoder.decode(url.getPath(), ENCODING));
-            }
-            catch (UnsupportedEncodingException uex)
-            {
-                // should normally not happen
-                return null;
-            }
+            return new File(URLDecoder.decode(url.getPath()));
         }
         else
         {
