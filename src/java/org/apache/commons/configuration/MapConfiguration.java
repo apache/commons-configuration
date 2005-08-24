@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package org.apache.commons.configuration;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -66,9 +67,28 @@ public class MapConfiguration extends AbstractConfiguration
         }
     }
 
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyDirect(String key, Object value)
     {
-        map.put(key, obj);
+        Object previousValue = getProperty(key);
+
+        if (previousValue == null)
+        {
+            map.put(key, value);
+        }
+        else if (previousValue instanceof List)
+        {
+            // the value is added to the existing list
+            ((List) previousValue).add(value);
+        }
+        else
+        {
+            // the previous value is replaced by a list containing the previous value and the new value
+            List list = new ArrayList();
+            list.add(previousValue);
+            list.add(value);
+
+            map.put(key, list);
+        }
     }
 
     public boolean isEmpty()

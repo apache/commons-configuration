@@ -70,6 +70,18 @@ public abstract class TestAbstractConfiguration extends TestCase
         AbstractConfiguration config = getConfiguration();
         config.addPropertyDirect("key3", "value3");
         assertEquals("key3", "value3", config.getProperty("key3"));
+
+        config.addPropertyDirect("key3", "value4");
+        config.addPropertyDirect("key3", "value5");
+        List list = config.getList("key3");
+        assertNotNull("no list found for the 'key3' property", list);
+
+        List expected = new ArrayList();
+        expected.add("value3");
+        expected.add("value4");
+        expected.add("value5");
+
+        ListAssert.assertEquals("values for the 'key3' property", expected, list);
     }
 
     public void testIsEmpty()

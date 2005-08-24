@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="35945" due-to="Steve Bate">
+        Fixed MapConfiguration to store the list of values added under a same
+        key instead of the last value added.
+      </action>
       <action dev="oheger" type="update" issue="35316">
         Fixed a bug in the handling of relative file names in ConfigurationFactory:
         In most cases relative file names were not resolved relative to the
@@ -122,7 +126,7 @@
         strategy, so no reload was performed.
       </action>
       <action dev="oheger" type="update" issue="34410">
-        Disabled auto save mode during PropertiesCconfiguration.load(). Prior
+        Disabled auto save mode during PropertiesConfiguration.load(). Prior
         it was possible that the properties file to be loaded was immideately
         overwritten.
       </action>
