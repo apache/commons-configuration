@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="36383">
+        If an include file with a relative path cannot be found in the base
+        path, PropertiesConfiguration now also tries to resolve it based on its
+        own location.
+      </action>
       <action dev="ebourg" type="update" issue="35945" due-to="Steve Bate">
         Fixed MapConfiguration to store the list of values added under a same
         key instead of the last value added.

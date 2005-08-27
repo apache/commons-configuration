@@ -394,4 +394,17 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("formfeed separator not properly parsed",   "foo", conf.getProperty("test.separator.formfeed"));
         assertEquals("whitespace separator not properly parsed", "foo", conf.getProperty("test.separator.whitespace"));
     }
+    
+    /**
+     * Tests including properties when they are loaded from a nested directory
+     * structure.
+     */
+    public void testIncludeInSubDir() throws ConfigurationException
+    {
+        ConfigurationFactory factory = new ConfigurationFactory("conf/testFactoryPropertiesInclude.xml");
+        Configuration config = factory.getConfiguration();
+        assertEquals(true, config.getBoolean("deeptest"));
+        assertEquals(true, config.getBoolean("deepinclude"));
+        assertFalse(config.containsKey("deeptestinvalid"));
+    }
 }

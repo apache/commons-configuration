@@ -322,7 +322,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                         String [] files = StringUtils.split(value, getDelimiter());
                         for (int i = 0; i < files.length; i++)
                         {
-                            load(ConfigurationUtils.locate(getBasePath(), files[i].trim()));
+                            loadIncludeFile(files[i].trim());
                         }
                     }
                 }
@@ -788,4 +788,33 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         return result;
     }
 
+    /**
+     * Helper method for loading an included properties file. This method is
+     * called by <code>load()</code> when an <code>include</code> property
+     * is encountered. It tries to resolve relative file names based on the
+     * current base path. If this fails, a resolution based on the location of
+     * this properties file is tried.
+     * 
+     * @param fileName the name of the file to load
+     * @throws ConfigurationException if loading fails
+     */
+    private void loadIncludeFile(String fileName) throws ConfigurationException
+    {
+        URL url = ConfigurationUtils.locate(getBasePath(), fileName);
+        if (url == null)
+        {
+            URL baseURL = getURL();
+            if (baseURL != null)
+            {
+                url = ConfigurationUtils.locate(baseURL.toString(), fileName);
+            }
+        }
+
+        if (url == null)
+        {
+            throw new ConfigurationException("Cannot resolve include file "
+                    + fileName);
+        }
+        load(url);
+    }
 }
