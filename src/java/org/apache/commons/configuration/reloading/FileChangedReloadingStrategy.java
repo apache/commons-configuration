@@ -24,10 +24,17 @@ import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileConfiguration;
 
 /**
- * A reloading strategy that will reload the configuration every time its
- * underlying file is changed. The file is not reloaded more than once
- * every 5 seconds by default, this time can be changed by setting the refresh
- * delay. This strategy only works with FileConfiguration instances.
+ * <p>A reloading strategy that will reload the configuration every time its
+ * underlying file is changed.</p>
+ * <p>This reloading strategy does not actively monitor a configuration file,
+ * but is triggered by its associated configuration whenever properties are
+ * accessed. It then checks the configuration file's last modification date
+ * and causes a reload if this has changed.</p>
+ * <p>To avoid permanent disc access on successive property lookups a refresh 
+ * delay can be specified. This has the effect that the configuration file's
+ * last modification date is only checked once in this delay period. The default
+ * value for this refresh delay is 5 seconds.</p>
+ * <p>This strategy only works with FileConfiguration instances.</p>
  *
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$
