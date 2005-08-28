@@ -135,12 +135,21 @@ public interface Configuration
      *
      * @param prefix The prefix to test against.
      * @return An Iterator of keys that match the prefix.
+     * @see #getKeys()
      */
     Iterator getKeys(String prefix);
 
     /**
-     * Get the list of the keys contained in the configuration.
-     *
+     * Get the list of the keys contained in the configuration. The returned
+     * iterator can be used to obtain all defined keys. Note that the exact
+     * behavior of the iterator's <code>remove()</code> method is specific to
+     * a concrete implementation. It <em>may</em> remove the corresponding
+     * property from the configuration, but this is not guaranteed. In any case
+     * it is no replacement for calling
+     * <code>{@link #clearProperty(String)}</code> for this property. So it is
+     * highly recommended to avoid using the iterator's <code>remove()</code>
+     * method.
+     * 
      * @return An Iterator.
      */
     Iterator getKeys();
