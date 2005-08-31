@@ -23,6 +23,13 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="36447">
+        If a multi-valued property was involved in an interpolation operation,
+        AbstractConfiguration created a string representation of the list of all
+        values. This was changed to only use the first value, which makes more
+        sense in this context and is consistent with other getters for single
+        valued properties.
+      </action>
       <action dev="oheger" type="add" issue="36383">
         If an include file with a relative path cannot be found in the base
         path, PropertiesConfiguration now also tries to resolve it based on its

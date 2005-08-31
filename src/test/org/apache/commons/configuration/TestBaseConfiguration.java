@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -570,6 +570,10 @@ public class TestBaseConfiguration extends TestCase
                 "check first entry was interpolated",
                 "/home/applicationRoot/1",
                 arrayInt[0]);
+        
+        config.addProperty("path", "/temp,C:\\Temp,/usr/local/tmp");
+        config.setProperty("path.current", "${path}");
+        assertEquals("Interpolation with multi-valued property", "/temp", superProp.getString("path.current"));
     }
 
     public void testMultipleInterpolation() throws Exception
@@ -662,5 +666,4 @@ public class TestBaseConfiguration extends TestCase
         config.addPropertyDirect("array.double", new double[] { 1, 2 });
         assertEquals("first element of the 'array.double' property", 1, config.getDouble("array.double"), 0);
     }
-
 }
