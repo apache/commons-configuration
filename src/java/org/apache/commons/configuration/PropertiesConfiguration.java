@@ -554,6 +554,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Escape the separators in the key.
+         *
+         * @since 1.2
          */
         private String escapeKey(String key)
         {
@@ -692,6 +694,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * Parse a property line and return the key and the value in an array.
+     *
+     * @since 1.2
      */
     private String[] parseProperty(String line)
     {

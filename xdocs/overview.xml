@@ -42,16 +42,21 @@
               Loads configuration values from a properties file.
           </li>
           <li>
-              <strong>BaseConfiguration</strong>
-              An in-memory method of populating a Configuration object.
-          </li>
-          <li>
               <strong>XMLConfiguration</strong>
               Takes values from an XML document.
           </li>
           <li>
+              <strong>PropertyListConfiguration</strong>
+              Loads values from an OpenStep .plist file. XMLPropertyListConfiguration is also
+              available to read the XML variant used by Mac OSX.
+          </li>
+          <li>
               <strong>JNDIConfiguration</strong>
               Using a key in the JNDI tree, can retrieve values as configuration properties.
+          </li>
+          <li>
+              <strong>BaseConfiguration</strong>
+              An in-memory method of populating a Configuration object.
           </li>
           <li>
               <strong>SystemConfiguration</strong>

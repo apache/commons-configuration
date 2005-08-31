@@ -45,7 +45,7 @@ import org.apache.commons.lang.StringUtils;
  *
  *     array = ( value1, value2, value3 );
  *
- *     data = <4f3e0145ab>;
+ *     data = &lt;4f3e0145ab>;
  *
  *     nested =
  *     {

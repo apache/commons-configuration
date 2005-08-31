@@ -45,6 +45,7 @@ Integer integer = config.getInteger("number");
         <ul>
           <li>Properties files</li>
           <li>XML documents</li>
+          <li>Property list files (.plist)</li>
           <li>JNDI</li>
           <li>JDBC Datasource</li>
           <li>System properties</li>

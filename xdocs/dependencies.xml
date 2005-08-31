@@ -41,38 +41,46 @@
                         <td>
                             Java 1.3<br/>
                             commons-collections<br/>
-                            commons-lang
+                            commons-lang<br/>
+                            commons-logging
                         </td>
                     </tr>
                     <tr>
                         <td>ConfigurationFactory</td>
                         <td>
-                            commons-logging<br/>
                             commons-digester<br/>
+                            commons-beanutils<br/>
                             JDK 1.4 or xml-apis
                         </td>
                     </tr>
                     <tr>
                         <td>DatabaseConfiguration</td>
-                        <td>
-                            commons-logging<br/>
-                            JDBC 3.0 (Java 1.4 or jdbc2_0-stdext.jar)
-                        </td>
+                        <td>JDBC 3.0 (Java 1.4 or jdbc2_0-stdext.jar)</td>
                     </tr>
                     <tr>
-                        <td>XMLConfiguration, HierarchicalXMLConfiguration</td>
+                        <td>XMLConfiguration</td>
                         <td>Java 1.4 or (xml-apis + xerces)</td>
                     </tr>
                     <tr>
-                        <td>JNDIConfiguration</td>
-                        <td>commons-logging</td>
+                        <td>XMLPropertiesConfiguration</td>
+                        <td>Java 1.4 or (xml-apis + xerces)</td>
+                    </tr>
+                    <tr>
+                        <td>PropertyListConfiguration</td>
+                        <td>commons-codec</td>
+                    </tr>
+                    <tr>
+                        <td>XMLPropertyListConfiguration</td>
+                        <td>
+                            commons-digester<br/>
+                            commons-beanutils<br/>
+                            commons-codec<br/>
+                            JDK 1.4 or xml-apis
+                        </td>
                     </tr>
                     <tr>
                         <td>ConfigurationDynaBean</td>
-                        <td>
-                            commons-beanutils<br/>
-                            commons-logging
-                        </td>
+                        <td>commons-beanutils</td>
                     </tr>
                 </tbody>
             </table>
