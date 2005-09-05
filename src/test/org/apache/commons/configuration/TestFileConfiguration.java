@@ -413,4 +413,52 @@ public class TestFileConfiguration extends TestCase
             //ok
         }
     }
+
+    /**
+     * Checks that loading a directory instead of a file throws an exception.
+     */
+    public void testLoadDirectory()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+
+        try
+        {
+            config.load("target");
+            fail("Could load config from a directory!");
+        }
+        catch (ConfigurationException e)
+        {
+            // ok
+        }
+
+        try
+        {
+            config.load(new File("target"));
+            fail("Could load config from a directory!");
+        }
+        catch (ConfigurationException e)
+        {
+            // ok
+        }
+
+        try
+        {
+            new PropertiesConfiguration("target");
+            fail("Could load config from a directory!");
+        }
+        catch (ConfigurationException e)
+        {
+            // ok
+        }
+
+        try
+        {
+            new PropertiesConfiguration(new File("target"));
+            fail("Could load config from a directory!");
+        }
+        catch (ConfigurationException e)
+        {
+            // ok
+        }
+    }
 }

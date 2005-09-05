@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="36488">
+        Attempting to load a configuration from a directory instead of a file
+        will now throw a ConfigurationException.
+      </action>
       <action dev="oheger" type="update" issue="36447">
         If a multi-valued property was involved in an interpolation operation,
         AbstractConfiguration created a string representation of the list of all

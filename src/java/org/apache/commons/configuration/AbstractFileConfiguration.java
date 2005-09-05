@@ -245,13 +245,21 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         if (sourceURL == null)
         {
-            if(StringUtils.isEmpty(getBasePath()))
+            if (StringUtils.isEmpty(getBasePath()))
             {
                 // ensure that we have a valid base path
                 setBasePath(url.toString());
             }
             sourceURL = url;
         }
+
+        // throw an exception if the target URL is a directory
+        File file = ConfigurationUtils.fileFromURL(url);
+        if (file != null && file.isDirectory())
+        {
+            throw new ConfigurationException("Cannot load a configuration from a directory");
+        }
+
         InputStream in = null;
 
         try
