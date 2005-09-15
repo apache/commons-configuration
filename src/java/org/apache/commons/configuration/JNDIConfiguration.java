@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
@@ -329,6 +330,11 @@ public class JNDIConfiguration extends AbstractConfiguration
             getBaseContext().lookup(key);
             return true;
         }
+        catch (NameNotFoundException e)
+        {
+            // expected exception, no need to log it
+            return false;
+        }
         catch (NamingException e)
         {
             log.error(e.getMessage(), e);
@@ -371,6 +377,11 @@ public class JNDIConfiguration extends AbstractConfiguration
         {
             key = StringUtils.replace(key, ".", "/");
             return getBaseContext().lookup(key);
+        }
+        catch (NameNotFoundException e)
+        {
+            // expected exception, no need to log it
+            return null;
         }
         catch (NamingException e)
         {

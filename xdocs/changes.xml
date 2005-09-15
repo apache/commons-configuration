@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="36664">
+        JNDIConfiguration no longer logs an error when attempting to get
+        a property that doesn't exist in the configuration.
+      </action>
       <action dev="ebourg" type="update" issue="36488">
         Attempting to load a configuration from a directory instead of a file
         will now throw a ConfigurationException.
