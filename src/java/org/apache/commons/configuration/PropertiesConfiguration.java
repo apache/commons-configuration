@@ -166,6 +166,16 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     private String header;
 
     /**
+     * The default encoding (ISO-8859-1 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     */
+    private static final String DEFAULT_ENCODING = "ISO-8859-1";
+
+    // initialization block to set the encoding before loading the file in the constructors
+    {
+        setEncoding(DEFAULT_ENCODING);
+    }
+
+    /**
      * Creates an empty PropertyConfiguration object which can be
      * used to synthesize a new Properties file by adding values and
      * then saving().
@@ -586,7 +596,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * <p>Unescapes any Java literals found in the <code>String</code> to a
      * <code>Writer</code>.</p> This is a slightly modified version of the
      * StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
-     * drop escaped commas (i.e '\,').
+     * drop escaped separators (i.e '\,').
      *
      * @param str  the <code>String</code> to unescape, may be null
      *
