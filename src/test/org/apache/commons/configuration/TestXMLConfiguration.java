@@ -742,6 +742,21 @@ public class TestXMLConfiguration extends TestCase
     }
     
     /**
+     * Tests whether the encoding is correctly detected by the XML parser. This
+     * is done by loading an XML file with the encoding "UTF-16". If this
+     * encoding is not detected correctly, an exception will be thrown that
+     * "Content is not allowed in prolog". This test case is related to issue
+     * 34204.
+     */
+    public void testLoadWithEncoding() throws ConfigurationException
+    {
+        File file = new File("conf/testEncoding.xml");
+        conf = new XMLConfiguration();
+        conf.load(file);
+        assertEquals("test3_yoge", conf.getString("yoge"));
+    }
+    
+    /**
      * Removes the test output file if it exists.
      */
     private void removeTestFile()
