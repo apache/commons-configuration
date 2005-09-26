@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.collections.ExtendedProperties;
 
 /**
@@ -84,16 +83,26 @@ public class TestConfigurationConverter extends TestCase
 
     public void testConfigurationToProperties()
     {
-        Configuration config = new BaseConfiguration();
+        BaseConfiguration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
         config.addProperty("array", "item 1");
         config.addProperty("array", "item 2");
+        config.addProperty("interpolated", "${string}");
+        config.addProperty("interpolated-array", "${interpolated}");
+        config.addProperty("interpolated-array", "${interpolated}");
 
         Properties props = ConfigurationConverter.getProperties(config);
 
         assertNotNull("null properties", props);
         assertEquals("'string' property", "teststring", props.getProperty("string"));
-        assertEquals("'array' property", "item 1, item 2", props.getProperty("array"));
+        assertEquals("'interpolated' property", "teststring", props.getProperty("interpolated"));
+        assertEquals("'array' property", "item 1,item 2", props.getProperty("array"));
+        assertEquals("'interpolated-array' property", "teststring,teststring", props.getProperty("interpolated-array"));
+
+        // change the list delimiter
+        BaseConfiguration.setDelimiter(';');
+        props = ConfigurationConverter.getProperties(config);
+        assertEquals("'array' property", "item 1;item 2", props.getProperty("array"));
     }
 
     public void testConfigurationToMap()

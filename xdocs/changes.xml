@@ -23,6 +23,15 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="36784  ">
+        ConfigurationConverter.getProperties() now uses the delimiter of the
+        specified configuration to convert the list properties into strings.
+      </action>
+      <action dev="ebourg" type="update" issue="36784  ">
+        getList() now returns a list of interpolated values. As a side effect
+        the Properties returned by ConfigurationConverter.getProperties()
+        contains only interpolated values.
+      </action>
       <action dev="ebourg" type="update" issue="36699">
         PropertiesConfiguration now uses the ISO-8859-1 encoding by default
         instead of the system encoding to comply with the specification of

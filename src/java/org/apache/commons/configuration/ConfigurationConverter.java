@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import java.util.Properties;
 import java.util.Vector;
 
 import org.apache.commons.collections.ExtendedProperties;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Configuration converter. Helper class to convert between Configuration,
@@ -90,8 +91,9 @@ public final class ConfigurationConverter
     }
 
     /**
-     * Convert a Configuration class into a Properties class. Multivalue keys
-     * will be collapsed into comma separated values.
+     * Convert a Configuration class into a Properties class. List properties
+     * are joined into a string using the delimiter of the configuration if it
+     * extends AbstractConfiguration, and a comma otherwise.
      *
      * @param config Configuration object to convert
      * @return Properties created from the Configuration
@@ -100,26 +102,16 @@ public final class ConfigurationConverter
     {
         Properties props = new Properties();
 
-        Iterator keys = config.getKeys();
+        char delimiter = (config instanceof AbstractConfiguration) ? ((AbstractConfiguration) config).getDelimiter() : ',';
 
+        Iterator keys = config.getKeys();
         while (keys.hasNext())
         {
             String key = (String) keys.next();
             List list = config.getList(key);
 
-            // turn lists into a string
-            StringBuffer property = new StringBuffer();
-            Iterator it = list.iterator();
-            while (it.hasNext())
-            {
-                property.append(String.valueOf(it.next()));
-                if (it.hasNext())
-                {
-                    property.append(", ");
-                }
-            }
-
-            props.setProperty(key, property.toString());
+            // turn the list into a string
+            props.setProperty(key, StringUtils.join(list.iterator(), delimiter));
         }
 
         return props;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -124,14 +124,6 @@ public class ConfigurationDynaBean implements DynaBean
             for (int i = 0; i < array.length; i++)
             {
                 configuration.addProperty(name, new Short(array[i]));
-            }
-        }
-        else if (value instanceof int[])
-        {
-            int[] array = (int[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                configuration.addProperty(name, new Integer(array[i]));
             }
         }
         else if (value instanceof long[])
@@ -283,13 +275,30 @@ public class ConfigurationDynaBean implements DynaBean
     {
         try
         {
-            List list = configuration.getList(name);
-            if (list == null)
+            Object property = configuration.getProperty(name);
+
+            if (property == null)
             {
                 throw new IllegalArgumentException("Property '" + name + "' does not exist.");
             }
-
-            list.set(index, value);
+            else if (property instanceof List)
+            {
+                List list = (List) property;
+                list.set(index, value);
+            }
+            else if (property.getClass().isArray())
+            {
+                Object[] array = (Object[]) property;
+                array[index] = value;
+            }
+            else if (index == 0)
+            {
+                configuration.setProperty(name, value);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
+            }
         }
         catch (ConversionException e)
         {

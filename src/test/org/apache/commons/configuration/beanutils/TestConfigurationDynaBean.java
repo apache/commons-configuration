@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +21,10 @@ import java.util.List;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
-
+import junitx.framework.ObjectAssert;
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -38,7 +39,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * The basic test bean for each test.
      */
-    protected ConfigurationDynaBean bean = null;
+    private ConfigurationDynaBean bean;
 
     /**
      * The set of property names we expect to have returned when calling
@@ -46,37 +47,37 @@ public class TestConfigurationDynaBean extends TestCase
      * when new properties are added to TestBean.
      */
     String[] properties = {
-        "booleanProperty",
-        "booleanSecond",
-        "doubleProperty",
-        "floatProperty",
-        "intProperty",
-        "longProperty",
-        "mappedProperty.key1",
-        "mappedProperty.key2",
-        "mappedProperty.key3",
-        "mappedIntProperty.key1",
-        "shortProperty",
-        "stringProperty",
-        "byteProperty",
-        "charProperty"
+            "booleanProperty",
+            "booleanSecond",
+            "doubleProperty",
+            "floatProperty",
+            "intProperty",
+            "longProperty",
+            "mappedProperty.key1",
+            "mappedProperty.key2",
+            "mappedProperty.key3",
+            "mappedIntProperty.key1",
+            "shortProperty",
+            "stringProperty",
+            "byteProperty",
+            "charProperty"
     };
 
     Object[] values = {
-        Boolean.TRUE,
-        Boolean.TRUE,
-        new Double(Double.MAX_VALUE),
-        new Float(Float.MAX_VALUE),
-        new Integer(Integer.MAX_VALUE),
-        new Long(Long.MAX_VALUE),
-        "First Value",
-        "Second Value",
-        "Third Value",
-        new Integer(Integer.MAX_VALUE),
-        new Short(Short.MAX_VALUE),
-        "This is a string",
-        new Byte(Byte.MAX_VALUE),
-        new Character(Character.MAX_VALUE)
+            Boolean.TRUE,
+            Boolean.TRUE,
+            new Double(Double.MAX_VALUE),
+            new Float(Float.MAX_VALUE),
+            new Integer(Integer.MAX_VALUE),
+            new Long(Long.MAX_VALUE),
+            "First Value",
+            "Second Value",
+            "Third Value",
+            new Integer(Integer.MAX_VALUE),
+            new Short(Short.MAX_VALUE),
+            "This is a string",
+            new Byte(Byte.MAX_VALUE),
+            new Character(Character.MAX_VALUE)
     };
 
     int[] intArray = {0, 10, 20, 30, 40};
@@ -89,21 +90,13 @@ public class TestConfigurationDynaBean extends TestCase
     double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
     String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
-    /**
-     * Construct a new instance of this test case.
-     * @param name Name of the test case
-     */
-    public TestConfigurationDynaBean(String name)
-    {
-        super(name);
-    }
 
     /**
      * Set up instance variables required by this test case.
      */
     public void setUp() throws Exception
     {
-        BaseConfiguration configuration = new BaseConfiguration();
+        Configuration configuration = new BaseConfiguration();
 
         for (int i = 0; i < properties.length; i++)
         {
@@ -143,27 +136,12 @@ public class TestConfigurationDynaBean extends TestCase
 
 
     /**
-     * Tear down instance variables required by this test case.
-     */
-    public void tearDown()
-    {
-        bean = null;
-    }
-
-    /**
      * Corner cases on getDynaProperty invalid arguments.
      */
     public void testGetDescriptorArguments()
     {
-        try
-        {
-            DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
-            assertNull("Unknown property descriptor should be null", descriptor);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of returning null");
-        }
+        DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
+        assertNull("Unknown property descriptor should be null", descriptor);
 
         try
         {
@@ -172,11 +150,11 @@ public class TestConfigurationDynaBean extends TestCase
         }
         catch (java.lang.IllegalArgumentException e)
         {
-            ; // Expected response
+            // Expected response
         }
         catch (AssertionFailedError e)
         {
-            ; // ignore other failed responses
+            // ignore other failed responses
         }
         catch (Throwable t)
         {
@@ -269,7 +247,7 @@ public class TestConfigurationDynaBean extends TestCase
                 }
             }
         }
-        
+
         for (int j = 0; j < properties.length; j++)
         {
             if (count[j] < 0)
@@ -310,77 +288,37 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetIndexedValues()
     {
-        Object value = null;
-
         for (int i = 0; i < 5; i++)
         {
-            try
-            {
-                value = bean.get("intArray", i);
-            }
-            catch (Throwable t)
-            {
-                fail("intArray " + i + " threw " + t);
-            }
+            Object value = bean.get("intArray", i);
 
             assertNotNull("intArray index " + i + " did not return value.", value);
-            assertTrue("intArray index " + i + " did not return Integer.", (value instanceof Integer));
+            ObjectAssert.assertInstanceOf("intArray index " + i, Integer.class, value);
             assertEquals("intArray " + i + " returned incorrect value.", i * 10, ((Integer) value).intValue());
 
-            try
-            {
-                value = bean.get("intIndexed", i);
-            }
-            catch (Throwable t)
-            {
-                fail("intIndexed index " + i + " threw " + t);
-            }
+            value = bean.get("intIndexed", i);
 
             assertNotNull("intIndexed index " + i + "returned value " + i, value);
-            assertTrue("intIndexed index " + i + "returned Integer " + i, value instanceof Integer);
+            ObjectAssert.assertInstanceOf("intIndexed index " + i, Integer.class, value);
             assertEquals("intIndexed index " + i + "returned correct " + i, i * 10, ((Integer) value).intValue());
 
-            try
-            {
-                value = bean.get("listIndexed", i);
-            }
-            catch (Throwable t)
-            {
-                fail("listIndexed index " + i + " threw " + t);
-            }
+            value = bean.get("listIndexed", i);
 
             assertNotNull("listIndexed index " + i + "returned value " + i, value);
-            assertTrue("list index " + i + "returned String " + i, value instanceof String);
+            ObjectAssert.assertInstanceOf("list index " + i, String.class, value);
             assertEquals("listIndexed index " + i + "returned correct " + i, "String " + i, (String) value);
 
-            try
-            {
-                value = bean.get("stringArray", i);
-            }
-            catch (Throwable t)
-            {
-                fail("stringArray index " + i + " threw " + t);
-            }
+            value = bean.get("stringArray", i);
 
             assertNotNull("stringArray index " + i + " returnde null.", value);
             assertFalse("stringArray index " + i + " returned array instead of String.", value.getClass().isArray());
-            assertTrue("stringArray index " + i + " returned "
-                    + value.getClass().getName() + "=[" + value + "]"
-                    + "  instead of String.",
-                    value instanceof String);
+            ObjectAssert.assertInstanceOf("stringArray index " + i, String.class, value);
             assertEquals("stringArray returned correct " + i, "String " + i, (String) value);
 
-            try
-            {
-                value = bean.get("stringIndexed", i);
-            }
-            catch (Throwable t)
-            {
-                fail("stringIndexed " + i + " threw " + t);
-            }
+            value = bean.get("stringIndexed", i);
 
             assertNotNull("stringIndexed returned value " + i, value);
-            assertTrue("stringIndexed returned String " + i, value instanceof String);
+            ObjectAssert.assertInstanceOf("stringIndexed", String.class, value);
             assertEquals("stringIndexed returned correct " + i, "String " + i, (String) value);
         }
     }
@@ -406,37 +344,14 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetMappedValues()
     {
-        Object value = null;
+        Object value = bean.get("mappedProperty", "key1");
+        assertEquals("Can find first value", "First Value", value);
 
-        try
-        {
-            value = bean.get("mappedProperty", "key1");
-            assertEquals("Can find first value", "First Value", value);
-        }
-        catch (Throwable t)
-        {
-            fail("Finding first value threw " + t);
-        }
+        value = bean.get("mappedProperty", "key2");
+        assertEquals("Can find second value", "Second Value", value);
 
-        try
-        {
-            value = bean.get("mappedProperty", "key2");
-            assertEquals("Can find second value", "Second Value", value);
-        }
-        catch (Throwable t)
-        {
-            fail("Finding second value threw " + t);
-        }
-
-        try
-        {
-            value = bean.get("mappedProperty", "key3");
-            assertNotNull("Cannot find third value", value);
-        }
-        catch (Throwable t)
-        {
-            fail("Finding third value threw " + t);
-        }
+        value = bean.get("mappedProperty", "key3");
+        assertNotNull("Cannot find third value", value);
     }
 
     /**
@@ -464,17 +379,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleBoolean()
     {
-        try
-        {
-            Object value = bean.get("booleanProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Got correct type", (value instanceof Boolean));
-            assertTrue("Got correct value", ((Boolean) value).booleanValue() == true);
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        Object value = bean.get("booleanProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Got correct type", Boolean.class, value);
+        assertTrue("Got correct value", ((Boolean) value).booleanValue());
     }
 
     /**
@@ -482,17 +390,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleDouble()
     {
-        try
-        {
-            Object value = bean.get("doubleProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Got correct type", (value instanceof Double));
-            assertEquals("Got correct value", ((Double) value).doubleValue(), Double.MAX_VALUE, 0.005);
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("doubleProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Got correct type", Double.class, value);
+        assertEquals("Got correct value", ((Double) value).doubleValue(), Double.MAX_VALUE, 0.005);
     }
 
     /**
@@ -500,17 +401,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleFloat()
     {
-        try
-        {
-            Object value = bean.get("floatProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Got correct type", (value instanceof Float));
-            assertEquals("Got correct value", ((Float) value).floatValue(), Float.MAX_VALUE, 0.005f);
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("floatProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Got correct type", Float.class, value);
+        assertEquals("Got correct value", ((Float) value).floatValue(), Float.MAX_VALUE, 0.005f);
     }
 
     /**
@@ -518,17 +412,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleInt()
     {
-        try
-        {
-            Object value = bean.get("intProperty");
-            assertNotNull("Failed to get value", value);
-            assertTrue("Incorrect type", (value instanceof Integer));
-            assertEquals("Incorrect value", ((Integer) value).intValue(), Integer.MAX_VALUE);
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("intProperty");
+        assertNotNull("Failed to get value", value);
+        ObjectAssert.assertInstanceOf("Incorrect type", Integer.class, value);
+        assertEquals("Incorrect value", ((Integer) value).intValue(), Integer.MAX_VALUE);
     }
 
     /**
@@ -536,17 +423,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleLong()
     {
-        try
-        {
-            Object value = bean.get("longProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Returned incorrect type", (value instanceof Long));
-            assertEquals("Returned value of Incorrect value", ((Long) value).longValue(), Long.MAX_VALUE);
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("longProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Returned incorrect type", Long.class, value);
+        assertEquals("Returned value of Incorrect value", ((Long) value).longValue(), Long.MAX_VALUE);
     }
 
     /**
@@ -554,17 +434,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleShort()
     {
-        try
-        {
-            Object value = bean.get("shortProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Got correct type", (value instanceof Short));
-            assertEquals("Got correct value", ((Short) value).shortValue(), Short.MAX_VALUE);
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("shortProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Got correct type", Short.class, value);
+        assertEquals("Got correct value", ((Short) value).shortValue(), Short.MAX_VALUE);
     }
 
     /**
@@ -572,17 +445,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testGetSimpleString()
     {
-        try
-        {
-            Object value = bean.get("stringProperty");
-            assertNotNull("Got a value", value);
-            assertTrue("Got correct type", (value instanceof String));
-            assertEquals("Got correct value", (String) value, "This is a string");
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        Object value = bean.get("stringProperty");
+        assertNotNull("Got a value", value);
+        ObjectAssert.assertInstanceOf("Got correct type", String.class, value);
+        assertEquals("Got correct value", (String) value, "This is a string");
     }
 
     /**
@@ -590,23 +456,8 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testMappedContains()
     {
-        try
-        {
-            assertTrue("Can't see first key", bean.contains("mappedProperty", "key1"));
-        }
-        catch (Exception e)
-        {
-            fail("Exception: " + e);
-        }
-
-        try
-        {
-            assertTrue("Can see unknown key", !bean.contains("mappedProperty", "Unknown Key"));
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        assertTrue("Can't see first key", bean.contains("mappedProperty", "key1"));
+        assertTrue("Can see unknown key", !bean.contains("mappedProperty", "Unknown Key"));
     }
 
     /**
@@ -614,27 +465,13 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testMappedRemove()
     {
-        try
-        {
-            assertTrue("Can see first key", bean.contains("mappedProperty", "key1"));
-            bean.remove("mappedProperty", "key1");
-            assertTrue("Can not see first key", !bean.contains("mappedProperty", "key1"));
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        assertTrue("Can see first key", bean.contains("mappedProperty", "key1"));
+        bean.remove("mappedProperty", "key1");
+        assertTrue("Can not see first key", !bean.contains("mappedProperty", "key1"));
 
-        try
-        {
-            assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
-            bean.remove("mappedProperty", "key4");
-            assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
-        }
-        catch (Throwable t)
-        {
-            fail("Exception: " + t);
-        }
+        assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
+        bean.remove("mappedProperty", "key4");
+        assertTrue("Can not see unknown key", !bean.contains("mappedProperty", "key4"));
     }
 
     /**
@@ -663,76 +500,43 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetIndexedValues()
     {
-        Object value = null;
-
-        try
-        {
-            bean.set("intArray", 0, new Integer(1));
-            value = bean.get("intArray", 0);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t);
-        }
+        bean.set("intArray", 0, new Integer(1));
+        Object value = bean.get("intArray", 0);
 
         assertNotNull("Returned new value 0", value);
-        assertTrue("Returned Integer new value 0", value instanceof Integer);
+        ObjectAssert.assertInstanceOf("Returned Integer new value 0", Integer.class,  value);
         assertEquals("Returned correct new value 0", 1, ((Integer) value).intValue());
 
-        try
-        {
-            bean.set("intIndexed", 1, new Integer(11));
-            value = bean.get("intIndexed", 1);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t);
-        }
+
+        bean.set("intIndexed", 1, new Integer(11));
+        value = bean.get("intIndexed", 1);
 
         assertNotNull("Returned new value 1", value);
-        assertTrue("Returned Integer new value 1", value instanceof Integer);
+        ObjectAssert.assertInstanceOf("Returned Integer new value 1", Integer.class,  value);
         assertEquals("Returned correct new value 1", 11, ((Integer) value).intValue());
 
-        try
-        {
-            bean.set("listIndexed", 2, "New Value 2");
-            value = bean.get("listIndexed", 2);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t);
-        }
+
+        bean.set("listIndexed", 2, "New Value 2");
+        value = bean.get("listIndexed", 2);
 
         assertNotNull("Returned new value 2", value);
-        assertTrue("Returned String new value 2", value instanceof String);
+        ObjectAssert.assertInstanceOf("Returned String new value 2", String.class,  value);
         assertEquals("Returned correct new value 2", "New Value 2", (String) value);
 
-        try
-        {
-            bean.set("stringArray", 3, "New Value 3");
-            value = bean.get("stringArray", 3);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t);
-        }
+
+        bean.set("stringArray", 3, "New Value 3");
+        value = bean.get("stringArray", 3);
 
         assertNotNull("Returned new value 3", value);
-        assertTrue("Returned String new value 3", value instanceof String);
+        ObjectAssert.assertInstanceOf("Returned String new value 3", String.class,  value);
         assertEquals("Returned correct new value 3", "New Value 3", (String) value);
 
-        try
-        {
-            bean.set("stringIndexed", 4, "New Value 4");
-            value = bean.get("stringIndexed", 4);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t);
-        }
+
+        bean.set("stringIndexed", 4, "New Value 4");
+        value = bean.get("stringIndexed", 4);
 
         assertNotNull("Returned new value 4", value);
-        assertTrue("Returned String new value 4", value instanceof String);
+        ObjectAssert.assertInstanceOf("Returned String new value 4", String.class,  value);
         assertEquals("Returned correct new value 4", "New Value 4", (String) value);
     }
 
@@ -741,25 +545,11 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetMappedValues()
     {
-        try
-        {
-            bean.set("mappedProperty", "First Key", "New First Value");
-            assertEquals("Can replace old value", "New First Value", (String) bean.get("mappedProperty", "First Key"));
-        }
-        catch (Throwable t)
-        {
-            fail("Finding fourth value threw " + t);
-        }
+        bean.set("mappedProperty", "First Key", "New First Value");
+        assertEquals("Can replace old value", "New First Value", (String) bean.get("mappedProperty", "First Key"));
 
-        try
-        {
-            bean.set("mappedProperty", "Fourth Key", "Fourth Value");
-            assertEquals("Can set new value", "Fourth Value", (String) bean.get("mappedProperty", "Fourth Key"));
-        }
-        catch (Throwable t)
-        {
-            fail("Finding fourth value threw " + t);
-        }
+        bean.set("mappedProperty", "Fourth Key", "Fourth Value");
+        assertEquals("Can set new value", "Fourth Value", (String) bean.get("mappedProperty", "Fourth Key"));
     }
 
     /**
@@ -767,17 +557,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleBoolean()
     {
-        try
-        {
-            boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
-            boolean newValue = !oldValue;
-            bean.set("booleanProperty", new Boolean(newValue));
-            assertTrue("Matched new value", newValue == ((Boolean) bean.get("booleanProperty")).booleanValue());
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
+        boolean newValue = !oldValue;
+        bean.set("booleanProperty", new Boolean(newValue));
+        assertTrue("Matched new value", newValue == ((Boolean) bean.get("booleanProperty")).booleanValue());
     }
 
     /**
@@ -785,17 +568,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleDouble()
     {
-        try
-        {
-            double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
-            double newValue = oldValue + 1.0;
-            bean.set("doubleProperty", new Double(newValue));
-            assertEquals("Matched new value", newValue, ((Double) bean.get("doubleProperty")).doubleValue(), 0.005);
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
+        double newValue = oldValue + 1.0;
+        bean.set("doubleProperty", new Double(newValue));
+        assertEquals("Matched new value", newValue, ((Double) bean.get("doubleProperty")).doubleValue(), 0.005);
     }
 
     /**
@@ -803,17 +579,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleFloat()
     {
-        try
-        {
-            float oldValue = ((Float) bean.get("floatProperty")).floatValue();
-            float newValue = oldValue + (float) 1.0;
-            bean.set("floatProperty", new Float(newValue));
-            assertEquals("Matched new value", newValue, ((Float) bean.get("floatProperty")).floatValue(), 0.005f);
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        float oldValue = ((Float) bean.get("floatProperty")).floatValue();
+        float newValue = oldValue + (float) 1.0;
+        bean.set("floatProperty", new Float(newValue));
+        assertEquals("Matched new value", newValue, ((Float) bean.get("floatProperty")).floatValue(), 0.005f);
     }
 
     /**
@@ -821,17 +590,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleInt()
     {
-        try
-        {
-            int oldValue = ((Integer) bean.get("intProperty")).intValue();
-            int newValue = oldValue + 1;
-            bean.set("intProperty", new Integer(newValue));
-            assertEquals("Matched new value", newValue, ((Integer) bean.get("intProperty")).intValue());
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        int oldValue = ((Integer) bean.get("intProperty")).intValue();
+        int newValue = oldValue + 1;
+        bean.set("intProperty", new Integer(newValue));
+        assertEquals("Matched new value", newValue, ((Integer) bean.get("intProperty")).intValue());
     }
 
     /**
@@ -839,17 +601,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleLong()
     {
-        try
-        {
-            long oldValue = ((Long) bean.get("longProperty")).longValue();
-            long newValue = oldValue + 1;
-            bean.set("longProperty", new Long(newValue));
-            assertEquals("Matched new value", newValue, ((Long) bean.get("longProperty")).longValue());
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        long oldValue = ((Long) bean.get("longProperty")).longValue();
+        long newValue = oldValue + 1;
+        bean.set("longProperty", new Long(newValue));
+        assertEquals("Matched new value", newValue, ((Long) bean.get("longProperty")).longValue());
     }
 
     /**
@@ -857,17 +612,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleShort()
     {
-        try
-        {
-            short oldValue = ((Short) bean.get("shortProperty")).shortValue();
-            short newValue = (short) (oldValue + 1);
-            bean.set("shortProperty", new Short(newValue));
-            assertEquals("Matched new value", newValue, ((Short) bean.get("shortProperty")).shortValue());
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        short oldValue = ((Short) bean.get("shortProperty")).shortValue();
+        short newValue = (short) (oldValue + 1);
+        bean.set("shortProperty", new Short(newValue));
+        assertEquals("Matched new value", newValue, ((Short) bean.get("shortProperty")).shortValue());
     }
 
     /**
@@ -875,17 +623,10 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetSimpleString()
     {
-        try
-        {
-            String oldValue = (String) bean.get("stringProperty");
-            String newValue = oldValue + " Extra Value";
-            bean.set("stringProperty", newValue);
-            assertEquals("Matched new value", newValue, (String) bean.get("stringProperty"));
-        }
-        catch (Throwable e)
-        {
-            fail("Exception: " + e);
-        }
+        String oldValue = (String) bean.get("stringProperty");
+        String newValue = oldValue + " Extra Value";
+        bean.set("stringProperty", newValue);
+        assertEquals("Matched new value", newValue, (String) bean.get("stringProperty"));
     }
 
     /**
@@ -938,15 +679,7 @@ public class TestConfigurationDynaBean extends TestCase
      */
     protected void testGetDescriptorBase(String name, Class type)
     {
-        DynaProperty descriptor = null;
-        try
-        {
-            descriptor = bean.getDynaClass().getDynaProperty(name);
-        }
-        catch (Throwable t)
-        {
-            fail("Threw an exception: " + t);
-        }
+        DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
 
         assertNotNull("Failed to get descriptor", descriptor);
         assertEquals("Got incorrect type", type, descriptor.getType());
@@ -960,25 +693,12 @@ public class TestConfigurationDynaBean extends TestCase
     public void testNonIndexedPropeties()
     {
         ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
-        try
-        {
-            String value = (String) nested.get("key1");
-            assertEquals("Can find first value", "First Value", value);
-        }
-        catch (Throwable t)
-        {
-            fail("Finding first value threw " + t);
-        }
 
-        try
-        {
-            nested.set("key1", "undefined");
-            assertEquals("Incorrect value returned", "undefined", bean.get("mappedProperty.key1"));
-        }
-        catch (Throwable t)
-        {
-            fail("Finding setting first value threw " + t);
-        }
+        String value = (String) nested.get("key1");
+        assertEquals("Can find first value", "First Value", value);
+
+        nested.set("key1", "undefined");
+        assertEquals("Incorrect value returned", "undefined", bean.get("mappedProperty.key1"));
     }
 
     /**
@@ -1006,7 +726,7 @@ public class TestConfigurationDynaBean extends TestCase
 
         try
         {
-            bean.set("booleanProperty", 0, new Boolean(true));
+            bean.set("booleanProperty", 0, Boolean.TRUE);
         }
         catch (IllegalArgumentException e)
         {

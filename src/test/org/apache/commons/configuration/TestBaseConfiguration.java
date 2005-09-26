@@ -27,6 +27,7 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 
 import junit.framework.TestCase;
+import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
 
 /**
@@ -333,8 +334,8 @@ public class TestBaseConfiguration extends TestCase
     public void testGetString()
     {
         config.setProperty("testString", "The quick brown fox");
-        String string = new String("The quick brown fox");
-        String defaultValue = new String("jumps over the lazy dog");
+        String string = "The quick brown fox";
+        String defaultValue = "jumps over the lazy dog";
 
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
@@ -415,6 +416,19 @@ public class TestBaseConfiguration extends TestCase
         }
     }
 
+    public void testGetInterpolatedList()
+    {
+        config.addProperty("number", "1");
+        config.addProperty("array", "${number}");
+        config.addProperty("array", "${number}");
+
+        List list = new ArrayList();
+        list.add("1");
+        list.add("1");
+
+        ListAssert.assertEquals("'array' property", list, config.getList("array"));
+    }
+
     public void testCommaSeparatedString()
     {
         String prop = "hey, that's a test";
@@ -441,7 +455,7 @@ public class TestBaseConfiguration extends TestCase
         }
 
     }
-    
+
     public void testAddProperty() throws Exception
     {
         Collection props = new ArrayList();
@@ -450,12 +464,12 @@ public class TestBaseConfiguration extends TestCase
         props.add(new String[] { "5.1", "5.2", "5.3,5.4", "5.5" });
         props.add("six");
         config.addProperty("complex.property", props);
-        
+
         Object val = config.getProperty("complex.property");
         assertTrue(val instanceof Collection);
         Collection col = (Collection) val;
         assertEquals(10, col.size());
-        
+
         props = new ArrayList();
         props.add("quick");
         props.add("brown");
@@ -475,7 +489,7 @@ public class TestBaseConfiguration extends TestCase
             assertEquals(tok.nextToken(), it.next());
         }
         assertFalse(it.hasNext());
-        
+
         config.setProperty("complex.property", null);
         assertFalse(config.containsKey("complex.property"));
     }
@@ -570,7 +584,7 @@ public class TestBaseConfiguration extends TestCase
                 "check first entry was interpolated",
                 "/home/applicationRoot/1",
                 arrayInt[0]);
-        
+
         config.addProperty("path", "/temp,C:\\Temp,/usr/local/tmp");
         config.setProperty("path.current", "${path}");
         assertEquals("Interpolation with multi-valued property", "/temp", superProp.getString("path.current"));

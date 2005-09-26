@@ -114,9 +114,9 @@ public abstract class AbstractConfiguration implements Configuration
      * provide write acces to underlying Configuration store.
      * 
      * @param key key to use for mapping
-     * @param obj object to store
+     * @param value object to store
      */
-    protected abstract void addPropertyDirect(String key, Object obj);
+    protected abstract void addPropertyDirect(String key, Object value);
 
     /**
      * interpolate key names to handle ${key} stuff
@@ -161,7 +161,6 @@ public abstract class AbstractConfiguration implements Configuration
         int begin = -1;
         int end = -1;
         int prec = 0 - END_TOKEN.length();
-        String variable = null;
         StringBuffer result = new StringBuffer();
 
         // FIXME: we should probably allow the escaping of the start token
@@ -169,7 +168,7 @@ public abstract class AbstractConfiguration implements Configuration
                 && ((end = base.indexOf(END_TOKEN, begin)) > -1))
         {
             result.append(base.substring(prec + END_TOKEN.length(), begin));
-            variable = base.substring(begin + START_TOKEN.length(), end);
+            String variable = base.substring(begin + START_TOKEN.length(), end);
 
             // if we've got a loop, create a useful exception message and throw
             if (priorVariables.contains(variable))
@@ -872,16 +871,30 @@ public abstract class AbstractConfiguration implements Configuration
     public List getList(String key, List defaultValue)
     {
         Object value = getProperty(key);
-        List list = null;
+        List list;
 
         if (value instanceof String)
         {
             list = new ArrayList(1);
-            list.add(value);
+            list.add(interpolate((String) value));
         }
         else if (value instanceof List)
         {
-            list = (List) value;
+            list = new ArrayList();
+            List l = (List) value;
+
+            // add the interpolated elements in the new list
+            Iterator it = l.iterator();
+            while (it.hasNext())
+            {
+                Object element = it.next();
+                if (element instanceof String) {
+                    list.add(interpolate((String) element));
+                } else {
+                    list.add(element);
+                }
+            }
+
         }
         else if (value == null)
         {
