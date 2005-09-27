@@ -429,6 +429,36 @@ public class TestBaseConfiguration extends TestCase
         ListAssert.assertEquals("'array' property", list, config.getList("array"));
     }
 
+    public void testGetInterpolatedPrimitives()
+    {
+        config.addProperty("number", "1");
+        config.addProperty("value", "${number}");
+
+        config.addProperty("boolean", "true");
+        config.addProperty("booleanValue", "${boolean}");
+
+        // primitive types
+        assertEquals("boolean interpolation", true, config.getBoolean("booleanValue"));
+        assertEquals("byte interpolation", 1, config.getByte("value"));
+        assertEquals("short interpolation", 1, config.getShort("value"));
+        assertEquals("int interpolation", 1, config.getInt("value"));
+        assertEquals("long interpolation", 1, config.getLong("value"));
+        assertEquals("float interpolation", 1, config.getFloat("value"), 0);
+        assertEquals("double interpolation", 1, config.getDouble("value"), 0);
+
+        // primitive wrappers
+        assertEquals("Boolean interpolation", Boolean.TRUE, config.getBoolean("booleanValue", null));
+        assertEquals("Byte interpolation", new Byte("1"), config.getByte("value", null));
+        assertEquals("Short interpolation", new Short("1"), config.getShort("value", null));
+        assertEquals("Integer interpolation", new Integer("1"), config.getInteger("value", null));
+        assertEquals("Long interpolation", new Long("1"), config.getLong("value", null));
+        assertEquals("Float interpolation", new Float("1"), config.getFloat("value", null));
+        assertEquals("Double interpolation", new Double("1"), config.getDouble("value", null));
+
+        assertEquals("BigInteger interpolation", new BigInteger("1"), config.getBigInteger("value", null));
+        assertEquals("BigDecimal interpolation", new BigDecimal("1"), config.getBigDecimal("value", null));
+    }
+
     public void testCommaSeparatedString()
     {
         String prop = "hey, that's a test";

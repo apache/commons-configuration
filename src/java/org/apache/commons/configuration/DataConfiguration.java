@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.io.Serializable;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -45,7 +46,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class DataConfiguration extends AbstractConfiguration
+public class DataConfiguration extends AbstractConfiguration implements Serializable
 {
     /** The key of the property storing the user defined date format. */
     public static final String DATE_FORMAT_KEY = "org.apache.commons.configuration.format.date";
@@ -130,7 +131,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -154,7 +155,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toBoolean(it.next()));
+                list.add(PropertyConverter.toBoolean(interpolate(it.next())));
             }
         }
         else
@@ -163,7 +164,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toBoolean(value));
+                list.add(PropertyConverter.toBoolean(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -229,7 +230,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toBoolean(it.next()).booleanValue();
+                array[i++] = PropertyConverter.toBoolean(interpolate(it.next())).booleanValue();
             }
         }
         else
@@ -238,7 +239,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new boolean[1];
-                array[0] = PropertyConverter.toBoolean(value).booleanValue();
+                array[0] = PropertyConverter.toBoolean(interpolate(value)).booleanValue();
             }
             catch (ConversionException e)
             {
@@ -280,7 +281,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -304,7 +305,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toByte(it.next()));
+                list.add(PropertyConverter.toByte(interpolate(it.next())));
             }
         }
         else
@@ -313,7 +314,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toByte(value));
+                list.add(PropertyConverter.toByte(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -378,7 +379,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toByte(it.next()).byteValue();
+                array[i++] = PropertyConverter.toByte(interpolate(it.next())).byteValue();
             }
         }
         else
@@ -387,7 +388,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new byte[1];
-                array[0] = PropertyConverter.toByte(value).byteValue();
+                array[0] = PropertyConverter.toByte(interpolate(value)).byteValue();
             }
             catch (ConversionException e)
             {
@@ -429,7 +430,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -453,7 +454,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toShort(it.next()));
+                list.add(PropertyConverter.toShort(interpolate(it.next())));
             }
         }
         else
@@ -462,7 +463,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toShort(value));
+                list.add(PropertyConverter.toShort(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -527,7 +528,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toShort(it.next()).shortValue();
+                array[i++] = PropertyConverter.toShort(interpolate(it.next())).shortValue();
             }
         }
         else
@@ -536,7 +537,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new short[1];
-                array[0] = PropertyConverter.toShort(value).shortValue();
+                array[0] = PropertyConverter.toShort(interpolate(value)).shortValue();
             }
             catch (ConversionException e)
             {
@@ -579,7 +580,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -603,7 +604,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toInteger(it.next()));
+                list.add(PropertyConverter.toInteger(interpolate(it.next())));
             }
         }
         else
@@ -612,7 +613,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toInteger(value));
+                list.add(PropertyConverter.toInteger(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -677,7 +678,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toInteger(it.next()).intValue();
+                array[i++] = PropertyConverter.toInteger(interpolate(it.next())).intValue();
             }
         }
         else
@@ -686,7 +687,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new int[1];
-                array[0] = PropertyConverter.toInteger(value).intValue();
+                array[0] = PropertyConverter.toInteger(interpolate(value)).intValue();
             }
             catch (ConversionException e)
             {
@@ -728,7 +729,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -752,7 +753,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toLong(it.next()));
+                list.add(PropertyConverter.toLong(interpolate(it.next())));
             }
         }
         else
@@ -761,7 +762,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toLong(value));
+                list.add(PropertyConverter.toLong(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -826,7 +827,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toLong(it.next()).longValue();
+                array[i++] = PropertyConverter.toLong(interpolate(it.next())).longValue();
             }
         }
         else
@@ -835,7 +836,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new long[1];
-                array[0] = PropertyConverter.toLong(value).longValue();
+                array[0] = PropertyConverter.toLong(interpolate(value)).longValue();
             }
             catch (ConversionException e)
             {
@@ -877,7 +878,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -901,7 +902,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toFloat(it.next()));
+                list.add(PropertyConverter.toFloat(interpolate(it.next())));
             }
         }
         else
@@ -910,7 +911,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toFloat(value));
+                list.add(PropertyConverter.toFloat(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -975,7 +976,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toFloat(it.next()).floatValue();
+                array[i++] = PropertyConverter.toFloat(interpolate(it.next())).floatValue();
             }
         }
         else
@@ -984,7 +985,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new float[1];
-                array[0] = PropertyConverter.toFloat(value).floatValue();
+                array[0] = PropertyConverter.toFloat(interpolate(value)).floatValue();
             }
             catch (ConversionException e)
             {
@@ -1027,7 +1028,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1051,7 +1052,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toDouble(it.next()));
+                list.add(PropertyConverter.toDouble(interpolate(it.next())));
             }
         }
         else
@@ -1060,7 +1061,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toDouble(value));
+                list.add(PropertyConverter.toDouble(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -1125,7 +1126,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                array[i++] = PropertyConverter.toDouble(it.next()).doubleValue();
+                array[i++] = PropertyConverter.toDouble(interpolate(it.next())).doubleValue();
             }
         }
         else
@@ -1134,7 +1135,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 array = new double[1];
-                array[0] = PropertyConverter.toDouble(value).doubleValue();
+                array[0] = PropertyConverter.toDouble(interpolate(value)).doubleValue();
             }
             catch (ConversionException e)
             {
@@ -1176,7 +1177,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1195,7 +1196,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toBigInteger(it.next()));
+                list.add(PropertyConverter.toBigInteger(interpolate(it.next())));
             }
         }
         else
@@ -1204,7 +1205,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toBigInteger(value));
+                list.add(PropertyConverter.toBigInteger(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -1286,7 +1287,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1305,7 +1306,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toBigDecimal(it.next()));
+                list.add(PropertyConverter.toBigDecimal(interpolate(it.next())));
             }
         }
         else
@@ -1314,7 +1315,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toBigDecimal(value));
+                list.add(PropertyConverter.toBigDecimal(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -1403,7 +1404,7 @@ public class DataConfiguration extends AbstractConfiguration
         {
             try
             {
-                return PropertyConverter.toURL(value);
+                return PropertyConverter.toURL(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -1443,7 +1444,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1462,7 +1463,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toURL(it.next()));
+                list.add(PropertyConverter.toURL(interpolate(it.next())));
             }
         }
         else
@@ -1471,7 +1472,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toURL(value));
+                list.add(PropertyConverter.toURL(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -1598,7 +1599,7 @@ public class DataConfiguration extends AbstractConfiguration
         {
             try
             {
-                return PropertyConverter.toDate(value, format);
+                return PropertyConverter.toDate(interpolate(value), format);
             }
             catch (ConversionException e)
             {
@@ -1681,7 +1682,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1710,7 +1711,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toDate(it.next(), format));
+                list.add(PropertyConverter.toDate(interpolate(it.next()), format));
             }
         }
         else
@@ -1719,7 +1720,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toDate(value, format));
+                list.add(PropertyConverter.toDate(interpolate(value), format));
             }
             catch (ConversionException e)
             {
@@ -1890,7 +1891,7 @@ public class DataConfiguration extends AbstractConfiguration
         {
             try
             {
-                return PropertyConverter.toCalendar(value, format);
+                return PropertyConverter.toCalendar(interpolate(value), format);
             }
             catch (ConversionException e)
             {
@@ -1973,7 +1974,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -2004,7 +2005,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toCalendar(it.next(), format));
+                list.add(PropertyConverter.toCalendar(interpolate(it.next()), format));
             }
         }
         else
@@ -2013,7 +2014,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toCalendar(value, format));
+                list.add(PropertyConverter.toCalendar(interpolate(value), format));
             }
             catch (ConversionException e)
             {
@@ -2152,7 +2153,7 @@ public class DataConfiguration extends AbstractConfiguration
         {
             try
             {
-                return PropertyConverter.toLocale(value);
+                return PropertyConverter.toLocale(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -2192,7 +2193,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -2211,7 +2212,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toLocale(it.next()));
+                list.add(PropertyConverter.toLocale(interpolate(it.next())));
             }
         }
         else
@@ -2220,7 +2221,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toLocale(value));
+                list.add(PropertyConverter.toLocale(interpolate(value)));
             }
             catch (ConversionException e)
             {
@@ -2309,7 +2310,7 @@ public class DataConfiguration extends AbstractConfiguration
         {
             try
             {
-                return PropertyConverter.toColor(value);
+                return PropertyConverter.toColor(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -2349,7 +2350,7 @@ public class DataConfiguration extends AbstractConfiguration
     {
         Object value = getProperty(key);
 
-        List list = null;
+        List list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -2368,7 +2369,7 @@ public class DataConfiguration extends AbstractConfiguration
             Iterator it = values.iterator();
             while (it.hasNext())
             {
-                list.add(PropertyConverter.toColor(it.next()));
+                list.add(PropertyConverter.toColor(interpolate(it.next())));
             }
         }
         else
@@ -2377,7 +2378,7 @@ public class DataConfiguration extends AbstractConfiguration
             {
                 // attempt to convert a single value
                 list = new ArrayList();
-                list.add(PropertyConverter.toColor(value));
+                list.add(PropertyConverter.toColor(interpolate(value)));
             }
             catch (ConversionException e)
             {

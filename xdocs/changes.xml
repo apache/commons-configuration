@@ -23,13 +23,14 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
-      <action dev="ebourg" type="update" issue="36784  ">
+      <action dev="ebourg" type="update" issue="36784">
         ConfigurationConverter.getProperties() now uses the delimiter of the
         specified configuration to convert the list properties into strings.
       </action>
-      <action dev="ebourg" type="update" issue="36784  ">
-        getList() now returns a list of interpolated values. As a side effect
-        the Properties returned by ConfigurationConverter.getProperties()
+      <action dev="ebourg" type="update" issue="36784">
+        The interpolation of variables (${foo}) is now performed in all property
+        getters of AbstractConfiguration and DataConfiguration. As a side effect
+        the Properties object returned by ConfigurationConverter.getProperties()
         contains only interpolated values.
       </action>
       <action dev="ebourg" type="update" issue="36699">

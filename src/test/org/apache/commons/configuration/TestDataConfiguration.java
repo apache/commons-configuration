@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,17 +16,17 @@
 
 package org.apache.commons.configuration;
 
-import java.awt.Color;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Date;
-import java.util.Calendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -61,6 +61,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("boolean.list6", booleans);
         conf.addProperty("boolean.string", "true");
         conf.addProperty("boolean.object", Boolean.TRUE);
+        conf.addProperty("boolean.list.interpolated", "${boolean.string},false");
 
         // lists of bytes
         conf.addProperty("byte.list1", "1");
@@ -76,6 +77,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("byte.list6", bytes);
         conf.addProperty("byte.string", "1");
         conf.addProperty("byte.object", new Byte("1"));
+        conf.addProperty("byte.list.interpolated", "${byte.string},2");
 
         // lists of shorts
         conf.addProperty("short.list1", "1");
@@ -91,6 +93,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("short.list6", shorts);
         conf.addProperty("short.string", "1");
         conf.addProperty("short.object", new Short("1"));
+        conf.addProperty("short.list.interpolated", "${short.string},2");
 
         // lists of integers
         conf.addProperty("integer.list1", "1");
@@ -106,6 +109,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("integer.list6", integers);
         conf.addProperty("integer.string", "1");
         conf.addProperty("integer.object", new Integer("1"));
+        conf.addProperty("integer.list.interpolated", "${integer.string},2");
 
         // lists of longs
         conf.addProperty("long.list1", "1");
@@ -121,6 +125,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("long.list6", longs);
         conf.addProperty("long.string", "1");
         conf.addProperty("long.object", new Long("1"));
+        conf.addProperty("long.list.interpolated", "${long.string},2");
 
         // lists of floats
         conf.addProperty("float.list1", "1");
@@ -136,6 +141,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("float.list6", floats);
         conf.addProperty("float.string", "1");
         conf.addProperty("float.object", new Float("1"));
+        conf.addProperty("float.list.interpolated", "${float.string},2");
 
         // lists of doubles
         conf.addProperty("double.list1", "1");
@@ -151,6 +157,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("double.list6", doubles);
         conf.addProperty("double.string", "1");
         conf.addProperty("double.object", new Double("1"));
+        conf.addProperty("double.list.interpolated", "${double.string},2");
 
         // lists of big integers
         conf.addProperty("biginteger.list1", "1");
@@ -165,6 +172,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("biginteger.list6", bigintegers);
         conf.addProperty("biginteger.string", "1");
         conf.addProperty("biginteger.object", new BigInteger("1"));
+        conf.addProperty("biginteger.list.interpolated", "${biginteger.string},2");
 
         // lists of big decimals
         conf.addProperty("bigdecimal.list1", "1");
@@ -179,23 +187,29 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("bigdecimal.list6", bigdecimals);
         conf.addProperty("bigdecimal.string", "1");
         conf.addProperty("bigdecimal.object", new BigDecimal("1"));
+        conf.addProperty("bigdecimal.list.interpolated", "${bigdecimal.string},2");
 
         // URLs
-        conf.addProperty("url.string", "http://jakarta.apache.org");
-        conf.addProperty("url.object", new URL("http://jakarta.apache.org"));
-        conf.addProperty("url.list1", "http://jakarta.apache.org");
-        conf.addProperty("url.list1", "http://www.apache.org");
-        conf.addProperty("url.list2", "http://jakarta.apache.org, http://www.apache.org");
-        conf.addProperty("url.list3", new URL("http://jakarta.apache.org"));
-        conf.addProperty("url.list3", new URL("http://www.apache.org"));
-        conf.addProperty("url.list4", new URL[] { new URL("http://jakarta.apache.org"), new URL("http://www.apache.org") });
+        String url1 = "http://jakarta.apache.org";
+        String url2 = "http://www.apache.org";
+        conf.addProperty("url.string", url1);
+        conf.addProperty("url.string.interpolated", "${url.string}");
+        conf.addProperty("url.object", new URL(url1));
+        conf.addProperty("url.list1", url1);
+        conf.addProperty("url.list1", url2);
+        conf.addProperty("url.list2", url1 + ", " + url2);
+        conf.addProperty("url.list3", new URL(url1));
+        conf.addProperty("url.list3", new URL(url2));
+        conf.addProperty("url.list4", new URL[] { new URL(url1), new URL(url2) });
         List urls = new ArrayList();
-        urls.add(new URL("http://jakarta.apache.org"));
-        urls.add(new URL("http://www.apache.org"));
+        urls.add(new URL(url1));
+        urls.add(new URL(url2));
         conf.addProperty("url.list6", urls);
+        conf.addProperty("url.list.interpolated", "${url.string}," + url2);
 
         // Locales
         conf.addProperty("locale.string", "fr");
+        conf.addProperty("locale.string.interpolated", "${locale.string}");
         conf.addProperty("locale.object", Locale.FRENCH);
         conf.addProperty("locale.list1", "fr");
         conf.addProperty("locale.list1", "de");
@@ -207,13 +221,17 @@ public class TestDataConfiguration extends TestCase
         locales.add(Locale.FRENCH);
         locales.add(Locale.GERMAN);
         conf.addProperty("locale.list6", locales);
+        conf.addProperty("locale.list.interpolated", "${locale.string},de");
 
         // Colors
-        conf.addProperty("color.string", "FF0000");
+        String color1 = "FF0000";
+        String color2 = "0000FF";
+        conf.addProperty("color.string", color1);
+        conf.addProperty("color.string.interpolated", "${color.string}");
         conf.addProperty("color.object", Color.red);
-        conf.addProperty("color.list1", "FF0000");
-        conf.addProperty("color.list1", "0000FF");
-        conf.addProperty("color.list2", "FF0000, 0000FF");
+        conf.addProperty("color.list1", color1);
+        conf.addProperty("color.list1", color2);
+        conf.addProperty("color.list2", color1 + ", " + color2);
         conf.addProperty("color.list3", Color.red);
         conf.addProperty("color.list3", Color.blue);
         conf.addProperty("color.list4", new Color[] { Color.red, Color.blue });
@@ -221,6 +239,7 @@ public class TestDataConfiguration extends TestCase
         colors.add(Color.red);
         colors.add(Color.blue);
         conf.addProperty("color.list6", colors);
+        conf.addProperty("color.list.interpolated", "${color.string}," + color2);
 
         // Dates & Calendars
         String pattern = "yyyy-MM-dd";
@@ -235,6 +254,7 @@ public class TestDataConfiguration extends TestCase
         calendar2.setTime(date2);
 
         conf.addProperty("date.string", "2004-01-01");
+        conf.addProperty("date.string.interpolated", "${date.string}");
         conf.addProperty("date.object", date1);
         conf.addProperty("date.list1", "2004-01-01");
         conf.addProperty("date.list1", "2004-12-31");
@@ -247,8 +267,10 @@ public class TestDataConfiguration extends TestCase
         dates.add(date1);
         dates.add(date2);
         conf.addProperty("date.list6", dates);
+        conf.addProperty("date.list.interpolated", "${date.string},2004-12-31");
 
         conf.addProperty("calendar.string", "2004-01-01");
+        conf.addProperty("calendar.string.interpolated", "${calendar.string}");
         conf.addProperty("calendar.object", calendar1);
         conf.addProperty("calendar.list1", "2004-01-01");
         conf.addProperty("calendar.list1", "2004-12-31");
@@ -261,6 +283,7 @@ public class TestDataConfiguration extends TestCase
         calendars.add(date1);
         calendars.add(date2);
         conf.addProperty("calendar.list6", calendars);
+        conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
     }
 
     public void testGetBooleanArray()
@@ -288,6 +311,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Boolean objects
         ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBooleanArray("boolean.list.interpolated"));
 
         // single boolean values
         ArrayAssert.assertEquals(new boolean[] { true }, conf.getBooleanArray("boolean.string"));
@@ -323,6 +349,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Boolean objects
         ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBooleanList("boolean.list.interpolated"));
 
         // single boolean values
         expected = new ArrayList();
@@ -360,6 +389,9 @@ public class TestDataConfiguration extends TestCase
         // list of Byte objects
         ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getByteArray("byte.list.interpolated"));
+
         // single byte values
         ArrayAssert.assertEquals(new byte[] { 1 }, conf.getByteArray("byte.string"));
         ArrayAssert.assertEquals(new byte[] { 1 }, conf.getByteArray("byte.object"));
@@ -394,6 +426,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Byte objects
         ListAssert.assertEquals(expected, conf.getByteList("byte.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getByteList("byte.list.interpolated"));
 
         // single byte values
         expected = new ArrayList();
@@ -431,6 +466,9 @@ public class TestDataConfiguration extends TestCase
         // list of Byte objects
         ArrayAssert.assertEquals(expected, conf.getShortArray("short.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getShortArray("short.list.interpolated"));
+
         // single byte values
         ArrayAssert.assertEquals(new short[] { 1 }, conf.getShortArray("short.string"));
         ArrayAssert.assertEquals(new short[] { 1 }, conf.getShortArray("short.object"));
@@ -465,6 +503,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Short objects
         ListAssert.assertEquals(expected, conf.getShortList("short.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getShortList("short.list.interpolated"));
 
         // single short values
         expected = new ArrayList();
@@ -502,6 +543,9 @@ public class TestDataConfiguration extends TestCase
         // list of Integer objects
         ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getIntArray("integer.list.interpolated"));
+
         // single int values
         ArrayAssert.assertEquals(new int[] { 1 }, conf.getIntArray("integer.string"));
         ArrayAssert.assertEquals(new int[] { 1 }, conf.getIntArray("integer.object"));
@@ -536,6 +580,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Integer objects
         ListAssert.assertEquals(expected, conf.getIntegerList("integer.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getIntegerList("integer.list.interpolated"));
 
         // single int values
         expected = new ArrayList();
@@ -573,6 +620,9 @@ public class TestDataConfiguration extends TestCase
         // list of Long objects
         ArrayAssert.assertEquals(expected, conf.getLongArray("long.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getLongArray("long.list.interpolated"));
+
         // single long values
         ArrayAssert.assertEquals(new long[] { 1 }, conf.getLongArray("long.string"));
         ArrayAssert.assertEquals(new long[] { 1 }, conf.getLongArray("long.object"));
@@ -607,6 +657,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Long objects
         ListAssert.assertEquals(expected, conf.getLongList("long.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getLongList("long.list.interpolated"));
 
         // single long values
         expected = new ArrayList();
@@ -644,6 +697,9 @@ public class TestDataConfiguration extends TestCase
         // list of Float objects
         ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list6"), 0);
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getFloatArray("float.list.interpolated"), 0);
+
         // single float values
         ArrayAssert.assertEquals(new float[] { 1 }, conf.getFloatArray("float.string"), 0);
         ArrayAssert.assertEquals(new float[] { 1 }, conf.getFloatArray("float.object"), 0);
@@ -678,6 +734,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Float objects
         ListAssert.assertEquals(expected, conf.getFloatList("float.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getFloatList("float.list.interpolated"));
 
         // single float values
         expected = new ArrayList();
@@ -715,6 +774,9 @@ public class TestDataConfiguration extends TestCase
         // list of Double objects
         ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list6"), 0);
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getDoubleArray("double.list.interpolated"), 0);
+
         // single double values
         ArrayAssert.assertEquals(new double[] { 1 }, conf.getDoubleArray("double.string"), 0);
         ArrayAssert.assertEquals(new double[] { 1 }, conf.getDoubleArray("double.object"), 0);
@@ -750,6 +812,9 @@ public class TestDataConfiguration extends TestCase
         // list of Double objects
         ListAssert.assertEquals(expected, conf.getDoubleList("double.list6"));
 
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getDoubleList("double.list.interpolated"));
+
         // single double values
         expected = new ArrayList();
         expected.add(new Double("1"));
@@ -783,6 +848,9 @@ public class TestDataConfiguration extends TestCase
         // list of BigInteger objects
         ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBigIntegerArray("biginteger.list.interpolated"));
+
         // single BigInteger values
         ArrayAssert.assertEquals(new BigInteger[] { new BigInteger("1") }, conf.getBigIntegerArray("biginteger.string"));
         ArrayAssert.assertEquals(new BigInteger[] { new BigInteger("1") }, conf.getBigIntegerArray("biginteger.object"));
@@ -814,6 +882,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of BigInteger objects
         ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBigIntegerList("biginteger.list.interpolated"));
 
         // single BigInteger values
         expected = new ArrayList();
@@ -848,6 +919,9 @@ public class TestDataConfiguration extends TestCase
         // list of BigDecimal objects
         ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list6"));
 
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getBigDecimalArray("bigdecimal.list.interpolated"));
+
         // single BigDecimal values
         ArrayAssert.assertEquals(new BigDecimal[] { new BigDecimal("1") }, conf.getBigDecimalArray("bigdecimal.string"));
         ArrayAssert.assertEquals(new BigDecimal[] { new BigDecimal("1") }, conf.getBigDecimalArray("bigdecimal.object"));
@@ -880,6 +954,9 @@ public class TestDataConfiguration extends TestCase
         // list of BigDecimal objects
         ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list6"));
 
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getBigDecimalList("bigdecimal.list.interpolated"));
+
         // single BigDecimal values
         expected = new ArrayList();
         expected.add(new BigDecimal("1"));
@@ -903,6 +980,9 @@ public class TestDataConfiguration extends TestCase
 
         // URL object
         assertEquals(expected, conf.getURL("url.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getURL("url.string.interpolated"));
     }
 
     public void testGetURLArray() throws Exception
@@ -927,6 +1007,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of URL objects
         ArrayAssert.assertEquals(expected, conf.getURLArray("url.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getURLArray("url.list.interpolated"));
 
         // single URL values
         ArrayAssert.assertEquals(new URL[] { new URL("http://jakarta.apache.org") }, conf.getURLArray("url.string"));
@@ -959,6 +1042,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of URL objects
         ListAssert.assertEquals(expected, conf.getURLList("url.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getURLList("url.list.interpolated"));
 
         // single URL values
         expected = new ArrayList();
@@ -1000,6 +1086,9 @@ public class TestDataConfiguration extends TestCase
         conf.setProperty("locale", "fr");
         assertEquals("Existing key with default value", Locale.FRENCH, conf.getLocale("locale", Locale.GERMAN));
         assertEquals("Missing key with default value", Locale.GERMAN, conf.getLocale("localeNotInConfig", Locale.GERMAN));
+
+        // interpolated value
+        assertEquals(Locale.FRENCH, conf.getLocale("locale.string.interpolated"));
     }
 
     public void testGetLocaleArray() throws Exception
@@ -1024,6 +1113,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Locale objects
         ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getLocaleArray("locale.list.interpolated"));
 
         // single Locale values
         ArrayAssert.assertEquals(new Locale[] { Locale.FRENCH }, conf.getLocaleArray("locale.string"));
@@ -1057,6 +1149,9 @@ public class TestDataConfiguration extends TestCase
         // list of Locale objects
         ListAssert.assertEquals(expected, conf.getLocaleList("locale.list6"));
 
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getLocaleList("locale.list.interpolated"));
+
         // single Locale values
         expected = new ArrayList();
         expected.add(Locale.FRENCH);
@@ -1085,6 +1180,9 @@ public class TestDataConfiguration extends TestCase
         assertEquals("green", 3, color.getGreen());
         assertEquals("blue",  5, color.getBlue());
         assertEquals("alpha", 7, color.getAlpha());
+
+        // interpolated value
+        assertEquals(Color.red, conf.getColor("color.string.interpolated"));
     }
 
     public void testGetColorArray() throws Exception
@@ -1109,6 +1207,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Color objects
         ArrayAssert.assertEquals(expected, conf.getColorArray("color.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getColorArray("color.list.interpolated"));
 
         // single Color values
         ArrayAssert.assertEquals(new Color[] { Color.red }, conf.getColorArray("color.string"));
@@ -1142,6 +1243,9 @@ public class TestDataConfiguration extends TestCase
         // list of Color objects
         ListAssert.assertEquals(expected, conf.getColorList("color.list6"));
 
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getColorList("color.list.interpolated"));
+
         // single Color values
         expected = new ArrayList();
         expected.add(Color.red);
@@ -1170,6 +1274,9 @@ public class TestDataConfiguration extends TestCase
 
         // Calendar object
         assertEquals(expected, conf.getDate("calendar.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getDate("date.string.interpolated"));
     }
 
     public void testGetDateArray() throws Exception
@@ -1201,6 +1308,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Date objects
         ArrayAssert.assertEquals(expected, conf.getDateArray("date.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getDateArray("date.list.interpolated"));
 
         // single Date values
         ArrayAssert.assertEquals(new Date[] { date1 }, conf.getDateArray("date.string"));
@@ -1241,6 +1351,9 @@ public class TestDataConfiguration extends TestCase
         // list of Date objects
         ListAssert.assertEquals(expected, conf.getDateList("date.list6"));
 
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getDateList("date.list.interpolated"));
+
         // single Date values
         expected = new ArrayList();
         expected.add(date1);
@@ -1271,6 +1384,9 @@ public class TestDataConfiguration extends TestCase
 
         // Date object
         assertEquals(expected, conf.getCalendar("date.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.getCalendar("calendar.string.interpolated"));
     }
 
 
@@ -1307,6 +1423,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Calendar objects
         ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list6"));
+
+        // list of interpolated values
+        ArrayAssert.assertEquals(expected, conf.getCalendarArray("calendar.list.interpolated"));
 
         // single Calendar values
         ArrayAssert.assertEquals(new Calendar[] { calendar1 }, conf.getCalendarArray("calendar.string"));
@@ -1350,6 +1469,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Calendar objects
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list6"));
+
+        // list of interpolated values
+        ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list.interpolated"));
 
         // single Calendar values
         expected = new ArrayList();

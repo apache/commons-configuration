@@ -131,6 +131,25 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
+     * Returns the interpolated value. Non String values are returned without change.
+     *
+     * @param value the value to interpolate
+     *
+     * @return returns the value with variables substituted
+     */
+    protected Object interpolate(Object value)
+    {
+        if (value instanceof String)
+        {
+            return interpolate((String) value);
+        }
+        else
+        {
+            return value;
+        }
+    }
+
+    /**
      * Recursive handler for multple levels of interpolation.
      * 
      * When called the first time, priorVariables should be null.
@@ -388,7 +407,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toBoolean(value);
+                return PropertyConverter.toBoolean(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -436,7 +455,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toByte(value);
+                return PropertyConverter.toByte(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -484,7 +503,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toDouble(value);
+                return PropertyConverter.toDouble(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -532,7 +551,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toFloat(value);
+                return PropertyConverter.toFloat(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -587,7 +606,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toInteger(value);
+                return PropertyConverter.toInteger(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -635,7 +654,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toLong(value);
+                return PropertyConverter.toLong(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -683,7 +702,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toShort(value);
+                return PropertyConverter.toShort(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -727,7 +746,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toBigDecimal(value);
+                return PropertyConverter.toBigDecimal(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -771,7 +790,7 @@ public abstract class AbstractConfiguration implements Configuration
         {
             try
             {
-                return PropertyConverter.toBigInteger(value);
+                return PropertyConverter.toBigInteger(interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -887,12 +906,7 @@ public abstract class AbstractConfiguration implements Configuration
             Iterator it = l.iterator();
             while (it.hasNext())
             {
-                Object element = it.next();
-                if (element instanceof String) {
-                    list.add(interpolate((String) element));
-                } else {
-                    list.add(element);
-                }
+                list.add(interpolate(it.next()));
             }
 
         }
