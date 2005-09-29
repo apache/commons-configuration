@@ -173,13 +173,14 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
                 printNode(out, indentLevel + 1, child);
 
                 // add a semi colon for elements that are not dictionaries
-                if (child.getValue() != null)
+                Object value = child.getValue();
+                if (value != null && !(value instanceof Map) && !(value instanceof Configuration))
                 {
                     out.println(";");
                 }
 
                 // skip a line after arrays and dictionaries
-                if (it.hasNext() && (child.getValue() == null || child.getValue() instanceof List))
+                if (it.hasNext() && (value == null || value instanceof List))
                 {
                     out.println();
                 }
@@ -229,6 +230,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         else if (value instanceof Configuration)
         {
             // display a flat Configuration as a dictionary
+            out.println();
             out.println(padding + "{");
 
             Configuration config = (Configuration) value;
@@ -240,11 +242,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
                 node.setValue(config.getProperty(key));
 
                 printNode(out, indentLevel + 1, node);
-
-                if (it.hasNext())
-                {
-                    out.println();
-                }
+                out.println(";");
             }
             out.println(padding + "}");
         }
@@ -281,7 +279,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      *   <li>foo;bar -> "foo;bar"</li>
      * </ul>
      */
-    private String quoteString(String s)
+    String quoteString(String s)
     {
         if (s == null)
         {

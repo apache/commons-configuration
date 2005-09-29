@@ -43,7 +43,7 @@ class PropertyListParser {
     /**
      * Remove the quotes at the beginning and at the end of the specified String.
      */
-    private String removeQuotes(String s)
+    protected String removeQuotes(String s)
     {
         if (s == null)
         {
@@ -58,7 +58,7 @@ class PropertyListParser {
         return s;
     }
 
-    private String unescapeQuotes(String s)
+    protected String unescapeQuotes(String s)
     {
         return StringUtils.replace(s, "\\\"", "\"");
     }
@@ -67,7 +67,7 @@ class PropertyListParser {
      * Remove the white spaces and the data delimiters from the specified
      * string and parse it as a byte array.
      */
-    private byte[] filterData(String s) throws ParseException
+    protected byte[] filterData(String s) throws ParseException
     {
         if (s == null)
         {

@@ -17,11 +17,7 @@
 package org.apache.commons.configuration.plist;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
@@ -29,6 +25,8 @@ import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.StrictConfigurationComparator;
+import org.apache.commons.configuration.ConfigurationComparator;
 
 /**
  * @author Emmanuel Bourg
@@ -171,7 +169,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
         assertEquals("nested property", "value", config.getString("nested.node1.node2.node3"));
     }
 
-    public void invalidtestSave() throws Exception
+    public void testSave() throws Exception
     {
         File savedFile = new File("target/testsave.plist.xml");
 
@@ -208,10 +206,12 @@ public class TestXMLPropertyListConfiguration extends TestCase
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        Configuration checkConfig = new XMLPropertyListConfiguration(filename);
-        for (Iterator i = config.getKeys(); i.hasNext();)
+        Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
+
+        Iterator it = config.getKeys();
+        while (it.hasNext())
         {
-            String key = (String) i.next();
+            String key = (String) it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
             Object value = checkConfig.getProperty(key);
@@ -222,7 +222,27 @@ public class TestXMLPropertyListConfiguration extends TestCase
             }
             else if (value instanceof List)
             {
-                List list1 = (List) value;
+                List list1 = (List) config.getProperty(key);
+                List list2 = (List) value;
+
+                assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
+
+                for (int i = 0; i < list2.size(); i++)
+                {
+                    Object value1 = list1.get(i);
+                    Object value2 = list2.get(i);
+
+                    if (value1 instanceof Configuration)
+                    {
+                        ConfigurationComparator comparator = new StrictConfigurationComparator();
+                        assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match", comparator.compare((Configuration) value1, (Configuration) value2));
+                    }
+                    else
+                    {
+                        assertEquals("Element at index " + i + " for the key '" + key + "'", value1, value2);
+                    }
+                }
+
                 ListAssert.assertEquals("Value of the '" + key + "' property", (List) config.getProperty(key), list1);
             }
             else

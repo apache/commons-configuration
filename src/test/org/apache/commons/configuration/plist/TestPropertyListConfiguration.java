@@ -17,16 +17,18 @@
 package org.apache.commons.configuration.plist;
 
 import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
+import java.io.StringReader;
 import java.util.Iterator;
+import java.util.List;
 
 import junit.framework.TestCase;
-import junitx.framework.ObjectAssert;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
+import junitx.framework.ObjectAssert;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationComparator;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.StrictConfigurationComparator;
 
 /**
  * @author Emmanuel Bourg
@@ -48,6 +50,18 @@ public class TestPropertyListConfiguration extends TestCase
     public void testLoad()
     {
         assertFalse("the configuration is empty", config.isEmpty());
+    }
+
+    public void testLoadWithError()
+    {
+        config = new PropertyListConfiguration();
+        try {
+            config.load(new StringReader(""));
+            fail("No exception thrown on loading an empty file");
+        } catch (ConfigurationException e) {
+            // expected
+            assertNotNull(e.getMessage());
+        }
     }
 
     public void testString()
@@ -160,7 +174,7 @@ public class TestPropertyListConfiguration extends TestCase
     }
 
 
-    public void invalidtestSave() throws Exception
+    public void testSave() throws Exception
     {
         File savedFile = new File("target/testsave.plist");
 
@@ -177,10 +191,12 @@ public class TestPropertyListConfiguration extends TestCase
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        Configuration checkConfig = new PropertyListConfiguration(filename);
-        for (Iterator i = config.getKeys(); i.hasNext();)
+        Configuration checkConfig = new PropertyListConfiguration(new File(filename));
+
+        Iterator it = config.getKeys();
+        while (it.hasNext())
         {
-            String key = (String) i.next();
+            String key = (String) it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
             Object value = checkConfig.getProperty(key);
@@ -191,7 +207,27 @@ public class TestPropertyListConfiguration extends TestCase
             }
             else if (value instanceof List)
             {
-                List list1 = (List) value;
+                List list1 = (List) config.getProperty(key);
+                List list2 = (List) value;
+
+                assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
+
+                for (int i = 0; i < list2.size(); i++)
+                {
+                    Object value1 = list1.get(i);
+                    Object value2 = list2.get(i);
+
+                    if (value1 instanceof Configuration)
+                    {
+                        ConfigurationComparator comparator = new StrictConfigurationComparator();
+                        assertTrue("The dictionnary at index " + i + " for the key '" + key + "' doesn't match", comparator.compare((Configuration) value1, (Configuration) value2));
+                    }
+                    else
+                    {
+                        assertEquals("Element at index " + i + " for the key '" + key + "'", value1, value2);
+                    }
+                }
+
                 ListAssert.assertEquals("Value of the '" + key + "' property", (List) config.getProperty(key), list1);
             }
             else
@@ -200,5 +236,14 @@ public class TestPropertyListConfiguration extends TestCase
             }
 
         }
+    }
+
+    public void testQuoteString()
+    {
+        assertEquals("null string", null, config.quoteString(null));
+        assertEquals("simple string", "abcd", config.quoteString("abcd"));
+        assertEquals("string with a space", "\"ab cd\"", config.quoteString("ab cd"));
+        assertEquals("string with a quote", "\"foo\\\"bar\"", config.quoteString("foo\"bar"));
+        assertEquals("string with a special char", "\"foo;bar\"", config.quoteString("foo;bar"));
     }
 }

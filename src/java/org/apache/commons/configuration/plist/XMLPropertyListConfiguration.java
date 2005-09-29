@@ -257,11 +257,6 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             super(methodName);
         }
 
-        public SetNextAndPopRule(String methodName, String paramType)
-        {
-            super(methodName, paramType);
-        }
-
         public void end(String namespace, String name) throws Exception
         {
             super.end(namespace, name);

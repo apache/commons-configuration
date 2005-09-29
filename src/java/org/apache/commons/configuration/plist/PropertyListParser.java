@@ -22,7 +22,7 @@ class PropertyListParser implements PropertyListParserConstants
     /**
      * Remove the quotes at the beginning and at the end of the specified String.
      */
-    private String removeQuotes(String s)
+    protected String removeQuotes(String s)
     {
         if (s == null)
         {
@@ -37,7 +37,7 @@ class PropertyListParser implements PropertyListParserConstants
         return s;
     }
 
-    private String unescapeQuotes(String s)
+    protected String unescapeQuotes(String s)
     {
         return StringUtils.replace(s, "\\\"", "\"");
     }
@@ -46,7 +46,7 @@ class PropertyListParser implements PropertyListParserConstants
      * Remove the white spaces and the data delimiters from the specified
      * string and parse it as a byte array.
      */
-    private byte[] filterData(String s) throws ParseException
+    protected byte[] filterData(String s) throws ParseException
     {
         if (s == null)
         {
@@ -84,10 +84,8 @@ class PropertyListParser implements PropertyListParserConstants
         PropertyListConfiguration configuration = null;
         configuration = Dictionary();
         jj_consume_token(0);
-        {
-            if (true) return configuration;
-        }
-        throw new Error("Missing return statement in function");
+
+        return configuration;
     }
 
     final public PropertyListConfiguration Dictionary() throws ParseException
@@ -130,21 +128,16 @@ class PropertyListParser implements PropertyListParserConstants
             configuration.getRoot().addChild(child);
         }
 
-        {
-            if (true) return configuration;
-        }
-        throw new Error("Missing return statement in function");
+        return configuration;
     }
 
     final public Node Property() throws ParseException
     {
-        String key = null;
-        Object value = null;
         Node node = new Node();
-        key = String();
+        String key = String();
         node.setName(key);
         jj_consume_token(EQUAL);
-        value = Element();
+        Object value = Element();
         node.setValue(value);
         switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk)
         {
@@ -155,48 +148,32 @@ class PropertyListParser implements PropertyListParserConstants
                 jj_la1[1] = jj_gen;
                 ;
         }
-        {
-            if (true) return node;
-        }
-        throw new Error("Missing return statement in function");
+
+        return node;
     }
 
     final public Object Element() throws ParseException
     {
-        Object value = null;
         switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk)
         {
             case ARRAY_BEGIN:
-                value = Array();
-                {
-                    if (true) return value;
-                }
-                break;
+                return Array();
+
             case DICT_BEGIN:
-                value = Dictionary();
-                {
-                    if (true) return value;
-                }
-                break;
+                return Dictionary();
+
             case STRING:
             case QUOTED_STRING:
-                value = String();
-                {
-                    if (true) return value;
-                }
-                break;
+                return String();
+
             case DATA:
-                value = Data();
-                {
-                    if (true) return value;
-                }
-                break;
+                return Data();
+
             default:
                 jj_la1[2] = jj_gen;
                 jj_consume_token(-1);
                 throw new ParseException();
         }
-        throw new Error("Missing return statement in function");
     }
 
     final public List Array() throws ParseException
@@ -235,46 +212,36 @@ class PropertyListParser implements PropertyListParserConstants
                 ;
         }
         jj_consume_token(ARRAY_END);
-        {
-            if (true) return list;
-        }
-        throw new Error("Missing return statement in function");
+
+        return list;
     }
 
     final public String String() throws ParseException
     {
         Token token = null;
-        String value = null;
         switch ((jj_ntk == -1) ? jj_ntk() : jj_ntk)
         {
             case QUOTED_STRING:
                 token = jj_consume_token(QUOTED_STRING);
-                {
-                    if (true) return unescapeQuotes(removeQuotes(token.image));
-                }
-                break;
+                return unescapeQuotes(removeQuotes(token.image));
+
             case STRING:
                 token = jj_consume_token(STRING);
-                {
-                    if (true) return token.image;
-                }
-                break;
+                return token.image;
+
             default:
                 jj_la1[5] = jj_gen;
                 jj_consume_token(-1);
                 throw new ParseException();
         }
-        throw new Error("Missing return statement in function");
     }
 
     final public byte[] Data() throws ParseException
     {
         Token token;
         token = jj_consume_token(DATA);
-        {
-            if (true) return filterData(token.image);
-        }
-        throw new Error("Missing return statement in function");
+
+        return filterData(token.image);
     }
 
     public PropertyListParserTokenManager token_source;
@@ -305,48 +272,10 @@ class PropertyListParser implements PropertyListParserConstants
         for (int i = 0; i < 6; i++) jj_la1[i] = -1;
     }
 
-    public void ReInit(java.io.InputStream stream)
-    {
-        jj_input_stream.ReInit(stream, 1, 1);
-        token_source.ReInit(jj_input_stream);
-        token = new Token();
-        jj_ntk = -1;
-        jj_gen = 0;
-        for (int i = 0; i < 6; i++) jj_la1[i] = -1;
-    }
-
     public PropertyListParser(java.io.Reader stream)
     {
         jj_input_stream = new SimpleCharStream(stream, 1, 1);
         token_source = new PropertyListParserTokenManager(jj_input_stream);
-        token = new Token();
-        jj_ntk = -1;
-        jj_gen = 0;
-        for (int i = 0; i < 6; i++) jj_la1[i] = -1;
-    }
-
-    public void ReInit(java.io.Reader stream)
-    {
-        jj_input_stream.ReInit(stream, 1, 1);
-        token_source.ReInit(jj_input_stream);
-        token = new Token();
-        jj_ntk = -1;
-        jj_gen = 0;
-        for (int i = 0; i < 6; i++) jj_la1[i] = -1;
-    }
-
-    public PropertyListParser(PropertyListParserTokenManager tm)
-    {
-        token_source = tm;
-        token = new Token();
-        jj_ntk = -1;
-        jj_gen = 0;
-        for (int i = 0; i < 6; i++) jj_la1[i] = -1;
-    }
-
-    public void ReInit(PropertyListParserTokenManager tm)
-    {
-        token_source = tm;
         token = new Token();
         jj_ntk = -1;
         jj_gen = 0;
@@ -369,30 +298,6 @@ class PropertyListParser implements PropertyListParserConstants
         token = oldToken;
         jj_kind = kind;
         throw generateParseException();
-    }
-
-    final public Token getNextToken()
-    {
-        if (token.next != null)
-            token = token.next;
-        else
-            token = token.next = token_source.getNextToken();
-        jj_ntk = -1;
-        jj_gen++;
-        return token;
-    }
-
-    final public Token getToken(int index)
-    {
-        Token t = token;
-        for (int i = 0; i < index; i++)
-        {
-            if (t.next != null)
-                t = t.next;
-            else
-                t = t.next = token_source.getNextToken();
-        }
-        return t;
     }
 
     final private int jj_ntk()
@@ -448,14 +353,6 @@ class PropertyListParser implements PropertyListParserConstants
             exptokseq[i] = (int[]) jj_expentries.elementAt(i);
         }
         return new ParseException(token, exptokseq, tokenImage);
-    }
-
-    final public void enable_tracing()
-    {
-    }
-
-    final public void disable_tracing()
-    {
     }
 
 }
