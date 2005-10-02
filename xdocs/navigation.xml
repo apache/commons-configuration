@@ -32,8 +32,8 @@
       <item name="Download"                     href="http://jakarta.apache.org/site/sourceindex.cgi#commons-configuration"/>  
       <item name="Using Configuration"          href="/overview.html"/>
       <item name="Properties Howto"             href="/howto_properties.html"/>
-      <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
       <item name="XML Howto"                    href="/howto_xml.html"/>
+      <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
       <item name="Composite Config Howto"       href="/howto_compositeconfiguration.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>

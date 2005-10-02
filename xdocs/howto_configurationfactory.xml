@@ -18,7 +18,7 @@
 <document>
 
  <properties>
-  <title>Configuration Factory and Hierarchical Structured Data Howto</title>
+  <title>Configuration Factory Howto</title>
   <author email="oliver.heger@t-online.de">Oliver Heger</author>
  </properties>
 
@@ -27,16 +27,16 @@
 		<p>
  	 		This section explains how a
     		<code>ConfigurationFactory</code> object is setup that provides access
-    		to a collection of different configuration sources.  It also discusses using Hierarchical
-    		and Structured datasets.
+    		to a collection of different configuration sources.
     	</p>
     		
 		<subsection name="The configuration definition file">
 			<p>
-				When a single configuration file is the only
+				When a single configuration file (e.g. a properties file) is the only
 				source of configuration data it is very simple to
-				load it using a <code>PropertiesConfiguration</code> object
-				(this is the class that handles files of this type). But because
+				load it using the specific configuration class that deals with
+                the corresponding format (e.g. <code>PropertiesConfiguration</code>
+                for properties files or <code>XMLConfiguration</code> for XML files). But because
 				we think that later other sources will be added (otherwise
 				this example section would be too silly) we will use a
 				<code>ConfigurationFactory</code> object to load it.
@@ -68,7 +68,10 @@
 			<p>
 				For this example we store the definition file for
 				<code>ConfigurationFactory</code> in the same directory as the
-				properties file and call it <code>config.xml</code>.
+				properties file and call it <code>config.xml</code>. The
+                properties file used in this example is the same as in the
+                section about <a href="howto_properties.html">properties
+                files</a>.
 			</p>
 		</subsection>
 		<subsection name="Setting up a ConfigurationFactory">
@@ -109,20 +112,13 @@ Configuration config = factory.getConfiguration();
     			Whatever way we used to load the configuration factory, we
     			should now have a <code>Configuration</code> object that was
     			returned by the factory's <code>getConfiguration()</code>
-    			method. This object defines a large amount of methods for
-    			querying properties. The most generic one is
-    			<code>getProperty()</code>, which returns an object, but there
-    			are lots of other methods that return other datatypes. In our
-    			example the property we have defined has a string value, so we
-    			would use the <code>getString()</code> method.
-    		</p>
-    		<p>
-    			All of these methods have in common that they expect a property
-    			key as argument. Here the name of the searched property must
-    			be provided in exact the same way as it is contained in the
-    			properties file. To obtain the value of the background color
-    			property that is defined in the properties file shown earlier
-    			the following code fragment can be used:
+    			method. This object is actually an instance of the
+                <code>CompositeConfiguration</code> class, a specific implementation
+                of the <code>Configuration</code> interface that is able to
+                deal with multiple contained configuration objects. Of course
+                this class provides all the getter methods defined in the
+                <code>Configuration</code> interface, so for accessing a
+                string property for instance we	would use the <code>getString()</code> method:
     		</p>
    			<source><![CDATA[
 String backColor = config.getString("color.background");
@@ -136,7 +132,7 @@ String backColor = config.getString("color.background");
 			sources does not make much sense if there is only one source to be
 			loaded. So let's add another one! This time we will embedd a XML file.
 		</p>
-		<subsection name="A XML configuration file">
+		<subsection name="Overriding properties">
 			<p>
 				Many applications use the popular XML format for storing
 				configuration information. So it is no wonder that Configuration
@@ -157,16 +153,6 @@ String backColor = config.getString("color.background");
 </gui-definition>
 ]]></source>
 			<p>
-				(As becomes obvious, this tutorial does not bother with good
-				design of XML documents, the example file should rather 
-				demonstrate the different ways	of accessing properties.)
-				This XML document should be stored under the name
-				<code>gui.xml</code> in the same directory as the so far
-				created configuration files.
-			</p>
-		</subsection>
-		<subsection name="Overriding properties">
-			<p>
 				To make this XML document part of our global configuration we
 				have to modify our configuration definition file to also include
 				the new file. For XML documents the element <code>xml</code>
@@ -182,44 +168,16 @@ String backColor = config.getString("color.background");
 ]]></source>
 			<p>
 				The code for setting up the <code>ConfigurationFactory</code>
-				object remains the same. The following fragment shows how the
-				new properties can be accessed:
-			</p>
-   			<source><![CDATA[
-String backColor = config.getString("color.background");
-String textColor = config.getString("color.text");
-String linkNormal = config.getString("color.link[@normal]");
-int rowsPerPage = config.getInt("rowsPerPage");
-]]></source>
-			<p>
-				This listing demonstrates some important points of constructing
-				keys for accessing properties load from XML documents:
-				<ul>
-					<li>
-						Nested elements are accessed using a dot notation. In
-						the example document there is an element
-						<code>&lt;text&gt;</code> in the body of the
-						<code>&lt;color&gt;</code> element. The corresponding
-						key is <code>color.text</code>.
-					</li>
-					<li>
-						The root element is ignored when constructing keys. In
-						the example you do not write
-						<code>gui-definition.color.text</code>, but only
-						<code>color.text</code>.
-					</li>
-					<li>
-						Attributes of XML elements are accessed in a XPath like
-						notation.
-					</li>
-				</ul>
+				object remains the same. From the <code>Configuration</code>
+                object returned by the factory the new properties can be
+                accessed in the usual way.
 			</p>
 			<p>
-				There is one problem with the example code fragement: It queries
-				the value of the <code>color.background</code> property, but
-				this is defined in both the properties and the XML file and -
+				There is one problem with this example configuration setup:
+				The <code>color.background</code> property
+				is defined in both the properties and the XML file, and -
 				to make things worse - with different values. Which value will
-				be returned by the corresponding call to <code>getString()</code>?
+				be returned by a call to <code>getString()</code>?
 			</p>
 			<p>
 				The answer is that the configuration sources are searched in the
@@ -291,6 +249,277 @@ int rowsPerPage = config.getInt("rowsPerPage");
 			</p>
 		</subsection>
 	</section>
+
+	<section name="Union configuration">
+		<p>
+			In an earlier section about the configuration definition file for
+			<code>ConfigurationFactory</code> it was stated that configuration
+			files included first can override properties in configuraton files
+			included later and an example use case for this behaviour was given.
+			There may be times when there are other requirements.
+		</p>
+		<p>
+			Let's continue the example with the application that somehow process
+			database tables and that reads the definitions of the affected tables from
+			its configuration. This example and the corresponding XML configuration
+            files were introduced in the section about <a href="howto_xml.html">XMLConfiguration</a>.
+            Now consider that this application grows larger and
+			must be maintained by a team of developers. Each developer works on
+			a separated set of tables. In such a scenario it would be problematic
+			if the definitions for all tables would be kept in a single file. It can be
+			expected that this file needs to be changed very often and thus can be
+			a bottleneck for team development when it is nearly steadily checked
+			out. It would be much better if each developer had an associated file
+			with table definitions and all these information could be linked together
+			at the end.
+		</p>
+		<p>
+			<code>ConfigurationFactory</code> provides support for such a use case,
+			too. It is possible to specify in the configuration definition file that
+			from a set of configuration sources a logic union configuration is to be
+			constructed. Then all properties defined in the provided sources are
+			collected and can be accessed as if they had been defined in a single
+			source. To demonstrate this feature let us assume that a developer of
+			the database application has defined a specific XML file with a table
+			definition named <code>tasktables.xml</code>:
+		</p>
+   		<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <table tableType="application">
+    <name>tasks</name>
+    <fields>
+      <field>
+        <name>taskid</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>responsibleID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>creatorID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>startDate</name>
+        <type>java.util.Date</type>
+      </field>
+      <field>
+        <name>endDate</name>
+        <type>java.util.Date</type>
+      </field>
+    </fields>
+  </table>
+</config>
+]]></source>
+		<p>
+			This file defines the structure of an additional table, which should be
+			added to the so far existing table definitions. To achieve this the
+			configuration definition file has to be changed: A new section is added
+			that contains the include elements of all configuration sources which
+			are to be combined.
+		</p>
+		<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Configuration definition file that demonstrates the
+     override and additional sections -->
+
+<configuration>
+  <override>
+    <properties fileName="usergui.properties"/>
+    <xml fileName="gui.xml"/>
+  </override>
+  
+  <additional>
+    <xml fileName="tables.xml"/>
+    <xml fileName="tasktables.xml" at="tables"/>
+  </additional>
+</configuration>
+]]></source>
+		<p>
+			Compared to the older versions of this file a couple of changes has been
+			done. One major difference is that the elements for including configuration
+			sources are no longer direct children of the root element, but are now
+			contained in either an <code>override</code> or <code>additional</code>
+			section. The names of these sections already imply their purpose.
+		</p>
+		<p>
+			The <code>override</code> section is not strictly necessary. Elements in
+			this section are treated as if they were children of the root element, i.e.
+			properties in the included configuration sources override properties in
+			sources included later. So the <code>override</code> tags could have
+			been ommitted, but for sake of clearity it is recommended to use them
+			when there is also an <code>additional</code> section.
+		</p>
+		<p>
+			It is the <code>additonal</code> section that introduces a new behaviour.
+			All configuration sources listed here are combined to a union configuration.
+			In our example we have put two <code>xml</code> elements in this area
+			that load the available files with database table definitions. The syntax
+			of elements in the <code>additional</code> section is analogous to the
+			syntax described so far. The only difference is an additionally supported
+			<code>at</code> attribute that specifies the position in the logic union
+			configuration where the included properties are to be added. In this
+			example we set the <code>at</code> attribute of the second element to
+			<em>tables</em>. This is because the file starts with a <code>table</code>
+			element, but to be compatible with the other table definition file it should be
+			accessable under the key <code>tables.table</code>.
+		</p>
+		<p>
+			After these modifications have been performed the configuration obtained
+			from the <code>ConfigurationFactory</code> will allow access to three
+			database tables. A call of <code>config.getString("tables.table(2).name");</code>
+			will result in a value of <em>tasks</em>. In an analogous way it is possible
+			to retrieve the fields of the third table.
+		</p>
+		<p>
+			Note that it is also possible to override properties defined in an
+			<code>additonal</code> section. This can be done by placing a
+			configuration source in the <code>override</code> section that defines
+			properties that are also defined in one of the sources listed in the
+			<code>additional</code> section. The example does not make use of that.
+			Note also that the order of the <code>override</code> and
+			<code>additional</code> sections in a configuration definition file does
+			not matter. Sources in an <code>override</code> section are always treated with
+			higher priority (otherwise they could not override the values of other
+			sources).
+		</p>
+	</section>
+    
+    <section name="The configuration definition file">
+        <p>
+            We have seen how to write configuration definition files for
+            including properties and XML files. This section deals with other
+            options that can be specified in such a definition file and that
+            are evaluated by <code>ConfigurationFactory</code>.
+        </p>
+        <p>
+            From time to time the question is raised whether there is a
+            document type definition that exactly defines the structure of a
+            configuration definition file. Frankly, the answer is no. This is
+            because for a future version of Commons Configuration it is planed
+            to make the configuration definition files extensible, i.e. allow
+            developers to register their own tags and corresponding implementations
+            of the Configuration interface.
+        </p>
+        <p>
+            In the current version the set of supported XML elements is fixed.
+            Below is a list of all supported tags and a description of each:
+        </p>
+        <p>
+            <dl>
+                <dt>properties</dt>
+                <dd>
+                With this element properties files can be included. The name of
+                the file to load is specified using the <code>fileName</code>
+                attribute. Which configuration class is created by this tag
+                depends on the extension of the file to load: If the extension
+                is ".xml", a <code>XMLPropertiesConfiguration</code> object is
+                created, which is able to process the XML properties format
+                introduced in Java 5.0. Otherwise a <code>PropertiesConfiguration</code>
+                object is created, the default reader for properties files.
+                </dd>
+                <dt>xml</dt>
+                <dd>
+                The <code>xml</code> element can be used to load XML configuration
+                files. It also uses the <code>fileName</code> attribute to
+                determine the name of the file to load and creates an instance
+                of <code>XMLConfiguration</code>.
+                </dd>
+                <dt>jndi</dt>
+                <dd>
+                As the name implies, with this element JNDI resources can be
+                included in the resulting configuration. Under the hood this is
+                done by an instance of the <code>JNDIConfiguration</code>
+                class. The <code>prefix</code> attribute can be used to
+                select a subset of the JNDI tree.
+                </dd>
+                <dt>plist</dt>
+                <dd>
+                The <code>plist</code> element allows to embedd configuration
+                files in the NeXT / OpenStep or Mac OS X format. Again the
+                name of the file to load is specified through the
+                <code>fileName</code> attribute. If a XML file is specified,
+                a <code>XMLPropertyListConfiguration</code> object is created
+                to process the file. Otherwise this task is delegated to a
+                <code>PropertyListConfiguration</code> instance.
+                </dd>
+                <dt>system</dt>
+                <dd>
+                With this element an instance of <code>SystemConfiguration</code>
+                is added to the resulting configuration allowing access to
+                system properties.
+                </dd>
+            </dl>
+        </p>
+        <p>
+            All of these elements can occur in a configuration definition file
+            in arbitrary number and order. The following listing shows an
+            example file using many of these tags.
+        </p>
+		<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <system/>
+  <jndi prefix="java:comp/env"/>
+  <properties fileName="test.properties"/>
+  <xml fileName="test.xml"/>
+  <properties fileName="test.properties.xml"/>
+</configuration>
+]]></source>
+
+    <subsection name="Setting further options">
+        <p>
+            Many specialized configuration classes support initialization
+            properties that influence the behavior of their instances. For
+            example for file based configurations the encoding of the files
+            to load can be specified using the <code>setEncoding()</code>
+            method, or an <code>XMLConfiguration</code> can be told to
+            perform validation by calling the <code>setValidating()</code>
+            method. How can such properties be set in a configuration definition
+            file?
+        </p>
+        <p>
+            Fortunately this is easy possible. For each XML element in a
+            configuration definition file additional attributes can be
+            specified that correspond to (bean) setter methods defined in the
+            associated configuration class. To derive the name of an attribute
+            from a setter method to be called, just drop the prefix "set" and
+            make the first letter lower case. So for instance the attribute
+            that invokes the <code>setEncoding()</code> method would be
+            <code>encoding</code>. The following example shows how a XML
+            document with a certain encoding and enabled validation can be
+            loaded:
+        </p>
+		<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <xml fileName="test.xml" encoding="UTF-8" validating="true"/>
+</configuration>
+]]></source>
+        <p>
+          Using this mechanism many properties of configuration classes can
+          be set when they are used together with <code>ConfigurationFactory</code>.
+          To find out, which attributes are supported by a specific XML
+          element, refer to the list in the previous section that explains,
+          which configuration classes are used for which tags. In the JavaDoc
+          of the corresponding class you can find the setter methods you can
+          address by attributes.
+        </p>
+    </subsection>
+    </section>
 </body>
 
 </document>
