@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -311,6 +311,7 @@ public class CompositeConfiguration extends AbstractConfiguration
      * Return the configuration at the specified index.
      *
      * @param index The index of the configuration to retrieve
+     * @return the configuration at this index
      */
     public Configuration getConfiguration(int index)
     {

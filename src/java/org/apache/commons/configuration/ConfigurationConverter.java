@@ -34,6 +34,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public final class ConfigurationConverter
 {
+    /**
+     * Private constructor prevents instances from being created.
+     */
     private ConfigurationConverter()
     {
         // to prevent instanciation...
@@ -102,7 +105,8 @@ public final class ConfigurationConverter
     {
         Properties props = new Properties();
 
-        char delimiter = (config instanceof AbstractConfiguration) ? ((AbstractConfiguration) config).getDelimiter() : ',';
+        char delimiter = (config instanceof AbstractConfiguration)
+            ? ((AbstractConfiguration) config).getDelimiter() : ',';
 
         Iterator keys = config.getKeys();
         while (keys.hasNext())

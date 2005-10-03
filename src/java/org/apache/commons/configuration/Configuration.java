@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,34 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Configuration interface.
+ * <p>The main Configuration interface.</p>
+ * <p>This interface allows accessing and manipulating a configuration object.
+ * The major part of the methods defined in this interface deals with accessing
+ * properties of various data types. There is a generic <code>getProperty()</code>
+ * method, which returns the value of the queried property in its raw data
+ * type. Other getter methods try to convert this raw data type into a specific
+ * data type. If this fails, a <code>ConversionException</code> will be thrown.</p>
+ * <p>For most of the property getter methods an overloaded version exists that
+ * allows to specify a default value, which will be returned if the queried
+ * property cannot be found in the configuration. The behavior of the methods
+ * that do not take a default value in case of a missing property is not defined
+ * by this interface and depends on a concrete implementation. E.g. the
+ * <code>{@link AbstractConfiguration}</code> class, which is the base class
+ * of most configuration implementations provided by this package, per default
+ * returns <b>null</b> if a property is not found, but provides the
+ * <code>{@link org.apache.commons.configuration.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
+ * setThrowExceptionOnMissing()}</code>
+ * method, with which it can be configured to throw a <code>NoSuchElementException</code>
+ * exception in that case. (Note that getter methods for primitive types in
+ * <code>AbstractConfiguration</code> always throw an exception for missing
+ * properties because there is no way of overloading the return value.)</p>
+ * <p>With the <code>addProperty()</code> and <code>setProperty()</code> methods
+ * new properties can be added to a configuration or the values of properties
+ * can be changed. With <code>clearProperty()</code> a property can be removed.
+ * Other methods allow to iterate over the contained properties or to create
+ * a subset configuration.</p>
  *
+ * @author Commons Configuration team
  * @version $Id$
  */
 public interface Configuration
@@ -56,6 +82,7 @@ public interface Configuration
      * Configuration, and reciprocally.
      *
      * @param prefix The prefix used to select the properties.
+     * @return a subset configuration
      *
      * @see SubsetConfiguration
      */
@@ -149,7 +176,7 @@ public interface Configuration
      * <code>{@link #clearProperty(String)}</code> for this property. So it is
      * highly recommended to avoid using the iterator's <code>remove()</code>
      * method.
-     * 
+     *
      * @return An Iterator.
      */
     Iterator getKeys();
@@ -178,9 +205,6 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated boolean.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Boolean.
@@ -212,16 +236,13 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Boolean.
      */
-    Boolean getBoolean(String key, Boolean defaultValue) throws NoClassDefFoundError;
+    Boolean getBoolean(String key, Boolean defaultValue);
 
     /**
      * Get a byte associated with the given configuration key.
      *
      * @param key The configuration key.
      * @return The associated byte.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Byte.
@@ -261,9 +282,6 @@ public interface Configuration
      * @param key The configuration key.
      * @return The associated double.
      *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Double.
      */
@@ -301,9 +319,6 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated float.
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Float.
      */
@@ -343,9 +358,6 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated int.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Integer.
@@ -387,9 +399,6 @@ public interface Configuration
      * @param key The configuration key.
      * @return The associated long.
      *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Long.
      */
@@ -430,9 +439,6 @@ public interface Configuration
      * @param key The configuration key.
      * @return The associated short.
      *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
-     *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Short.
      */
@@ -462,9 +468,6 @@ public interface Configuration
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a Short.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     Short getShort(String key, Short defaultValue);
 
@@ -473,9 +476,6 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @return The associated BigDecimal if key is found and has valid format
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     BigDecimal getBigDecimal(String key);
 
@@ -498,9 +498,6 @@ public interface Configuration
      * @param key The configuration key.
      *
      * @return The associated BigInteger if key is found and has valid format
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     BigInteger getBigInteger(String key);
 
@@ -525,9 +522,6 @@ public interface Configuration
      *
      * @throws ConversionException is thrown if the key maps to an object that
      *         is not a String.
-     *
-     * @throws NoSuchElementException is thrown if the key doesn't
-     *         map to an existing object.
      */
     String getString(String key);
 

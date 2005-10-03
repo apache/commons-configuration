@@ -32,7 +32,7 @@ import org.apache.commons.lang.BooleanUtils;
  * Abstract configuration class. Provide basic functionality but does not store
  * any data. If you want to write your own Configuration class then you should
  * implement only abstract methods from this class.
- * 
+ *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
@@ -54,12 +54,12 @@ public abstract class AbstractConfiguration implements Configuration
      * Whether the configuration should throw NoSuchElementExceptions or simply
      * return null when a property does not exist. Defaults to return null.
      */
-    private boolean throwExceptionOnMissing = false;
+    private boolean throwExceptionOnMissing;
 
     /**
      * For configurations extending AbstractConfiguration, allow them to change
      * the delimiter from the default comma (",").
-     * 
+     *
      * @param delimiter The new delimiter
      */
     public static void setDelimiter(char delimiter)
@@ -69,7 +69,7 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Retrieve the current delimiter. By default this is a comma (",").
-     * 
+     *
      * @return The delimiter in use
      */
     public static char getDelimiter()
@@ -78,8 +78,14 @@ public abstract class AbstractConfiguration implements Configuration
     }
 
     /**
-     * If set to false, missing elements return null if possible (for objects).
-     * 
+     * Allows to set the <code>throwExceptionOnMissing</code> flag. This
+     * flag controls the behavior of property getter methods that return
+     * objects if the requested property is missing. If the flag is set to
+     * <b>false</b> (which is the default value), these methods will return
+     * <b>null</b>. If set to <b>true</b>, they will throw a
+     * <code>NoSuchElementException</code> exception. Note that getter methods
+     * for primitive data types are not affected by this flag.
+     *
      * @param throwExceptionOnMissing The new value for the property
      */
     public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
@@ -89,7 +95,7 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Returns true if missing values throw Exceptions.
-     * 
+     *
      * @return true if missing values throw Exceptions
      */
     public boolean isThrowExceptionOnMissing()
@@ -112,7 +118,7 @@ public abstract class AbstractConfiguration implements Configuration
     /**
      * Adds a key/value pair to the Configuration. Override this method to
      * provide write acces to underlying Configuration store.
-     * 
+     *
      * @param key key to use for mapping
      * @param value object to store
      */
@@ -120,9 +126,9 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * interpolate key names to handle ${key} stuff
-     * 
+     *
      * @param base string to interpolate
-     * 
+     *
      * @return returns the key name with the ${key} substituted
      */
     protected String interpolate(String base)
@@ -151,15 +157,15 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Recursive handler for multple levels of interpolation.
-     * 
+     *
      * When called the first time, priorVariables should be null.
-     * 
+     *
      * @param base string with the ${key} variables
      * @param priorVariables serves two purposes: to allow checking for loops,
      * and creating a meaningful exception message should a loop occur. It's
      * 0'th element will be set to the value of base from the first call. All
      * subsequent interpolated variables are added afterward.
-     * 
+     *
      * @return the string with the interpolation taken care of
      */
     protected String interpolateHelper(String base, List priorVariables)
@@ -320,16 +326,16 @@ public abstract class AbstractConfiguration implements Configuration
 
     /**
      * Get a list of properties associated with the given configuration key.
-     * 
+     *
      * @param key The configuration key.
      * @param defaults Any default values for the returned
      * <code>Properties</code> object. Ignored if <code>null</code>.
-     * 
+     *
      * @return The associated properties if key is found.
-     * 
+     *
      * @throws ConversionException is thrown if the key maps to an object that
      * is not a String/List of Strings.
-     * 
+     *
      * @throws IllegalArgumentException if one of the tokens is malformed (does
      * not contain an equals sign).
      */
@@ -925,9 +931,9 @@ public abstract class AbstractConfiguration implements Configuration
     /**
      * Returns an object from the store described by the key. If the value is a
      * List object, replace it with the first object in the list.
-     * 
+     *
      * @param key The property key.
-     * 
+     *
      * @return value Value, transparently resolving a possible List dependency.
      */
     protected Object resolveContainerStore(String key)
