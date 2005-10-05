@@ -74,6 +74,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * key in this subset.
      *
      * @param key The key in the subset.
+     * @return the key as to be used by the parent
      */
     protected String getParentKey(String key)
     {
@@ -92,6 +93,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * key in the parent configuration.
      *
      * @param key The key in the parent configuration.
+     * @return the key in the context of this subset configuration
      */
     protected String getChildKey(String key)
     {
@@ -118,6 +120,8 @@ public class SubsetConfiguration extends AbstractConfiguration
 
     /**
      * Return the parent configuation for this subset.
+     *
+     * @return the parent configuration
      */
     public Configuration getParent()
     {
@@ -126,6 +130,8 @@ public class SubsetConfiguration extends AbstractConfiguration
 
     /**
      * Return the prefix used to select the properties in the parent configuration.
+     *
+     * @return the prefix used by this subset
      */
     public String getPrefix()
     {
@@ -134,6 +140,8 @@ public class SubsetConfiguration extends AbstractConfiguration
 
     /**
      * Set the prefix used to select the properties in the parent configuration.
+     *
+     * @param prefix the prefix
      */
     public void setPrefix(String prefix)
     {

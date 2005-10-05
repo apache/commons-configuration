@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package org.apache.commons.configuration;
 /**
  * A specialized hierarchical configuration class that is able to parse XML
  * documents.
- * 
+ *
  * <p>The parsed document will be stored keeping its structure. The contained
  * properties can be accessed using all methods supported by the base class
  * <code>HierarchicalConfiguration</code>.
- * 
+ *
  * @since commons-configuration 1.0
- * 
+ *
  * @author J&ouml;rg Schaible
  * @author Oliver Heger
  * @version $Revision$, $Date$

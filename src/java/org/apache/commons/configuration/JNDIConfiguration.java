@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * Creates a JNDIConfiguration using the default initial context, shifted
      * with the specified prefix, as the root of the properties.
      *
-     * @param prefix
+     * @param prefix the prefix
      *
      * @throws NamingException thrown if an error occurs when initializing the default context
      */
@@ -99,7 +99,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * by the specified prefix as the root of the properties.
      *
      * @param context the initial context
-     * @param prefix
+     * @param prefix the prefix
      */
     public JNDIConfiguration(Context context, String prefix)
     {
@@ -165,7 +165,9 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an iterator with all property keys stored in this configuration.
+     *
+     * @return an iterator with all keys
      */
     public Iterator getKeys()
     {
@@ -173,7 +175,11 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Returns an iterator with all property keys starting with the given
+     * prefix.
+     *
+     * @param prefix the prefix
+     * @return an iterator with the selected keys
      */
     public Iterator getKeys(String prefix)
     {
@@ -266,7 +272,9 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Returns a flag whether this configuration is empty.
+     *
+     * @return the empty flag
      */
     public boolean isEmpty()
     {
@@ -299,6 +307,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * <p><strong>This operation is not supported and will throw an
      * UnsupportedOperationException.</strong></p>
      *
+     * @param key the key
+     * @param value the value
      * @throws UnsupportedOperationException
      */
     public void setProperty(String key, Object value)
@@ -307,7 +317,9 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Removes the specified property.
+     *
+     * @param key the key of the property to remove
      */
     public void clearProperty(String key)
     {
@@ -315,7 +327,10 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Checks whether the specified key is contained in this configuration.
+     *
+     * @param key the key to check
+     * @return a flag whether this key is stored in this configuration
      */
     public boolean containsKey(String key)
     {
@@ -343,7 +358,8 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * @return String
+     * Returns the prefix.
+     * @return the prefix
      */
     public String getPrefix()
     {
@@ -364,7 +380,10 @@ public class JNDIConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the value of the specified property.
+     *
+     * @param key the key of the property
+     * @return the value of this property
      */
     public Object getProperty(String key)
     {
@@ -394,6 +413,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * <p><strong>This operation is not supported and will throw an
      * UnsupportedOperationException.</strong></p>
      *
+     * @param key the key
+     * @param obj the value
      * @throws UnsupportedOperationException
      */
     protected void addPropertyDirect(String key, Object obj)
@@ -403,6 +424,9 @@ public class JNDIConfiguration extends AbstractConfiguration
 
     /**
      * Return the base context with the prefix applied.
+     *
+     * @return the base context
+     * @throws NamingException if an error occurs
      */
     public Context getBaseContext() throws NamingException
     {
@@ -417,6 +441,8 @@ public class JNDIConfiguration extends AbstractConfiguration
     /**
      * Return the initial context used by this configuration. This context is
      * independent of the prefix specified.
+     *
+     * @return the initial context
      */
     public Context getContext()
     {
@@ -425,6 +451,8 @@ public class JNDIConfiguration extends AbstractConfiguration
 
     /**
      * Set the initial context of the configuration.
+     *
+     * @param context the context
      */
     public void setContext(Context context)
     {

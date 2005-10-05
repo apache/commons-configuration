@@ -39,7 +39,7 @@ import org.apache.commons.lang.StringUtils;
  * organization.</p><p>The internal used storage form allows for a more
  * sophisticated access to single properties. As an example consider the
  * following XML document:</p><p>
- * 
+ *
  * <pre>
  * &lt;database&gt;
  *   &lt;tables&gt;
@@ -71,7 +71,7 @@ import org.apache.commons.lang.StringUtils;
  *   &lt;/tables&gt;
  * &lt;/database&gt;
  * </pre>
- * 
+ *
  * </p><p>If this document is parsed and stored in a
  * <code>HierarchicalConfiguration</code> object (which can be done by one of
  * the sub classes), there are enhanced possibilities of accessing properties.
@@ -87,7 +87,7 @@ import org.apache.commons.lang.StringUtils;
  * <code>getMaxIndex()</code> method that returns the maximum allowed index
  * that can be added to a given property key. This method can be used to iterate
  * over all values defined for a certain property.</p>
- * 
+ *
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
  * @version $Id: HierarchicalConfiguration.java,v 1.14 2004/12/02 22:05:52
  * ebourg Exp $
@@ -102,7 +102,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Returns the root node of this hierarchical configuration.
-     * 
+     *
      * @return the root node
      */
     public Node getRoot()
@@ -112,7 +112,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Sets the root node of this hierarchical configuration.
-     * 
+     *
      * @param node the root node
      */
     public void setRoot(Node node)
@@ -127,7 +127,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Fetches the specified property. Performs a recursive lookup in the tree
      * with the configuration properties.
-     * 
+     *
      * @param key the key to be looked up
      * @return the found value
      */
@@ -168,7 +168,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * passed in key is of importance, especially the indices it might contain.
      * The following example should clearify this: Suppose the actual
      * configuration contains the following elements:</p><p>
-     * 
+     *
      * <pre>
      * tables
      *    +-- table
@@ -184,18 +184,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *            +-- fields
      *                   ...
      * </pre>
-     * 
+     *
      * </p><p>In this example a database structure is defined, e.g. all fields
      * of the first table could be accessed using the key
      * <code>tables.table(0).fields.field.name</code>. If now properties are
      * to be added, it must be exactly specified at which position in the
      * hierarchy the new property is to be inserted. So to add a new field name
      * to a table it is not enough to say just</p><p>
-     * 
+     *
      * <pre>
      * config.addProperty("tables.table.fields.field.name", "newField");
      * </pre>
-     * 
+     *
      * </p><p>The statement given above contains some ambiguity. For instance
      * it is not clear, to which table the new field should be added. If this
      * method finds such an ambiguity, it is resolved by following the last
@@ -214,23 +214,23 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * achieved by specifying an invalid index (like -1) after the element where
      * a new branch should be created. Given this our example would run:</p>
      * <p>
-     * 
+     *
      * <pre>
      * config.addProperty("tables.table(1).fields.field(-1).name", "newField");
      * </pre>
-     * 
+     *
      * </p><p>With this notation it is possible to add new branches
      * everywhere. We could for instance create a new <code>table</code>
      * element by specifying</p><p>
-     * 
+     *
      * <pre>
      * config.addProperty("tables.table(-1).fields.field.name", "newField2");
      * </pre>
-     * 
+     *
      * </p><p>(Note that because after the <code>table</code> element a new
      * branch is created indices in following elements are not relevant; the
      * branch is new so there cannot be any ambiguities.)</p>
-     * 
+     *
      * @param key the key of the new property
      * @param obj the value of the new property
      */
@@ -251,7 +251,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * and thus complete configuration sub trees. E.g. with this method it is
      * possible to add parts of another <code>HierarchicalConfiguration</code>
      * object to this object.
-     * 
+     *
      * @param key the key where the nodes are to be added; can be <b>null </b>,
      * then they are added to the root node
      * @param nodes a collection with the <code>Node</code> objects to be
@@ -290,7 +290,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Checks if this configuration is empty. Empty means that there are no keys
      * with any values, though there can be some (empty) nodes.
-     * 
+     *
      * @return a flag if this configuration is empty
      */
     public boolean isEmpty()
@@ -303,7 +303,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * that start with the specified prefix. This implementation will return a
      * <code>HierarchicalConfiguration</code> object so that the structure of
      * the keys will be saved.
-     * 
+     *
      * @param prefix the prefix of the keys for the subset
      * @return a new configuration object representing the selected subset
      */
@@ -342,7 +342,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * has an associated value. If there is a node for this key that has no
      * value but children (either defined or undefined), this method will still
      * return <b>false </b>.
-     * 
+     *
      * @param key the key to be chekced
      * @return a flag if this key is contained in this configuration
      */
@@ -352,7 +352,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * @inheritDoc
+     * Sets the value of the specified property.
+     *
+     * @param key the key of the property to set
+     * @param value the new value of this property
      */
     public void setProperty(String key, Object value)
     {
@@ -381,7 +384,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * start with this name. So if there is a property with the key
      * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
      * of <code>clearTree("foo")</code> would remove both properties.
-     * 
+     *
      * @param key the key of the property to be removed
      */
     public void clearTree(String key)
@@ -398,7 +401,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Removes the property with the given key. Properties with names that start
      * with the given key (i.e. properties below the specified key in the
      * hierarchy) won't be affected.
-     * 
+     *
      * @param key the key of the property to be removed
      */
     public void clearProperty(String key)
@@ -415,7 +418,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Returns an iterator with all keys defined in this configuration.
      * Note that the keys returned by this method will not contain any
      * indices. This means that some structure will be lost.</p>
-     * 
+     *
      * @return an iterator with the defined keys in this configuration
      */
     public Iterator getKeys()
@@ -430,7 +433,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Returns an iterator with all keys defined in this configuration that
      * start with the given prefix. The returned keys will not contain any
      * indices.
-     * 
+     *
      * @param prefix the prefix of the keys to start with
      * @return an iterator with the found keys
      */
@@ -457,7 +460,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * there are multiple values for this key. They can then be addressed
      * separately by specifying indices from 0 to the return value of this
      * method.
-     * 
+     *
      * @param key the key to be checked
      * @return the maximum defined index for this key
      */
@@ -465,11 +468,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         return fetchNodeList(key).size() - 1;
     }
-    
+
     /**
      * Creates a copy of this object. This new configuration object will contain
      * copies of all nodes in the same structure.
-     * 
+     *
      * @return the copy
      * @since 1.2
      */
@@ -497,7 +500,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Helper method for fetching a list of all nodes that are addressed by the
      * specified key.
-     * 
+     *
      * @param key the key
      * @return a list with all affected nodes (never <b>null </b>)
      */
@@ -512,7 +515,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Recursive helper method for fetching a property. This method processes
      * all facets of a configuration key, traverses the tree of properties and
      * fetches the the nodes of all matching properties.
-     * 
+     *
      * @param keyPart the configuration key iterator
      * @param node the actual node
      * @param nodes here the found nodes are stored
@@ -547,7 +550,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Checks if the specified node is defined.
-     * 
+     *
      * @param node the node to be checked
      * @return a flag if this node is defined
      */
@@ -562,7 +565,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Removes the specified node from this configuration. This method ensures
      * that parent nodes that become undefined by this operation are also
      * removed.
-     * 
+     *
      * @param node the node to be removed
      */
     protected void removeNode(Node node)
@@ -581,7 +584,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Clears the value of the specified node. If the node becomes undefined by
      * this operation, it is removed from the hierarchy.
-     * 
+     *
      * @param node the node to be cleard
      */
     protected void clearNode(Node node)
@@ -597,7 +600,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Returns a reference to the parent node of an add operation. Nodes for new
      * properties can be added as children of this node. If the path for the
      * specified key does not exist so far, it is created now.
-     * 
+     *
      * @param keyIt the iterator for the key of the new property
      * @param startNode the node to start the search with
      * @return the parent node for the add operation
@@ -616,7 +619,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Finds the last existing node for an add operation. This method traverses
      * the configuration tree along the specified key. The last existing node on
      * this path is returned.
-     * 
+     *
      * @param keyIt the key iterator
      * @param node the actual node
      * @return the last existing node on the given path
@@ -649,7 +652,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Creates the missing nodes for adding a new property. This method ensures
      * that there are corresponding nodes for all components of the specified
      * configuration key.
-     * 
+     *
      * @param keyIt the key iterator
      * @param root the base node of the path to be created
      * @return the last node of the path
@@ -674,7 +677,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * method can be overloaded in derived classes if a specific node type is
      * needed. This base implementation always returns a new object of the
      * <code>Node</code> class.
-     * 
+     *
      * @param name the name of the new node
      * @return the new node
      */
@@ -686,7 +689,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A data class for storing (hierarchical) property information. A property
      * can have a value and an arbitrary number of child properties.
-     *  
+     *
      */
     public static class Node implements Serializable, Cloneable
     {
@@ -719,7 +722,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Creates a new instance of <code>Node</code> and sets the name.
-         * 
+         *
          * @param name the node's name
          */
         public Node(String name)
@@ -741,7 +744,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the name of this node.
-         * 
+         *
          * @return the node name
          */
         public String getName()
@@ -751,7 +754,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the value of this node.
-         * 
+         *
          * @return the node value (may be <b>null </b>)
          */
         public Object getValue()
@@ -761,7 +764,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the parent of this node.
-         * 
+         *
          * @return this node's parent (can be <b>null </b>)
          */
         public Node getParent()
@@ -771,7 +774,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Sets the name of this node.
-         * 
+         *
          * @param string the node name
          */
         public void setName(String string)
@@ -781,7 +784,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Sets the value of this node.
-         * 
+         *
          * @param object the node value
          */
         public void setValue(Object object)
@@ -791,7 +794,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Sets the parent of this node.
-         * 
+         *
          * @param node the parent node
          */
         public void setParent(Node node)
@@ -801,7 +804,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the reference object for this node.
-         * 
+         *
          * @return the reference object
          */
         public Object getReference()
@@ -816,7 +819,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * configuration e.g. this reference could be an element in a
          * corresponding XML document. The reference is used by the
          * <code>BuilderVisitor</code> class when the configuration is stored.
-         * 
+         *
          * @param ref the reference object
          */
         public void setReference(Object ref)
@@ -827,7 +830,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Adds the specified child object to this node. Note that there can be
          * multiple children with the same name.
-         * 
+         *
          * @param child the child to be added
          */
         public void addChild(Node child)
@@ -850,7 +853,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns a list with the child nodes of this node.
-         * 
+         *
          * @return a list with the children (can be empty, but never <b>null
          * </b>)
          */
@@ -871,7 +874,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns a list with this node's children with the given name.
-         * 
+         *
          * @param name the name of the children
          * @return a list with all chidren with this name; may be empty, but
          * never <b>null </b>
@@ -892,10 +895,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
             return list;
         }
-        
+
         /**
          * Returns a flag whether this node has child elements.
-         * 
+         *
          * @return <b>true</b> if there a child node, <b>false</b> otherwise
          */
         public boolean hasChildren()
@@ -917,7 +920,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Removes the specified child from this node.
-         * 
+         *
          * @param child the child node to be removed
          * @return a flag if the child could be found
          */
@@ -954,7 +957,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Removes all children with the given name.
-         * 
+         *
          * @param name the name of the children to be removed
          * @return a flag if children with this name existed
          */
@@ -997,7 +1000,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * A generic method for traversing this node and all of its children.
          * This method sends the passed in visitor to this node and all of its
          * children.
-         * 
+         *
          * @param visitor the visitor
          * @param key here a configuration key with the name of the root node of
          * the iteration can be passed; if this key is not <b>null </b>, the
@@ -1042,7 +1045,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Creates a copy of this object. This is not a deep copy, the children
          * are not cloned.
-         * 
+         *
          * @return a copy of this object
          */
         public Object clone()
@@ -1074,7 +1077,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * Helper method for calling <code>removeReference()</code> on a list
          * of removed nodes. Used by methods that can remove multiple child
          * nodes in one step.
-         * 
+         *
          * @param nodes collection with the nodes to be removed
          */
         private void nodesRemoved(Collection nodes)
@@ -1094,14 +1097,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * iteration algorithm based on the <em>Visitor</em> pattern. By providing
      * different implementations of visitors it is possible to collect different
      * data during the iteration process.</p>
-     *  
+     *
      */
     public static class NodeVisitor
     {
         /**
          * Visits the specified node. This method is called during iteration for
          * each node before its children have been visited.
-         * 
+         *
          * @param node the actual node
          * @param key the key of this node (may be <b>null </b>)
          */
@@ -1113,7 +1116,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * Visits the specified node after its children have been processed.
          * This gives a visitor the opportunity of collecting additional data
          * after the child nodes have been visited.
-         * 
+         *
          * @param node the node to be visited
          * @param key the key of this node (may be <b>null </b>)
          */
@@ -1127,7 +1130,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * visitors that search a specific node. If this node is found, the
          * whole process can be stopped. This base implementation always returns
          * <b>false </b>.
-         * 
+         *
          * @return a flag if iteration should be stopped
          */
         public boolean terminate()
@@ -1140,7 +1143,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * A specialized visitor that checks if a node is defined.
      * &quot;Defined&quot; in this terms means that the node or at least one of
      * its sub nodes is associated with a value.
-     *  
+     *
      */
     static class DefinedVisitor extends NodeVisitor
     {
@@ -1150,7 +1153,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Checks if iteration should be stopped. This can be done if the first
          * defined node is found.
-         * 
+         *
          * @return a flag if iteration should be stopped
          */
         public boolean terminate()
@@ -1160,7 +1163,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Visits the node. Checks if a value is defined.
-         * 
+         *
          * @param node the actual node
          * @param key the key of this node
          */
@@ -1171,7 +1174,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the defined flag.
-         * 
+         *
          * @return the defined flag
          */
         public boolean isDefined()
@@ -1183,7 +1186,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A specialized visitor that fills a list with keys that are defined in a
      * node hierarchy.
-     *  
+     *
      */
     static class DefinedKeysVisitor extends NodeVisitor
     {
@@ -1204,7 +1207,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Creates a new <code>DefinedKeysVisitor</code> instance and sets the
          * prefix for the keys to fetch.
-         * 
+         *
          * @param prefix the prefix
          */
         public DefinedKeysVisitor(String prefix)
@@ -1215,7 +1218,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Returns the list with all defined keys.
-         * 
+         *
          * @return the list with the defined keys
          */
         public Set getKeyList()
@@ -1226,7 +1229,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Visits the specified node. If this node has a value, its key is added
          * to the internal list.
-         * 
+         *
          * @param node the node to be visited
          * @param key the key of this node
          */
@@ -1240,7 +1243,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Adds the specified key to the internal list.
-         * 
+         *
          * @param key the key to add
          */
         protected void addKey(ConfigurationKey key)
@@ -1265,7 +1268,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A specialized visitor that is able to create a deep copy of a node
      * hierarchy.
-     *  
+     *
      */
     static class CloneVisitor extends NodeVisitor
     {
@@ -1285,7 +1288,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Visits the specified node after its children have been processed.
-         * 
+         *
          * @param node the node
          * @param key the key of this node
          */
@@ -1300,7 +1303,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         /**
          * Visits and copies the specified node.
-         * 
+         *
          * @param node the node
          * @param key the key of this node
          */
@@ -1319,7 +1322,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         /**
          * Returns the result of the clone process. This is the root node of the
          * cloned node hierarchy.
-         * 
+         *
          * @return the cloned root node
          */
         public Node getClone()
@@ -1341,12 +1344,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * method is called, which must be defined in concrete sub classes. This
      * method can perform all steps to integrate the new node into the original
      * structure.
-     *  
+     *
      */
     protected abstract static class BuilderVisitor extends NodeVisitor
     {
         /**
-         * @inheritDoc
+         * Visits the specified node before its children have been traversed.
+         *
+         * @param node the node to visit
+         * @param key the current key
          */
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
@@ -1410,7 +1416,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * value is interpreted as the new reference of the affected
          * <code>Node</code> object; if it is not <b>null </b>, it is passed
          * to the node's <code>setReference()</code> method.
-         * 
+         *
          * @param newNode the node to be inserted
          * @param parent the parent node
          * @param sibling1 the sibling after which the node is to be inserted;

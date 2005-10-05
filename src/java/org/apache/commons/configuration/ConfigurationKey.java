@@ -41,9 +41,9 @@ public class ConfigurationKey implements Serializable
 {
     /** Constant for a property delimiter.*/
     public static final char PROPERTY_DELIMITER = '.';
-    
+
     /** Constant for an escaped delimiter. */
-    public static final String ESCAPED_DELIMITER = 
+    public static final String ESCAPED_DELIMITER =
         String.valueOf(PROPERTY_DELIMITER) + String.valueOf(PROPERTY_DELIMITER);
 
     /** Constant for an attribute start marker.*/
@@ -127,10 +127,10 @@ public class ConfigurationKey implements Serializable
         keyBuffer.append(constructAttributeKey(attr));
         return this;
     }
-    
+
     /**
      * Checks if this key is an attribute key.
-     * 
+     *
      * @return a flag if this key is an attribute key
      */
     public boolean isAttributeKey()
@@ -201,8 +201,10 @@ public class ConfigurationKey implements Serializable
     {
         int count = 0;
         for (int idx = keyBuffer.length() - 1; idx >= 0
-                && keyBuffer.charAt(idx) == PROPERTY_DELIMITER; idx--, count++)
-            ;
+                && keyBuffer.charAt(idx) == PROPERTY_DELIMITER; idx--)
+        {
+            count++;
+        }
         return count % 2 == 1;
     }
 
@@ -401,7 +403,7 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Helper method for determining the next indices.
-         * 
+         *
          * @return the next key part
          */
         private String findNextIndices()
@@ -430,12 +432,12 @@ public class ConfigurationKey implements Serializable
         /**
          * Helper method for extracting the next key part. Takes escaping of
          * delimiter characters into account.
-         * 
+         *
          * @return the next key part
          */
         private String nextKeyPart()
         {
-            StringBuffer key = new StringBuffer(32);
+            StringBuffer key = new StringBuffer(INITIAL_SIZE);
             int idx = startIndex;
             int endIdx = keyBuffer.toString().indexOf(ATTRIBUTE_START,
                     startIndex);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,12 @@
 
 package org.apache.commons.configuration;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -39,8 +44,12 @@ public final class ConfigurationUtils
     /** Constant for the file URL protocol.*/
     static final String PROTOCOL_FILE = "file";
 
+    /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
+    /**
+     * Private constructor. Prevents instances from being created.
+     */
     private ConfigurationUtils()
     {
         // to prevent instanciation...
@@ -260,7 +269,7 @@ public final class ConfigurationUtils
             // undefined, always return null
             return null;
         }
-        
+
         URL url = null;
 
         // attempt to create an URL directly
@@ -390,8 +399,8 @@ public final class ConfigurationUtils
      * Return the path without the file name, for example http://xyz.net/foo/bar.xml
      * results in http://xyz.net/foo/
      *
-     * @param url
-     * @return
+     * @param url the URL from which to extract the path
+     * @return the path component of the passed in URL
      */
     static String getBasePath(URL url)
     {
@@ -414,6 +423,9 @@ public final class ConfigurationUtils
 
     /**
      * Extract the file name from the specified URL.
+     *
+     * @param url the URL from which to extract the file name
+     * @return the extracted file name
      */
     static String getFileName(URL url)
     {
@@ -439,7 +451,7 @@ public final class ConfigurationUtils
      * This method is called e.g. by the save() methods of file based
      * configurations. The parameter strings can be relative files, absolute
      * files and URLs as well.
-     * 
+     *
      * @param basePath the base path
      * @param fileName the file name
      * @return the file object (<b>null</b> if no file can be obtained)
@@ -475,7 +487,7 @@ public final class ConfigurationUtils
     /**
      * Tries to convert the specified URL to a file object. If this fails,
      * <b>null</b> is returned.
-     * 
+     *
      * @param url the URL
      * @return the resulting file object
      */

@@ -59,10 +59,10 @@ public class ConfigurationFactory
 
     /** Constant for the additional section.*/
     private static final String SEC_ADDITIONAL = SEC_ROOT + "additional/";
-    
+
     /** Constant for the optional attribute.*/
     private static final String ATTR_OPTIONAL = "optional";
-    
+
     /** Constant for the fileName attribute.*/
     private static final String ATTR_FILENAME = "fileName";
 
@@ -154,7 +154,7 @@ public class ConfigurationFactory
             // awareness must be configured before the digester rules are loaded.
             configureNamespace(digester);
         }
-        
+
         // Configure digester to always enable the context class loader
         digester.setUseContextClassLoader(true);
         // Put the composite builder object below all of the other objects.
@@ -516,6 +516,13 @@ public class ConfigurationFactory
             return conf;
         }
 
+        /**
+         * Creates the object, a <code>FileConfiguration</code>.
+         *
+         * @param attributes the actual attributes
+         * @return the file configuration
+         * @throws Exception if the object could not be created
+         */
         protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
         {
             return (FileConfiguration) super.createObject(attributes);
@@ -530,11 +537,24 @@ public class ConfigurationFactory
      */
     public class PropertiesConfigurationFactory extends FileConfigurationFactory
     {
+        /**
+         * Creates a new instance of <code>PropertiesConfigurationFactory</code>.
+         */
         public PropertiesConfigurationFactory()
         {
             super(null);
         }
 
+        /**
+         * Creates the new configuration object. Based on the file name
+         * provided in the attributes either a <code>PropertiesConfiguration</code>
+         * or a <code>XMLPropertiesConfiguration</code> object will be
+         * returned.
+         *
+         * @param attributes the attributes
+         * @return the new configuration object
+         * @throws Exception if an error occurs
+         */
         protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
         {
             String filename = attributes.getValue(ATTR_FILENAME);
@@ -558,11 +578,24 @@ public class ConfigurationFactory
      */
     public class PropertyListConfigurationFactory extends FileConfigurationFactory
     {
+        /**
+         * Creates a new instance of <code>PropertyListConfigurationFactory</code>.
+         */
         public PropertyListConfigurationFactory()
         {
             super(null);
         }
 
+        /**
+         * Creates the new configuration object. Based on the file name
+         * provided in the attributes either a <code>XMLPropertyListConfiguration</code>
+         * or a <code>PropertyListConfiguration</code> object will be
+         * returned.
+         *
+         * @param attributes the attributes
+         * @return the new configuration object
+         * @throws Exception if an error occurs
+         */
         protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
         {
             String filename = attributes.getValue(ATTR_FILENAME);
@@ -584,6 +617,9 @@ public class ConfigurationFactory
      */
     private class JNDIConfigurationFactory extends DigesterConfigurationFactory
     {
+        /**
+         * Creates a new instance of <code>JNDIConfigurationFactory</code>.
+         */
         public JNDIConfigurationFactory()
         {
             super(JNDIConfiguration.class);
@@ -596,6 +632,9 @@ public class ConfigurationFactory
      */
     private class SystemConfigurationFactory extends DigesterConfigurationFactory
     {
+        /**
+         * Creates a new instance of <code>SystemConfigurationFactory</code>.
+         */
         public SystemConfigurationFactory()
         {
             super(SystemConfiguration.class);
