@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -48,11 +48,18 @@ public final class PropertyConverter
 {
     /** Constant for the list delimiter escaping character.*/
     static final String LIST_ESCAPE = "\\";
-    
+
+    /** Constant for the prefix of hex numbers.*/
+    private static final String HEX_PREFIX = "0x";
+
+    /** Constant for the radix of hex numbers.*/
+    private static final int HEX_RADIX = 16;
+
     /**
      * Convert the specified object into a Boolean.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a boolean
      */
     public static Boolean toBoolean(Object value) throws ConversionException
@@ -80,6 +87,7 @@ public final class PropertyConverter
      * Convert the specified object into a Byte.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a byte
      */
     public static Byte toByte(Object value) throws ConversionException
@@ -93,9 +101,9 @@ public final class PropertyConverter
             try
             {
                 String string = (String) value;
-                if (string.startsWith("0x"))
+                if (string.startsWith(HEX_PREFIX))
                 {
-                    return new Byte((byte) Integer.parseInt(string.substring(2), 16));
+                    return new Byte((byte) Integer.parseInt(string.substring(2), HEX_RADIX));
                 }
                 else
                 {
@@ -117,6 +125,7 @@ public final class PropertyConverter
      * Convert the specified object into a Short.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a short
      */
     public static Short toShort(Object value) throws ConversionException
@@ -130,9 +139,9 @@ public final class PropertyConverter
             try
             {
                 String string = (String) value;
-                if (string.startsWith("0x"))
+                if (string.startsWith(HEX_PREFIX))
                 {
-                    return new Short((short) Integer.parseInt(string.substring(2), 16));
+                    return new Short((short) Integer.parseInt(string.substring(2), HEX_RADIX));
                 }
                 else
                 {
@@ -155,6 +164,7 @@ public final class PropertyConverter
      * Convert the specified object into an Integer.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an integer
      */
     public static Integer toInteger(Object value) throws ConversionException
@@ -168,9 +178,9 @@ public final class PropertyConverter
             try
             {
                 String string = (String) value;
-                if (string.startsWith("0x"))
+                if (string.startsWith(HEX_PREFIX))
                 {
-                    return new Integer((int) Long.parseLong(string.substring(2), 16));
+                    return new Integer((int) Long.parseLong(string.substring(2), HEX_RADIX));
                 }
                 else
                 {
@@ -192,6 +202,7 @@ public final class PropertyConverter
      * Convert the specified object into a Long.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Long
      */
     public static Long toLong(Object value) throws ConversionException
@@ -205,9 +216,9 @@ public final class PropertyConverter
             try
             {
                 String string = (String) value;
-                if (string.startsWith("0x"))
+                if (string.startsWith(HEX_PREFIX))
                 {
-                    return new Long(new BigInteger(string.substring(2), 16).longValue());
+                    return new Long(new BigInteger(string.substring(2), HEX_RADIX).longValue());
                 }
                 else
                 {
@@ -229,6 +240,7 @@ public final class PropertyConverter
      * Convert the specified object into a Float.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Float
      */
     public static Float toFloat(Object value) throws ConversionException
@@ -258,6 +270,7 @@ public final class PropertyConverter
      * Convert the specified object into a Double.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Double
      */
     public static Double toDouble(Object value) throws ConversionException
@@ -287,6 +300,7 @@ public final class PropertyConverter
      * Convert the specified object into a BigInteger.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigInteger
      */
     public static BigInteger toBigInteger(Object value) throws ConversionException
@@ -300,9 +314,9 @@ public final class PropertyConverter
             try
             {
                 String string = (String) value;
-                if (string.startsWith("0x"))
+                if (string.startsWith(HEX_PREFIX))
                 {
-                    return new BigInteger(string.substring(2), 16);
+                    return new BigInteger(string.substring(2), HEX_RADIX);
                 }
                 else
                 {
@@ -324,6 +338,7 @@ public final class PropertyConverter
      * Convert the specified object into a BigDecimal.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a BigDecimal
      */
     public static BigDecimal toBigDecimal(Object value) throws ConversionException
@@ -353,6 +368,7 @@ public final class PropertyConverter
      * Convert the specified object into an URL.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to an URL
      */
     public static URL toURL(Object value) throws ConversionException
@@ -382,6 +398,7 @@ public final class PropertyConverter
      * Convert the specified object into a Locale.
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Locale
      */
     public static Locale toLocale(Object value) throws ConversionException
@@ -422,6 +439,7 @@ public final class PropertyConverter
      *
      * @param s          the string to split
      * @param delimiter  the delimiter
+     * @return a list with the single tokens
      */
     public static List split(String s, char delimiter)
     {
@@ -470,14 +488,14 @@ public final class PropertyConverter
 
         return list;
     }
-    
+
     /**
      * Escapes the delimiters that might be contained in the given string. This
      * method ensures that list delimiter characters that are part of a
      * property's value are correctly escaped when a configuration is saved to a
      * file. Otherwise when loaded again the property will be treated as a list
      * property.
-     * 
+     *
      * @param s the string with the value
      * @param delimiter the list delimiter to use
      * @return the correctly esaped string
@@ -499,6 +517,7 @@ public final class PropertyConverter
      * </ul>
      *
      * @param value the value to convert
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Color
      */
     public static Color toColor(Object value) throws ConversionException
@@ -544,10 +563,11 @@ public final class PropertyConverter
     }
 
     /**
-     * Convert the specified object into a Calendar.
+     * Convert the specified object into a Date.
      *
      * @param value  the value to convert
      * @param format the DateFormat pattern to parse String values
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
     public static Date toDate(Object value, String format) throws ConversionException
@@ -582,6 +602,7 @@ public final class PropertyConverter
      *
      * @param value  the value to convert
      * @param format the DateFormat pattern to parse String values
+     * @return the converted value
      * @throws ConversionException thrown if the value cannot be converted to a Calendar
      */
     public static Calendar toCalendar(Object value, String format) throws ConversionException
@@ -628,6 +649,7 @@ public final class PropertyConverter
      *
      * @param value     the value to "split"
      * @param delimiter the delimiter for String values
+     * @return an iterator for accessing the single values
      */
     public static Iterator toIterator(Object value, char delimiter)
     {
@@ -670,5 +692,4 @@ public final class PropertyConverter
             return new SingletonIterator(value);
         }
     }
-
 }

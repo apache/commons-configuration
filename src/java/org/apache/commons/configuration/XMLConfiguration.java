@@ -56,21 +56,21 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
 /**
  * <p>A specialized hierarchical configuration class that is able to parse XML
  * documents.</p>
- * 
+ *
  * <p>The parsed document will be stored keeping its structure. The class also
  * tries to preserve as much information from the loaded XML document as
  * possible, including comments and processing instructions. These will be
  * contained in documents created by the <code>save()</code> methods, too.</p>
- * 
+ *
  * <p>Like other file based configuration classes this class maintains the name
  * and path to the loaded configuration file. These properties can be altered
  * using several setter methods, but they are not modified by <code>save()</code>
  * and <code>load()</code> methods. If XML documents contain relative paths to
  * other documents (e.g. to a DTD), these references are resolved based on the
  * path set for this configuration.</p>
- * 
+ *
  * @since commons-configuration 1.0
- * 
+ *
  * @author J&ouml;rg Schaible
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
  * @version $Revision$, $Date$
@@ -80,6 +80,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
+    /** A helper object for implementing the file configuration interface. */
     private FileConfigurationDelegate delegate = new FileConfigurationDelegate();
 
     /** The document from this configuration's data source. */
@@ -87,13 +88,13 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /** Stores the name of the root element. */
     private String rootElementName;
-    
+
     /** Stores the document builder that should be used for loading.*/
     private DocumentBuilder documentBuilder;
-    
+
     /** Stores a flag whether DTD validation should be performed.*/
     private boolean validating;
-    
+
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
      */
@@ -105,7 +106,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
      * The configuration is loaded from the specified file
-     * 
+     *
      * @param fileName the name of the file to load
      * @throws ConfigurationException if the file cannot be loaded
      */
@@ -119,7 +120,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
      * The configuration is loaded from the specified file.
-     * 
+     *
      * @param file the file
      * @throws ConfigurationException if an error occurs while loading the file
      */
@@ -136,7 +137,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
      * The configuration is loaded from the specified URL.
-     * 
+     *
      * @param url the URL
      * @throws ConfigurationException if loading causes an error
      */
@@ -152,7 +153,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * from a XML document, the name of this document's root element is
      * returned. Otherwise it is possible to set a name for the root element
      * that will be used when this configuration is stored.
-     * 
+     *
      * @return the name of the root element
      */
     public String getRootElementName()
@@ -176,7 +177,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * exception is thrown. Whether this configuration has been loaded from an
      * XML document or not can be found out using the <code>getDocument()</code>
      * method.
-     * 
+     *
      * @param name the name of the root element
      */
     public void setRootElementName(String name)
@@ -193,7 +194,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * Returns the <code>DocumentBuilder</code> object that is used for
      * loading documents. If no specific builder has been set, this method
      * returns <b>null</b>.
-     * 
+     *
      * @return the <code>DocumentBuilder</code> for loading new documents
      * @since 1.2
      */
@@ -207,7 +208,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * documents. This method makes it possible to specify the exact document
      * builder. So an application can create a builder, configure it for its
      * special needs, and then pass it to this method.
-     * 
+     *
      * @param documentBuilder the document builder to be used; if undefined, a
      * default builder will be used
      * @since 1.2
@@ -219,6 +220,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /**
      * Returns the value of the validating flag.
+     *
      * @return the validating flag
      * @since 1.2
      */
@@ -231,7 +233,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * Sets the value of the validating flag. This flag determines whether
      * DTD validation should be performed when loading XML documents. This
      * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
+     *
      * @param validating the validating flag
+     * @since 1.2
      */
     public void setValidating(boolean validating)
     {
@@ -242,7 +246,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * Returns the XML document this configuration was loaded from. The return
      * value is <b>null</b> if this configuration was not loaded from a XML
      * document.
-     * 
+     *
      * @return the XML document this configuration was loaded from
      */
     public Document getDocument()
@@ -251,7 +255,10 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
 
     /**
-     * @inheritDoc
+     * Adds a property to this configuration.
+     *
+     * @param key the key of the property
+     * @param obj the property's value
      */
     protected void addPropertyDirect(String key, Object obj)
     {
@@ -260,7 +267,9 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
 
     /**
-     * @inheritDoc
+     * Removes the property with the given key.
+     *
+     * @param key the key of the property to remove
      */
     public void clearProperty(String key)
     {
@@ -269,14 +278,16 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
 
     /**
-     * @inheritDoc
+     * Removes all properties in the specified sub tree.
+     *
+     * @param key the key of the properties to be removed
      */
     public void clearTree(String key)
     {
         super.clearTree(key);
         delegate.possiblySave();
     }
-    
+
     /**
      * Removes all properties from this configuration. If this configuration
      * was loaded from a file, the associated DOM document is also cleared.
@@ -286,9 +297,12 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         super.clear();
         document = null;
     }
-    
+
     /**
-     * @inheritDoc
+     * Sets the value of the specified property.
+     *
+     * @param key the key of the property
+     * @param value the new value
      */
     public void setProperty(String key, Object value)
     {
@@ -298,7 +312,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /**
      * Initializes this configuration from an XML document.
-     * 
+     *
      * @param document the document to be parsed
      * @param elemRefs a flag whether references to the XML elements should be set
      */
@@ -310,7 +324,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Helper method for building the internal storage hierarchy. The XML
      * elements are transformed into node objects.
-     * 
+     *
      * @param node the actual node
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
@@ -326,8 +340,8 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             if (w3cNode instanceof Element)
             {
                 Element child = (Element) w3cNode;
-                Node childNode = new XMLNode(child.getTagName(), 
-                        (elemRefs) ? child : null);
+                Node childNode = new XMLNode(child.getTagName(),
+                        elemRefs ? child : null);
                 constructHierarchy(childNode, child, elemRefs);
                 node.addChild(childNode);
                 handleDelimiters(node, childNode);
@@ -348,7 +362,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Helper method for constructing node objects for the attributes of the
      * given XML element.
-     * 
+     *
      * @param node the actual node
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
@@ -365,18 +379,18 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                 for (Iterator it = PropertyConverter.split(attr.getValue(), getDelimiter()).iterator(); it.hasNext();)
                 {
                     Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()),
-                            (elemRefs) ? element : null);
+                            elemRefs ? element : null);
                     child.setValue(it.next());
                     node.addChild(child);
                 }
             }
         }
     }
-    
+
     /**
      * Deals with elements whose value is a list. In this case multiple child
      * elements must be added.
-     * 
+     *
      * @param parent the parent element
      * @param child the child element
      */
@@ -406,7 +420,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             }
         }
     }
-    
+
     /**
      * Creates the <code>DocumentBuilder</code> to be used for loading files.
      * This implementation checks whether a specific
@@ -414,7 +428,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * one is used. Otherwise a default builder is created. Depending on the
      * value of the validating flag this builder will be a validating or a non
      * validating <code>DocumentBuilder</code>.
-     * 
+     *
      * @return the <code>DocumentBuilder</code> for loading configuration
      * files
      * @throws ParserConfigurationException if an error occurs
@@ -451,7 +465,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /**
      * Creates a DOM document from the internal tree of configuration nodes.
-     * 
+     *
      * @return the new document
      * @throws ConfigurationException if an error occurs
      */
@@ -485,7 +499,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     /**
      * Creates a new node object. This implementation returns an instance of the
      * <code>XMLNode</code> class.
-     * 
+     *
      * @param name the node's name
      * @return the new node
      */
@@ -494,6 +508,10 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         return new XMLNode(name, null);
     }
 
+    /**
+     * Loads this configuration.
+     * @throws ConfigurationException if an error occurs
+     */
     public void load() throws ConfigurationException
     {
         delegate.load();
@@ -532,13 +550,13 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      *
      * @param in An InputStream.
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs
      */
     public void load(Reader in) throws ConfigurationException
     {
         load(new InputSource(in));
     }
-    
+
     /**
      * Loads a configuration file from the specified input source.
      * @param source the input source
@@ -553,7 +571,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             {
                 source.setSystemId(sourceURL.toString());
             }
-            
+
             DocumentBuilder builder = createDocumentBuilder();
             Document newDocument = builder.parse(source);
             Document oldDocument = document;
@@ -599,7 +617,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
     /**
      * Saves the configuration to the specified writer.
-     * 
+     *
      * @param writer the writer used to save the configuration
      * @throws ConfigurationException if an error occurs
      */
@@ -619,13 +637,13 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             throw new ConfigurationException(e.getMessage(), e);
         }
     }
-    
+
     /**
      * Creates a copy of this object. The new configuration object will contain
      * the same properties as the original, but it will lose any connection to a
      * source document (if one exists). This is to avoid race conditions if both
      * the original and the copy are modified and then saved.
-     * 
+     *
      * @return the copy
      */
     public Object clone()
@@ -721,7 +739,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         delegate.setEncoding(encoding);
     }
-    
+
     public boolean containsKey(String key)
     {
         reload();
@@ -755,7 +773,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         /**
          * Creates a new instance of <code>XMLNode</code> and initializes it
          * with a name and the corresponding XML element.
-         * 
+         *
          * @param name the node's name
          * @param elem the XML element
          */
@@ -768,7 +786,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         /**
          * Sets the value of this node. If this node is associated with an XML
          * element, this element will be updated, too.
-         * 
+         *
          * @param value the node's new value
          */
         public void setValue(Object value)
@@ -813,7 +831,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         /**
          * Updates the node's value if it represents an element node.
-         * 
+         *
          * @param value the new value
          */
         private void updateElement(Object value)
@@ -854,7 +872,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         /**
          * Updates the node's value if it represents an attribute.
-         *  
+         *
          */
         private void updateAttribute()
         {
@@ -866,7 +884,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
          * called when the element's text changes. Then all text nodes except
          * for the first are removed. A reference to the first is returned or
          * <b>null </b> if there is no text node at all.
-         * 
+         *
          * @return the first and only text node
          */
         private Text findTextNodeForUpdate()
@@ -919,7 +937,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         /**
          * Creates a new instance of <code>XMLBuilderVisitor</code>
-         * 
+         *
          * @param doc the document to be created
          */
         public XMLBuilderVisitor(Document doc)
@@ -929,7 +947,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         /**
          * Processes the node hierarchy and adds new nodes to the document.
-         * 
+         *
          * @param rootNode the root node
          */
         public void processDocument(Node rootNode)
@@ -938,7 +956,13 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         }
 
         /**
-         * @inheritDoc
+         * Inserts a new node. This implementation ensures that the correct
+         * XML element is created and inserted between the given siblings.
+         *
+         * @param newNode the node to insert
+         * @param parent the parent node
+         * @param sibling1 the first sibling
+         * @param sibling2 the second sibling
          */
         protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
         {
@@ -953,7 +977,8 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
                 Element elem = document.createElement(newNode.getName());
                 if (newNode.getValue() != null)
                 {
-                    elem.appendChild(document.createTextNode(PropertyConverter.escapeDelimiters(newNode.getValue().toString(), getDelimiter())));
+                    elem.appendChild(document.createTextNode(
+                            PropertyConverter.escapeDelimiters(newNode.getValue().toString(), getDelimiter())));
                 }
                 if (sibling2 == null)
                 {
@@ -974,7 +999,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         /**
          * Helper method for updating the value of the specified node's
          * attribute with the given name.
-         * 
+         *
          * @param node the affected node
          * @param elem the element that is associated with this node
          * @param name the name of the affected attribute
@@ -1017,7 +1042,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
          * Updates the value of the specified attribute of the given node.
          * Because there can be multiple child nodes representing this attribute
          * the new value is determined by iterating over all those child nodes.
-         * 
+         *
          * @param node the affected node
          * @param name the name of the attribute
          */
@@ -1031,7 +1056,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         /**
          * Helper method for accessing the element of the specified node.
-         * 
+         *
          * @param node the node
          * @return the element of this node
          */
@@ -1042,6 +1067,11 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         }
     }
 
+    /**
+     * A special implementation of the <code>FileConfiguration</code> interface that is
+     * used internally to implement the <code>FileConfiguration</code> methods
+     * for <code>XMLConfiguration</code>, too.
+     */
     private class FileConfigurationDelegate extends AbstractFileConfiguration
     {
         public void load(InputStream in) throws ConfigurationException
@@ -1058,7 +1088,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         {
             XMLConfiguration.this.save(out);
         }
-        
+
         public void clear()
         {
             XMLConfiguration.this.clear();

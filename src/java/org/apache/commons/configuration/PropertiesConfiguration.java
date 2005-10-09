@@ -154,6 +154,18 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     private static final char[] WHITE_SPACE = new char[] { ' ', '\t', '\f' };
 
     /**
+     * The default encoding (ISO-8859-1 as specified by
+     * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     */
+    private static final String DEFAULT_ENCODING = "ISO-8859-1";
+
+    /** Constant for the radix of hex numbers.*/
+    private static final int HEX_RADIX = 16;
+
+    /** Constant for the length of a unicode literal.*/
+    private static final int UNICODE_LEN = 4;
+
+    /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
      */
@@ -164,11 +176,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** Comment header of the .properties file */
     private String header;
-
-    /**
-     * The default encoding (ISO-8859-1 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
-     */
-    private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
     // initialization block to set the encoding before loading the file in the constructors
     {
@@ -271,6 +278,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /**
      * Return the comment header.
      *
+     * @return the comment header
      * @since 1.1
      */
     public String getHeader()
@@ -281,6 +289,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /**
      * Set the comment header.
      *
+     * @param header the header to use
      * @since 1.1
      */
     public void setHeader(String header)
@@ -296,7 +305,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @param in An InputStream.
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs
      */
     public synchronized void load(Reader in) throws ConfigurationException
     {
@@ -357,6 +366,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * Save the configuration to the specified stream.
      *
      * @param writer the output stream used to save the configuration
+     * @throws ConfigurationException if an error occurs
      */
     public void save(Writer writer) throws ConfigurationException
     {
@@ -445,7 +455,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @return A string containing a property value or null
          *
-         * @throws IOException
+         * @throws IOException in case of an I/O error
          */
         public String readProperty() throws IOException
         {
@@ -481,19 +491,22 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
             return buffer.toString();
         }
-        
+
         /**
          * Checks if the passed in line should be combined with the following.
          * This is true, if the line ends with an odd number of backslashes.
-         * 
+         *
          * @param line the line
          * @return a flag if the lines should be combined
          */
         private static boolean checkCombineLines(String line)
         {
             int bsCount = 0;
-            for (int idx = line.length()-1; idx >= 0 && line.charAt(idx) == '\\'; idx--, bsCount++)
-                ;
+            for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
+            {
+                bsCount++;
+            }
+
             return bsCount % 2 == 1;
         }
     } // class PropertiesReader
@@ -503,12 +516,14 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
+        /** The delimiter for multi-valued properties.*/
         private char delimiter;
 
         /**
          * Constructor.
          *
          * @param writer a Writer object providing the underlying stream
+         * @param delimiter the delimiter character for multi-valued properties
          */
         public PropertiesWriter(Writer writer, char delimiter)
         {
@@ -519,9 +534,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /**
          * Write a property.
          *
-         * @param key
-         * @param value
-         * @throws IOException
+         * @param key the key of the property
+         * @param value the value of the property
+         * @throws IOException if an I/O error occurs
          */
         public void writeProperty(String key, Object value) throws IOException
         {
@@ -554,8 +569,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /**
          * Write a comment.
          *
-         * @param comment
-         * @throws IOException
+         * @param comment the comment to write
+         * @throws IOException if an I/O error occurs
          */
         public void writeComment(String comment) throws IOException
         {
@@ -565,6 +580,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /**
          * Escape the separators in the key.
          *
+         * @param key the key
+         * @return the escaped key
          * @since 1.2
          */
         private String escapeKey(String key)
@@ -599,7 +616,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * drop escaped separators (i.e '\,').
      *
      * @param str  the <code>String</code> to unescape, may be null
-     *
+     * @param delimiter the delimiter for multi-valued properties
+     * @return the processed string
      * @throws IllegalArgumentException if the Writer is <code>null</code>
      */
     protected static String unescapeJava(String str, char delimiter)
@@ -610,7 +628,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
         int sz = str.length();
         StringBuffer out = new StringBuffer(sz);
-        StringBuffer unicode = new StringBuffer(4);
+        StringBuffer unicode = new StringBuffer(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++)
@@ -621,13 +639,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 // if in unicode, then we're reading unicode
                 // values in somehow
                 unicode.append(ch);
-                if (unicode.length() == 4)
+                if (unicode.length() == UNICODE_LEN)
                 {
                     // unicode now contains the four hex digits
                     // which represents our unicode character
                     try
                     {
-                        int value = Integer.parseInt(unicode.toString(), 16);
+                        int value = Integer.parseInt(unicode.toString(), HEX_RADIX);
                         out.append((char) value);
                         unicode.setLength(0);
                         inUnicode = false;
@@ -646,39 +664,50 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 // handle an escaped value
                 hadSlash = false;
 
-                if (ch=='\\'){
+                if (ch == '\\')
+                {
                     out.append('\\');
                 }
-                else if (ch=='\''){
+                else if (ch == '\'')
+                {
                     out.append('\'');
                 }
-                else if (ch=='\"'){
+                else if (ch == '\"')
+                {
                     out.append('"');
                 }
-                else if (ch=='r'){
+                else if (ch == 'r')
+                {
                     out.append('\r');
                 }
-                else if (ch=='f'){
+                else if (ch == 'f')
+                {
                     out.append('\f');
                 }
-                else if (ch=='t'){
+                else if (ch == 't')
+                {
                     out.append('\t');
                 }
-                else if (ch=='n'){
+                else if (ch == 'n')
+                {
                     out.append('\n');
                 }
-                else if (ch=='b'){
+                else if (ch == 'b')
+                {
                     out.append('\b');
                 }
-                else if (ch==delimiter){
+                else if (ch == delimiter)
+                {
                     out.append('\\');
                     out.append(delimiter);
                 }
-                else if (ch=='u'){
-                    //                  uh-oh, we're in unicode country....
+                else if (ch == 'u')
+                {
+                    // uh-oh, we're in unicode country....
                     inUnicode = true;
                 }
-                else {
+                else
+                {
                     out.append(ch);
                 }
 
@@ -705,6 +734,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /**
      * Parse a property line and return the key and the value in an array.
      *
+     * @param line the line to parse
+     * @return an array with the property's key and value
      * @since 1.2
      */
     private String[] parseProperty(String line)
@@ -808,7 +839,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * is encountered. It tries to resolve relative file names based on the
      * current base path. If this fails, a resolution based on the location of
      * this properties file is tried.
-     * 
+     *
      * @param fileName the name of the file to load
      * @throws ConfigurationException if loading fails
      */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ import java.util.Set;
  * {@link org.apache.commons.configuration.Configuration}
  * instance to provide a <code>Map</code> interface.</p>
  *
- * @todo This implementation is incomplete. 
+ * @todo This implementation is incomplete.
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  * @version $Revision$, $Date$
@@ -39,7 +39,7 @@ public class ConfigurationMap extends AbstractMap
     /**
      * The <code>Configuration</code> wrapped by this class.
      */
-    Configuration configuration = null;
+    Configuration configuration;
 
     /**
      * Creates a new instance of a <code>ConfigurationMap</code>
@@ -82,22 +82,22 @@ public class ConfigurationMap extends AbstractMap
 
     static class ConfigurationSet extends AbstractSet
     {
-        private Configuration configuration = null;
+        private Configuration configuration;
 
         private class Entry implements Map.Entry
         {
-            private Object key = null;
-            
+            private Object key;
+
             private Entry(Object key)
             {
                 this.key = key;
             }
-            
+
             public Object getKey()
             {
                 return key;
             }
-            
+
             public Object getValue()
             {
                 return configuration.getProperty((String) key);
@@ -150,7 +150,7 @@ public class ConfigurationMap extends AbstractMap
         {
             // Ouch. Now _that_ one is expensive...
             int count = 0;
-            for (Iterator iterator = configuration.getKeys(); iterator.hasNext(); )
+            for (Iterator iterator = configuration.getKeys(); iterator.hasNext();)
             {
                 iterator.next();
                 count++;

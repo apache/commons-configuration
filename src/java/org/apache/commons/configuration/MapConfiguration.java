@@ -38,7 +38,7 @@ public class MapConfiguration extends AbstractConfiguration
      * used to store the configuration properties, any change will also affect
      * the Map.
      *
-     * @param map
+     * @param map the map
      */
     public MapConfiguration(Map map)
     {
@@ -47,6 +47,8 @@ public class MapConfiguration extends AbstractConfiguration
 
     /**
      * Return the Map decorated by this configuration.
+     *
+     * @return the map this configuration is based onto
      */
     public Map getMap()
     {

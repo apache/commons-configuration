@@ -76,20 +76,27 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
 {
+    /** Stores the file name.*/
     protected String fileName;
 
+    /** Stores the base path.*/
     protected String basePath;
 
+    /** The auto save flag.*/
     protected boolean autoSave;
 
+    /** Holds a reference to the reloading strategy.*/
     protected ReloadingStrategy strategy;
 
+    /** A lock object for protecting reload operations.*/
     private Object reloadLock = new Object();
 
+    /** Stores the encoding of the configuration file.*/
     private String encoding;
-    
-    private URL sourceURL = null;
-    
+
+    /** Stores the URL from which the configuration file was loaded.*/
+    private URL sourceURL;
+
     /** A counter that prohibits reloading.*/
     private int noReload;
 
@@ -192,7 +199,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         try
         {
             URL url = ConfigurationUtils.locate(basePath, fileName);
-            
+
             if (url == null)
             {
                 throw new ConfigurationException("Cannot locate configuration source " + fileName);
@@ -298,7 +305,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      *
      * @param in the input stream
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(InputStream in) throws ConfigurationException
     {
@@ -312,7 +319,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * @param in the input stream
      * @param encoding the encoding used. <code>null</code> to use the default encoding
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the load operation
      */
     public void load(InputStream in, String encoding) throws ConfigurationException
     {
@@ -352,7 +359,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             throw new ConfigurationException("No file name has been set!");
         }
-        
+
         if (sourceURL != null)
         {
             save(sourceURL);
@@ -368,9 +375,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Save the configuration to the specified file. This doesn't change the
      * source of the configuration, use setFileName() if you need it.
      *
-     * @param fileName
+     * @param fileName the file name
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(String fileName) throws ConfigurationException
     {
@@ -398,9 +405,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * This doesn't change the source of the configuration, use setURL()
      * if you need it.
      *
-     * @param url
+     * @param url the URL
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(URL url) throws ConfigurationException
     {
@@ -420,9 +427,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * automatically if it doesn't exist. This doesn't change the source
      * of the configuration, use {@link #setFile} if you need it.
      *
-     * @param file
+     * @param file the target file
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(File file) throws ConfigurationException
     {
@@ -460,9 +467,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Save the configuration to the specified stream, using the encoding
      * returned by {@link #getEncoding()}.
      *
-     * @param out
+     * @param out the output stream
      *
-     * @throws ConfigurationException
+     * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(OutputStream out) throws ConfigurationException
     {
@@ -473,9 +480,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Save the configuration to the specified stream, using the specified
      * encoding. If the encoding is null the default encoding is used.
      *
-     * @param out
-     * @param encoding
-     * @throws ConfigurationException
+     * @param out the output stream
+     * @param encoding the encoding to use
+     * @throws ConfigurationException if an error occurs during the save operation
      */
     public void save(OutputStream out, String encoding) throws ConfigurationException
     {
@@ -504,6 +511,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Return the name of the file.
+     *
+     * @return the file name
      */
     public String getFileName()
     {
@@ -525,6 +534,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Return the base path.
+     *
+     * @return the base path
      */
     public String getBasePath()
     {
@@ -534,7 +545,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     /**
      * Set the base path. Relative configurations are loaded from this path. The
      * base path can be either a path to a directory or a URL.
-     * 
+     *
      * @param basePath the base path.
      */
     public void setBasePath(String basePath)
@@ -547,7 +558,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Return the file where the configuration is stored. If the base path is a
      * URL with a protocol different than &quot;file&quot;, the return value
      * will not point to a valid file object.
-     * 
+     *
      * @return the file where the configuration is stored; this can be <b>null</b>
      */
     public File getFile()
@@ -573,7 +584,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Set the file where the configuration is stored. The passed in file is
      * made absolute if it is not yet. Then the file's path component becomes
      * the base path and its name component becomes the file name.
-     * 
+     *
      * @param file the file where the configuration is stored
      */
     public void setFile(File file)
@@ -588,7 +599,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Returns the full path to the file this configuration is based on. The
      * return value is valid only if this configuration is based on a file on
      * the local disk.
-     * 
+     *
      * @return the full path to the configuration file
      */
     public String getPath()
@@ -599,7 +610,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     /**
      * Sets the location of this configuration as a full path name. The passed
      * in path should represent a valid file name.
-     * 
+     *
      * @param path the full path name of the configuration file
      */
     public void setPath(String path)
@@ -609,13 +620,13 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Return the URL where the configuration is stored.
-     * 
+     *
      * @return the configuration's location as URL
      */
     public URL getURL()
     {
-        return (sourceURL != null) ? sourceURL :
-            ConfigurationUtils.locate(getBasePath(), getFileName());
+        return (sourceURL != null) ? sourceURL
+                : ConfigurationUtils.locate(getBasePath(), getFileName());
     }
 
     /**
@@ -707,7 +718,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
         }
     }
-    
+
     /**
      * Enters the &quot;No reloading mode&quot;. As long as this mode is active
      * no reloading will be performed. This is necessary for some
@@ -728,7 +739,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Leaves the &quot;No reloading mode&quot;.
-     * 
+     *
      * @see #enterNoReload()
      */
     protected void exitNoReload()
@@ -768,6 +779,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Create the path to the specified file.
+     *
+     * @param file the target file
      */
     private void createPath(File file)
     {

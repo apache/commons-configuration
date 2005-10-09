@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -54,8 +54,15 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     /** The default format for dates. */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    /** Stores the wrapped configuration.*/
     protected Configuration configuration;
 
+    /**
+     * Creates a new instance of <code>DataConfiguration</code> and sets the
+     * wrapped configuration.
+     *
+     * @param configuration the wrapped configuration
+     */
     public DataConfiguration(Configuration configuration)
     {
         this.configuration = configuration;
@@ -63,6 +70,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
     /**
      * Return the configuration decorated by this DataConfiguration.
+     *
+     * @return the wrapped configuration
      */
     public Configuration getConfiguration()
     {
@@ -347,6 +356,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated byte array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -496,6 +506,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated short array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -646,6 +657,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated int array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -795,6 +807,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated long array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -944,6 +957,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated float array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1094,6 +1108,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated double array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1238,6 +1253,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated BigInteger array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1348,6 +1364,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated BigDecimal array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1503,6 +1520,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * If the key doesn't map to an existing object an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated URL array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -1775,6 +1793,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * If the key doesn't map to an existing object an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Date array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -2069,6 +2088,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * If the key doesn't map to an existing object an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Calendar array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -2109,6 +2129,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     /**
      * Returns the date format specified by the user in the DATE_FORMAT_KEY
      * property, or the default format otherwise.
+     *
+     * @return the default date format
      */
     private String getDefaultDateFormat()
     {
@@ -2254,6 +2276,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Locale array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an
@@ -2411,6 +2434,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * an empty array is returned.
      *
      * @param key The configuration key.
+     * @param defaultValue the default value, which will be returned if the property is not found
      * @return The associated Color array if the key is found.
      *
      * @throws ConversionException is thrown if the key maps to an

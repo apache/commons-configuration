@@ -50,7 +50,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *   &lt;entry key="key3">value3&lt;/entry>
  * &lt;/properties>
  * </pre>
- * 
+ *
  * The Java 5.0 runtime is not required to use this class. The default encoding
  * for this configuration format is UTF-8. Note that unlike
  * <code>PropertiesConfiguration</code>, <code>XMLPropertiesConfiguration</code>
@@ -189,6 +189,10 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
 
     /**
      * Write a property.
+     *
+     * @param out the output stream
+     * @param key the key of the property
+     * @param value the value of the property
      */
     private void writeProperty(PrintWriter out, String key, Object value)
     {
@@ -211,6 +215,10 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
 
     /**
      * Write a list property.
+     *
+     * @param out the output stream
+     * @param key the key of the property
+     * @param values a list with all property values
      */
     private void writeProperty(PrintWriter out, String key, List values)
     {
