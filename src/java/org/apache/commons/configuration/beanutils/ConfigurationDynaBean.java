@@ -48,17 +48,24 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ConfigurationDynaBean implements DynaBean
 {
-    private final static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
+    /** The logger.*/
+    private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
+    /** Stores the associated configuration instance.*/
     Configuration configuration;
 
+    /**
+     * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
+     * the configuration this bean is associated with.
+     * @param configuration the configuration
+     */
     public ConfigurationDynaBean(Configuration configuration)
     {
         if (log.isTraceEnabled())
         {
             log.trace("ConfigurationDynaBean(" + configuration + ")");
         }
-        
+
         this.configuration = configuration;
     }
 

@@ -38,8 +38,10 @@ import org.apache.commons.logging.LogFactory;
  */
 public class ConfigurationDynaClass implements DynaClass
 {
-    private final static Log log = LogFactory.getLog(ConfigurationDynaClass.class);
+    /** The logger.*/
+    private static Log log = LogFactory.getLog(ConfigurationDynaClass.class);
 
+    /** Stores the associated configuration.*/
     Configuration configuration;
 
     /**
@@ -50,7 +52,10 @@ public class ConfigurationDynaClass implements DynaClass
     public ConfigurationDynaClass(Configuration configuration)
     {
         super();
-        if (log.isTraceEnabled()) log.trace("ConfigurationDynaClass(" + configuration + ")");
+        if (log.isTraceEnabled())
+        {
+            log.trace("ConfigurationDynaClass(" + configuration + ")");
+        }
         this.configuration = configuration;
     }
 
