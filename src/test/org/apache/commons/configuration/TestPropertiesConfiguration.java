@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Copyright 2001-2005 The Apache Software Foundation.
  *
@@ -16,16 +14,12 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+package org.apache.commons.configuration;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.io.PipedOutputStream;
-import java.io.PipedInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.FileInputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -309,6 +303,14 @@ public class TestPropertiesConfiguration extends TestCase
     public void testUnescapeJava()
     {
         assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test", ','));
+    }
+
+    public void testEscapedKey() throws Exception
+    {
+        PropertiesConfiguration conf = new PropertiesConfiguration();
+        conf.load(new StringReader("\\u0066\\u006f\\u006f=bar"));
+
+        assertEquals("value of the 'foo' property", "bar", conf.getString("foo"));
     }
 
     public void testMixedArray()

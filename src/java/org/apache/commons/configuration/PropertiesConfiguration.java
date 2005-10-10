@@ -347,7 +347,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
                 else
                 {
-                    addProperty(key, unescapeJava(value, getDelimiter()));
+                    addProperty(StringEscapeUtils.unescapeJava(key), unescapeJava(value, getDelimiter()));
                 }
 
             }

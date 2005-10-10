@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="ebourg" type="update" issue="36991">
+        PropertiesConfiguration now translates properly the escaped unicode
+        characters (like \u1234) used in the property keys. This complies with
+        the specification of java.util.Properties.
+      </action>
       <action dev="ebourg" type="update" issue="36784">
         ConfigurationConverter.getProperties() now uses the delimiter of the
         specified configuration to convert the list properties into strings.
