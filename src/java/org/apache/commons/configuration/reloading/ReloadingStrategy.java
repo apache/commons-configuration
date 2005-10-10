@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,12 @@ import org.apache.commons.configuration.FileConfiguration;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public interface ReloadingStrategy {
-
+public interface ReloadingStrategy
+{
     /**
      * Set the configuration managed by this strategy.
+     *
+     * @param configuration the configuration to monitor
      */
     void setConfiguration(FileConfiguration configuration);
 
@@ -40,6 +42,8 @@ public interface ReloadingStrategy {
 
     /**
      * Tell if the evaluation of the strategy requires to reload the configuration.
+     *
+     * @return a flag whether a reload should be performed
      */
     boolean reloadingRequired();
 

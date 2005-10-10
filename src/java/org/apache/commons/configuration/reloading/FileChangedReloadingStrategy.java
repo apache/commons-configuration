@@ -30,7 +30,7 @@ import org.apache.commons.configuration.FileConfiguration;
  * but is triggered by its associated configuration whenever properties are
  * accessed. It then checks the configuration file's last modification date
  * and causes a reload if this has changed.</p>
- * <p>To avoid permanent disc access on successive property lookups a refresh 
+ * <p>To avoid permanent disc access on successive property lookups a refresh
  * delay can be specified. This has the effect that the configuration file's
  * last modification date is only checked once in this delay period. The default
  * value for this refresh delay is 5 seconds.</p>
@@ -44,7 +44,10 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 {
     /** Constant for the jar URL protocol.*/
     private static final String JAR_PROTOCOL = "jar";
-    
+
+    /** Constant for the default refresh delay.*/
+    private static final int DEFAULT_REFRESH_DELAY = 5000;
+
     /** Stores a reference to the configuration to be monitored.*/
     protected FileConfiguration configuration;
 
@@ -55,7 +58,7 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
     protected long lastChecked;
 
     /** The minimum delay in milliseconds between checks. */
-    protected long refreshDelay = 5000;
+    protected long refreshDelay = DEFAULT_REFRESH_DELAY;
 
     public void setConfiguration(FileConfiguration configuration)
     {
@@ -73,10 +76,10 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
         long now = System.currentTimeMillis();
 
-        if ((now > lastChecked + refreshDelay))
+        if (now > lastChecked + refreshDelay)
         {
             lastChecked = now;
-            if(hasChanged())
+            if (hasChanged())
             {
                 reloading = true;
             }
@@ -92,6 +95,8 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
     /**
      * Return the minimal time in milliseconds between two reloadings.
+     *
+     * @return the refresh delay (in milliseconds)
      */
     public long getRefreshDelay()
     {
@@ -122,6 +127,8 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
     /**
      * Check if the configuration has changed since the last time it was loaded.
+     *
+     * @return a flag whether the configuration has changed
      */
     protected boolean hasChanged()
     {
@@ -131,13 +138,13 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
             return false;
         }
 
-        return (file.lastModified() > lastModified);
+        return file.lastModified() > lastModified;
     }
 
     /**
      * Returns the file that is monitored by this strategy. Note that the return
      * value can be <b>null </b> under some circumstances.
-     * 
+     *
      * @return the monitored file
      */
     protected File getFile()
@@ -149,7 +156,7 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
     /**
      * Helper method for transforming a URL into a file object. This method
      * handles file: and jar: URLs.
-     * 
+     *
      * @param url the URL to be converted
      * @return the resulting file or <b>null </b>
      */
