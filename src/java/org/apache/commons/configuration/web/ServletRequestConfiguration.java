@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.Arrays;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
-import org.apache.commons.configuration.AbstractConfiguration;
 
 /**
  * A configuration wrapper to read the parameters of a servlet request. This
@@ -32,8 +31,9 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class ServletRequestConfiguration extends AbstractConfiguration
+public class ServletRequestConfiguration extends BaseWebConfiguration
 {
+    /** Stores the wrapped request.*/
     protected ServletRequest request;
 
     /**
@@ -48,7 +48,7 @@ public class ServletRequestConfiguration extends AbstractConfiguration
 
     public Object getProperty(String key)
     {
-        String values[] = request.getParameterValues(key);
+        String[] values = request.getParameterValues(key);
 
         if (values == null || values.length == 0)
         {
@@ -62,38 +62,6 @@ public class ServletRequestConfiguration extends AbstractConfiguration
         {
             return Arrays.asList(values);
         }
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
-    }
-
-    public boolean isEmpty()
-    {
-        return !getKeys().hasNext();
-    }
-
-    public boolean containsKey(String key)
-    {
-        return getProperty(key) != null;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    public void clearProperty(String key)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
     }
 
     public Iterator getKeys()

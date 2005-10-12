@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
 
 /**
@@ -33,15 +32,16 @@ import org.apache.commons.configuration.PropertyConverter;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class AppletConfiguration extends AbstractConfiguration
+public class AppletConfiguration extends BaseWebConfiguration
 {
+    /** Stores the wrapped applet.*/
     protected Applet applet;
 
     /**
      * Create an AppletConfiguration using the initialization parameters of
      * the specified Applet.
      *
-     * @param applet
+     * @param applet the applet
      */
     public AppletConfiguration(Applet applet)
     {
@@ -54,38 +54,6 @@ public class AppletConfiguration extends AbstractConfiguration
         List list = PropertyConverter.split((String) value, getDelimiter());
 
         return list.size() > 1 ? list : value;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
-    }
-
-    public boolean isEmpty()
-    {
-        return !getKeys().hasNext();
-    }
-
-    public boolean containsKey(String key)
-    {
-        return getProperty(key) != null;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    public void clearProperty(String key)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
     }
 
     public Iterator getKeys()

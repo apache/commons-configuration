@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
 
 /**
@@ -34,8 +33,9 @@ import org.apache.commons.configuration.PropertyConverter;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class ServletContextConfiguration extends AbstractConfiguration
+public class ServletContextConfiguration extends BaseWebConfiguration
 {
+    /** Stores the wrapped servlet context.*/
     protected ServletContext context;
 
     /**
@@ -66,38 +66,6 @@ public class ServletContextConfiguration extends AbstractConfiguration
         List list = PropertyConverter.split((String) value, getDelimiter());
 
         return list.size() > 1 ? list : value;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
-    }
-
-    public boolean isEmpty()
-    {
-        return !getKeys().hasNext();
-    }
-
-    public boolean containsKey(String key)
-    {
-        return getProperty(key) != null;
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @throws UnsupportedOperationException
-     */
-    public void clearProperty(String key)
-    {
-        throw new UnsupportedOperationException("Read only configuration");
     }
 
     public Iterator getKeys()
