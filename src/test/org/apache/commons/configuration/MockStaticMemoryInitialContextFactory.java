@@ -65,7 +65,7 @@ public class MockStaticMemoryInitialContextFactory
         }
         catch (NamingException ne)
         {
-            throw new RuntimeException(ne);
+            throw new RuntimeException(ne.getMessage());
         }
         return me;
     }
