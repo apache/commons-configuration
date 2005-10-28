@@ -630,6 +630,10 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
             Result result = new StreamResult(writer);
 
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            if (getEncoding() != null)
+            {
+                transformer.setOutputProperty(OutputKeys.ENCODING, getEncoding());
+            }
             transformer.transform(source, result);
         }
         catch (TransformerException e)

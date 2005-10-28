@@ -23,6 +23,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +46,9 @@ import junit.framework.TestCase;
  */
 public class TestXMLConfiguration extends TestCase
 {
+    /** Constant for the used encoding.*/
+    static final String ENCODING = "ISO-8859-1";
+
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
     private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
@@ -754,6 +758,38 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration();
         conf.load(file);
         assertEquals("test3_yoge", conf.getString("yoge"));
+    }
+    
+    /**
+     * Tests whether the encoding is written to the generated XML file.
+     */
+    public void testSaveWithEncoding() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        conf.setProperty("test", "a value");
+        conf.setEncoding(ENCODING);
+
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        assertTrue("Encoding was not written to file", out.toString().indexOf(
+                "encoding=\"" + ENCODING + "\"") >= 0);
+    }
+    
+    /**
+     * Tests whether a default encoding is used if no specific encoding is set.
+     * According to the XSLT specification (http://www.w3.org/TR/xslt#output)
+     * this should be either UTF-8 or UTF-16.
+     */
+    public void testSaveWithNullEncoding() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        conf.setProperty("testNoEncoding", "yes");
+        conf.setEncoding(null);
+
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        assertTrue("Encoding was written to file", out.toString().indexOf(
+                "encoding=\"UTF-") >= 0);
     }
     
     /**

@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" due-to="Kay Doebl" issue="37293">
+        XMLConfiguration now prints the used encoding in the xml declaration of
+        generated files. In earlier versions always the default encoding was
+        written.
+      </action>
       <action dev="ebourg" type="update" issue="36991">
         PropertiesConfiguration now translates properly the escaped unicode
         characters (like \u1234) used in the property keys. This complies with
