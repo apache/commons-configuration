@@ -124,11 +124,6 @@
         </pathelement>
         <!-- Manual changes for dealing with the conf directory -->
         <pathelement path="${targetconfdir}"/>
-        <path>
-          <fileset dir="${targetconfdir}">
-            <include name="resources.jar"/>
-          </fileset>
-        </path>
         <!-- Manual changes end -->
         
       </classpath>
@@ -184,7 +179,6 @@
         </include>
         <include name="*.dtd">
         </include>
-        <include name="resources.jar"/>
       </fileset>
     </copy>
     <mkdir dir="${targetconfdir}/org/apache/commons/configuration">
@@ -270,8 +264,6 @@
     </get>
     <get dest="${libdir}/mockobjects-jdk1.4-j2ee1.3-0.09.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/mockobjects/jars/mockobjects-jdk1.4-j2ee1.3-0.09.jar">
     </get>
-<!--    <get dest="${libdir}/resources-1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/resources/jars/resources-1.0.jar">
-    </get>  -->
     <get dest="${libdir}/maven-tasks-plugin-1.1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-tasks-plugin-1.1.0.jar">
     </get>
     <get dest="${libdir}/maven-findbugs-plugin-0.8.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-findbugs-plugin-0.8.4.jar">

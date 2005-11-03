@@ -355,13 +355,6 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- Fake dependency to test loading configuration files from a JAR -->
-    <dependency>
-      <id>resources</id>
-      <version>1.0</version>
-      <scope>test</scope>
-    </dependency>
-
     <dependency>
       <groupId>maven-plugins</groupId>
       <artifactId>maven-tasks-plugin</artifactId>

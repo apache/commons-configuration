@@ -181,16 +181,6 @@ public class TestConfigurationFactory extends TestCase
         }
     }
 
-    public void testLoadingFromJAR() throws Exception
-    {
-        URL url = Thread.currentThread().getContextClassLoader().getResource("config-jar.xml");
-        assertNotNull("config-jar.xml not found on the classpath", url);
-        factory.setConfigurationURL(url);
-
-        Configuration conf = factory.getConfiguration();
-        assertFalse("The configuration is empty", conf.isEmpty());
-    }
-
     public void testThrowingConfigurationInitializationException() throws Exception
     {
         factory.setConfigurationFileName(testDigesterBadXML.toString());

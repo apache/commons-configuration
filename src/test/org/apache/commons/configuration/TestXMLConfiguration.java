@@ -323,15 +323,6 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
 
-    public void testLoadFromJAR() throws Exception
-    {
-        conf = new XMLConfiguration();
-        conf.setFileName("test-jar.xml");
-        conf.load();
-
-        assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
-    }
-    
     /**
      * Tests constructing an XMLConfiguration from a non existing file and
      * later saving to this file.

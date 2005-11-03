@@ -223,17 +223,6 @@ public class TestPropertiesConfiguration extends TestCase
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
 
-    public void testLoadFromJAR() throws Exception
-    {
-        conf = new PropertiesConfiguration();
-        conf.setIncludesAllowed(true);
-        conf.setFileName("test-jar.properties");
-        conf.load();
-
-        assertEquals("jar", conf.getProperty("configuration.location"));
-        assertEquals("property in an included file", "jar", conf.getProperty("include.location"));
-    }
-
     public void testLoadFromFile() throws Exception
     {
         File file = new File("conf/test.properties");

@@ -18,6 +18,7 @@ package org.apache.commons.configuration.reloading;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 
 import junit.framework.TestCase;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -124,13 +125,12 @@ public class TestFileChangedReloadingStrategy extends TestCase
     public void testFromJar() throws Exception
     {
         XMLConfiguration config = new XMLConfiguration();
-        config.setFileName("test-jar.xml");
-        config.load();
+        // use some jar: URL; the jar need not exist
+        config.setURL(new URL("jar:file:/D:/data/projects/OpenSource/commons-configuration/conf/resources.jar!/test-jar.xml"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
         File file = strategy.getFile();
-        assertNotNull(file);
-        assertTrue(file.exists());
-        assertEquals("resources.jar", file.getName());
+        assertNotNull("Strategy's file is null", file);
+        assertEquals("Strategy does not monitor the jar file", "resources.jar", file.getName());
     }
 }
