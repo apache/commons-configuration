@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -397,5 +398,24 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals(true, config.getBoolean("deeptest"));
         assertEquals(true, config.getBoolean("deepinclude"));
         assertFalse(config.containsKey("deeptestinvalid"));
+    }
+
+    /**
+     * Tests whether the correct line separator is used.
+     */
+    public void testLineSeparator() throws ConfigurationException
+    {
+        final String EOL = System.getProperty("line.separator");
+        conf = new PropertiesConfiguration();
+        conf.setHeader("My header");
+        conf.setProperty("prop", "value");
+
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        String content = out.toString();
+        assertTrue("Header could not be found", content.indexOf("# My header"
+                + EOL + EOL) == 0);
+        assertTrue("Property could not be found", content
+                .indexOf("prop = value" + EOL) > 0);
     }
 }

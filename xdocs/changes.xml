@@ -31,7 +31,8 @@
       <action dev="oheger" type="update" due-to="Kay Doebl" issue="37293">
         XMLConfiguration now prints the used encoding in the xml declaration of
         generated files. In earlier versions always the default encoding was
-        written.
+        written. PropertiesConfiguration now always uses the platform specific
+        line separator when saving files.
       </action>
       <action dev="ebourg" type="update" issue="36991">
         PropertiesConfiguration now translates properly the escaped unicode

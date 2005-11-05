@@ -159,6 +159,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
+    /** Constant for the platform specific line separator.*/
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
@@ -383,12 +386,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 {
                     out.writeComment(line);
                 }
-                out.write("\n");
+                out.writeln(null);
             }
 
             out.writeComment("written by PropertiesConfiguration");
             out.writeComment(new Date().toString());
-            out.write("\n");
+            out.writeln(null);
 
             Iterator keys = getKeys();
             while (keys.hasNext())
@@ -549,7 +552,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 write(v);
             }
 
-            write('\n');
+            writeln(null);
         }
 
         /**
@@ -574,7 +577,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         public void writeComment(String comment) throws IOException
         {
-            write("# " + comment + "\n");
+            writeln("# " + comment);
         }
 
         /**
@@ -605,6 +608,22 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
 
             return newkey.toString();
+        }
+
+        /**
+         * Helper method for writing a line with the platform specific line
+         * ending.
+         *
+         * @param s the content of the line (may be <b>null</b>)
+         * @throws IOException if an error occurs
+         */
+        private void writeln(String s) throws IOException
+        {
+            if (s != null)
+            {
+                write(s);
+            }
+            write(LINE_SEPARATOR);
         }
 
     } // class PropertiesWriter
