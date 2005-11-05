@@ -18,7 +18,6 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
@@ -51,7 +50,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
  * <p>A specialized hierarchical configuration class that is able to parse XML
@@ -75,13 +73,10 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
  * @version $Revision$, $Date$
  */
-public class XMLConfiguration extends HierarchicalConfiguration implements FileConfiguration
+public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 {
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
-
-    /** A helper object for implementing the file configuration interface. */
-    private FileConfigurationDelegate delegate = new FileConfigurationDelegate();
 
     /** The document from this configuration's data source. */
     private Document document;
@@ -255,40 +250,6 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
 
     /**
-     * Adds a property to this configuration.
-     *
-     * @param key the key of the property
-     * @param obj the property's value
-     */
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        super.addPropertyDirect(key, obj);
-        delegate.possiblySave();
-    }
-
-    /**
-     * Removes the property with the given key.
-     *
-     * @param key the key of the property to remove
-     */
-    public void clearProperty(String key)
-    {
-        super.clearProperty(key);
-        delegate.possiblySave();
-    }
-
-    /**
-     * Removes all properties in the specified sub tree.
-     *
-     * @param key the key of the properties to be removed
-     */
-    public void clearTree(String key)
-    {
-        super.clearTree(key);
-        delegate.possiblySave();
-    }
-
-    /**
      * Removes all properties from this configuration. If this configuration
      * was loaded from a file, the associated DOM document is also cleared.
      */
@@ -296,18 +257,6 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         super.clear();
         document = null;
-    }
-
-    /**
-     * Sets the value of the specified property.
-     *
-     * @param key the key of the property
-     * @param value the new value
-     */
-    public void setProperty(String key, Object value)
-    {
-        super.setProperty(key, value);
-        delegate.possiblySave();
     }
 
     /**
@@ -509,41 +458,18 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     }
 
     /**
-     * Loads this configuration.
+     * Loads the configuration from the given input stream.
+     *
+     * @param in the input stream
      * @throws ConfigurationException if an error occurs
      */
-    public void load() throws ConfigurationException
-    {
-        delegate.load();
-    }
-
-    public void load(String fileName) throws ConfigurationException
-    {
-        delegate.load(fileName);
-    }
-
-    public void load(File file) throws ConfigurationException
-    {
-        delegate.load(file);
-    }
-
-    public void load(URL url) throws ConfigurationException
-    {
-        delegate.load(url);
-    }
-
     public void load(InputStream in) throws ConfigurationException
     {
         load(new InputSource(in));
     }
 
-    public void load(InputStream in, String encoding) throws ConfigurationException
-    {
-        delegate.load(in, encoding);
-    }
-
     /**
-     * Load the properties from the given reader.
+     * Load the configuration from the given reader.
      * Note that the <code>clear()</code> method is not called, so
      * the properties contained in the loaded file will be added to the
      * actual set of properties.
@@ -566,7 +492,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
     {
         try
         {
-            URL sourceURL = delegate.getURL();
+            URL sourceURL = getDelegate().getURL();
             if (sourceURL != null)
             {
                 source.setSystemId(sourceURL.toString());
@@ -583,36 +509,6 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         {
             throw new ConfigurationException(e.getMessage(), e);
         }
-    }
-
-    public void save() throws ConfigurationException
-    {
-        delegate.save();
-    }
-
-    public void save(String fileName) throws ConfigurationException
-    {
-        delegate.save(fileName);
-    }
-
-    public void save(File file) throws ConfigurationException
-    {
-        delegate.save(file);
-    }
-
-    public void save(URL url) throws ConfigurationException
-    {
-        delegate.save(url);
-    }
-
-    public void save(OutputStream out) throws ConfigurationException
-    {
-        delegate.save(out);
-    }
-
-    public void save(OutputStream out, String encoding) throws ConfigurationException
-    {
-        delegate.save(out, encoding);
     }
 
     /**
@@ -656,7 +552,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
 
         // clear document related properties
         copy.document = null;
-        copy.delegate = copy.new FileConfigurationDelegate();
+        copy.setDelegate(createDelegate());
         // clear all references in the nodes, too
         copy.getRoot().visit(new NodeVisitor()
         {
@@ -669,103 +565,15 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
         return copy;
     }
 
-    public String getFileName()
+    /**
+     * Creates the file configuration delegate for this object. This implementation
+     * will return an instance of a class derived from <code>FileConfigurationDelegate</code>
+     * that deals with some specialities of <code>XMLConfiguration</code>.
+     * @return the delegate for this object
+     */
+    protected FileConfigurationDelegate createDelegate()
     {
-        return delegate.getFileName();
-    }
-
-    public void setFileName(String fileName)
-    {
-        delegate.setFileName(fileName);
-    }
-
-    public String getBasePath()
-    {
-        return delegate.getBasePath();
-    }
-
-    public void setBasePath(String basePath)
-    {
-        delegate.setBasePath(basePath);
-    }
-
-    public File getFile()
-    {
-        return delegate.getFile();
-    }
-
-    public void setFile(File file)
-    {
-        delegate.setFile(file);
-    }
-
-    public URL getURL()
-    {
-        return delegate.getURL();
-    }
-
-    public void setURL(URL url)
-    {
-        delegate.setURL(url);
-    }
-
-    public void setAutoSave(boolean autoSave)
-    {
-        delegate.setAutoSave(autoSave);
-    }
-
-    public boolean isAutoSave()
-    {
-        return delegate.isAutoSave();
-    }
-
-    public ReloadingStrategy getReloadingStrategy()
-    {
-        return delegate.getReloadingStrategy();
-    }
-
-    public void setReloadingStrategy(ReloadingStrategy strategy)
-    {
-        delegate.setReloadingStrategy(strategy);
-    }
-
-    public void reload()
-    {
-        delegate.reload();
-    }
-
-    public String getEncoding()
-    {
-        return delegate.getEncoding();
-    }
-
-    public void setEncoding(String encoding)
-    {
-        delegate.setEncoding(encoding);
-    }
-
-    public boolean containsKey(String key)
-    {
-        reload();
-        return super.containsKey(key);
-    }
-
-    public Iterator getKeys(String prefix)
-    {
-        reload();
-        return super.getKeys(prefix);
-    }
-
-    public Object getProperty(String key)
-    {
-        reload();
-        return super.getProperty(key);
-    }
-
-    public boolean isEmpty()
-    {
-        reload();
-        return super.isEmpty();
+        return new XMLFileConfigurationDelegate();
     }
 
     /**
@@ -967,6 +775,7 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
          * @param parent the parent node
          * @param sibling1 the first sibling
          * @param sibling2 the second sibling
+         * @return the new node
          */
         protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
         {
@@ -1076,26 +885,11 @@ public class XMLConfiguration extends HierarchicalConfiguration implements FileC
      * used internally to implement the <code>FileConfiguration</code> methods
      * for <code>XMLConfiguration</code>, too.
      */
-    private class FileConfigurationDelegate extends AbstractFileConfiguration
+    private class XMLFileConfigurationDelegate extends FileConfigurationDelegate
     {
         public void load(InputStream in) throws ConfigurationException
         {
             XMLConfiguration.this.load(in);
-        }
-
-        public void load(Reader in) throws ConfigurationException
-        {
-            XMLConfiguration.this.load(in);
-        }
-
-        public void save(Writer out) throws ConfigurationException
-        {
-            XMLConfiguration.this.save(out);
-        }
-
-        public void clear()
-        {
-            XMLConfiguration.this.clear();
         }
     }
 }

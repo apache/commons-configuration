@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Iterator;
 
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
@@ -33,29 +34,17 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$
  */
-public abstract class AbstractHierarchicalFileConfiguration extends HierarchicalConfiguration implements FileConfiguration
+public abstract class AbstractHierarchicalFileConfiguration
+extends HierarchicalConfiguration implements FileConfiguration
 {
-    protected AbstractHierarchicalFileConfiguration.FileConfigurationDelegate delegate = new AbstractHierarchicalFileConfiguration.FileConfigurationDelegate();
+    /** Stores the delegate used for implementing functionality related to the
+     * <code>FileConfiguration</code> interface.
+     */
+    private FileConfigurationDelegate delegate = createDelegate();
 
-    protected class FileConfigurationDelegate extends AbstractFileConfiguration
+    protected AbstractHierarchicalFileConfiguration()
     {
-        public void load(Reader in) throws ConfigurationException
-        {
-            AbstractHierarchicalFileConfiguration.this.load(in);
-        }
-
-        public void save(Writer out) throws ConfigurationException
-        {
-            AbstractHierarchicalFileConfiguration.this.save(out);
-        }
-
-        public void clear()
-        {
-            AbstractHierarchicalFileConfiguration.this.clear();
-        }
     }
-
-    protected AbstractHierarchicalFileConfiguration() { }
 
     /**
      * Creates and loads the configuration from the specified file.
@@ -264,4 +253,83 @@ public abstract class AbstractHierarchicalFileConfiguration extends Hierarchical
         delegate.setEncoding(encoding);
     }
 
+    public boolean containsKey(String key)
+    {
+        reload();
+        return super.containsKey(key);
+    }
+
+    public Iterator getKeys(String prefix)
+    {
+        reload();
+        return super.getKeys(prefix);
+    }
+
+    public Object getProperty(String key)
+    {
+        reload();
+        return super.getProperty(key);
+    }
+
+    public boolean isEmpty()
+    {
+        reload();
+        return super.isEmpty();
+    }
+
+    /**
+     * Creates the file configuration delegate, i.e. the object that implements
+     * functionality required by the <code>FileConfiguration</code> interface.
+     * This base implementation will return an instance of the
+     * <code>FileConfigurationDelegate</code> class. Derived classes may
+     * override it to create a different delegate object.
+     *
+     * @return the file configuration delegate
+     */
+    protected FileConfigurationDelegate createDelegate()
+    {
+        return new FileConfigurationDelegate();
+    }
+
+    /**
+     * Returns the file configuration delegate.
+     *
+     * @return the delegate
+     */
+    protected FileConfigurationDelegate getDelegate()
+    {
+        return delegate;
+    }
+
+    /**
+     * Allows to set the file configuration delegate.
+     * @param delegate the new delegate
+     */
+    protected void setDelegate(FileConfigurationDelegate delegate)
+    {
+        this.delegate = delegate;
+    }
+
+    /**
+     * A special implementation of the <code>FileConfiguration</code> interface that is
+     * used internally to implement the <code>FileConfiguration</code> methods
+     * for hierarchical configurations.
+     */
+    protected class FileConfigurationDelegate extends AbstractFileConfiguration
+    {
+        public void load(Reader in) throws ConfigurationException
+        {
+            AbstractHierarchicalFileConfiguration.this.load(in);
+        }
+
+        public void save(Writer out) throws ConfigurationException
+        {
+            AbstractHierarchicalFileConfiguration.this.save(out);
+        }
+
+        public void clear()
+        {
+            AbstractHierarchicalFileConfiguration.this.clear();
+        }
+    }
 }
