@@ -98,19 +98,6 @@ public class TestEqualBehaviour  extends TestCase
         assertEquals(msg + ", Iterator End: ", it1.hasNext(), it2.hasNext());
     }
 
-    private void checkSameKeyVector(String msg, String key, Configuration c1, Configuration c2)
-    {
-        String [] s1 = c1.getStringArray(key);
-        String [] s2 = c2.getStringArray(key);
-
-        assertEquals(msg + ", length: ", s1.length, s2.length);
-
-        for (int i = 0; i < s1.length ; i++)
-        {
-            assertEquals(msg + ", String Array: ", s1[i], s2[i]);
-        }
-    }
-
     /**
      * Are both configurations equal after loading?
      */

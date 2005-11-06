@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Collection;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
