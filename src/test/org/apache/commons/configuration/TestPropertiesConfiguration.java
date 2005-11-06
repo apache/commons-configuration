@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+
 import junit.framework.TestCase;
 
 /**
@@ -417,5 +419,22 @@ public class TestPropertiesConfiguration extends TestCase
                 + EOL + EOL) == 0);
         assertTrue("Property could not be found", content
                 .indexOf("prop = value" + EOL) > 0);
+    }
+    
+    /**
+     * Tests what happens if a reloading strategy's <code>reloadingRequired()</code>
+     * implementation accesses methods of the configuration that in turn cause a reload.
+     */
+    public void testReentrantReload()
+    {
+        conf.setProperty("shouldReload", Boolean.FALSE);
+        conf.setReloadingStrategy(new FileChangedReloadingStrategy()
+        {
+            public boolean reloadingRequired()
+            {
+                return configuration.getBoolean("shouldReload");
+            }
+        });
+        assertFalse("Property has wrong value", conf.getBoolean("shouldReload"));
     }
 }

@@ -700,20 +700,29 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         synchronized (reloadLock)
         {
-            if (noReload == 0 && strategy.reloadingRequired())
+            if (noReload == 0)
             {
                 try
                 {
-                    clear();
-                    load();
+                    enterNoReload(); // avoid reentrant calls
 
-                    // notify the strategy
-                    strategy.reloadingPerformed();
+                    if (strategy.reloadingRequired())
+                    {
+                        clear();
+                        load();
+
+                        // notify the strategy
+                        strategy.reloadingPerformed();
+                    }
                 }
                 catch (Exception e)
                 {
                     e.printStackTrace();
                     // todo rollback the changes if the file can't be reloaded
+                }
+                finally
+                {
+                    exitNoReload();
                 }
             }
         }
