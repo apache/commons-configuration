@@ -731,7 +731,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
 
         /**
-         * Creates a new instance of {@link Node} and sets the name and the value.
+         * Creates a new instance of <code>Node</code> and sets the name and the value.
          *
          * @param name the node's name
          * @param value the value

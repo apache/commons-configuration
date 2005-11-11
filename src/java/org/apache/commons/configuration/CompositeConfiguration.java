@@ -319,7 +319,10 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * Returns the &quot;in memory configuration&quot;. In this configuration
+     * changes are stored.
+     *
+     * @return the in memory configuration
      */
     public Configuration getInMemoryConfiguration()
     {

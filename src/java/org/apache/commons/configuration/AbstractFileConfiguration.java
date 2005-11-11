@@ -36,8 +36,8 @@ import org.apache.commons.lang.StringUtils;
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
  * Developpers of file based configuration may want to extend this class,
- * the two methods left to implement are {@see AbstractFileConfiguration#load(Reader)}
- * and {@see AbstractFileConfiguration#save(Reader)}.</p>
+ * the two methods left to implement are <code>{@link FileConfiguration#load(Reader)}</code>
+ * and <code>{@link FileConfiguration#save(Writer)}.</p>
  * <p>This base class already implements a couple of ways to specify the location
  * of the file this configuration is based on. The following possibilities
  * exist:
