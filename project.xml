@@ -21,8 +21,9 @@
 <project>
   <pomVersion>3</pomVersion>
 
-  <id>commons-configuration</id>
-  <currentVersion>1.2-dev</currentVersion>
+  <groupId>commons-configuration</groupId>
+  <artifactId>commons-configuration</artifactId>
+  <currentVersion>1.2-SNAPSHOT</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
@@ -160,13 +161,13 @@
       <email>smanux@lfjr.net</email>
     </developer>
 	
-	<developer>
+    <developer>
       <name>Oliver Heger</name>
       <id>oheger</id>
       <email>oliver.heger@t-online.de</email>
       <organization>University Marburg</organization>
       <timezone>+1</timezone>
-	</developer>
+    </developer>
 
   </developers>
 
@@ -184,10 +185,9 @@
       <email>ksh@scand.com</email>
       <organization>scand.com</organization>
     </contributor>
-    
+
     <contributor>
       <name>Jamie M. Guillemette</name>
-      <id>jguillemette</id>
       <email>JMGuillemette@gmail.com</email>
       <organization>TD Bank</organization>
     </contributor>
@@ -296,63 +296,81 @@
       <groupId>spice</groupId>
       <artifactId>spice-jndikit</artifactId>
       <version>1.1</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>commons-dbcp</groupId>
       <artifactId>commons-dbcp</artifactId>
       <version>1.1</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>commons-pool</groupId>
       <artifactId>commons-pool</artifactId>
       <version>1.1</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
       <version>1.7.2.2</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>dbunit</groupId>
       <artifactId>dbunit</artifactId>
       <version>2.1</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>junit-addons</groupId>
       <artifactId>junit-addons</artifactId>
       <version>1.4</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>mockobjects</groupId>
       <artifactId>mockobjects-core</artifactId>
       <version>0.09</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
       <groupId>mockobjects</groupId>
       <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
       <version>0.09</version>
-      <scope>test</scope>
+      <properties>
+        <scope>test</scope>
+      </properties>
     </dependency>
 
     <dependency>
@@ -378,8 +396,6 @@
 
     <sourceDirectory>src/java</sourceDirectory>
     <unitTestSourceDirectory>src/test</unitTestSourceDirectory>
-    <integrationUnitTestSourceDirectory/>
-    <aspectSourceDirectories/>
 
     <!-- Unit test classes -->
     <unitTest>
