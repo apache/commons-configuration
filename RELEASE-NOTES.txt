@@ -1,7 +1,7 @@
 $Id$
 
                            Commons Configuration Package
-                               Version 1.1
+                               Version 1.2
                                  Release Notes
 
 
@@ -11,8 +11,9 @@ INTRODUCTION
 This document contains the release notes for this version of the Commons
 Configuration component, and highlights changes since the previous version.
 
-Release 1.1 contains new features and bug fixes as well. A complete list of
-changes can be obtained from the changelog report that is created when building
-with maven or can be viewed at
+Release 1.2 in the first line contains bug fixes, many of them related to file
+based configurations and reloading strategies. There are some new features as
+well. A complete list of changes can be obtained from the changelog report that
+is created when building with maven or can be viewed at
 
   http://jakarta.apache.org/commons/configuration/changes-report.html

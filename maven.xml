@@ -46,6 +46,7 @@ limitations under the License.
     </copy>
     <copy todir="${maven.dist.src.assembly.dir}">
       <fileset file="${basedir}/NOTICE.txt"/>
+      <fileset file="${basedir}/RELEASE-NOTES.txt"/>
     </copy>
   </postGoal>
   
@@ -53,6 +54,7 @@ limitations under the License.
   <preGoal name="dist:build-bin">
     <copy todir="${maven.dist.bin.assembly.dir}">
       <fileset file="${basedir}/NOTICE.txt"/>
+      <fileset file="${basedir}/RELEASE-NOTES.txt"/>
     </copy>
   </preGoal>
   
