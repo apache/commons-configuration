@@ -125,8 +125,8 @@ public class TestFileChangedReloadingStrategy extends TestCase
     public void testFromJar() throws Exception
     {
         XMLConfiguration config = new XMLConfiguration();
-        // use some jar: URL; the jar need not exist
-        config.setURL(new URL("jar:file:/D:/data/projects/OpenSource/commons-configuration/conf/resources.jar!/test-jar.xml"));
+        // use some jar: URL
+        config.setURL(new URL("jar:" + new File("conf/resources.jar").getAbsoluteFile().toURL() + "!/test-jar.xml"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
         File file = strategy.getFile();
