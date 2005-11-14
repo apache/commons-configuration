@@ -23,6 +23,14 @@
   <body>
 
     <release version="1.2-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="37486">
+        ConfigurationDynaBean now implements the java.util.Map interface (as
+        was stated in the javadocs). This was done by deriving the class from
+        ConfigurationMap.
+      </action>
+    </release>
+    
+    <release version="1.2-rc1" date="2005-11-11">
       <action dev="oheger" type="update" issue="36665">
         The reload() method in AbstractFileConfiguration was updated to prevent
         reentrant invocation, which may be caused by some methods when they

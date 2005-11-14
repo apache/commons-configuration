@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
@@ -46,13 +47,10 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$, $Date$
  * @since 1.0-rc1
  */
-public class ConfigurationDynaBean implements DynaBean
+public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 {
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
-
-    /** Stores the associated configuration instance.*/
-    Configuration configuration;
 
     /**
      * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
@@ -61,12 +59,11 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public ConfigurationDynaBean(Configuration configuration)
     {
+        super(configuration);
         if (log.isTraceEnabled())
         {
             log.trace("ConfigurationDynaBean(" + configuration + ")");
         }
-
-        this.configuration = configuration;
     }
 
     /**
@@ -90,7 +87,7 @@ public class ConfigurationDynaBean implements DynaBean
             Iterator iterator = list.iterator();
             while (iterator.hasNext())
             {
-                configuration.addProperty(name, iterator.next());
+                getConfiguration().addProperty(name, iterator.next());
             }
         }
         else if (value instanceof int[])
@@ -98,7 +95,7 @@ public class ConfigurationDynaBean implements DynaBean
             int[] array = (int[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Integer(array[i]));
+                getConfiguration().addProperty(name, new Integer(array[i]));
             }
         }
         else if (value instanceof boolean[])
@@ -106,7 +103,7 @@ public class ConfigurationDynaBean implements DynaBean
             boolean[] array = (boolean[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, BooleanUtils.toBooleanObject(array[i]));
+                getConfiguration().addProperty(name, BooleanUtils.toBooleanObject(array[i]));
             }
         }
         else if (value instanceof char[])
@@ -114,7 +111,7 @@ public class ConfigurationDynaBean implements DynaBean
             char[] array = (char[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Character(array[i]));
+                getConfiguration().addProperty(name, new Character(array[i]));
             }
         }
         else if (value instanceof byte[])
@@ -122,7 +119,7 @@ public class ConfigurationDynaBean implements DynaBean
             byte[] array = (byte[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Byte(array[i]));
+                getConfiguration().addProperty(name, new Byte(array[i]));
             }
         }
         else if (value instanceof short[])
@@ -130,7 +127,7 @@ public class ConfigurationDynaBean implements DynaBean
             short[] array = (short[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Short(array[i]));
+                getConfiguration().addProperty(name, new Short(array[i]));
             }
         }
         else if (value instanceof long[])
@@ -138,7 +135,7 @@ public class ConfigurationDynaBean implements DynaBean
             long[] array = (long[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Long(array[i]));
+                getConfiguration().addProperty(name, new Long(array[i]));
             }
         }
         else if (value instanceof float[])
@@ -146,7 +143,7 @@ public class ConfigurationDynaBean implements DynaBean
             float[] array = (float[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Float(array[i]));
+                getConfiguration().addProperty(name, new Float(array[i]));
             }
         }
         else if (value instanceof double[])
@@ -154,7 +151,7 @@ public class ConfigurationDynaBean implements DynaBean
             double[] array = (double[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, new Double(array[i]));
+                getConfiguration().addProperty(name, new Double(array[i]));
             }
         }
         else if (value instanceof Object[])
@@ -162,12 +159,12 @@ public class ConfigurationDynaBean implements DynaBean
             Object[] array = (Object[]) value;
             for (int i = 0; i < array.length; i++)
             {
-                configuration.addProperty(name, array[i]);
+                getConfiguration().addProperty(name, array[i]);
             }
         }
         else
         {
-            configuration.setProperty(name, value);
+            getConfiguration().setProperty(name, value);
         }
     }
 
@@ -182,14 +179,14 @@ public class ConfigurationDynaBean implements DynaBean
         }
 
         // get configuration property
-        Object result = configuration.getProperty(name);
+        Object result = getConfiguration().getProperty(name);
         if (result == null)
         {
             // otherwise attempt to create bean from configuration subset
-            Configuration subset = configuration.subset(name);
+            Configuration subset = getConfiguration().subset(name);
             if (!subset.isEmpty())
             {
-                result = new ConfigurationDynaBean(configuration.subset(name));
+                result = new ConfigurationDynaBean(getConfiguration().subset(name));
             }
         }
 
@@ -210,7 +207,7 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public boolean contains(String name, String key)
     {
-        Configuration subset = configuration.subset(name);
+        Configuration subset = getConfiguration().subset(name);
         if (subset == null)
         {
             throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
@@ -226,7 +223,7 @@ public class ConfigurationDynaBean implements DynaBean
     {
         try
         {
-            List list = configuration.getList(name);
+            List list = getConfiguration().getList(name);
             if (list.isEmpty())
             {
                 throw new IllegalArgumentException("Indexed property '" + name + "' does not exist.");
@@ -245,7 +242,7 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public Object get(String name, String key)
     {
-        Configuration subset = configuration.subset(name);
+        Configuration subset = getConfiguration().subset(name);
         if (subset == null)
         {
             throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
@@ -259,7 +256,7 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public DynaClass getDynaClass()
     {
-        return new ConfigurationDynaClass(configuration);
+        return new ConfigurationDynaClass(getConfiguration());
     }
 
     /**
@@ -267,7 +264,7 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public void remove(String name, String key)
     {
-        Configuration subset = configuration.subset(name);
+        Configuration subset = getConfiguration().subset(name);
         if (subset == null)
         {
             throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
@@ -282,7 +279,7 @@ public class ConfigurationDynaBean implements DynaBean
     {
         try
         {
-            Object property = configuration.getProperty(name);
+            Object property = getConfiguration().getProperty(name);
 
             if (property == null)
             {
@@ -300,7 +297,7 @@ public class ConfigurationDynaBean implements DynaBean
             }
             else if (index == 0)
             {
-                configuration.setProperty(name, value);
+                getConfiguration().setProperty(name, value);
             }
             else
             {
@@ -318,7 +315,7 @@ public class ConfigurationDynaBean implements DynaBean
      */
     public void set(String name, String key, Object value)
     {
-        configuration.setProperty(name + "." + key, value);
+        getConfiguration().setProperty(name + "." + key, value);
     }
 
 }
