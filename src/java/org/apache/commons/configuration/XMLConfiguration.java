@@ -67,6 +67,35 @@ import org.xml.sax.helpers.DefaultHandler;
  * other documents (e.g. to a DTD), these references are resolved based on the
  * path set for this configuration.</p>
  *
+ * <p>By inheriting from <code>{@link AbstractConfiguration}</code> this class
+ * provides some extended functionaly, e.g. interpolation of property values.
+ * Like in <code>{@link PropertiesConfiguration}</code> property values can
+ * contain delimiter characters (the comma ',' per default) and are then splitted
+ * into multiple values. This works for XML attributes and text content of
+ * elements as well. The delimiter can be escaped by a backslash. As an example
+ * consider the following XML fragment:</p>
+ *
+ * <p>
+ * <pre>
+ * &lt;config&gt;
+ *   &lt;array&gt;10,20,30,40&lt;/array&gt;
+ *   &lt;scalar&gt;3\,1415&lt;/scalar&gt;
+ *   &lt;cite text="To be or not to be\, this is the question!"/&gt;
+ * &lt;/config&gt;
+ * </pre>
+ * </p>
+ * <p>Here the content of the <code>array</code> element will be splitted at
+ * the commas, so the <code>array</code> key will be assigned 4 values. In the
+ * <code>scalar</code> property and the <code>text</code> attribute of the
+ * <code>cite</code> element the comma is escaped, so that no splitting is
+ * performed.</p>
+ *
+ * <p><code>XMLConfiguration</code> implements the <code>{@link FileConfiguration}</code>
+ * interface and thus provides full support for loading XML documents from
+ * different sources like files, URLs, or streams. A full description of these
+ * features can be found in the documentation of
+ * <code>{@link AbstractFileConfiguration}</code>.</p>
+ *
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible

@@ -28,7 +28,7 @@
  	 		This section explains how to use hierarchical
     		and structured XML datasets.
     	</p>
-    </section>	
+    </section>
 
 	<section name="Hierarchical properties">
 		<p>
@@ -52,8 +52,13 @@
     <text>#000000</text>
     <header>#008000</header>
     <link normal="#000080" visited="#800080"/>
+    <default>${colors.header}</default>
   </colors>
   <rowsPerPage>15</rowsPerPage>
+  <buttons>
+    <name>OK,Cancel,Help</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
 </gui-definition>
 ]]></source>
 			<p>
@@ -84,14 +89,17 @@ catch(ConfigurationException cex)
                 The following fragment shows how the properties can be accessed:
 			</p>
    			<source><![CDATA[
-String backColor = config.getString("color.background");
-String textColor = config.getString("color.text");
-String linkNormal = config.getString("color.link[@normal]");
+String backColor = config.getString("colors.background");
+String textColor = config.getString("colors.text");
+String linkNormal = config.getString("colors.link[@normal]");
+String defColor = config.getString("colors.default");
 int rowsPerPage = config.getInt("rowsPerPage");
+List buttons = config.getList("buttons.name");
 ]]></source>
 			<p>
-				This listing demonstrates some important points of constructing
-				keys for accessing properties load from XML documents:
+				This listing demonstrates some important points about constructing
+				keys for accessing properties load from XML documents and about
+                features of <code>XMLConfiguration</code> in general:
 				<ul>
 					<li>
 						Nested elements are accessed using a dot notation. In
@@ -110,6 +118,27 @@ int rowsPerPage = config.getInt("rowsPerPage");
 						Attributes of XML elements are accessed in a XPath like
 						notation.
 					</li>
+                    <li>
+                        Interpolation can be used as in <code>PropertiesConfiguration</code>.
+                        Here the <code>&lt;default&gt;</code> element in the
+                        <code>colors</code> section refers to another color.
+                    </li>
+                    <li>
+                        Lists of properties can be defined in a short form using
+                        the delimiter character (which is the comma by default).
+                        In this example the <code>buttons.name</code> property
+                        has the three values <em>OK</em>, <em>Cancel</em>, and
+                        <em>Help</em>, so it is queried using the <code>getList()</code>
+                        method. This works in attributes, too. Using the static
+                        <code>setDelimiter()</code> method of
+                        <code>AbstractConfiguration</code> you can globally
+                        define a different delimiter character or -
+                        by setting the delimiter to 0 - disabling this mechanism
+                        completely. Placing a backslash before a delimiter
+                        character will escape it. This is demonstrated in the
+                        <code>pattern</code> attribute of the <code>numberFormat</code>
+                        element.
+                    </li>
 				</ul>
 			</p>
             <p>

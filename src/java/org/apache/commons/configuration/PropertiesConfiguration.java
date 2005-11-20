@@ -67,8 +67,15 @@ import org.apache.commons.lang.StringUtils;
  *   is placed at the end of the line that continues below.
  *  </li>
  *  <li>
- *   If <i>value</i> is a list of strings, each token is separated
- *   by a comma ',' by default.
+ *   <i>value</i> can contain <em>value delimiters</em> and will then be interpreted
+ *   as a list of tokens. Default value delimiter is the comma ','. So the
+ *   following property definition
+ * <pre>
+ *  key = This property, has multiple, values
+ * </pre>
+ *   will result in a property with three values. You can change the value
+ *   delmiter using the <code>{@link AbstractConfiguration#setDelimiter(char)}</code>
+ *   method. Setting the delimiter to 0 will disable value splitting completely.
  *  </li>
  *  <li>
  *   Commas in each token are escaped placing a backslash right before

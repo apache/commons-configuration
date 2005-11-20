@@ -56,6 +56,26 @@ Configuration config = new PropertiesConfiguration("usergui.properties");
             <li>in the classpath</li>
           </ul>
         </p>
+        <p>
+          Instead of using a constructor that takes a file name you can also
+          invoke one of the <code>load()</code> methods. There are several
+          overloaded variants that allow to load properties from
+          <ul>
+            <li>a file, specified by either a path or a <code>java.io.File</code>
+            object</li>
+            <li>a URL</li>
+            <li>an input stream or a reader.</li>
+          </ul>
+        </p>
+        <p>
+          Note that the <code>load()</code> methods do not empty the
+          configuration before new data is loaded. This makes it easy to
+          construct union configurations by simply calling <code>load()</code>
+          multiple times. But if you want to reuse a <code>Configuration</code>
+          object and load a different file, remember to call the
+          <code>clear()</code> method first to ensure that old properties are
+          wiped out.
+        </p>
       </subsection>
 
       <subsection name="Includes">

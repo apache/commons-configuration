@@ -27,7 +27,11 @@ import java.util.Iterator;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
- * Base class for implementing file based hierarchical configurations.
+ * <p>Base class for implementing file based hierarchical configurations.</p>
+ * <p>This class serves an analogous purpose as the
+ * <code>{@link AbstractFileConfiguration}</code> class for non hierarchical
+ * configurations. It behaves in exactly the same way, so please refer to the
+ * documentation of <code>AbstractFileConfiguration</code> for further details.</p>
  *
  * @since 1.2
  *
