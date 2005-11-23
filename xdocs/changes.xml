@@ -22,7 +22,7 @@
 
   <body>
 
-    <release version="1.2-dev" date="in SVN">
+    <release version="1.2-rc2" date="2005-11-23">
       <action dev="oheger" type="update" issue="37486">
         ConfigurationDynaBean now implements the java.util.Map interface (as
         was stated in the javadocs). This was done by deriving the class from
