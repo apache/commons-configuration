@@ -21,36 +21,45 @@
     <body>
 
         <category name="Version 1.1" description="">
-            <task status="">
-                delimiter for comma separated values revamp
-            </task>
-            <task status="">
-                add DatabaseConfiguration support to the ConfigurationFactory
-            </task>
-            <task status="">
+            <task status="partly done">
                 reloadable configurations
             </task>
-            <task status="">
+            <task status="done">
                 web configurations
             </task>
-            <task status="">
+            <task status="done">
                 additionnal types (URL, Locale, Date, Calendar, Color)
             </task>
-            <task status="">
+            <task status="done">
                 list setters/getters for all types
+            </task>
+        </category>
+
+        <category name="Version 1.2" description="">
+            <task status="done">
+                support for configurations in the NeXT / OpenStep or Mac OS X format
+            </task>
+            <task status="done">
+                support for validation of XML configurations
+            </task>
+        </category>
+
+        <category name="Version 1.3" description="">
+            <task status="">
+                support for XPATH queries
+            </task>
+            <task status="">
+                delimiter for comma separated values revamp
             </task>
             <task status="">
                 INI file support
             </task>
             <task status="">
-                system properties interpolation (Bug 26066)
+                enhanced interpolation support
             </task>
             <task status="">
                 ConfigurationFactory refactoring for pluggable extensions
             </task>
-        </category>
-
-        <category name="Version 1.2" description="">
             <task status="">
                 Windows configuration (Registry wrapper)
             </task>
@@ -59,7 +68,7 @@
             </task>
         </category>
 
-        <category name="Version 1.3" description="">
+        <category name="Version 1.4" description="">
             <task status="">
                 JMX integration ?
             </task>
@@ -68,15 +77,6 @@
             </task>
             <task status="">
                 observable configurations ?
-            </task>
-        </category>
-
-        <category name="Version 2.0" description="">
-            <task status="">
-                Pluggable query engine
-            </task>
-            <task status="">
-                Configuration interface refactoring for hierarchical configurations.
             </task>
         </category>
 
