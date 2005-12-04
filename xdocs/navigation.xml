@@ -29,13 +29,14 @@
 
 	<menu name="Configuration">
       <item name="Home"                         href="/index.html"/>  
-      <item name="Download"                     href="http://jakarta.apache.org/site/sourceindex.cgi#commons-configuration"/>  
+      <item name="Download"                     href="http://jakarta.apache.org/site/downloads/downloads_commons-configuration.cgi"/>  
       <item name="Using Configuration"          href="/overview.html"/>
       <item name="Properties Howto"             href="/howto_properties.html"/>
       <item name="XML Howto"                    href="/howto_xml.html"/>
       <item name="ConfigurationFactory Howto"   href="/howto_configurationfactory.html"/>      
       <item name="Composite Config Howto"       href="/howto_compositeconfiguration.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
+      <item name="Building"                     href="/building.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
       <item name="Javadoc (latest)"             href="/apidocs/index.html"/>
       <item name="Javadoc (Release 1.1)"        href="/apidocs_1.1/index.html"/>

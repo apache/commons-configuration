@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2004-2005 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+    <properties>
+        <title>Building</title>
+        <author email="oheger@apache.org">Oliver Heger</author>
+    </properties>
+
+    <body>
+
+        <section name="Overview">
+          <p>
+            Commons Configuration can be built using
+            <a href="http://maven.apache.org">maven</a> or
+            <a href="http://ant.apache.org">ant</a>. While building on a JDK
+            1.4 and higher should be no problem for JDK 1.3 (which is the
+            minimum required JDK) some preparations are necessary. This is
+            covered in full detail in the Building with JDK 1.3 section below.
+          </p>
+        </section>
+
+        <section name="Maven Goals">
+          <p>
+            Maven 1.x is our recommended build tool. To build the Configuration
+            jar file, change into the directory where you unzipped the source
+            distribution or where you checked out the sources from SVN and run
+            "maven jar". The result will be in the (newly created) "target"
+            subdirectory.
+          </p>
+          <p>
+            To build the Javadocs, run "maven javadoc".
+            The result will be in "target/docs/apidocs".
+          </p>
+          <p>
+            To build the full website, run "maven site". <em>Note:</em> For this
+            to work you will also have to checkout the 
+            <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/commons-build/trunk/">
+            <code>commons-build</code></a> module as a sibling directory to your
+            Configuration root directory.
+            The result will be in "target/docs".
+          </p>
+        </section>
+
+        <section name="Ant Goals">
+          <p>
+            To build a jar file, change into Configuration's root directory and run "ant jar".
+            The result will be in the "target" subdirectory.
+          </p>
+          <p>
+            To build the Javadocs, run "ant javadoc".
+            The result will be in "target/docs/apidocs".
+          </p>
+        </section>
+        
+        <section name="Building with JDK 1.3">
+          <a ref="JDK13"></a>
+          <p>
+            If you want to build Commons Configuration on a JDK 1.3, you will
+            face two problems:
+          </p>
+          <p>
+            The first problem is that JDK 1.3 does not contain the JDBC 2.0
+            standard extensions, which are used by the
+            <code>DatabaseConfiguration</code> class. Unfortunately, due to legal
+            issues, the jar file containing these extensions cannot be
+            distributed through the typical maven repositories and automatically
+            downloaded. To resolve this issue perform the following steps:
+          </p>
+          <p>
+            <ul>
+              <li>Download the JDBC 2.0 Optional Package from
+              <a href="http://java.sun.com/products/jdbc/download.html">
+              http://java.sun.com/products/jdbc/download.html</a> and store
+              the jdbc-stdext-2.0.jar somewhere on your hard disk.</li>
+              <li>Create a <code>build.properties</code> file in the Configuration
+              root directory that must contain the following line:<br/>
+              <code>dependency.jdbc = <em>&lt;path to jdbc-stdext-2.0.jar&gt;</em></code></li>
+            </ul>
+          </p>
+          <p>
+            The second problem is related to a test class for
+            <code>DatabaseConfiguration</code> that makes use of
+            <a href="http://hsqldb.org">hsqldb</a>. At the time of writing this, the
+            hsqldb jar files distributed on the ibiblio maven repository only
+            support JDK 1.4 and higher. This makes the tests fail with a class
+            not found exception for <code>java.sql.SavePoint</code>. There are
+            some workarounds for this problem:
+          </p>
+          <p>
+            <ul>
+              <li>Disable the failing test class
+              (<code>org.apache.commons.configuration.TestDatabaseConfiguration</code>)
+              in the build script. For instance if building with maven, this can
+              be done with an <code>excludes</code> element in the
+              <code>unitTest</code> section of <code>project.xml</code>.</li>
+              <li>It is possible to download a hsqldb distribution and recompile
+              on JDK 1.3. The jar that is created this way will cause no
+              problems on a JDK 1.3.</li>
+              <li>Another solution would be to run maven on a JDK 1.4 or higher and use
+              the <code>maven.compile.executable</code> property to point to
+              a JDK 1.3 compiler. This will ensure that the classes are compiled
+              on JDK 1.3, but the tests are run on the JDK maven is executing.
+              Refer to the documentation of the
+              <a href="http://maven.apache.org/maven-1.x/reference/plugins/java/">
+              Maven Java Plug-in</a> for further information.</li>
+            </ul>
+          </p>
+          <p>
+            If these problems are solved, the build can be performed as
+            described above.
+          </p>
+        </section>
+    </body>
+
+</document>
