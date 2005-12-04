@@ -28,7 +28,7 @@ import java.util.Set;
  * {@link org.apache.commons.configuration.Configuration}
  * instance to provide a <code>Map</code> interface.</p>
  *
- * @todo This implementation is incomplete.
+ * <p><em>Note:</em> This implementation is incomplete.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  * @version $Revision$, $Date$
