@@ -42,7 +42,7 @@ public class ConfigurationDynaClass implements DynaClass
     private static Log log = LogFactory.getLog(ConfigurationDynaClass.class);
 
     /** Stores the associated configuration.*/
-    Configuration configuration;
+    private Configuration configuration;
 
     /**
      * Construct an instance of a <code>ConfigurationDynaClass</code>

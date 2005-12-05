@@ -155,10 +155,10 @@ import org.apache.commons.lang.StringUtils;
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
     /** The list of possible key/value separators */
-    private static final char[] SEPARATORS = new char[] { '=', ':' };
+    private static final char[] SEPARATORS = new char[] {'=', ':'};
 
     /** The white space characters used as key/value separators. */
-    private static final char[] WHITE_SPACE = new char[] { ' ', '\t', '\f' };
+    private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
 
     /**
      * The default encoding (ISO-8859-1 as specified by

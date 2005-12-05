@@ -39,18 +39,7 @@ public class ConfigurationMap extends AbstractMap
     /**
      * The <code>Configuration</code> wrapped by this class.
      */
-    Configuration configuration;
-
-    /**
-     * Returns the wrapped <code>Configuration</code> object.
-     *
-     * @return the wrapped configuration
-     * @since 1.2
-     */
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
+    private Configuration configuration;
 
     /**
      * Creates a new instance of a <code>ConfigurationMap</code>
@@ -62,6 +51,17 @@ public class ConfigurationMap extends AbstractMap
     public ConfigurationMap(Configuration configuration)
     {
         this.configuration = configuration;
+    }
+
+    /**
+     * Returns the wrapped <code>Configuration</code> object.
+     *
+     * @return the wrapped configuration
+     * @since 1.2
+     */
+    public Configuration getConfiguration()
+    {
+        return configuration;
     }
 
     /**
