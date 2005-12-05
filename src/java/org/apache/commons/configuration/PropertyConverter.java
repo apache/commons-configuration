@@ -538,18 +538,20 @@ public final class PropertyConverter
                     color = color.substring(1);
                 }
 
-                int red = Integer.parseInt(color.substring(0, 2), 16);
-                int green = Integer.parseInt(color.substring(2, 4), 16);
-                int blue = Integer.parseInt(color.substring(4, 6), 16);
+                int[] components = new int[3];
+                for (int i = 0; i < components.length; i++) {
+                    components[i] = Integer.parseInt(color.substring(i, i + 2), HEX_RADIX);
+                }
+
                 int alpha = 255;
 
                 // parse the transparency
                 if (color.length() >= 8)
                 {
-                    alpha = Integer.parseInt(color.substring(6, 8), 16);
+                    alpha = Integer.parseInt(color.substring(6, 8), HEX_RADIX);
                 }
 
-                return new Color(red, green, blue, alpha);
+                return new Color(components[0], components[1], components[2], alpha);
             }
             catch (Exception e)
             {
