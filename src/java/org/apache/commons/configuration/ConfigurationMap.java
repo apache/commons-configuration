@@ -91,12 +91,20 @@ public class ConfigurationMap extends AbstractMap
         return configuration.getProperty(String.valueOf(key));
     }
 
+    /**
+     * Set of entries in the map.
+     */
     static class ConfigurationSet extends AbstractSet
     {
+        /** The configuration mapped to this entry set. */
         private Configuration configuration;
 
-        private class Entry implements Map.Entry
+        /**
+         * A Map entry in the ConfigurationMap.
+         */
+        private final class Entry implements Map.Entry
         {
+            /** The key of the map entry. */
             private Object key;
 
             private Entry(Object key)
@@ -120,11 +128,14 @@ public class ConfigurationMap extends AbstractMap
                 configuration.setProperty((String) key, value);
                 return old;
             }
-
         }
 
-        private class ConfigurationSetIterator implements Iterator
+        /**
+         * Iterator over the entries in the ConfigurationMap.
+         */
+        private final class ConfigurationSetIterator implements Iterator
         {
+            /** An iterator over the keys in the configuration. */
             private Iterator keys;
 
             private ConfigurationSetIterator()
@@ -146,7 +157,6 @@ public class ConfigurationMap extends AbstractMap
             {
                 keys.remove();
             }
-
         }
 
         ConfigurationSet(Configuration configuration)

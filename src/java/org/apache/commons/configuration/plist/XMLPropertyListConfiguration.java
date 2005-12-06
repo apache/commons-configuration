@@ -115,6 +115,7 @@ import org.xml.sax.InputSource;
  */
 public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
 
     /**
@@ -122,7 +123,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      * used to synthesize a new plist file by adding values and
      * then saving().
      */
-    public XMLPropertyListConfiguration() { }
+    public XMLPropertyListConfiguration()
+    {
+    }
 
     /**
      * Creates and loads the property list from the specified file.
@@ -424,18 +427,17 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     public static class PListNode extends Node
     {
+        /** The standard format of dates in plist files. */
         private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
-        public void addChild(Node child)
-        {
-            super.addChild(child);
-        }
-
-        public void setName(String string)
-        {
-            super.setName(string);
-        }
-
+        /**
+         * Update the value of the node. If the existing value is null, it's
+         * replaced with the new value. If the existing value is a list, the
+         * specified value is appended to the list. If the existing value is
+         * not null, a list with the two values is built.
+         *
+         * @param value the value to be added
+         */
         public void addValue(Object value)
         {
             if (getValue() == null)
@@ -456,6 +458,11 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
         }
 
+        /**
+         * Parse the specified string as a date and add it to the values of the node.
+         *
+         * @param value the value to be added
+         */
         public void addDateValue(String value)
         {
             try
@@ -468,31 +475,58 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
         }
 
+        /**
+         * Parse the specified string as a byte array in base 64 format
+         * and add it to the values of the node.
+         *
+         * @param value the value to be added
+         */
         public void addDataValue(String value)
         {
             addValue(Base64.decodeBase64(value.getBytes()));
         }
 
+        /**
+         * Parse the specified string as an Interger and add it to the values of the node.
+         *
+         * @param value the value to be added
+         */
         public void addIntegerValue(String value)
         {
             addValue(new Integer(value));
         }
 
+        /**
+         * Parse the specified string as a Double and add it to the values of the node.
+         *
+         * @param value the value to be added
+         */
         public void addRealValue(String value)
         {
             addValue(new Double(value));
         }
 
+        /**
+         * Add a boolean value 'true' to the values of the node.
+         */
         public void addTrueValue()
         {
             addValue(Boolean.TRUE);
         }
 
+        /**
+         * Add a boolean value 'false' to the values of the node.
+         */
         public void addFalseValue()
         {
             addValue(Boolean.FALSE);
         }
 
+        /**
+         * Add a sublist to the values of the node.
+         *
+         * @param node the node whose value will be added to the current node value
+         */
         public void addList(ArrayNode node)
         {
             addValue(node.getValue());
@@ -506,13 +540,24 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     public static class ArrayNode extends PListNode
     {
+        /** The list of values in the array. */
         private List list = new ArrayList();
 
+        /**
+         * Add an object to the array.
+         *
+         * @param value the value to be added
+         */
         public void addValue(Object value)
         {
             list.add(value);
         }
 
+        /**
+         * Return the list of values in the array.
+         *
+         * @return the {@link List} of values
+         */
         public Object getValue()
         {
             return list;

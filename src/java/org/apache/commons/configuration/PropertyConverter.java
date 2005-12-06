@@ -56,6 +56,14 @@ public final class PropertyConverter
     private static final int HEX_RADIX = 16;
 
     /**
+     * Private constructor prevents instances from being created.
+     */
+    private PropertyConverter()
+    {
+        // to prevent instanciation...
+    }
+
+    /**
      * Convert the specified object into a Boolean.
      *
      * @param value the value to convert
@@ -526,29 +534,42 @@ public final class PropertyConverter
         {
             return (Color) value;
         }
-        else if (value instanceof String && !StringUtils.isBlank((String) value) && ((String) value).length() >= 6)
+        else if (value instanceof String && !StringUtils.isBlank((String) value))
         {
+            String color = ((String) value).trim();
+
+            int[] components = new int[3];
+
+            // check the size of the string
+            int minlength = components.length * 2;
+            if (color.length() < minlength)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a Color");
+            }
+
+            // remove the leading #
+            if (color.startsWith("#"))
+            {
+                color = color.substring(1);
+            }
+
             try
             {
-                String color = ((String) value).trim();
-
-                // remove the leading #
-                if (color.startsWith("#"))
+                // parse the components
+                for (int i = 0; i < components.length; i++)
                 {
-                    color = color.substring(1);
-                }
-
-                int[] components = new int[3];
-                for (int i = 0; i < components.length; i++) {
                     components[i] = Integer.parseInt(color.substring(2 * i, 2 * i + 2), HEX_RADIX);
                 }
 
-                int alpha = 255;
-
                 // parse the transparency
-                if (color.length() >= 8)
+                int alpha;
+                if (color.length() >= minlength + 2)
                 {
-                    alpha = Integer.parseInt(color.substring(6, 8), HEX_RADIX);
+                    alpha = Integer.parseInt(color.substring(minlength, minlength + 2), HEX_RADIX);
+                }
+                else
+                {
+                    alpha = Color.black.getAlpha();
                 }
 
                 return new Color(components[0], components[1], components[2], alpha);

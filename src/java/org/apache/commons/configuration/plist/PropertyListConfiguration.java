@@ -66,6 +66,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
 
     /**
@@ -73,7 +74,9 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      * used to synthesize a new plist file by adding values and
      * then saving().
      */
-    public PropertyListConfiguration() { }
+    public PropertyListConfiguration()
+    {
+    }
 
     /**
      * Creates and loads the property list from the specified file.

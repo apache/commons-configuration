@@ -48,7 +48,7 @@ public abstract class AbstractConfiguration implements Configuration
     protected static final String END_TOKEN = "}";
 
     /** The property delimiter used while parsing (a comma). */
-    private static char DELIMITER = ',';
+    private static char delimiter = ',';
 
     /**
      * Whether the configuration should throw NoSuchElementExceptions or simply
@@ -64,7 +64,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public static void setDelimiter(char delimiter)
     {
-        AbstractConfiguration.DELIMITER = delimiter;
+        AbstractConfiguration.delimiter = delimiter;
     }
 
     /**
@@ -74,7 +74,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public static char getDelimiter()
     {
-        return AbstractConfiguration.DELIMITER;
+        return AbstractConfiguration.delimiter;
     }
 
     /**
@@ -108,7 +108,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public void addProperty(String key, Object value)
     {
-        Iterator it = PropertyConverter.toIterator(value, DELIMITER);
+        Iterator it = PropertyConverter.toIterator(value, getDelimiter());
         while (it.hasNext())
         {
             addPropertyDirect(key, it.next());

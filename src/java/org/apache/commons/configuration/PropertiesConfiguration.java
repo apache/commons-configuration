@@ -154,6 +154,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
+    /**
+     * This is the name of the property that can point to other
+     * properties file for including other properties files.
+     */
+    private static String include = "include";
+
     /** The list of possible key/value separators */
     private static final char[] SEPARATORS = new char[] {'=', ':'};
 
@@ -174,12 +180,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** Constant for the length of a unicode literal.*/
     private static final int UNICODE_LEN = 4;
-
-    /**
-     * This is the name of the property that can point to other
-     * properties file for including other properties files.
-     */
-    static String include = "include";
 
     /** Allow file inclusion or not */
     private boolean includesAllowed;
@@ -546,6 +546,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @param key the key of the property
          * @param value the value of the property
+         *
          * @throws IOException if an I/O error occurs
          */
         public void writeProperty(String key, Object value) throws IOException
@@ -567,6 +568,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @param key The key of the property
          * @param values The array of values of the property
+         *
+         * @throws IOException if an I/O error occurs
          */
         public void writeProperty(String key, List values) throws IOException
         {
@@ -830,6 +833,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     if (ArrayUtils.contains(WHITE_SPACE, c))
                     {
                         // do nothing, eat all white spaces
+                        state = 2;
                     }
                     else if (ArrayUtils.contains(SEPARATORS, c))
                     {
