@@ -540,7 +540,7 @@ public final class PropertyConverter
 
                 int[] components = new int[3];
                 for (int i = 0; i < components.length; i++) {
-                    components[i] = Integer.parseInt(color.substring(i, i + 2), HEX_RADIX);
+                    components[i] = Integer.parseInt(color.substring(2 * i, 2 * i + 2), HEX_RADIX);
                 }
 
                 int alpha = 255;
