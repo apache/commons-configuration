@@ -22,7 +22,7 @@
 
   <body>
 
-    <release version="1.2-rc3" date="in SVN">
+    <release version="1.2-rc3" date="2005-12-07">
       <action dev="oheger" type="update">
         Commons Configuration now declares a dependency to Xalan. As with
 	Xerces this dependency is only needed for JDK 1.3. It was introduced
