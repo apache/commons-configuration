@@ -59,7 +59,7 @@
                     </tr>
                     <tr>
                         <td>XMLConfiguration</td>
-                        <td>Java 1.4 or (xml-apis + xerces)</td>
+                        <td>Java 1.4 or (xml-apis + xerces + xalan)</td>
                     </tr>
                     <tr>
                         <td>XMLPropertiesConfiguration</td>
