@@ -13,7 +13,10 @@ Configuration component, and highlights changes since the previous version.
 
 Release 1.2 in the first line contains bug fixes, many of them related to file
 based configurations and reloading strategies. There are some new features as
-well. A complete list of changes can be obtained from the changelog report that
+well, e.g. the new plist package that provides support for configuration files
+in the NeXT / OpenStep format or support for validating XML configuration files.
+
+A complete list of changes can be obtained from the changelog report that
 is created when building with maven or can be viewed at
 
   http://jakarta.apache.org/commons/configuration/changes-report.html

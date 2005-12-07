@@ -16,7 +16,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<project default="jar:jar">
+<project default="jar:jar" xmlns:j="jelly:core" xmlns:maven="jelly:maven">
 
   <!-- ================================================================== -->
   <!-- START : C O M M O N S - B U I L D                                  -->
@@ -34,7 +34,19 @@ limitations under the License.
   <!-- ================================================================== -->
   <!-- END: C O M M O N S - B U I L D                                     -->
   <!-- ================================================================== -->
-  
+
+  <!-- Adds the jdbc-stdext to the dependency classpath if the
+       dependency.jdbc property is defined.
+  -->
+  <preGoal name="java:compile">
+    <j:if test="${dependency.jdbc != ''}">
+      <path id="extended.dependency.path">
+        <pathelement path="${dependency.jdbc}"/>
+      </path>
+      <maven:addPath id="maven.dependency.classpath" refid="extended.dependency.path"/>
+    </j:if>
+  </preGoal>
+    
   <!-- Ensures that the conf directory and NOTICE.txt are included in the 
        source distro.
    -->
@@ -48,6 +60,11 @@ limitations under the License.
       <fileset file="${basedir}/NOTICE.txt"/>
       <fileset file="${basedir}/RELEASE-NOTES.txt"/>
     </copy>
+    <mkdir dir="${maven.dist.src.assembly.dir}/xdocs"/>
+    <copy todir="${maven.dist.src.assembly.dir}/xdocs">
+      <fileset dir="${basedir}/xdocs">
+      </fileset>
+    </copy>
   </postGoal>
   
   <!-- Ensures that NOTICE.txt is added to the binary distro -->
@@ -56,6 +73,13 @@ limitations under the License.
       <fileset file="${basedir}/NOTICE.txt"/>
       <fileset file="${basedir}/RELEASE-NOTES.txt"/>
     </copy>
+    
+    <!-- Create a zip file containing the sources -->
+    <zip destfile="${maven.dist.bin.assembly.dir}/${maven.final.name}-ide.zip">
+      <zipfileset prefix="META-INF" dir="${basedir}"
+        includes="LICENSE*, NOTICE*"/>
+      <fileset dir="${basedir}/src/java" includes="**/*.java"/>
+    </zip>
   </preGoal>
   
   <!-- NonStringTestHolder.java contains tests shared by JUnit and Cactus

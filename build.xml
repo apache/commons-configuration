@@ -36,9 +36,10 @@
   <property name="javadocdir" value="dist/docs/api">
   </property>
   
-  <!-- Manual changes for dealing with the conf directory -->
+  <!-- Manual changes for dealing with the conf directory and jdbc dependency -->
   <property name="confdir" value="conf"/>
   <property name="targetconfdir" value="${defaulttargetdir}/${confdir}"/>
+  <property file="build.properties"/>
   <!-- Manual changes end -->
   
   <property name="final.name" value="commons-configuration-1.2RC2">
@@ -61,7 +62,14 @@
     <available property="Junit.present" classname="junit.framework.Test">
     </available>
   </target>
-  <target name="compile" description="o Compile the code" depends="get-deps">
+  
+  <!-- Copies the jdbc-stdext jar in the lib directory if the dependency is defined -->
+  <target name="copy-jdbc-dep" if="dependency.jdbc">
+    <copy todir="${libdir}" file="${dependency.jdbc}"/>
+  </target>
+  
+  <target name="compile" description="o Compile the code"
+    depends="get-deps, copy-jdbc-dep">
     <mkdir dir="${classesdir}">
     </mkdir>
     <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
@@ -241,6 +249,8 @@
     <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-codec/jars/commons-codec-1.3.jar">
     </get>
     <get dest="${libdir}/xerces-2.2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.2.1.jar">
+    </get>
+    <get dest="${libdir}/xalan-2.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xalan/jars/xalan-2.7.0.jar">
     </get>
     <get dest="${libdir}/xml-apis-2.0.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xml-apis/jars/xml-apis-2.0.2.jar">
     </get>
