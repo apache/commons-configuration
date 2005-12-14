@@ -34,6 +34,8 @@ import org.apache.commons.logging.LogFactory;
 /**
  * Miscellaneous utility methods for configurations.
  *
+ * @see ConfigurationConverter Utility methods to convert configurations.
+ *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
