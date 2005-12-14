@@ -36,7 +36,7 @@ import junit.framework.TestCase;
 public class TestFileConfiguration extends TestCase
 {
     private static final File TARGET_DIR = new File("target");
-    
+
     public void testSetURL() throws Exception
     {
         // http URL
@@ -51,6 +51,19 @@ public class TestFileConfiguration extends TestCase
         config.setURL(new URL("file:/temp/test.properties"));
         assertEquals("base path", "file:/temp/", config.getBasePath());
         assertEquals("file name", "test.properties", config.getFileName());
+    }
+
+    public void testSetURLWithParams() throws Exception
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        URL url = new URL(
+                "http://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
+        config.setURL(url);
+        assertEquals("Base path incorrect",
+                "http://issues.apache.org/bugzilla/", config.getBasePath());
+        assertEquals("File name incorrect", "show_bug.cgi", config
+                .getFileName());
+        assertEquals("URL was not correctly stored", url, config.getURL());
     }
 
     public void testLocations() throws Exception
@@ -131,7 +144,7 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests collaboration with ConfigurationFactory: Is the base path set on
      * loading is valid in file based configurations?
-     * 
+     *
      * @throws Exception if an error occurs
      */
     public void testWithConfigurationFactory() throws Exception
@@ -176,7 +189,7 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
-    
+
     /**
      * Tests if invalid URLs cause an exception.
      */
@@ -203,7 +216,7 @@ public class TestFileConfiguration extends TestCase
             //fine
         }
     }
-    
+
     /**
      * Tests if the URL used by the load() method is also used by save().
      */
@@ -266,7 +279,7 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
-    
+
     /**
      * Tests setting a file changed reloading strategy together with the auto
      * save feature.
@@ -304,7 +317,7 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
-    
+
     /**
      * Tests loading and saving a configuration file with a complicated path
      * name including spaces. (related to issue 35210)
@@ -355,7 +368,7 @@ public class TestFileConfiguration extends TestCase
             }
         }
     }
-    
+
     /**
      * Tests the getFile() method.
      */
@@ -369,7 +382,7 @@ public class TestFileConfiguration extends TestCase
         config.load();
         assertEquals(file, config.getFile());
     }
-    
+
     /**
      * Tests to invoke save() without explicitely setting a file name. This
      * will cause an exception.
@@ -388,7 +401,7 @@ public class TestFileConfiguration extends TestCase
         {
             //ok
         }
-        
+
         config = new PropertiesConfiguration();
         config.load("conf/test.properties");
         try
@@ -400,7 +413,7 @@ public class TestFileConfiguration extends TestCase
         {
             //ok
         }
-        
+
         config = new PropertiesConfiguration();
         config.load(file.toURL());
         try

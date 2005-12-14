@@ -641,6 +641,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         setBasePath(ConfigurationUtils.getBasePath(url));
         setFileName(ConfigurationUtils.getFileName(url));
+        sourceURL = url;
     }
 
     public void setAutoSave(boolean autoSave)
