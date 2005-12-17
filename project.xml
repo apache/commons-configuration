@@ -23,7 +23,7 @@
 
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <currentVersion>1.2</currentVersion>
+  <currentVersion>1.3-SNAPSHOT</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>
@@ -82,6 +82,11 @@
       <id>1.1</id>
       <name>1.1</name>
       <tag>CONFIGURATION_1_1</tag>
+    </version>
+    <version>
+      <id>1.2</id>
+      <name>1.2</name>
+      <tag>CONFIGURATION_1_2</tag>
     </version>
   </versions>
     

@@ -42,7 +42,7 @@
   <property file="build.properties"/>
   <!-- Manual changes end -->
   
-  <property name="final.name" value="commons-configuration-1.2">
+  <property name="final.name" value="commons-configuration-1.3-dev">
   </property>
   <path id="build.classpath">
     <fileset dir="${libdir}">
