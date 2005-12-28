@@ -356,10 +356,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Attr attr = (Attr) w3cNode;
                 for (Iterator it = PropertyConverter.split(attr.getValue(), getDelimiter()).iterator(); it.hasNext();)
                 {
-                    Node child = new XMLNode(ConfigurationKey.constructAttributeKey(attr.getName()),
+                    Node child = new XMLNode(attr.getName(),
                             elemRefs ? element : null);
                     child.setValue(it.next());
-                    node.addChild(child);
+                    node.addAttribute(child);
                 }
             }
         }
@@ -636,7 +636,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
             if (getReference() != null && document != null)
             {
-                if (ConfigurationKey.isAttributeKey(getName()))
+                if (isAttribute())
                 {
                     updateAttribute();
                 }
@@ -655,7 +655,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (getReference() != null)
             {
                 Element element = (Element) getReference();
-                if (ConfigurationKey.isAttributeKey(getName()))
+                if (isAttribute())
                 {
                     updateAttribute();
                 }
@@ -808,7 +808,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          */
         protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
         {
-            if (ConfigurationKey.isAttributeKey(newNode.getName()))
+            if (newNode.isAttribute())
             {
                 updateAttribute(parent, getElement(parent), newNode.getName());
                 return null;
@@ -850,7 +850,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (node != null && elem != null)
             {
-                List attrs = node.getChildren(name);
+                List attrs = node.getAttributes(name);
                 StringBuffer buf = new StringBuffer();
                 for (Iterator it = attrs.iterator(); it.hasNext();)
                 {
@@ -869,13 +869,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
                 if (buf.length() < 1)
                 {
-                    elem.removeAttribute(ConfigurationKey
-                            .removeAttributeMarkers(name));
+                    elem.removeAttribute(name);
                 }
                 else
                 {
-                    elem.setAttribute(ConfigurationKey
-                            .removeAttributeMarkers(name), buf.toString());
+                    elem.setAttribute(name, buf.toString());
                 }
             }
         }

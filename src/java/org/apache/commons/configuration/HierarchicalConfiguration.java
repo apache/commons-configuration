@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.collections.set.ListOrderedSet;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -239,9 +239,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         ConfigurationKey.KeyIterator it = new ConfigurationKey(key).iterator();
         Node parent = fetchAddNode(it, getRoot());
 
-        Node child = createNode(it.currentKey(true));
+        Node child = createNode(it.currentKey(false));
         child.setValue(obj);
-        parent.addChild(child);
+        if (it.isAttribute())
+        {
+            parent.addAttribute(child);
+        }
+        else
+        {
+            parent.addChild(child);
+        }
     }
 
     /**
@@ -323,13 +330,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             Node nd = (Node) it.next();
             nd.visit(visitor, null);
 
-            List children = visitor.getClone().getChildren();
-            if (children.size() > 0)
+            for (Iterator it2 = visitor.getClone().getChildren().iterator(); it2.hasNext();)
             {
-                for (int i = 0; i < children.size(); i++)
-                {
-                    result.getRoot().addChild((Node) children.get(i));
-                }
+                result.getRoot().addChild((Node) it2.next());
+            }
+            for (Iterator it2 = visitor.getClone().getAttributes().iterator(); it2.hasNext();)
+            {
+                result.getRoot().addAttribute((Node) it2.next());
             }
         }
 
@@ -450,6 +457,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             {
                 ((Node) it.next()).visit(visitor, key);
             }
+            for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+            {
+                ((Node) it.next()).visit(visitor, key);
+            }
         }
 
         return visitor.getKeyList().iterator();
@@ -528,8 +539,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
         else
         {
-            String key = keyPart.nextKey(true);
-            List children = node.getChildren(key);
+            String key = keyPart.nextKey(false);
+            List children = keyPart.isAttribute() ? node.getAttributes(key) : node.getChildren(key);
             if (keyPart.hasIndex())
             {
                 if (keyPart.getIndex() < children.size() && keyPart.getIndex() >= 0)
@@ -626,11 +637,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
     {
-        String keyPart = keyIt.nextKey(true);
+        String keyPart = keyIt.nextKey(false);
 
         if (keyIt.hasNext())
         {
-            List list = node.getChildren(keyPart);
+            List list = keyIt.isAttribute() ? node.getAttributes(keyPart) : node.getChildren(keyPart);
             int idx = (keyIt.hasIndex()) ? keyIt.getIndex() : list.size() - 1;
             if (idx < 0 || idx >= list.size())
             {
@@ -661,7 +672,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         if (keyIt.hasNext())
         {
-            Node child = createNode(keyIt.currentKey(true));
+            Node child = createNode(keyIt.currentKey(false));
+            child.setAttribute(keyIt.isAttribute());
             root.addChild(child);
             keyIt.next();
             return createAddPath(keyIt, child);
@@ -688,36 +700,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * A data class for storing (hierarchical) property information. A property
-     * can have a value and an arbitrary number of child properties.
-     *
+     * can have a value and an arbitrary number of child properties. From version 1.3 on this class
+     * is only a thin wrapper over the <code>{@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}</code>
+     * class that exists mainly for the purpose of backwards compatibility.
      */
-    public static class Node implements Serializable, Cloneable
+    public static class Node extends DefaultConfigurationNode implements Serializable
     {
-        /** Stores a reference to this node's parent. */
-        private Node parent;
-
-        /** Stores the name of this node. */
-        private String name;
-
-        /** Stores the value of this node. */
-        private Object value;
-
-        /** Stores a reference to an object this node is associated with. */
-        private Object reference;
-
-        /** Stores the children of this node. */
-        private LinkedMap children; // Explict type here or we
-
-        // will get a findbugs error
-        // because Map doesn't imply
-        // Serializable
-
         /**
          * Creates a new instance of <code>Node</code>.
          */
         public Node()
         {
-            this(null);
+            super();
         }
 
         /**
@@ -727,7 +721,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public Node(String name)
         {
-            setName(name);
+            super(name);
         }
 
         /**
@@ -738,58 +732,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public Node(String name, Object value)
         {
-            setName(name);
-            setValue(value);
-        }
-
-        /**
-         * Returns the name of this node.
-         *
-         * @return the node name
-         */
-        public String getName()
-        {
-            return name;
-        }
-
-        /**
-         * Returns the value of this node.
-         *
-         * @return the node value (may be <b>null </b>)
-         */
-        public Object getValue()
-        {
-            return value;
+            super(name, value);
         }
 
         /**
          * Returns the parent of this node.
          *
-         * @return this node's parent (can be <b>null </b>)
+         * @return this node's parent (can be <b>null</b>)
          */
         public Node getParent()
         {
-            return parent;
-        }
-
-        /**
-         * Sets the name of this node.
-         *
-         * @param string the node name
-         */
-        public void setName(String string)
-        {
-            name = string;
-        }
-
-        /**
-         * Sets the value of this node.
-         *
-         * @param object the node value
-         */
-        public void setValue(Object object)
-        {
-            value = object;
+            return (Node) getParentNode();
         }
 
         /**
@@ -799,123 +752,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public void setParent(Node node)
         {
-            parent = node;
-        }
-
-        /**
-         * Returns the reference object for this node.
-         *
-         * @return the reference object
-         */
-        public Object getReference()
-        {
-            return reference;
-        }
-
-        /**
-         * Sets the reference object for this node. A node can be associated
-         * with a reference object whose concrete meaning is determined by a sub
-         * class of <code>HierarchicalConfiguration</code>. In an XML
-         * configuration e.g. this reference could be an element in a
-         * corresponding XML document. The reference is used by the
-         * <code>BuilderVisitor</code> class when the configuration is stored.
-         *
-         * @param ref the reference object
-         */
-        public void setReference(Object ref)
-        {
-            reference = ref;
-        }
-
-        /**
-         * Adds the specified child object to this node. Note that there can be
-         * multiple children with the same name.
-         *
-         * @param child the child to be added
-         */
-        public void addChild(Node child)
-        {
-            if (children == null)
-            {
-                children = new LinkedMap();
-            }
-
-            List c = (List) children.get(child.getName());
-            if (c == null)
-            {
-                c = new ArrayList();
-                children.put(child.getName(), c);
-            }
-
-            c.add(child);
-            child.setParent(this);
-        }
-
-        /**
-         * Returns a list with the child nodes of this node.
-         *
-         * @return a list with the children (can be empty, but never <b>null
-         * </b>)
-         */
-        public List getChildren()
-        {
-            List result = new ArrayList();
-
-            if (children != null)
-            {
-                for (Iterator it = children.values().iterator(); it.hasNext();)
-                {
-                    result.addAll((Collection) it.next());
-                }
-            }
-
-            return result;
-        }
-
-        /**
-         * Returns a list with this node's children with the given name.
-         *
-         * @param name the name of the children
-         * @return a list with all chidren with this name; may be empty, but
-         * never <b>null </b>
-         */
-        public List getChildren(String name)
-        {
-            if (name == null || children == null)
-            {
-                return getChildren();
-            }
-
-            List list = new ArrayList();
-            List c = (List) children.get(name);
-            if (c != null)
-            {
-                list.addAll(c);
-            }
-
-            return list;
+            setParentNode(node);
         }
 
         /**
          * Returns a flag whether this node has child elements.
          *
-         * @return <b>true</b> if there a child node, <b>false</b> otherwise
+         * @return <b>true</b> if there is a child node, <b>false</b> otherwise
          */
         public boolean hasChildren()
         {
-            if (children != null)
-            {
-                for (Iterator it = children.values().iterator(); it.hasNext();)
-                {
-                    Collection nodes = (Collection) it.next();
-                    if (!nodes.isEmpty())
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            return getChildrenCount() > 0 || getAttributeCount() > 0;
         }
 
         /**
@@ -926,33 +773,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public boolean remove(Node child)
         {
-            if (children == null)
-            {
-                return false;
-            }
-
-            List c = (List) children.get(child.getName());
-            if (c == null)
-            {
-                return false;
-            }
-
-            else
-            {
-                if (c.remove(child))
-                {
-                    child.removeReference();
-                    if (c.isEmpty())
-                    {
-                        children.remove(child.getName());
-                    }
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
+            return child.isAttribute() ? removeAttribute(child) : removeChild(child);
         }
 
         /**
@@ -963,37 +784,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public boolean remove(String name)
         {
-            if (children == null)
-            {
-                return false;
-            }
-
-            List nodes = (List) children.remove(name);
-            if (nodes != null)
-            {
-                nodesRemoved(nodes);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /**
-         * Removes all children of this node.
-         */
-        public void removeChildren()
-        {
-            if (children != null)
-            {
-                Iterator it = children.values().iterator();
-                children = null;
-                while (it.hasNext())
-                {
-                    nodesRemoved((Collection) it.next());
-                }
-            }
+            boolean childrenRemoved = removeChild(name);
+            boolean attrsRemoved = removeAttribute(name);
+            return childrenRemoved || attrsRemoved;
         }
 
         /**
@@ -1015,24 +808,29 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 length = key.length();
                 if (getName() != null)
                 {
-                    key.append(StringUtils.replace(getName(), String
-                            .valueOf(ConfigurationKey.PROPERTY_DELIMITER),
-                            ConfigurationKey.ESCAPED_DELIMITER));
+                    key
+                            .append(StringUtils
+                                    .replace(
+                                            isAttribute() ? ConfigurationKey
+                                                    .constructAttributeKey(getName())
+                                                    : getName(),
+                                            String
+                                                    .valueOf(ConfigurationKey.PROPERTY_DELIMITER),
+                                            ConfigurationKey.ESCAPED_DELIMITER));
                 }
             }
 
             visitor.visitBeforeChildren(this, key);
 
-            if (children != null)
+            for (Iterator it = getChildren().iterator(); it.hasNext()
+                    && !visitor.terminate();)
             {
-                for (Iterator it = children.values().iterator(); it.hasNext() && !visitor.terminate();)
-                {
-                    Collection col = (Collection) it.next();
-                    for (Iterator it2 = col.iterator(); it2.hasNext() && !visitor.terminate();)
-                    {
-                        ((Node) it2.next()).visit(visitor, key);
-                    }
-                }
+                ((Node) it.next()).visit(visitor, key);
+            }
+            for (Iterator it = getAttributes().iterator(); it.hasNext()
+                    && !visitor.terminate();)
+            {
+                ((Node) it.next()).visit(visitor, key);
             }
 
             if (key != null)
@@ -1040,52 +838,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 key.setLength(length);
             }
             visitor.visitAfterChildren(this, key);
-        }
-
-        /**
-         * Creates a copy of this object. This is not a deep copy, the children
-         * are not cloned.
-         *
-         * @return a copy of this object
-         */
-        public Object clone()
-        {
-            try
-            {
-                Node copy = (Node) super.clone();
-                copy.children = null;
-                return copy;
-            }
-            catch (CloneNotSupportedException cex)
-            {
-                return null; // should not happen
-            }
-        }
-
-        /**
-         * Deals with the reference when a node is removed. This method is
-         * called for each removed child node. It can be overloaded in sub
-         * classes, for which the reference has a concrete meaning and remove
-         * operations need some update actions. This default implementation is
-         * empty.
-         */
-        protected void removeReference()
-        {
-        }
-
-        /**
-         * Helper method for calling <code>removeReference()</code> on a list
-         * of removed nodes. Used by methods that can remove multiple child
-         * nodes in one step.
-         *
-         * @param nodes collection with the nodes to be removed
-         */
-        private void nodesRemoved(Collection nodes)
-        {
-            for (Iterator it = nodes.iterator(); it.hasNext();)
-            {
-                ((Node) it.next()).removeReference();
-            }
         }
     }
 
@@ -1310,10 +1062,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
             Node copy = (Node) node.clone();
+            copy.setParentNode(null);
 
             if (!copyStack.isEmpty())
             {
-                ((Node) copyStack.peek()).addChild(copy);
+                if (node.isAttribute())
+                {
+                    ((Node) copyStack.peek()).addAttribute(copy);
+                }
+                else
+                {
+                    ((Node) copyStack.peek()).addChild(copy);
+                }
             }
 
             copyStack.push(copy);
@@ -1356,7 +1116,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
-            Iterator children = node.getChildren().iterator();
+            Collection subNodes = new LinkedList(node.getChildren());
+            subNodes.addAll(node.getAttributes());
+            Iterator children = subNodes.iterator();
             Node sibling1 = null;
             Node nd = null;
 

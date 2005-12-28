@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2005 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package org.apache.commons.configuration;
 
-import java.util.List;
+import java.util.Iterator;
 
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.xml.sax.Attributes;
@@ -165,14 +165,13 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
         protected Attributes fetchAttributes(Node node)
         {
             AttributesImpl attrs = new AttributesImpl();
-            List children = node.getChildren();
 
-            for (int i = 0; i < children.size(); i++)
+            for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
             {
-                Node child = (Node) children.get(i);
-                if (isAttributeNode(child) && child.getValue() != null)
+                Node child = (Node) it.next();
+                if (child.getValue() != null)
                 {
-                    String attr = ConfigurationKey.attributeName(child.getName());
+                    String attr = child.getName();
                     attrs.addAttribute(NS_URI, attr, attr, ATTR_TYPE, child.getValue().toString());
                 }
             }
@@ -203,7 +202,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          */
         private boolean isAttributeNode(Node node)
         {
-            return ConfigurationKey.isAttributeKey(node.getName());
+            return node.isAttribute();
         }
     }
 }

@@ -34,9 +34,9 @@ import junit.framework.TestCase;
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
     private static final String TEST_FILE = "conf/testHierarchicalXMLConfiguration.xml";
-    
+
     private HierarchicalConfigurationXMLReader parser;
-    
+
     protected void setUp() throws Exception
     {
         XMLConfiguration config =
@@ -50,13 +50,13 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
     {
         SAXReader reader = new SAXReader(parser);
         Document document = reader.read("someSysID");
-        
+
         Element root = document.getRootElement();
         assertEquals("config", root.getName());
         assertEquals(1, root.elements().size());
         Iterator itRoot = root.elementIterator();
         Element elemTabs = (Element) itRoot.next();
-        
+
         assertEquals(2, elemTabs.elements().size());
         List tables = elemTabs.elements();
         Element tabUsr = (Element) tables.get(0);
@@ -67,7 +67,7 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
         Element elemFields = tabUsr.element("fields");
         assertNotNull(elemFields);
         assertEquals(5, elemFields.elements().size());
-        
+
         List attribs = tabUsr.attributes();
         assertEquals(1, attribs.size());
         Attribute attr = (Attribute) attribs.get(0);
