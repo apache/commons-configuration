@@ -222,4 +222,23 @@ public class TestConfigurationKey extends TestCase
         assertTrue(it.hasIndex());
         assertEquals(0, it.getIndex());
     }
+    
+    /**
+     * Tests iterating over an attribute key that has an index.
+     */
+    public void testAttributeKeyWithIndex()
+    {
+        ConfigurationKey k = new ConfigurationKey(TESTATTR);
+        k.appendIndex(0);
+        assertEquals("Wrong attribute key with index", TESTATTR + "(0)", k.toString());
+        
+        ConfigurationKey.KeyIterator it = k.iterator();
+        assertTrue("No first element", it.hasNext());
+        it.next();
+        assertTrue("Index not found", it.hasIndex());
+        assertEquals("Incorrect index", 0, it.getIndex());
+        assertTrue("Attribute not found", it.isAttribute());
+        assertEquals("Wrong plain key", "dataType", it.currentKey(false));
+        assertEquals("Wrong decorated key", TESTATTR, it.currentKey(true));
+    }
 }

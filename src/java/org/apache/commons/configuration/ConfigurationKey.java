@@ -506,15 +506,9 @@ public class ConfigurationKey implements Serializable
             indexValue = -1;
             String key = findNextIndices();
 
-            attribute = checkAttribute(key);
-            if (!attribute)
-            {
-                hasIndex = checkIndex(key);
-                if (!hasIndex)
-                {
-                    current = key;
-                }
-            }
+            current = key;
+            hasIndex = checkIndex(key);
+            attribute = checkAttribute(current);
 
             return currentKey(decorated);
         }
