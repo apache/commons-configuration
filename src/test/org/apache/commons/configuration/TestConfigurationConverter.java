@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class TestConfigurationConverter extends TestCase
         assertEquals("'interpolated-array' property", "teststring,teststring", props.getProperty("interpolated-array"));
 
         // change the list delimiter
-        BaseConfiguration.setDelimiter(';');
+        config.setListDelimiter(';');
         props = ConfigurationConverter.getProperties(config);
         assertEquals("'array' property", "item 1;item 2", props.getProperty("array"));
     }

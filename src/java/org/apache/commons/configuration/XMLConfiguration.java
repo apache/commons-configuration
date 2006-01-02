@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.collections.iterators.SingletonIterator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -354,7 +355,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                for (Iterator it = PropertyConverter.split(attr.getValue(), getDelimiter()).iterator(); it.hasNext();)
+                Iterator it;
+                if (isDelimiterParsingDisabled())
+                {
+                    it = new SingletonIterator(attr.getValue());
+                }
+                else
+                {
+                    it = PropertyConverter.split(attr.getValue(), getListDelimiter()).iterator();
+                }
+                while (it.hasNext())
                 {
                     Node child = new XMLNode(attr.getName(),
                             elemRefs ? element : null);
@@ -376,8 +386,18 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         if (child.getValue() != null)
         {
-            List values = PropertyConverter.split(child.getValue().toString(),
-                    getDelimiter());
+            List values;
+            if (isDelimiterParsingDisabled())
+            {
+                values = new ArrayList();
+                values.add(child.getValue().toString());
+            }
+            else
+            {
+                values = PropertyConverter.split(child.getValue().toString(),
+                    getListDelimiter());
+            }
+
             if (values.size() > 1)
             {
                 // remove the original child
@@ -460,7 +480,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 document = newDocument;
             }
 
-            XMLBuilderVisitor builder = new XMLBuilderVisitor(document);
+            XMLBuilderVisitor builder = new XMLBuilderVisitor(document, getListDelimiter());
             builder.processDocument(getRoot());
             return document;
         } /* try */
@@ -692,7 +712,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 {
                     txtNode = document
                             .createTextNode(PropertyConverter.escapeDelimiters(
-                                    value.toString(), getDelimiter()));
+                                    value.toString(), getListDelimiter()));
                     if (((Element) getReference()).getFirstChild() != null)
                     {
                         ((Element) getReference()).insertBefore(txtNode,
@@ -706,7 +726,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 else
                 {
                     txtNode.setNodeValue(PropertyConverter.escapeDelimiters(
-                            value.toString(), getDelimiter()));
+                            value.toString(), getListDelimiter()));
                 }
             }
         }
@@ -717,7 +737,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          */
         private void updateAttribute()
         {
-            XMLBuilderVisitor.updateAttribute(getParent(), getName());
+            XMLBuilderVisitor.updateAttribute(getParent(), getName(), getListDelimiter());
         }
 
         /**
@@ -775,15 +795,21 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         /** Stores the document to be constructed. */
         private Document document;
+        
+        /** Stores the list delimiter.*/
+        private char listDelimiter = AbstractConfiguration.
+                getDefaultListDelimiter();
 
         /**
          * Creates a new instance of <code>XMLBuilderVisitor</code>
          *
          * @param doc the document to be created
+         * @param listDelimiter the delimiter for attribute properties with multiple values
          */
-        public XMLBuilderVisitor(Document doc)
+        public XMLBuilderVisitor(Document doc, char listDelimiter)
         {
             document = doc;
+            this.listDelimiter = listDelimiter;
         }
 
         /**
@@ -810,7 +836,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (newNode.isAttribute())
             {
-                updateAttribute(parent, getElement(parent), newNode.getName());
+                updateAttribute(parent, getElement(parent), newNode.getName(), listDelimiter);
                 return null;
             }
 
@@ -820,7 +846,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 if (newNode.getValue() != null)
                 {
                     elem.appendChild(document.createTextNode(
-                            PropertyConverter.escapeDelimiters(newNode.getValue().toString(), getDelimiter())));
+                            PropertyConverter.escapeDelimiters(newNode.getValue().toString(), listDelimiter)));
                 }
                 if (sibling2 == null)
                 {
@@ -845,8 +871,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param node the affected node
          * @param elem the element that is associated with this node
          * @param name the name of the affected attribute
+         * @param listDelimiter the delimiter vor attributes with multiple values
          */
-        private static void updateAttribute(Node node, Element elem, String name)
+        private static void updateAttribute(Node node, Element elem, String name, char listDelimiter)
         {
             if (node != null && elem != null)
             {
@@ -859,10 +886,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     {
                         if (buf.length() > 0)
                         {
-                            buf.append(getDelimiter());
+                            buf.append(listDelimiter);
                         }
                         buf.append(PropertyConverter.escapeDelimiters(attr
-                                .getValue().toString(), getDelimiter()));
+                                .getValue().toString(), getDefaultListDelimiter()));
                     }
                     attr.setReference(elem);
                 }
@@ -885,12 +912,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          *
          * @param node the affected node
          * @param name the name of the attribute
+         * @param listDelimiter the delimiter vor attributes with multiple values
          */
-        static void updateAttribute(Node node, String name)
+        static void updateAttribute(Node node, String name, char listDelimiter)
         {
             if (node != null)
             {
-                updateAttribute(node, (Element) node.getReference(), name);
+                updateAttribute(node, (Element) node.getReference(), name, listDelimiter);
             }
         }
 

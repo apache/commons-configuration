@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ import org.apache.commons.lang.StringUtils;
  *  key = This property, has multiple, values
  * </pre>
  *   will result in a property with three values. You can change the value
- *   delmiter using the <code>{@link AbstractConfiguration#setDelimiter(char)}</code>
+ *   delimiter using the <code>{@link AbstractConfiguration#setListDelimiter(char)}</code>
  *   method. Setting the delimiter to 0 will disable value splitting completely.
  *  </li>
  *  <li>
@@ -348,7 +348,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 {
                     if (getIncludesAllowed())
                     {
-                        String [] files = StringUtils.split(value, getDelimiter());
+                        String [] files;
+                        if (!isDelimiterParsingDisabled())
+                        {
+                            files = StringUtils.split(value, getListDelimiter());
+                        }
+                        else
+                        {
+                            files = new String[]{value};
+                        }
                         for (int i = 0; i < files.length; i++)
                         {
                             loadIncludeFile(files[i].trim());
@@ -357,7 +365,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
                 else
                 {
-                    addProperty(StringEscapeUtils.unescapeJava(key), unescapeJava(value, getDelimiter()));
+                    addProperty(StringEscapeUtils.unescapeJava(key), unescapeJava(value, getListDelimiter()));
                 }
 
             }
@@ -383,7 +391,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         enterNoReload();
         try
         {
-            PropertiesWriter out = new PropertiesWriter(writer, getDelimiter());
+            PropertiesWriter out = new PropertiesWriter(writer, getListDelimiter());
 
             if (header != null)
             {

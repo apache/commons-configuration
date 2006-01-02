@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -203,7 +203,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         {
             // escape the value
             String v = StringEscapeUtils.escapeXml(String.valueOf(value));
-            v = StringUtils.replace(v, String.valueOf(getDelimiter()), "\\" + getDelimiter());
+            v = StringUtils.replace(v, String.valueOf(getListDelimiter()), "\\" + getListDelimiter());
 
             out.println("  <entry key=\"" + k + "\">" + v + "</entry>");
         }

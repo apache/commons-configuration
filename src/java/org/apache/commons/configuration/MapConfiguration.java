@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -58,9 +58,9 @@ public class MapConfiguration extends AbstractConfiguration
     public Object getProperty(String key)
     {
         Object value = map.get(key);
-        if (value instanceof String)
+        if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
-            List list = PropertyConverter.split((String) value, getDelimiter());
+            List list = PropertyConverter.split((String) value, getListDelimiter());
             return list.size() > 1 ? list : value;
         }
         else

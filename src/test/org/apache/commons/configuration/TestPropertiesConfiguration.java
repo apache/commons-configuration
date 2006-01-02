@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -325,16 +325,41 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
     }
 
-    public void testChangingDelimiter() throws Exception
+    public void testChangingDefaultListDelimiter() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration(testProperties);
         assertEquals(4, pc.getList("test.mixed.array").size());
 
-        char delimiter = PropertiesConfiguration.getDelimiter();
-        PropertiesConfiguration.setDelimiter('^');
+        char delimiter = PropertiesConfiguration.getDefaultListDelimiter();
+        PropertiesConfiguration.setDefaultListDelimiter('^');
         pc = new PropertiesConfiguration(testProperties);
         assertEquals(2, pc.getList("test.mixed.array").size());
-        PropertiesConfiguration.setDelimiter(delimiter);
+        PropertiesConfiguration.setDefaultListDelimiter(delimiter);
+    }
+
+    public void testChangingListDelimiter() throws Exception
+    {
+        PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
+        assertEquals(4, pc1.getList("test.mixed.array").size());
+
+        PropertiesConfiguration pc2 = new PropertiesConfiguration();
+        pc2.setListDelimiter('^');
+        pc2.setFileName(testProperties);
+        pc2.load();
+        assertEquals("Should obtain the first value", "a", pc2.getString("test.mixed.array"));
+        assertEquals(2, pc2.getList("test.mixed.array").size());
+    }
+
+    public void testDisableListDelimiter() throws Exception
+    {
+        PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
+        assertEquals(4, pc1.getList("test.mixed.array").size());
+
+        PropertiesConfiguration pc2 = new PropertiesConfiguration();
+        pc2.setDelimiterParsingDisabled(true);
+        pc2.setFileName(testProperties);
+        pc2.load();
+        assertEquals(2, pc2.getList("test.mixed.array").size());
     }
 
     /**

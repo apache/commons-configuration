@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import org.apache.commons.collections.set.ListOrderedSet;
+import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
@@ -367,7 +368,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     public void setProperty(String key, Object value)
     {
         Iterator itNodes = fetchNodeList(key).iterator();
-        Iterator itValues = PropertyConverter.toIterator(value, getDelimiter());
+        Iterator itValues;
+        if (!isDelimiterParsingDisabled())
+        {
+            itValues = PropertyConverter.toIterator(value, getListDelimiter());
+        }
+        else
+        {
+            itValues = new SingletonIterator(value);
+        }
         while (itNodes.hasNext() && itValues.hasNext())
         {
             ((Node) itNodes.next()).setValue(itValues.next());

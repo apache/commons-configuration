@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -683,6 +683,24 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("a,b,c", conf.getString("split.list2"));
     }
     
+    /**
+     * Tests string properties with list delimiters when delimiter parsing
+     * is disabled
+     */
+    public void testDelimiterParsingDisabled() throws ConfigurationException {
+        XMLConfiguration conf2 = new XMLConfiguration();
+        conf2.setDelimiterParsingDisabled(true);
+        conf2.setFile(new File(testProperties));
+        conf2.load();
+
+        assertEquals("a,b,c", conf2.getString("split.list3[@values]"));
+        assertEquals(0, conf2.getMaxIndex("split.list3[@values]"));
+        assertEquals("a\\,b\\,c", conf2.getString("split.list4[@values]"));
+        assertEquals("a,b,c", conf2.getString("split.list1"));
+        assertEquals(0, conf2.getMaxIndex("split.list1"));
+        assertEquals("a\\,b\\,c", conf2.getString("split.list2"));
+    }
+
     /**
      * Tests whether a DTD can be accessed.
      */

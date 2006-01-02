@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -106,7 +106,7 @@ public final class ConfigurationConverter
         Properties props = new Properties();
 
         char delimiter = (config instanceof AbstractConfiguration)
-            ? ((AbstractConfiguration) config).getDelimiter() : ',';
+            ? ((AbstractConfiguration) config).getListDelimiter() : ',';
 
         Iterator keys = config.getKeys();
         while (keys.hasNext())
