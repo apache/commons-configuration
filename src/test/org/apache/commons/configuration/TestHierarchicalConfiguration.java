@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 
 import junit.framework.TestCase;
 
@@ -387,18 +390,44 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("birthDate", config.getString("tables.table(0).fields.field(5).name"));
         assertEquals("lastLogin", config.getString("tables.table(0).fields.field(6).name"));
         assertEquals("language", config.getString("tables.table(0).fields.field(7).name"));
+    }
+
+    /**
+     * Tests the addNodes() method when the provided key does not exist. In
+     * this case, a new node (or even a complete new branch) will be created.
+     */
+    public void testAddNodesForNonExistingKey()
+    {
+        Collection nodes = new ArrayList();
+        nodes.add(createNode("usr", "scott"));
+        Node nd = createNode("pwd", "tiger");
+        nd.setAttribute(true);
+        nodes.add(nd);
+        config.addNodes("database.connection.settings", nodes);
         
+        assertEquals("Usr node not found", "scott", config.getString("database.connection.settings.usr"));
+        assertEquals("Pwd node not found", "tiger", config.getString("database.connection.settings[@pwd]"));
+    }
+    
+    /**
+     * Tests the addNodes() method when the new nodes should be added to an
+     * attribute node. This is not allowed.
+     */
+    public void testAddNodesWithAttributeKey()
+    {
+        Collection nodes = new ArrayList();
+        nodes.add(createNode("testNode", "yes"));
         try
         {
-            config.addNodes(".", nodes);
-            fail("Could use empty key!");
+            config.addNodes("database.connection[@settings]", nodes);
+            fail("Could add nodes to an attribute node!");
         }
         catch(IllegalArgumentException iex)
         {
             //ok
         }
     }
-    
+
     /**
      * Tests removing children from a configuration node.
      */
@@ -452,6 +481,49 @@ public class TestHierarchicalConfiguration extends TestCase
     }
     
     /**
+     * Tests setting a custom expression engine, which uses a slightly different
+     * syntax.
+     */
+    public void testSetExpressionEngine()
+    {
+        config.setExpressionEngine(null);
+        assertNotNull("Expression engine is null", config.getExpressionEngine());
+        assertSame("Default engine is not used", HierarchicalConfiguration
+                .getDefaultExpressionEngine(), config.getExpressionEngine());
+
+        config.setExpressionEngine(createAlternativeExpressionEngine());
+        checkAlternativeSyntax();
+    }
+
+    /**
+     * Tests setting the default expression engine. This should impact all
+     * configuration instances that do not have their own engine.
+     */
+    public void testSetDefaultExpressionEngine()
+    {
+        HierarchicalConfiguration
+                .setDefaultExpressionEngine(createAlternativeExpressionEngine());
+        checkAlternativeSyntax();
+    }
+
+    /**
+     * Tests setting the default expression engine to null. This should not be
+     * allowed.
+     */
+    public void testSetDefaultExpressionEngineNull()
+    {
+        try
+        {
+            HierarchicalConfiguration.setDefaultExpressionEngine(null);
+            fail("Could set default expression engine to null!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      * @param prefix the key to pass into getKeys()
      * @param expected the expected result
@@ -482,7 +554,52 @@ public class TestHierarchicalConfiguration extends TestCase
     }
     
     /**
+     * Helper method for checking keys using an alternative syntax.
+     */
+    private void checkAlternativeSyntax()
+    {
+        assertNull(config.getProperty("tables/table/resultset"));
+        assertNull(config.getProperty("tables/table/fields/field"));
+
+        Object prop = config.getProperty("tables/table[0]/fields/field/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(5, ((Collection) prop).size());
+
+        prop = config.getProperty("tables/table/fields/field/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(10, ((Collection) prop).size());
+
+        prop = config.getProperty("tables/table/fields/field[3]/name");
+        assertNotNull(prop);
+        assertTrue(prop instanceof Collection);
+        assertEquals(2, ((Collection) prop).size());
+
+        prop = config.getProperty("tables/table[1]/fields/field[2]/name");
+        assertNotNull(prop);
+        assertEquals("creationDate", prop.toString());
+
+        Set keys = new HashSet();
+        CollectionUtils.addAll(keys, config.getKeys());
+        assertEquals("Wrong number of defined keys", 2, keys.size());
+        assertTrue("Key not found", keys.contains("tables/table/name"));
+        assertTrue("Key not found", keys
+                .contains("tables/table/fields/field/name"));
+    }
+
+    private ExpressionEngine createAlternativeExpressionEngine()
+    {
+        DefaultExpressionEngine engine = new DefaultExpressionEngine();
+        engine.setPropertyDelimiter("/");
+        engine.setIndexStart("[");
+        engine.setIndexEnd("]");
+        return engine;
+    }
+    
+    /**
      * Helper method for creating a field node with its children.
+     * 
      * @param name the name of the field
      * @return the field node
      */

@@ -27,7 +27,12 @@ import java.util.Stack;
 
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.collections.iterators.SingletonIterator;
+import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.tree.NodeAddData;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -95,11 +100,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class HierarchicalConfiguration extends AbstractConfiguration implements Serializable, Cloneable
 {
-    /** Constant for a new dummy key. */
-    private static final String NEW_KEY = "newKey";
+    /** Stores the default expression engine to be used for new objects.*/
+    private static ExpressionEngine defaultExpressionEngine = new DefaultExpressionEngine();
 
     /** Stores the root node of this configuration. */
     private Node root = new Node();
+
+    /** Stores the expression engine for this instance.*/
+    private ExpressionEngine expressionEngine;
 
     /**
      * Returns the root node of this hierarchical configuration.
@@ -126,8 +134,66 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Fetches the specified property. Performs a recursive lookup in the tree
-     * with the configuration properties.
+     * Returns the default expression engine.
+     *
+     * @return the default expression engine
+     * @since 1.3
+     */
+    public static ExpressionEngine getDefaultExpressionEngine()
+    {
+        return defaultExpressionEngine;
+    }
+
+    /**
+     * Sets the default expression engine. This expression engine will be used
+     * if no specific engine was set for an instance. It is shared between all
+     * hierarchical configuration instances. So modifying its properties will
+     * impact all instances, for which no specific engine is set.
+     *
+     * @param engine the new default expression engine
+     * @since 1.3
+     */
+    public static void setDefaultExpressionEngine(ExpressionEngine engine)
+    {
+        if (engine == null)
+        {
+            throw new IllegalArgumentException(
+                    "Default expression engine must not be null!");
+        }
+        defaultExpressionEngine = engine;
+    }
+
+    /**
+     * Returns the expression engine used by this configuration. This method
+     * will never return <b>null</b>; if no specific expression engine was set,
+     * the default expression engine will be returned.
+     *
+     * @return the current expression engine
+     * @since 1.3
+     */
+    public ExpressionEngine getExpressionEngine()
+    {
+        return (expressionEngine != null) ? expressionEngine
+                : getDefaultExpressionEngine();
+    }
+
+    /**
+     * Sets the expression engine to be used by this configuration. All property
+     * keys this configuration has to deal with will be interpreted by this
+     * engine.
+     *
+     * @param expressionEngine the new expression engine; can be <b>null</b>,
+     * then the default expression engine will be used
+     * @since 1.3
+     */
+    public void setExpressionEngine(ExpressionEngine expressionEngine)
+    {
+        this.expressionEngine = expressionEngine;
+    }
+
+    /**
+     * Fetches the specified property. This task is delegated to the associated
+     * expression engine.
      *
      * @param key the key to be looked up
      * @return the found value
@@ -164,92 +230,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * <p>Adds the property with the specified key.</p><p>To be able to deal
-     * with the structure supported by this configuration implementation the
-     * passed in key is of importance, especially the indices it might contain.
-     * The following example should clearify this: Suppose the actual
-     * configuration contains the following elements:</p><p>
-     *
-     * <pre>
-     * tables
-     *    +-- table
-     *            +-- name = user
-     *            +-- fields
-     *                    +-- field
-     *                            +-- name = uid
-     *                    +-- field
-     *                            +-- name = firstName
-     *                    ...
-     *    +-- table
-     *            +-- name = documents
-     *            +-- fields
-     *                   ...
-     * </pre>
-     *
-     * </p><p>In this example a database structure is defined, e.g. all fields
-     * of the first table could be accessed using the key
-     * <code>tables.table(0).fields.field.name</code>. If now properties are
-     * to be added, it must be exactly specified at which position in the
-     * hierarchy the new property is to be inserted. So to add a new field name
-     * to a table it is not enough to say just</p><p>
-     *
-     * <pre>
-     * config.addProperty("tables.table.fields.field.name", "newField");
-     * </pre>
-     *
-     * </p><p>The statement given above contains some ambiguity. For instance
-     * it is not clear, to which table the new field should be added. If this
-     * method finds such an ambiguity, it is resolved by following the last
-     * valid path. Here this would be the last table. The same is true for the
-     * <code>field</code>; because there are multiple fields and no explicit
-     * index is provided, a new <code>name</code> property would be added to
-     * the last field - which is propably not what was desired.</p><p>To make
-     * things clear explicit indices should be provided whenever possible. In
-     * the example above the exact table could be specified by providing an
-     * index for the <code>table</code> element as in
-     * <code>tables.table(1).fields</code>. By specifying an index it can
-     * also be expressed that at a given position in the configuration tree a
-     * new branch should be added. In the example above we did not want to add
-     * an additional <code>name</code> element to the last field of the table,
-     * but we want a complete new <code>field</code> element. This can be
-     * achieved by specifying an invalid index (like -1) after the element where
-     * a new branch should be created. Given this our example would run:</p>
-     * <p>
-     *
-     * <pre>
-     * config.addProperty("tables.table(1).fields.field(-1).name", "newField");
-     * </pre>
-     *
-     * </p><p>With this notation it is possible to add new branches
-     * everywhere. We could for instance create a new <code>table</code>
-     * element by specifying</p><p>
-     *
-     * <pre>
-     * config.addProperty("tables.table(-1).fields.field.name", "newField2");
-     * </pre>
-     *
-     * </p><p>(Note that because after the <code>table</code> element a new
-     * branch is created indices in following elements are not relevant; the
-     * branch is new so there cannot be any ambiguities.)</p>
+     * Adds the property with the specified key. This task will be delegated to
+     * the associated <code>ExpressionEngine</code>, so the passed in key
+     * must match the requirements of this implementation.
      *
      * @param key the key of the new property
      * @param obj the value of the new property
      */
     protected void addPropertyDirect(String key, Object obj)
     {
-        ConfigurationKey.KeyIterator it = new ConfigurationKey(key).iterator();
-        Node parent = fetchAddNode(it, getRoot());
-
-        Node child = createNode(it.currentKey(false));
-        child.setValue(obj);
-        if (it.isAttribute())
-        {
-            parent.addAttribute(child);
-        }
-        else
-        {
-            parent.addChild(child);
-        }
+        NodeAddData data = getExpressionEngine().prepareAdd(getRoot(), key);
+        ConfigurationNode node = processNodeAddData(data);
+        node.setValue(obj);
     }
 
     /**
@@ -258,7 +250,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * instead of a single property a whole collection of nodes can be added -
      * and thus complete configuration sub trees. E.g. with this method it is
      * possible to add parts of another <code>HierarchicalConfiguration</code>
-     * object to this object.
+     * object to this object. If the passed in key refers to an existing and
+     * unique node, the new nodes are added to this node. Otherwise a new node
+     * will be created at the specified position in the hierarchy.
      *
      * @param key the key where the nodes are to be added; can be <b>null </b>,
      * then they are added to the root node
@@ -272,26 +266,36 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             return;
         }
 
-        Node parent;
-        if (StringUtils.isEmpty(key))
+        ConfigurationNode parent;
+        List target = fetchNodeList(key);
+        if (target.size() == 1)
         {
-            parent = getRoot();
+            // existing unique key
+            parent = (ConfigurationNode) target.get(0);
         }
         else
         {
-            ConfigurationKey.KeyIterator kit = new ConfigurationKey(key).iterator();
-            parent = fetchAddNode(kit, getRoot());
-
-            // fetchAddNode() does not really fetch the last component,
-            // but one before. So we must perform an additional step.
-            ConfigurationKey keyNew = new ConfigurationKey(kit.currentKey(true));
-            keyNew.append(NEW_KEY);
-            parent = fetchAddNode(keyNew.iterator(), parent);
+            // otherwise perform an add operation
+            parent = processNodeAddData(getExpressionEngine().prepareAdd(
+                    getRoot(), key));
         }
 
+        if (parent.isAttribute())
+        {
+            throw new IllegalArgumentException(
+                    "Cannot add nodes to an attribute node!");
+        }
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
-            parent.addChild((Node) it.next());
+            ConfigurationNode child = (ConfigurationNode) it.next();
+            if (child.isAttribute())
+            {
+                parent.addAttribute(child);
+            }
+            else
+            {
+                parent.addChild(child);
+            }
         }
     }
 
@@ -440,7 +444,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     public Iterator getKeys()
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        getRoot().visit(visitor, new ConfigurationKey());
+        getRoot().visit(visitor);
 
         return visitor.getKeyList().iterator();
     }
@@ -457,18 +461,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         List nodes = fetchNodeList(prefix);
-        ConfigurationKey key = new ConfigurationKey();
 
         for (Iterator itNodes = nodes.iterator(); itNodes.hasNext();)
         {
             Node node = (Node) itNodes.next();
             for (Iterator it = node.getChildren().iterator(); it.hasNext();)
             {
-                ((Node) it.next()).visit(visitor, key);
+                ((Node) it.next()).visit(visitor);
             }
             for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
             {
-                ((Node) it.next()).visit(visitor, key);
+                ((Node) it.next()).visit(visitor);
             }
         }
 
@@ -526,9 +529,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     protected List fetchNodeList(String key)
     {
-        List nodes = new LinkedList();
-        findPropertyNodes(new ConfigurationKey(key).iterator(), getRoot(), nodes);
-        return nodes;
+        return getExpressionEngine().query(getRoot(), key);
     }
 
     /**
@@ -539,33 +540,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param keyPart the configuration key iterator
      * @param node the actual node
      * @param nodes here the found nodes are stored
+     * @deprecated Property keys are now evaluated by the expression engine
+     * associated with the configuration; this method will no longer be called.
+     * If you want to modify the way properties are looked up, consider
+     * implementing you own <code>ExpressionEngine</code> implementation.
      */
-    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart, Node node, Collection nodes)
+    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart,
+            Node node, Collection nodes)
     {
-        if (!keyPart.hasNext())
-        {
-            nodes.add(node);
-        }
-        else
-        {
-            String key = keyPart.nextKey(false);
-            List children = keyPart.isAttribute() ? node.getAttributes(key) : node.getChildren(key);
-            if (keyPart.hasIndex())
-            {
-                if (keyPart.getIndex() < children.size() && keyPart.getIndex() >= 0)
-                {
-                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) children.get(keyPart
-                            .getIndex()), nodes);
-                }
-            }
-            else
-            {
-                for (Iterator it = children.iterator(); it.hasNext();)
-                {
-                    findPropertyNodes((ConfigurationKey.KeyIterator) keyPart.clone(), (Node) it.next(), nodes);
-                }
-            }
-        }
     }
 
     /**
@@ -624,15 +606,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param keyIt the iterator for the key of the new property
      * @param startNode the node to start the search with
      * @return the parent node for the add operation
+     * @deprecated Adding new properties is now to a major part delegated to the
+     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * This method will no longer be called. Developers who want to modify the
+     * process of adding new properties should consider implementing their own
+     * expression engine.
      */
     protected Node fetchAddNode(ConfigurationKey.KeyIterator keyIt, Node startNode)
     {
-        if (!keyIt.hasNext())
-        {
-            throw new IllegalArgumentException("Key must be defined!");
-        }
-
-        return createAddPath(keyIt, findLastPathNode(keyIt, startNode));
+        return null;
     }
 
     /**
@@ -643,29 +625,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param keyIt the key iterator
      * @param node the actual node
      * @return the last existing node on the given path
+     * @deprecated Adding new properties is now to a major part delegated to the
+     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * This method will no longer be called. Developers who want to modify the
+     * process of adding new properties should consider implementing their own
+     * expression engine.
      */
     protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
     {
-        String keyPart = keyIt.nextKey(false);
-
-        if (keyIt.hasNext())
-        {
-            List list = keyIt.isAttribute() ? node.getAttributes(keyPart) : node.getChildren(keyPart);
-            int idx = (keyIt.hasIndex()) ? keyIt.getIndex() : list.size() - 1;
-            if (idx < 0 || idx >= list.size())
-            {
-                return node;
-            }
-            else
-            {
-                return findLastPathNode(keyIt, (Node) list.get(idx));
-            }
-        }
-
-        else
-        {
-            return node;
-        }
+        return null;
     }
 
     /**
@@ -676,21 +644,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param keyIt the key iterator
      * @param root the base node of the path to be created
      * @return the last node of the path
+     * @deprecated Adding new properties is now to a major part delegated to the
+     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * This method will no longer be called. Developers who want to modify the
+     * process of adding new properties should consider implementing their own
+     * expression engine.
      */
     protected Node createAddPath(ConfigurationKey.KeyIterator keyIt, Node root)
     {
-        if (keyIt.hasNext())
-        {
-            Node child = createNode(keyIt.currentKey(false));
-            child.setAttribute(keyIt.isAttribute());
-            root.addChild(child);
-            keyIt.next();
-            return createAddPath(keyIt, child);
-        }
-        else
-        {
-            return root;
-        }
+        return null;
     }
 
     /**
@@ -705,6 +667,39 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     protected Node createNode(String name)
     {
         return new Node(name);
+    }
+
+    /**
+     * Helper method for processing a node add data object obtained from the
+     * expression engine. This method will create all new nodes.
+     *
+     * @param data the data object
+     * @return the new node
+     * @since 1.3
+     */
+    private ConfigurationNode processNodeAddData(NodeAddData data)
+    {
+        ConfigurationNode node = data.getParent();
+
+        // Create missing nodes on the path
+        for (Iterator it = data.getPathNodes().iterator(); it.hasNext();)
+        {
+            ConfigurationNode child = createNode((String) it.next());
+            node.addChild(child);
+            node = child;
+        }
+
+        // Add new target node
+        ConfigurationNode child = createNode(data.getNewNodeName());
+        if (data.isAttribute())
+        {
+            node.addAttribute(child);
+        }
+        else
+        {
+            node.addChild(child);
+        }
+        return child;
     }
 
     /**
@@ -947,15 +942,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A specialized visitor that fills a list with keys that are defined in a
      * node hierarchy.
-     *
      */
-    static class DefinedKeysVisitor extends NodeVisitor
+    class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** Stores the list to be filled. */
         private Set keyList;
 
-        /** Stores a prefix for the keys. */
-        private String prefix;
+        /** A stack with the keys of the already processed nodes. */
+        private Stack parentKeys;
 
         /**
          * Default constructor.
@@ -963,6 +957,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         public DefinedKeysVisitor()
         {
             keyList = new ListOrderedSet();
+            parentKeys = new Stack();
         }
 
         /**
@@ -974,7 +969,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         public DefinedKeysVisitor(String prefix)
         {
             this();
-            this.prefix = prefix;
+            parentKeys.push(prefix);
         }
 
         /**
@@ -988,40 +983,31 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
 
         /**
+         * Visits the node after its children has been processed. Removes this
+         * node's key from the stack.
+         *
+         * @param node the node
+         */
+        public void visitAfterChildren(ConfigurationNode node)
+        {
+            parentKeys.pop();
+        }
+
+        /**
          * Visits the specified node. If this node has a value, its key is added
          * to the internal list.
          *
          * @param node the node to be visited
-         * @param key the key of this node
          */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        public void visitBeforeChildren(ConfigurationNode node)
         {
-            if (node.getValue() != null && key != null)
+            String parentKey = parentKeys.isEmpty() ? null
+                    : (String) parentKeys.peek();
+            String key = getExpressionEngine().nodeKey(node, parentKey);
+            parentKeys.push(key);
+            if (node.getValue() != null)
             {
-                addKey(key);
-            }
-        }
-
-        /**
-         * Adds the specified key to the internal list.
-         *
-         * @param key the key to add
-         */
-        protected void addKey(ConfigurationKey key)
-        {
-            if (prefix == null)
-            {
-                keyList.add(key.toString());
-            }
-            else
-            {
-                StringBuffer buf = new StringBuffer(prefix);
-                if (!key.isAttributeKey())
-                {
-                    buf.append(ConfigurationKey.PROPERTY_DELIMITER);
-                }
-                buf.append(key);
-                keyList.add(buf.toString());
+                keyList.add(key);
             }
         }
     }
