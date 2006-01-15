@@ -82,6 +82,10 @@
                         <td>ConfigurationDynaBean</td>
                         <td>commons-beanutils</td>
                     </tr>
+                    <tr>
+                        <td>XPathExpressionEngine</td>
+                        <td>commons-jxpath 1.2</td>
+                    </tr>
                 </tbody>
             </table>
 

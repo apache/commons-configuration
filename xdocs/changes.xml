@@ -23,6 +23,34 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="add" issue="35753">
+        With XPathExpressionEngine an expression engine for hierarchical
+        configurations is now available that can evaluate XPATH expressions in
+        property keys. This expression engine implementation is based on
+        Commons JXPath, which is now declared as a new dependency (but at
+        runtime it is only needed if the XPathExpressionEngine class is used).
+      </action>
+      <action dev="oheger" type="add">
+        The code for interpreting property keys was refactored out off
+        HierarchicalConfiguration. Instead this class now supports pluggable
+        expression engines (using the setExpressionEngine() method). So it is
+        possible to plug in different expression languages. A default expression
+        engine is provided that understands the native expression language used
+        by hierarchical configurations in older versions. During the process of
+        this refactoring some methods of HierarchicalConfiguration have been
+        deprecated; they will not be called any more when searching or adding
+        properties. These are the following: createAddPath(), fetchAddNode(),
+        findLastPathNode(), findPropertyNodes().
+      </action>
+      <action dev="oheger" type="update">
+        A larger refactoring was performed on the inner Node class of
+        HierarchicalConfiguration: A ConfigurationNode interface was extracted
+        for which a default implementation (DefaultConfigurationNode) is
+        provided. HierarchicalConfiguration.Node now extends this default
+        implementation. The new ConfigurationNode interface defines some more
+        methods than the Node class did originally for conveniently dealing with
+        sub nodes and attributes.
+      </action>
       <action dev="oheger" type="update" issue="35828" due-to="Jorge Ferrer">
         All configuration classes derived from AbstractConfiguration now allow
         to set an instance specific list delimiter. This can be done through
