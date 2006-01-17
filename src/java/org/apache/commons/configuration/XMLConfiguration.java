@@ -137,9 +137,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public XMLConfiguration(String fileName) throws ConfigurationException
     {
-        this();
-        setFileName(fileName);
-        load();
+        super(fileName);
     }
 
     /**
@@ -151,12 +149,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public XMLConfiguration(File file) throws ConfigurationException
     {
-        this();
-        setFile(file);
-        if (file.exists())
-        {
-            load();
-        }
+        super(file);
     }
 
     /**
@@ -168,9 +161,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public XMLConfiguration(URL url) throws ConfigurationException
     {
-        this();
-        setURL(url);
-        load();
+        super(url);
     }
 
     /**
