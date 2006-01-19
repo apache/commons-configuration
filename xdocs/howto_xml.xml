@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@
 			tree-like nature XML documents can represent data that is
 			structured in many ways. This section explains how to deal with
 			such structured documents and demonstrates the enhanced query
-            facilities supported by the <code>XMLConfiguration</code> class..
+            facilities supported by the <a href="apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+            <code>XMLConfiguration</code></a> class.
 		</p>
         <subsection name="Accessing properties defined in XML documents">
             <p>
@@ -259,7 +260,7 @@ if(prop instanceof Collection)
 		</subsection>
 		<subsection name="Accessing structured properties">
 			<p>
-				Okay, we can obtain a list with the name of all defined
+				Okay, we can obtain a list with the names of all defined
 				tables. In the same way we can retrieve a list with the names
 				of all table fields: just pass the key
 				<code>tables.table.fields.field.name</code> to the
@@ -523,6 +524,270 @@ String complex = config.getString("test..complex.test..sub..element");
         </subsection>
 	</section>
     
+    <section name="Expression engines">
+        <p>
+            In the previous chapters we saw many examples about how properties
+            in a <code>XMLConfiguration</code> object (or more general in a
+            <code>HierarchicalConfiguration</code> object, because this is the
+            base class, which implements this functionality) can be queried or
+            modified using a special syntax for the property keys. Well, this
+            was not the full truth. Actually, property keys are not processed
+            by the configuration object itself, but are delegated to a helper
+            object, a so called <em>Expression engine</em>.
+        </p>
+        <p>
+            The separation of the task of interpreting property keys into a
+            helper object is a typical application of the <em>Strategy</em>
+            design pattern. In this case it also has the advantage that it
+            becomes possible to plug in different expression engines into a
+            <code>HierarchicalConfiguration</code> object. So by providing
+            different implementations of the
+            <a href="apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            <code>ExpressionEngine</code></a>
+            interface hierarchical configurations can support alternative
+            expression languages for accessing their data.
+        </p>
+        <p>
+            Before we discuss the available expression engines that ship
+            with Commons Configuration, it should be explained how an
+            expression engine can be associated with a configuration object.
+            <a href="apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <code>HierarchicalConfiguration</code></a> and all derived classes
+            provide a <code>setExpressionEngine()</code> method, which expects
+            an implementation of the <code>ExpressionEngine</code> interface as
+            argument. After this method was called, the configuration object will
+            use the passed expression engine, which means that all property keys
+            passed to methods like <code>getProperty()</code>,
+            <code>getString()</code>, or <code>addProperty()</code> must
+            conform to the syntax supported by this engine. Property keys
+            returned by the <code>getKeys()</code> method will follow this
+            syntax, too.
+        </p>
+        <p>
+            In addition to instance specific expression engines that change the
+            behavior of single configuration objects it is also possible to set
+            a global expression engine. This engine is shared between all
+            hierarchical configuration objects, for which no specific expression
+            engine was set. The global expression engine can be set using the
+            static <code>setDefaultExpressionEngine()</code> method of
+            <code>HierarchicalConfiguration</code>. By invoking this method with
+            a custom expression engine the syntax of all hierarchical configuration
+            objects can be altered at once.
+        </p>
+        
+        <subsection name="The default expression engine">
+            <p>
+                The syntax described so far for property keys of hierarchical
+                configurations is implemented by a specific implementation of the
+                <a href="apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                <code>ExpressionEngine</code></a> interface called
+                <a href="apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                <code>DefaultExpressionEngine</code></a>. An instance of this class
+                is installed as the global expression engine in
+                <code>HierarchicalConfiguration</code>. So all newly created
+                instances of this class will make use of this engine (which is
+                the reason that our examples above worked).
+            </p>
+            <p>
+                After reading the examples of property keys provided so far in
+                this document you should have a sound understanding regarding
+                the features and the syntax supported by the
+                <code>DefaultExpressionEngine</code> class. But it can do a
+                little bit more for you: it defines a bunch of properties,
+                which can be used to customize most tokens that can appear in a
+                valid property key. You prefer curly brackets over paranthesis
+                as index markers? You find the duplicated dot as escaped
+                property delimiter counter-intuitive? Well, simply go ahead and
+                change it! The following example shows how the syntax of a
+                <code>DefaultExpressionEngine</code> object is modified. Then
+                this object is set as the global expression engine, so that from
+                now on all hierarchical configuration objects will take up this
+                new syntax:
+            </p>
+            <source><![CDATA[
+DefaultExpressionEngine engine = new DefaultExpressionEngine();
+
+// Use a slash as property delimiter
+engine.setPropertyDelimiter("/");
+// Indices should be provided in curly brackets
+engine.setIndexStart("{");
+engine.setIndexEnd("}");
+// For attributes use simply a @
+engine.setAttributeStart("@");
+engine.setAttributeEnd(null);
+// A Backslash is used for escaping property delimiters
+engine.setEscapedDelimiter("\\/");
+
+// Now install this engine as the global engine
+HierarchicalConfiguration.setDefaultExpressionEngine(engine);
+
+// Access properties using the new syntax
+HierarchicalConfiguration config = ...
+String tableName = config.getString("tables/table{0}/name");
+String tableType = config.getString("tables/table{0}@type");
+         ]]></source>
+            <p>
+                <em>Tip:</em> Sometimes when processing an XML document you
+                don't want to distinguish between attributes and &quot;normal&quot;
+                child nodes. You can achieve this by setting the
+                <code>AttributeEnd</code> property to <b>null</b> and the
+                <code>AttributeStart</code> property to the same value as the
+                <code>PropertyDelimiter</code> property. Then the syntax for
+                accessing attributes is the same as the syntax for other
+                properties:
+            </p>
+            <source><![CDATA[
+DefaultExpressionEngine engine = new DefaultExpressionEngine();
+engine.setAttributeEnd(null);
+engine.setAttributeStart(engine.getPropertyDelimiter());
+...
+Object value = config.getProperty("tables.table(0).name");
+// name can either be a child node of table or an attribute
+         ]]></source>
+        </subsection>
+        
+        <subsection name="The XPATH expression engine">
+            <p>
+                The expression language provided by the <code>DefaultExpressionEngine</code>
+                class is powerful enough to address all properties in a
+                hierarchical configuration, but it is not always convenient to
+                use. Especially if list structures are involved, it is often
+                necessary to iterate through the whole list to find a certain
+                element.
+            </p>
+            <p>
+                Think about our example configuration that stores information about
+                database tables. A use case could be to load all fields that belong
+                to the &quot;users&quot; table. If you knew the index of this
+                table, you could simply build a property key like
+                <code>tables.table(&lt;index&gt;).fields.field.name</code>,
+                but how do you find out the correct index? When using the
+                default expression engine, the only solution to this problem is
+                to iterate over all tables until you find the &quot;users&quot;
+                table.
+            </p>
+            <p>
+                Life would be much easier if an expression language could be used,
+                which would directly support queries of such kind. In the XML
+                world, the XPATH syntax has grown popular as a powerful means
+                of querying structured data. In XPATH a query that selects all
+                field names of the &quot;users&quot; table would look something
+                like <code>tables/table[@name='users']/fields/name</code> (here
+                we assume that the table's name is modelled as an attribute).
+                This is not only much simpler than an iteration over all tables,
+                but also much more readable: it is quite obvious, which fields
+                are selected by this query.
+            </p>
+            <p>
+                Given the power of XPATH it is no wonder that we got many
+                user requests to add XPATH support to Commons Configuration.
+                Well, here is it!
+            </p>
+            <p>
+                For enabling XPATH syntax for property keys you need the
+                <a href="apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <code>XPathExpressionEngine</code></a> class. This class
+                implements the <code>ExpressionEngine</code> interface and can
+                be plugged into a <code>HierarchicalConfiguration</code> object
+                using the <code>setExpressionEngine()</code> method. It is also
+                possible to set an instance of this class as the global
+                expression engine, so that all hierarchical configuration
+                objects make use of XPATH syntax. The following code fragment
+                shows how XPATH support can be enabled for a configuration
+                object:
+            </p>
+            <source><![CDATA[
+HierarchicalConfiguration config = ...
+config.setExpressionEngine(new XPathExpressionEngine());
+
+// Now we can use XPATH queries:
+List fields = config.getList("tables/table[1]/fields/name");
+         ]]></source>
+            <p>
+                XPATH expressions are not only used for selecting properties
+                (i.e. for the several getter methods), but also for adding new
+                properties. For this purpose the keys passed into the
+                <code>addProperty()</code> method must conform to a special
+                syntax. They consist of two parts: the first part is an
+                arbitrary XPATH expression that selects the node where the new
+                property is to be added to, the second part defines the new
+                element to be added. Both parts are separated by whitespace.
+            </p>
+            <p>
+                Okay, let's make an example. Say, we want to add a <code>type</code>
+                property under the first table (as a sibling to the <code>name</code>
+                element). Then the first part of our key will have to select
+                the first table element, the second part will simply be
+                <code>type</code>, i.e. the name of the new property:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table[1] type", "system");
+         ]]></source>
+            <p>
+                (Note that indices in XPATH are 1-based, while in the default
+                expression language they are 0-based.) In this example the part
+                <code>tables/table[1]</code> selects the target element of the
+                add operation. This element must exist and must be unique, otherwise an exception
+                will be thrown. <code>type</code> is the name of the new element
+                that will be added. If instead of a normal element an attribute
+                should be added, the example becomes
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table[1] @type", "system");
+         ]]></source>
+            <p>
+                It is possible to add complete paths at once. Then the single
+                elements in the new path are separated by &quot;/&quot;
+                characters. The following example shows how data about a new
+                table can be added to the configuration. Here we use full paths:
+            </p>
+            <source><![CDATA[
+// Add new table "tasks" with name element and type attribute
+config.addProperty("tables table/name", "tasks");
+// last() selects the last element of this name,
+// which is the newest table element
+config.addProperty("tables/table[last()] @type", "system");
+
+// Now add fields
+config.addProperty("tables/table[last()] fields/field/name", "taskid");
+config.addProperty("tables/table[last()]/fields/field[last()] type", "int");
+config.addProperty("tables/table[last()]/fields field/name", "name");
+config.addProperty("tables/table[last()]/fields field/name", "startDate");
+...
+         ]]></source>
+            <p>
+                The first line of this example adds the path <code>table/name</code>
+                to the <code>tables</code> element, i.e. a new <code>table</code>
+                element will be created and added as last child to the
+                <code>tables</code> element. Then a new <code>name</code> element
+                is added as child to the new <code>table</code> element. To this
+                element the value &quot;tasks&quot; is assigned. The next line
+                adds a <code>type</code> attribute to the new table element. To
+                obtain the correct <code>table</code> element, to which the
+                attribute must be added, the XPATH function <code>last()</code>
+                is used; this function selects the last element with a given
+                name, which in this case is the new <code>table</code> element.
+                The following lines all use the same approach to construct a new
+                element hierarchy: At first complete new branches are added
+                (<code>fields/field/name</code>), then to the newly created
+                elements further children are added.
+            </p>
+            <p>
+                <em>Note:</em> XPATH support is implemented through
+                <a href="http://jakarta.apache.org/commons/jxpath">Commons JXPath</a>.
+                So when making use of this feature, be sure you include the
+                commons-jxpath jar in your classpath.
+            </p>
+            <p>
+                In this tutorial we don't want to describe XPATH syntax and
+                expressions in detail. Please refer to corresponding documentation.
+                It is important to mention that by embedding Commons JXPath the
+                full extent of the XPATH 1.0 standard can be used for constructing
+                property keys.
+            </p>
+        </subsection>
+    </section>
+
     <section name="Validation of XML configuration files">
         <p>
             XML parsers provide support for validation of XML documents to ensure that they
