@@ -257,6 +257,17 @@ public class TestSubnodeConfiguration extends TestCase
                 HierarchicalConfiguration.getDefaultExpressionEngine(), parent
                         .getExpressionEngine());
     }
+    
+    /**
+     * Tests the configurationAt() method.
+     */
+    public void testConfiguarationAt()
+    {
+        setUpSubnodeConfig();
+        SubnodeConfiguration sub2 = (SubnodeConfiguration) config.configurationAt("fields.field(1)");
+        assertEquals("Wrong value of property", TABLE_FIELDS[0][1], sub2.getString("name"));
+        assertEquals("Wrong parent", config.getParent(), sub2.getParent());
+    }
 
     /**
      * Initializes the parent configuration. This method creates the typical

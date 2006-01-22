@@ -32,19 +32,19 @@ import junit.framework.TestCase;
 
 /**
  * Test class for HierarchicalConfiguration.
- * 
+ *
  * @version $Id$
  */
 public class TestHierarchicalConfiguration extends TestCase
 {
     private static String[] tables = { "users", "documents" };
-    
+
     private static String[][] fields =
     {
         { "uid", "uname", "firstName", "lastName", "email" },
         { "docid", "name", "creationDate", "authorID", "version" }
     };
-        
+
     private HierarchicalConfiguration config;
 
     protected void setUp() throws Exception
@@ -65,7 +65,7 @@ public class TestHierarchicalConfiguration extends TestCase
         HierarchicalConfiguration.Node nodeTables = createNode("tables", null);
         for(int i = 0; i < tables.length; i++)
         {
-            HierarchicalConfiguration.Node nodeTable = createNode("table", null); 
+            HierarchicalConfiguration.Node nodeTable = createNode("table", null);
             nodeTables.addChild(nodeTable);
             HierarchicalConfiguration.Node nodeName = createNode("name", tables[i]);
             nodeTable.addChild(nodeName);
@@ -80,7 +80,7 @@ public class TestHierarchicalConfiguration extends TestCase
 
         config.getRoot().addChild(nodeTables);
     }
-    
+
     public void testSetRoot()
     {
         try
@@ -92,7 +92,7 @@ public class TestHierarchicalConfiguration extends TestCase
         {
             //ok
         }
-        
+
         config.setRoot(new HierarchicalConfiguration.Node("test"));
         assertTrue(config.isEmpty());
     }
@@ -113,27 +113,27 @@ public class TestHierarchicalConfiguration extends TestCase
     {
         assertNull(config.getProperty("tables.table.resultset"));
         assertNull(config.getProperty("tables.table.fields.field"));
-        
+
         Object prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(5, ((Collection) prop).size());
-        
+
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(10, ((Collection) prop).size());
-        
+
         prop = config.getProperty("tables.table.fields.field(3).name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(2, ((Collection) prop).size());
-        
+
         prop = config.getProperty("tables.table(1).fields.field(2).name");
         assertNotNull(prop);
         assertEquals("creationDate", prop.toString());
     }
-    
+
     public void testSetProperty()
     {
         config.setProperty("tables.table(0).name", "resources");
@@ -141,7 +141,7 @@ public class TestHierarchicalConfiguration extends TestCase
         config.setProperty("tables.table.name", "tab1,tab2");
         assertEquals("tab1", config.getString("tables.table(0).name"));
         assertEquals("tab2", config.getString("tables.table(1).name"));
-        
+
         config.setProperty("test.items.item", new int[] { 2, 4, 8, 16 });
         assertEquals(3, config.getMaxIndex("test.items.item"));
         assertEquals(8, config.getInt("test.items.item(2)"));
@@ -149,18 +149,18 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(6, config.getInt("test.items.item(2)"));
         config.setProperty("test.items.item(2)", new int[] { 7, 9, 11 });
         assertEquals(5, config.getMaxIndex("test.items.item"));
-        
+
         config.setProperty("test", Boolean.TRUE);
         config.setProperty("test.items", "01/01/05");
         assertEquals(5, config.getMaxIndex("test.items.item"));
         assertTrue(config.getBoolean("test"));
         assertEquals("01/01/05", config.getProperty("test.items"));
-        
+
         config.setProperty("test.items.item", new Integer(42));
         assertEquals(0, config.getMaxIndex("test.items.item"));
         assertEquals(42, config.getInt("test.items.item"));
     }
-    
+
     public void testClearProperty()
     {
         config.clearProperty("tables.table(0).fields.field(0).name");
@@ -171,14 +171,14 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("documents", config.getProperty("tables.table.name"));
         config.clearProperty("tables.table");
         assertEquals("documents", config.getProperty("tables.table.name"));
-        
+
         config.addProperty("test", "first");
         config.addProperty("test.level", "second");
         config.clearProperty("test");
         assertEquals("second", config.getString("test.level"));
         assertFalse(config.containsKey("test"));
     }
-    
+
     public void testClearTree()
     {
         Object prop = config.getProperty("tables.table(0).fields.field.name");
@@ -188,40 +188,40 @@ public class TestHierarchicalConfiguration extends TestCase
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(4, ((Collection) prop).size());
-        
+
         config.clearTree("tables.table(0).fields");
         assertNull(config.getProperty("tables.table(0).fields.field.name"));
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(5, ((Collection) prop).size());
-        
+
         config.clearTree("tables.table(1)");
         assertNull(config.getProperty("tables.table.fields.field.name"));
     }
-    
+
     public void testContainsKey()
     {
         assertTrue(config.containsKey("tables.table(0).name"));
         assertTrue(config.containsKey("tables.table(1).name"));
         assertFalse(config.containsKey("tables.table(2).name"));
-        
+
         assertTrue(config.containsKey("tables.table(0).fields.field.name"));
         assertFalse(config.containsKey("tables.table(0).fields.field"));
         config.clearTree("tables.table(0).fields");
         assertFalse(config.containsKey("tables.table(0).fields.field.name"));
-        
+
         assertTrue(config.containsKey("tables.table.fields.field.name"));
     }
-    
+
     public void testGetKeys()
     {
         List keys = new ArrayList();
         for (Iterator it = config.getKeys(); it.hasNext();)
         {
-            keys.add(it.next()); 
+            keys.add(it.next());
         }
-        
+
         assertEquals(2, keys.size());
         assertTrue(keys.contains("tables.table.name"));
         assertTrue(keys.contains("tables.table.fields.field.name"));
@@ -236,7 +236,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("2nd key", "order.key2", it.next());
         assertEquals("3rd key", "order.key3", it.next());
     }
-    
+
     public void testGetKeysString()
     {
         // add some more properties to make it more interesting
@@ -249,7 +249,7 @@ public class TestHierarchicalConfiguration extends TestCase
         config.addProperty("connections.connection.param.pwd", "secret");
         config.addProperty("connections.connection(-1).param.url", "url2");
         config.addProperty("connections.connection(1).param.user", "guest");
-        
+
         checkKeys("tables.table(1)", new String[] { "name", "fields.field.name" });
         checkKeys("tables.table(0)",
                 new String[] { "name", "fields.field.name", "tables.table(0)[@type]", "size", "fields.field.type", "fields.field.size" });
@@ -258,7 +258,7 @@ public class TestHierarchicalConfiguration extends TestCase
         checkKeys("connections.connection(1).param",
                 new String[] {"url", "user" });
     }
-    
+
     public void testAddProperty()
     {
         config.addProperty("tables.table(0).fields.field(-1).name", "phone");
@@ -266,7 +266,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(6, ((Collection) prop).size());
-        
+
         config.addProperty("tables.table(0).fields.field.name", "fax");
         prop = config.getProperty("tables.table.fields.field(5).name");
         assertNotNull(prop);
@@ -274,7 +274,7 @@ public class TestHierarchicalConfiguration extends TestCase
         List list = (List) prop;
         assertEquals("phone", list.get(0));
         assertEquals("fax", list.get(1));
-        
+
         config.addProperty("tables.table(-1).name", "config");
         prop = config.getProperty("tables.table.name");
         assertNotNull(prop);
@@ -289,17 +289,17 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(2, ((Collection) prop).size());
         assertEquals("confName",
         config.getProperty("tables.table(2).fields.field(1).name"));
-        
+
         config.addProperty("connection.user", "scott");
         config.addProperty("connection.passwd", "tiger");
         assertEquals("tiger", config.getProperty("connection.passwd"));
-        
+
         ConfigurationKey key = new ConfigurationKey();
         key.append("tables").append("table").appendIndex(0);
         key.appendAttribute("tableType");
         config.addProperty(key.toString(), "system");
         assertEquals("system", config.getProperty(key.toString()));
-        
+
         try
         {
             config.addProperty(".", "InvalidKey");
@@ -310,7 +310,7 @@ public class TestHierarchicalConfiguration extends TestCase
             //ok
         }
     }
-    
+
     public void testGetMaxIndex()
     {
         assertEquals(4, config.getMaxIndex("tables.table(0).fields.field"));
@@ -320,7 +320,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(0, config.getMaxIndex("tables.table(0).name"));
         assertEquals(0, config.getMaxIndex("tables.table(1).fields.field(1)"));
         assertEquals(-1, config.getMaxIndex("tables.table(2).fields"));
-        
+
         int maxIdx = config.getMaxIndex("tables.table(0).fields.field.name");
         for(int i = 0; i <= maxIdx; i++)
         {
@@ -329,7 +329,7 @@ public class TestHierarchicalConfiguration extends TestCase
             assertNotNull(config.getProperty(key.toString()));
         }
     }
-    
+
     public void testSubset()
     {
         // test the subset on the first table
@@ -340,7 +340,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertNotNull(prop);
         assertTrue(prop instanceof Collection);
         assertEquals(5, ((Collection) prop).size());
-        
+
         for (int i = 0; i < fields[0].length; i++)
         {
             ConfigurationKey key = new ConfigurationKey();
@@ -364,7 +364,91 @@ public class TestHierarchicalConfiguration extends TestCase
         subset = config.subset("tables.table.fields.field.name");
         assertTrue("subset is not empty", subset.isEmpty());
     }
-    
+
+    /**
+     * Tests the configurationAt() method to obtain a configuration for a sub
+     * tree.
+     */
+    public void testConfigurationAt()
+    {
+        HierarchicalConfiguration subConfig = config
+                .configurationAt("tables.table(1)");
+        assertEquals("Wrong table name", tables[1], subConfig.getString("name"));
+        List lstFlds = subConfig.getList("fields.field.name");
+        assertEquals("Wrong number of fields", fields[1].length, lstFlds.size());
+        for (int i = 0; i < fields[1].length; i++)
+        {
+            assertEquals("Wrong field at position " + i, fields[1][i], lstFlds
+                    .get(i));
+        }
+
+        subConfig.setProperty("name", "testTable");
+        assertEquals("Change not visible in parent", "testTable", config
+                .getString("tables.table(1).name"));
+        config.setProperty("tables.table(1).fields.field(2).name", "testField");
+        assertEquals("Change not visible in sub config", "testField", subConfig
+                .getString("fields.field(2).name"));
+    }
+
+    /**
+     * Tests the configurationAt() method when the passed in key does not exist.
+     */
+    public void testConfigurationAtUnknownSubTree()
+    {
+        try
+        {
+            config.configurationAt("non.existing.key");
+            fail("Could obtain sub config for unknown key!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests the configurationAt() method when the passed in key selects
+     * multiple nodes. This should cause an exception.
+     */
+    public void testConfigurationAtMultipleNodes()
+    {
+        try
+        {
+            config.configurationAt("tables.table.name");
+            fail("Could create sub config with non unique key!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests the configurationsAt() method.
+     */
+    public void testConfigurationsAt()
+    {
+        List lstFlds = config.configurationsAt("tables.table(1).fields.field");
+        assertEquals("Wrong size of fields", fields[1].length, lstFlds.size());
+        for (int i = 0; i < fields[1].length; i++)
+        {
+            HierarchicalConfiguration sub = (HierarchicalConfiguration) lstFlds
+                    .get(i);
+            assertEquals("Wrong field at position " + i, fields[1][i], sub
+                    .getString("name"));
+        }
+    }
+
+    /**
+     * Tests the configurationsAt() method when the passed in key does not
+     * select any sub nodes.
+     */
+    public void testConfigurationsAtEmpty()
+    {
+        assertTrue("List is not empty", config.configurationsAt("unknown.key")
+                .isEmpty());
+    }
+
     public void testClone()
     {
         Configuration copy = (Configuration) config.clone();
@@ -378,7 +462,7 @@ public class TestHierarchicalConfiguration extends TestCase
             }
         }
     }
-    
+
     public void testAddNodes()
     {
         Collection nodes = new ArrayList();
@@ -404,11 +488,11 @@ public class TestHierarchicalConfiguration extends TestCase
         nd.setAttribute(true);
         nodes.add(nd);
         config.addNodes("database.connection.settings", nodes);
-        
+
         assertEquals("Usr node not found", "scott", config.getString("database.connection.settings.usr"));
         assertEquals("Pwd node not found", "tiger", config.getString("database.connection.settings[@pwd]"));
     }
-    
+
     /**
      * Tests the addNodes() method when the new nodes should be added to an
      * attribute node. This is not allowed.
@@ -438,7 +522,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertFalse(node.hasChildren());
         node.removeChildren(); // should have no effect
         assertFalse(node.remove("child"));
-        
+
         node.addChild(createNode("test", "test"));
         assertTrue(node.hasChildren());
         assertTrue(node.remove("test"));
@@ -479,7 +563,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(28, v.beforeCount);
         assertEquals(v.beforeCount, v.afterCount);
     }
-    
+
     /**
      * Tests setting a custom expression engine, which uses a slightly different
      * syntax.
@@ -501,9 +585,11 @@ public class TestHierarchicalConfiguration extends TestCase
      */
     public void testSetDefaultExpressionEngine()
     {
+        ExpressionEngine engineOld = HierarchicalConfiguration.getDefaultExpressionEngine();
         HierarchicalConfiguration
                 .setDefaultExpressionEngine(createAlternativeExpressionEngine());
         checkAlternativeSyntax();
+        HierarchicalConfiguration.setDefaultExpressionEngine(engineOld);
     }
 
     /**
@@ -535,7 +621,7 @@ public class TestHierarchicalConfiguration extends TestCase
         {
             values.add((expected[i].startsWith(prefix)) ? expected[i] :  prefix + "." + expected[i]);
         }
-        
+
         Iterator itKeys = config.getKeys(prefix);
         while(itKeys.hasNext())
         {
@@ -549,10 +635,10 @@ public class TestHierarchicalConfiguration extends TestCase
                 values.remove(key);
             }
         }
-        
+
         assertTrue("Remaining keys " + values, values.isEmpty());
     }
-    
+
     /**
      * Helper method for checking keys using an alternative syntax.
      */
@@ -596,10 +682,10 @@ public class TestHierarchicalConfiguration extends TestCase
         engine.setIndexEnd("]");
         return engine;
     }
-    
+
     /**
      * Helper method for creating a field node with its children.
-     * 
+     *
      * @param name the name of the field
      * @return the field node
      */
@@ -609,7 +695,7 @@ public class TestHierarchicalConfiguration extends TestCase
         fld.addChild(createNode("name", name));
         return fld;
     }
-    
+
     /**
      * Helper method for creating a configuration node.
      * @param name the node's name
@@ -622,7 +708,7 @@ public class TestHierarchicalConfiguration extends TestCase
         node.setValue(value);
         return node;
     }
-    
+
     /**
      * A test visitor implementation for checking whether all visitor methods
      * are correctly called.

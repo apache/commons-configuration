@@ -189,6 +189,20 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
     }
 
     /**
+     * Returns a hierarchical configuration object for the given sub node.
+     * This implementation will ensure that the returned
+     * <code>SubnodeConfiguration</code> object will have the same parent than
+     * this object.
+     *
+     * @param node the sub node, for which the configuration is to be created
+     * @return a hierarchical configuration for this sub node
+     */
+    protected HierarchicalConfiguration createSubnodeConfiguration(Node node)
+    {
+        return new SubnodeConfiguration(getParent(), node);
+    }
+
+    /**
      * Creates a new node. This task is delegated to the parent.
      *
      * @param name the node's name

@@ -349,6 +349,95 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
+     * <p>
+     * Returns a hierarchical configuration object that wraps the configuration
+     * node specified by the given key. This method provides an easy means of
+     * accessing sub trees of a hierarchical configuration. In the returned
+     * configuration the sub tree can directly be accessed, it becomes the root
+     * node of this configuration. Because of this the passed in key must select
+     * exactly one configuration node; otherwise an
+     * <code>IllegalArgumentException</code> will be thrown.
+     * </p>
+     * <p>
+     * The difference between this method and the
+     * <code>{@link #subset(String)}</code> method is that
+     * <code>subset()</code> supports arbitrary subsets of configuration nodes
+     * while <code>configurationAt()</code> only returns a single sub tree.
+     * Actually, the object returned by this method is an instance of
+     * <code>SubnodeConfiguration</code>. Please refer to the documentation
+     * of this class to obtain further information about subnode configurations
+     * and when they should be used.
+     * </p>
+     *
+     * @param key the key that selects the sub tree
+     * @return a hierarchical configuration that contains this sub tree
+     * @see SubnodeConfiguration
+     * @since 1.3
+     */
+    public HierarchicalConfiguration configurationAt(String key)
+    {
+        List nodes = fetchNodeList(key);
+        if (nodes.size() != 1)
+        {
+            throw new IllegalArgumentException(
+                    "Passed in key must select exactly one node: " + key);
+        }
+        return createSubnodeConfiguration((Node) nodes.get(0));
+    }
+
+    /**
+     * Returns a list of sub configurations for all configuration nodes selected
+     * by the given key. This method will evaluate the passed in key (using the
+     * current <code>ExpressionEngine</code>) and then create a subnode
+     * configuration for each returned node (like
+     * <code>{@link #configurationAt(String)}</code>}). This is especially
+     * useful when dealing with list-like structures. As an example consider the
+     * configuration that contains data about database tables and their fields.
+     * If you need access to all fields of a certain table, you can simply do
+     *
+     * <pre>
+     * List fields = config.configurationsAt("tables.table(0).fields.field");
+     * for(Iterator it = fields.iterator(); it.hasNext();)
+     * {
+     *     HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
+     *     // now the children and attributes of the field node can be
+     *     // directly accessed
+     *     String fieldName = sub.getString("name");
+     *     String fieldType = sub.getString("type");
+     *     ...
+     * </pre>
+     *
+     * @param key the key for selecting the desired nodes
+     * @return a list with hierarchical configuration objects; each
+     * configuration represents one of the nodes selected by the passed in key
+     * @since 1.3
+     */
+    public List configurationsAt(String key)
+    {
+        List nodes = fetchNodeList(key);
+        List configs = new ArrayList(nodes.size());
+        for (Iterator it = nodes.iterator(); it.hasNext();)
+        {
+            configs.add(createSubnodeConfiguration((Node) it.next()));
+        }
+        return configs;
+    }
+
+    /**
+     * Creates a subnode configuration for the specified node. This method is
+     * called by <code>configurationAt()</code> and
+     * <code>configurationsAt()</code>.
+     *
+     * @param node the node, for which a subnode configuration is to be created
+     * @return the configuration for the given node
+     * @since 1.3
+     */
+    protected HierarchicalConfiguration createSubnodeConfiguration(Node node)
+    {
+        return new SubnodeConfiguration(this, node);
+    }
+
+    /**
      * Checks if the specified key is contained in this configuration. Note that
      * for this configuration the term &quot;contained&quot; means that the key
      * has an associated value. If there is a node for this key that has no
