@@ -23,6 +23,19 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="add" issue="38075">
+        A new method configurationsAdd() was added to HierarchicalConfiguration
+        that provides a convenient way of iterating over complex list-like
+        structures without the need of manually constructing configuration keys
+        with indices.
+      </action>
+      <action dev="oheger" type="add">
+        A new class SubnodeConfiguration was introduced that wraps a configuration
+        node of a HierarchicalConfiguration. All operations performed on this
+        configuration use this wrapped node as root. The new configurationAt()
+        method of HierarchicalConfiguration returns such a SubnodeConfiguration
+        for a specified sub node.
+      </action>
       <action dev="oheger" type="add" issue="35753">
         With XPathExpressionEngine an expression engine for hierarchical
         configurations is now available that can evaluate XPATH expressions in

@@ -333,6 +333,64 @@ if(prop instanceof Collection)
 				of indices it is possible to navigate through complex structures of
 				XML documents; each XML element can be uniquely identified.
 			</p>
+            <p>
+                Sometimes dealing with long property keys may become inconvenient,
+                especially if always the same properties are accessed. For this
+                case <code>HierarchicalConfiguration</code> provides a short cut
+                with the <code>configurationAt()</code> method. This method can
+                be passed a key that selects exactly one node of the hierarchy
+                of nodes contained in a hierarchical configuration. Then a new
+                hierarchical configuration will be returned whose root node is
+                the selected node. So all property keys passed into that
+                configuration should be relative to the new root node. For
+                instance, if we are only interested in information about the
+                first database table, we could do something like that:
+            </p>
+   			<source><![CDATA[
+HierarchicalConfiguration sub = config.configurationAt("tables.table(0)");
+String tableName = sub.getString("name");  // only need to provide relative path
+List fieldNames = sub.getList("fields.field.name");
+]]></source>
+            <p>
+                For dealing with complex list-like structures there is another
+                short cut. Often it will be necessary to iterate over all items
+                in the list and access their (sub) properties. A good example are
+                the fields of the tables in our demo configuration. When you want
+                to process all fields of a table (e.g. for constructing a
+                <code>CREATE TABLE</code> statement), you will need all information
+                stored for them in the configuration. An option would be to use
+                the <code>getList()</code> method to fetch the required data one
+                by one:
+            </p>
+   			<source><![CDATA[
+List fieldNames = config.getList("tables.table(0).fields.field.name");
+List fieldTypes = config.getList("tables.table(0).fields.field.type");
+List ... // further calls for other data that might be stored in the config
+]]></source>
+            <p>
+                But this is not very readable and will fail if not all field
+                elements contain the same set of data (for instance the
+                <code>type</code> property may be optional, then the list for
+                the types can contain less elements than the other lists). A
+                solution to these problems is the <code>configurationsAt()</code>
+                method, a close relative to the <code>configurationAt()</code>
+                method covered above. This method evaluates the passed in key and
+                collects all configuration nodes that match this criterion. Then
+                for each node a <code>HierarchicalConfiguration</code> object is
+                created with this node as root node. A list with these configuration
+                objects is returned. As the following example shows this comes in
+                very handy when processing list-like structures:
+            </p>
+   			<source><![CDATA[
+List fields = config.configurationsAt("tables.table(0).fields.field");
+for(Iterator it = fields.iterator(); it.hasNext();)
+{
+    HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
+    // sub contains now all data about a single field
+    String fieldName = sub.getString("name");
+    String fieldType = sub.getString("type");
+    ...
+]]></source>
 		</subsection>
 		<subsection name="Adding new properties">
 			<p>
