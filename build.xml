@@ -145,6 +145,8 @@
           </exclude>
           <exclude name="**/TestAbstractConfiguration.java">
           </exclude>
+          <exclude name="**/XPathTest.java">
+          </exclude>
         </fileset>
       </batchtest>
     </junit>
@@ -240,13 +242,13 @@
     </get>
     <get dest="${libdir}/commons-logging-1.0.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.0.4.jar">
     </get>
-    <get dest="${libdir}/commons-digester-1.5.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.5.jar">
+    <get dest="${libdir}/commons-digester-1.6.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.6.jar">
     </get>
     <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-core-1.7.0.jar">
     </get>
-    <get dest="${libdir}/commons-beanutils-bean-collections-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-bean-collections-1.7.0.jar">
-    </get>
     <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-codec/jars/commons-codec-1.3.jar">
+    </get>
+    <get dest="${libdir}/commons-jxpath-1.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jxpath/jars/commons-jxpath-1.2.jar">
     </get>
     <get dest="${libdir}/xerces-2.2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.2.1.jar">
     </get>
