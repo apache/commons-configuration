@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<!-- 
+	Apache Commons Configuration XML Schema for configuration.xml
+	version: 0.1
+	author : Borut Bolčina
+	date    : January 2nd, 2006
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="configuration">
+		<xs:annotation>
+			<xs:documentation>Commons Configuration v0.1</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="sources">
+					<xs:sequence minOccurs="0">
+						<xs:element name="override" type="sources" minOccurs="0"/>
+						<xs:element name="additional" type="sources" minOccurs="0"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="abstractConfiguration">
+		<xs:attribute name="delimiter" type="xs:string" use="optional"/>
+		<xs:attribute name="throwExceptionOnMissing" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="hierarhicalConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractConfiguration">
+				<xs:attribute name="root" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abstractHierarchicalFileConfiguration">
+		<xs:complexContent>
+			<xs:extension base="hierarhicalConfiguration">
+				<xs:attribute name="fileName" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:pattern value=".+\.properties"/>
+							<xs:pattern value=".+\.xml"/>
+							<xs:pattern value=".+\.plist"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="autosave" type="xs:boolean" use="optional"/>
+				<xs:attribute name="basePath" type="xs:string" use="optional"/>
+				<xs:attribute name="encoding" type="xs:string" use="optional"/>
+				<xs:attribute name="url" type="xs:anyURI" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="abstractFileConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractConfiguration">
+				<xs:attribute name="fileName" use="required">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:pattern value=".+\.properties"/>
+							<xs:pattern value=".+\.xml"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:attribute>
+				<xs:attribute name="encoding" type="xs:string" use="optional"/>
+				<xs:attribute name="basePath" type="xs:string" use="optional"/>
+				<xs:attribute name="autosave" type="xs:boolean" use="optional"/>
+				<xs:attribute name="path" type="xs:string" use="optional"/>
+				<xs:attribute name="url" type="xs:anyURI" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="propertiesConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractFileConfiguration">
+				<xs:attribute name="header" type="xs:string" use="optional"/>
+				<xs:attribute name="include" type="xs:string" use="optional"/>
+				<xs:attribute name="includesAllowed" type="xs:boolean" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="xmlPropertiesConfiguration">
+		<xs:complexContent>
+			<xs:extension base="propertiesConfiguration"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="xmlConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractHierarchicalFileConfiguration">
+				<xs:attribute name="rootElementName" type="xs:string" use="optional"/>
+				<xs:attribute name="validating" type="xs:boolean" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jndiConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractConfiguration">
+				<xs:attribute name="prefix" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="sources">
+		<xs:choice maxOccurs="unbounded">
+			<xs:element name="system" type="xs:string"/>
+			<xs:element name="properties" type="propertiesConfiguration"/>
+			<xs:element name="xml" type="xmlConfiguration"/>
+			<xs:element name="plist" type="abstractHierarchicalFileConfiguration"/>
+			<xs:element name="jndi" type="jndiConfiguration"/>
+		</xs:choice>
+	</xs:complexType>
+</xs:schema>
