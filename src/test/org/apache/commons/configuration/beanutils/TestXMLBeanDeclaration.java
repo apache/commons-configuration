@@ -63,6 +63,9 @@ public class TestXMLBeanDeclaration extends TestCase
     /** Constant for the key with the bean declaration. */
     static final String KEY = "myBean";
 
+    /** Constant for the section with the variables.*/
+    static final String VARS = "variables.";
+
     /** Stores the object to be tested. */
     XMLBeanDeclaration decl;
 
@@ -74,7 +77,8 @@ public class TestXMLBeanDeclaration extends TestCase
     {
         try
         {
-            decl = new XMLBeanDeclaration((ConfigurationNode) null);
+            decl = new XMLBeanDeclaration(new HierarchicalConfiguration(),
+                    (ConfigurationNode) null);
             fail("Could init declaration with null node!");
         }
         catch (IllegalArgumentException iex)
@@ -262,6 +266,23 @@ public class TestXMLBeanDeclaration extends TestCase
         Map nested = decl.getNestedBeanDeclarations();
         assertTrue("Found nested declarations", nested == null
                 || nested.isEmpty());
+    }
+
+    /**
+     * Tests whether interpolation of bean properties works.
+     */
+    public void testGetInterpolatedBeanProperties()
+    {
+        HierarchicalConfiguration config = new HierarchicalConfiguration();
+        String[] varValues = new String[TEST_PROPS.length];
+        for(int i = 0; i < TEST_PROPS.length; i++)
+        {
+            varValues[i] = "${" + VARS + TEST_PROPS[i] + "}";
+            config.addProperty(VARS + TEST_PROPS[i], TEST_VALUES[i]);
+        }
+        setupBeanDeclaration(config, KEY, TEST_PROPS, varValues);
+        decl = new XMLBeanDeclaration(config, KEY);
+        checkProperties(decl, TEST_PROPS, TEST_VALUES);
     }
 
     /**

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.PropertyConverter;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 
 /**
@@ -36,13 +37,13 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * <p>
  *
  * <pre>
- *  ...
- *  &lt;personBean config-class=&quot;my.model.PersonBean&quot;
- *      lastName=&quot;Doe&quot; firstName=&quot;John&quot;&gt;
- *      &lt;address config-class=&quot;my.model.AddressBean&quot;
- *          street=&quot;21st street 11&quot; zip=&quot;1234&quot;
- *          city=&quot;TestCity&quot;/&gt;
- *  &lt;/personBean&gt;
+ *   ...
+ *   &lt;personBean config-class=&quot;my.model.PersonBean&quot;
+ *       lastName=&quot;Doe&quot; firstName=&quot;John&quot;&gt;
+ *       &lt;address config-class=&quot;my.model.AddressBean&quot;
+ *           street=&quot;21st street 11&quot; zip=&quot;1234&quot;
+ *           city=&quot;TestCity&quot;/&gt;
+ *   &lt;/personBean&gt;
  * </pre>
  *
  * </p>
@@ -103,6 +104,9 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public static final String ATTR_FACTORY_PARAM = RESERVED_PREFIX
             + "factoryParam";
 
+    /** Stores the associated configuration. */
+    private HierarchicalConfiguration configuration;
+
     /** Stores the configuration node that contains the bean declaration. */
     private ConfigurationNode node;
 
@@ -122,14 +126,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
             throw new IllegalArgumentException(
                     "Configuration must not be null!");
         }
-        if (key == null)
-        {
-            node = config.getRoot();
-        }
-        else
-        {
-            node = config.configurationAt(key).getRoot();
-        }
+
+        node = (key == null) ? config.getRoot() : config.configurationAt(key)
+                .getRoot();
+        configuration = config;
     }
 
     /**
@@ -141,7 +141,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public XMLBeanDeclaration(HierarchicalConfiguration config)
     {
-        this(config, null);
+        this(config, (String) null);
     }
 
     /**
@@ -149,15 +149,34 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * initializes it with the configuration node that contains the bean
      * declaration.
      *
+     * @param config the configuration
      * @param node the node with the bean declaration.
      */
-    public XMLBeanDeclaration(ConfigurationNode node)
+    public XMLBeanDeclaration(HierarchicalConfiguration config,
+            ConfigurationNode node)
     {
+        if (config == null)
+        {
+            throw new IllegalArgumentException(
+                    "Configuration must not be null!");
+        }
         if (node == null)
         {
             throw new IllegalArgumentException("Node must not be null!");
         }
+
         this.node = node;
+        configuration = config;
+    }
+
+    /**
+     * Returns the configuration object this bean declaration is based on.
+     *
+     * @return the associated configuration
+     */
+    public HierarchicalConfiguration getConfiguration()
+    {
+        return configuration;
     }
 
     /**
@@ -217,7 +236,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
             ConfigurationNode attr = (ConfigurationNode) it.next();
             if (!isReservedNode(attr))
             {
-                props.put(attr.getName(), attr.getValue());
+                props.put(attr.getName(), PropertyConverter.interpolate(attr
+                        .getValue(), getConfiguration()));
             }
         }
 
@@ -239,7 +259,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
             ConfigurationNode child = (ConfigurationNode) it.next();
             if (!isReservedNode(child))
             {
-                nested.put(child.getName(), new XMLBeanDeclaration(child));
+                nested.put(child.getName(), new XMLBeanDeclaration(
+                        getConfiguration(), child));
             }
         }
 
