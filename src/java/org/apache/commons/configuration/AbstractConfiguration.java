@@ -219,7 +219,8 @@ public abstract class AbstractConfiguration implements Configuration
      */
     protected String interpolate(String base)
     {
-        return interpolateHelper(base, null);
+        Object result = interpolate((Object) base);
+        return (result == null) ? null : result.toString();
     }
 
     /**
@@ -231,14 +232,7 @@ public abstract class AbstractConfiguration implements Configuration
      */
     protected Object interpolate(Object value)
     {
-        if (value instanceof String)
-        {
-            return interpolate((String) value);
-        }
-        else
-        {
-            return value;
-        }
+        return PropertyConverter.interpolate(value, this);
     }
 
     /**
@@ -253,82 +247,13 @@ public abstract class AbstractConfiguration implements Configuration
      * subsequent interpolated variables are added afterward.
      *
      * @return the string with the interpolation taken care of
+     * @deprecated Interpolation is now handled by
+     * <code>{@link PropertyConverter}</code>; this method will no longer be
+     * called
      */
     protected String interpolateHelper(String base, List priorVariables)
     {
-        if (base == null)
-        {
-            return null;
-        }
-
-        // on the first call initialize priorVariables
-        // and add base as the first element
-        if (priorVariables == null)
-        {
-            priorVariables = new ArrayList();
-            priorVariables.add(base);
-        }
-
-        int begin = -1;
-        int end = -1;
-        int prec = 0 - END_TOKEN.length();
-        StringBuffer result = new StringBuffer();
-
-        // FIXME: we should probably allow the escaping of the start token
-        while (((begin = base.indexOf(START_TOKEN, prec + END_TOKEN.length())) > -1)
-                && ((end = base.indexOf(END_TOKEN, begin)) > -1))
-        {
-            result.append(base.substring(prec + END_TOKEN.length(), begin));
-            String variable = base.substring(begin + START_TOKEN.length(), end);
-
-            // if we've got a loop, create a useful exception message and throw
-            if (priorVariables.contains(variable))
-            {
-                String initialBase = priorVariables.remove(0).toString();
-                priorVariables.add(variable);
-                StringBuffer priorVariableSb = new StringBuffer();
-
-                // create a nice trace of interpolated variables like so:
-                // var1->var2->var3
-                for (Iterator it = priorVariables.iterator(); it.hasNext();)
-                {
-                    priorVariableSb.append(it.next());
-                    if (it.hasNext())
-                    {
-                        priorVariableSb.append("->");
-                    }
-                }
-
-                throw new IllegalStateException("infinite loop in property interpolation of " + initialBase + ": "
-                        + priorVariableSb.toString());
-            }
-            // otherwise, add this variable to the interpolation list.
-            else
-            {
-                priorVariables.add(variable);
-            }
-
-            Object value = resolveContainerStore(variable);
-            if (value != null)
-            {
-                result.append(interpolateHelper(value.toString(), priorVariables));
-
-                // pop the interpolated variable off the stack
-                // this maintains priorVariables correctness for
-                // properties with multiple interpolations, e.g.
-                // prop.name=${some.other.prop1}/blahblah/${some.other.prop2}
-                priorVariables.remove(priorVariables.size() - 1);
-            }
-            else
-            {
-                //variable not defined - so put it back in the value
-                result.append(START_TOKEN).append(variable).append(END_TOKEN);
-            }
-
-            prec = end;
-        }
-        result.append(base.substring(prec + END_TOKEN.length(), base.length()));
-        return result.toString();
+        return base; // just a dummy implementation
     }
 
     /**
