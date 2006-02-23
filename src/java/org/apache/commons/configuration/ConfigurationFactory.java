@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Stack;
 
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
@@ -801,76 +800,10 @@ public class ConfigurationFactory
             else
             {
                 // transform configuration to a hierarchical root node
-                HierarchicalConfigurationNodeConverter conv =
-                new HierarchicalConfigurationNodeConverter();
-                conv.process(cdata.getConfiguration());
-                return conv.getRootNode();
+                HierarchicalConfiguration hc = new HierarchicalConfiguration();
+                ConfigurationUtils.copy(cdata.getConfiguration(), hc);
+                return hc.getRoot();
             }
-        }
-    }
-
-    /**
-     * A specialized <code>HierarchicalConfigurationConverter</code> class
-     * that creates a <code>HierarchicalConfiguration</code> root node from
-     * an arbitrary <code>Configuration</code> object. This class is used to
-     * add additional configuration objects to the hierarchical configuration
-     * managed by the <code>ConfigurationBuilder</code>.
-     */
-    static class HierarchicalConfigurationNodeConverter extends HierarchicalConfigurationConverter
-    {
-        /** A stack for constructing the hierarchy.*/
-        private Stack nodes;
-
-        /** Stores the root node.*/
-        private HierarchicalConfiguration.Node root;
-
-        /**
-         * Default constructor.
-         */
-        public HierarchicalConfigurationNodeConverter()
-        {
-            nodes = new Stack();
-            root = new HierarchicalConfiguration.Node();
-            nodes.push(root);
-        }
-
-        /**
-         * Callback for an element start event. Creates a new node and adds
-         * it to the actual parent.
-         *
-         * @param name the name of the new node
-         * @param value the node's value
-         */
-        protected void elementStart(String name, Object value)
-        {
-            HierarchicalConfiguration.Node parent = (HierarchicalConfiguration.Node) nodes.peek();
-            HierarchicalConfiguration.Node child = new HierarchicalConfiguration.Node(name);
-            if (value != null)
-            {
-                child.setValue(value);
-            }
-            parent.addChild(child);
-            nodes.push(child);
-        }
-
-        /**
-         * Callback for an element end event. Clears the stack.
-         *
-         * @param name the name of the element
-         */
-        protected void elementEnd(String name)
-        {
-            nodes.pop();
-        }
-
-        /**
-         * Returns the constructed root node.
-         *
-         * @return the root node
-         */
-        public HierarchicalConfiguration.Node getRootNode()
-        {
-            return root;
         }
     }
 }
