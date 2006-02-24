@@ -37,7 +37,7 @@ package org.apache.commons.configuration.beanutils;
  * creates. Then it is not necessary to specify a bean class in the bean
  * declaration.
  * </p>
- * 
+ *
  * @since 1.3
  * @author Oliver Heger
  * @version $Id$
@@ -48,23 +48,26 @@ public interface BeanFactory
      * Returns a bean instance for the given class. The bean will be initialized
      * from the specified bean declaration object. It is up to a concrete
      * implementation how the bean will be created and initialized.
-     * 
+     *
      * @param beanClass the class for the bean
      * @param data the bean declaration object containing all data about the
      * bean to be created
+     * @param param an additional parameter that may be passed by calling code;
+     * it is up to a concrete implementation how this parameter is evaluated
      * @return the new bean instance (should not be <b>null</b>)
      * @throws Exception if an error occurs (the helper classes for creating
      * beans will catch this unspecific exception and wrap it in a configuration
      * exception)
      */
-    Object createBean(Class beanClass, BeanDeclaration data) throws Exception;
+    Object createBean(Class beanClass, BeanDeclaration data, Object param)
+            throws Exception;
 
     /**
      * Returns the default bean class of this bean factory. If an implementation
      * here returns a non <b>null</b> value, bean declarations using this
      * factory do not need to provide the name of the bean class. In such a case
      * an instance of the default class will be created.
-     * 
+     *
      * @return the default class of this factory or <b>null</b> if there is
      * none
      */

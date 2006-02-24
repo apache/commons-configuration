@@ -50,11 +50,12 @@ public class DefaultBeanFactory implements BeanFactory
      * @param beanClass the class of the bean, from which an instance is to be
      * created
      * @param data the bean declaration object
+     * @param param an additional parameter (ignored by this implementation)
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    public Object createBean(Class beanClass, BeanDeclaration data)
-            throws Exception
+    public Object createBean(Class beanClass, BeanDeclaration data,
+            Object parameter) throws Exception
     {
         Object result = createBeanInstance(beanClass, data);
         initBeanInstance(result, data);

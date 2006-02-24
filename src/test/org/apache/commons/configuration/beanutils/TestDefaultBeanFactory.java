@@ -54,7 +54,7 @@ public class TestDefaultBeanFactory extends TestCase
     public void testCreateBean() throws Exception
     {
         Object bean = factory.createBean(PropertiesConfiguration.class,
-                new TestBeanDeclaration());
+                new TestBeanDeclaration(), null);
         assertNotNull("New bean is null", bean);
         assertEquals("Bean is of wrong class", PropertiesConfiguration.class,
                 bean.getClass());

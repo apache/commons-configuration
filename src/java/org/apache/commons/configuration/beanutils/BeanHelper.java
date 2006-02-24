@@ -221,11 +221,14 @@ public class BeanHelper
      *
      * @param data the bean declaration
      * @param defaultClass the default class to use
+     * @param param an additional parameter that will be passed to the bean
+     * factory; some factories may support parameters and behave different
+     * depending on the value passed in here
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data, Class defaultClass)
-            throws ConfigurationRuntimeException
+    public static Object createBean(BeanDeclaration data, Class defaultClass,
+            Object param) throws ConfigurationRuntimeException
     {
         if (data == null)
         {
@@ -237,12 +240,26 @@ public class BeanHelper
         try
         {
             return factory.createBean(fetchBeanClass(data, defaultClass,
-                    factory), data);
+                    factory), data, param);
         }
         catch (Exception ex)
         {
             throw new ConfigurationRuntimeException(ex);
         }
+    }
+
+    /**
+     * Returns a bean instance for the specified declaration. This method is a
+     * short cut for <code>createBean(data, null, null);</code>.
+     *
+     * @param data the bean declaration
+     * @return the new bean
+     * @throws ConfigurationRuntimeException if an error occurs
+     */
+    public static Object createBean(BeanDeclaration data, Class defaultClass)
+            throws ConfigurationRuntimeException
+    {
+        return createBean(data, defaultClass, null);
     }
 
     /**

@@ -205,11 +205,13 @@ public class TestBeanHelper extends TestCase
      */
     public void testCreateBean()
     {
-        BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
+        TestBeanFactory factory = new TestBeanFactory();
+        BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(TestBean.class.getName());
         checkBean((TestBean) BeanHelper.createBean(data, null));
+        assertNull("A parameter was passed", factory.parameter);
     }
 
     /**
@@ -347,6 +349,21 @@ public class TestBeanHelper extends TestCase
     }
 
     /**
+     * Tests if a parameter is correctly passed to the bean factory.
+     */
+    public void testCreateBeanWithParameter()
+    {
+        Object param = new Integer(42);
+        TestBeanFactory factory = new TestBeanFactory();
+        BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
+        TestBeanDeclaration data = setUpBeanDeclaration();
+        data.setBeanFactoryName(TEST_FACTORY);
+        data.setBeanClassName(TestBean.class.getName());
+        checkBean((TestBean) BeanHelper.createBean(data, null, param));
+        assertSame("Wrong parameter", param, factory.parameter);
+    }
+
+    /**
      * Returns an initialized bean declaration.
      *
      * @return the bean declaration
@@ -441,11 +458,14 @@ public class TestBeanHelper extends TestCase
      */
     static class TestBeanFactory implements BeanFactory
     {
+        Object parameter;
+
         boolean supportsDefaultClass;
 
-        public Object createBean(Class beanClass, BeanDeclaration data)
+        public Object createBean(Class beanClass, BeanDeclaration data, Object param)
                 throws Exception
         {
+            parameter = param;
             if (TestBean.class.equals(beanClass))
             {
                 TestBean bean = new TestBean();

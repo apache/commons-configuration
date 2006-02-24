@@ -122,6 +122,24 @@ public class TestXMLBeanDeclaration extends TestCase
     }
 
     /**
+     * Tests creating a declaration from a null configuration with a node. This
+     * should cause an exception.
+     */
+    public void testInitFromNullConfigurationAndNode()
+    {
+        try
+        {
+            decl = new XMLBeanDeclaration(null, new HierarchicalConfiguration()
+                    .getRoot());
+            fail("Could init declaration with null configuration and node!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Tests fetching the bean's class name.
      */
     public void testGetBeanClassName()
