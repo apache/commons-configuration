@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <properties fileName="test.properties" throwExceptionOnMissing="true">
+    <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
+      refreshDelay="10000"/>
+  </properties>
+  <xml fileName="test.xml">
+    <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
+      propertyDelimiter="/" indexStart="[" indexEnd="]"/>
+  </xml>
+</configuration>
