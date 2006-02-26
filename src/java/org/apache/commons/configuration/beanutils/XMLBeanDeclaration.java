@@ -306,7 +306,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param attrName the name of the attribute
      * @return the attribute's value as string
      */
-    private String attributeValueStr(String attrName)
+    protected String attributeValueStr(String attrName)
     {
         Object value = attributeValue(attrName);
         return (value != null) ? value.toString() : null;
