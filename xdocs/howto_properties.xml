@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
   <properties>
     <title>Properties files</title>
     <author email="smanux@lfjr.net">Emmanuel Bourg</author>
-    <author email="oliver.heger@t-online.de">Oliver Heger</author>
+    <author email="oheger@apache.org">Oliver Heger</author>
   </properties>
 
   <body>
@@ -27,18 +27,31 @@
     <section name="Properties files">
       <p>
         Properties files are a popular mean of configuring applications. Of course Commons Configuration
-        supports this format and enhance significantly the basic <code>java.util.Properties</code> class.
-        This section introduces the features of the  <code>PropertiesConfiguration</code> class.
+        supports this format and enhances significantly the basic <code>java.util.Properties</code> class.
+        This section introduces the features of the 
+        <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
+        Note that <code>PropertiesConfiguration</code> is a very typical example
+        for an implementation of the <code>Configuration</code> interface and
+        many of the features described in this section (e.g. list handling or
+        interpolation) are supported by other configuration classes as well.
+        This is because most configuration implementations that ship with
+        Commons Configuration are derived from the common base class
+        <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">AbstractConfiguration</a></code>,
+        which implementes this features.
       </p>
 
-      <subsection name="Loading">
+      <subsection name="Using PropertiesConfiguration">
         <p>
-          At first lets consider that the whole configuration data of an application consists in
-          a single properties file named <code>usergui.properties</code> with the following content:
+          Let's start with a simple properties file named
+          <code>usergui.properties</code> with the following content:
         </p>
         <source><![CDATA[
 # Properties definining the GUI
 colors.background = #FFFFFF
+colors.foreground = #000080
+
+window.width = 500
+window.height = 300
 ]]></source>
 
         <p>
@@ -59,23 +72,20 @@ Configuration config = new PropertiesConfiguration("usergui.properties");
         <p>
           Instead of using a constructor that takes a file name you can also
           invoke one of the <code>load()</code> methods. There are several
-          overloaded variants that allow to load properties from
-          <ul>
-            <li>a file, specified by either a path or a <code>java.io.File</code>
-            object</li>
-            <li>a URL</li>
-            <li>an input stream or a reader.</li>
-          </ul>
+          overloaded variants that allow you to load properties from various
+          sources. More information about loading properties files (and file-based
+          configurations in general) can be found in the section about
+          <a href="howto_filebased.html">File-based Configurations</a>.
         </p>
         <p>
-          Note that the <code>load()</code> methods do not empty the
-          configuration before new data is loaded. This makes it easy to
-          construct union configurations by simply calling <code>load()</code>
-          multiple times. But if you want to reuse a <code>Configuration</code>
-          object and load a different file, remember to call the
-          <code>clear()</code> method first to ensure that old properties are
-          wiped out.
+          After the properties file was loaded you can access its content through
+          the methods of the <code>Configuration</code> interface, e.g.
         </p>
+<source>
+String backColor = config.getString("colors.background");
+Dimension size = new Dimension(config.getInt("window.width"),
+  config.getInt("window.height"));
+</source>
       </subsection>
 
       <subsection name="Includes">
@@ -99,24 +109,109 @@ colors.background = #FFFFFF
 
       </subsection>
 
-      <subsection name="Automatic Reloading">
+      <subsection name="Lists and arrays">
         <p>
-          A common issue with properties file is to handle the reloading of the file when it
-          changes. Typically you would use a thread monitoring the date of the file and reloading
-          the <code>Properties</code> when a more recent date is detected. Commons Configuration
-          integrates this mechanism out of the box, to enable it, just specify a reloading strategy
-          on your configuration:
+          Commons Configuration has the ability to return easily a list of values,
+          for example if your file contains a list of comma separated values:
         </p>
 <source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setReloadingStrategy(new FileChangedReloadingStrategy());
+# chart colors
+colors.pie = #FF0000, #00FF00, #0000FF
 </source>
         <p>
-          Now everytime you edit manually the <code>usergui.properties</code> file, the
-          configuration is automatically refreshed and the modified values are immediately
-          available to your application.
+          You don't have to split the value manually, you can retrieve an array
+          or a <code>java.util.List</code> directly with:
         </p>
+<source>
+String[] colors = config.getStringArray("colors.pie");
+List colorList = config.getList("colors.pie");
+</source>
+        <p>
+          Alternatively, you can specify a list of values in your properties file by using
+          the same key on several lines:
+        </p>
+<source>
+# chart colors
+colors.pie = #FF0000;
+colors.pie = #00FF00;
+colors.pie = #0000FF;
+</source>
+        <p>
+          The <code>addProperty()</code> and <code>setProperty()</code> methods
+          also implement special list handling. The property value that is passed
+          to these methods can be a list or an array resulting in a property
+          with multiple values. If the property value is a string, it is checked
+          whether it contains the <em>list delimiter character</em>. If this is
+          the case, the string is splitted, and its single parts are added one
+          by one. The list delimiter character is the comma by default. It is
+          also applied to the properties when the configuration file is loaded
+          (that's the reason why the example above with the comma separated list
+          of chart colors works). By using the <code>setListDelimiter()</code>
+          method you can set it to a different character. Here are some examples:
+        </p>
+<source>
+// Change the list delimiter character to a slash
+config.setListDelimiter('/');
+// Now add some properties
+config.addProperty("greeting", "Hello, how are you?");
+config.addProperty("colors.pie",
+  new String[] { "#FF0000", "#00FF00", "#0000FF" });
+config.addProperty("colors.graph", "#808080/#00FFCC/#6422FF");
 
+// Access data
+String salut = config.getString("greeting");
+List colPie = config.getList("colors.pie");
+String[] colGraph = config.getStringArray("colors.graph");
+
+String firstPieColor = config.getString("colors.pie");
+</source>
+        <p>
+          In this example the list delimiter character is changed from a comma
+          to a slash. Because of this the <code>greeting</code> property won't
+          be splitted, but remains a single string. The string passed as value
+          for the <code>colors.graph</code> property in opposite contains the
+          new delimiter character and thus will result in a property with three
+          values.
+        </p>
+        <p>
+          Of interest is also the last line of the example fragment. Here the
+          <code>getString()</code> method is called for a property that has
+          multiple values. This call will return the first value of the list.
+        </p>
+        <p>
+          If you want to change the list delimiter character for all configuration
+          objects, you can use the static <code>setDefaultListDelimiter()</code>
+          method of <code>AbstractConfiguration</code>. It is also possible to
+          disable splitting of string properties at all for a Configuration
+          instance by calling its <code>setDelimiterParsingDisabled()</code>
+          method with a value of <b>true</b>.
+        </p>
+        <p>
+          <em>Note:</em> The list handling and string splitting facilities
+          described in this section are not specific to <code>PropertiesConfiguration</code>,
+          but are also supported by other configuration classes.
+        </p>
+      </subsection>
+
+      <subsection name="Variable Interpolation">
+        <p>
+          If you are familiar with Ant or Maven, you have most certainly already encountered
+          the variables (like <code>${token}</code>) that are automatically expanded when the
+          configuration file is loaded. Commons Configuration supports this feature as well,
+          here is an example:
+        </p>
+<source>
+application.name = Killer App
+application.version = 1.6.2
+
+application.title = ${application.name} ${application.version}
+</source>
+        <p>
+          If you now retrieve the value for the <code>application.title</code>
+          property, the result will be <code>Killer App 1.6.2</code>. As for
+          list handling, variable interpolation is a feature supported by other
+          configuration classes as well.
+        </p>
       </subsection>
 
       <subsection name="Saving">
@@ -137,57 +232,10 @@ config.setProperty("colors.background", "#000000);
 config.save("usergui.backup.properties);
 </source>
         <p>
-          And if you don't want to bother saving your configuration everytime it changes,
-          you can enable the automatic saving mode:
+          More information about saving properties files (and file-based
+          configurations in general) can be found in the section about
+          <a href="howto_filebased.html">File-based Configurations</a>.
         </p>
-<source>
-PropertiesConfiguration config = new PropertiesConfiguration("usergui.properties");
-config.setAutoSave(true);
-config.setProperty("colors.background", "#000000); // the configuration is saved after this call
-</source>
-
-      </subsection>
-
-      <subsection name="Lists and arrays">
-        <p>
-          Commons Configuration has the ability to return easily a list of values,
-          for example if your file contains a list of comma separated values:
-        </p>
-<source>
-# chart colors
-colors.pie = #FF0000, #00FF00, #0000FF
-</source>
-        <p>
-          You don't have to split the value manually, you can retrieve an array directly with:
-        </p>
-<source>
-String[] colors = config.getStringArray("colors.pie");
-</source>
-        <p>
-          Alternatively, you can specify a list of values in your properties file by using
-          the same key on several lines:
-        </p>
-<source>
-# chart colors
-colors.pie = #FF0000;
-colors.pie = #00FF00;
-colors.pie = #0000FF;
-</source>
-      </subsection>
-
-      <subsection name="Variable Interpolation">
-        <p>
-          If you are familiar with Ant or Maven, you have most certainly already encountered
-          the variables (like <code>${token}</code>) that are automatically expanded when the
-          configuration file is loaded. Commons Configuration supports this feature as well,
-          here is an example:
-        </p>
-<source>
-application.name = Killer App
-application.version = 1.6.2
-
-application.title = ${application.name} ${application.version}
-</source>
       </subsection>
 
       <subsection name="Special Characters">
@@ -200,8 +248,6 @@ application.title = ${application.name} ${application.version}
 key = This \n string \t contains \, escaped \\ characters \u0020
 ]]></source>
       </subsection>
-
-
 
     </section>
 

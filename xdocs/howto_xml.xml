@@ -19,7 +19,7 @@
 
  <properties>
   <title>XML Howto</title>
-  <author email="oliver.heger@t-online.de">Oliver Heger</author>
+  <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
 <body>		
@@ -67,7 +67,8 @@
 				design of XML documents, the example file should rather 
 				demonstrate the different ways of accessing properties.)
 				To access the data stored in this document it must be loaded
-                by <code>XMLConfiguration</code>. Like other file based
+                by <code>XMLConfiguration</code>. Like other 
+                <a href="howto_filebased.html">file based</a>
                 configuration classes <code>XMLConfiguration</code> supports
                 many ways of specifying the file to process. One way is to
                 pass the file name to the constructor as shown in the following
@@ -131,7 +132,7 @@ List buttons = config.getList("buttons.name");
                         has the three values <em>OK</em>, <em>Cancel</em>, and
                         <em>Help</em>, so it is queried using the <code>getList()</code>
                         method. This works in attributes, too. Using the static
-                        <code>setDelimiter()</code> method of
+                        <code>setDefaultDelimiter()</code> method of
                         <code>AbstractConfiguration</code> you can globally
                         define a different delimiter character or -
                         by setting the delimiter to 0 - disabling this mechanism

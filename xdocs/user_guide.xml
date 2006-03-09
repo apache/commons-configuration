@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Commons Configuration User's Guide</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="About this document">
+		<p>
+ 	 		This document describes the features of the Commons Configuration
+            component starting with the very basics and up to the more advanced
+            topics. If you read it in a linear way, you should get a sound
+            understanding of the provided classes and the possibilities they
+            offer. But you can also skip sections and jump directly to the topics
+            you are most interested in.
+    	</p>
+    </section>
+
+	<section name="Table of contents">
+    <ul>
+      <li><a href="overview.html#Using Configuration">Using Configuration</a></li>
+      <ul>
+        <li><a href="overview.html#Configuration Sources">Configuration Sources</a></li>
+        <li><a href="overview.html#Mixing Configuration Sources">Mixing Configuration Sources</a></li>
+        <li><a href="overview.html#The Configuration interface">The Configuration interface</a></li>
+      </ul>
+      <li><a href="howto_properties.html#Properties files">Properties files</a></li>
+      <ul>
+        <li><a href="howto_properties.html#Using PropertiesConfiguration">Using PropertiesConfiguration</a></li>
+        <li><a href="howto_properties.html#Includes">Includes</a></li>
+        <li><a href="howto_properties.html#Lists and arrays">Lists and arrays</a></li>
+        <li><a href="howto_properties.html#Variable Interpolation">Variable Interpolation</a></li>
+        <li><a href="howto_properties.html#Saving">Saving</a></li>
+        <li><a href="howto_properties.html#Special Characters">Special Characters</a></li>
+      </ul>
+      <li><a href="howto_filebased.html#File-based Configurations">File-based Configurations</a></li>
+      <ul>
+        <li><a href="howto_filebased.html#Specifying the file">Specifying the file</a></li>
+        <li><a href="howto_filebased.html#Loading">Loading</a></li>
+        <li><a href="howto_filebased.html#Saving">Saving</a></li>
+        <li><a href="howto_filebased.html#Automatic Saving">Automatic Saving</a></li>
+        <li><a href="howto_filebased.html#Automatic Reloading">Automatic Reloading</a></li>
+      </ul>
+      <li><a href="howto_xml.html#Hierarchical properties">Hierarchical properties</a></li>
+      <ul>
+        <li><a href="howto_xml.html#Accessing properties defined in XML documents">Accessing properties defined in XML documents</a></li>
+        <li><a href="howto_xml.html#Structured XML">Structured XML</a></li>
+        <li><a href="howto_xml.html#Accessing structured properties">Accessing structured properties</a></li>
+        <li><a href="howto_xml.html#Adding new properties">Adding new properties</a></li>
+        <li><a href="howto_xml.html#Escaping dot characters in XML tags">Escaping dot characters in XML tags</a></li>
+      </ul>
+      <li><a href="howto_xml.html#Expression engines">Expression engines</a></li>
+      <ul>
+        <li><a href="howto_xml.html#The default expression engine">The default expression engine</a></li>
+        <li><a href="howto_xml.html#The XPATH expression engine">The XPATH expression engine</a></li>
+      </ul>
+      <li><a href="howto_xml.html#Validation of XML configuration files">Validation of XML configuration files</a></li>
+      <li><a href="howto_compositeconfiguration.html#Composite Configuration Details">Composite Configuration Details</a></li>
+      <ul>
+        <li><a href="howto_compositeconfiguration.html#Setting Up Defaults">Setting Up Defaults</a></li>
+        <li><a href="howto_compositeconfiguration.html#Saving Changes">Saving Changes</a></li>
+      </ul>
+      <li><a href="howto_beans.html#Declaring and Creating Beans">Declaring and Creating Beans</a></li>
+      <ul>
+        <li><a href="howto_beans.html#Basic Concepts">Basic Concepts</a></li>
+        <li><a href="howto_beans.html#An Example">An Example</a></li>
+        <li><a href="howto_beans.html#Extending the Basic Mechanism">Extending the Basic Mechanism</a></li>
+      </ul>
+      <li><a href="howto_configurationfactory.html#Using a Configuration Factory">Using a Configuration Factory</a></li>
+      <ul>
+        <li><a href="howto_configurationfactory.html#The configuration definition file">The configuration definition file</a></li>
+        <li><a href="howto_configurationfactory.html#Setting up a ConfigurationFactory">Setting up a ConfigurationFactory</a></li>
+        <li><a href="howto_configurationfactory.html#Accessing properties">Accessing properties</a></li>
+      </ul>
+      <li><a href="howto_configurationfactory.html#Multiple configuration sources">Multiple configuration sources</a></li>
+      <ul>
+        <li><a href="howto_configurationfactory.html#Overriding properties">Overriding properties</a></li>
+        <li><a href="howto_configurationfactory.html#Optional configuration sources">Optional configuration sources</a></li>
+      </ul>
+      <li><a href="howto_configurationfactory.html#Union configuration">Union configuration</a></li>
+      <li><a href="howto_configurationfactory.html#The configuration definition file">The configuration definition file</a></li>
+      <ul>
+        <li><a href="howto_configurationfactory.html#Setting further options">Setting further options</a></li>
+      </ul>
+    </ul>
+    </section>
+</body>
+
+</document>
