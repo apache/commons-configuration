@@ -26,12 +26,12 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import junit.framework.TestCase;
 
 /**
- * Test class for XMLConfigurationFactory.
+ * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestXMLConfigurationFactory extends TestCase
+public class TestDefaultConfigurationBuilder extends TestCase
 {
     /** Test configuration definition file. */
     private static final File TEST_FILE = new File(
@@ -53,7 +53,7 @@ public class TestXMLConfigurationFactory extends TestCase
             "conf/testComplexInitialization.xml");
 
     /** Stores the object to be tested. */
-    XMLConfigurationFactory factory;
+    DefaultConfigurationBuilder factory;
 
     protected void setUp() throws Exception
     {
@@ -61,7 +61,7 @@ public class TestXMLConfigurationFactory extends TestCase
         System
                 .setProperty("java.naming.factory.initial",
                         "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
-        factory = new XMLConfigurationFactory();
+        factory = new DefaultConfigurationBuilder();
     }
 
     /**
@@ -69,8 +69,8 @@ public class TestXMLConfigurationFactory extends TestCase
      */
     public void testConfigurationDeclarationIsReserved()
     {
-        factory = new XMLConfigurationFactory();
-        XMLConfigurationFactory.ConfigurationDeclaration decl = new XMLConfigurationFactory.ConfigurationDeclaration(
+        factory = new DefaultConfigurationBuilder();
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory);
         DefaultConfigurationNode nd = new DefaultConfigurationNode();
         nd.setAttribute(true);
@@ -94,9 +94,9 @@ public class TestXMLConfigurationFactory extends TestCase
      */
     public void testConfigurationDeclarationGetAttributes()
     {
-        factory = new XMLConfigurationFactory();
+        factory = new DefaultConfigurationBuilder();
         factory.addProperty("/ xml/fileName", "test.xml");
-        XMLConfigurationFactory.ConfigurationDeclaration decl = new XMLConfigurationFactory.ConfigurationDeclaration(
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("xml"));
         assertNull("Found an at attribute", decl.getAt());
         assertFalse("Found an optional attribute", decl.isOptional());
@@ -121,7 +121,7 @@ public class TestXMLConfigurationFactory extends TestCase
      */
     public void testAddConfigurationProvider()
     {
-        XMLConfigurationFactory.ConfigurationProvider provider = new XMLConfigurationFactory.ConfigurationProvider();
+        DefaultConfigurationBuilder.ConfigurationProvider provider = new DefaultConfigurationBuilder.ConfigurationProvider();
         assertNull("Provider already registered", factory
                 .providerForTag("test"));
         factory.addConfigurationProvider("test", provider);
@@ -155,7 +155,7 @@ public class TestXMLConfigurationFactory extends TestCase
         try
         {
             factory.addConfigurationProvider(null,
-                    new XMLConfigurationFactory.ConfigurationProvider());
+                    new DefaultConfigurationBuilder.ConfigurationProvider());
             fail("Could register provider for null tag!");
         }
         catch (IllegalArgumentException iex)
@@ -173,7 +173,7 @@ public class TestXMLConfigurationFactory extends TestCase
                 .removeConfigurationProvider("test"));
         assertNull("Removing provider for null tag", factory
                 .removeConfigurationProvider(null));
-        XMLConfigurationFactory.ConfigurationProvider provider = new XMLConfigurationFactory.ConfigurationProvider();
+        DefaultConfigurationBuilder.ConfigurationProvider provider = new DefaultConfigurationBuilder.ConfigurationProvider();
         factory.addConfigurationProvider("test", provider);
         assertSame("Failed to remove provider", provider, factory
                 .removeConfigurationProvider("test"));
@@ -186,10 +186,10 @@ public class TestXMLConfigurationFactory extends TestCase
     public void testConfigurationBeanFactoryCreateBean()
     {
         factory.addConfigurationProvider("test",
-                new XMLConfigurationFactory.ConfigurationProvider(
+                new DefaultConfigurationBuilder.ConfigurationProvider(
                         PropertiesConfiguration.class));
         factory.addProperty("/ test@throwExceptionOnMissing", "true");
-        XMLConfigurationFactory.ConfigurationDeclaration decl = new XMLConfigurationFactory.ConfigurationDeclaration(
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
         PropertiesConfiguration conf = (PropertiesConfiguration) BeanHelper
                 .createBean(decl);
@@ -204,7 +204,7 @@ public class TestXMLConfigurationFactory extends TestCase
     public void testConfigurationBeanFactoryCreateUnknownTag()
     {
         factory.addProperty("/ test@throwExceptionOnMissing", "true");
-        XMLConfigurationFactory.ConfigurationDeclaration decl = new XMLConfigurationFactory.ConfigurationDeclaration(
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
         try
         {
@@ -231,7 +231,7 @@ public class TestXMLConfigurationFactory extends TestCase
      */
     public void testLoadConfigurationFromFile() throws ConfigurationException
     {
-        factory = new XMLConfigurationFactory(TEST_FILE);
+        factory = new DefaultConfigurationBuilder(TEST_FILE);
         checkConfiguration();
     }
 
@@ -241,7 +241,7 @@ public class TestXMLConfigurationFactory extends TestCase
     public void testLoadConfigurationFromFileName()
             throws ConfigurationException
     {
-        factory = new XMLConfigurationFactory(TEST_FILE.getAbsolutePath());
+        factory = new DefaultConfigurationBuilder(TEST_FILE.getAbsolutePath());
         checkConfiguration();
     }
 
@@ -250,7 +250,7 @@ public class TestXMLConfigurationFactory extends TestCase
      */
     public void testLoadConfigurationFromURL() throws Exception
     {
-        factory = new XMLConfigurationFactory(TEST_FILE.toURL());
+        factory = new DefaultConfigurationBuilder(TEST_FILE.toURL());
         checkConfiguration();
     }
 

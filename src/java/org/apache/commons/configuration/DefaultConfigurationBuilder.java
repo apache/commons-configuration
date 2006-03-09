@@ -62,13 +62,13 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * @author Oliver Heger
  * @version $Id$
  */
-public class XMLConfigurationFactory extends XMLConfiguration
+public class DefaultConfigurationBuilder extends XMLConfiguration implements ConfigurationBuilder
 {
-    /** Constant for the expression engine used by this factory. */
+    /** Constant for the expression engine used by this builder. */
     static final XPathExpressionEngine EXPRESSION_ENGINE = new XPathExpressionEngine();
 
     /** Constant for the name of the configuration bean factory. */
-    static final String CONFIG_BEAN_FACTORY_NAME = XMLConfigurationFactory.class
+    static final String CONFIG_BEAN_FACTORY_NAME = DefaultConfigurationBuilder.class
             .getName()
             + ".CONFIG_BEAN_FACTORY_NAME";
 
@@ -134,12 +134,12 @@ public class XMLConfigurationFactory extends XMLConfiguration
     private String configurationBasePath;
 
     /**
-     * Creates a new instance of <code>XMLConfigurationFactory</code>. A
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code>. A
      * configuration definition file is not yet loaded. Use the diverse setter
      * methods provided by file based configurations to specify the
      * configuration definition file.
      */
-    public XMLConfigurationFactory()
+    public DefaultConfigurationBuilder()
     {
         super();
         providers = new HashMap();
@@ -148,25 +148,25 @@ public class XMLConfigurationFactory extends XMLConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfigurationFactory</code> and sets
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
      * the specified configuration definition file.
      *
      * @param file the configuration definition file
      */
-    public XMLConfigurationFactory(File file)
+    public DefaultConfigurationBuilder(File file)
     {
         this();
         setFile(file);
     }
 
     /**
-     * Creates a new instance of <code>XMLConfigurationFactory</code> and sets
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
      * the specified configuration definition file.
      *
      * @param fileName the name of the configuration definition file
      * @throws ConfigurationException if an error occurs when the file is loaded
      */
-    public XMLConfigurationFactory(String fileName)
+    public DefaultConfigurationBuilder(String fileName)
             throws ConfigurationException
     {
         this();
@@ -174,13 +174,13 @@ public class XMLConfigurationFactory extends XMLConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfigurationFactory</code> and sets
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
      * the specified configuration definition file.
      *
      * @param url the URL to the configuration definition file
      * @throws ConfigurationException if an error occurs when the file is loaded
      */
-    public XMLConfigurationFactory(URL url) throws ConfigurationException
+    public DefaultConfigurationBuilder(URL url) throws ConfigurationException
     {
         this();
         setURL(url);
@@ -262,7 +262,7 @@ public class XMLConfigurationFactory extends XMLConfiguration
     }
 
     /**
-     * Returns the configuration provided by this factory. Loads and parses the
+     * Returns the configuration provided by this builder. Loads and parses the
      * configuration definition file and creates instances for the declared
      * configurations.
      *
@@ -275,7 +275,7 @@ public class XMLConfigurationFactory extends XMLConfiguration
     }
 
     /**
-     * Returns the configuration provided by this factory. If the boolean
+     * Returns the configuration provided by this builder. If the boolean
      * parameter is <b>true</b>, the configuration definition file will be
      * loaded. It will then be parsed, and instances for the declared
      * configurations will be created.
@@ -528,30 +528,30 @@ public class XMLConfigurationFactory extends XMLConfiguration
     protected static class ConfigurationDeclaration extends XMLBeanDeclaration
     {
         /** Stores a reference to the associated configuration factory. */
-        private XMLConfigurationFactory configurationFactory;
+        private DefaultConfigurationBuilder configurationBuilder;
 
         /**
          * Creates a new instance of <code>ConfigurationDeclaration</code> and
          * initializes it.
          *
-         * @param factory the associated configuration factory
+         * @param buikder the associated configuration builder
          * @param config the configuration this declaration is based onto
          */
-        public ConfigurationDeclaration(XMLConfigurationFactory factory,
+        public ConfigurationDeclaration(DefaultConfigurationBuilder builder,
                 HierarchicalConfiguration config)
         {
             super(config);
-            configurationFactory = factory;
+            configurationBuilder = builder;
         }
 
         /**
-         * Returns the associated configuration factory.
+         * Returns the associated configuration builder.
          *
-         * @return the configuration factory
+         * @return the configuration builder
          */
-        public XMLConfigurationFactory getConfigurationFactory()
+        public DefaultConfigurationBuilder getConfigurationBuilder()
         {
-            return configurationFactory;
+            return configurationBuilder;
         }
 
         /**
@@ -677,7 +677,7 @@ public class XMLConfigurationFactory extends XMLConfiguration
         {
             ConfigurationDeclaration decl = (ConfigurationDeclaration) data;
             String tagName = decl.getNode().getName();
-            ConfigurationProvider provider = decl.getConfigurationFactory()
+            ConfigurationProvider provider = decl.getConfigurationBuilder()
                     .providerForTag(tagName);
             if (provider == null)
             {
@@ -770,7 +770,7 @@ public class XMLConfigurationFactory extends XMLConfiguration
         {
             FileConfiguration config = (FileConfiguration) bean;
             config.setBasePath(((ConfigurationDeclaration) data)
-                    .getConfigurationFactory().getConfigurationBasePath());
+                    .getConfigurationBuilder().getConfigurationBasePath());
             super.initBeanInstance(bean, data);
         }
     }
