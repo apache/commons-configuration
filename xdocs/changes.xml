@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="add" issue="34353">
+        (Basic) Support for declaring beans in configuration files was added.
+        Some new classes in the beanutils package allow to create instances from
+        these declarations.
+      </action>
       <action dev="oheger" type="update">
         The implementation of the interpolation features have been extracted out
         off AbstractConfiguration and moved to PropertyConverter. The
@@ -30,7 +35,7 @@
         and will not be called any more during interpolation.
       </action>
       <action dev="oheger" type="add" issue="38075">
-        A new method configurationsAdd() was added to HierarchicalConfiguration
+        A new method configurationsAt() was added to HierarchicalConfiguration
         that provides a convenient way of iterating over complex list-like
         structures without the need of manually constructing configuration keys
         with indices.
