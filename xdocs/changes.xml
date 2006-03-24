@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="ebourg" type="add" issue="39068">
+        Added two new constructors in CompositeConfiguration accepting a
+        collection of configurations as a parameter.
+      </action>
       <action dev="oheger" type="add" issue="34353">
         (Basic) Support for declaring beans in configuration files was added.
         Some new classes in the beanutils package allow to create instances from

@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Collection;
 
 import junit.framework.TestCase;
 
@@ -61,15 +62,15 @@ public class TestCompositeConfiguration extends TestCase
     public void testAddRemoveConfigurations() throws Exception
     {
         cc.addConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations());
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations());
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
         cc.addConfiguration(conf2);
-        assertEquals(3, cc.getNumberOfConfigurations());
+        assertEquals("Number of configurations", 3, cc.getNumberOfConfigurations());
         cc.removeConfiguration(conf1);
-        assertEquals(2, cc.getNumberOfConfigurations());
+        assertEquals("Number of configurations", 2, cc.getNumberOfConfigurations());
         cc.clear();
-        assertEquals(1, cc.getNumberOfConfigurations());
+        assertEquals("Number of configurations", 1, cc.getNumberOfConfigurations());
     }
 
     public void testGetPropertyWIncludes() throws Exception
@@ -222,8 +223,7 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
-        Configuration subset = null;
-        subset = cc.subset("test");
+        Configuration subset = cc.subset("test");
         assertNotNull(subset);
         assertFalse("Shouldn't be empty", subset.isEmpty());
         assertEquals("Make sure the initial loaded configs subset overrides any later add configs subset", "1", subset.getString("short"));
@@ -435,5 +435,17 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("1st element", "foo.bar1", array[0]);
         assertEquals("2nd element", "foo.bar2", array[1]);
         assertEquals("3rd element", "foo.bar3", array[2]);
+    }
+
+    public void testInstanciateWithCollectiono()
+    {
+        Collection configs = new ArrayList();
+        configs.add(xmlConf);
+        configs.add(conf1);
+        configs.add(conf2);
+
+        CompositeConfiguration config = new CompositeConfiguration(configs);
+        assertEquals("Number of configurations", 4, config.getNumberOfConfigurations());
+        assertTrue("The in memory configuration is not empty", config.getInMemoryConfiguration().isEmpty());
     }
 }

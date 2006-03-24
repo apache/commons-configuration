@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,7 +54,7 @@ public class CompositeConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates an CompositeConfiguration object with a specified InMemory
+     * Creates a CompositeConfiguration object with a specified in memory
      * configuration. This configuration will store any changes made to
      * the CompositeConfiguration.
      *
@@ -64,6 +65,38 @@ public class CompositeConfiguration extends AbstractConfiguration
         configList.clear();
         this.inMemoryConfiguration = inMemoryConfiguration;
         configList.add(inMemoryConfiguration);
+    }
+
+    /**
+     * Create a CompositeConfiguration with an empty in memory configuration
+     * and adds the collection of configurations specified.
+     *
+     * @param configurations the collection of configurations to add
+     */
+    public CompositeConfiguration(Collection configurations)
+    {
+        this(new BaseConfiguration(), configurations);
+    }
+
+    /**
+     * Creates a CompositeConfiguration with a specified in memory
+     * configuration, and then adds the given collection of configurations.
+     *
+     * @param inMemoryConfiguration the in memory configuration to use
+     * @param configurations        the collection of configurations to add
+     */
+    public CompositeConfiguration(Configuration inMemoryConfiguration, Collection configurations)
+    {
+        this(inMemoryConfiguration);
+
+        if (configurations != null)
+        {
+            Iterator it = configurations.iterator();
+            while (it.hasNext())
+            {
+                addConfiguration((Configuration) it.next());
+            }
+        }
     }
 
     /**
