@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -16,13 +16,15 @@
 
 package org.apache.commons.configuration;
 
-import java.util.Iterator;
-import java.util.List;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXSource;
 
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.apache.commons.jxpath.JXPathContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 
 import junit.framework.TestCase;
 
@@ -48,30 +50,23 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
 
     public void testParse() throws Exception
     {
-        SAXReader reader = new SAXReader(parser);
-        Document document = reader.read("someSysID");
+        SAXSource source = new SAXSource(parser, new InputSource());
+        DOMResult result = new DOMResult();
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.transform(source, result);
+        Node root = ((Document) result.getNode()).getDocumentElement();
+        JXPathContext ctx = JXPathContext.newContext(root);
 
-        Element root = document.getRootElement();
-        assertEquals("config", root.getName());
-        assertEquals(1, root.elements().size());
-        Iterator itRoot = root.elementIterator();
-        Element elemTabs = (Element) itRoot.next();
-
-        assertEquals(2, elemTabs.elements().size());
-        List tables = elemTabs.elements();
-        Element tabUsr = (Element) tables.get(0);
-        assertEquals("table", tabUsr.getName());
-        Element elemName = tabUsr.element("name");
-        assertNotNull(elemName);
-        assertEquals("users", elemName.getTextTrim());
-        Element elemFields = tabUsr.element("fields");
-        assertNotNull(elemFields);
-        assertEquals(5, elemFields.elements().size());
-
-        List attribs = tabUsr.attributes();
-        assertEquals(1, attribs.size());
-        Attribute attr = (Attribute) attribs.get(0);
-        assertEquals("tableType", attr.getName());
-        assertEquals("system", attr.getValue());
+        assertEquals("Wrong name of root element", "config", root.getNodeName());
+        assertEquals("Wrong number of children of root", 1, ctx.selectNodes(
+                "/*").size());
+        assertEquals("Wrong number of tables", 2, ctx.selectNodes(
+                "/tables/table").size());
+        assertEquals("Wrong name of first table", "users", ctx
+                .getValue("/tables/table[1]/name"));
+        assertEquals("Wrong number of fields in first table", 5, ctx
+                .selectNodes("/tables/table[1]/fields/field").size());
+        assertEquals("Wrong attribute value", "system", ctx
+                .getValue("/tables/table[1]/@tableType"));
     }
 }

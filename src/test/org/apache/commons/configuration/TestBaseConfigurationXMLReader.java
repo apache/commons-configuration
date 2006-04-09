@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,16 @@ package org.apache.commons.configuration;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.sax.SAXSource;
+
+import org.apache.commons.jxpath.JXPathContext;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -103,55 +108,48 @@ public class TestBaseConfigurationXMLReader extends TestCase
     private void checkDocument(BaseConfigurationXMLReader creader,
     String rootName) throws Exception
     {
-        SAXReader reader = new SAXReader(creader);
-        Document document = reader.read("config");
+        SAXSource source = new SAXSource(creader, new InputSource());
+        DOMResult result = new DOMResult();
+        Transformer trans = TransformerFactory.newInstance().newTransformer();
+        trans.transform(source, result);
+        Node root = ((Document) result.getNode()).getDocumentElement();
+        JXPathContext ctx = JXPathContext.newContext(root);
         
-        Element root = document.getRootElement();
-        assertEquals(rootName, root.getName());
-        assertEquals(3, root.elements().size());
+        assertEquals("Wrong root name", rootName, root.getNodeName());
+        assertEquals("Wrong number of children", 3, ctx.selectNodes("/*").size());
 
-        check(root, "world.continents.continent", CONTINENTS);
-        check(root, "world.greeting", new String[] { "Hello", "Salute" });
-        check(root, "world.wish", "Peace");
-        check(root, "application.mail.smtp", "smtp.mymail.org");
-        check(root, "application.mail.timeout", "42");
-        check(root, "application.mail.account.type", "pop3");
-        check(root, "application.mail.account.user", "postmaster");
-        check(root, "test", "true");        
+        check(ctx, "world/continents/continent", CONTINENTS);
+        check(ctx, "world/greeting", new String[] { "Hello", "Salute" });
+        check(ctx, "world/wish", "Peace");
+        check(ctx, "application/mail/smtp", "smtp.mymail.org");
+        check(ctx, "application/mail/timeout", "42");
+        check(ctx, "application/mail/account/type", "pop3");
+        check(ctx, "application/mail/account/user", "postmaster");
+        check(ctx, "test", "true");        
     }
     
     /**
-     * Helper method for checking values in the DOM4J document.
-     * @param root the root element
+     * Helper method for checking values in the created document.
+     *
+     * @param ctx the JXPath context
      * @param path the path to be checked
      * @param values the expected element values
      */
-    private void check(Element root, String path, String[] values)
+    private void check(JXPathContext ctx, String path, String[] values)
     {
-        ConfigurationKey.KeyIterator keyIt =
-        new ConfigurationKey(path).iterator();
-        Element e = root;
-        
-        for(keyIt.nextKey(); keyIt.hasNext(); keyIt.nextKey())
+        Iterator it = ctx.iterate(path);
+        for (int i = 0; i < values.length; i++)
         {
-            Element child = e.element(keyIt.currentKey());
-            assertNotNull(child);
-            e = child;    
-        }  /* for */
-        
-        List elems = e.elements(keyIt.currentKey());
-        assertEquals(values.length, elems.size());
-        Iterator it = elems.iterator();
-        for(int i = 0; i < values.length; i++)
-        {
-            Element child = (Element) it.next();
-            assertEquals(values[i], child.getTextTrim());
-        }  /* for */
+            assertTrue("Too few values", it.hasNext());
+            assertEquals("Wrong property value", values[i], it.next());
+        } /* for */
+        assertFalse("Too many values", it.hasNext());
     }
-    
-    private void check(Element root, String path, String value)
+
+    private void check(JXPathContext ctx, String path, String value)
     {
-        check(root, path, new String[] { value });
+        check(ctx, path, new String[]
+        { value });
     }
     
     // A ContentHandler that raises an exception

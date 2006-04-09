@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update">
+        The dependency to dom4j was removed; it was only used by two test classes,
+        which have been re-written.
+      </action>
       <action dev="oheger" type="update" issue="39227">
         XMLConfiguration used to drop the DOCTYPE declaration when saving the
         configuration. It is now able to extract the DTD's public and system ID
