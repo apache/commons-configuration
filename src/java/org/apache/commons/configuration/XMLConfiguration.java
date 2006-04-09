@@ -114,6 +114,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /** Stores the name of the root element. */
     private String rootElementName;
 
+    /** Stores the public ID from the DOCTYPE.*/
+    private String publicID;
+
+    /** Stores the system ID from the DOCTYPE.*/
+    private String systemID;
+
     /** Stores the document builder that should be used for loading.*/
     private DocumentBuilder documentBuilder;
 
@@ -235,6 +241,58 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
+     * Returns the public ID of the DOCTYPE declaration from the loaded XML
+     * document. This is <b>null</b> if no document has been loaded yet or if
+     * the document does not contain a DOCTYPE declaration with a public ID.
+     *
+     * @return the public ID
+     * @since 1.3
+     */
+    public String getPublicID()
+    {
+        return publicID;
+    }
+
+    /**
+     * Sets the public ID of the DOCTYPE declaration. When this configuration is
+     * saved, a DOCTYPE declaration will be constructed that contains this
+     * public ID.
+     *
+     * @param publicID the public ID
+     * @since 1.3
+     */
+    public void setPublicID(String publicID)
+    {
+        this.publicID = publicID;
+    }
+
+    /**
+     * Returns the system ID of the DOCTYPE declaration from the loaded XML
+     * document. This is <b>null</b> if no document has been loaded yet or if
+     * the document does not contain a DOCTYPE declaration with a system ID.
+     *
+     * @return the system ID
+     * @since 1.3
+     */
+    public String getSystemID()
+    {
+        return systemID;
+    }
+
+    /**
+     * Sets the system ID of the DOCTYPE declaration. When this configuration is
+     * saved, a DOCTYPE declaration will be constructed that contains this
+     * system ID.
+     *
+     * @param publicID the public ID
+     * @since 1.3
+     */
+    public void setSystemID(String systemID)
+    {
+        this.systemID = systemID;
+    }
+
+    /**
      * Returns the value of the validating flag.
      *
      * @return the validating flag
@@ -288,6 +346,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public void initProperties(Document document, boolean elemRefs)
     {
+        if (document.getDoctype() != null)
+        {
+            setPublicID(document.getDoctype().getPublicId());
+            setSystemID(document.getDoctype().getSystemId());
+        }
         constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
     }
 
@@ -561,21 +624,49 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         try
         {
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Transformer transformer = createTransformer();
             Source source = new DOMSource(createDocument());
             Result result = new StreamResult(writer);
-
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            if (getEncoding() != null)
-            {
-                transformer.setOutputProperty(OutputKeys.ENCODING, getEncoding());
-            }
             transformer.transform(source, result);
         }
         catch (TransformerException e)
         {
             throw new ConfigurationException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Creates and initializes the transformer used for save operations. This
+     * base implementation initializes all of the default settings like
+     * indention mode and the DOCTYPE. Derived classes may overload this method
+     * if they have specific needs.
+     *
+     * @return the transformer to use for a save operation
+     * @throws TransformerException if an error occurs
+     * @since 1.3
+     */
+    protected Transformer createTransformer() throws TransformerException
+    {
+        Transformer transformer = TransformerFactory.newInstance()
+                .newTransformer();
+
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        if (getEncoding() != null)
+        {
+            transformer.setOutputProperty(OutputKeys.ENCODING, getEncoding());
+        }
+        if (getPublicID() != null)
+        {
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
+                    getPublicID());
+        }
+        if (getSystemID() != null)
+        {
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
+                    getSystemID());
+        }
+
+        return transformer;
     }
 
     /**
@@ -786,7 +877,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         /** Stores the document to be constructed. */
         private Document document;
-        
+
         /** Stores the list delimiter.*/
         private char listDelimiter = AbstractConfiguration.
                 getDefaultListDelimiter();

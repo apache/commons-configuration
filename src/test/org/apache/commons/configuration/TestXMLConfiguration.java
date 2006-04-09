@@ -49,6 +49,18 @@ public class TestXMLConfiguration extends TestCase
     /** Constant for the used encoding.*/
     static final String ENCODING = "ISO-8859-1";
 
+    /** Constant for the test system ID.*/
+    static final String SYSTEM_ID = "properties.dtd";
+
+    /** Constant for the test public ID.*/
+    static final String PUBLIC_ID = "-//Commons Configuration//DTD Test Configuration 1.3//EN";
+
+    /** Constant for the DOCTYPE declaration.*/
+    static final String DOCTYPE_DECL = " PUBLIC \"" + PUBLIC_ID + "\" \"" + SYSTEM_ID + "\">";
+
+    /** Constant for the DOCTYPE prefix.*/
+    static final String DOCTYPE = "<!DOCTYPE ";
+
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
     private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
@@ -800,7 +812,48 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("Encoding was written to file", out.toString().indexOf(
                 "encoding=\"UTF-") >= 0);
     }
-    
+
+    /**
+     * Tests whether the DOCTYPE survives a save operation.
+     */
+    public void testSaveWithDoctype() throws ConfigurationException
+    {
+        String content = "<?xml  version=\"1.0\"?>"
+                + DOCTYPE
+                + "properties"
+                + DOCTYPE_DECL
+                + "<properties version=\"1.0\"><entry key=\"test\">value</entry></properties>";
+        StringReader in = new StringReader(content);
+        conf = new XMLConfiguration();
+        conf.setFileName("conf/testDtd.xml");
+        conf.load();
+        conf.clear();
+        conf.load(in);
+
+        assertEquals("Wrong public ID", PUBLIC_ID, conf.getPublicID());
+        assertEquals("Wrong system ID", SYSTEM_ID, conf.getSystemID());
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        System.out.println(out.toString());
+        assertTrue("Did not find DOCTYPE", out.toString().indexOf(DOCTYPE) >= 0);
+    }
+
+    /**
+     * Tests setting public and system IDs for the D'OCTYPE and then saving the
+     * configuration. This should generate a DOCTYPE declaration.
+     */
+    public void testSaveWithDoctypeIDs() throws ConfigurationException
+    {
+        assertNull("A public ID was found", conf.getPublicID());
+        assertNull("A system ID was found", conf.getSystemID());
+        conf.setPublicID(PUBLIC_ID);
+        conf.setSystemID(SYSTEM_ID);
+        StringWriter out = new StringWriter();
+        conf.save(out);
+        assertTrue("Did not find DOCTYPE", out.toString().indexOf(
+                DOCTYPE + "testconfig" + DOCTYPE_DECL) >= 0);
+    }
+
     /**
      * Removes the test output file if it exists.
      */
@@ -811,7 +864,7 @@ public class TestXMLConfiguration extends TestCase
             assertTrue(testSaveConf.delete());
         }
     }
-    
+
     /**
      * Helper method for checking if a save operation was successful. Loads a
      * saved configuration and then tests against a reference configuration.
