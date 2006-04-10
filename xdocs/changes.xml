@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update" issue="39169">
+        Loading of file-based configurations no longer throws a NullPointerException
+        in setups where the thread context class loader is not set. 
+      </action>
       <action dev="oheger" type="update">
         The dependency to dom4j was removed; it was only used by two test classes,
         which have been re-written.

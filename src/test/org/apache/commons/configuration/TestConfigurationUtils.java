@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -182,5 +182,20 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));        
         assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
         assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
+    }
+
+    public void testLocateWithNullTCCL() throws Exception
+    {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            Thread.currentThread().setContextClassLoader(null);
+            assertNull(ConfigurationUtils.locate("abase", "aname"));
+            assertNotNull(ConfigurationUtils.locate("test.xml"));
+        }
+        finally
+        {
+            Thread.currentThread().setContextClassLoader(cl);
+        }
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -375,11 +375,14 @@ public final class ConfigurationUtils
         if (url == null)
         {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            url = loader.getResource(name);
-
-            if (url != null)
+            if (loader != null)
             {
-                log.debug("Configuration loaded from the context classpath (" + name + ")");
+                url = loader.getResource(name);
+
+                if (url != null)
+                {
+                    log.debug("Configuration loaded from the context classpath (" + name + ")");
+                }
             }
         }
 
