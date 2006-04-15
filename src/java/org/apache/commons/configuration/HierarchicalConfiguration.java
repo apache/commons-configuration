@@ -103,14 +103,30 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /** Stores the default expression engine to be used for new objects.*/
     private static ExpressionEngine defaultExpressionEngine = new DefaultExpressionEngine();
 
-    /** Stores the root node of this configuration. */
-    private Node root = new Node();
+    /** Stores the root node of this configuration. This field is required for
+     * backwards compatibility only.
+     */
+    private Node root;
+
+    /** Stores the root configuration node.*/
+    private ConfigurationNode rootNode;
 
     /** Stores the expression engine for this instance.*/
     private ExpressionEngine expressionEngine;
 
     /**
-     * Returns the root node of this hierarchical configuration.
+     * Creates a new instance of <code>HierarchicalConfiguration</code>.
+     */
+    public HierarchicalConfiguration()
+    {
+        setRootNode(new Node());
+    }
+
+    /**
+     * Returns the root node of this hierarchical configuration. This method
+     * exists for backwards compatibility only. New code should use the
+     * <code>{@link #getRootNode()}</code> method instead, which operates on
+     * the preferred data type <code>ConfigurationNode</code>.
      *
      * @return the root node
      */
@@ -120,7 +136,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Sets the root node of this hierarchical configuration.
+     * Sets the root node of this hierarchical configuration. This method
+     * exists for backwards compatibility only. New code should use the
+     * <code>{@link #setRootNode(ConfigurationNode)}</code> method instead,
+     * which operates on the preferred data type <code>ConfigurationNode</code>.
      *
      * @param node the root node
      */
@@ -131,6 +150,36 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             throw new IllegalArgumentException("Root node must not be null!");
         }
         root = node;
+        rootNode = null;
+    }
+
+    /**
+     * Returns the root node of this hierarchical configuration.
+     *
+     * @return the root node
+     * @since 1.3
+     */
+    public ConfigurationNode getRootNode()
+    {
+        return (rootNode != null) ? rootNode : root;
+    }
+
+    /**
+     * Sets the root node of this hierarchical configuration.
+     *
+     * @param node the root node
+     * @since 1.3
+     */
+    public void setRootNode(ConfigurationNode rootNode)
+    {
+        if (rootNode == null)
+        {
+            throw new IllegalArgumentException("Root node must not be null!");
+        }
+        this.rootNode = rootNode;
+
+        // For backward compatibility also set the old root field.
+        root = (rootNode instanceof Node) ? (Node) rootNode : new Node(rootNode);
     }
 
     /**
@@ -211,7 +260,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             List list = new ArrayList();
             for (Iterator it = nodes.iterator(); it.hasNext();)
             {
-                Node node = (Node) it.next();
+                ConfigurationNode node = (ConfigurationNode) it.next();
                 if (node.getValue() != null)
                 {
                     list.add(node.getValue());
@@ -239,7 +288,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     protected void addPropertyDirect(String key, Object obj)
     {
-        NodeAddData data = getExpressionEngine().prepareAdd(getRoot(), key);
+        NodeAddData data = getExpressionEngine().prepareAdd(getRootNode(), key);
         ConfigurationNode node = processNodeAddData(data);
         node.setValue(obj);
     }
@@ -277,7 +326,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         {
             // otherwise perform an add operation
             parent = processNodeAddData(getExpressionEngine().prepareAdd(
-                    getRoot(), key));
+                    getRootNode(), key));
         }
 
         if (parent.isAttribute())
@@ -307,7 +356,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public boolean isEmpty()
     {
-        return !nodeDefined(getRoot());
+        return !nodeDefined(getRootNode());
     }
 
     /**
@@ -332,16 +381,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
-            Node nd = (Node) it.next();
-            nd.visit(visitor, null);
+            ConfigurationNode nd = (ConfigurationNode) it.next();
+            nd.visit(visitor);
 
             for (Iterator it2 = visitor.getClone().getChildren().iterator(); it2.hasNext();)
             {
-                result.getRoot().addChild((Node) it2.next());
+                result.getRootNode().addChild((ConfigurationNode) it2.next());
             }
             for (Iterator it2 = visitor.getClone().getAttributes().iterator(); it2.hasNext();)
             {
-                result.getRoot().addAttribute((Node) it2.next());
+                result.getRootNode().addAttribute((ConfigurationNode) it2.next());
             }
         }
 
@@ -382,7 +431,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             throw new IllegalArgumentException(
                     "Passed in key must select exactly one node: " + key);
         }
-        return createSubnodeConfiguration((Node) nodes.get(0));
+        return createSubnodeConfiguration((ConfigurationNode) nodes.get(0));
     }
 
     /**
@@ -418,7 +467,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         List configs = new ArrayList(nodes.size());
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
-            configs.add(createSubnodeConfiguration((Node) it.next()));
+            configs.add(createSubnodeConfiguration((ConfigurationNode) it.next()));
         }
         return configs;
     }
@@ -432,7 +481,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the configuration for the given node
      * @since 1.3
      */
-    protected HierarchicalConfiguration createSubnodeConfiguration(Node node)
+    protected HierarchicalConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         return new SubnodeConfiguration(this, node);
     }
@@ -472,7 +521,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
         while (itNodes.hasNext() && itValues.hasNext())
         {
-            ((Node) itNodes.next()).setValue(itValues.next());
+            ((ConfigurationNode) itNodes.next()).setValue(itValues.next());
         }
 
         // Add additional nodes if necessary
@@ -484,7 +533,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         // Remove remaining nodes
         while (itNodes.hasNext())
         {
-            clearNode((Node) itNodes.next());
+            clearNode((ConfigurationNode) itNodes.next());
         }
     }
 
@@ -502,7 +551,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
-            removeNode((Node) it.next());
+            removeNode((ConfigurationNode) it.next());
         }
     }
 
@@ -519,7 +568,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
-            clearNode((Node) it.next());
+            clearNode((ConfigurationNode) it.next());
         }
     }
 
@@ -533,7 +582,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     public Iterator getKeys()
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
-        getRoot().visit(visitor);
+        getRootNode().visit(visitor);
 
         return visitor.getKeyList().iterator();
     }
@@ -553,14 +602,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         for (Iterator itNodes = nodes.iterator(); itNodes.hasNext();)
         {
-            Node node = (Node) itNodes.next();
+            ConfigurationNode node = (ConfigurationNode) itNodes.next();
             for (Iterator it = node.getChildren().iterator(); it.hasNext();)
             {
-                ((Node) it.next()).visit(visitor);
+                ((ConfigurationNode) it.next()).visit(visitor);
             }
             for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
             {
-                ((Node) it.next()).visit(visitor);
+                ((ConfigurationNode) it.next()).visit(visitor);
             }
         }
 
@@ -597,8 +646,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
             // clone the nodes, too
             CloneVisitor v = new CloneVisitor();
-            getRoot().visit(v, null);
-            copy.setRoot(v.getClone());
+            getRootNode().visit(v);
+            copy.setRootNode(v.getClone());
 
             return copy;
         }
@@ -618,7 +667,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     protected List fetchNodeList(String key)
     {
-        return getExpressionEngine().query(getRoot(), key);
+        return getExpressionEngine().query(getRootNode(), key);
     }
 
     /**
@@ -644,11 +693,24 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *
      * @param node the node to be checked
      * @return a flag if this node is defined
+     * @deprecated Use the method <code>{@link #nodeDefined(ConfigurationNode)}</code>
+     * instead.
      */
     protected boolean nodeDefined(Node node)
     {
+        return nodeDefined((ConfigurationNode) node);
+    }
+
+    /**
+     * Checks if the specified node is defined.
+     *
+     * @param node the node to be checked
+     * @return a flag if this node is defined
+     */
+    protected boolean nodeDefined(ConfigurationNode node)
+    {
         DefinedVisitor visitor = new DefinedVisitor();
-        node.visit(visitor, null);
+        node.visit(visitor);
         return visitor.isDefined();
     }
 
@@ -658,13 +720,27 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * removed.
      *
      * @param node the node to be removed
+     * @deprecated Use the method <code>{@link #removeNode(ConfigurationNode)}</code>
+     * instead.
      */
     protected void removeNode(Node node)
     {
-        Node parent = node.getParent();
+        removeNode((ConfigurationNode) node);
+    }
+
+    /**
+     * Removes the specified node from this configuration. This method ensures
+     * that parent nodes that become undefined by this operation are also
+     * removed.
+     *
+     * @param node the node to be removed
+     */
+    protected void removeNode(ConfigurationNode node)
+    {
+        ConfigurationNode parent = node.getParentNode();
         if (parent != null)
         {
-            parent.remove(node);
+            parent.removeChild(node);
             if (!nodeDefined(parent))
             {
                 removeNode(parent);
@@ -677,8 +753,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * this operation, it is removed from the hierarchy.
      *
      * @param node the node to be cleard
+     * @deprecated Use the method <code>{@link #clearNode(ConfigurationNode)}</code>
+     * instead
      */
     protected void clearNode(Node node)
+    {
+        clearNode((ConfigurationNode) node);
+    }
+
+    /**
+     * Clears the value of the specified node. If the node becomes undefined by
+     * this operation, it is removed from the hierarchy.
+     *
+     * @param node the node to be cleard
+     */
+    protected void clearNode(ConfigurationNode node)
     {
         node.setValue(null);
         if (!nodeDefined(node))
@@ -826,6 +915,27 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         public Node(String name, Object value)
         {
             super(name, value);
+        }
+
+        /**
+         * Creates a new instance of <code>Node</code> based on the given
+         * source node. All properties of the source node, including its
+         * children and attributes, will be copied.
+         *
+         * @param src the node to be copied
+         */
+        public Node(ConfigurationNode src)
+        {
+            this(src.getName(), src.getValue());
+            setReference(src.getReference());
+            for (Iterator it = src.getChildren().iterator(); it.hasNext();)
+            {
+                addChild((ConfigurationNode) it.next());
+            }
+            for (Iterator it = src.getAttributes().iterator(); it.hasNext();)
+            {
+                addAttribute((ConfigurationNode) it.next());
+            }
         }
 
         /**
@@ -990,7 +1100,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * its sub nodes is associated with a value.
      *
      */
-    static class DefinedVisitor extends NodeVisitor
+    static class DefinedVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** Stores the defined flag. */
         private boolean defined;
@@ -1010,9 +1120,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * Visits the node. Checks if a value is defined.
          *
          * @param node the actual node
-         * @param key the key of this node
          */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        public void visitBeforeChildren(ConfigurationNode node)
         {
             defined = node.getValue() != null;
         }
@@ -1106,7 +1215,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * hierarchy.
      *
      */
-    static class CloneVisitor extends NodeVisitor
+    static class CloneVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** A stack with the actual object to be copied. */
         private Stack copyStack;
@@ -1126,9 +1235,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * Visits the specified node after its children have been processed.
          *
          * @param node the node
-         * @param key the key of this node
          */
-        public void visitAfterChildren(Node node, ConfigurationKey key)
+        public void visitAfterChildren(ConfigurationNode node)
         {
             Node copy = (Node) copyStack.pop();
             if (copyStack.isEmpty())
@@ -1141,11 +1249,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * Visits and copies the specified node.
          *
          * @param node the node
-         * @param key the key of this node
          */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        public void visitBeforeChildren(ConfigurationNode node)
         {
-            Node copy = (Node) node.clone();
+            ConfigurationNode copy = (ConfigurationNode) node.clone();
             copy.setParentNode(null);
 
             if (!copyStack.isEmpty())

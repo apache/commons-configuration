@@ -15,6 +15,7 @@
  */
 package org.apache.commons.configuration;
 
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
 /**
@@ -76,7 +77,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      * @param parent the parent configuration
      * @param root the root node of this subnode configuration
      */
-    public SubnodeConfiguration(HierarchicalConfiguration parent, Node root)
+    public SubnodeConfiguration(HierarchicalConfiguration parent, ConfigurationNode root)
     {
         if (parent == null)
         {
@@ -88,7 +89,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
             throw new IllegalArgumentException("Root node must not be null!");
         }
 
-        setRoot(root);
+        setRootNode(root);
         this.parent = parent;
     }
 
@@ -197,7 +198,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      * @param node the sub node, for which the configuration is to be created
      * @return a hierarchical configuration for this sub node
      */
-    protected HierarchicalConfiguration createSubnodeConfiguration(Node node)
+    protected HierarchicalConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         return new SubnodeConfiguration(getParent(), node);
     }

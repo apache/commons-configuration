@@ -25,6 +25,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
@@ -95,6 +96,29 @@ public class TestHierarchicalConfiguration extends TestCase
 
         config.setRoot(new HierarchicalConfiguration.Node("test"));
         assertTrue(config.isEmpty());
+    }
+
+    public void testSetRootNode()
+    {
+        config.setRootNode(new DefaultConfigurationNode("testNode"));
+        assertNotSame("Same root node", config.getRootNode(), config.getRoot());
+        assertEquals("Wrong name of root node", "testNode", config.getRoot().getName());
+
+        config.setRootNode(new HierarchicalConfiguration.Node("test"));
+        assertSame("Wrong root node", config.getRootNode(), config.getRoot());
+    }
+
+    public void testSetRootNodeNull()
+    {
+        try
+        {
+            config.setRootNode(null);
+            fail("Could set null root node!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
     }
 
     public void testIsEmpty()

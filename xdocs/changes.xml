@@ -92,7 +92,10 @@
         provided. HierarchicalConfiguration.Node now extends this default
         implementation. The new ConfigurationNode interface defines some more
         methods than the Node class did originally for conveniently dealing with
-        sub nodes and attributes.
+        sub nodes and attributes. HierarchicalConfiguration now uses the new
+        type ConfigurationNode whereever possible. Some methods dealing with
+        Node objects have been deprecated and replaced by versions operating on
+        ConfigurationNode objects instead.
       </action>
       <action dev="oheger" type="update" issue="35828" due-to="Jorge Ferrer">
         All configuration classes derived from AbstractConfiguration now allow

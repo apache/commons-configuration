@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.util.List;
  *
  * @since 1.3
  * @author Oliver Heger
+ * @version $Id$
  */
 public interface ConfigurationNode
 {
@@ -254,4 +255,10 @@ public interface ConfigurationNode
      * @param visitor the visitor
      */
     void visit(ConfigurationNodeVisitor visitor);
+
+    /**
+     * Returns a copy of this node.
+     * @return the copy
+     */
+    Object clone();
 }

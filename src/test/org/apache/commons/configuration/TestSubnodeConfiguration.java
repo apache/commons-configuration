@@ -307,11 +307,10 @@ public class TestSubnodeConfiguration extends TestCase
      * @param conf the parent config
      * @return the root node for the subnode config
      */
-    protected HierarchicalConfiguration.Node getSubnodeRoot(
-            HierarchicalConfiguration conf)
+    protected ConfigurationNode getSubnodeRoot(HierarchicalConfiguration conf)
     {
         ConfigurationNode root = conf.getRoot();
-        return (HierarchicalConfiguration.Node) root.getChild(0).getChild(0);
+        return root.getChild(0).getChild(0);
     }
 
     /**
