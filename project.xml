@@ -431,6 +431,8 @@
         <exclude>**/TestAbstractConfiguration.java</exclude>
         <exclude>**/XPathTest.java</exclude>
         <exclude>**/AbstractCombinerTest.java</exclude>
+        <exclude>**/AbstractTestConfigurationEvents.java</exclude>
+        <exclude>**/AbstractTestFileConfigurationEvents.java</exclude>
       </excludes>
       <resources>
         <resource>

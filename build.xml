@@ -148,6 +148,8 @@
           <exclude name="**/XPathTest.java">
           </exclude>
           <exclude name="**/AbstractCombinerTest.java"/>
+          <exclude name="**/AbstractTestConfigurationEvents.java"/>
+          <exclude name="**/AbstractTestFileConfigurationEvents.java"/>
         </fileset>
       </batchtest>
     </junit>
