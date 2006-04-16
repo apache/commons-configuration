@@ -76,6 +76,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
 {
+    /** Constant for the configuration reload event.*/
+    public static final int EVENT_RELOAD = 20;
+
     /** Stores the file name.*/
     protected String fileName;
 
@@ -709,8 +712,18 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
                     if (strategy.reloadingRequired())
                     {
-                        clear();
-                        load();
+                        fireEvent(EVENT_RELOAD, null, getURL(), true);
+                        setDetailEvents(false);
+                        try
+                        {
+                            clear();
+                            load();
+                        }
+                        finally
+                        {
+                            setDetailEvents(true);
+                        }
+                        fireEvent(EVENT_RELOAD, null, getURL(), false);
 
                         // notify the strategy
                         strategy.reloadingPerformed();
@@ -760,6 +773,31 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             {
                 noReload--;
             }
+        }
+    }
+
+    /**
+     * Sends an event to all registered listeners. This implementation ensures
+     * that no reloads are performed while the listeners are invoked. So
+     * infinite loops can be avoided that can be caused by event listeners
+     * accessing the configuration's properties when they are invoked.
+     *
+     * @param type the event type
+     * @param propName the name of the property
+     * @param propValue the value of the property
+     * @param before the before update flag
+     */
+    protected void fireEvent(int type, String propName, Object propValue,
+            boolean before)
+    {
+        enterNoReload();
+        try
+        {
+            super.fireEvent(type, propName, propValue, before);
+        }
+        finally
+        {
+            exitNoReload();
         }
     }
 

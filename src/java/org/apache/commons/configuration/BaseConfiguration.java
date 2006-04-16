@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -124,7 +124,7 @@ public class BaseConfiguration extends AbstractConfiguration
      *
      * @param key the key to remove along with corresponding value.
      */
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         if (containsKey(key))
         {
@@ -137,7 +137,9 @@ public class BaseConfiguration extends AbstractConfiguration
      */
     public void clear()
     {
+        fireEvent(EVENT_CLEAR, null, null, true);
         store.clear();
+        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

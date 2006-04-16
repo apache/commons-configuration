@@ -100,6 +100,12 @@ import org.apache.commons.lang.StringUtils;
  */
 public class HierarchicalConfiguration extends AbstractConfiguration implements Serializable, Cloneable
 {
+    /** Constant for the clear tree event.*/
+    public static final int EVENT_CLEAR_TREE = 10;
+
+    /** Constant for the add nodes event.*/
+    public static final int EVENT_ADD_NODES = 11;
+
     /** Stores the default expression engine to be used for new objects.*/
     private static ExpressionEngine defaultExpressionEngine = new DefaultExpressionEngine();
 
@@ -315,6 +321,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             return;
         }
 
+        fireEvent(EVENT_ADD_NODES, key, nodes, true);
         ConfigurationNode parent;
         List target = fetchNodeList(key);
         if (target.size() == 1)
@@ -346,6 +353,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 parent.addChild(child);
             }
         }
+        fireEvent(EVENT_ADD_NODES, key, nodes, false);
     }
 
     /**
@@ -509,6 +517,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public void setProperty(String key, Object value)
     {
+        fireEvent(EVENT_SET_PROPERTY, key, value, true);
+
         Iterator itNodes = fetchNodeList(key).iterator();
         Iterator itValues;
         if (!isDelimiterParsingDisabled())
@@ -535,6 +545,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         {
             clearNode((ConfigurationNode) itNodes.next());
         }
+
+        fireEvent(EVENT_SET_PROPERTY, key, value, false);
     }
 
     /**
@@ -547,12 +559,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public void clearTree(String key)
     {
+        fireEvent(EVENT_CLEAR_TREE, key, null, true);
         List nodes = fetchNodeList(key);
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             removeNode((ConfigurationNode) it.next());
         }
+        fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
     }
 
     /**
@@ -564,12 +578,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public void clearProperty(String key)
     {
+        fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
         List nodes = fetchNodeList(key);
 
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             clearNode((ConfigurationNode) it.next());
         }
+
+        fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
     }
 
     /**

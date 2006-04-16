@@ -1,5 +1,5 @@
 /*
- * Copyright 2005 The Apache Software Foundation.
+ * Copyright 2005-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.util.Iterator;
 
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
@@ -44,10 +46,12 @@ extends HierarchicalConfiguration implements FileConfiguration
     /** Stores the delegate used for implementing functionality related to the
      * <code>FileConfiguration</code> interface.
      */
-    private FileConfigurationDelegate delegate = createDelegate();
+    private FileConfigurationDelegate delegate;
 
     protected AbstractHierarchicalFileConfiguration()
     {
+        delegate = createDelegate();
+        initDelegate(delegate);
     }
 
     /**
@@ -58,6 +62,7 @@ extends HierarchicalConfiguration implements FileConfiguration
      */
     public AbstractHierarchicalFileConfiguration(String fileName) throws ConfigurationException
     {
+        this();
         // store the file name
         delegate.setPath(fileName);
 
@@ -73,6 +78,7 @@ extends HierarchicalConfiguration implements FileConfiguration
      */
     public AbstractHierarchicalFileConfiguration(File file) throws ConfigurationException
     {
+        this();
         // set the file and update the url, the base path and the file name
         setFile(file);
 
@@ -91,6 +97,7 @@ extends HierarchicalConfiguration implements FileConfiguration
      */
     public AbstractHierarchicalFileConfiguration(URL url) throws ConfigurationException
     {
+        this();
         // set the URL and update the base path and the file name
         setURL(url);
 
@@ -244,7 +251,15 @@ extends HierarchicalConfiguration implements FileConfiguration
 
     public void reload()
     {
-        delegate.reload();
+        setDetailEvents(false);
+        try
+        {
+            delegate.reload();
+        }
+        finally
+        {
+            setDetailEvents(true);
+        }
     }
 
     public String getEncoding()
@@ -293,6 +308,32 @@ extends HierarchicalConfiguration implements FileConfiguration
     protected FileConfigurationDelegate createDelegate()
     {
         return new FileConfigurationDelegate();
+    }
+
+    /**
+     * Helper method for initializing the file configuration delegate.
+     *
+     * @param del the delegate
+     */
+    private void initDelegate(FileConfigurationDelegate del)
+    {
+        del.addConfigurationListener(new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                // deliver reload events to registered listeners
+                setDetailEvents(true);
+                try
+                {
+                    fireEvent(event.getType(), event.getPropertyName(), event
+                            .getPropertyValue(), event.isBeforeUpdate());
+                }
+                finally
+                {
+                    setDetailEvents(false);
+                }
+            }
+        });
     }
 
     /**

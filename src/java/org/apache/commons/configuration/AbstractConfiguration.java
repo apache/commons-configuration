@@ -26,12 +26,32 @@ import java.util.Properties;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.lang.BooleanUtils;
 
 /**
- * Abstract configuration class. Provide basic functionality but does not store
- * any data. If you want to write your own Configuration class then you should
- * implement only abstract methods from this class.
+ * <p>Abstract configuration class. Provides basic functionality but does not
+ * store any data.</p>
+ * <p>If you want to write your own Configuration class then you should
+ * implement only abstract methods from this class. A lot of functionality
+ * needed by typical implementations of the <code>Configuration</conde>
+ * interface is already provided by this base class. Following is a list of
+ * feauters implemented here:
+ * <ul><li>Data conversion support. The various data types required by the
+ * <code>Configuration</code> interface are already handled by this base class.
+ * A concrete sub class only needs to provide a generic <code>getProperty()</code>
+ * method.</li>
+ * <li>Support for variable interpolation. Property values containing special
+ * variable tokens (like <code>${var}</code>) will be replaced by their
+ * corresponding values.</li>
+ * <li>Support for string lists. The values of properties to be added to this
+ * configuration are checked whether they contain a list delimiter character. If
+ * this is the case and if list splitting is enabled, the string is splitted and
+ * multiple values are added for this property.</li>
+ * <li>Basic event support. Whenever this configuration is modified registered
+ * event listeners are notified. Refer to the various <code>EVENT_XXX</code>
+ * constants to get an impression about which event types are supported.</li>
+ * </ul></p>
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
@@ -39,8 +59,20 @@ import org.apache.commons.lang.BooleanUtils;
  * @version $Id: AbstractConfiguration.java,v 1.29 2004/12/02 22:05:52 ebourg
  * Exp $
  */
-public abstract class AbstractConfiguration implements Configuration
+public abstract class AbstractConfiguration extends EventSource implements Configuration
 {
+    /** Constant for the add property event type.*/
+    public static final int EVENT_ADD_PROPERTY = 1;
+
+    /** Constant for the clear property event type.*/
+    public static final int EVENT_CLEAR_PROPERTY = 2;
+
+    /** Constant for the set property event type.*/
+    public static final int EVENT_SET_PROPERTY = 3;
+
+    /** Constant for the clear configuration event type.*/
+    public static final int EVENT_CLEAR = 4;
+
     /** start token */
     protected static final String START_TOKEN = "${";
 
@@ -187,6 +219,8 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public void addProperty(String key, Object value)
     {
+        fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+
         if (!isDelimiterParsingDisabled())
         {
             Iterator it = PropertyConverter.toIterator(value, getListDelimiter());
@@ -199,6 +233,8 @@ public abstract class AbstractConfiguration implements Configuration
         {
             addPropertyDirect(key, value);
         }
+
+        fireEvent(EVENT_ADD_PROPERTY, key, value, false);
     }
 
     /**
@@ -279,32 +315,74 @@ public abstract class AbstractConfiguration implements Configuration
      */
     public void setProperty(String key, Object value)
     {
-        clearProperty(key);
-        addProperty(key, value);
+        fireEvent(EVENT_SET_PROPERTY, key, value, true);
+        setDetailEvents(false);
+        try
+        {
+            clearProperty(key);
+            addProperty(key, value);
+        }
+        finally
+        {
+            setDetailEvents(true);
+        }
+        fireEvent(EVENT_SET_PROPERTY, key, value, false);
     }
 
     /**
-     * {@inheritDoc}
+     * Removes the specified property from this configuration. This
+     * implementation performs some preparations and then delegates to
+     * <code>clearPropertyDirect()</code>, which will do the real work.
+     *
+     * @param key the key to be removed
      */
-    public abstract void clearProperty(String key);
+    public void clearProperty(String key)
+    {
+        fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
+        clearPropertyDirect(key);
+        fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
+    }
+
+    /**
+     * Removes the specified property from this configuration. This method is
+     * called by <code>clearProperty()</code> after it has done some
+     * preparations. It should be overriden in sub classes. This base
+     * implementation is just left empty.
+     *
+     * @param key the key to be removed
+     */
+    protected void clearPropertyDirect(String key)
+    {
+        // override in sub classes
+    }
 
     /**
      * {@inheritDoc}
      */
     public void clear()
     {
-        Iterator it = getKeys();
-        while (it.hasNext())
+        fireEvent(EVENT_CLEAR, null, null, true);
+        setDetailEvents(false);
+        try
         {
-            String key = (String) it.next();
-            it.remove();
-
-            if (containsKey(key))
+            Iterator it = getKeys();
+            while (it.hasNext())
             {
-                // workaround for Iterators that do not remove the property on calling remove()
-                clearProperty(key);
+                String key = (String) it.next();
+                it.remove();
+
+                if (containsKey(key))
+                {
+                    // workaround for Iterators that do not remove the property on calling remove()
+                    clearProperty(key);
+                }
             }
         }
+        finally
+        {
+            setDetailEvents(true);
+        }
+        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

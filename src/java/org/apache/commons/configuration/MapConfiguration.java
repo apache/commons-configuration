@@ -103,7 +103,7 @@ public class MapConfiguration extends AbstractConfiguration
         return map.containsKey(key);
     }
 
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         map.remove(key);
     }
