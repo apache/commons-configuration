@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <gui>
+    <bgcolor>green</bgcolor>
+    <selcolor>yellow</selcolor>
+    <level default="2">1</level>
+  </gui>
+  <net>
+    <proxy>
+      <url>http://www.url1.org</url>
+      <url>http://www.url2.org</url>
+      <url>http://www.url3.org</url>
+    </proxy>
+    <service>
+      <url>http://service1.org</url>
+    </service>
+    <server>
+    </server>
+  </net>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user>Admin</user>
+          <passwd type="secret"/>
+        </login>
+      </security>
+    </services>
+  </base>
+  <database>
+    <tables>
+      <table id="1">
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>docid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>docname</name>
+            <type>varchar</type>
+          </field>
+          <field>
+            <name>authorID</name>
+            <type>int</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+</config>

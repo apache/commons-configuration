@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -147,6 +147,7 @@
           </exclude>
           <exclude name="**/XPathTest.java">
           </exclude>
+          <exclude name="**/AbstractCombinerTest.java"/>
         </fileset>
       </batchtest>
     </junit>

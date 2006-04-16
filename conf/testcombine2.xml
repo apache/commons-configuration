@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <base>
+    <services>
+      <security>
+        <login>
+          <user type="default">scotty</user>
+          <passwd>BeamMeUp</passwd>
+        </login>
+      </security>
+    </services>
+  </base>
+  <gui>
+    <bgcolor>black</bgcolor>
+    <fgcolor>blue</fgcolor>
+    <level min="1">4</level>
+  </gui>
+  <net>
+    <server>
+      <url>http://appsvr1.com</url>
+      <url>http://appsvr2.com</url>
+      <url>http://testsvr.com</url>
+      <url>http://backupsvr.com</url>
+    </server>
+    <service>
+      <url type="2">http://service2.org</url>
+      <url type="2">http://service3.org</url>
+    </service>
+  </net>
+  <database>
+    <tables>
+      <table id="2">
+        <name>tasks</name>
+        <fields>
+          <field>
+            <name>taskid</name>
+            <type>long</type>
+          </field>
+          <field>
+            <name>taskname</name>
+            <type>varchar</type>
+          </field>
+        </fields>
+      </table>
+    </tables>
+  </database>
+</config>
