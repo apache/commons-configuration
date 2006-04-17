@@ -35,6 +35,7 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -632,6 +633,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         catch (TransformerException e)
         {
             throw new ConfigurationException(e.getMessage(), e);
+        }
+        catch (TransformerFactoryConfigurationError err)
+        {
+            throw new ConfigurationException(err.getMessage(), err);
         }
     }
 

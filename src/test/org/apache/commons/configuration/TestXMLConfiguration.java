@@ -61,6 +61,9 @@ public class TestXMLConfiguration extends TestCase
     /** Constant for the DOCTYPE prefix.*/
     static final String DOCTYPE = "<!DOCTYPE ";
 
+    /** Constant for the transformer factory property.*/
+    static final String PROP_FACTORY = "javax.xml.transform.TransformerFactory";
+
     /** The File that we test with */
     private String testProperties = new File("conf/test.xml").getAbsolutePath();
     private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
@@ -852,6 +855,29 @@ public class TestXMLConfiguration extends TestCase
         conf.save(out);
         assertTrue("Did not find DOCTYPE", out.toString().indexOf(
                 DOCTYPE + "testconfig" + DOCTYPE_DECL) >= 0);
+    }
+
+    /**
+     * Tests saving a configuration when an invalid transformer factory is
+     * specified. In this case the error thrown by the TransformerFactory class
+     * should be caught and re-thrown as a ConfigurationException.
+     */
+    public void testSaveWithInvalidTransformerFactory()
+    {
+        System.setProperty(PROP_FACTORY, "an.invalid.Class");
+        try
+        {
+            conf.save(testSaveConf);
+            fail("Could save with invalid TransformerFactory!");
+        }
+        catch (ConfigurationException cex)
+        {
+            // ok
+        }
+        finally
+        {
+            System.getProperties().remove(PROP_FACTORY);
+        }
     }
 
     /**
