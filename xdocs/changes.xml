@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="add">
+        A new method convertToHierarchical() was added to ConfigurationUtils,
+        which is able to convert an arbitrary configuration object into a
+        hierarchical configuration.
+      </action>
       <action dev="oheger" type="update" issue="39169">
         Loading of file-based configurations no longer throws a NullPointerException
         in setups where the thread context class loader is not set. 

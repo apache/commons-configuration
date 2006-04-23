@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -197,5 +198,49 @@ public class TestConfigurationUtils extends TestCase
         {
             Thread.currentThread().setContextClassLoader(cl);
         }
+    }
+
+    /**
+     * Tests converting a configuration into a hierarchical one.
+     */
+    public void testConvertToHierarchical()
+    {
+        Configuration conf = new BaseConfiguration();
+        for (int i = 0; i < 10; i++)
+        {
+            conf.addProperty("test" + i, "value" + i);
+            conf.addProperty("test.list", "item" + i);
+        }
+
+        HierarchicalConfiguration hc = ConfigurationUtils
+                .convertToHierarchical(conf);
+        for (Iterator it = conf.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertEquals("Wrong value for key " + key, conf.getProperty(key),
+                    hc.getProperty(key));
+        }
+    }
+
+    /**
+     * Tests converting a configuration into a hierarchical one that is already
+     * hierarchical.
+     */
+    public void testConvertHierarchicalToHierarchical()
+    {
+        Configuration conf = new HierarchicalConfiguration();
+        conf.addProperty("test", "yes");
+        assertSame("Wrong configuration returned", conf, ConfigurationUtils
+                .convertToHierarchical(conf));
+    }
+
+    /**
+     * Tests converting a null configuration to a hierarchical one. The result
+     * should be null, too.
+     */
+    public void testConvertNullToHierarchical()
+    {
+        assertNull("Wrong conversion result for null config",
+                ConfigurationUtils.convertToHierarchical(null));
     }
 }
