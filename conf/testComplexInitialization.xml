@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
-  <properties fileName="test.properties" throwExceptionOnMissing="true">
+  <header>
+    <combiner>
+      <override>
+        <list-nodes>
+          <node>table</node>
+          <node>list</node>
+        </list-nodes>
+      </override>
+    </combiner>
+  </header>
+  <properties fileName="test.properties" throwExceptionOnMissing="true"
+    config-name="properties">
     <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
       refreshDelay="10000"/>
   </properties>
-  <xml fileName="test.xml">
+  <xml fileName="test.xml" config-name="xml">
     <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
       propertyDelimiter="/" indexStart="[" indexEnd="]"/>
   </xml>
+  <additional>
+    <xml config-name="combiner1" fileName="testcombine1.xml"/>
+    <xml config-name="combiner2" fileName="testcombine2.xml"/>
+  </additional>
 </configuration>

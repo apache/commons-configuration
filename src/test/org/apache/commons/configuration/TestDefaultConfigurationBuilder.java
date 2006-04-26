@@ -17,6 +17,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Set;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
@@ -29,7 +30,8 @@ import junit.framework.TestCase;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id$
+ * @version $Id: TestDefaultConfigurationBuilder.java 384601 2006-03-09
+ * 20:22:58Z oheger $
  */
 public class TestDefaultConfigurationBuilder extends TestCase
 {
@@ -72,20 +74,67 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory = new DefaultConfigurationBuilder();
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory);
-        DefaultConfigurationNode nd = new DefaultConfigurationNode();
-        nd.setAttribute(true);
-        nd.setName("at");
+        DefaultConfigurationNode parent = new DefaultConfigurationNode();
+        DefaultConfigurationNode nd = new DefaultConfigurationNode("at");
+        parent.addAttribute(nd);
         assertTrue("Attribute at not recognized", decl.isReservedNode(nd));
-        nd.setName("optional");
+        nd = new DefaultConfigurationNode("optional");
+        parent.addAttribute(nd);
         assertTrue("Attribute optional not recognized", decl.isReservedNode(nd));
-        nd.setName(XMLBeanDeclaration.ATTR_BEAN_CLASS);
+        nd = new DefaultConfigurationNode(XMLBeanDeclaration.ATTR_BEAN_CLASS);
+        parent.addAttribute(nd);
         assertTrue("Inherited attribute not recognized", decl
                 .isReservedNode(nd));
-        nd.setName("different");
+        nd = new DefaultConfigurationNode("different");
+        parent.addAttribute(nd);
         assertFalse("Wrong reserved attribute", decl.isReservedNode(nd));
-        nd.setAttribute(false);
-        nd.setName("at");
+        nd = new DefaultConfigurationNode("at");
+        parent.addChild(nd);
         assertFalse("Node type not evaluated", decl.isReservedNode(nd));
+    }
+
+    /**
+     * Tests if the at attribute is correctly detected as reserved attribute.
+     */
+    public void testConfigurationDeclarationIsReservedAt()
+    {
+        checkOldReservedAttribute("at");
+    }
+
+    /**
+     * Tests if the optional attribute is correctly detected as reserved
+     * attribute.
+     */
+    public void testConfigurationDeclarationIsReservedOptional()
+    {
+        checkOldReservedAttribute("optional");
+    }
+
+    /**
+     * Tests if special reserved attributes are recognized by the
+     * isReservedNode() method. For compatibility reasons the attributes "at"
+     * and "optional" are also treated as reserved attributes, but only if there
+     * are no corresponding attributes with the "config-" prefix.
+     *
+     * @param name the attribute name
+     */
+    private void checkOldReservedAttribute(String name)
+    {
+        factory = new DefaultConfigurationBuilder();
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
+                factory, factory);
+        DefaultConfigurationNode parent = new DefaultConfigurationNode();
+        DefaultConfigurationNode nd = new DefaultConfigurationNode("config-"
+                + name);
+        parent.addAttribute(nd);
+        assertTrue("config-" + name + " attribute not recognized", decl
+                .isReservedNode(nd));
+        DefaultConfigurationNode nd2 = new DefaultConfigurationNode(name);
+        parent.addAttribute(nd2);
+        assertFalse(name + " is reserved though config- exists", decl
+                .isReservedNode(nd2));
+        assertTrue("config- attribute not recognized when " + name + " exists",
+                decl.isReservedNode(nd));
     }
 
     /**
@@ -259,10 +308,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     private void checkConfiguration() throws ConfigurationException
     {
-        CompositeConfiguration compositeConfiguration = (CompositeConfiguration) factory
+        CombinedConfiguration compositeConfiguration = (CombinedConfiguration) factory
                 .getConfiguration();
 
-        assertEquals("Number of configurations", 4, compositeConfiguration
+        assertEquals("Number of configurations", 3, compositeConfiguration
                 .getNumberOfConfigurations());
         assertEquals(PropertiesConfiguration.class, compositeConfiguration
                 .getConfiguration(0).getClass());
@@ -292,9 +341,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testLoadAdditional() throws ConfigurationException
     {
         factory.setFile(ADDITIONAL_FILE);
-        CompositeConfiguration compositeConfiguration = (CompositeConfiguration) factory
+        CombinedConfiguration compositeConfiguration = (CombinedConfiguration) factory
                 .getConfiguration();
-        assertEquals("Verify how many configs", 3, compositeConfiguration
+        assertEquals("Verify how many configs", 2, compositeConfiguration
                 .getNumberOfConfigurations());
 
         // Test if union was constructed correctly
@@ -367,9 +416,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.setFile(MULTI_FILE);
         Configuration config = factory.getConfiguration();
         assertFalse(config.isEmpty());
-        assertTrue(config instanceof CompositeConfiguration);
-        CompositeConfiguration cc = (CompositeConfiguration) config;
-        assertTrue(cc.getNumberOfConfigurations() == 2);
+        assertTrue(config instanceof CombinedConfiguration);
+        CombinedConfiguration cc = (CombinedConfiguration) config;
+        assertEquals("Wrong number of configurations", 1, cc
+                .getNumberOfConfigurations());
 
         assertNotNull(config
                 .getProperty("tables.table(0).fields.field(2).name"));
@@ -413,7 +463,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testComplexInitialization() throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
-        CompositeConfiguration cc = (CompositeConfiguration) factory
+        CombinedConfiguration cc = (CombinedConfiguration) factory
                 .getConfiguration();
 
         PropertiesConfiguration c1 = (PropertiesConfiguration) cc
@@ -425,9 +475,67 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 ((FileChangedReloadingStrategy) c1.getReloadingStrategy())
                         .getRefreshDelay());
 
-        assertEquals("Property not found", "I'm complex!", cc
+        Configuration xmlConf = cc.getConfiguration("xml");
+        assertEquals("Property not found", "I'm complex!", xmlConf
                 .getString("element2/subelement/subsubelement"));
-        assertEquals("List index not found", "two", cc
+        assertEquals("List index not found", "two", xmlConf
                 .getString("list[0]/item[1]"));
+    }
+
+    /**
+     * Tests if the returned combined configuration has the expected structure.
+     */
+    public void testCombinedConfiguration() throws ConfigurationException
+    {
+        factory.setFile(INIT_FILE);
+        CombinedConfiguration cc = (CombinedConfiguration) factory
+                .getConfiguration();
+        assertNotNull("Properties configuration not found", cc
+                .getConfiguration("properties"));
+        assertNotNull("XML configuration not found", cc.getConfiguration("xml"));
+        assertEquals("Wrong number of contained configs", 3, cc
+                .getNumberOfConfigurations());
+
+        CombinedConfiguration cc2 = (CombinedConfiguration) cc
+                .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
+        assertNotNull("No additional configuration found", cc2);
+        Set names = cc2.getConfigurationNames();
+        assertEquals("Wrong number of contained additional configs", 2, names
+                .size());
+        assertTrue("Config 1 not contained", names.contains("combiner1"));
+        assertTrue("Config 2 not contained", names.contains("combiner2"));
+    }
+
+    /**
+     * Tests the structure of the returned combined configuration if there is no
+     * additional section.
+     */
+    public void testCombinedConfigurationNoAdditional()
+            throws ConfigurationException
+    {
+        factory.setFile(TEST_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        assertNull("Additional configuration was found", cc
+                .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME));
+    }
+
+    /**
+     * Tests whether the list node definition was correctly processed.
+     */
+    public void testCombinedConfigurationListNodes()
+            throws ConfigurationException
+    {
+        factory.setFile(INIT_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        Set listNodes = cc.getNodeCombiner().getListNodes();
+        assertEquals("Wrong number of list nodes", 2, listNodes.size());
+        assertTrue("table node not a list node", listNodes.contains("table"));
+        assertTrue("list node not a list node", listNodes.contains("list"));
+
+        CombinedConfiguration cca = (CombinedConfiguration) cc
+                .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
+        listNodes = cca.getNodeCombiner().getListNodes();
+        assertTrue("Found list nodes for additional combiner", listNodes
+                .isEmpty());
     }
 }

@@ -30,6 +30,9 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.OverrideCombiner;
+import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 /**
@@ -57,13 +60,118 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * is detected. For the default configuration classes providers are already
  * registered.
  * </p>
+ * <p>
+ * The configuration definition file has the following basic structure:
+ * </p>
+ * <p>
+ *
+ * <pre>
+ * &lt;configuration&gt;
+ *   &lt;header&gt;
+ *     &lt;!-- Optional meta information about the composite configuration --&gt;
+ *   &lt;/header&gt;
+ *   &lt;override&gt;
+ *     &lt;!-- Declarations for override configurations --&gt;
+ *   &lt;/override&gt;
+ *   &lt;additional&gt;
+ *     &lt;!-- Declarations for union configurations --&gt;
+ *   &lt;/additional&gt;
+ * &lt;/configuration&gt;
+ * </pre>
+ *
+ * </p>
+ * <p>
+ * The name of the root element (here <code>configuration</code>) is
+ * arbitrary. There are two sections (both of them are optional) for declaring
+ * <em>override</em> and <em>additional</em> configurations. Configurations
+ * in the former section are evaluated in the order of their declaration, and
+ * properties of configurations declared earlier hide those of configurations
+ * declared later. Configurations in the latter section are combined to a union
+ * configuration, i.e. all of their properties are added to a large hierarchical
+ * configuration. Configuration declarations that occur as direct children of
+ * the root element are treated as override declarations.
+ * </p>
+ * <p>
+ * Each configuration declaration consists of a tag whose name is associated
+ * with a <code>ConfigurationProvider</code>. This can be one of the
+ * pre-defined tags like <code>properties</code>, or <code>xml</code>, or
+ * a custom tag, for which a configuration provider was registered. Attributes
+ * and sub elements with specific initialization parameters can be added. There
+ * are some reserved attributes with a special meaning that can be used in every
+ * configuration declaration:
+ * </p>
+ * <p>
+ * <table border="1">
+ * <tr>
+ * <th>Attribute</th>
+ * <th>Meaning</th>
+ * </tr>
+ * <tr>
+ * <td valign="top"><code>config-name</code></td>
+ * <td>Allows to specify a name for this configuration. This name can be used
+ * to obtain a reference to the configuration from the resulting combined
+ * configuration (see below).</td>
+ * </tr>
+ * <tr>
+ * <td valign="top"><code>config-at</code></td>
+ * <td>With this attribute an optional prefix can be specified for the
+ * properties of the corresponding configuration.</td>
+ * </tr>
+ * <tr>
+ * <td valign="top"><code>config-optional</code></td>
+ * <td>Declares a configuration as optional. This means that errors when
+ * creating the configuration are silently ignored.</td>
+ * </tr>
+ * </table>
+ * </p>
+ * <p>
+ * The optional <em>header</em> section can contain some meta data about the
+ * created configuration itself. For instance, it is possible to set further
+ * properties of the <code>NodeCombiner</code> objects used for constructing
+ * the resulting configuration.
+ * </p>
+ * <p>
+ * The configuration object returned by this builder is an instance of the
+ * <code>{@link CombinedConfiguration}</code> class. The return value of the
+ * <code>getConfiguration()</code> method can be casted to this type, and the
+ * <code>getConfiguration(boolean)</code> method directly declares
+ * <code>CombinedConfiguration</code> as return type. This allows for
+ * convenient access to the configuration objects maintained by the combined
+ * configuration (e.g. for updates of single configuration objects). It has also
+ * the advantage that the properties stored in all declared configuration
+ * objects are collected and transformed into a single hierarchical structure,
+ * which can be accessed using different expression engines.
+ * </p>
+ * <p>
+ * All declared override configurations are directly added to the resulting
+ * combined configuration. If they are given names (using the
+ * <code>config-name</code> attribute), they can directly be accessed using
+ * the <code>getConfiguration(String)</code> method of
+ * <code>CombinedConfiguration</code>. The additional configurations are
+ * alltogether added to another combined configuration, which uses a union
+ * combiner. Then this union configuration is added to the resulting combined
+ * configuration under the name defined by the <code>ADDITIONAL_NAME</code>
+ * constant.
+ * </p>
  *
  * @since 1.3
  * @author Oliver Heger
- * @version $Id$
+ * @version $Id: DefaultConfigurationBuilder.java 384601 2006-03-09 20:22:58Z
+ * oheger $
  */
-public class DefaultConfigurationBuilder extends XMLConfiguration implements ConfigurationBuilder
+public class DefaultConfigurationBuilder extends XMLConfiguration implements
+        ConfigurationBuilder
 {
+    /**
+     * Constant for the name of the additional configuration. If the
+     * configuration definition file contains an <code>additional</code>
+     * section, a special union configuration is created and added under this
+     * name to the resulting combined configuration.
+     */
+    public static final String ADDITIONAL_NAME = DefaultConfigurationBuilder.class
+            .getName()
+            + "/ADDITIONAL_CONFIG";
+
     /** Constant for the expression engine used by this builder. */
     static final XPathExpressionEngine EXPRESSION_ENGINE = new XPathExpressionEngine();
 
@@ -71,6 +179,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
     static final String CONFIG_BEAN_FACTORY_NAME = DefaultConfigurationBuilder.class
             .getName()
             + ".CONFIG_BEAN_FACTORY_NAME";
+
+    /** Constant for the reserved name attribute. */
+    static final String ATTR_NAME = XMLBeanDeclaration.RESERVED_PREFIX + "name";
 
     /** Constant for the reserved at attribute. */
     static final String ATTR_AT = "at";
@@ -81,17 +192,35 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
     /** Constant for the file name attribute. */
     static final String ATTR_FILENAME = "fileName";
 
+    /** Constant for the name of the header section. */
+    static final String SEC_HEADER = "header";
+
     /** Constant for an expression that selects the union configurations. */
     static final String KEY_UNION = "/additional/*";
 
     /** Constant for an expression that selects override configurations. */
-    static final String KEY_OVERRIDE1 = "/*[local-name() != 'additional' and local-name() != 'override']";
+    static final String KEY_OVERRIDE1 = "/*[local-name() != 'additional' and local-name() != 'override' and local-name() != '"
+            + SEC_HEADER + "']";
 
     /**
      * Constant for an expression that selects override configurations in the
      * override section.
      */
     static final String KEY_OVERRIDE2 = "/override/*";
+
+    /**
+     * Constant for the key that points to the list nodes definition of the
+     * override combiner.
+     */
+    static final String KEY_OVERRIDE_LIST = SEC_HEADER
+            + "/combiner/override/list-nodes/node";
+
+    /**
+     * Constant for the key that points to the list nodes definition of the
+     * additional combiner.
+     */
+    static final String KEY_ADDITIONAL_LIST = SEC_HEADER
+            + "/combiner/additional/list-nodes/node";
 
     /** Constant for the XML file extension. */
     static final String EXT_XML = ".xml";
@@ -120,12 +249,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS =
-    { "properties", "xml", "hierarchicalXml", "jndi", "system", "plist"};
+    { "properties", "xml", "hierarchicalXml", "jndi", "system", "plist" };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     { PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER};
+            SYSTEM_PROVIDER, PLIST_PROVIDER };
 
     /** Stores a map with the registered configuration providers. */
     private Map providers;
@@ -148,8 +277,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
-     * the specified configuration definition file.
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * sets the specified configuration definition file.
      *
      * @param file the configuration definition file
      */
@@ -160,8 +289,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
-     * the specified configuration definition file.
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * sets the specified configuration definition file.
      *
      * @param fileName the name of the configuration definition file
      * @throws ConfigurationException if an error occurs when the file is loaded
@@ -174,8 +303,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and sets
-     * the specified configuration definition file.
+     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * sets the specified configuration definition file.
      *
      * @param url the URL to the configuration definition file
      * @throws ConfigurationException if an error occurs when the file is loaded
@@ -287,7 +416,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
      * @return the configuration
      * @throws ConfigurationException if an error occurs
      */
-    public Configuration getConfiguration(boolean load)
+    public CombinedConfiguration getConfiguration(boolean load)
             throws ConfigurationException
     {
         if (load)
@@ -297,89 +426,52 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
 
         List overrides = configurationsAt(KEY_OVERRIDE1);
         overrides.addAll(configurationsAt(KEY_OVERRIDE2));
-        CompositeConfiguration result = createOverrideConfiguration(overrides);
+        CombinedConfiguration result = createCombinedConfiguration(overrides,
+                new OverrideCombiner(), KEY_OVERRIDE_LIST);
         List additionals = configurationsAt(KEY_UNION);
         if (!additionals.isEmpty())
         {
-            result.addConfiguration(createUnionConfiguration(additionals));
+            result.addConfiguration(createCombinedConfiguration(additionals,
+                    new UnionCombiner(), KEY_ADDITIONAL_LIST), ADDITIONAL_NAME);
         }
 
         return result;
     }
 
     /**
-     * Creates a composite configuration for the passed in configuration
-     * declarations.
+     * Creates a combined configuration for the configurations of a specific
+     * section. This method is called for the override and for the additional
+     * section (if it exists).
      *
-     * @param subs a list with sub configurations that contain configuration
-     * declarations for override configurations
-     * @return the composite configuration
+     * @param containedConfigs the list with the declaratinos of the contained
+     * configurations
+     * @param combiner the node combiner to use
+     * @param keyListNodes a list with the declaration of list nodes
+     * @return the new combined configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected CompositeConfiguration createOverrideConfiguration(List subs)
+    protected CombinedConfiguration createCombinedConfiguration(
+            List containedConfigs, NodeCombiner combiner, String keyListNodes)
             throws ConfigurationException
     {
-        CompositeConfiguration cc = new CompositeConfiguration();
-
-        for (Iterator it = subs.iterator(); it.hasNext();)
+        List listNodes = getList(keyListNodes);
+        for (Iterator it = listNodes.iterator(); it.hasNext();)
         {
-            cc
-                    .addConfiguration(createConfigurationAt((HierarchicalConfiguration) it
-                            .next()));
+            combiner.addListNode((String) it.next());
         }
 
-        return cc;
-    }
-
-    /**
-     * Creates a union configuration for the passed in configuration
-     * declarations. This method will create configuration objects for the
-     * passed in descriptions and combine them into a single union
-     * configuration.
-     *
-     * @param subs a list with sub configurations that contain configuration
-     * declarations
-     * @return the union configuration
-     * @throws ConfigurationException if an error occurs
-     */
-    protected HierarchicalConfiguration createUnionConfiguration(List subs)
-            throws ConfigurationException
-    {
-        HierarchicalConfiguration union = new HierarchicalConfiguration();
-
-        for (Iterator it = subs.iterator(); it.hasNext();)
+        CombinedConfiguration result = new CombinedConfiguration(combiner);
+        for (Iterator it = containedConfigs.iterator(); it.hasNext();)
         {
             HierarchicalConfiguration conf = (HierarchicalConfiguration) it
                     .next();
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
                     conf);
-            union.addNodes(decl.getAt(), convertToHierarchical(
-                    createConfigurationAt(decl)).getRoot().getChildren());
+            result.addConfiguration(createConfigurationAt(decl), decl
+                    .attributeValueStr(ATTR_NAME), decl.getAt());
         }
 
-        return union;
-    }
-
-    /**
-     * Converts the passed in configuration to a hierarchical one. If the
-     * configuration is already hierarchical, it is directly returned. Otherwise
-     * all properties are copied into a new hierarchical configuration.
-     *
-     * @param conf the configuration to convert
-     * @return the new hierarchical configuration
-     */
-    protected HierarchicalConfiguration convertToHierarchical(Configuration conf)
-    {
-        if (conf instanceof HierarchicalConfiguration)
-        {
-            return (HierarchicalConfiguration) conf;
-        }
-        else
-        {
-            HierarchicalConfiguration hc = new HierarchicalConfiguration();
-            ConfigurationUtils.copy(conf, hc);
-            return hc;
-        }
+        return result;
     }
 
     /**
@@ -403,31 +495,18 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
      * @return the new configuration object
      * @throws ConfigurationException if an error occurs
      */
-    private Configuration createConfigurationAt(ConfigurationDeclaration decl)
-            throws ConfigurationException
+    private AbstractConfiguration createConfigurationAt(
+            ConfigurationDeclaration decl) throws ConfigurationException
     {
         try
         {
-            return (Configuration) BeanHelper.createBean(decl);
+            return (AbstractConfiguration) BeanHelper.createBean(decl);
         }
         catch (Exception ex)
         {
             // redirect to configuration exceptions
             throw new ConfigurationException(ex);
         }
-    }
-
-    /**
-     * Creates a configuration object from the specified sub configuration.
-     *
-     * @param sub the sub configuration
-     * @return the new configuration object
-     * @throws ConfigurationException if an error occurs
-     */
-    private Configuration createConfigurationAt(HierarchicalConfiguration sub)
-            throws ConfigurationException
-    {
-        return createConfigurationAt(new ConfigurationDeclaration(this, sub));
     }
 
     /**
@@ -443,6 +522,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
      * provider is then asked to create a corresponding
      * <code>Configuration</code> object. It is up to a concrete
      * implementation how this object is created and initialized.
+     * </p>
+     * <p>
+     * Note that at the moment only configuration classes derived from
+     * <code>{@link AbstractConfiguration}</code> are supported.
      * </p>
      */
     public static class ConfigurationProvider extends DefaultBeanFactory
@@ -502,11 +585,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
          * @return the new configuration object
          * @throws Exception if an error occurs
          */
-        public Configuration getConfiguration(ConfigurationDeclaration decl)
-                throws Exception
+        public AbstractConfiguration getConfiguration(
+                ConfigurationDeclaration decl) throws Exception
         {
-            return (Configuration) createBean(getConfigurationClass(), decl,
-                    null);
+            return (AbstractConfiguration) createBean(getConfigurationClass(),
+                    decl, null);
         }
     }
 
@@ -647,8 +730,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
             }
 
             return nd.isAttribute()
-                    && (ATTR_AT.equals(nd.getName()) || ATTR_OPTIONAL.equals(nd
-                            .getName()));
+                    && ((ATTR_AT.equals(nd.getName()) && nd.getParentNode()
+                            .getAttributeCount(RESERVED_PREFIX + ATTR_AT) == 0) || (ATTR_OPTIONAL
+                            .equals(nd.getName()) && nd.getParentNode()
+                            .getAttributeCount(RESERVED_PREFIX + ATTR_OPTIONAL) == 0));
         }
     }
 
@@ -737,8 +822,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
          * @return the new configuration
          * @throws Exception if an error occurs
          */
-        public Configuration getConfiguration(ConfigurationDeclaration decl)
-                throws Exception
+        public AbstractConfiguration getConfiguration(
+                ConfigurationDeclaration decl) throws Exception
         {
             FileConfiguration config = (FileConfiguration) super
                     .getConfiguration(decl);
@@ -753,7 +838,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements Con
                     throw cex;
                 }
             }
-            return config;
+            return (AbstractConfiguration) config;
         }
 
         /**
