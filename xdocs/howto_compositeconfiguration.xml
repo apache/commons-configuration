@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,6 +25,23 @@
 <body>
 
     <section name="Composite Configuration Details">
+        <p>
+            There are many use cases when you want to collect the properties
+            of several configuration sources and access them like a single
+            configuration object. One way to do that is using the
+            <code><a href="apidocs/org/apache/commons/configuration/CompositeConfiguration.html">
+            CompositeConfiguration</a></code> class.
+        </p>
+        <p>
+            A <code>CompositeConfiguration</code> object contains a list of
+            other configuration objects. When properties are accessed from a
+            composite configuration the object takes the passed in property key
+            and iterates over the list of the contained configurations. As soon
+            as a value is found for the key it is returned. This means that a
+            <code>CompositeConfiguration</code> implements a kind of override
+            semantics, i.e. the properties of configurations that were added
+            first hide the property values of configurations added later.
+        </p>
     	<p>
     		We will discuss how you can establish a "default" choice for your
     		Composite Configuration as well as save changes made to your

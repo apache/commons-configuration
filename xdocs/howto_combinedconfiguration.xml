@@ -1,0 +1,288 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Combined Configurations</title>
+  <author email="oheger@apache.com">Oliver Heger</author>
+ </properties>
+
+<body>
+    <section name="Combined Configuration">
+    <p>
+      The <code><a href="apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      CombinedConfiguration</a></code> class provides an alternative for handling
+      multiple configuration sources. Its API is very similar to the
+      <code>CompositeConfiguration</code> class, which was discussed in the
+      <a href="howto_compositeconfiguration.html#Composite Configuration Details">last
+      section</a>. There are the following differences however:
+    </p>
+    <p>
+      <ul>
+        <li>A <code>CombinedConfiguration</code> is a truely
+        <a href="howto_xml.html#Hierarchical properties">hierarchical
+        configuration</a>. This means that all the enhanced facilities
+        provided by <code>HierarchicalConfiguration</code> (e.g. expression
+        engines) can be used.</li>
+        <li>A <code>CombinedConfiguration</code> is not limited to implementing
+        an override semantics for the properties of the contained configurations.
+        Instead it has the concept of so-called <em>node combiners</em>, which
+        know how properties of multiple configuration sources can be combined.
+        Node combiners are discussed later in detail. For instance, there is a
+        node combiner implementation available that constructs a union of the
+        contained configurations.</li>
+        <li>Contained configurations can be assigned a name. They can later be
+        accessed by their name.</li>
+        <li>Each contained configuration can have an optional prefix. Its
+        properties are then added under this prefix to the combined
+        configuration.</li>
+        <li>There is no concept of an <em>in memory configuration</em>. Changes
+        to a combined configuration are handled in a different way.</li>
+      </ul>
+   	</p>
+
+    <subsection name="How it works">
+    <p>
+      A <code>CombinedConfiguration</code> provides a logic view on the
+      properties of the configurations it contains. This view is determined
+      by the associated node combiner object. Because of that it must be
+      re-constructed whenever one of these contained configurations is
+      changed.
+    </p>
+    <p>
+      To achieve this, a <code>CombinedConfiguration</code> object registers
+      itself as an event listener at the configurations that are added to it.
+      It will then be notified for every modification that occurs. If such a
+      notification is received, the internally managed view is invalidated.
+      When a property of the combined configuration is to be accessed, the view
+      is checked whether it is valid. If this is the case, the property's value
+      can be directly fetched. Otherwise the associated node combiner is asked
+      to re-construct the view.
+    </p>
+    </subsection>
+    
+    <subsection name="Node combiners">
+    <p>
+      A <em>node combiner</em> is an object of a class that inherits from the
+      abstract <code><a href="apidocs/org/apache/commons/configuration/tree/NodeCombiner.html">NodeCombiner</a></code>
+      class. This class defines an abstract <code>combine()</code> method, which
+      takes the root nodes of two hierarchical configurations and returns the
+      root node of the combined node structure. It is up to a concrete
+      implementation how this combined structure will look like. Commons
+      Configuration ships with the two concrete implementations
+      <code><a href="apidocs/org/apache/commons/configuration/tree/OverrideCombiner.html">OverrideCombiner</a></code>
+      and <code><a href="apidocs/org/apache/commons/configuration/tree/UnionCombiner.html">UnionCombiner</a></code>,
+      which implement an override and a union semantics respective.
+    </p>
+    <p>
+      Constructing a combination of multiple node hierarchies is not a trivial
+      task. The available implementations descend the passed in node hierarchies
+      in a recursive manner to decide, which nodes have to be copied into the
+      resulting structure. Under certain circumstances two nodes of the source
+      structures can be combined into a single result node, but unfortunately
+      this process cannot be fully automated, but sometimes needs some hints
+      from the developer. As an example consider the following XML configuration
+      sources:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>and</p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      These two configuration sources define database tables. Each source
+      defines one table. When constructing a union for these sources the result
+      should look as follows:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+      <table>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      As you can see, the resulting structure contains two <code>table</code>
+      nodes while the nodes <code>database</code> and <code>tables</code> appear
+      only once. For a human being this is quite logic because <code>database</code>
+      and <code>tables</code> define the overall structure of the configuration
+      data, and there can be multiple tables. A node combiner however does not
+      know anything about structure nodes, list nodes, or whatever. From its point of
+      view there is no detectable difference between the <code>tables</code>
+      nodes and the <code>table</code> nodes in the source structures: both
+      appear once in each source file and have no values. So without any
+      assistance the result constructed by the <code>UnionCombiner</code> when
+      applied on the two example sources would be a bit different:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <database>
+    <tables>
+      <table>
+        <name>users</name>
+        <fields>
+          <field>
+            <name>user_id</name>
+          </field>
+          ...
+        </fields>
+        <name>documents</name>
+        <fields>
+          <field>
+            <name>document_id</name>
+          </field>
+          ...
+        </fields>
+      </table>
+    </tables>
+  </database>
+</configuration>
+]]></source>
+    <p>
+      Note that the <code>table</code> node would be considered a structure
+      node, too, and would not be duplicated. This is probably not what was
+      desired. To deal with such situations it is possible to tell the node
+      combiner that certain nodes are list nodes and thus should not be
+      combined. So in this concrete example the <code>table</code> node should
+      be declared as a list node, then we would get the expected result. We will
+      see below how this is done. Note that this explicit declaration of a list
+      node is necessary only in situations where there is ambiguity. If in one
+      of our example configuration sources multiple tables had been defined, the
+      node combiner would have concluded itself that <code>table</code> is a list
+      node and would have acted correspondigly.
+    </p>
+    </subsection>
+
+	<subsection name="Constructing a CombinedConfiguration">
+	<p>
+      To create a <code>CombinedConfiguration</code> object you specify the node
+      combiner to use and then add an arbitrary number of configurations. We will
+      show how to construct a union configuration from the two example sources
+      introduced earlier:
+    </p>
+<source><![CDATA[
+// Load the source configurations
+XMLConfiguration conf1 = new XMLConfiguration("table1.xml");
+XMLConfiguration conf2 = new XMLConfiguration("table2.xml");
+
+// Create and initialize the node combiner
+NodeCombiner combiner = new UnionCombiner();
+combiner.addListNode("table");  // mark table as list node
+            // this is needed only if there are ambiguities
+
+// Construct the combined configuration
+CombinedConfiguration cc = new CombinedConfiguration(combiner);
+cc.addConfiguration(conf1, "tab1");
+cc.addConfiguration(conf2);
+]]></source>
+    <p>
+      Here we also specified a name for one of the configurations, so it can
+      later be accessed by <code>cc.getConfiguration("tab1");</code>. Access by
+      index is also supported. After that the properties in the combined
+      configuration can be accessed as if it were a normal hierarchical
+      configuration
+    </p>
+    </subsection>
+    
+    <subsection name="Dealing with changes">
+    <p>
+      There is nothing that prevents you from updating a combined configuration,
+      e.g. by calling methods like <code>addProperty()</code> or
+      <code>removeProperty()</code>. The problem is that depending on the used
+      node combiner it might no be clear, which of the contained configurations
+      will be modified or whether one is modified at all.
+    </p>
+    <p>
+      Typical node combiners work by copying parts of the node structures of
+      the source configurations into the target structure and linking them
+      togehter using special link nodes. So updates of the combined node structure
+      will either effect nodes from one of the contained configuration (then
+      the changes are directly visible in this configuration) or one of the link
+      nodes (then they cannot really be saved).
+    </p>
+    <p>
+      It is also possible that a change is done at the combined node structure,
+      which is not compatible with the current node combiner. Imagine that an
+      <code>OverrideCombiner</code> is used and that a
+      property should be removed. This property will then be removed from one
+      of the contained configurations. Now it may happen that this removed
+      property had hidden property values of other contained configurations.
+      Their values won't become visible automatically, but only after the
+      combined view was re-constructed.
+    </p>
+    <p>
+      Because of that it is recommended that changes are not done at the
+      combined configuration, but only at contained configurations. This way
+      the correct configuration to be updated can unambigously be identified.
+      Obtaining the configuration to be updated from the combined configuration
+      is easy when it was given a name.
+    </p>
+    </subsection>
+	</section>
+</body>
+
+</document>

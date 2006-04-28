@@ -78,6 +78,13 @@
         <li><a href="howto_compositeconfiguration.html#Setting Up Defaults">Setting Up Defaults</a></li>
         <li><a href="howto_compositeconfiguration.html#Saving Changes">Saving Changes</a></li>
       </ul>
+      <li><a href="howto_combinedconfiguration.html#Combined Configuration">Combined Configuration</a></li>
+      <ul>
+        <li><a href="howto_combinedconfiguration.html#How it works">How it works</a></li>
+        <li><a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a></li>
+        <li><a href="howto_combinedconfiguration.html#Constructing a CombinedConfiguration">Constructing a CombinedConfiguration</a></li>
+        <li><a href="howto_combinedconfiguration.html#Dealing with changes">Dealing with changes</a></li>
+      </ul>
       <li><a href="howto_beans.html#Declaring and Creating Beans">Declaring and Creating Beans</a></li>
       <ul>
         <li><a href="howto_beans.html#Basic Concepts">Basic Concepts</a></li>
