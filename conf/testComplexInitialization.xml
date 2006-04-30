@@ -2,6 +2,10 @@
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
+    <result delimiterParsingDisabled="true">
+      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </result>
     <combiner>
       <override>
         <list-nodes>

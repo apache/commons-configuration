@@ -304,6 +304,59 @@ public class TestXMLBeanDeclaration extends TestCase
     }
 
     /**
+     * Tests constructing a bean declaration from an undefined key. This should
+     * cause an exception.
+     */
+    public void testInitFromUndefinedKey()
+    {
+        HierarchicalConfiguration config = new HierarchicalConfiguration();
+        setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
+        try
+        {
+            decl = new XMLBeanDeclaration(config, "undefined_key");
+            fail("Could create declaration from an undefined key!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests constructing a bean declaration from a key, which is undefined when
+     * the optional flag is set. In this case an empty declaration should be
+     * created, which can be used for creating beans as long as a default class
+     * is provided.
+     */
+    public void testInitFromUndefinedKeyOptional()
+    {
+        HierarchicalConfiguration config = new HierarchicalConfiguration();
+        setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
+        decl = new XMLBeanDeclaration(config, "undefined_key", true);
+        assertNull("Found a bean class", decl.getBeanClassName());
+    }
+
+    /**
+     * Tests constructing a bean declaration from a key with multiple values.
+     * This should cause an exception because keys must be unique.
+     */
+    public void testInitFromMultiValueKey()
+    {
+        HierarchicalConfiguration config = new HierarchicalConfiguration();
+        config.addProperty(KEY, "myFirstKey");
+        config.addProperty(KEY, "mySecondKey");
+        try
+        {
+            decl = new XMLBeanDeclaration(config, KEY);
+            fail("Could create declaration from multi-valued property!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Initializes a configuration object with a bean declaration. Under the
      * specified key the given properties will be added.
      *

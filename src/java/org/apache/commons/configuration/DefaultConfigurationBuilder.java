@@ -30,7 +30,6 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -119,8 +118,8 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * </tr>
  * <tr>
  * <td valign="top"><code>config-optional</code></td>
- * <td>Declares a configuration as optional. This means that errors when
- * creating the configuration are silently ignored.</td>
+ * <td>Declares a configuration as optional. This means that errors that occur
+ * when creating the configuration are silently ignored.</td>
  * </tr>
  * </table>
  * </p>
@@ -221,6 +220,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static final String KEY_ADDITIONAL_LIST = SEC_HEADER
             + "/combiner/additional/list-nodes/node";
+
+    /**
+     * Constant for the key of the result declaration. This key can point to a
+     * bean declaration, which defines properties of the resulting combined
+     * configuration.
+     */
+    static final String KEY_RESULT = SEC_HEADER + "/result";
+
+    /** Constant for the key of the combiner in the result declaration.*/
+    static final String KEY_COMBINER = KEY_RESULT + "/nodeCombiner";
 
     /** Constant for the XML file extension. */
     static final String EXT_XML = ".xml";
@@ -424,54 +433,82 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             load();
         }
 
-        List overrides = configurationsAt(KEY_OVERRIDE1);
-        overrides.addAll(configurationsAt(KEY_OVERRIDE2));
-        CombinedConfiguration result = createCombinedConfiguration(overrides,
-                new OverrideCombiner(), KEY_OVERRIDE_LIST);
+        CombinedConfiguration result = createOverrideConfiguration();
         List additionals = configurationsAt(KEY_UNION);
         if (!additionals.isEmpty())
         {
-            result.addConfiguration(createCombinedConfiguration(additionals,
-                    new UnionCombiner(), KEY_ADDITIONAL_LIST), ADDITIONAL_NAME);
+            CombinedConfiguration addConfig = new CombinedConfiguration(
+                    new UnionCombiner());
+            initCombinedConfiguration(addConfig, additionals,
+                    KEY_ADDITIONAL_LIST);
+            result.addConfiguration(addConfig, ADDITIONAL_NAME);
         }
 
         return result;
     }
 
     /**
-     * Creates a combined configuration for the configurations of a specific
+     * Creates the resulting combined configuration. This method is called by
+     * <code>getConfiguration()</code>. Its task is to construct the
+     * resulting (override) combined configuration and to add all declared
+     * override configurations to it. This implementation checks whether the
+     * <code>header</code> section of the configuration definition file
+     * contains a <code>result</code> element. If this is the case, it will be
+     * used to initialize the properties of the newly created configuration
+     * object.
+     *
+     * @return the override configuration object
+     * @throws ConfigurationException if an error occurs
+     */
+    protected CombinedConfiguration createOverrideConfiguration()
+            throws ConfigurationException
+    {
+        XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_RESULT, true);
+        CombinedConfiguration result = (CombinedConfiguration) BeanHelper
+                .createBean(decl, CombinedConfiguration.class);
+
+        if (getMaxIndex(KEY_COMBINER) < 0)
+        {
+            // No combiner defined => set default
+            result.setNodeCombiner(new OverrideCombiner());
+        }
+
+        List overrides = configurationsAt(KEY_OVERRIDE1);
+        overrides.addAll(configurationsAt(KEY_OVERRIDE2));
+        initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
+        return result;
+    }
+
+    /**
+     * Initializes a combined configuration for the configurations of a specific
      * section. This method is called for the override and for the additional
      * section (if it exists).
      *
+     * @param config the configuration to be initialized
      * @param containedConfigs the list with the declaratinos of the contained
      * configurations
-     * @param combiner the node combiner to use
      * @param keyListNodes a list with the declaration of list nodes
-     * @return the new combined configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected CombinedConfiguration createCombinedConfiguration(
-            List containedConfigs, NodeCombiner combiner, String keyListNodes)
+    protected void initCombinedConfiguration(CombinedConfiguration config,
+            List containedConfigs, String keyListNodes)
             throws ConfigurationException
     {
         List listNodes = getList(keyListNodes);
         for (Iterator it = listNodes.iterator(); it.hasNext();)
         {
-            combiner.addListNode((String) it.next());
+            config.getNodeCombiner().addListNode((String) it.next());
         }
 
-        CombinedConfiguration result = new CombinedConfiguration(combiner);
         for (Iterator it = containedConfigs.iterator(); it.hasNext();)
         {
             HierarchicalConfiguration conf = (HierarchicalConfiguration) it
                     .next();
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
                     conf);
-            result.addConfiguration(createConfigurationAt(decl), decl
+            config.addConfiguration(createConfigurationAt(decl), decl
                     .attributeValueStr(ATTR_NAME), decl.getAt());
         }
-
-        return result;
     }
 
     /**
@@ -792,7 +829,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * configurations. Ensures that the base path is correctly set and that the
      * load() method gets called.
      */
-    static class FileConfigurationProvider extends ConfigurationProvider
+    public static class FileConfigurationProvider extends ConfigurationProvider
     {
         /**
          * Creates a new instance of <code>FileConfigurationProvider</code>.

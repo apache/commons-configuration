@@ -23,6 +23,7 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 import junit.framework.TestCase;
 
@@ -480,6 +481,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 .getString("element2/subelement/subsubelement"));
         assertEquals("List index not found", "two", xmlConf
                 .getString("list[0]/item[1]"));
+
+        assertTrue("Delimiter flag was not set", cc
+                .isDelimiterParsingDisabled());
+        assertTrue("Expression engine was not set",
+                cc.getExpressionEngine() instanceof XPathExpressionEngine);
     }
 
     /**

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
 /**
  * <p>
@@ -117,9 +118,32 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @param config the configuration
      * @param key the key to the bean declaration (this key must point to
-     * exactly one bean declaration)
+     * exactly one bean declaration or a <code>IllegalArgumentException</code>
+     * exception will be thrown)
      */
     public XMLBeanDeclaration(HierarchicalConfiguration config, String key)
+    {
+        this(config, key, false);
+    }
+
+    /**
+     * Creates a new instance of <code>XMLBeanDeclaration</code> and
+     * initializes it from the given configuration. The passed in key points to
+     * the bean declaration. If the key does not exist and the boolean argument
+     * is <b>true</b>, the declaration is initialized with an empty
+     * configuration. It is possible to create objects from such an empty
+     * declaration if a default class is provided. If the key on the other hand
+     * has multiple values or is undefined and the boolean argument is <b>false</b>,
+     * a <code>IllegalArgumentException</code> exception will be thrown.
+     *
+     * @param config the configuration
+     * @param key the key to the bean declaration
+     * @param optional a flag whether this declaration is optional; if set to
+     * <b>true</b>, no exception will be thrown if the passed in key is
+     * undefined
+     */
+    public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
+            boolean optional)
     {
         if (config == null)
         {
@@ -127,8 +151,20 @@ public class XMLBeanDeclaration implements BeanDeclaration
                     "Configuration must not be null!");
         }
 
-        node = (key == null) ? config.getRoot() : config.configurationAt(key)
-                .getRoot();
+        try
+        {
+            node = (key == null) ? config.getRoot() : config.configurationAt(
+                    key).getRoot();
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // If we reach this block, the key does not have exactly one value
+            if (!optional || config.getMaxIndex(key) > 0)
+            {
+                throw iex;
+            }
+            node = new DefaultConfigurationNode();
+        }
         configuration = config;
     }
 
