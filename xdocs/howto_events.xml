@@ -1,0 +1,131 @@
+<?xml version="1.0"?>
+<!--
+   Copyright 2006 The Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Configuration Events Howto</title>
+  <author email="oheger@apache.org">Oliver Heger</author>
+ </properties>
+
+<body>
+	<section name="Configuration Events">
+    <p>
+      All configuration classes derived from
+      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> allow to register event listeners, which
+      are notified whenever the configuration's data is changed. This provides
+      an easy means for tracking updates on a configuration.
+    </p>
+
+    <subsection name="Configuration listeners">
+	<p>
+      Objects that are interested in update events triggered by configurations
+      must implement the
+      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationListener.html">
+      ConfigurationListener</a></code> interface. This interface defines a
+      single method <code>configurationChanged()</code>, which is passed a
+      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html">
+      ConfigurationEvent</a></code> object. The event object contains all
+      information available about the modification, including:
+      <ul>
+        <li>A source object, which is usually the configuration object that was
+        modified.</li>
+        <li>The event's type. This is a numeric value that corresponds to
+        constant declarations in concrete configuration classes. It describes
+        what exactly has happended.</li>
+        <li>If available, the name of the property whose modification caused the
+        event.</li>
+        <li>If available, the value of the property that caused this event.</li>
+        <li>A flag whether this event was generated before or after the update
+        of the source configuration. A modification of a configuration typically
+        causes two events: one event before and one event after the modification
+        is performed. This allows event listeners to react at the correct point
+        of time.</li>
+      </ul>
+      Depending on the event type not all of this data may be available.
+    </p>
+    <p>
+      For resolving the numeric event type use constants defined in
+      <code>AbstractConfiguration</code> or derived classes. These constants
+      start with the prefix <code>EVENT_</code> and have a speaking name. Here
+      is an incomplete list of available event types with the configuration
+      classes, in which they are defined:
+    </p>
+    <p>
+      <dl>
+        <dt>AbstractConfiguration</dt>
+        <dd>EVENT_ADD_PROPERTY (a property was added), EVENT_SET_PROPERTY
+        (a property's value was changed), EVENT_CLEAR_PROPERTY (a property was
+        removed from the configuration), EVENT_CLEAR (the configuration was
+        cleared)</dd>
+        <dt>AbstractFileConfiguration</dt>
+        <dd>EVENT_RELOAD (the configuration was reloaded)</dd>
+        <dt>HierarchicalConfiguration</dt>
+        <dd>EVENT_ADD_NODES (the <code>addNodes()</code> method was called),
+        EVENT_CLEAR_TREE (the <code>clearTree()</code> method was called)</dd>
+      </dl>
+    </p>
+    </subsection>
+
+    <subsection name="An example">
+    <p>
+      Implementing an event listener is quite easy. As an example we are going
+      to define an event listener, which logs all received configuration events
+      to the console. The class could look as follows:
+    </p>
+    <source><![CDATA[
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+
+public class ConfigurationLogListener implements ConfigurationListener
+{
+    public void configurationChanged(ConfigurationEvent event)
+    {
+        if (!event.isBeforeUpdate())
+        {
+            // only display events after the modification was done
+            System.out.println("Received event!");
+            System.out.println("Type = " + event.getType());
+            if (event.getPropertyName() != null)
+            {
+                System.out.println("Property name = " + event.getPropertyName());
+            }
+            if (event.getPropertyValue() != null)
+            {
+                System.out.println("Property value = " + event.getPropertyValue());
+            }
+        }
+    }
+}
+]]></source>
+    <p>
+      Now an instance of this event listener class has to be registered at a
+      configuration object:
+    </p>
+    <source><![CDATA[
+AbstractConfiguration config = ... // somehow create the configuration
+ConfigurationListener listener = new ConfigurationLogListener();
+config.addConfigurationListener(listener);
+...
+config.addProperty("newProperty", "newValue"); // will fire an event
+]]></source>
+    </subsection>
+    </section>
+</body>
+
+</document>

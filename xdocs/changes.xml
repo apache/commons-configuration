@@ -32,6 +32,11 @@
         The new class CombinedConfiguration was added as a hierarchical
         alternative to CompositeConfiguration.
       </action>
+      <action dev="oheger" type="add" issue="38929">
+        Support for low-level configuration events was added to all classes
+        derived from AbstractConfiguration. The major part of this is handled
+        by the new super class EventSource of AbstractConfiguration.
+      </action>
       <action dev="oheger" type="add">
         A new method convertToHierarchical() was added to ConfigurationUtils,
         which is able to convert an arbitrary configuration object into a

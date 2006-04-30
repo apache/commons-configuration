@@ -114,6 +114,11 @@
         <li><a href="howto_configurationbuilder.html#An example">An example</a></li>
         <li><a href="howto_configurationbuilder.html#Extending the configuration definition file format">Extending the configuration definition file format</a></li>
       </ul>
+      <li><a href="howto_events.html#Configuration Events">Configuration Events</a></li>
+      <ul>
+        <li><a href="howto_events.html#Configuration listeners">Configuration listeners</a></li>
+        <li><a href="howto_events.html#An example">An example</a></li>
+      </ul>
     </ul>
     </section>
 </body>
