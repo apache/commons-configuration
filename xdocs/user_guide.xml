@@ -103,9 +103,16 @@
         <li><a href="howto_configurationfactory.html#Optional configuration sources">Optional configuration sources</a></li>
       </ul>
       <li><a href="howto_configurationfactory.html#Union configuration">Union configuration</a></li>
-      <li><a href="howto_configurationfactory.html#The configuration definition file">The configuration definition file</a></li>
+      <li><a href="howto_configurationfactory.html#Configuration definition file reference">Configuration definition file reference</a></li>
       <ul>
         <li><a href="howto_configurationfactory.html#Setting further options">Setting further options</a></li>
+      </ul>
+      <li><a href="howto_configurationbuilder.html#Using DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
+      <ul>
+        <li><a href="howto_configurationbuilder.html#Differences to ConfigurationFactory">Differences to ConfigurationFactory</a></li>
+        <li><a href="howto_configurationbuilder.html#Enhancements of the configuration definition file">Enhancements of the configuration definition file</a></li>
+        <li><a href="howto_configurationbuilder.html#An example">An example</a></li>
+        <li><a href="howto_configurationbuilder.html#Extending the configuration definition file format">Extending the configuration definition file format</a></li>
       </ul>
     </ul>
     </section>

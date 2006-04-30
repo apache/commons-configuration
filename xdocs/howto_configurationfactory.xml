@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@
 
  <properties>
   <title>Configuration Factory Howto</title>
-  <author email="oliver.heger@t-online.de">Oliver Heger</author>
+  <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
-<body>		
+<body>
 	<section name="Using a Configuration Factory">
 		<p>
  	 		This section explains how a
@@ -395,8 +395,8 @@ String backColor = config.getString("color.background");
 			sources).
 		</p>
 	</section>
-    
-    <section name="The configuration definition file">
+
+    <section name="Configuration definition file reference">
         <p>
             We have seen how to write configuration definition files for
             including properties and XML files. This section deals with other

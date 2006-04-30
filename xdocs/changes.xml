@@ -24,6 +24,11 @@
 
     <release version="1.3-SNAPSHOT" date="in SVN">
       <action dev="oheger" type="add">
+        The new class DefaultConfigurationBuilder was added as an alternative to
+        ConfigurationFactory. It provides some more features and creates a
+        CombinedConfiguration object
+      </action>
+      <action dev="oheger" type="add">
         The new class CombinedConfiguration was added as a hierarchical
         alternative to CompositeConfiguration.
       </action>
