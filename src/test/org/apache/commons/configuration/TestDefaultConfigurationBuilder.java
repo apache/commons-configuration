@@ -72,7 +72,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testConfigurationDeclarationIsReserved()
     {
-        factory = new DefaultConfigurationBuilder();
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory);
         DefaultConfigurationNode parent = new DefaultConfigurationNode();
@@ -121,7 +120,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     private void checkOldReservedAttribute(String name)
     {
-        factory = new DefaultConfigurationBuilder();
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory);
         DefaultConfigurationNode parent = new DefaultConfigurationNode();
@@ -144,16 +142,24 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testConfigurationDeclarationGetAttributes()
     {
-        factory = new DefaultConfigurationBuilder();
         factory.addProperty("/ xml/fileName", "test.xml");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("xml"));
         assertNull("Found an at attribute", decl.getAt());
         assertFalse("Found an optional attribute", decl.isOptional());
-        factory.addProperty("/xml @at", "test1");
+        factory.addProperty("/xml @config-at", "test1");
         assertEquals("Wrong value of at attribute", "test1", decl.getAt());
-        factory.addProperty("/xml @optional", "true");
+        factory.addProperty("/xml @at", "test2");
+        assertEquals("Wrong value of config-at attribute", "test1", decl.getAt());
+        factory.clearProperty("/xml/@config-at");
+        assertEquals("Old at attribute not detected", "test2", decl.getAt());
+        factory.addProperty("/xml @config-optional", "true");
         assertTrue("Wrong value of optional attribute", decl.isOptional());
+        factory.addProperty("/xml @optional", "false");
+        assertTrue("Wrong value of config-optional attribute", decl.isOptional());
+        factory.clearProperty("/xml/@config-optional");
+        factory.setProperty("/xml/@optional", Boolean.TRUE);
+        assertTrue("Old optional attribute not detected", decl.isOptional());
         factory.setProperty("/xml/@optional", "invalid value");
         try
         {
@@ -328,6 +334,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 .getFileName());
 
         // check some properties
+        checkProperties(compositeConfiguration);
+    }
+
+    /**
+     * Checks if the passed in configuration contains the expected properties.
+     *
+     * @param compositeConfiguration the configuration to check
+     */
+    private void checkProperties(Configuration compositeConfiguration)
+    {
         assertTrue("Make sure we have loaded our key", compositeConfiguration
                 .getBoolean("test.boolean"));
         assertEquals("I'm complex!", compositeConfiguration
@@ -407,6 +423,25 @@ public class TestDefaultConfigurationBuilder extends TestCase
         {
             // ok
         }
+    }
+
+    /**
+     * Tries to load a configuration file with an optional, non file-based
+     * configuration. The optional attribute should work for other configuration
+     * classes, too.
+     */
+    public void testLoadOptionalNonFileBased() throws ConfigurationException
+    {
+        factory.addProperty("/ override/configuration@fileName",
+                "nonExisting.xml");
+        factory.addProperty("/override/configuration[1] @config-optional",
+                Boolean.TRUE);
+        factory.addProperty("/override/configuration[1] @config-name",
+                "optionalConfig");
+        CombinedConfiguration config = factory.getConfiguration(false);
+        assertTrue("Configuration not empty", config.isEmpty());
+        assertEquals("Wrong number of configurations", 0, config
+                .getNumberOfConfigurations());
     }
 
     /**
@@ -543,5 +578,20 @@ public class TestDefaultConfigurationBuilder extends TestCase
         listNodes = cca.getNodeCombiner().getListNodes();
         assertTrue("Found list nodes for additional combiner", listNodes
                 .isEmpty());
+    }
+
+    /**
+     * Tests whether a configuration builder can itself be declared in a
+     * configuration definition file.
+     */
+    public void testConfigurationBuilderProvider()
+            throws ConfigurationException
+    {
+        factory.addProperty("/ override/configuration@fileName", TEST_FILE
+                .getAbsolutePath());
+        CombinedConfiguration cc = factory.getConfiguration(false);
+        assertEquals("Wrong number of configurations", 1, cc
+                .getNumberOfConfigurations());
+        checkProperties(cc);
     }
 }

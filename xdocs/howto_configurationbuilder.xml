@@ -132,6 +132,23 @@
       are also allowed for <code>ConfigurationFactory</code>. A list of all
       supported tags can be found
       <a href="howto_configurationfactory.html#Configuration definition file reference">here</a>.
+      In addition to the default tags provided by <code>ConfigurationFactory</code>
+      <code>DefaultConfigurationBuilder</code> knows the following tags:
+    </p>
+    <p>
+      <dl>
+        <dt>configuration</dt>
+        <dd>The <code>configuration</code> tag allows to include other
+        configuration definition files. This makes it possible to nest these
+        definition files up to an arbitrary depth. In fact, this tag will
+        create another <code>DefaultConfigurationBuilder</code> object,
+        initialize it, and obtain the <code>CombinedConfiguation</code> from it.
+        This combined configuration will then be added to the resulting
+        combined configuration. Like for other file-based configurations the
+        <code>fileName</code> attribute can be used to specify the configuration
+        definition file to be loaded. This file must be an XML document that
+        conforms to the format described here.</dd>
+      </dl>
     </p>
     <p>
       In the declaration of a configuration source it is possible to set
@@ -193,7 +210,13 @@
     <tr>
       <td valign="top"><code>config-optional</code></td>
       <td>Declares a configuration as optional. This means that errors that
-      occur when creating the configuration are silently ignored.</td>
+      occur when creating the configuration are silently ignored. Note that in
+      case of an error no configuration is added to the resulting combined
+      configuration. This fact can be used to find out whether an optional
+      configuration could be successfully created or not: If you specify a name
+      for the optional configuration (using the <code>config-name</code>
+      attribute), you can later check the combined configuration whether it
+      contains a configuration with this name.</td>
     </tr>
     </table>
     </p>

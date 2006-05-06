@@ -256,14 +256,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             XMLPropertyListConfiguration.class,
             PropertyListConfiguration.class, EXT_XML);
 
+    /** Constant for the provider for configuration definition files.*/
+    private static final ConfigurationProvider BUILDER_PROVIDER = new ConfigurationBuilderProvider();
+
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS =
-    { "properties", "xml", "hierarchicalXml", "jndi", "system", "plist" };
+    { "properties", "xml", "hierarchicalXml", "jndi", "system", "plist", "configuration" };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     { PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER };
+            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER };
 
     /** Stores a map with the registered configuration providers. */
     private Map providers;
@@ -506,8 +509,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                     .next();
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
                     conf);
-            config.addConfiguration(createConfigurationAt(decl), decl
-                    .attributeValueStr(ATTR_NAME), decl.getAt());
+            AbstractConfiguration newConf = createConfigurationAt(decl);
+            if (newConf != null)
+            {
+                config.addConfiguration(newConf, decl
+                        .attributeValueStr(ATTR_NAME), decl.getAt());
+            }
         }
     }
 
@@ -681,7 +688,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public String getAt()
         {
-            return attributeValueStr(ATTR_AT);
+            String result = attributeValueStr(RESERVED_PREFIX + ATTR_AT);
+            return (result == null) ? attributeValueStr(ATTR_AT) : result;
         }
 
         /**
@@ -692,7 +700,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public boolean isOptional()
         {
-            Object value = attributeValue(ATTR_OPTIONAL);
+            Object value = attributeValue(RESERVED_PREFIX + ATTR_OPTIONAL);
+            if (value == null)
+            {
+                value = attributeValue(ATTR_OPTIONAL);
+            }
+
             try
             {
                 return (value != null) ? PropertyConverter.toBoolean(value)
@@ -786,7 +799,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * Creates an instance of a bean class. This implementation expects that
          * the passed in bean declaration is a declaration for a configuration.
          * It will determine the responsible configuration provider and delegate
-         * the call to this instance.
+         * the call to this instance. If creation of the configuration fails
+         * and the <code>optional</code> attribute is set, the exception will
+         * be ignored and <b>null</b> will be returned.
          *
          * @param beanClass the bean class (will be ignored)
          * @param data the declaration
@@ -808,7 +823,22 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                                 + tagName);
             }
 
-            return provider.getConfiguration(decl);
+            try
+            {
+                return provider.getConfiguration(decl);
+            }
+            catch (Exception ex)
+            {
+                // If this is an optional configuration, ignore the exception
+                if (!decl.isOptional())
+                {
+                    throw ex;
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         /**
@@ -864,17 +894,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             FileConfiguration config = (FileConfiguration) super
                     .getConfiguration(decl);
-            try
-            {
-                config.load();
-            }
-            catch (ConfigurationException cex)
-            {
-                if (!decl.isOptional())
-                {
-                    throw cex;
-                }
-            }
+            config.load();
             return (AbstractConfiguration) config;
         }
 
@@ -961,6 +981,37 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             {
                 return super.createBeanInstance(defaultClass, data);
             }
+        }
+    }
+
+    /**
+     * A specialized configuration provider class that allows to include other
+     * configuration definition files.
+     */
+    static class ConfigurationBuilderProvider extends ConfigurationProvider
+    {
+        /**
+         * Creates a new instance of <code>ConfigurationBuilderProvider</code>.
+         */
+        public ConfigurationBuilderProvider()
+        {
+            super(DefaultConfigurationBuilder.class);
+        }
+
+        /**
+         * Creates the configuration. First creates a configuration builder
+         * object. Then returns the configuration created by this builder.
+         *
+         * @param decl the configuration declaration
+         * @return the configuration
+         * @exception Exception if an error occurs
+         */
+        public AbstractConfiguration getConfiguration(
+                ConfigurationDeclaration decl) throws Exception
+        {
+            DefaultConfigurationBuilder builder = (DefaultConfigurationBuilder) super
+                    .getConfiguration(decl);
+            return builder.getConfiguration(true);
         }
     }
 
