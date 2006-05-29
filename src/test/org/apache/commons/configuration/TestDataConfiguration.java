@@ -1048,7 +1048,7 @@ public class TestDataConfiguration extends TestCase
 
         // single URL values
         expected = new ArrayList();
-        expected.add(new URL("http://www.apache.org"));
+        expected.add(new URL("http://jakarta.apache.org"));
         ListAssert.assertEquals(expected, conf.getURLList("url.string"));
         ListAssert.assertEquals(expected, conf.getURLList("url.object"));
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE org.apache.commons.menus SYSTEM '../../commons-build/menus/menus.dtd'>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@
       <item name="Building"                     href="/building.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
       <item name="Javadoc (latest)"             href="/apidocs/index.html"/>
+      <item name="Javadoc (Release 1.2)"        href="/apidocs_1.2/index.html"/>
       <item name="Javadoc (Release 1.1)"        href="/apidocs_1.1/index.html"/>
       <item name="Javadoc (Release 1.0)"        href="/apidocs_1.0/index.html"/>
       <item name="SVN"                          href="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/"/>
