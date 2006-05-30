@@ -31,6 +31,7 @@
       <item name="Home"                         href="/index.html"/>  
       <item name="Download"                     href="http://jakarta.apache.org/site/downloads/downloads_commons-configuration.cgi"/>  
       <item name="User's Guide"                 href="/user_guide.html"/>
+      <item name="Howtos (Release 1.2)"         href="/howtos_index.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
       <item name="Building"                     href="/building.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>

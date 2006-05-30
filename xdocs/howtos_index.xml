@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -17,29 +17,29 @@
 <document>
 
   <properties>
-    <author email="oliver.heger@t-online.de">Oliver Heger</author>
+    <author email="oheger@apache.org">Oliver Heger</author>
     <title>Configuration howtos index</title>
   </properties>
 
   <body>
     <section name="Howtos">
       <p>
-        Here you can find a short user guide for the Configuration project.
-        Note that these documents deal with the latest <em>development</em> version of the
-        Configuration API, i.e. the main trunk in SVN or the nightly builds. 
-        If you use the latest <em>released</em> version, some of the features
-        described here may not be available. In this case please jump to the
-        old version of this guide, which can be found
-        <a href="howtos_index_1.0.html">here</a>.
+        Here you can find documents that describe the usage of some of
+        the main classes provided by the Commons Configuration project. Prior
+        to the 1.3 release these howto documents made up the user
+        documentation. In Commons Configuration 1.3 they have been replaced by
+        a new <a href="user_guide.html">user's guide</a>. So if you are using
+        a newer version of Commons Configuration you should jump to this new
+        user's guide. For versions up to 1.2 you are right here.
       </p>
       <p>
         The following doucments are available:
         <ul>
-          <li><a href="overview.html">Using Configuration</a></li>
-          <li><a href="howto_properties.html">Properties Howto</a></li>
-          <li><a href="howto_configurationfactory.html">ConfigurationFactory Howto</a></li>
-          <li><a href="howto_xml.html">XML Howto</a></li>
-          <li><a href="howto_compositeconfiguration.html">Composite Config Howto</a></li>
+          <li><a href="overview_1_2.html">Using Configuration</a></li>
+          <li><a href="howto_properties_1_2.html">Properties Howto</a></li>
+          <li><a href="howto_configurationfactory_1_2.html">ConfigurationFactory Howto</a></li>
+          <li><a href="howto_xml_1_2.html">XML Howto</a></li>
+          <li><a href="howto_compositeconfiguration_1_2.html">Composite Config Howto</a></li>
         </ul>
       </p>
     </section>

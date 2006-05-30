@@ -32,6 +32,13 @@
             offer. But you can also skip sections and jump directly to the topics
             you are most interested in.
     	</p>
+        <p>
+            Note that many features described in this guide are only available
+            since the 1.3 release of Commons Configuration. If you are using
+            a 1.2 version, have a look at the older
+            <a href="howtos_index.html">Howtos</a> documents, which specifically
+            deal with this version.
+        </p>
     </section>
 
 	<section name="Table of contents">
