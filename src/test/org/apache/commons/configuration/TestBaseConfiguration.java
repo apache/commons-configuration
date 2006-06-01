@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -38,6 +38,9 @@ import junitx.framework.ObjectAssert;
  */
 public class TestBaseConfiguration extends TestCase
 {
+    /** Constant for the number key.*/
+    static final String KEY_NUMBER = "number";
+
     protected BaseConfiguration config = null;
 
     protected static Class missingElementException = NoSuchElementException.class;
@@ -709,5 +712,28 @@ public class TestBaseConfiguration extends TestCase
 
         config.addPropertyDirect("array.double", new double[] { 1, 2 });
         assertEquals("first element of the 'array.double' property", 1, config.getDouble("array.double"), 0);
+    }
+
+    /**
+     * Tests if conversion between number types is possible.
+     */
+    public void testNumberConversions()
+    {
+        config.setProperty(KEY_NUMBER, new Integer(42));
+        assertEquals("Wrong int returned", 42, config.getInt(KEY_NUMBER));
+        assertEquals("Wrong long returned", 42L, config.getLong(KEY_NUMBER));
+        assertEquals("Wrong byte returned", (byte) 42, config
+                .getByte(KEY_NUMBER));
+        assertEquals("Wrong float returned", 42.0f,
+                config.getFloat(KEY_NUMBER), 0.01f);
+        assertEquals("Wrong double returned", 42.0, config
+                .getDouble(KEY_NUMBER), 0.001);
+
+        assertEquals("Wrong Long returned", new Long(42L), config.getLong(
+                KEY_NUMBER, null));
+        assertEquals("Wrong BigInt returned", new BigInteger("42"), config
+                .getBigInteger(KEY_NUMBER));
+        assertEquals("Wrong DigDecimal returned", new BigDecimal("42"), config
+                .getBigDecimal(KEY_NUMBER));
     }
 }

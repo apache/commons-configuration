@@ -15,6 +15,7 @@
  */
 package org.apache.commons.configuration;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Iterator;
 
@@ -162,5 +163,92 @@ public class TestPropertyConverter extends TestCase
                 "The quick brown fox jumps over ${target}.", PropertyConverter
                         .interpolate("The ${animal} jumps over ${target}.",
                                 config));
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in objects are already
+     * numbers.
+     */
+    public void testToNumberDirect()
+    {
+        Integer i = new Integer(42);
+        assertSame("Wrong integer", i, PropertyConverter.toNumber(i,
+                Integer.class));
+        BigDecimal d = new BigDecimal("3.1415");
+        assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d,
+                Integer.class));
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in objects have a compatible
+     * string representation.
+     */
+    public void testToNumberFromString()
+    {
+        assertEquals("Incorrect Integer value", new Integer(42),
+                PropertyConverter.toNumber("42", Integer.class));
+        assertEquals("Incorrect Short value", new Short((short) 10),
+                PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in objects are strings with
+     * prefixes for special radices.
+     */
+    public void testToNumberFromHexString()
+    {
+        Number n = PropertyConverter.toNumber("0x10", Integer.class);
+        assertEquals("Incorrect Integer value", 16, n.intValue());
+    }
+
+    /**
+     * Tests conversion to numbers when an invalid Hex value is passed in. This
+     * should cause an exception.
+     */
+    public void testToNumberFromInvalidHexString()
+    {
+        try
+        {
+            PropertyConverter.toNumber("0xNotAHexValue", Integer.class);
+            fail("Could convert invalid hex value!");
+        }
+        catch (ConversionException cex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in objects have no numeric
+     * String representation. This should cause an exception.
+     */
+    public void testToNumberFromInvalidString()
+    {
+        try
+        {
+            PropertyConverter.toNumber("Not a number", Byte.class);
+            fail("Could convert invalid String!");
+        }
+        catch (ConversionException cex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in target class is invalid.
+     * This should cause an exception.
+     */
+    public void testToNumberWithInvalidClass()
+    {
+        try
+        {
+            PropertyConverter.toNumber("42", Object.class);
+            fail("Could convert to invalid target class!");
+        }
+        catch (ConversionException cex)
+        {
+            //ok
+        }
     }
 }

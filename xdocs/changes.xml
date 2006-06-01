@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-214">
+        The getter methods for numeric data types in AbstractConfiguration now
+        support conversions between different Number types, e.g. you can now
+        call getLong(key) when key points to an Integer value.
+      </action>
       <action dev="oheger" type="add">
         The new class DefaultConfigurationBuilder was added as an alternative to
         ConfigurationFactory. It provides some more features and creates a
