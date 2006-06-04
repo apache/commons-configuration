@@ -183,8 +183,8 @@ public class TestSubnodeConfiguration extends TestCase
      */
     public void testSetThrowExceptionOnMissing()
     {
-        setUpSubnodeConfig();
         parent.setThrowExceptionOnMissing(true);
+        setUpSubnodeConfig();
         assertTrue("Exception flag not fetchted from parent", config
                 .isThrowExceptionOnMissing());
         try
@@ -198,7 +198,7 @@ public class TestSubnodeConfiguration extends TestCase
         }
 
         config.setThrowExceptionOnMissing(false);
-        assertFalse("Exception flag not set on parent", parent
+        assertTrue("Exception flag reset on parent", parent
                 .isThrowExceptionOnMissing());
     }
 
@@ -208,33 +208,36 @@ public class TestSubnodeConfiguration extends TestCase
      */
     public void testSetDelimiterParsingDisabled()
     {
-        setUpSubnodeConfig();
         parent.setDelimiterParsingDisabled(true);
+        setUpSubnodeConfig();
+        parent.setDelimiterParsingDisabled(false);
         assertTrue("Delimiter parsing flag was not received from parent",
                 config.isDelimiterParsingDisabled());
         config.addProperty("newProp", "test1,test2,test3");
         assertEquals("New property was splitted", "test1,test2,test3", parent
                 .getString("tables.table(0).newProp"));
+        parent.setDelimiterParsingDisabled(true);
         config.setDelimiterParsingDisabled(false);
-        assertFalse("Delimiter parsing flag was not set on parent", parent
+        assertTrue("Delimiter parsing flag was reset on parent", parent
                 .isDelimiterParsingDisabled());
     }
 
     /**
-     * Tests manipulating the list delimiter. This piece of data is used by both
-     * the parent and the subnode.
+     * Tests manipulating the list delimiter. This piece of data is derived from
+     * the parent.
      */
     public void testSetListDelimiter()
     {
-        setUpSubnodeConfig();
         parent.setListDelimiter('/');
+        setUpSubnodeConfig();
+        parent.setListDelimiter(';');
         assertEquals("List delimiter not obtained from parent", '/', config
                 .getListDelimiter());
         config.addProperty("newProp", "test1,test2/test3");
         assertEquals("List was incorrectly splitted", "test1,test2", parent
                 .getString("tables.table(0).newProp"));
         config.setListDelimiter(',');
-        assertEquals("List delimiter not set at parent", ',', parent
+        assertEquals("List delimiter changed on parent", ';', parent
                 .getListDelimiter());
     }
 
@@ -243,8 +246,8 @@ public class TestSubnodeConfiguration extends TestCase
      */
     public void testSetExpressionEngine()
     {
-        setUpSubnodeConfig();
         parent.setExpressionEngine(new XPathExpressionEngine());
+        setUpSubnodeConfig();
         assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
                 .getString("fields/field[2]/name"));
         Set keys = new HashSet();
@@ -253,20 +256,39 @@ public class TestSubnodeConfiguration extends TestCase
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
         config.setExpressionEngine(null);
-        assertSame("Expression engine not set on parent",
-                HierarchicalConfiguration.getDefaultExpressionEngine(), parent
-                        .getExpressionEngine());
+        assertTrue("Expression engine reset on parent", parent
+                .getExpressionEngine() instanceof XPathExpressionEngine);
     }
-    
+
     /**
      * Tests the configurationAt() method.
      */
     public void testConfiguarationAt()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration sub2 = (SubnodeConfiguration) config.configurationAt("fields.field(1)");
-        assertEquals("Wrong value of property", TABLE_FIELDS[0][1], sub2.getString("name"));
+        SubnodeConfiguration sub2 = (SubnodeConfiguration) config
+                .configurationAt("fields.field(1)");
+        assertEquals("Wrong value of property", TABLE_FIELDS[0][1], sub2
+                .getString("name"));
         assertEquals("Wrong parent", config.getParent(), sub2.getParent());
+    }
+
+    /**
+     * Tests interpolation features. The subnode config should use its parent
+     * for interpolation.
+     */
+    public void testInterpolation()
+    {
+        parent.addProperty("tablespaces.tablespace.name", "default");
+        parent.addProperty("tablespaces.tablespace(-1).name", "test");
+        parent.addProperty("tables.table(0).tablespace",
+                "${tablespaces.tablespace(0).name}");
+        assertEquals("Wrong interpolated tablespace", "default", parent
+                .getString("tables.table(0).tablespace"));
+
+        setUpSubnodeConfig();
+        assertEquals("Wrong interpolated tablespace in subnode", "default",
+                config.getString("tablespace"));
     }
 
     /**
@@ -286,7 +308,6 @@ public class TestSubnodeConfiguration extends TestCase
                 nodeCounter++;
                 return super.createNode(name);
             }
-
         };
         for (int i = 0; i < TABLE_NAMES.length; i++)
         {
