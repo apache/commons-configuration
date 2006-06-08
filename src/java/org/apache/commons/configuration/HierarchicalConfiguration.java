@@ -407,12 +407,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * <p>
-     * Returns a hierarchical configuration object that wraps the configuration
-     * node specified by the given key. This method provides an easy means of
-     * accessing sub trees of a hierarchical configuration. In the returned
-     * configuration the sub tree can directly be accessed, it becomes the root
-     * node of this configuration. Because of this the passed in key must select
-     * exactly one configuration node; otherwise an
+     * Returns a hierarchical subnode configuration object that wraps the
+     * configuration node specified by the given key. This method provides an
+     * easy means of accessing sub trees of a hierarchical configuration. In the
+     * returned configuration the sub tree can directly be accessed, it becomes
+     * the root node of this configuration. Because of this the passed in key
+     * must select exactly one configuration node; otherwise an
      * <code>IllegalArgumentException</code> will be thrown.
      * </p>
      * <p>
@@ -420,18 +420,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * <code>{@link #subset(String)}</code> method is that
      * <code>subset()</code> supports arbitrary subsets of configuration nodes
      * while <code>configurationAt()</code> only returns a single sub tree.
-     * Actually, the object returned by this method is an instance of
-     * <code>SubnodeConfiguration</code>. Please refer to the documentation
-     * of this class to obtain further information about subnode configurations
-     * and when they should be used.
+     * Please refer to the documentation of the
+     * <code>SubnodeConfiguration</code> class to obtain further information
+     * about subnode configurations and when they should be used.
      * </p>
-     *
+     * 
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
      * @since 1.3
      */
-    public HierarchicalConfiguration configurationAt(String key)
+    public SubnodeConfiguration configurationAt(String key)
     {
         List nodes = fetchNodeList(key);
         if (nodes.size() != 1)
@@ -489,7 +488,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the configuration for the given node
      * @since 1.3
      */
-    protected HierarchicalConfiguration createSubnodeConfiguration(ConfigurationNode node)
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         return new SubnodeConfiguration(this, node);
     }

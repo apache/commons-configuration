@@ -30,6 +30,7 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -152,6 +153,11 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * configuration under the name defined by the <code>ADDITIONAL_NAME</code>
  * constant.
  * </p>
+ * <p>
+ * Implementation note: This class is not thread-safe. Especially the
+ * <code>getConfiguration()</code> methods should be called by a single thread
+ * only.
+ * </p>
  *
  * @since 1.3
  * @author Oliver Heger
@@ -180,16 +186,40 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             + ".CONFIG_BEAN_FACTORY_NAME";
 
     /** Constant for the reserved name attribute. */
-    static final String ATTR_NAME = XMLBeanDeclaration.RESERVED_PREFIX + "name";
+    static final String ATTR_NAME = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + XMLBeanDeclaration.RESERVED_PREFIX
+            + "name"
+            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
+    /** Constant for the name of the at attribute. */
+    static final String ATTR_ATNAME = "at";
 
     /** Constant for the reserved at attribute. */
-    static final String ATTR_AT = "at";
+    static final String ATTR_AT_RES = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + XMLBeanDeclaration.RESERVED_PREFIX
+            + ATTR_ATNAME
+            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
+    /** Constant for the at attribute without the reserved prefix. */
+    static final String ATTR_AT = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + ATTR_ATNAME + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
+    /** Constant for the name of the optional attribute. */
+    static final String ATTR_OPTIONALNAME = "optional";
 
     /** Constant for the reserved optional attribute. */
-    static final String ATTR_OPTIONAL = "optional";
+    static final String ATTR_OPTIONAL_RES = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + XMLBeanDeclaration.RESERVED_PREFIX
+            + ATTR_OPTIONALNAME
+            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
+    /** Constant for the optional attribute without the reserved prefix. */
+    static final String ATTR_OPTIONAL = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + ATTR_OPTIONALNAME + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the file name attribute. */
-    static final String ATTR_FILENAME = "fileName";
+    static final String ATTR_FILENAME = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + "fileName" + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
 
     /** Constant for the name of the header section. */
     static final String SEC_HEADER = "header";
@@ -267,6 +297,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     { PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
             SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER };
+
+    /** Stores the configuration that is currently constructed.*/
+    private CombinedConfiguration constructedConfiguration;
 
     /** Stores a map with the registered configuration providers. */
     private Map providers;
@@ -436,15 +469,21 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             load();
         }
 
-        CombinedConfiguration result = createOverrideConfiguration();
+        CombinedConfiguration result = createResultConfiguration();
+        constructedConfiguration = result;
+
+        List overrides = configurationsAt(KEY_OVERRIDE1);
+        overrides.addAll(configurationsAt(KEY_OVERRIDE2));
+        initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
+
         List additionals = configurationsAt(KEY_UNION);
         if (!additionals.isEmpty())
         {
             CombinedConfiguration addConfig = new CombinedConfiguration(
                     new UnionCombiner());
+            result.addConfiguration(addConfig, ADDITIONAL_NAME);
             initCombinedConfiguration(addConfig, additionals,
                     KEY_ADDITIONAL_LIST);
-            result.addConfiguration(addConfig, ADDITIONAL_NAME);
         }
 
         return result;
@@ -452,18 +491,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /**
      * Creates the resulting combined configuration. This method is called by
-     * <code>getConfiguration()</code>. Its task is to construct the
-     * resulting (override) combined configuration and to add all declared
-     * override configurations to it. This implementation checks whether the
+     * <code>getConfiguration()</code>. It checks whether the
      * <code>header</code> section of the configuration definition file
      * contains a <code>result</code> element. If this is the case, it will be
      * used to initialize the properties of the newly created configuration
      * object.
      *
-     * @return the override configuration object
+     * @return the resulting configuration object
      * @throws ConfigurationException if an error occurs
      */
-    protected CombinedConfiguration createOverrideConfiguration()
+    protected CombinedConfiguration createResultConfiguration()
             throws ConfigurationException
     {
         XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_RESULT, true);
@@ -476,9 +513,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             result.setNodeCombiner(new OverrideCombiner());
         }
 
-        List overrides = configurationsAt(KEY_OVERRIDE1);
-        overrides.addAll(configurationsAt(KEY_OVERRIDE2));
-        initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
         return result;
     }
 
@@ -491,11 +525,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param containedConfigs the list with the declaratinos of the contained
      * configurations
      * @param keyListNodes a list with the declaration of list nodes
+     * @param interpolConfig the configuration to be used for interpolation
      * @throws ConfigurationException if an error occurs
      */
     protected void initCombinedConfiguration(CombinedConfiguration config,
-            List containedConfigs, String keyListNodes)
-            throws ConfigurationException
+            List containedConfigs, String keyListNodes) throws ConfigurationException
     {
         List listNodes = getList(keyListNodes);
         for (Iterator it = listNodes.iterator(); it.hasNext();)
@@ -512,8 +546,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
-                config.addConfiguration(newConf, decl
-                        .attributeValueStr(ATTR_NAME), decl.getAt());
+                config.addConfiguration(newConf, decl.getConfiguration()
+                        .getString(ATTR_NAME), decl.getAt());
             }
         }
     }
@@ -529,6 +563,26 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             addConfigurationProvider(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
         }
+    }
+
+    /**
+     * Performs interpolation. This method will not only take this configuration
+     * instance into account (which is the one that loaded the configuration
+     * definition file), but also the so far constructed combined configuration.
+     * So variables can be used that point to properties that are defined in
+     * configuration sources loaded by this builder.
+     *
+     * @param value the value to be interpolated
+     * @return the interpolated value
+     */
+    protected Object interpolate(Object value)
+    {
+        Object result = super.interpolate(value);
+        if (constructedConfiguration != null)
+        {
+            result = constructedConfiguration.interpolate(result);
+        }
+        return result;
     }
 
     /**
@@ -654,15 +708,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     protected static class ConfigurationDeclaration extends XMLBeanDeclaration
     {
-        /** Stores a reference to the associated configuration factory. */
+        /** Stores a reference to the associated configuration builder. */
         private DefaultConfigurationBuilder configurationBuilder;
 
         /**
          * Creates a new instance of <code>ConfigurationDeclaration</code> and
          * initializes it.
          *
-         * @param buikder the associated configuration builder
+         * @param builder the associated configuration builder
          * @param config the configuration this declaration is based onto
+         * @param interpolConfig the configuration to be used for interpolation
          */
         public ConfigurationDeclaration(DefaultConfigurationBuilder builder,
                 HierarchicalConfiguration config)
@@ -688,8 +743,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public String getAt()
         {
-            String result = attributeValueStr(RESERVED_PREFIX + ATTR_AT);
-            return (result == null) ? attributeValueStr(ATTR_AT) : result;
+            String result = getConfiguration().getString(ATTR_AT_RES);
+            return (result == null) ? getConfiguration().getString(ATTR_AT)
+                    : result;
         }
 
         /**
@@ -700,23 +756,14 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public boolean isOptional()
         {
-            Object value = attributeValue(RESERVED_PREFIX + ATTR_OPTIONAL);
+            Boolean value = getConfiguration().getBoolean(ATTR_OPTIONAL_RES,
+                    null);
             if (value == null)
             {
-                value = attributeValue(ATTR_OPTIONAL);
+                value = getConfiguration().getBoolean(ATTR_OPTIONAL,
+                        Boolean.FALSE);
             }
-
-            try
-            {
-                return (value != null) ? PropertyConverter.toBoolean(value)
-                        .booleanValue() : false;
-            }
-            catch (ConversionException cex)
-            {
-                throw new ConfigurationRuntimeException(
-                        "optional attribute does not have a valid boolean value",
-                        cex);
-            }
+            return value.booleanValue();
         }
 
         /**
@@ -743,29 +790,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
-         * Returns the value of the specified attribute. This can be useful for
-         * certain <code>ConfigurationProvider</code> implementations.
-         *
-         * @param attrName the attribute's name
-         * @return the attribute's value (or <b>null</b> if it does not exist)
-         */
-        public Object attributeValue(String attrName)
-        {
-            return super.attributeValue(attrName);
-        }
-
-        /**
-         * Returns the string value of the specified attribute.
-         *
-         * @param attrName the attribute's name
-         * @return the attribute's value (or <b>null</b> if it does not exist)
-         */
-        public String attributeValueStr(String attrName)
-        {
-            return super.attributeValueStr(attrName);
-        }
-
-        /**
          * Checks whether the given node is reserved. This method will take
          * further reserved attributes into account
          *
@@ -780,10 +804,23 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             }
 
             return nd.isAttribute()
-                    && ((ATTR_AT.equals(nd.getName()) && nd.getParentNode()
-                            .getAttributeCount(RESERVED_PREFIX + ATTR_AT) == 0) || (ATTR_OPTIONAL
+                    && ((ATTR_ATNAME.equals(nd.getName()) && nd.getParentNode()
+                            .getAttributeCount(RESERVED_PREFIX + ATTR_ATNAME) == 0) || (ATTR_OPTIONALNAME
                             .equals(nd.getName()) && nd.getParentNode()
-                            .getAttributeCount(RESERVED_PREFIX + ATTR_OPTIONAL) == 0));
+                            .getAttributeCount(RESERVED_PREFIX + ATTR_OPTIONALNAME) == 0));
+        }
+
+        /**
+         * Performs interpolation. This implementation will delegate
+         * interpolation to the configuration builder, which takes care that the
+         * currently constructed configuration is taken into account, too.
+         *
+         * @param value the value to be interpolated
+         * @return the interpolated value
+         */
+        protected Object interpolate(Object value)
+        {
+            return getConfigurationBuilder().interpolate(value);
         }
     }
 
@@ -971,7 +1008,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 BeanDeclaration data) throws Exception
         {
             String fileName = ((ConfigurationDeclaration) data)
-                    .attributeValueStr(ATTR_FILENAME);
+                    .getConfiguration().getString(ATTR_FILENAME);
             if (fileName != null
                     && fileName.toLowerCase().trim().endsWith(fileExtension))
             {

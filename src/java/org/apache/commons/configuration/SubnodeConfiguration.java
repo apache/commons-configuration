@@ -113,7 +113,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      * @param node the sub node, for which the configuration is to be created
      * @return a hierarchical configuration for this sub node
      */
-    protected HierarchicalConfiguration createSubnodeConfiguration(ConfigurationNode node)
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         return new SubnodeConfiguration(getParent(), node);
     }

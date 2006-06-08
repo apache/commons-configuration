@@ -231,6 +231,29 @@
       <code>additional</code> section).
     </p>
     <p>
+      Another useful feature is the built-in support for interpolation (i.e.
+      variable substitution): You can use variables in your configuration
+      definition file that are defined in declared configuration sources. For
+      instance, if the name of a configuration file to be loaded is defined by
+      the system property <code>CONFIG_FILE</code>, you can do something like
+      this:
+    </p>
+    <source><![CDATA[
+<configuration>
+  <!-- Load the system properties -->
+  <system/>
+  <!-- Now load the config file, using a system property as file name -->
+  <properties fileName="${CONFIG_FILE}"/>
+</configuration>
+]]></source>
+    <p>
+      Note that you can refer only to properties that have already been loaded.
+      If you change the order of the <code>&lt;system&gt;</code> and the
+      <code>&lt;properties&gt;</code> elements in the example above, an error
+      will occur because the <code>${CONFIG_FILE}</code> variable will then be
+      undefined at the moment it is evaluated.
+    </p>
+    <p>
       <strong>The header section</strong>
     </p>
     <p>

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
-import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -64,6 +63,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
         System
                 .setProperty("java.naming.factory.initial",
                         "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        System.setProperty("test_file_xml", "test.xml");
+        System.setProperty("test_file_combine", "testcombine1.xml");
         factory = new DefaultConfigurationBuilder();
     }
 
@@ -81,7 +82,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         nd = new DefaultConfigurationNode("optional");
         parent.addAttribute(nd);
         assertTrue("Attribute optional not recognized", decl.isReservedNode(nd));
-        nd = new DefaultConfigurationNode(XMLBeanDeclaration.ATTR_BEAN_CLASS);
+        nd = new DefaultConfigurationNode("config-class");
         parent.addAttribute(nd);
         assertTrue("Inherited attribute not recognized", decl
                 .isReservedNode(nd));
@@ -502,8 +503,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
         CombinedConfiguration cc = (CombinedConfiguration) factory
                 .getConfiguration();
 
+        assertEquals("System property not found", "test.xml",
+                cc.getString("test_file_xml"));
         PropertiesConfiguration c1 = (PropertiesConfiguration) cc
-                .getConfiguration(0);
+                .getConfiguration(1);
         assertTrue(
                 "Reloading strategy was not set",
                 c1.getReloadingStrategy() instanceof FileChangedReloadingStrategy);
@@ -516,6 +519,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 .getString("element2/subelement/subsubelement"));
         assertEquals("List index not found", "two", xmlConf
                 .getString("list[0]/item[1]"));
+        assertEquals("Property in combiner file not found", "yellow", cc
+                .getString("/gui/selcolor"));
 
         assertTrue("Delimiter flag was not set", cc
                 .isDelimiterParsingDisabled());
@@ -534,7 +539,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertNotNull("Properties configuration not found", cc
                 .getConfiguration("properties"));
         assertNotNull("XML configuration not found", cc.getConfiguration("xml"));
-        assertEquals("Wrong number of contained configs", 3, cc
+        assertEquals("Wrong number of contained configs", 4, cc
                 .getNumberOfConfigurations());
 
         CombinedConfiguration cc2 = (CombinedConfiguration) cc

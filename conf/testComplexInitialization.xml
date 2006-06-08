@@ -15,17 +15,19 @@
       </override>
     </combiner>
   </header>
+  <system/>
   <properties fileName="test.properties" throwExceptionOnMissing="true"
     config-name="properties">
     <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
       refreshDelay="10000"/>
   </properties>
-  <xml fileName="test.xml" config-name="xml">
+  <!-- Fetch the file name from a variable -->
+  <xml fileName="${test_file_xml}" config-name="xml">
     <expressionEngine config-class="org.apache.commons.configuration.tree.DefaultExpressionEngine"
       propertyDelimiter="/" indexStart="[" indexEnd="]"/>
   </xml>
   <additional>
-    <xml config-name="combiner1" fileName="testcombine1.xml"/>
+    <xml config-name="combiner1" fileName="${test_file_combine}"/>  -->
     <xml config-name="combiner2" fileName="testcombine2.xml"/>
   </additional>
 </configuration>

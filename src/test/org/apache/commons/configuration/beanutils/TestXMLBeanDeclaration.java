@@ -77,7 +77,7 @@ public class TestXMLBeanDeclaration extends TestCase
     {
         try
         {
-            decl = new XMLBeanDeclaration(new HierarchicalConfiguration(),
+            decl = new XMLBeanDeclaration(new HierarchicalConfiguration().configurationAt(null),
                     (ConfigurationNode) null);
             fail("Could init declaration with null node!");
         }

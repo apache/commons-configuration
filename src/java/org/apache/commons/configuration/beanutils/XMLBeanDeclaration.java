@@ -17,11 +17,11 @@ package org.apache.commons.configuration.beanutils;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
@@ -85,6 +85,16 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * it can have attributes defining meta data or bean properties and even further
  * nested elements for complex bean properties.
  * </p>
+ * <p>
+ * A <code>XMLBeanDeclaration</code> object is usually created from a
+ * <code>HierarchicalConfiguration</code>. From this it will derive a
+ * <code>SubnodeConfiguration</code>, which is used to access the needed
+ * properties. This subnode configuration can be obtained using the
+ * <code>{@link #getConfiguration()}</code> method. All of its properties can
+ * be accessed in the usual way. To ensure that the property keys used by this
+ * class are understood by the configuration, the default expression engine will
+ * be set.
+ * </p>
  *
  * @since 1.3
  * @author Oliver Heger
@@ -95,18 +105,21 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /** Constant for the prefix of reserved attributes. */
     public static final String RESERVED_PREFIX = "config-";
 
+    /** Constant for the prefix for reserved attributes.*/
+    private static final String ATTR_PREFIX = "[@" + RESERVED_PREFIX;
+
     /** Constant for the bean class attribute. */
-    public static final String ATTR_BEAN_CLASS = RESERVED_PREFIX + "class";
+    public static final String ATTR_BEAN_CLASS = ATTR_PREFIX + "class]";
 
     /** Constant for the bean factory attribute. */
-    public static final String ATTR_BEAN_FACTORY = RESERVED_PREFIX + "factory";
+    public static final String ATTR_BEAN_FACTORY = ATTR_PREFIX + "factory]";
 
     /** Constant for the bean factory parameter attribute. */
-    public static final String ATTR_FACTORY_PARAM = RESERVED_PREFIX
-            + "factoryParam";
+    public static final String ATTR_FACTORY_PARAM = ATTR_PREFIX
+            + "factoryParam]";
 
     /** Stores the associated configuration. */
-    private HierarchicalConfiguration configuration;
+    private SubnodeConfiguration configuration;
 
     /** Stores the configuration node that contains the bean declaration. */
     private ConfigurationNode node;
@@ -153,8 +166,8 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
         try
         {
-            node = (key == null) ? config.getRoot() : config.configurationAt(
-                    key).getRoot();
+            configuration = config.configurationAt(key);
+            node = configuration.getRootNode();
         }
         catch (IllegalArgumentException iex)
         {
@@ -163,9 +176,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
             {
                 throw iex;
             }
+            configuration = config.configurationAt(null);
             node = new DefaultConfigurationNode();
         }
-        configuration = config;
+        initSubnodeConfiguration(getConfiguration());
     }
 
     /**
@@ -188,7 +202,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * @param config the configuration
      * @param node the node with the bean declaration.
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config,
+    public XMLBeanDeclaration(SubnodeConfiguration config,
             ConfigurationNode node)
     {
         if (config == null)
@@ -203,6 +217,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
         this.node = node;
         configuration = config;
+        initSubnodeConfiguration(config);
     }
 
     /**
@@ -210,7 +225,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return the associated configuration
      */
-    public HierarchicalConfiguration getConfiguration()
+    public SubnodeConfiguration getConfiguration()
     {
         return configuration;
     }
@@ -233,7 +248,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public String getBeanFactoryName()
     {
-        return attributeValueStr(ATTR_BEAN_FACTORY);
+        return getConfiguration().getString(ATTR_BEAN_FACTORY);
     }
 
     /**
@@ -244,7 +259,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public Object getBeanFactoryParameter()
     {
-        return attributeValue(ATTR_FACTORY_PARAM);
+        return getConfiguration().getProperty(ATTR_FACTORY_PARAM);
     }
 
     /**
@@ -255,7 +270,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public String getBeanClassName()
     {
-        return attributeValueStr(ATTR_BEAN_CLASS);
+        return getConfiguration().getString(ATTR_BEAN_CLASS);
     }
 
     /**
@@ -272,8 +287,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
             ConfigurationNode attr = (ConfigurationNode) it.next();
             if (!isReservedNode(attr))
             {
-                props.put(attr.getName(), PropertyConverter.interpolate(attr
-                        .getValue(), getConfiguration()));
+                props.put(attr.getName(), interpolate(attr .getValue()));
             }
         }
 
@@ -296,7 +310,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
             if (!isReservedNode(child))
             {
                 nested.put(child.getName(), new XMLBeanDeclaration(
-                        getConfiguration(), child));
+                        getConfiguration().configurationAt(child.getName()), child));
             }
         }
 
@@ -304,18 +318,18 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Returns the value of the specified attribute node or <b>null</b> if it
-     * does not exist. If there are multiple attributes with this name, this
-     * implementation selects the first one.
+     * Performs interpolation for the specified value. This implementation will
+     * interpolate against the current subnode configuration's parent. If sub
+     * classes need a different interpolation mechanism, they should override
+     * this method.
      *
-     * @param attrName the name of the attribute
-     * @return the value of this attribute
+     * @param value the value that is to be interpolated
+     * @return the interpolated value
      */
-    protected Object attributeValue(String attrName)
+    protected Object interpolate(Object value)
     {
-        List attrs = getNode().getAttributes(attrName);
-        return attrs.isEmpty() ? null : ((ConfigurationNode) attrs.get(0))
-                .getValue();
+        return PropertyConverter.interpolate(value, getConfiguration()
+                .getParent());
     }
 
     /**
@@ -336,15 +350,14 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Returns the value of the specified attribute as string. This is a
-     * convenience method.
+     * Initializes the internally managed subnode configuration. This method
+     * will set some default values for some properties.
      *
-     * @param attrName the name of the attribute
-     * @return the attribute's value as string
+     * @param conf the configuration to initialize
      */
-    protected String attributeValueStr(String attrName)
+    private void initSubnodeConfiguration(SubnodeConfiguration conf)
     {
-        Object value = attributeValue(attrName);
-        return (value != null) ? value.toString() : null;
+        conf.setThrowExceptionOnMissing(false);
+        conf.setExpressionEngine(null);
     }
 }
