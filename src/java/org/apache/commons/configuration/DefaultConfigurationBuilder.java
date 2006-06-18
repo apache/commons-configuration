@@ -525,7 +525,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param containedConfigs the list with the declaratinos of the contained
      * configurations
      * @param keyListNodes a list with the declaration of list nodes
-     * @param interpolConfig the configuration to be used for interpolation
      * @throws ConfigurationException if an error occurs
      */
     protected void initCombinedConfiguration(CombinedConfiguration config,
@@ -717,7 +716,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @param builder the associated configuration builder
          * @param config the configuration this declaration is based onto
-         * @param interpolConfig the configuration to be used for interpolation
          */
         public ConfigurationDeclaration(DefaultConfigurationBuilder builder,
                 HierarchicalConfiguration config)

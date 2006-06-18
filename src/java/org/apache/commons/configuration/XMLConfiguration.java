@@ -285,7 +285,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * saved, a DOCTYPE declaration will be constructed that contains this
      * system ID.
      *
-     * @param publicID the public ID
+     * @param systemID the system ID
      * @since 1.3
      */
     public void setSystemID(String systemID)

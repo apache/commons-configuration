@@ -173,7 +173,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Sets the root node of this hierarchical configuration.
      *
-     * @param node the root node
+     * @param rootNode the root node
      * @since 1.3
      */
     public void setRootNode(ConfigurationNode rootNode)
