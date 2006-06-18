@@ -37,7 +37,7 @@
         The new class CombinedConfiguration was added as a hierarchical
         alternative to CompositeConfiguration.
       </action>
-      <action dev="oheger" type="add" issue="38929">
+      <action dev="oheger" type="add" issue="CONFIGURATION-143">
         Support for low-level configuration events was added to all classes
         derived from AbstractConfiguration. The major part of this is handled
         by the new super class EventSource of AbstractConfiguration.
@@ -47,7 +47,7 @@
         which is able to convert an arbitrary configuration object into a
         hierarchical configuration.
       </action>
-      <action dev="oheger" type="update" issue="39169">
+      <action dev="oheger" type="update" issue="CONFIGURATION-63">
         Loading of file-based configurations no longer throws a NullPointerException
         in setups where the thread context class loader is not set. 
       </action>
@@ -55,18 +55,18 @@
         The dependency to dom4j was removed; it was only used by two test classes,
         which have been re-written.
       </action>
-      <action dev="oheger" type="update" issue="39227">
+      <action dev="oheger" type="update" issue="CONFIGURATION-100">
         XMLConfiguration used to drop the DOCTYPE declaration when saving the
         configuration. It is now able to extract the DTD's public and system ID
         and write them back (more complex DOCTYPE declarations are still not supported).
         With the new methods setSystemID() and setPublicID(), the DOCTYPE
         declaration can be configured.
       </action>
-      <action dev="ebourg" type="add" issue="39068">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-178">
         Added two new constructors in CompositeConfiguration accepting a
         collection of configurations as a parameter.
       </action>
-      <action dev="oheger" type="add" issue="34353">
+      <action dev="oheger" type="add" issue="CONFIGURATION-186">
         (Basic) Support for declaring beans in configuration files was added.
         Some new classes in the beanutils package allow to create instances from
         these declarations.
@@ -77,7 +77,7 @@
         interpolateHelper() method of AbstractConfiguration is now deprectated
         and will not be called any more during interpolation.
       </action>
-      <action dev="oheger" type="add" issue="38075">
+      <action dev="oheger" type="add" issue="CONFIGURATION-182">
         A new method configurationsAt() was added to HierarchicalConfiguration
         that provides a convenient way of iterating over complex list-like
         structures without the need of manually constructing configuration keys
@@ -90,7 +90,7 @@
         method of HierarchicalConfiguration returns such a SubnodeConfiguration
         for a specified sub node.
       </action>
-      <action dev="oheger" type="add" issue="35753">
+      <action dev="oheger" type="add" issue="CONFIGURATION-173">
         With XPathExpressionEngine an expression engine for hierarchical
         configurations is now available that can evaluate XPATH expressions in
         property keys. This expression engine implementation is based on
@@ -121,7 +121,7 @@
         Node objects have been deprecated and replaced by versions operating on
         ConfigurationNode objects instead.
       </action>
-      <action dev="oheger" type="update" issue="35828" due-to="Jorge Ferrer">
+      <action dev="oheger" type="update" issue="CONFIGURATION-155" due-to="Jorge Ferrer">
         All configuration classes derived from AbstractConfiguration now allow
         to set an instance specific list delimiter. This can be done through
         the new method setListDelimiter(). As before it is possible to define
@@ -154,7 +154,7 @@
     </release>
 
     <release version="1.2-rc2" date="2005-11-23">
-      <action dev="oheger" type="update" issue="37486">
+      <action dev="oheger" type="update" issue="CONFIGURATION-2">
         ConfigurationDynaBean now implements the java.util.Map interface (as
         was stated in the javadocs). This was done by deriving the class from
         ConfigurationMap.
@@ -162,7 +162,7 @@
     </release>
     
     <release version="1.2-rc1" date="2005-11-11">
-      <action dev="oheger" type="update" issue="36665">
+      <action dev="oheger" type="update" issue="CONFIGURATION-33">
         The reload() method in AbstractFileConfiguration was updated to prevent
         reentrant invocation, which may be caused by some methods when they
         are called during a reloading operation.
@@ -172,57 +172,57 @@
         hierarchical configurations, was introduced. XMLConfiguration now
         extends this class.
       </action>
-      <action dev="oheger" type="update" due-to="Kay Doebl" issue="37293">
+      <action dev="oheger" type="update" due-to="Kay Doebl" issue="CONFIGURATION-41">
         XMLConfiguration now prints the used encoding in the xml declaration of
         generated files. In earlier versions always the default encoding was
         written. PropertiesConfiguration now always uses the platform specific
         line separator when saving files.
       </action>
-      <action dev="ebourg" type="update" issue="36991">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-8">
         PropertiesConfiguration now translates properly the escaped unicode
         characters (like \u1234) used in the property keys. This complies with
         the specification of java.util.Properties.
       </action>
-      <action dev="ebourg" type="update" issue="36784">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-123">
         ConfigurationConverter.getProperties() now uses the delimiter of the
         specified configuration to convert the list properties into strings.
       </action>
-      <action dev="ebourg" type="update" issue="36784">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-123">
         The interpolation of variables (${foo}) is now performed in all property
         getters of AbstractConfiguration and DataConfiguration. As a side effect
         the Properties object returned by ConfigurationConverter.getProperties()
         contains only interpolated values.
       </action>
-      <action dev="ebourg" type="update" issue="36699">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-35">
         PropertiesConfiguration now uses the ISO-8859-1 encoding by default
         instead of the system encoding to comply with the specification of
         java.util.Properties.
       </action>
-      <action dev="ebourg" type="update" issue="36664">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-44">
         JNDIConfiguration no longer logs an error when attempting to get
         a property that doesn't exist in the configuration.
       </action>
-      <action dev="ebourg" type="update" issue="36488">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-99">
         Attempting to load a configuration from a directory instead of a file
         will now throw a ConfigurationException.
       </action>
-      <action dev="oheger" type="update" issue="36447">
+      <action dev="oheger" type="update" issue="CONFIGURATION-28">
         If a multi-valued property was involved in an interpolation operation,
         AbstractConfiguration created a string representation of the list of all
         values. This was changed to only use the first value, which makes more
         sense in this context and is consistent with other getters for single
         valued properties.
       </action>
-      <action dev="oheger" type="add" issue="36383">
+      <action dev="oheger" type="add" issue="CONFIGURATION-83">
         If an include file with a relative path cannot be found in the base
         path, PropertiesConfiguration now also tries to resolve it based on its
         own location.
       </action>
-      <action dev="ebourg" type="update" issue="35945" due-to="Steve Bate">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-117" due-to="Steve Bate">
         Fixed MapConfiguration to store the list of values added under a same
         key instead of the last value added.
       </action>
-      <action dev="oheger" type="update" issue="35316">
+      <action dev="oheger" type="update" issue="CONFIGURATION-80">
         Fixed a bug in the handling of relative file names in ConfigurationFactory:
         In most cases relative file names were not resolved relative to the
         location of the configuration definition file as stated in the documentation.
@@ -230,7 +230,7 @@
         This may have an impact on existing code which uses workarounds for
         the erroneous resolving mechanism.
       </action>
-      <action dev="oheger" type="update" issue="35963">
+      <action dev="oheger" type="update" issue="CONFIGURATION-6">
         Empty elements or elements whose content consists only of comments or
         whitespace are now taken into account by XMLConfiguration. They are
         added to the configuration; their value is an empty string.
@@ -240,18 +240,18 @@
         loading files. This enables XML parsers to correctly resolve relative
         files, e.g. DTDs.
       </action>
-      <action dev="ebourg" type="update" issue="35903">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-74">
         getKeys() in HierarchicalConfiguration now returns the keys in the same order the properties were inserted.
       </action>
       <action dev="ebourg" type="update">
         Commons Configuration now depends on Commons Collections 3.1 instead of 3.0
       </action>
-      <action dev="ebourg" type="add" issue="32633">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-195">
         New configurations implementing the "property list" format used in
         NeXT/OpenStep and its XML variant used in Mac OS X.
         (PropertyListConfiguration and XMLPropertyListConfiguration)
       </action>
-      <action dev="oheger" type="update" issue="35938">
+      <action dev="oheger" type="update" issue="CONFIGURATION-97">
         Resolved some issues with XMLConfiguration and properties containing
         the delimiter character. These properties are now correctly treated,
         escaping the delimiter will work, too.
@@ -261,51 +261,51 @@
         A &lt;properties> element will generate a XMLPropertiesConfiguration
         if the filename ends with ".xml".
       </action>
-      <action dev="ebourg" type="add" issue="29192">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-184">
         PropertiesConfiguration now supports escaped key/value separators in the keys
         (i.e foo\:key = bar).
       </action>
-      <action dev="ebourg" type="add" issue="29171">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-166">
         PropertiesConfiguration now supports all key/value separators supported by java.util.Properties
         ('=', ':' and white space characters).
       </action>
       <action dev="ebourg" type="update">
         Commons Configuration now depends on Commons Lang 2.1 instead of 2.0
       </action>
-      <action dev="ebourg" type="update" issue="35888">
-        Comment lines for PropertiesConfiguration can start with the '!' char (compatibility with java.util.Properties)
+      <action dev="ebourg" type="update" issue="CONFIGURATION-207">
+        Comment lines for PropertiesConfiguration can start with the '!' char (compatibility with java.util.Properties).
       </action>
-      <action dev="oheger" type="update" issue="35772">
+      <action dev="oheger" type="update" issue="CONFIGURATION-84">
         Because ConfigurationUtils.copy() does not fully support hierarchical
         configurations a clone() method was added to HierarchicalConfiguration
         that can be used instead.
       </action>
-      <action dev="oheger" type="add" issue="31616">
+      <action dev="oheger" type="add" issue="CONFIGURATION-206">
         XMLConfiguration now provides some support for validating XML
         documents. With the setValidating() method DTD validation can be
         enabled. It is also possible to set a custom DocumentBuilder allowing
         a caller to perform enhanced configuration of the XML loading process.
       </action>
-      <action dev="oheger" type="update" issue="35621">
+      <action dev="oheger" type="update" issue="CONFIGURATION-121">
         AbstractFileConfiguration now always sets a valid base path if the
         configuration file could be located. This allows PropertiesConfiguration
         to resolve include files even when loaded from class path.
       </action>
-      <action dev="oheger" type="update" issue="35509">
+      <action dev="oheger" type="update" issue="CONFIGURATION-85">
         Updated XMLConfiguration to correctly deal with properties containing
         dots in their names. Such properties could not be accessed before.
       </action>
-      <action dev="oheger" type="update" issue="35119">
+      <action dev="oheger" type="update" issue="CONFIGURATION-9">
         PropertiesConfiguration's handling of backslash characters at the end
         of line was incorrect when there was an even number of trailing
         backslashes. This is now fixed.
       </action>
-      <action dev="oheger" type="update" issue="35210">
+      <action dev="oheger" type="update" issue="CONFIGURATION-130">
         Fixed a problem related to file based configurations that are loaded
         from a URL which is application/x-www-form-urlencoded: the save() method
         would store such files at a wrong location.
       </action>
-      <action dev="oheger" type="update" issue="34289">
+      <action dev="oheger" type="update" issue="CONFIGURATION-50">
         Updated FileChangedReloadingStrategy to use the file based configuration's
         source URL to find the file to watch. Before that it was possible that
         the strategy checked the wrong file. For configuration files loaded
@@ -315,22 +315,22 @@
         reloadingRequired() method ignoring its refresh delay. Thanks to Jorge
         Ferrer.
       </action>
-      <action dev="oheger" type="update" issue="35118">
+      <action dev="oheger" type="update" issue="CONFIGURATION-62">
         Fixed a bug in the collaboration between XMLConfiguration and its
         reloading strategy: The configuration did not check its reloading
         strategy, so no reload was performed.
       </action>
-      <action dev="oheger" type="update" issue="34410">
+      <action dev="oheger" type="update" issue="CONFIGURATION-119">
         Disabled auto save mode during PropertiesConfiguration.load(). Prior
         it was possible that the properties file to be loaded was immideately
         overwritten.
       </action>
-      <action dev="oheger" type="update" issue="34441">
+      <action dev="oheger" type="update" issue="CONFIGURATION-89">
         Under certain circumstances it was possible that a reloading strategy
         set for PropertiesConfiguration interferred with the save() method causing
         the configuration file to be erased. This has now been fixed.
       </action>
-      <action dev="oheger" type="update" due-to="Jamie M. Guillemette" issue="34362">
+      <action dev="oheger" type="update" due-to="Jamie M. Guillemette" issue="CONFIGURATION-94">
         AbstractFileConfiguration now stores the URL of the config file in the
         load() methods. This URL is reused by the save() method to ensure that
         the same file is written.
@@ -339,12 +339,12 @@
         XMLPropertiesConfiguration no longer depends on Digester to parse the
         configuration file, it's now implemented with a pure SAX parser.
       </action>
-      <action dev="oheger" type="update" due-to="Mi Zhang" issue="34442">
+      <action dev="oheger" type="update" due-to="Mi Zhang" issue="CONFIGURATION-49">
         Fixed a bug which causes XMLConfiguration.save to lose attribute values
         under some circumstances. The clear() method now also ensures that the
         associated DOM document is always cleared.
       </action>
-      <action dev="ebourg" type="update" due-to="Kunihara Tetsuya" issue="34204">
+      <action dev="ebourg" type="update" due-to="Kunihara Tetsuya" issue="CONFIGURATION-13">
         XMLConfiguration now parse the configuration using the encoding
         declared in the XML header instead of the OS default encoding.
       </action>
@@ -354,11 +354,11 @@
     </release>
 
     <release version="1.1" date="2005-04-02">
-      <action dev="ebourg" type="update" issue="33925">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-134">
         Fixed a ConcurrentModificationException thrown when calling clear()
         on a SubsetConfiguration applied to a BaseConfiguration.
       </action>
-      <action dev="ebourg" type="update" issue="34104">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-81">
         The resolveContainerStore() method in AbstractConfiguration now works
         properly with arrays of objects and arrays of primitives. This means
         it is possible to store an array of value in the configuration and
@@ -367,7 +367,7 @@
     </release>
 
     <release version="1.1-rc2" date="2005-03-06">
-      <action dev="oheger" type="update" issue="33814">
+      <action dev="oheger" type="update" issue="CONFIGURATION-118">
         Updated documentation for FileConfiguration's load() methods. Fixed a
         problem in XMLConfiguration with the output of the save() method when
         multiple files were loaded.
@@ -380,25 +380,25 @@
         Changed getXXXArray() and getXXXList() in DataConfiguration to return
         an empty array/list for empty values.
       </action>
-      <action dev="ebourg" type="update" issue="33524">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-58">
         Fixed getLongArray(), getFloatArray() and getDoubleArray() in DataConfiguration,
         the values were cast into integers. 
       </action>
     </release>
 
     <release version="1.1-rc1" date="2005-02-13">
-      <action dev="oheger" type="add" issue="33475">
+      <action dev="oheger" type="add" issue="CONFIGURATION-88">
         ConfigurationFactory now always configures digester to use the context
         classloader. This avoids problems in application server environments,
         which use their own version of digester. Thanks to Mike Colbert for the
         patch!
       </action>
-      <action dev="ebourg" type="add" issue="32318">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-148">
         Added a new configuration, XMLPropertiesConfiguration, supporting the
         new XML format for java.util.Properties introduced in Java 1.5.
         A 1.5 runtime is not required to use this class.
       </action>
-      <action dev="ebourg" type="add" issue="26092">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-190">
         Added a comment header to PropertiesConfiguration. The header is not
         parsed when the file is loaded yet.
       </action>
@@ -407,12 +407,12 @@
         FileConfiguration interface to control the encoding of the
         configuration file.
       </action>
-      <action dev="oheger" type="add" issue="31136">
+      <action dev="oheger" type="add" issue="CONFIGURATION-210">
         Access to the top level element of the XML document is now provided. For
         newly created configurations this element can be changed before the
         document is written.
       </action>
-      <action dev="oheger" type="update" issue="31429">
+      <action dev="oheger" type="update" issue="CONFIGURATION-168">
         Merged the two XML related configuration classes into one new class
         XMLConfiguration. This new class should provide the best of its
         ancestors.
@@ -423,7 +423,7 @@
         building an iterator on the elements of a composite value in
         PropertyConverter as toIterator().
       </action>
-      <action dev="oheger" type="fix" issue="30858">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-15">
         Some cleanup of the handling of the base path in file based configurations.
         The base path is now always taken into account.
       </action>
@@ -436,7 +436,7 @@
         concrete configurations now implement directly the getProperty method
         from the Configuration interface.
       </action>
-      <action dev="oheger" type="add" issue="31130">
+      <action dev="oheger" type="add" issue="CONFIGURATION-187">
         Added implementation of a save() method for HierarchicalXMLConfiguration.
       </action>
       <action dev="ebourg" type="update">
@@ -446,7 +446,7 @@
       <action dev="ebourg" type="add">
         Saving a configuration now creates the path to the file if it doesn't exist.
       </action>
-      <action dev="ebourg" type="update" issue="32020">
+      <action dev="ebourg" type="update" issue="CONFIGURATION-45">
         AbstractFileConfiguration.save(File) no longer fails silently when
         an error occurs, a ConfigurationException is thrown instead.
       </action>
@@ -455,11 +455,11 @@
         This fixes a bug preventing configuration files from being found if
         the configuration descriptor is in a JAR file (reported by Grant Ingersoll).
       </action>
-      <action dev="oheger" type="fix" issue="32236">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-96">
         Fixed NPE that were caused in the constructors of file based
         configurations if an invalid file name was specified.
       </action>
-      <action dev="oheger" type="add" issue="31797">
+      <action dev="oheger" type="add" issue="CONFIGURATION-162">
         Added support for optional configuration sources in definition files for
         ConfigurationFactory. A new optional attribute allows to specify whether a
         configuration source is mandatory or optional.
@@ -484,15 +484,15 @@
       <action dev="epugh" type="remove">
         Remove deprecated getVector() implementations. 
       </action>        
-      <action dev="ebourg" type="add" issue="25661">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-147">
         File based configurations can now be automatically reloaded when the
         underlying file is modified.
       </action>
-      <action dev="ebourg" type="add" issue="26102">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-156">
         Added a clear() method to the Configuration interface to remove
         all properties.
       </action>
-      <action dev="ebourg" type="add" issue="26066">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-208">
         Added a SystemConfiguration wrapping the system properties.
         ConfigurationFactory recognizes the corresponding &lt;system/&gt;
         element.
@@ -505,15 +505,15 @@
         changes made to the Configuration are available in the Properties,
         and reciprocally.
       </action>
-      <action dev="ebourg" type="add" issue="31532">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-146">
         The "autoSave" feature of XMLConfiguration has been generalized
         to all file based configurations.
       </action>
-      <action dev="ebourg" type="add" issue="28026">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-191">
         Numeric properties can now be specified in hexadecimal format,
         for example "number = 0xC5F0".
       </action>
-      <action dev="oheger" type="fix" issue="31745">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-36">
         Fixed HierarchicalConfiguration.getKeys(String), it returned an empty
         iterator if the prefix string contained indices.
       </action>
@@ -530,11 +530,11 @@
     </release>
 
     <release version="1.0" date="2004-10-11">
-      <action dev="ebourg" type="fix" issue="29616">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-66">
         The getStringArray() method in CompositeConfiguration now interpolates
         the strings.
       </action>
-      <action dev="ebourg" type="fix" issue="31540">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-23">
         SubsetConfiguration now shares the "throwExceptionOnMissing" property
         with its parent.
       </action>
@@ -547,7 +547,7 @@
         All NamingEnumerations in JNDIConfiguraiton are now properly closed (Suggested
         by Eric Jung).
       </action>
-      <action dev="ebourg" type="fix" issue="30799">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-90">
         Properties added to an XMLConfiguration are no longer duplicated in the
         resulting XML file.
       </action>
@@ -561,12 +561,12 @@
         BasePathConfiguration, ClassPropertiesConfiguration and
         BasePropertiesConfiguration have been removed.
       </action>
-      <action dev="ebourg" type="fix" issue="31346">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-22">
         Replaced the calls to Boolean.booleanValue(boolean) in
         AbstractConfiguration and ConfigurationDynaBean to be Java 1.3
         compatible.
       </action>
-      <action dev="ebourg" type="fix" issue="31345">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-112">
         Changing the prefix of a JNDIConfiguration will now reset the base context used.
       </action>
       <action dev="ebourg" type="add" due-to="Eric Jung">
@@ -581,27 +581,27 @@
         The old default behaviour of returning a <code>null</code> value has
         been restored.
       </action>
-      <action dev="epugh" type="add" issue="29714">
+      <action dev="epugh" type="add" issue="CONFIGURATION-151">
         Allow configurations extending AbstractConfiguration to change the
         delimiter used from "," to something else.
       </action>
       <action dev="epugh" type="fix">
         PropertiesConfiguration.save() method has issues with preserving the filename
       </action>
-      <action dev="epugh" type="fix" issue="30597" due-to="Mark Woodman">
-        Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes
+      <action dev="epugh" type="fix" issue="CONFIGURATION-132" due-to="Mark Woodman">
+        Test cases for HierarchicalConfigurationXMLReader stores comments as text nodes.
       </action>
-      <action dev="epugh" type="fix" issue="30545" due-to="Ricardo Gladwell">
+      <action dev="epugh" type="fix" issue="CONFIGURATION-183" due-to="Ricardo Gladwell">
         Clarify for ConfigurationDynaBean that the get method should throw an
         illegalArgumentException if there is no property specified.
       </action>
-      <action dev="ebourg" type="fix" issue="30839">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-25">
         Fixed a ClassCastException when adding a non String property to an XMLConfiguration.
       </action>
-      <action dev="ebourg" type="fix" issue="30655" due-to="Oliver Heger">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-138" due-to="Oliver Heger">
         Fixed the handling of attribute properties by HierarchicalConfigurationConverter.
       </action>
-      <action dev="ebourg" type="fix" issue="30676">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-125">
         Fixed a ClassCastException thrown on adding a non string property
         in a DatabaseConfiguration.
       </action>
@@ -614,42 +614,46 @@
     </release>
 
     <release version="1.0-rc1" date="2004-08-14">
-      <action dev="epugh" type="add" issue="30597" due-to="Oliver Heger">
-        HierarchicalConfigurationXMLReader stores comments as text nodes
+      <action dev="epugh" type="add" issue="CONFIGURATION-132" due-to="Oliver Heger">
+        HierarchicalConfigurationXMLReader stores comments as text nodes.
       </action>
-      <action dev="epugh" type="add" issue="30648" due-to="Ricardo Gladwell">
-        project.xml contains bad dependencies
+      <action dev="epugh" type="add" issue="CONFIGURATION-122" due-to="Ricardo Gladwell">
+        project.xml contains bad dependencies.
       </action>
-      <action dev="epugh" type="add" issue="30234" due-to="Brent Worden">
-        clearXmlProperty doesn't remove list properties completely
+      <action dev="epugh" type="add" issue="CONFIGURATION-64" due-to="Brent Worden">
+        clearXmlProperty doesn't remove list properties completely.
       </action>
-      <action dev="epugh" type="add" issue="30545" due-to="Ricardo Gladwell">
-        new ConfigurationDynaBean
+      <action dev="epugh" type="add" issue="CONFIGURATION-183" due-to="Ricardo Gladwell">
+        new ConfigurationDynaBean.
       </action>
-      <action dev="epugh" type="add" issue="29611" due-to="Ricardo Gladwell">
-        new ConfigurationMap and ConfigurationSet
+      <action dev="epugh" type="add" issue="CONFIGURATION-185" due-to="Ricardo Gladwell">
+        new ConfigurationMap and ConfigurationSet.
       </action>
-      <action dev="epugh" type="fix" issue="30598" due-to="Ricardo Gladwell">
-        Problem adding property XMLConfiguration
+      <action dev="epugh" type="fix" issue="CONFIGURATION-91" due-to="Ricardo Gladwell">
+        Problem adding property XMLConfiguration.
       </action>
       <action dev="epugh" type="remove">
         ConfigurationXMLDocument removed until post 1.0.
       </action>
-      <action dev="epugh" type="fix" issue="29734">
+      <action dev="epugh" type="fix" issue="CONFIGURATION-18">
         DatabaseConfiguration doesn't support List properties.
       </action>
       <action dev="ebourg" type="fix">
+        <fixes issue="CONFIGURATION-137"/>
+        <fixes issue="CONFIGURATION-116"/>
+        <fixes issue="CONFIGURATION-4"/>
+        <fixes issue="CONFIGURATION-32"/>
         Fixed several bugs related to XMLConfiguration:
         <ul>
-          <li>30074 - Can't add a new property as an attribute in XMLConfiguration</li>
-          <li>30205 - XMLConfiguration doesn't support attribute names with a dot</li>
-          <li>30209 - XMLConfiguration doesn't ignore comments</li>
-          <li>30212 - XMLConfiguration.save() doesn't escape reserved characters</li>
+          <li>Can't add a new property as an attribute in XMLConfiguration</li>
+          <li>XMLConfiguration doesn't support attribute names with a dot</li>
+          <li>XMLConfiguration doesn't ignore comments</li>
+          <li>XMLConfiguration.save() doesn't escape reserved characters</li>
         </ul>
       </action>
-      <action dev="ebourg" type="add">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-114">
         Added save methods in XMLConfiguration similar to PropertiesConfiguration
-        to save the configuration to another file (bug 29721).
+        to save the configuration to another file.
       </action>
       <action dev="ebourg" type="update">
         Removed the DOM4J implementations in favor of the DOM ones.
@@ -663,24 +667,22 @@
         save(OutputStream out), save(OutputStream out, String encoding) to
         BasePropertiesConfiguration.
       </action>
-      <action dev="ebourg" type="fix">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-98">
         List values are now properly stored as comma separated values in the
         Properties object returned by ConfigurationConverter.getProperties()
-        (Bug 29607)
       </action>
       <action dev="ebourg" type="update">
         Introduced a ConversionException thrown when the value of a property is
         not compatible the type requested. It replaces the ClassCastException
         and the NumberFormatException thrown previously.
       </action>
-      <action dev="ebourg" type="fix">
-        Tokens like ${ref} in a PropertyConfiguration are now properly saved
-        (Bug 29366).
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-174">
+        Tokens like ${ref} in a PropertyConfiguration are now properly saved.
       </action>
-      <action dev="ebourg" type="fix">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-127">
         The getList() method of a CompositeConfiguration now returns the list
         composed of the elements in the first matching configuration and the
-        additional elements found in the in memory configuration (Bug 28660).
+        additional elements found in the in memory configuration.
       </action>
       <action dev="epugh" type="fix">
         SubsetConfiguration returns a List on getList(). AbstractConfiguration
@@ -696,8 +698,8 @@
       <action dev="ebourg" type="update">
         Refactored JNDIConfiguration to use AbstractConfiguration.
       </action>
-      <action dev="ebourg" type="update">
-        Fixed bug 27427 by refactoring out the subset logic into a SubsetConfiguration.
+      <action dev="ebourg" type="update" issue="CONFIGURATION-76">
+        Fixed invalid subsets by refactoring out the subset logic into a SubsetConfiguration.
       </action>
       <action dev="oheger" type="fix">
         Reapply the ConfigurationXMLDocument that went missing during migration out of sandbox.
@@ -716,11 +718,11 @@
         a CompositeConfiguration and get back the inMemoryConfiguration that has the delta of changes. Added a
         bit of documentation on this.
       </action>
-      <action dev="epugh" type="update">
-        Bugzilla 16504 Enhancement: Configuration Comparator
+      <action dev="epugh" type="update" issue="CONFIGURATION-154">
+        Enhancement: Configuration Comparator.
       </action>
-      <action dev="epugh" type="update">
-        Bugzilla 26694 (BaseConfiguration: containsKey ignores default properties).
+      <action dev="epugh" type="update" issue="CONFIGURATION-54">
+        BaseConfiguration: containsKey ignores default properties.
         I have changed it so that now the defaults are paid attention to.
       </action>
       <action dev="ebourg" type="add">
