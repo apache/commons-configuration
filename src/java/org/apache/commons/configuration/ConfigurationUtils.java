@@ -46,6 +46,9 @@ public final class ConfigurationUtils
     /** Constant for the file URL protocol.*/
     static final String PROTOCOL_FILE = "file";
 
+    /** Constant for the resource path separator.*/
+    static final String RESOURCE_PATH_SEPARATOR = "/";
+
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
@@ -401,17 +404,30 @@ public final class ConfigurationUtils
             }
         }
 
+        String resourceName = null;
+        if (url == null)
+        {
+            if (base != null)
+            {
+                resourceName = base + RESOURCE_PATH_SEPARATOR + name;
+            }
+            else
+            {
+                resourceName = name;
+            }
+        }
+
         // attempt to load from the context classpath
         if (url == null)
         {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             if (loader != null)
             {
-                url = loader.getResource(name);
+                url = loader.getResource(resourceName);
 
                 if (url != null)
                 {
-                    log.debug("Configuration loaded from the context classpath (" + name + ")");
+                    log.debug("Configuration loaded from the context classpath (" + resourceName + ")");
                 }
             }
         }
@@ -419,11 +435,11 @@ public final class ConfigurationUtils
         // attempt to load from the system classpath
         if (url == null)
         {
-            url = ClassLoader.getSystemResource(name);
+            url = ClassLoader.getSystemResource(resourceName);
 
             if (url != null)
             {
-                log.debug("Configuration loaded from the system classpath (" + name + ")");
+                log.debug("Configuration loaded from the system classpath (" + resourceName + ")");
             }
         }
 

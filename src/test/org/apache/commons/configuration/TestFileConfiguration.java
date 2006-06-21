@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,6 +37,8 @@ import junit.framework.TestCase;
 public class TestFileConfiguration extends TestCase
 {
     private static final File TARGET_DIR = new File("target");
+
+    private static final String RESOURCE_NAME = "config/deep/deeptest.properties";
 
     public void testSetURL() throws Exception
     {
@@ -472,6 +475,26 @@ public class TestFileConfiguration extends TestCase
         catch (ConfigurationException e)
         {
             // ok
+        }
+    }
+
+    /**
+     * Tests whether the constructor behaves the same as setFileName() when the
+     * configuration source is in the classpath.
+     */
+    public void testInitFromClassPath() throws ConfigurationException
+    {
+        PropertiesConfiguration config1 = new PropertiesConfiguration();
+        config1.setFileName(RESOURCE_NAME);
+        config1.load();
+        PropertiesConfiguration config2 = new PropertiesConfiguration(
+                RESOURCE_NAME);
+
+        for (Iterator it = config1.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertEquals("Wrong value for key " + key,
+                    config1.getProperty(key), config2.getProperty(key));
         }
     }
 }
