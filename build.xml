@@ -38,7 +38,7 @@
   
   <!-- Manual changes for dealing with the conf directory and jdbc dependency -->
   <property name="confdir" value="conf"/>
-  <property name="targetconfdir" value="${defaulttargetdir}/${confdir}"/>
+  <property name="targetconfdir" value="${testclassesdir}"/>
   <property file="build.properties"/>
   <!-- Manual changes end -->
   
@@ -178,19 +178,7 @@
     <mkdir dir="${targetconfdir}"/>
     <copy todir="${targetconfdir}">
       <fileset dir="${confdir}">
-        <include name="*.xml">
-        </include>
-      </fileset>
-    </copy>
-    <copy todir="${targetconfdir}">
-      <fileset dir="${confdir}">
-        <include name="testClasspath.properties">
-        </include>
-        <include name="testdb.script">
-        </include>
-        <include name="*.properties">
-        </include>
-        <include name="*.dtd">
+        <include name="**/*.*">
         </include>
       </fileset>
     </copy>
@@ -201,14 +189,6 @@
         <include name="test.properties">
         </include>
         <include name="include.properties">
-        </include>
-      </fileset>
-    </copy>
-    <mkdir dir="${testclassesdir}/config">
-    </mkdir>
-    <copy todir="${testclassesdir}/config">
-      <fileset dir="${confdir}">
-        <include name="**/*.properties">
         </include>
       </fileset>
     </copy>
