@@ -110,7 +110,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public AbstractFileConfiguration()
     {
-        setReloadingStrategy(new InvariantReloadingStrategy());
+        initReloadingStrategy();
     }
 
     /**
@@ -854,5 +854,34 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public void setEncoding(String encoding)
     {
         this.encoding = encoding;
+    }
+
+    /**
+     * Creates a copy of this configuration. The new configuration object will
+     * contain the same properties as the original, but it will lose any
+     * connection to a source file (if one exists); this includes setting the
+     * source URL, base path, and file name to <b>null</b>. This is done to
+     * avoid race conditions if both the original and the copy are modified and
+     * then saved.
+     *
+     * @return the copy
+     * @since 1.3
+     */
+    public Object clone()
+    {
+        AbstractFileConfiguration copy = (AbstractFileConfiguration) super
+                .clone();
+        copy.setBasePath(null);
+        copy.setFileName(null);
+        copy.initReloadingStrategy();
+        return copy;
+    }
+
+    /**
+     * Helper method for initializing the reloading strategy.
+     */
+    private void initReloadingStrategy()
+    {
+        setReloadingStrategy(new InvariantReloadingStrategy());
     }
 }

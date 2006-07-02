@@ -736,4 +736,39 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("Wrong DigDecimal returned", new BigDecimal("42"), config
                 .getBigDecimal(KEY_NUMBER));
     }
+
+    /**
+     * Tests cloning a BaseConfiguration.
+     */
+    public void testClone()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            config.addProperty("key" + i, new Integer(i));
+        }
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+
+        for (Iterator it = config.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertTrue("Key not found: " + key, config2.containsKey(key));
+            assertEquals("Wrong value for key " + key, config.getProperty(key),
+                    config2.getProperty(key));
+        }
+    }
+
+    /**
+     * Tests whether a cloned configuration is decoupled from its original.
+     */
+    public void testCloneModify()
+    {
+        config.addProperty("original", Boolean.TRUE);
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+
+        config2.addProperty("clone", Boolean.TRUE);
+        assertFalse("New key appears in original", config.containsKey("clone"));
+        config2.setProperty("original", Boolean.FALSE);
+        assertTrue("Wrong value of original property", config
+                .getBoolean("original"));
+    }
 }

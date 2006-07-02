@@ -17,7 +17,6 @@
 package org.apache.commons.configuration;
 
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
@@ -489,12 +488,34 @@ public class TestFileConfiguration extends TestCase
         config1.load();
         PropertiesConfiguration config2 = new PropertiesConfiguration(
                 RESOURCE_NAME);
+        compare(config1, config2);
+    }
 
-        for (Iterator it = config1.getKeys(); it.hasNext();)
-        {
-            String key = (String) it.next();
-            assertEquals("Wrong value for key " + key,
-                    config1.getProperty(key), config2.getProperty(key));
-        }
+    /**
+     * Tests cloning a file based configuration.
+     */
+    public void testClone() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration(
+                RESOURCE_NAME);
+        PropertiesConfiguration copy = (PropertiesConfiguration) config.clone();
+        compare(config, copy);
+        assertNull("URL was not reset", copy.getURL());
+        assertNull("Base path was not reset", copy.getBasePath());
+        assertNull("File name was not reset", copy.getFileName());
+        assertNotSame("Reloading strategy was not reset", config
+                .getReloadingStrategy(), copy.getReloadingStrategy());
+    }
+
+    /**
+     * Helper method for comparing the content of two configuration objects.
+     *
+     * @param config1 the first configuration
+     * @param config2 the second configuration
+     */
+    private void compare(Configuration config1, Configuration config2)
+    {
+        StrictConfigurationComparator cc = new StrictConfigurationComparator();
+        assertTrue("Configurations are different", cc.compare(config1, config2));
     }
 }

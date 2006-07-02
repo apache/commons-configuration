@@ -47,7 +47,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @version $Id$
  */
-public class BaseConfiguration extends AbstractConfiguration
+public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
     private Map store = new LinkedMap();
@@ -151,5 +151,28 @@ public class BaseConfiguration extends AbstractConfiguration
     public Iterator getKeys()
     {
         return store.keySet().iterator();
+    }
+
+    /**
+     * Creates a copy of this object. This implementation will create a deep
+     * clone, i.e. the map that stores the properties is cloned, too. So changes
+     * performed at the copy won't affect the original and vice versa.
+     *
+     * @return the copy
+     * @since 1.3
+     */
+    public Object clone()
+    {
+        try
+        {
+            BaseConfiguration copy = (BaseConfiguration) super.clone();
+            copy.store = (Map) ((LinkedMap) store).clone();
+            return copy;
+        }
+        catch (CloneNotSupportedException cex)
+        {
+            // should not happen
+            throw new ConfigurationRuntimeException(cex);
+        }
     }
 }
