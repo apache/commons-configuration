@@ -243,4 +243,44 @@ public class TestConfigurationUtils extends TestCase
         assertNull("Wrong conversion result for null config",
                 ConfigurationUtils.convertToHierarchical(null));
     }
+
+    /**
+     * Tests cloning a configuration that supports this operation.
+     */
+    public void testCloneConfiguration()
+    {
+        HierarchicalConfiguration conf = new HierarchicalConfiguration();
+        conf.addProperty("test", "yes");
+        HierarchicalConfiguration copy = (HierarchicalConfiguration) ConfigurationUtils
+                .cloneConfiguration(conf);
+        assertNotSame("Same object was returned", conf, copy);
+        assertEquals("Property was not cloned", "yes", copy.getString("test"));
+    }
+
+    /**
+     * Tests cloning a configuration that does not support this operation. This
+     * should cause an exception.
+     */
+    public void testCloneConfigurationNotSupported()
+    {
+        Configuration myNonCloneableConfig = new NonCloneableConfiguration();
+        try
+        {
+            ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
+            fail("Could clone non cloneable config!");
+        }
+        catch (ConfigurationRuntimeException crex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests cloning a <b>null</b> configuration.
+     */
+    public void testCloneConfigurationNull()
+    {
+        assertNull("Wrong return value", ConfigurationUtils
+                .cloneConfiguration(null));
+    }
 }

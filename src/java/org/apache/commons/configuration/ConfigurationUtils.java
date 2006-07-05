@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -48,6 +50,9 @@ public final class ConfigurationUtils
 
     /** Constant for the resource path separator.*/
     static final String RESOURCE_PATH_SEPARATOR = "/";
+
+    /** Constant for the name of the clone() method.*/
+    private static final String METHOD_CLONE = "clone";
 
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
@@ -181,6 +186,83 @@ public final class ConfigurationUtils
             HierarchicalConfiguration hc = new HierarchicalConfiguration();
             ConfigurationUtils.copy(conf, hc);
             return hc;
+        }
+    }
+
+    /**
+     * Clones the given configuration object if this is possible. If the passed
+     * in configuration object implements the <code>Cloneable</code>
+     * interface, its <code>clone()</code> method will be invoked. Otherwise
+     * an exception will be thrown.
+     *
+     * @param config the configuration object to be cloned (can be <b>null</b>)
+     * @return the cloned configuration (<b>null</b> if the argument was
+     * <b>null</b>, too)
+     * @throws ConfigurationRuntimeException if cloning is not supported for
+     * this object
+     * @since 1.3
+     */
+    public static Configuration cloneConfiguration(Configuration config)
+            throws ConfigurationRuntimeException
+    {
+        if (config == null)
+        {
+            return null;
+        }
+        else
+        {
+            try
+            {
+                return (Configuration) clone(config);
+            }
+            catch (CloneNotSupportedException cnex)
+            {
+                throw new ConfigurationRuntimeException(cnex);
+            }
+        }
+    }
+
+    /**
+     * An internally used helper method for cloning objects. This implementation
+     * is not very sophisticated nor efficient. Maybe it can be replaced by an
+     * implementation from Commons Lang later. The method checks whether the
+     * passed in object implements the <code>Cloneable</code> interface. If
+     * this is the case, the <code>clone()</code> method is invoked by
+     * reflection. Errors that occur during the cloning process are re-thrown as
+     * runtime exceptions.
+     *
+     * @param obj the object to be cloned
+     * @return the cloned object
+     * @throws CloneNotSupportedException if the object cannot be cloned
+     */
+    static Object clone(Object obj) throws CloneNotSupportedException
+    {
+        if (obj instanceof Cloneable)
+        {
+            try
+            {
+                Method m = obj.getClass().getMethod(METHOD_CLONE, null);
+                return m.invoke(obj, null);
+            }
+            catch (NoSuchMethodException nmex)
+            {
+                throw new CloneNotSupportedException(
+                        "No clone() method found for class"
+                                + obj.getClass().getName());
+            }
+            catch (IllegalAccessException iaex)
+            {
+                throw new ConfigurationRuntimeException(iaex);
+            }
+            catch (InvocationTargetException itex)
+            {
+                throw new ConfigurationRuntimeException(itex);
+            }
+        }
+        else
+        {
+            throw new CloneNotSupportedException(obj.getClass().getName()
+                    + " does not implement Cloneable");
         }
     }
 
