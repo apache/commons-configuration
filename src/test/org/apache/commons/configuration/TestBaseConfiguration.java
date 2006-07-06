@@ -26,6 +26,9 @@ import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
@@ -762,6 +765,14 @@ public class TestBaseConfiguration extends TestCase
      */
     public void testCloneModify()
     {
+        ConfigurationListener l = new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                // just a dummy
+            }
+        };
+        config.addConfigurationListener(l);
         config.addProperty("original", Boolean.TRUE);
         BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
@@ -770,5 +781,8 @@ public class TestBaseConfiguration extends TestCase
         config2.setProperty("original", Boolean.FALSE);
         assertTrue("Wrong value of original property", config
                 .getBoolean("original"));
+
+        assertEquals("Event listener was copied", 0, config2
+                .getConfigurationListeners().size());
     }
 }

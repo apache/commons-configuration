@@ -648,7 +648,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Creates a copy of this object. This new configuration object will contain
-     * copies of all nodes in the same structure.
+     * copies of all nodes in the same structure. Registered event listeners
+     * won't be cloned; so they are not registered at the returned copy.
      *
      * @return the copy
      * @since 1.2
@@ -664,6 +665,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             CloneVisitor v = new CloneVisitor();
             getRootNode().visit(v);
             copy.setRootNode(v.getClone());
+            copy.clearConfigurationListeners();
 
             return copy;
         }

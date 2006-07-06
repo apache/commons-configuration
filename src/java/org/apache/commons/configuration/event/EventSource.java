@@ -69,7 +69,7 @@ public class EventSource
      */
     public EventSource()
     {
-        listeners = new LinkedList();
+        clearConfigurationListeners();
     }
 
     /**
@@ -118,6 +118,14 @@ public class EventSource
         {
             return Collections.unmodifiableCollection(listeners);
         }
+    }
+
+    /**
+     * Removes all registered configuration listeners.
+     */
+    public void clearConfigurationListeners()
+    {
+        listeners = new LinkedList();
     }
 
     /**

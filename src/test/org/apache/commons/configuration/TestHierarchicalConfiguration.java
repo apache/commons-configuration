@@ -25,6 +25,8 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -485,6 +487,25 @@ public class TestHierarchicalConfiguration extends TestCase
                 assertEquals(fields[i][j], copy.getString("tables.table(" + i + ").fields.field(" + j + ").name"));
             }
         }
+    }
+
+    /**
+     * Tests whether registered event handlers are handled correctly when a
+     * configuration is cloned. They should not be registered at the clone.
+     */
+    public void testCloneWithEventListeners()
+    {
+        config.addConfigurationListener(new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                // just a dummy
+            }
+        });
+        HierarchicalConfiguration copy = (HierarchicalConfiguration) config
+                .clone();
+        assertTrue("Event listener registered at clone", copy
+                .getConfigurationListeners().isEmpty());
     }
 
     public void testAddNodes()
