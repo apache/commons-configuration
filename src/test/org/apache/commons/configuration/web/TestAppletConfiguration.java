@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 package org.apache.commons.configuration.web;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
 
 import java.applet.Applet;
@@ -26,10 +28,35 @@ import java.util.Properties;
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Revision$, $Date: 2005-02-26 13:56:39 +0100 (Sa, 26 Feb
+ * 2005) $
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {
+    /** A flag whether tests with an applet can be run. */
+    boolean supportsApplet;
+
+    /**
+     * Initializes the tests. This implementation checks whether an applet can
+     * be used. Some environments, which do not support a GUI, don't allow
+     * creating an <code>Applet</code> instance. If we are in such an
+     * environment, some tests need to behave differently or be completely
+     * dropped.
+     */
+    protected void setUp() throws Exception
+    {
+        try
+        {
+            new Applet();
+            supportsApplet = true;
+        }
+        catch (Exception ex)
+        {
+            // cannot use applets
+            supportsApplet = false;
+        }
+    }
+
     protected AbstractConfiguration getConfiguration()
     {
         final Properties parameters = new Properties();
@@ -37,55 +64,74 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         parameters.setProperty("key2", "value2");
         parameters.setProperty("list", "value1, value2");
 
-        Applet applet = new Applet()
+        if (supportsApplet)
         {
-            public String getParameter(String key)
+            Applet applet = new Applet()
             {
-                return parameters.getProperty(key);
-            }
-
-            public String[][] getParameterInfo()
-            {
-                return new String[][]
+                public String getParameter(String key)
                 {
-                    {"key1", "String", ""},
-                    {"key2", "String", ""},
-                    {"list", "String[]", ""}
-                };
-            }
-        };
+                    return parameters.getProperty(key);
+                }
 
-        return new AppletConfiguration(applet);
+                public String[][] getParameterInfo()
+                {
+                    return new String[][]
+                    {
+                    { "key1", "String", "" },
+                    { "key2", "String", "" },
+                    { "list", "String[]", "" } };
+                }
+            };
+
+            return new AppletConfiguration(applet);
+        }
+        else
+        {
+            return new MapConfiguration(parameters);
+        }
     }
 
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        return new AppletConfiguration(new Applet());
+        if (supportsApplet)
+        {
+            return new AppletConfiguration(new Applet());
+        }
+        else
+        {
+            return new BaseConfiguration();
+        }
     }
 
     public void testAddPropertyDirect()
     {
-        try
+        if (supportsApplet)
         {
-            super.testAddPropertyDirect();
-            fail("addPropertyDirect should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
+            try
+            {
+                super.testAddPropertyDirect();
+                fail("addPropertyDirect should throw an UnsupportedException");
+            }
+            catch (UnsupportedOperationException e)
+            {
+                // ok
+            }
         }
     }
 
     public void testClearProperty()
     {
-        try
+        if (supportsApplet)
         {
-            super.testClearProperty();
-            fail("testClearProperty should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
+            try
+            {
+                super.testClearProperty();
+                fail("testClearProperty should throw an UnsupportedException");
+            }
+            catch (UnsupportedOperationException e)
+            {
+                // ok
+            }
         }
     }
 }
