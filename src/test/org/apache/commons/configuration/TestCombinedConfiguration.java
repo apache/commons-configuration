@@ -338,6 +338,72 @@ public class TestCombinedConfiguration extends TestCase
     }
 
     /**
+     * Tests cloning a combined configuration.
+     */
+    public void testClone()
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        config.addConfiguration(new PropertiesConfiguration(), "props");
+
+        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        assertEquals("Wrong number of contained configurations", config
+                .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
+        assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
+                .getNodeCombiner());
+        assertEquals("Wrong number of names", config.getConfigurationNames()
+                .size(), cc2.getConfigurationNames().size());
+        assertTrue("Event listeners were cloned", cc2
+                .getConfigurationListeners().isEmpty());
+
+        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        for (int i = 0; i < config.getNumberOfConfigurations(); i++)
+        {
+            assertNotSame("Configuration at " + i + " was not cloned", config
+                    .getConfiguration(i), cc2.getConfiguration(i));
+            assertEquals("Wrong config class at " + i, config.getConfiguration(
+                    i).getClass(), cc2.getConfiguration(i).getClass());
+            assertTrue("Configs not equal at " + i, comp.compare(config
+                    .getConfiguration(i), cc2.getConfiguration(i)));
+        }
+
+        assertTrue("Combined configs not equal", comp.compare(config, cc2));
+    }
+
+    /**
+     * Tests if the cloned configuration is decoupled from the original.
+     */
+    public void testCloneModify()
+    {
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
+        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        assertTrue("Name is missing", cc2.getConfigurationNames().contains(
+                TEST_NAME));
+        cc2.removeConfiguration(TEST_NAME);
+        assertFalse("Names in original changed", config.getConfigurationNames()
+                .isEmpty());
+    }
+
+    /**
+     * Tests clearing a combined configuration. This should remove all contained
+     * configurations.
+     */
+    public void testClear()
+    {
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "test");
+        config.addConfiguration(setUpTestConfiguration());
+
+        config.clear();
+        assertEquals("Still configs contained", 0, config
+                .getNumberOfConfigurations());
+        assertTrue("Still names contained", config.getConfigurationNames()
+                .isEmpty());
+        assertTrue("Config is not empty", config.isEmpty());
+
+        listener.checkEvent(3, 2);
+    }
+
+    /**
      * Helper method for creating a test configuration to be added to the
      * combined configuration.
      *

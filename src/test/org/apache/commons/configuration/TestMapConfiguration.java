@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation.
+ * Copyright 2004-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,9 @@ package org.apache.commons.configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 
 /**
  * Tests for MapConfiguration.
@@ -48,5 +51,37 @@ public class TestMapConfiguration extends TestAbstractConfiguration
 
         MapConfiguration conf = new MapConfiguration(map);
         assertEquals(map, conf.getMap());
+    }
+
+    public void testClone()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        MapConfiguration copy = (MapConfiguration) config.clone();
+        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        assertTrue("Configurations are not equal", comp.compare(config, copy));
+    }
+
+    /**
+     * Tests if the cloned configuration decoupled from the original.
+     */
+    public void testCloneModify()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.addConfigurationListener(new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                // Just a dummy
+            }
+        });
+        MapConfiguration copy = (MapConfiguration) config.clone();
+        assertTrue("Event listeners were copied", copy
+                .getConfigurationListeners().isEmpty());
+
+        config.addProperty("cloneTest", Boolean.TRUE);
+        assertFalse("Map not decoupled", copy.containsKey("cloneTest"));
+        copy.clearProperty("key1");
+        assertEquals("Map not decoupled (2)", "value1", config
+                .getString("key1"));
     }
 }

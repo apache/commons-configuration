@@ -1231,7 +1231,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A specialized visitor that is able to create a deep copy of a node
      * hierarchy.
-     *
      */
     static class CloneVisitor extends ConfigurationNodeVisitorAdapter
     {
@@ -1239,7 +1238,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         private Stack copyStack;
 
         /** Stores the result of the clone process. */
-        private Node result;
+        private ConfigurationNode result;
 
         /**
          * Creates a new instance of <code>CloneVisitor</code>.
@@ -1256,7 +1255,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public void visitAfterChildren(ConfigurationNode node)
         {
-            Node copy = (Node) copyStack.pop();
+            ConfigurationNode copy = (ConfigurationNode) copyStack.pop();
             if (copyStack.isEmpty())
             {
                 result = copy;
@@ -1277,11 +1276,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             {
                 if (node.isAttribute())
                 {
-                    ((Node) copyStack.peek()).addAttribute(copy);
+                    ((ConfigurationNode) copyStack.peek()).addAttribute(copy);
                 }
                 else
                 {
-                    ((Node) copyStack.peek()).addChild(copy);
+                    ((ConfigurationNode) copyStack.peek()).addChild(copy);
                 }
             }
 
@@ -1294,7 +1293,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @return the cloned root node
          */
-        public Node getClone()
+        public ConfigurationNode getClone()
         {
             return result;
         }

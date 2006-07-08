@@ -371,6 +371,7 @@ implements Cloneable
      * won't get cloned.
      *
      * @return the copy
+     * @since 1.3
      */
     public Object clone()
     {

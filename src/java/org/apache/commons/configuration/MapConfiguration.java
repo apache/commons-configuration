@@ -28,7 +28,7 @@ import java.util.Map;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class MapConfiguration extends AbstractConfiguration
+public class MapConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** The Map decorated by this configuration. */
     protected Map map;
@@ -111,5 +111,28 @@ public class MapConfiguration extends AbstractConfiguration
     public Iterator getKeys()
     {
         return map.keySet().iterator();
+    }
+
+    /**
+     * Returns a copy of this object. The returned configuration will contain
+     * the same properties as the original. Event listeners are not cloned.
+     *
+     * @return the copy
+     * @since 1.3
+     */
+    public Object clone()
+    {
+        try
+        {
+            MapConfiguration copy = (MapConfiguration) super.clone();
+            copy.clearConfigurationListeners();
+            copy.map = (Map) ConfigurationUtils.clone(map);
+            return copy;
+        }
+        catch (CloneNotSupportedException cex)
+        {
+            // cannot happen
+            throw new ConfigurationRuntimeException(cex);
+        }
     }
 }

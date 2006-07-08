@@ -27,6 +27,7 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
@@ -94,7 +95,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * @version $Id$
  */
 public class CombinedConfiguration extends HierarchicalConfiguration implements
-        ConfigurationListener
+        ConfigurationListener, Cloneable
 {
     /**
      * Constant for the invalidate event that is fired when the internal node
@@ -130,8 +131,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     public CombinedConfiguration(NodeCombiner comb)
     {
         setNodeCombiner((comb != null) ? comb : DEFAULT_COMBINER);
-        configurations = new ArrayList();
-        namedConfigurations = new HashMap();
+        clear();
     }
 
     /**
@@ -398,6 +398,43 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     }
 
     /**
+     * Clears this configuration. All contained configurations will be removed.
+     */
+    public void clear()
+    {
+        fireEvent(EVENT_CLEAR, null, null, true);
+        configurations = new ArrayList();
+        namedConfigurations = new HashMap();
+        fireEvent(EVENT_CLEAR, null, null, false);
+        invalidate();
+    }
+
+    /**
+     * Returns a copy of this object. This implementation performs a deep clone,
+     * i.e. all contained configurations will be cloned, too. For this to work,
+     * all contained configurations must be cloneable. Registered event
+     * listeners won't be cloned. The clone will use the same node combiner than
+     * the original.
+     *
+     * @return the copied object
+     */
+    public Object clone()
+    {
+        CombinedConfiguration copy = (CombinedConfiguration) super.clone();
+        copy.clear();
+        for (Iterator it = configurations.iterator(); it.hasNext();)
+        {
+            ConfigData cd = (ConfigData) it.next();
+            copy.addConfiguration((AbstractConfiguration) ConfigurationUtils
+                    .cloneConfiguration(cd.getConfiguration()), cd.getName(),
+                    cd.getAt());
+        }
+
+        copy.setRootNode(new DefaultConfigurationNode());
+        return copy;
+    }
+
+    /**
      * Creates the root node of this combined configuration.
      *
      * @return the combined root node
@@ -435,8 +472,11 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         /** Stores the name under which the configuration is stored. */
         private String name;
 
-        /** Stores the at information. */
+        /** Stores the at information as path of nodes. */
         private Collection atPath;
+
+        /** Stores the at string.*/
+        private String at;
 
         /**
          * Creates a new instance of <code>ConfigData</code> and initializes
@@ -451,6 +491,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             configuration = config;
             name = n;
             atPath = parseAt(at);
+            this.at = at;
         }
 
         /**
@@ -471,6 +512,16 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         public String getName()
         {
             return name;
+        }
+
+        /**
+         * Returns the at position of this configuration.
+         *
+         * @return the at position
+         */
+        public String getAt()
+        {
+            return at;
         }
 
         /**
