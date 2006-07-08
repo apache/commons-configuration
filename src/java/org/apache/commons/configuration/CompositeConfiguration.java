@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ import java.util.List;
  * @version $Id$
  */
 public class CompositeConfiguration extends AbstractConfiguration
+implements Cloneable
 {
     /** List holding all the configuration */
     private List configList = new LinkedList();
@@ -360,5 +361,45 @@ public class CompositeConfiguration extends AbstractConfiguration
     public Configuration getInMemoryConfiguration()
     {
         return inMemoryConfiguration;
+    }
+
+    /**
+     * Returns a copy of this object. This implementation will create a deep
+     * clone, i.e. all configurations contained in this composite will also be
+     * cloned. This only works if all contained configurations support cloning;
+     * otherwise a runtime exception will be thrown. Registered event handlers
+     * won't get cloned.
+     *
+     * @return the copy
+     */
+    public Object clone()
+    {
+        try
+        {
+            CompositeConfiguration copy = (CompositeConfiguration) super
+                    .clone();
+            copy.clearConfigurationListeners();
+            copy.configList = new LinkedList();
+            copy.inMemoryConfiguration = ConfigurationUtils
+                    .cloneConfiguration(getInMemoryConfiguration());
+            copy.configList.add(copy.inMemoryConfiguration);
+
+            for (int i = 0; i < getNumberOfConfigurations(); i++)
+            {
+                Configuration config = getConfiguration(i);
+                if (config != getInMemoryConfiguration())
+                {
+                    copy.addConfiguration(ConfigurationUtils
+                            .cloneConfiguration(config));
+                }
+            }
+
+            return copy;
+        }
+        catch (CloneNotSupportedException cnex)
+        {
+            // cannot happen
+            throw new ConfigurationRuntimeException(cnex);
+        }
     }
 }

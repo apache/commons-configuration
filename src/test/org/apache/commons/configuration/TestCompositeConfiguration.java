@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2004 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Collection;
+
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 
 import junit.framework.TestCase;
 
@@ -78,7 +81,7 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
         List l = cc.getList("packages");
-        assertTrue(l.contains("packagea"));       
+        assertTrue(l.contains("packagea"));
     }
 
     public void testGetProperty() throws Exception
@@ -437,7 +440,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("3rd element", "foo.bar3", array[2]);
     }
 
-    public void testInstanciateWithCollectiono()
+    public void testInstanciateWithCollection()
     {
         Collection configs = new ArrayList();
         configs.add(xmlConf);
@@ -447,5 +450,61 @@ public class TestCompositeConfiguration extends TestCase
         CompositeConfiguration config = new CompositeConfiguration(configs);
         assertEquals("Number of configurations", 4, config.getNumberOfConfigurations());
         assertTrue("The in memory configuration is not empty", config.getInMemoryConfiguration().isEmpty());
+    }
+
+    public void testClone()
+    {
+        CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
+        assertEquals("Wrong number of contained configurations", cc
+                .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
+
+        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        for (int i = 0; i < cc.getNumberOfConfigurations(); i++)
+        {
+            assertEquals("Wrong configuration class at " + i, cc
+                    .getConfiguration(i).getClass(), cc2.getConfiguration(i)
+                    .getClass());
+            assertNotSame("Configuration was not cloned", cc
+                    .getConfiguration(i), cc2.getConfiguration(i));
+            assertTrue("Configurations at " + i + " not equal", comp.compare(cc
+                    .getConfiguration(i), cc2.getConfiguration(i)));
+        }
+
+        assertTrue("Configurations are not equal", comp.compare(cc, cc2));
+    }
+
+    /**
+     * Tests cloning if one of the contained configurations does not support
+     * this operation. This should cause an exception.
+     */
+    public void testCloneNotSupported()
+    {
+        cc.addConfiguration(new NonCloneableConfiguration());
+        try
+        {
+            cc.clone();
+            fail("Could clone non cloneable configuration!");
+        }
+        catch (ConfigurationRuntimeException crex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Ensures that event listeners are not cloned.
+     */
+    public void testCloneEventListener()
+    {
+        cc.addConfigurationListener(new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                // Just a dummy
+            }
+        });
+        CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
+        assertTrue("Listeners have been cloned", cc2
+                .getConfigurationListeners().isEmpty());
     }
 }
