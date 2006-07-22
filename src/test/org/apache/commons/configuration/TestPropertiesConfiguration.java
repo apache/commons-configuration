@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class TestPropertiesConfiguration extends TestCase
         String loaded = conf.getString("configuration.loaded");
         assertEquals("true", loaded);
     }
-    
+
     /**
      * Tests if properties can be appended by simply calling load() another
      * time.
@@ -170,7 +171,7 @@ public class TestPropertiesConfiguration extends TestCase
             //good
         }
     }
-    
+
     /**
      * Tests if the base path is taken into account by the save() method.
      * @throws Exception if an error occurs
@@ -182,14 +183,14 @@ public class TestPropertiesConfiguration extends TestCase
         {
             assertTrue(testSavePropertiesFile.delete());
         }
-        
+
         conf.setProperty("test", "true");
         conf.setBasePath(testSavePropertiesFile.getParentFile().toURL().toString());
         conf.setFileName(testSavePropertiesFile.getName());
         conf.save();
         assertTrue(testSavePropertiesFile.exists());
     }
-    
+
     public void testLoadViaProperty() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
@@ -233,7 +234,7 @@ public class TestPropertiesConfiguration extends TestCase
 
         assertEquals("true", conf.getString("configuration.loaded"));
     }
-    
+
     public void testLoadUnexistingFile()
     {
         try
@@ -246,14 +247,14 @@ public class TestPropertiesConfiguration extends TestCase
             // fine
         }
     }
-    
+
     /**
      * Tests to load a file with enabled auto save mode.
      */
     public void testLoadWithAutoSave() throws Exception
     {
         PrintWriter out = null;
-        
+
         try
         {
             out = new PrintWriter(new FileWriter(testSavePropertiesFile));
@@ -262,7 +263,7 @@ public class TestPropertiesConfiguration extends TestCase
             out.println("c = three");
             out.close();
             out = null;
-            
+
             conf = new PropertiesConfiguration();
             conf.setAutoSave(true);
             conf.setFile(testSavePropertiesFile);
@@ -413,7 +414,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("formfeed separator not properly parsed",   "foo", conf.getProperty("test.separator.formfeed"));
         assertEquals("whitespace separator not properly parsed", "foo", conf.getProperty("test.separator.whitespace"));
     }
-    
+
     /**
      * Tests including properties when they are loaded from a nested directory
      * structure.
@@ -445,7 +446,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertTrue("Property could not be found", content
                 .indexOf("prop = value" + EOL) > 0);
     }
-    
+
     /**
      * Tests what happens if a reloading strategy's <code>reloadingRequired()</code>
      * implementation accesses methods of the configuration that in turn cause a reload.
@@ -461,5 +462,101 @@ public class TestPropertiesConfiguration extends TestCase
             }
         });
         assertFalse("Property has wrong value", conf.getBoolean("shouldReload"));
+    }
+
+    /**
+     * Tests accessing the layout object.
+     */
+    public void testGetLayout()
+    {
+        PropertiesConfigurationLayout layout = conf.getLayout();
+        assertNotNull("Layout is null", layout);
+        assertSame("Different object returned", layout, conf.getLayout());
+        conf.setLayout(null);
+        PropertiesConfigurationLayout layout2 = conf.getLayout();
+        assertNotNull("Layout 2 is null", layout2);
+        assertNotSame("Same object returned", layout, layout2);
+    }
+
+    /**
+     * Tests the propertyLoaded() method for a simple property.
+     */
+    public void testPropertyLoaded() throws ConfigurationException
+    {
+        DummyLayout layout = new DummyLayout(conf);
+        conf.setLayout(layout);
+        conf.propertyLoaded("layoutLoadedProperty", "yes");
+        assertEquals("Layout's load() was called", 0, layout.loadCalls);
+        assertEquals("Property not added", "yes", conf
+                .getString("layoutLoadedProperty"));
+    }
+
+    /**
+     * Tests the propertyLoaded() method for an include property.
+     */
+    public void testPropertyLoadedInclude() throws ConfigurationException
+    {
+        DummyLayout layout = new DummyLayout(conf);
+        conf.setLayout(layout);
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(),
+                "testClassPath.properties,testEqual.properties");
+        assertEquals("Layout's load() was not correctly called", 2,
+                layout.loadCalls);
+        assertFalse("Property was added", conf
+                .containsKey(PropertiesConfiguration.getInclude()));
+    }
+
+    /**
+     * Tests propertyLoaded() for an include property, when includes are
+     * disabled.
+     */
+    public void testPropertyLoadedIncludeNotAllowed()
+            throws ConfigurationException
+    {
+        DummyLayout layout = new DummyLayout(conf);
+        conf.setLayout(layout);
+        conf.setIncludesAllowed(false);
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(),
+                "testClassPath.properties,testEqual.properties");
+        assertEquals("Layout's load() was called", 0, layout.loadCalls);
+        assertFalse("Property was added", conf
+                .containsKey(PropertiesConfiguration.getInclude()));
+    }
+
+    /**
+     * Tests whether comment lines are correctly detected.
+     */
+    public void testIsCommentLine()
+    {
+        assertTrue("Comment not detected", PropertiesConfiguration
+                .isCommentLine("# a comment"));
+        assertTrue("Alternative comment not detected", PropertiesConfiguration
+                .isCommentLine("! a comment"));
+        assertTrue("Comment with no space not detected",
+                PropertiesConfiguration.isCommentLine("#a comment"));
+        assertTrue("Comment with leading space not detected",
+                PropertiesConfiguration.isCommentLine("    ! a comment"));
+        assertFalse("Wrong comment", PropertiesConfiguration
+                .isCommentLine("   a#comment"));
+    }
+
+    /**
+     * A dummy layout implementation for checking whether certain methods are
+     * correctly called by the configuration.
+     */
+    static class DummyLayout extends PropertiesConfigurationLayout
+    {
+        /** Stores the number how often load() was called. */
+        public int loadCalls;
+
+        public DummyLayout(PropertiesConfiguration config)
+        {
+            super(config);
+        }
+
+        public void load(Reader in) throws ConfigurationException
+        {
+            loadCalls++;
+        }
     }
 }
