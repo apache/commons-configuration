@@ -249,6 +249,30 @@ key = This \n string \t contains \, escaped \\ characters \u0020
 ]]></source>
       </subsection>
 
+      <subsection name="Layout Objects">
+      <p>
+        Each <code>PropertiesConfiguration</code> object is associated with a
+        <em>Layout object</em>, an instance of the class
+        <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfigurationLayout.html">
+        PropertiesConfigurationLayout</a></code>. This layout object is
+        responsible for preserving most of the structure of loaded configuration
+        files. This means that things like comments or blanc lines in a saved
+        properties file will closely resemble the original properties file
+        (the algorithm is not 100 percent perfect, but for most use cases it
+        should be sufficient).
+      </p>
+      <p>
+        Normally a developer does not have to deal with these layout objects.
+        However there are some methods that might be of interest in certain use
+        cases. For instance <code>PropertiesConfigurationLayout</code> defines
+        methods for obtaining and setting the comment for a property key. A
+        header comment for the whole properties file is also supported. If the
+        values of multi-valued properties should always be written on a
+        single line rather than adding a new property definition for each value
+        (which would be incompatible with <code>java.util.Properties</code>)
+        the <code>setForceSingleLine()</code> method can be used.
+      </p>
+      </subsection>
     </section>
 
   </body>

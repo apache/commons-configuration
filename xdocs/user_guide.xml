@@ -57,6 +57,7 @@
         <li><a href="howto_properties.html#Variable Interpolation">Variable Interpolation</a></li>
         <li><a href="howto_properties.html#Saving">Saving</a></li>
         <li><a href="howto_properties.html#Special Characters">Special Characters</a></li>
+        <li><a href="howto_properties.html#Layout Objects">Layout Objects</a></li>
       </ul>
       <li><a href="howto_filebased.html#File-based Configurations">File-based Configurations</a></li>
       <ul>
