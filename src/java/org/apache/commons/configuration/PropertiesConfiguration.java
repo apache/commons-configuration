@@ -16,16 +16,14 @@
 
 package org.apache.commons.configuration;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.Writer;
 import java.net.URL;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -134,6 +132,14 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
+ * <p>A <code>PropertiesConfiguration</code> object is associated with an
+ * instance of the <code>{@link PropertiesConfigurationLayout}</code> class,
+ * which is responsible for storing the layout of the parsed properties file
+ * (i.e. empty lines, comments, and such things). The <code>getLayout()</code>
+ * method can be used to obtain this layout object. With <code>setLayout()</code>
+ * a new layout object can be set. This should be done before a properties file
+ * was loaded.
+ *
  * @see java.util.Properties#load
  *
  * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
@@ -175,17 +181,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+    /** Constant for the supported comment characters.*/
+    static final String COMMENT_CHARS = "#!";
+
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
     /** Constant for the length of a unicode literal.*/
     private static final int UNICODE_LEN = 4;
 
+    /** Stores the layout object.*/
+    private PropertiesConfigurationLayout layout;
+
     /** Allow file inclusion or not */
     private boolean includesAllowed;
-
-    /** Comment header of the .properties file */
-    private String header;
 
     // initialization block to set the encoding before loading the file in the constructors
     {
@@ -293,7 +302,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public String getHeader()
     {
-        return header;
+        return getLayout().getHeaderComment();
     }
 
     /**
@@ -304,7 +313,47 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public void setHeader(String header)
     {
-        this.header = header;
+        getLayout().setHeaderComment(header);
+    }
+
+    /**
+     * Returns the associated layout object.
+     *
+     * @return the associated layout object
+     * @since 1.3
+     */
+    public synchronized PropertiesConfigurationLayout getLayout()
+    {
+        if (layout == null)
+        {
+            layout = createLayout();
+        }
+        return layout;
+    }
+
+    /**
+     * Sets the associated layout object.
+     *
+     * @param layout the new layout object; can be <b>null</b>, then a new
+     * layout object will be created
+     * @since 1.3
+     */
+    public void setLayout(PropertiesConfigurationLayout layout)
+    {
+        this.layout = layout;
+    }
+
+    /**
+     * Creates the associated layout object. This method is invoked when the
+     * layout object is accessed and has not been created yet. Derived classes
+     * can override this method to hook in a different layout implementation.
+     *
+     * @return the layout object to use
+     * @since 1.3
+     */
+    protected PropertiesConfigurationLayout createLayout()
+    {
+        return new PropertiesConfigurationLayout(this);
     }
 
     /**
@@ -319,60 +368,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public synchronized void load(Reader in) throws ConfigurationException
     {
-        PropertiesReader reader = new PropertiesReader(in);
         boolean oldAutoSave = isAutoSave();
         setAutoSave(false);
 
         try
         {
-            while (true)
-            {
-                String line = reader.readProperty();
-
-                if (line == null)
-                {
-                    break; // EOF
-                }
-
-                // parse the line
-                String[] property = parseProperty(line);
-                String key = property[0];
-                String value = property[1];
-
-                // Though some software (e.g. autoconf) may produce
-                // empty values like foo=\n, emulate the behavior of
-                // java.util.Properties by setting the value to the
-                // empty string.
-
-                if (StringUtils.isNotEmpty(getInclude()) && key.equalsIgnoreCase(getInclude()))
-                {
-                    if (getIncludesAllowed())
-                    {
-                        String [] files;
-                        if (!isDelimiterParsingDisabled())
-                        {
-                            files = StringUtils.split(value, getListDelimiter());
-                        }
-                        else
-                        {
-                            files = new String[]{value};
-                        }
-                        for (int i = 0; i < files.length; i++)
-                        {
-                            loadIncludeFile(files[i].trim());
-                        }
-                    }
-                }
-                else
-                {
-                    addProperty(StringEscapeUtils.unescapeJava(key), unescapeJava(value, getListDelimiter()));
-                }
-
-            }
-        }
-        catch (IOException ioe)
-        {
-            throw new ConfigurationException("Could not load configuration from input stream.", ioe);
+            getLayout().load(in);
         }
         finally
         {
@@ -391,44 +392,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         enterNoReload();
         try
         {
-            PropertiesWriter out = new PropertiesWriter(writer, getListDelimiter());
-
-            if (header != null)
-            {
-                BufferedReader reader = new BufferedReader(new StringReader(header));
-                String line;
-                while ((line = reader.readLine()) != null)
-                {
-                    out.writeComment(line);
-                }
-                out.writeln(null);
-            }
-
-            out.writeComment("written by PropertiesConfiguration");
-            out.writeComment(new Date().toString());
-            out.writeln(null);
-
-            Iterator keys = getKeys();
-            while (keys.hasNext())
-            {
-                String key = (String) keys.next();
-                Object value = getProperty(key);
-
-                if (value instanceof List)
-                {
-                    out.writeProperty(key, (List) value);
-                }
-                else
-                {
-                    out.writeProperty(key, value);
-                }
-            }
-
-            out.flush();
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException(e.getMessage(), e);
+            getLayout().save(writer);
         }
         finally
         {
@@ -449,13 +413,93 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * This class is used to read properties lines.  These lines do
+     * This method is invoked by the associated
+     * <code>{@link PropertiesConfigurationLayout}</code> object for each
+     * property definition detected in the parsed properties file. Its task is
+     * to check whether this is a special property definition (e.g. the
+     * <code>include</code> property). If not, the property must be added to
+     * this configuration. The return value indicates whether the property
+     * should be treated as a normal property. If it is <b>false</b>, the
+     * layout object will ignore this property.
+     *
+     * @param key the property key
+     * @param value the property value
+     * @return a flag whether this is a normal property
+     * @throws ConfigurationException if an error occurs
+     * @since 1.3
+     */
+    boolean propertyLoaded(String key, String value)
+            throws ConfigurationException
+    {
+        boolean result;
+
+        if (StringUtils.isNotEmpty(getInclude())
+                && key.equalsIgnoreCase(getInclude()))
+        {
+            if (getIncludesAllowed())
+            {
+                String[] files;
+                if (!isDelimiterParsingDisabled())
+                {
+                    files = StringUtils.split(value, getListDelimiter());
+                }
+                else
+                {
+                    files = new String[]
+                    { value };
+                }
+                for (int i = 0; i < files.length; i++)
+                {
+                    loadIncludeFile(files[i].trim());
+                }
+            }
+            result = false;
+        }
+
+        else
+        {
+            addProperty(key, value);
+            result = true;
+        }
+
+        return result;
+    }
+
+    /**
+     * Tests whether a line is a comment, i.e. whether it starts with a comment
+     * character.
+     *
+     * @param line the line
+     * @return a flag if this is a comment line
+     * @since 1.3
+     */
+    static boolean isCommentLine(String line)
+    {
+        String s = line.trim();
+        // blanc lines are also treated as comment lines
+        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
+    }
+
+    /**
+     * This class is used to read properties lines. These lines do
      * not terminate with new-line chars but rather when there is no
      * backslash sign a the end of the line.  This is used to
      * concatenate multiple lines for readability.
      */
     public static class PropertiesReader extends LineNumberReader
     {
+        /** Stores the comment lines for the currently processed property.*/
+        private List commentLines;
+
+        /** Stores the name of the last read property.*/
+        private String propertyName;
+
+        /** Stores the value of the last read property.*/
+        private String propertyValue;
+
+        /** Stores the list delimiter character.*/
+        private char delimiter;
+
         /**
          * Constructor.
          *
@@ -463,13 +507,30 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         public PropertiesReader(Reader reader)
         {
-            super(reader);
+            this(reader, AbstractConfiguration.getDefaultListDelimiter());
         }
 
         /**
-         * Read a property. Returns null if Stream is
+         * Creates a new instance of <code>PropertiesReader</code> and sets
+         * the underlaying reader and the list delimiter.
+         *
+         * @param reader the reader
+         * @param listDelimiter the list delimiter character
+         * @since 1.3
+         */
+        public PropertiesReader(Reader reader, char listDelimiter)
+        {
+            super(reader);
+            commentLines = new ArrayList();
+            delimiter = listDelimiter;
+        }
+
+        /**
+         * Reads a property line. Returns null if Stream is
          * at EOF. Concatenates lines ending with "\".
          * Skips lines beginning with "#" or "!" and empty lines.
+         * The return value is a property definition (<code>&lt;name&gt;</code>
+         * = <code>&lt;value&gt;</code>)
          *
          * @return A string containing a property value or null
          *
@@ -477,6 +538,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         public String readProperty() throws IOException
         {
+            commentLines.clear();
             StringBuffer buffer = new StringBuffer();
 
             while (true)
@@ -488,13 +550,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                     return null;
                 }
 
-                line = line.trim();
-
-                // skip comments and empty lines
-                if (StringUtils.isEmpty(line) || (line.charAt(0) == '#') || (line.charAt(0) == '!'))
+                if (isCommentLine(line))
                 {
+                    commentLines.add(line);
                     continue;
                 }
+
+                line = line.trim();
 
                 if (checkCombineLines(line))
                 {
@@ -508,6 +570,71 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
             }
             return buffer.toString();
+        }
+
+        /**
+         * Parses the next property from the input stream and stores the found
+         * name and value in internal fields. These fields can be obtained using
+         * the provided getter methods. The return value indicates whether EOF
+         * was reached (<b>false</b>) or whether further properties are
+         * available (<b>true</b>).
+         *
+         * @return a flag if further properties are available
+         * @throws IOException if an error occurs
+         * @since 1.3
+         */
+        public boolean nextProperty() throws IOException
+        {
+            String line = readProperty();
+
+            if (line == null)
+            {
+                return false; // EOF
+            }
+
+            // parse the line
+            String[] property = parseProperty(line);
+            propertyName = StringEscapeUtils.unescapeJava(property[0]);
+            propertyValue = unescapeJava(property[1], delimiter);
+            return true;
+        }
+
+        /**
+         * Returns the comment lines that have been read for the last property.
+         *
+         * @return the comment lines for the last property returned by
+         * <code>readProperty()</code>
+         * @since 1.3
+         */
+        public List getCommentLines()
+        {
+            return commentLines;
+        }
+
+        /**
+         * Returns the name of the last read property. This method can be called
+         * after <code>{@link #nextProperty()}</code> was invoked and its
+         * return value was <b>true</b>.
+         *
+         * @return the name of the last read property
+         * @since 1.3
+         */
+        public String getPropertyName()
+        {
+            return propertyName;
+        }
+
+        /**
+         * Returns the value of the last read property. This method can be
+         * called after <code>{@link #nextProperty()}</code> was invoked and
+         * its return value was <b>true</b>.
+         *
+         * @return the value of the last read property
+         * @since 1.3
+         */
+        public String getPropertyValue()
+        {
+            return propertyValue;
         }
 
         /**
@@ -526,6 +653,109 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
 
             return bsCount % 2 == 1;
+        }
+
+        /**
+         * Parse a property line and return the key and the value in an array.
+         *
+         * @param line the line to parse
+         * @return an array with the property's key and value
+         * @since 1.2
+         */
+        private static String[] parseProperty(String line)
+        {
+            // sorry for this spaghetti code, please replace it as soon as
+            // possible with a regexp when the Java 1.3 requirement is dropped
+
+            String[] result = new String[2];
+            StringBuffer key = new StringBuffer();
+            StringBuffer value = new StringBuffer();
+
+            // state of the automaton:
+            // 0: key parsing
+            // 1: antislash found while parsing the key
+            // 2: separator crossing
+            // 3: value parsing
+            int state = 0;
+
+            for (int pos = 0; pos < line.length(); pos++)
+            {
+                char c = line.charAt(pos);
+
+                switch (state)
+                {
+                    case 0:
+                        if (c == '\\')
+                        {
+                            state = 1;
+                        }
+                        else if (ArrayUtils.contains(WHITE_SPACE, c))
+                        {
+                            // switch to the separator crossing state
+                            state = 2;
+                        }
+                        else if (ArrayUtils.contains(SEPARATORS, c))
+                        {
+                            // switch to the value parsing state
+                            state = 3;
+                        }
+                        else
+                        {
+                            key.append(c);
+                        }
+
+                        break;
+
+                    case 1:
+                        if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
+                        {
+                            // this is an escaped separator or white space
+                            key.append(c);
+                        }
+                        else
+                        {
+                            // another escaped character, the '\' is preserved
+                            key.append('\\');
+                            key.append(c);
+                        }
+
+                        // return to the key parsing state
+                        state = 0;
+
+                        break;
+
+                    case 2:
+                        if (ArrayUtils.contains(WHITE_SPACE, c))
+                        {
+                            // do nothing, eat all white spaces
+                            state = 2;
+                        }
+                        else if (ArrayUtils.contains(SEPARATORS, c))
+                        {
+                            // switch to the value parsing state
+                            state = 3;
+                        }
+                        else
+                        {
+                            // any other character indicates we encoutered the beginning of the value
+                            value.append(c);
+
+                            // switch to the value parsing state
+                            state = 3;
+                        }
+
+                        break;
+
+                    case 3:
+                        value.append(c);
+                        break;
+                }
+            }
+
+            result[0] = key.toString().trim();
+            result[1] = value.toString().trim();
+
+            return result;
         }
     } // class PropertiesReader
 
@@ -559,16 +789,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         public void writeProperty(String key, Object value) throws IOException
         {
-            write(escapeKey(key));
-            write(" = ");
-            if (value != null)
-            {
-                String v = StringEscapeUtils.escapeJava(String.valueOf(value));
-                v = StringUtils.replace(v, String.valueOf(delimiter), "\\" + delimiter);
-                write(v);
-            }
-
-            writeln(null);
+            writeProperty(key, value, false);
         }
 
         /**
@@ -585,6 +806,48 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             {
                 writeProperty(key, values.get(i));
             }
+        }
+
+        /**
+         * Writes the given property and its value. If the value happens to be a
+         * list, the <code>forceSingleLine</code> flag is evaluated. If it is
+         * set, all values are written on a single line using the list delimiter
+         * as separator.
+         *
+         * @param key the property key
+         * @param value the property value
+         * @param forceSingleLine the &quot;force single line&quot; flag
+         * @throws IOException if an error occurs
+         * @since 1.3
+         */
+        public void writeProperty(String key, Object value,
+                boolean forceSingleLine) throws IOException
+        {
+            String v;
+
+            if (value instanceof List)
+            {
+                List values = (List) value;
+                if (forceSingleLine)
+                {
+                    v = makeSingleLineValue(values);
+                }
+                else
+                {
+                    writeProperty(key, values);
+                    return;
+                }
+            }
+            else
+            {
+                v = escapeValue(value);
+            }
+
+            write(escapeKey(key));
+            write(" = ");
+            write(v);
+
+            writeln(null);
         }
 
         /**
@@ -629,13 +892,55 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
+         * Escapes the given property value. Delimiter characters in the value
+         * will be escaped.
+         *
+         * @param value the property value
+         * @return the escaped property value
+         * @since 1.3
+         */
+        private String escapeValue(Object value)
+        {
+            String v = StringEscapeUtils.escapeJava(String.valueOf(value));
+            return StringUtils.replace(v, String.valueOf(delimiter), "\\"
+                    + delimiter);
+        }
+
+        /**
+         * Transforms a list of values into a single line value.
+         *
+         * @param values the list with the values
+         * @return a string with the single line value (can be <b>null</b>)
+         * @since 1.3
+         */
+        private String makeSingleLineValue(List values)
+        {
+            if (!values.isEmpty())
+            {
+                Iterator it = values.iterator();
+                StringBuffer buf = new StringBuffer(escapeValue(it.next()));
+                while (it.hasNext())
+                {
+                    buf.append(delimiter);
+                    buf.append(escapeValue(it.next()));
+                }
+                return buf.toString();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /**
          * Helper method for writing a line with the platform specific line
          * ending.
          *
          * @param s the content of the line (may be <b>null</b>)
          * @throws IOException if an error occurs
+         * @since 1.3
          */
-        private void writeln(String s) throws IOException
+        public void writeln(String s) throws IOException
         {
             if (s != null)
             {
@@ -766,109 +1071,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         return out.toString();
-    }
-
-    /**
-     * Parse a property line and return the key and the value in an array.
-     *
-     * @param line the line to parse
-     * @return an array with the property's key and value
-     * @since 1.2
-     */
-    private String[] parseProperty(String line)
-    {
-        // sorry for this spaghetti code, please replace it as soon as
-        // possible with a regexp when the Java 1.3 requirement is dropped
-
-        String[] result = new String[2];
-        StringBuffer key = new StringBuffer();
-        StringBuffer value = new StringBuffer();
-
-        // state of the automaton:
-        // 0: key parsing
-        // 1: antislash found while parsing the key
-        // 2: separator crossing
-        // 3: value parsing
-        int state = 0;
-
-        for (int pos = 0; pos < line.length(); pos++)
-        {
-            char c = line.charAt(pos);
-
-            switch (state)
-            {
-                case 0:
-                    if (c == '\\')
-                    {
-                        state = 1;
-                    }
-                    else if (ArrayUtils.contains(WHITE_SPACE, c))
-                    {
-                        // switch to the separator crossing state
-                        state = 2;
-                    }
-                    else if (ArrayUtils.contains(SEPARATORS, c))
-                    {
-                        // switch to the value parsing state
-                        state = 3;
-                    }
-                    else
-                    {
-                        key.append(c);
-                    }
-
-                    break;
-
-                case 1:
-                    if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
-                    {
-                        // this is an escaped separator or white space
-                        key.append(c);
-                    }
-                    else
-                    {
-                        // another escaped character, the '\' is preserved
-                        key.append('\\');
-                        key.append(c);
-                    }
-
-                    // return to the key parsing state
-                    state = 0;
-
-                    break;
-
-                case 2:
-                    if (ArrayUtils.contains(WHITE_SPACE, c))
-                    {
-                        // do nothing, eat all white spaces
-                        state = 2;
-                    }
-                    else if (ArrayUtils.contains(SEPARATORS, c))
-                    {
-                        // switch to the value parsing state
-                        state = 3;
-                    }
-                    else
-                    {
-                        // any other character indicates we encoutered the beginning of the value
-                        value.append(c);
-
-                        // switch to the value parsing state
-                        state = 3;
-                    }
-
-                    break;
-
-                case 3:
-                    value.append(c);
-                    break;
-            }
-        }
-
-        result[0] = key.toString().trim();
-        result[1] = value.toString().trim();
-
-        return result;
     }
 
     /**
