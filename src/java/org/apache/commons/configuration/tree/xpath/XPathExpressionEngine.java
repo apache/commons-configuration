@@ -251,7 +251,8 @@ public class XPathExpressionEngine implements ExpressionEngine
     protected void initNodeAddData(NodeAddData data, String path)
     {
         String lastComponent = null;
-        boolean attr = false, first = true;
+        boolean attr = false;
+        boolean first = true;
 
         StringTokenizer tok = new StringTokenizer(path, NODE_PATH_DELIMITERS,
                 true);

@@ -1,7 +1,7 @@
 /*
  * Copyright 2006 The Apache Software Foundation
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -25,7 +25,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
- * 
+ *
  * @author Oliver Heger
  * @version $Id$
  */
@@ -34,7 +34,7 @@ class ConfigurationNodeIteratorAttribute extends
 {
     /** Constant for the wildcard node name.*/
     private static final String WILDCARD = "*";
-    
+
     /**
      * Creates a new instance of <code>ConfigurationNodeIteratorAttribute</code>.
      * @param parent the parent node pointer
@@ -43,9 +43,10 @@ class ConfigurationNodeIteratorAttribute extends
     public ConfigurationNodeIteratorAttribute(NodePointer parent, QName name)
     {
         super(parent, false);
-        initSubNodeList(createSubNodeList((ConfigurationNode) parent.getNode(), name));
+        initSubNodeList(createSubNodeList((ConfigurationNode) parent.getNode(),
+                name));
     }
-    
+
     /**
      * Determines which attributes are selected based on the passed in node
      * name.
@@ -55,14 +56,14 @@ class ConfigurationNodeIteratorAttribute extends
      */
     protected List createSubNodeList(ConfigurationNode node, QName name)
     {
-        if(name.getPrefix() != null)
+        if (name.getPrefix() != null)
         {
             // namespace prefixes are not supported
             return Collections.EMPTY_LIST;
         }
-        
+
         List result = new ArrayList();
-        if(!WILDCARD.equals(name.getName()))
+        if (!WILDCARD.equals(name.getName()))
         {
             result.addAll(node.getAttributes(name.getName()));
         }
@@ -70,7 +71,7 @@ class ConfigurationNodeIteratorAttribute extends
         {
             result.addAll(node.getAttributes());
         }
-        
+
         return result;
     }
 }
