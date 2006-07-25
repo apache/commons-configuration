@@ -424,7 +424,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * <code>SubnodeConfiguration</code> class to obtain further information
      * about subnode configurations and when they should be used.
      * </p>
-     * 
+     *
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree
      * @see SubnodeConfiguration
@@ -974,6 +974,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         public void setParent(Node node)
         {
             setParentNode(node);
+        }
+
+        /**
+         * Adds the given node to the children of this node.
+         *
+         * @param node the child to be added
+         */
+        public void addChild(Node node)
+        {
+            addChild((ConfigurationNode) node);
         }
 
         /**
