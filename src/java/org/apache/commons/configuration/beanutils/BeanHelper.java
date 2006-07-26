@@ -253,6 +253,8 @@ public class BeanHelper
      * short cut for <code>createBean(data, null, null);</code>.
      *
      * @param data the bean declaration
+     * @param defaultClass the class to be used when in the declation no class
+     * is specified
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */

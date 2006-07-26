@@ -106,7 +106,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public static final String RESERVED_PREFIX = "config-";
 
     /** Constant for the prefix for reserved attributes.*/
-    private static final String ATTR_PREFIX = "[@" + RESERVED_PREFIX;
+    public static final String ATTR_PREFIX = "[@" + RESERVED_PREFIX;
 
     /** Constant for the bean class attribute. */
     public static final String ATTR_BEAN_CLASS = ATTR_PREFIX + "class]";

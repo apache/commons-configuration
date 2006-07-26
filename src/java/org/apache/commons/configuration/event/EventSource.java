@@ -53,6 +53,9 @@ import java.util.LinkedList;
  * does not generate any detail events.
  * </p>
  *
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
