@@ -199,6 +199,8 @@ public interface ConfigurationNode
 
     /**
      * Returns the number of attributes with the given name.
+     *
+     * @param name the name of the attribute
      * @return the number of attributes with this name
      */
     int getAttributeCount(String name);

@@ -43,11 +43,17 @@ import java.util.Set;
  * can be passed the name of a node, which should be considered a list node.
  * </p>
  *
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
 public abstract class NodeCombiner
 {
+    /** Stores a list with node names that are known to be list nodes. */
+    protected Set listNodes;
+
     /**
      * Creates a new instance of <code>NodeCombiner</code>.
      */
@@ -55,9 +61,6 @@ public abstract class NodeCombiner
     {
         listNodes = new HashSet();
     }
-
-    /** Stores a list with node names that are known to be list nodes. */
-    protected Set listNodes;
 
     /**
      * Adds the name of a node to the list of known list nodes. This means that

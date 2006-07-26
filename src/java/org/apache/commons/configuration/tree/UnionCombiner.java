@@ -36,10 +36,10 @@ import java.util.List;
  * can be combined or not. Consider the following two node hierarchies:
  * </p>
  * <p>
- * 
+ *
  * <pre>
  * Hierarchy 1:
- * 
+ *
  * Database
  *   +--Tables
  *        +--Table
@@ -51,13 +51,13 @@ import java.util.List;
  *                   |    +--name [usrname]
  *                     ...
  * </pre>
- * 
+ *
  * </p>
  * <p>
- * 
+ *
  * <pre>
  * Hierarchy 2:
- * 
+ *
  * Database
  *   +--Tables
  *        +--Table
@@ -69,14 +69,14 @@ import java.util.List;
  *                   |    +--name [docname]
  *                     ...
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * Both hierarchies contain data about database tables. Each describes a single
  * table. If these hierarchies are to be combined, the result should probably
  * look like the following:
  * <p>
- * 
+ *
  * <pre>
  * Database
  *   +--Tables
@@ -93,7 +93,7 @@ import java.util.List;
  *                   |    +--name [docid]
  *                     ...
  * </pre>
- * 
+ *
  * </p>
  * <p>
  * i.e. the <code>Tables</code> nodes should be combined, while the
@@ -108,7 +108,10 @@ import java.util.List;
  * must not combine the <code>Table</code> nodes, but add it both to the
  * resulting tree.
  * </p>
- * 
+ *
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -116,7 +119,7 @@ public class UnionCombiner extends NodeCombiner
 {
     /**
      * Combines the given nodes to a new union node.
-     * 
+     *
      * @param node1 the first source node
      * @param node2 the second source node
      * @return the union node
@@ -181,7 +184,7 @@ public class UnionCombiner extends NodeCombiner
      * If all of these tests are successfull, the matching child node of the
      * second source node is returned. Otherwise the result is <b>null</b>.
      * </p>
-     * 
+     *
      * @param node1 the first source node
      * @param node2 the second source node
      * @param child the child node of the first source node to be checked

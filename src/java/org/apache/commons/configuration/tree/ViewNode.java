@@ -31,6 +31,9 @@ import java.util.Iterator;
  * configuration.
  * </p>
  *
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  * @since 1.3
  */

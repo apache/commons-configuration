@@ -122,11 +122,14 @@ public class DefaultConfigurationKey
     public DefaultConfigurationKey append(String property, boolean escape)
     {
         String key;
-        if(escape && property != null)
+        if (escape && property != null)
         {
             key = escapeDelimiters(property);
         }
-        else key = property;
+        else
+        {
+            key = property;
+        }
         key = trim(key);
 
         if (keyBuffer.length() > 0 && !isAttributeKey(property)
@@ -433,12 +436,17 @@ public class DefaultConfigurationKey
 
     /**
      * Escapes the delimiters in the specified string.
+     *
      * @param key the key to be escaped
      * @return the escaped key
      */
     private String escapeDelimiters(String key)
     {
-        return (getExpressionEngine().getEscapedDelimiter() == null || key.indexOf(getExpressionEngine().getPropertyDelimiter()) < 0) ? key : StringUtils.replace(key, getExpressionEngine().getPropertyDelimiter(), getExpressionEngine().getEscapedDelimiter());
+        return (getExpressionEngine().getEscapedDelimiter() == null || key
+                .indexOf(getExpressionEngine().getPropertyDelimiter()) < 0) ? key
+                : StringUtils.replace(key, getExpressionEngine()
+                        .getPropertyDelimiter(), getExpressionEngine()
+                        .getEscapedDelimiter());
     }
 
     /**
