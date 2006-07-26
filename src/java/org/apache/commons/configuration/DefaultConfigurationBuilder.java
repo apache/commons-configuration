@@ -160,7 +160,9 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id: DefaultConfigurationBuilder.java 384601 2006-03-09 20:22:58Z
  * oheger $
  */
@@ -228,7 +230,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static final String KEY_UNION = "/additional/*";
 
     /** Constant for an expression that selects override configurations. */
-    static final String KEY_OVERRIDE1 = "/*[local-name() != 'additional' and local-name() != 'override' and local-name() != '"
+    static final String KEY_OVERRIDE1 = "/*[local-name() != 'additional' and "
+            + "local-name() != 'override' and local-name() != '"
             + SEC_HEADER + "']";
 
     /**
@@ -291,12 +294,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS =
-    { "properties", "xml", "hierarchicalXml", "jndi", "system", "plist", "configuration" };
+    {"properties", "xml", "hierarchicalXml", "jndi", "system", "plist", "configuration"};
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
-    { PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER };
+    {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
+            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
 
     /** Stores the configuration that is currently constructed.*/
     private CombinedConfiguration constructedConfiguration;

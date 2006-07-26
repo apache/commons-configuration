@@ -901,7 +901,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * A data class for storing (hierarchical) property information. A property
      * can have a value and an arbitrary number of child properties. From version 1.3 on this class
-     * is only a thin wrapper over the <code>{@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}</code>
+     * is only a thin wrapper over the
+     * <code>{@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}</code>
      * class that exists mainly for the purpose of backwards compatibility.
      */
     public static class Node extends DefaultConfigurationNode implements Serializable

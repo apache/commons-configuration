@@ -160,6 +160,9 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
 {
+    /** Constant for the supported comment characters.*/
+    static final String COMMENT_CHARS = "#!";
+
     /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
@@ -180,9 +183,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-    /** Constant for the supported comment characters.*/
-    static final String COMMENT_CHARS = "#!";
 
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
@@ -445,8 +445,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
                 else
                 {
-                    files = new String[]
-                    { value };
+                    files = new String[]{value};
                 }
                 for (int i = 0; i < files.length; i++)
                 {

@@ -27,7 +27,9 @@ package org.apache.commons.configuration;
  * configuration constructed by this builder.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public interface ConfigurationBuilder

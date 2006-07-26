@@ -60,7 +60,7 @@ public final class PropertyConverter
     /** Constant for the argument classes of the Number constructor that takes
      * a String.
      */
-    private static final Class[] CONSTR_ARGS = { String.class };
+    private static final Class[] CONSTR_ARGS = {String.class};
 
     /**
      * Private constructor prevents instances from being created.
@@ -298,8 +298,7 @@ public final class PropertyConverter
             try
             {
                 Constructor constr = targetClass.getConstructor(CONSTR_ARGS);
-                return (Number) constr.newInstance(new Object[]
-                { str });
+                return (Number) constr.newInstance(new Object[]{str});
             }
             catch (InvocationTargetException itex)
             {

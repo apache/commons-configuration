@@ -89,7 +89,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * When set to true the given configuration delimiter will not be used
      * while parsing for this configuration.
      */
-    private boolean delimiterParsingDisabled = false;
+    private boolean delimiterParsingDisabled;
 
     /**
      * Whether the configuration should throw NoSuchElementExceptions or simply
@@ -111,9 +111,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
+     * Sets the default list delimiter.
+     *
+     * @param delimiter the delimiter character
      * @deprecated Use AbstractConfiguration.setDefaultListDelimiter(char)
      * instead
-     * @param delimiter
      */
     public static void setDelimiter(char delimiter)
     {
@@ -131,6 +133,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
+     * Returns the default list delimiter.
+     *
+     * @return the default list delimiter
      * @deprecated Use AbstractConfiguration.getDefaultListDelimiter() instead
      */
     public static char getDelimiter()
@@ -181,7 +186,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * Note: this change will only be effective for new parsings. If you
      * want it to take effect for all loaded properties use the no arg constructor
      * and call this method before setting source.
-     * @param delimiterParsingDisabled
+     * @param delimiterParsingDisabled a flag whether delimiter parsing should
+     * be disabled
      */
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {

@@ -91,6 +91,9 @@ import org.apache.commons.configuration.tree.ViewNode;
  * properly synchronization.
  * </p>
  *
+ * @author <a
+ * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @since 1.3
  * @version $Id$
  */
