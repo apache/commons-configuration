@@ -41,6 +41,11 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  */
 class ConfigurationNodePointer extends NodePointer
 {
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -1087475639680007713L;
+
     /** Stores the associated configuration node. */
     private ConfigurationNode node;
 

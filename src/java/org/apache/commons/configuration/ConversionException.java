@@ -27,6 +27,11 @@ package org.apache.commons.configuration;
 public class ConversionException extends ConfigurationRuntimeException
 {
     /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -5167943099293540392L;
+
+    /**
      * Constructs a new <code>ConversionException</code> without specified
      * detail message.
      */

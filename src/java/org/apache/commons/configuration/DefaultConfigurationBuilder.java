@@ -301,6 +301,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
             SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
 
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -3113777854714492123L;
+
     /** Stores the configuration that is currently constructed.*/
     private CombinedConfiguration constructedConfiguration;
 

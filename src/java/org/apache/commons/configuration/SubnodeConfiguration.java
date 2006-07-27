@@ -67,6 +67,11 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  */
 public class SubnodeConfiguration extends HierarchicalConfiguration
 {
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 3105734147019386480L;
+
     /** Stores the parent configuration. */
     private HierarchicalConfiguration parent;
 

@@ -61,6 +61,11 @@ public class ConfigurationKey implements Serializable
     /** Constant for the initial StringBuffer size.*/
     private static final int INITIAL_SIZE = 32;
 
+    /**
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = -4299732083605277656L;
+
     /** Holds a buffer with the so far created key.*/
     private StringBuffer keyBuffer;
 

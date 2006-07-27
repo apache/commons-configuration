@@ -106,6 +106,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /** Constant for the add nodes event.*/
     public static final int EVENT_ADD_NODES = 11;
 
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 3373812230395363192L;
+
     /** Stores the default expression engine to be used for new objects.*/
     private static ExpressionEngine defaultExpressionEngine = new DefaultExpressionEngine();
 
@@ -907,6 +912,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public static class Node extends DefaultConfigurationNode implements Serializable
     {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = -6357500633536941775L;
+
         /**
          * Creates a new instance of <code>Node</code>.
          */

@@ -54,6 +54,11 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     /** The default format for dates. */
     public static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -69011336405718640L;
+
     /** Stores the wrapped configuration.*/
     protected Configuration configuration;
 

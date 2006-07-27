@@ -28,6 +28,11 @@ import org.apache.commons.lang.exception.NestableException;
 public class ConfigurationException extends NestableException
 {
     /**
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = -1316746661346991484L;
+
+    /**
      * Constructs a new <code>ConfigurationException</code> without specified
      * detail message.
      */

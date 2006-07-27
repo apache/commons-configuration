@@ -29,6 +29,11 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public class ConfigurationRuntimeException extends NestableRuntimeException
 {
     /**
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = -7838702245512140996L;
+
+    /**
      * Constructs a new <code>ConfigurationRuntimeException</code> without
      * specified detail message.
      */

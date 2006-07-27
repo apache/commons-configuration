@@ -106,6 +106,11 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 2453781111653383552L;
+
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
@@ -718,6 +723,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     class XMLNode extends Node
     {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = -4133988932174596562L;
+
         /**
          * Creates a new instance of <code>XMLNode</code> and initializes it
          * with a name and the corresponding XML element.

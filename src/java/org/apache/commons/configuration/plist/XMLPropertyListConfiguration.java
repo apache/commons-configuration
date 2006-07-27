@@ -115,6 +115,11 @@ import org.xml.sax.InputSource;
  */
 public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = -3162063751042475985L;
+
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
 
@@ -427,6 +432,11 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     public static class PListNode extends Node
     {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = -7614060264754798317L;
+
         /** The standard format of dates in plist files. */
         private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
@@ -540,6 +550,11 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     public static class ArrayNode extends PListNode
     {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = 5586544306664205835L;
+
         /** The list of values in the array. */
         private List list = new ArrayList();
 

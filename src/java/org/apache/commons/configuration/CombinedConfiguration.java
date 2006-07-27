@@ -106,6 +106,11 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public static final int EVENT_COMBINED_INVALIDATE = 40;
 
+    /**
+     * The serial version ID.
+     */
+    private static final long serialVersionUID = 8338574525528692307L;
+
     /** Constant for the expression engine for parsing the at path. */
     private static final DefaultExpressionEngine AT_ENGINE = new DefaultExpressionEngine();
 
