@@ -1049,7 +1049,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             else if (value instanceof boolean[])
             {
                 boolean[] array = (boolean[]) value;
-                value = array.length == 0 ? null : new Boolean(array[0]);
+                value = array.length == 0 ? null : array[0] ? Boolean.TRUE : Boolean.FALSE;
             }
             else if (value instanceof byte[])
             {

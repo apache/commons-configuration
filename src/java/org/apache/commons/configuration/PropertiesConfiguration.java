@@ -338,7 +338,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * layout object will be created
      * @since 1.3
      */
-    public void setLayout(PropertiesConfigurationLayout layout)
+    public synchronized void setLayout(PropertiesConfigurationLayout layout)
     {
         this.layout = layout;
     }

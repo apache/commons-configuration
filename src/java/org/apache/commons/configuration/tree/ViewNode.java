@@ -52,9 +52,13 @@ public class ViewNode extends DefaultConfigurationNode
         if (attr != null)
         {
             parent = attr.getParentNode();
+            super.addAttribute(attr);
+            attr.setParentNode(parent);
         }
-        super.addAttribute(attr);
-        attr.setParentNode(parent);
+        else
+        {
+            throw new IllegalArgumentException("Attribute node must not be null!");
+        }
     }
 
     /**
@@ -70,9 +74,13 @@ public class ViewNode extends DefaultConfigurationNode
         if (child != null)
         {
             parent = child.getParentNode();
+            super.addChild(child);
+            child.setParentNode(parent);
         }
-        super.addChild(child);
-        child.setParentNode(parent);
+        else
+        {
+            throw new IllegalArgumentException("Child node must not be null!");
+        }
     }
 
     /**
