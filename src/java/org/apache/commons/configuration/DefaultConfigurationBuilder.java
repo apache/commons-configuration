@@ -749,8 +749,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public String getAt()
         {
-            String result = getConfiguration().getString(ATTR_AT_RES);
-            return (result == null) ? getConfiguration().getString(ATTR_AT)
+            String result = this.getConfiguration().getString(ATTR_AT_RES);
+            return (result == null) ? this.getConfiguration().getString(ATTR_AT)
                     : result;
         }
 
@@ -762,11 +762,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public boolean isOptional()
         {
-            Boolean value = getConfiguration().getBoolean(ATTR_OPTIONAL_RES,
+            Boolean value = this.getConfiguration().getBoolean(ATTR_OPTIONAL_RES,
                     null);
             if (value == null)
             {
-                value = getConfiguration().getBoolean(ATTR_OPTIONAL,
+                value = this.getConfiguration().getBoolean(ATTR_OPTIONAL,
                         Boolean.FALSE);
             }
             return value.booleanValue();

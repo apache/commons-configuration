@@ -41,7 +41,8 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * @version $Revision$, $Date$
  */
 public abstract class AbstractHierarchicalFileConfiguration
-extends HierarchicalConfiguration implements FileConfiguration
+extends HierarchicalConfiguration
+implements FileConfiguration, ConfigurationListener
 {
     /** Stores the delegate used for implementing functionality related to the
      * <code>FileConfiguration</code> interface.
@@ -317,23 +318,29 @@ extends HierarchicalConfiguration implements FileConfiguration
      */
     private void initDelegate(FileConfigurationDelegate del)
     {
-        del.addConfigurationListener(new ConfigurationListener()
+        del.addConfigurationListener(this);
+    }
+
+    /**
+     * Reacts on configuration change events triggered by the delegate. These
+     * events are passed to the registered configuration listeners.
+     *
+     * @param event the triggered event
+     * @since 1.3
+     */
+    public void configurationChanged(ConfigurationEvent event)
+    {
+        // deliver reload events to registered listeners
+        setDetailEvents(true);
+        try
         {
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                // deliver reload events to registered listeners
-                setDetailEvents(true);
-                try
-                {
-                    fireEvent(event.getType(), event.getPropertyName(), event
-                            .getPropertyValue(), event.isBeforeUpdate());
-                }
-                finally
-                {
-                    setDetailEvents(false);
-                }
-            }
-        });
+            fireEvent(event.getType(), event.getPropertyName(), event
+                    .getPropertyValue(), event.isBeforeUpdate());
+        }
+        finally
+        {
+            setDetailEvents(false);
+        }
     }
 
     /**
