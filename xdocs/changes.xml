@@ -23,6 +23,10 @@
   <body>
 
     <release version="1.3-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-217">
+        The dependency to servletapi was updated from version 2.3 to version
+        2.4, but version 2.3 will still work.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-104">
         A new class PropertiesConfigurationLayout was introduced whose task is
         to preserve the structure (e.g. comments, blanc lines) of a file
