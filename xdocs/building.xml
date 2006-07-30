@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -48,11 +48,7 @@
             The result will be in "target/docs/apidocs".
           </p>
           <p>
-            To build the full website, run "maven site". <em>Note:</em> For this
-            to work you will also have to checkout the 
-            <a href="http://svn.apache.org/repos/asf/jakarta/commons/proper/commons-build/trunk/">
-            <code>commons-build</code></a> module as a sibling directory to your
-            Configuration root directory.
+            To build the full website, run "maven site".
             The result will be in "target/docs".
           </p>
         </section>

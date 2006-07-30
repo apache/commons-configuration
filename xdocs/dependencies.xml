@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-   Copyright 2004-2005 The Apache Software Foundation
+   Copyright 2004-2006 The Apache Software Foundation
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -49,6 +49,13 @@
                         <td>ConfigurationFactory</td>
                         <td>
                             commons-digester<br/>
+                            commons-beanutils<br/>
+                            JDK 1.4 or xml-apis
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>DefaultConfigurationBuilder</td>
+                        <td>
                             commons-beanutils<br/>
                             JDK 1.4 or xml-apis
                         </td>

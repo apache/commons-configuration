@@ -45,12 +45,21 @@
         </category>
 
         <category name="Version 1.3" description="">
-            <task status="">
+            <task status="done">
                 support for XPATH queries
             </task>
-            <task status="">
+            <task status="done">
                 delimiter for comma separated values revamp
             </task>
+            <task status="done">
+                ConfigurationFactory refactoring for pluggable extensions
+            </task>
+            <task status="partly done">
+                comments and layout preservation in .properties files
+            </task>
+        </category>
+
+        <category name="Version 1.4" description="">
             <task status="">
                 INI file support
             </task>
@@ -58,24 +67,15 @@
                 enhanced interpolation support
             </task>
             <task status="">
-                ConfigurationFactory refactoring for pluggable extensions
-            </task>
-            <task status="">
-                Windows configuration (Registry wrapper)
-            </task>
-            <task status="">
-                comments and layout preservation in .properties files
-            </task>
-        </category>
-
-        <category name="Version 1.4" description="">
-            <task status="">
                 JMX integration ?
             </task>
             <task status="">
                 Preference API integration ?
             </task>
             <task status="">
+                Windows configuration (Registry wrapper)
+            </task>
+            <task status="partly done">
                 observable configurations ?
             </task>
         </category>
