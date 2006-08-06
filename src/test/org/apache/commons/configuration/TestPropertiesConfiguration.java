@@ -499,7 +499,7 @@ public class TestPropertiesConfiguration extends TestCase
         DummyLayout layout = new DummyLayout(conf);
         conf.setLayout(layout);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(),
-                "testClassPath.properties,testEqual.properties");
+                "testClasspath.properties,testEqual.properties");
         assertEquals("Layout's load() was not correctly called", 2,
                 layout.loadCalls);
         assertFalse("Property was added", conf
