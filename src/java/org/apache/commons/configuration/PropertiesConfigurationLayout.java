@@ -145,6 +145,20 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     public PropertiesConfigurationLayout(PropertiesConfiguration config)
     {
+        this(config, null);
+    }
+
+    /**
+     * Creates a new instance of <code>PropertiesConfigurationLayout</code>
+     * and initializes it with the given configuration object. The data of the
+     * specified layout object is copied.
+     *
+     * @param config the configuration (must not be <b>null</b>)
+     * @param c the layout object to be copied
+     */
+    public PropertiesConfigurationLayout(PropertiesConfiguration config,
+            PropertiesConfigurationLayout c)
+    {
         if (config == null)
         {
             throw new IllegalArgumentException(
@@ -153,6 +167,11 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         configuration = config;
         layoutData = new LinkedMap();
         config.addConfigurationListener(this);
+
+        if (c != null)
+        {
+            copyFrom(c);
+        }
     }
 
     /**
@@ -688,10 +707,26 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
+     * Copies the data from the given layout object.
+     *
+     * @param c the layout object to copy
+     */
+    private void copyFrom(PropertiesConfigurationLayout c)
+    {
+        for (Iterator it = c.getKeys().iterator(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            PropertyLayoutData data = (PropertyLayoutData) c.layoutData
+                    .get(key);
+            layoutData.put(key, data.clone());
+        }
+    }
+
+    /**
      * A helper class for storing all layout related information for a
      * configuration property.
      */
-    static class PropertyLayoutData
+    static class PropertyLayoutData implements Cloneable
     {
         /** Stores the comment for the property. */
         private StringBuffer comment;
@@ -797,6 +832,30 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         public String getComment()
         {
             return (comment == null) ? null : comment.toString();
+        }
+
+        /**
+         * Creates a copy of this object.
+         *
+         * @return the copy
+         */
+        public Object clone()
+        {
+            try
+            {
+                PropertyLayoutData copy = (PropertyLayoutData) super.clone();
+                if (comment != null)
+                {
+                    // must copy string buffer, too
+                    copy.comment = new StringBuffer(getComment());
+                }
+                return copy;
+            }
+            catch (CloneNotSupportedException cnex)
+            {
+                // This cannot happen!
+                throw new ConfigurationRuntimeException(cnex);
+            }
         }
     }
 }

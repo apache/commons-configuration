@@ -560,6 +560,42 @@ public class TestPropertiesConfigurationLayout extends TestCase
     }
 
     /**
+     * Tests the copy constructor.
+     */
+    public void testInitCopy()
+    {
+        fillLayout();
+        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(
+                config, layout);
+        assertEquals("Wrong number of keys", layout.getKeys().size(), l2
+                .getKeys().size());
+        for (Iterator it = layout.getKeys().iterator(); it.hasNext();)
+        {
+            Object key = it.next();
+            assertTrue("Key was not found: " + key, l2.getKeys().contains(key));
+        }
+    }
+
+    /**
+     * Tests if the copy and the original are independend from each other.
+     */
+    public void testInitCopyModify()
+    {
+        fillLayout();
+        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(
+                config, layout);
+        assertEquals("Comments are not equal", layout.getComment(TEST_KEY), l2
+                .getComment(TEST_KEY));
+        layout.setComment(TEST_KEY, "A new comment");
+        assertEquals("Comment was changed", TEST_COMMENT, l2
+                .getCanonicalComment(TEST_KEY, false));
+        l2.setBlancLinesBefore(TEST_KEY, l2.getBlancLinesBefore(TEST_KEY) + 1);
+        assertFalse("Blanc lines do not differ", layout
+                .getBlancLinesBefore(TEST_KEY) == l2
+                .getBlancLinesBefore(TEST_KEY));
+    }
+
+    /**
      * Helper method for filling the layout object with some properties.
      */
     private void fillLayout()

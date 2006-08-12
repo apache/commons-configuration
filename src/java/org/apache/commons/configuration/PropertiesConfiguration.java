@@ -413,6 +413,21 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
+     * Creates a copy of this object.
+     *
+     * @return the copy
+     */
+    public Object clone()
+    {
+        PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
+        if (layout != null)
+        {
+            copy.setLayout(new PropertiesConfigurationLayout(copy, layout));
+        }
+        return copy;
+    }
+
+    /**
      * This method is invoked by the associated
      * <code>{@link PropertiesConfigurationLayout}</code> object for each
      * property definition detected in the parsed properties file. Its task is

@@ -541,6 +541,42 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a properties configuration can be successfully cloned. It
+     * is especially checked whether the layout object is taken into account.
+     */
+    public void testClone() throws ConfigurationException
+    {
+        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
+        assertNotSame("Copy has same layout object", conf.getLayout(), copy
+                .getLayout());
+        assertEquals("Wrong number of event listeners for original", 1, conf
+                .getConfigurationListeners().size());
+        assertEquals("Wrong number of event listeners for clone", 1, copy
+                .getConfigurationListeners().size());
+        assertSame("Wrong event listener for original", conf.getLayout(), conf
+                .getConfigurationListeners().iterator().next());
+        assertSame("Wrong event listener for clone", copy.getLayout(), copy
+                .getConfigurationListeners().iterator().next());
+        StringWriter outConf = new StringWriter();
+        conf.save(outConf);
+        StringWriter outCopy = new StringWriter();
+        copy.save(outCopy);
+        assertEquals("Output from copy is different", outConf.toString(),
+                outCopy.toString());
+    }
+
+    /**
+     * Tests the clone() method when no layout object exists yet.
+     */
+    public void testCloneNullLayout()
+    {
+        conf = new PropertiesConfiguration();
+        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
+        assertNotSame("Layout objects are the same", conf.getLayout(), copy
+                .getLayout());
+    }
+
+    /**
      * A dummy layout implementation for checking whether certain methods are
      * correctly called by the configuration.
      */

@@ -22,7 +22,13 @@
 
   <body>
 
-    <release version="1.3-SNAPSHOT" date="in SVN">
+    <release version="1.3-rc2" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-219">
+        PropertiesConfiguration now defines its own clone() method to handle
+        the associated PropertiesConfigurationLayout object correctly.
+      </action>
+    </release>
+    <release version="1.3-rc1" date="2006-07-30">
       <action dev="oheger" type="update" issue="CONFIGURATION-217">
         The dependency to servletapi was updated from version 2.3 to version
         2.4, but version 2.3 will still work.
