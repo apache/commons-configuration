@@ -1320,6 +1320,20 @@ public class TestDataConfiguration extends TestCase
         ArrayAssert.assertEquals(new Date[] { }, conf.getDateArray("empty"));
     }
 
+    public void testGetDateArrayWithFormat() throws Exception
+    {
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        Date date1 = format.parse("01/01/2004");
+        Date date2 = format.parse("12/31/2004");
+        Date[] expected = new Date[]
+        { date1, date2 };
+
+        conf.addProperty("date.format", "01/01/2004");
+        conf.addProperty("date.format", "12/31/2004");
+        ArrayAssert.assertEquals("Wrong dates with format", expected, conf
+                .getDateArray("date.format", "MM/dd/yyyy"));
+    }
+
     public void testGetDateList() throws Exception
     {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");

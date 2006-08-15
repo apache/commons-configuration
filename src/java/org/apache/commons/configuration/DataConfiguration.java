@@ -1825,7 +1825,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date[] getDateArray(String key, Date[] defaultValue, String format)
     {
-        List list = getDateList(key);
+        List list = getDateList(key, format);
         if (list.isEmpty())
         {
             return defaultValue;

@@ -25,6 +25,8 @@ A complete list of changes can be found below.
 CHANGES
 =======
 
+- DataConfiguration.getDateArray() used to ignore the format argument.
+  This was fixed. Fixes CONFIGURATION-220.
 - The dependency to servletapi was updated from version 2.3 to version 2.4, but
   version 2.3 will still work. Fixes CONFIGURATION-217.
 - A new class PropertiesConfigurationLayout was introduced whose task is to
