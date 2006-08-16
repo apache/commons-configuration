@@ -26,7 +26,14 @@
 
         <section name="Runtime dependencies">
 
-            <p>The following is the list of dependencies required to run each feature of Commons Configuration:</p>
+            <p>
+              In the maven POM a lot of dependencies are declared. These are all
+              needed during compile time. On runtime however you only need to
+              add the dependencies to your classpath that are required by the
+              parts of the Commons Configuration package you are using. The
+              following table helps you to determine which dependencies you
+              have to include based on the components you intend to use:
+            </p>
 
             <table>
                 <thead>
@@ -57,7 +64,7 @@
                         <td>DefaultConfigurationBuilder</td>
                         <td>
                             commons-beanutils<br/>
-                            JDK 1.4 or xml-apis
+                            JDK 1.4 or (xml-apis + xerces + xalan)
                         </td>
                     </tr>
                     <tr>
@@ -91,11 +98,78 @@
                     </tr>
                     <tr>
                         <td>XPathExpressionEngine</td>
-                        <td>commons-jxpath 1.2</td>
+                        <td>commons-jxpath</td>
                     </tr>
                 </tbody>
             </table>
 
+            <p>
+              <strong>Notes</strong>
+            </p>
+            <p>
+              <ul>
+                <li>Commons Configuration makes use of a couple of other
+                Commons components. You should be able to use the current
+                versions of these components together with Commons Configuration.
+                In some cases, when no specific features are used, older
+                versions will work, too. Below is a table with the version
+                numbers that have been tested:
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Component</th>
+                      <th>Version</th>
+                    </tr>                    
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>commons-lang</td>
+                      <td>2.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-collections</td>
+                      <td>3.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-logging</td>
+                      <td>1.0.4</td>
+                    </tr>
+                    <tr>
+                      <td>commons-digester</td>
+                      <td>1.6</td>
+                    </tr>
+                    <tr>
+                      <td>commons-beanutils</td>
+                      <td>1.7.0</td>
+                    </tr>
+                    <tr>
+                      <td>commons-codec</td>
+                      <td>1.3</td>
+                    </tr>
+                    <tr>
+                      <td>commons-jxpath</td>
+                      <td>1.2</td>
+                    </tr>
+                  </tbody>
+                </table>
+                </li>
+                <li>
+                  In JDK versions before 1.4 XML support is not integrated. To
+                  make use of components that require XML processing you need
+                  to add a suitable replacement. We used 
+                  <a href="http://xml.apache.org/xerces2-j/">Xerces 2.2.1</a>,
+                  <a href="http://xml.apache.org/xalan-j/">Xalan 2.7.0</a>, and
+                  <a href="http://xml.apache.org/commons/">XML APIs 2.0.2</a>.
+                  Version 2.7.0 of Xalan seems to cause some problems in a few
+                  of our JUnit tests (a <code>java.lang.NoSuchMethodError</code>
+                  is thrown when a SAX data source is to be transformed into a
+                  DOM result). With version 2.6.0 these problems do not occur.
+                  In both cases the error happened only in test code; the actual
+                  code was not affected. But if you face a similar problem with
+                  Xalan 2.7.0 it is worth trying the older version.
+                </li>
+              </ul>
+            </p>
         </section>
 
     </body>
