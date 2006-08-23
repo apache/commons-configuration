@@ -65,7 +65,7 @@ implements FileConfiguration, ConfigurationListener
     {
         this();
         // store the file name
-        delegate.setPath(fileName);
+        delegate.setFileName(fileName);
 
         // load the file
         load();

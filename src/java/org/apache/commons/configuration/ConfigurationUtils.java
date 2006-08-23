@@ -486,31 +486,32 @@ public final class ConfigurationUtils
             }
         }
 
-        String resourceName = null;
+        // attempt to load from classpath
         if (url == null)
         {
-            if (base != null)
-            {
-                resourceName = base + RESOURCE_PATH_SEPARATOR + name;
-            }
-            else
-            {
-                resourceName = name;
-            }
+            url = locateFromClasspath(name);
         }
+        return url;
+    }
 
+    /**
+     * Tries to find a resource with the given name in the classpath.
+     * @param resourceName the name of the resource
+     * @return the URL to the found resource or <b>null</b> if the resource
+     * cannot be found
+     */
+    static URL locateFromClasspath(String resourceName)
+    {
+        URL url = null;
         // attempt to load from the context classpath
-        if (url == null)
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        if (loader != null)
         {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
-            if (loader != null)
-            {
-                url = loader.getResource(resourceName);
+            url = loader.getResource(resourceName);
 
-                if (url != null)
-                {
-                    log.debug("Configuration loaded from the context classpath (" + resourceName + ")");
-                }
+            if (url != null)
+            {
+                log.debug("Configuration loaded from the context classpath (" + resourceName + ")");
             }
         }
 
@@ -524,7 +525,6 @@ public final class ConfigurationUtils
                 log.debug("Configuration loaded from the system classpath (" + resourceName + ")");
             }
         }
-
         return url;
     }
 

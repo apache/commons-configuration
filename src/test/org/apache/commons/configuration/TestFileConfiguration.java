@@ -492,6 +492,20 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
+     * Tests the loading of configuration file in a Combined configuration 
+     * when the configuration source is in the classpath.
+     */
+    public void testLoadFromClassPath() throws ConfigurationException
+    {
+        DefaultConfigurationBuilder cf = 
+            new DefaultConfigurationBuilder("conf/config/deep/testFileFromClasspath.xml");
+        CombinedConfiguration config = cf.getConfiguration(true);
+        Configuration config1 = config.getConfiguration("propConf");
+        Configuration config2 = config.getConfiguration("propConfDeep");
+        compare(config1, config2);
+    }
+
+    /**
      * Tests cloning a file based configuration.
      */
     public void testClone() throws ConfigurationException

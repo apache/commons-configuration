@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties config-name="propConf" fileName="testEqual.properties"/>
+  <properties config-name="propConfDeep" fileName="testEqualDeep.properties"/>
+</configuration>
+

@@ -26,6 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 
@@ -523,8 +524,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Set the name of the file. The passed in file name should not contain a
-     * path. Use <code>{@link AbstractFileConfiguration#setPath(String)
+     * Set the name of the file. The passed in file name can contain a
+     * relative path. 
+     * It must be used when referring files with relative paths from classpath.
+     * Use <code>{@link AbstractFileConfiguration#setPath(String)
      * setPath()}</code> to set a full qualified file name.
      *
      * @param fileName the name of the file
@@ -559,7 +562,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Return the file where the configuration is stored. If the base path is a
-     * URL with a protocol different than &quot;file&quot;, the return value
+     * URL with a protocol different than &quot;file&quot;, or the configuration 
+     * file is within a compressed archive, the return value
      * will not point to a valid file object.
      *
      * @return the file where the configuration is stored; this can be <b>null</b>
@@ -600,19 +604,51 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Returns the full path to the file this configuration is based on. The
-     * return value is valid only if this configuration is based on a file on
-     * the local disk.
+     * return value is a valid File path only if this configuration is based on 
+     * a file on the local disk.
+     * If the configuration was loaded from a packed archive the returned value
+     * is the string form of the URL from which the configuration was loaded.
      *
      * @return the full path to the configuration file
      */
     public String getPath()
     {
-        return getFile().getAbsolutePath();
+        String path = null;
+        File file = getFile();
+        // if resource was loaded from jar file may be null
+        if (file != null)
+        {
+            path = file.getAbsolutePath();
+        }
+        
+        // try to see if file was loaded from a jar
+        if (path == null)
+        {
+            if (sourceURL != null)
+            {
+                path = sourceURL.getPath();
+            }
+            else
+            {
+                try {
+                    path = ConfigurationUtils.getURL(getBasePath(),
+                            getFileName()).getPath();
+                } catch (MalformedURLException e) {
+                    // simply ignore it and return null
+                }
+            }
+        }
+
+        return path;
     }
 
     /**
-     * Sets the location of this configuration as a full path name. The passed
-     * in path should represent a valid file name.
+     * Sets the location of this configuration as a full or relative path name. 
+     * The passed in path should represent a valid file name on the file system.
+     * It must not be used to specify relative paths for files that exist 
+     * in classpath, either plain file system or compressed archive, 
+     * because this method expands any relative path to an absolute one which
+     * may end in an invalid absolute path for classpath references.
      *
      * @param path the full path name of the configuration file
      */

@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.3-rc2" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-216" due-to="Gabriele Garuglieri">
+        There were still some problems with resolving relative paths when
+        configuration files are loaded from classpath. This fix addresses these
+        issues.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-220">
         DataConfiguration.getDateArray() used to ignore the format argument.
         This was fixed.
