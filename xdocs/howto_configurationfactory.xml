@@ -519,6 +519,41 @@ String backColor = config.getString("color.background");
           address by attributes.
         </p>
     </subsection>
+    
+    <subsection name="Referencing system properties">
+        <p>
+          Often the configuration definition files are contained in a 
+          distribution unit like a war file that should not be manipulated after
+          packaging. The path names these files refer to need some way of making
+          them externally customizable so that the packaging unit can be adoped
+          to a special environment without repackaging. One way to achieve this
+          is to allow system properties in the file names.
+        </p>
+        <p>
+          <code>ConfigurationFactory</code> supports a simple way of adding
+          references to system properties to the configuration definition
+          files. Below is an example that demonstrates this feature:
+        </p>
+		<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- A test configuration file for loading a file specified by a
+     system property.
+-->
+<configuration>
+  <properties fileName="${config.file}"/>
+</configuration>]]></source>
+        <p>
+          In this configuration definition file the name of the properties
+          file to be loaded is specified by means of a variable (which is
+          marked using the typical ${} syntax). When this file is parsed the
+          name of the variable is looked up in the set of defined system
+          properties. So to set a concrete file name for the properties file
+          the <code>config.file</code> system property must be defined (e.g.
+          by calling <code>System.setProperty("config.file", "myfile.properties");</code>
+          or using the <code>-D</code> command line switch when starting your
+          Java application).
+        </p>
+    </subsection>
     </section>
 </body>
 

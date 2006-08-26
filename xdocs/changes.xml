@@ -23,6 +23,11 @@
   <body>
 
     <release version="1.3-rc2" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-221" due-to="Rainer Jung">
+        ConfigurationFactory now supports variables in its configuration
+        definition files. These variables are resolved using system properties
+        and have the typical ${} syntax.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-216" due-to="Gabriele Garuglieri">
         There were still some problems with resolving relative paths when
         configuration files are loaded from classpath. This fix addresses these

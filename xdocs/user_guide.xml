@@ -114,6 +114,7 @@
       <li><a href="howto_configurationfactory.html#Configuration definition file reference">Configuration definition file reference</a></li>
       <ul>
         <li><a href="howto_configurationfactory.html#Setting further options">Setting further options</a></li>
+        <li><a href="howto_configurationfactory.html#Referencing_system_properties">Referencing system properties</a></li>
       </ul>
       <li><a href="howto_configurationbuilder.html#Using DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
       <ul>

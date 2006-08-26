@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- A test configuration file for loading a file specified by a
+     system property.
+-->
+<configuration>
+  <properties fileName="${config.file}"/>
+</configuration>

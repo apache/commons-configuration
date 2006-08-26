@@ -23,12 +23,16 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreationFactory;
+import org.apache.commons.digester.Substitutor;
+import org.apache.commons.digester.substitution.MultiVariableExpander;
+import org.apache.commons.digester.substitution.VariableSubstitutor;
 import org.apache.commons.digester.xmlrules.DigesterLoader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -156,6 +160,8 @@ public class ConfigurationFactory
 
         // Configure digester to always enable the context class loader
         digester.setUseContextClassLoader(true);
+        // Add a substitutor to resolve system properties
+        enableDigesterSubstitutor(digester);
         // Put the composite builder object below all of the other objects.
         digester.push(builder);
         // Parse the input stream to configure our mappings
@@ -242,12 +248,27 @@ public class ConfigurationFactory
     }
 
     /**
+     * Adds a substitutor to interpolate system properties
+     *
+     * @param digester The digester to which we add the substitutor
+     */
+    protected void enableDigesterSubstitutor(Digester digester)
+    {
+        Map systemProperties = System.getProperties();
+        MultiVariableExpander expander = new MultiVariableExpander();
+        expander.addSource("$", systemProperties);
+
+        // allow expansion in both xml attributes and element text
+        Substitutor substitutor = new VariableSubstitutor(expander);
+        digester.setSubstitutor(substitutor);
+    }
+
+    /**
      * Initializes the parsing rules for the default digester
      *
-     * This allows the Configuration Factory to understand the
-     * default types: Properties, XML and JNDI. Two special sections are
-     * introduced: <code>&lt;override&gt;</code> and
-     * <code>&lt;additional&gt;</code>.
+     * This allows the Configuration Factory to understand the default types:
+     * Properties, XML and JNDI. Two special sections are introduced:
+     * <code>&lt;override&gt;</code> and <code>&lt;additional&gt;</code>.
      *
      * @param digester The digester to configure
      */

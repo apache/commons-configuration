@@ -25,6 +25,10 @@ A complete list of changes can be found below.
 CHANGES
 =======
 
+- ConfigurationFactory now supports variables in its configuration
+  definition files. These variables are resolved using system properties
+  and have the typical ${} syntax. Fixes CONFIGURATION-221.
+  Thanks to Rainer Jung.
 - DataConfiguration.getDateArray() used to ignore the format argument.
   This was fixed. Fixes CONFIGURATION-220.
 - The dependency to servletapi was updated from version 2.3 to version 2.4, but
@@ -42,7 +46,7 @@ CHANGES
   Fixes CONFIGURATION-145.
 - If a configuration file was to be loaded from classpath, the constructor of
   AbstractFileConfiguration dropped the file's path. The path is now taken into
-  account. Fixes CONFIGURATION-216.
+  account. Fixes CONFIGURATION-216. Thanks to Gabriele Garuglieri.
 - The getter methods for numeric data types in AbstractConfiguration now support
   conversions between different Number types, e.g. you can now call getLong(key)
   when key points to an Integer value. Fixes CONFIGURATION-214.

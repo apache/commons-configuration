@@ -1,5 +1,5 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
+ * Copyright 2001-2006 The Apache Software Foundation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,13 @@ public class TestConfigurationFactory extends TestCase
             new File("conf/testDigesterOptionalConfiguration.xml");
     private File testDigesterFileOptionalEx =
             new File("conf/testDigesterOptionalConfigurationEx.xml");
+    private File testDigesterFileSysProps =
+            new File("conf/testDigesterConfigurationSysProps.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
     private String testBasePath = new File("conf").getAbsolutePath();
-    
+
     private File testProperties = new File("conf/test.properties");
     private File testAbsConfig = new File("target/testAbsConfig.xml");
 
@@ -165,7 +167,7 @@ public class TestConfigurationFactory extends TestCase
     {
         factory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
-        
+
         factory = new ConfigurationFactory();
         File nonExistingFile = new File("conf/nonexisting.xml");
         factory.setConfigurationURL(nonExistingFile.toURL());
@@ -224,7 +226,7 @@ public class TestConfigurationFactory extends TestCase
         assertNotNull(config.getProperty("java.version"));
         assertEquals(System.getProperty("java.version"), config.getString("java.version"));
     }
-    
+
     // Checks if optional configurations work
     public void testOptionalConfigurations() throws Exception
     {
@@ -232,7 +234,7 @@ public class TestConfigurationFactory extends TestCase
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
-        
+
         factory.setConfigurationURL(testDigesterFileOptionalEx.toURL());
         try
         {
@@ -244,7 +246,7 @@ public class TestConfigurationFactory extends TestCase
             // fine
         }
     }
-    
+
     // Checks if a file with an absolute path can be loaded
     public void testLoadAbsolutePath() throws Exception
     {
@@ -281,7 +283,7 @@ public class TestConfigurationFactory extends TestCase
             }
         }
     }
-    
+
     public void testBasePath() throws Exception
     {
         assertEquals(".", factory.getBasePath());
@@ -297,16 +299,28 @@ public class TestConfigurationFactory extends TestCase
         factory.setConfigurationFileName(testDigesterFile.getAbsolutePath());
         // if a base path was set, the file name does not play a role
         assertEquals(homeDir, factory.getBasePath());
-        
+
         factory = new ConfigurationFactory(testDigesterFile.getAbsolutePath());
         assertEquals(testDigesterFile.getParentFile().getAbsolutePath(),
                 factory.getBasePath());
         factory.setBasePath(homeDir);
         assertEquals(homeDir, factory.getBasePath());
-        
+
         factory = new ConfigurationFactory();
         factory.setConfigurationURL(testDigesterFile.toURL());
         assertEquals(testDigesterFile.toURL().toString(), factory.getBasePath());
+    }
+
+    // Tests if system properties can be resolved in the configuration
+    // definition
+    public void testLoadingWithSystemProperties() throws ConfigurationException
+    {
+        System.setProperty("config.file", "test.properties");
+        factory.setConfigurationFileName(testDigesterFileSysProps
+                .getAbsolutePath());
+        Configuration config = factory.getConfiguration();
+        assertTrue("Configuration not loaded", config
+                .getBoolean("configuration.loaded"));
     }
 
     private void checkUnionConfig() throws Exception
