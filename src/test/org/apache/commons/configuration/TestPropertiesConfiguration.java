@@ -158,6 +158,45 @@ public class TestPropertiesConfiguration extends TestCase
         checkConfig.save();
     }
 
+    public void testInMemoryCreatedSave() throws Exception
+    {
+        // remove the file previously saved if necessary
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue(testSavePropertiesFile.delete());
+        }
+
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        // add an array of strings to the configuration
+        pc.addProperty("string", "value1");
+        List list = new ArrayList();
+        for (int i = 1; i < 5; i++)
+        {
+            list.add("value" + i);
+        }
+        pc.addProperty("array", list);
+
+        // save the configuration
+        String filename = testSavePropertiesFile.getAbsolutePath();
+        pc.save(filename);
+
+        assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
+
+        // read the configuration and compare the properties
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
+        for (Iterator i = pc.getKeys(); i.hasNext();)
+        {
+            String key = (String) i.next();
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'",
+                    checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", 
+                    pc.getProperty(key), checkConfig.getProperty(key));
+        }
+
+        // Save it again, verifing a save with a filename works.
+        checkConfig.save();
+    }
+
     public void testSaveMissingFilename()
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();

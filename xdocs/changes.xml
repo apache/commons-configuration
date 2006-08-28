@@ -23,6 +23,13 @@
   <body>
 
     <release version="1.3-rc2" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-222" due-to="Gabriele Garuglieri">
+        The new PropertiesConfigurationLayout class broke the save() operation
+        of PropertiesConfiguration when an instance was newly created and
+        populated in memory. This is fixed now by ensuring that a layout object
+        is immediately created and registered as event listener at the
+        configuration.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-221" due-to="Rainer Jung">
         ConfigurationFactory now supports variables in its configuration
         definition files. These variables are resolved using system properties

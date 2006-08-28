@@ -208,6 +208,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public PropertiesConfiguration()
     {
+        layout = createLayout();
         setIncludesAllowed(false);
     }
 
@@ -340,7 +341,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public synchronized void setLayout(PropertiesConfigurationLayout layout)
     {
-        this.layout = layout;
+        // only one layout must exist
+        if (this.layout != null)
+        {
+            removeConfigurationListener(this.layout);
+        }
+
+        if (layout == null)
+        {
+            this.layout = createLayout();
+        }
+        else
+        {
+            this.layout = layout;
+        }
     }
 
     /**
