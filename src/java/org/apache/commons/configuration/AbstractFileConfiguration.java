@@ -525,7 +525,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Set the name of the file. The passed in file name can contain a
-     * relative path. 
+     * relative path.
      * It must be used when referring files with relative paths from classpath.
      * Use <code>{@link AbstractFileConfiguration#setPath(String)
      * setPath()}</code> to set a full qualified file name.
@@ -562,7 +562,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Return the file where the configuration is stored. If the base path is a
-     * URL with a protocol different than &quot;file&quot;, or the configuration 
+     * URL with a protocol different than &quot;file&quot;, or the configuration
      * file is within a compressed archive, the return value
      * will not point to a valid file object.
      *
@@ -604,7 +604,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /**
      * Returns the full path to the file this configuration is based on. The
-     * return value is a valid File path only if this configuration is based on 
+     * return value is a valid File path only if this configuration is based on
      * a file on the local disk.
      * If the configuration was loaded from a packed archive the returned value
      * is the string form of the URL from which the configuration was loaded.
@@ -620,7 +620,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             path = file.getAbsolutePath();
         }
-        
+
         // try to see if file was loaded from a jar
         if (path == null)
         {
@@ -643,10 +643,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Sets the location of this configuration as a full or relative path name. 
+     * Sets the location of this configuration as a full or relative path name.
      * The passed in path should represent a valid file name on the file system.
-     * It must not be used to specify relative paths for files that exist 
-     * in classpath, either plain file system or compressed archive, 
+     * It must not be used to specify relative paths for files that exist
+     * in classpath, either plain file system or compressed archive,
      * because this method expands any relative path to an absolute one which
      * may end in an invalid absolute path for classpath references.
      *
@@ -712,9 +712,30 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
     }
 
-    protected void addPropertyDirect(String key, Object obj)
+    /**
+     * Adds a new property to this configuration. This implementation checks if
+     * the auto save mode is enabled and saves the configuration if necessary.
+     *
+     * @param key the key of the new property
+     * @param value the value
+     */
+    public void addProperty(String key, Object value)
     {
-        super.addPropertyDirect(key, obj);
+        super.addProperty(key, value);
+        possiblySave();
+    }
+
+    /**
+     * Sets a new value for the specified property. This implementation checks
+     * if the auto save mode is enabled and saves the configuration if
+     * necessary.
+     *
+     * @param key the key of the affected property
+     * @param value the value
+     */
+    public void setProperty(String key, Object value)
+    {
+        super.setProperty(key, value);
         possiblySave();
     }
 

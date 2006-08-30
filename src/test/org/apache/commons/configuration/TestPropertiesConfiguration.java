@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
@@ -189,7 +190,7 @@ public class TestPropertiesConfiguration extends TestCase
             String key = (String) i.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'",
                     checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", 
+            assertEquals("Value of the '" + key + "' property",
                     pc.getProperty(key), checkConfig.getProperty(key));
         }
 
@@ -292,6 +293,62 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testLoadWithAutoSave() throws Exception
     {
+        setUpSavedProperties();
+    }
+
+    /**
+     * Tests the auto save functionality when an existing property is modified.
+     */
+    public void testLoadWithAutoSaveAndSetExisting() throws Exception
+    {
+        setUpSavedProperties();
+        conf.setProperty("a", "moreThanOne");
+        checkSavedConfig();
+    }
+
+    /**
+     * Tests the auto save functionality when a new property is added using the
+     * setProperty() method.
+     */
+    public void testLoadWithAutoSaveAndSetNew() throws Exception
+    {
+        setUpSavedProperties();
+        conf.setProperty("d", "four");
+        checkSavedConfig();
+    }
+
+    /**
+     * Tests the auto save functionality when a new property is added using the
+     * addProperty() method.
+     */
+    public void testLoadWithAutoSaveAndAdd() throws Exception
+    {
+        setUpSavedProperties();
+        conf.addProperty("d", "four");
+        checkSavedConfig();
+    }
+
+    /**
+     * Tests the auto save functionality when a property is removed.
+     */
+    public void testLoadWithAutoSaveAndClear() throws Exception
+    {
+        setUpSavedProperties();
+        conf.clearProperty("c");
+        PropertiesConfiguration checkConfig = checkSavedConfig();
+        assertFalse("The saved configuration contain the key '" + "c" + "'",
+                checkConfig.containsKey("c"));
+    }
+
+    /**
+     * Creates a properties file on disk. Used for testing load and save
+     * operations.
+     *
+     * @throws IOException if an I/O error occurs
+     */
+    private void setUpSavedProperties() throws IOException,
+            ConfigurationException
+    {
         PrintWriter out = null;
 
         try
@@ -313,11 +370,34 @@ public class TestPropertiesConfiguration extends TestCase
         }
         finally
         {
-            if(out != null)
+            if (out != null)
             {
                 out.close();
             }
         }
+    }
+
+    /**
+     * Helper method for testing a saved configuration. Reads in the file using
+     * a new instance and compares this instance with the original one.
+     *
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    private PropertiesConfiguration checkSavedConfig()
+            throws ConfigurationException
+    {
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        for (Iterator i = conf.getKeys(); i.hasNext();)
+        {
+            String key = (String) i.next();
+            assertTrue("The saved configuration doesn't contain the key '"
+                    + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", conf
+                    .getProperty(key), checkConfig.getProperty(key));
+        }
+        return checkConfig;
     }
 
     public void testGetStringWithEscapedChars()

@@ -23,6 +23,14 @@
   <body>
 
     <release version="1.3-rc2" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-223" due-to="Gabriele Garuglieri">
+        AbstractFileConfiguration now overrides addProperty() and setProperty()
+        instead of addPropertyDirect() to implement the auto save feature.
+        This was necessary to properly integrate PropertiesConfigurationLayout.
+        It has also the advantage that an auto save is triggered only once if
+        multi-valued properties are involved (before a save operation was
+        performed for each property value).
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-222" due-to="Gabriele Garuglieri">
         The new PropertiesConfigurationLayout class broke the save() operation
         of PropertiesConfiguration when an instance was newly created and
