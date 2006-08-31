@@ -200,6 +200,12 @@
       <organization></organization>
     </contributor>
 
+    <contributor>
+      <name>Gabriele Garuglieri</name>
+      <email>gabriele.garuglieri@infoblu.it</email>
+      <organization>Infoblu S.p.A</organization>
+    </contributor>
+
   </contributors>
 
   <dependencies>
