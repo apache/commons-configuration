@@ -44,90 +44,90 @@
 
 	<section name="Table of contents">
     <ul>
-      <li><a href="overview.html#Using Configuration">Using Configuration</a></li>
+      <li><a href="overview.html#Using_Configuration">Using Configuration</a></li>
       <ul>
-        <li><a href="overview.html#Configuration Sources">Configuration Sources</a></li>
-        <li><a href="overview.html#Mixing Configuration Sources">Mixing Configuration Sources</a></li>
-        <li><a href="overview.html#The Configuration interface">The Configuration interface</a></li>
+        <li><a href="overview.html#Configuration_Sources">Configuration Sources</a></li>
+        <li><a href="overview.html#Mixing_Configuration_Sources">Mixing Configuration Sources</a></li>
+        <li><a href="overview.html#The_Configuration_interface">The Configuration interface</a></li>
       </ul>
-      <li><a href="howto_properties.html#Properties files">Properties files</a></li>
+      <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>
-        <li><a href="howto_properties.html#Using PropertiesConfiguration">Using PropertiesConfiguration</a></li>
+        <li><a href="howto_properties.html#Using_PropertiesConfiguration">Using PropertiesConfiguration</a></li>
         <li><a href="howto_properties.html#Includes">Includes</a></li>
-        <li><a href="howto_properties.html#Lists and arrays">Lists and arrays</a></li>
-        <li><a href="howto_properties.html#Variable Interpolation">Variable Interpolation</a></li>
+        <li><a href="howto_properties.html#Lists_and_arrays">Lists and arrays</a></li>
+        <li><a href="howto_properties.html#Variable_Interpolation">Variable Interpolation</a></li>
         <li><a href="howto_properties.html#Saving">Saving</a></li>
-        <li><a href="howto_properties.html#Special Characters">Special Characters</a></li>
-        <li><a href="howto_properties.html#Layout Objects">Layout Objects</a></li>
+        <li><a href="howto_properties.html#Special_Characters">Special Characters</a></li>
+        <li><a href="howto_properties.html#Layout_Objects">Layout Objects</a></li>
       </ul>
-      <li><a href="howto_filebased.html#File-based Configurations">File-based Configurations</a></li>
+      <li><a href="howto_filebased.html#File-based_Configurations">File-based Configurations</a></li>
       <ul>
-        <li><a href="howto_filebased.html#Specifying the file">Specifying the file</a></li>
+        <li><a href="howto_filebased.html#Specifying_the_file">Specifying the file</a></li>
         <li><a href="howto_filebased.html#Loading">Loading</a></li>
         <li><a href="howto_filebased.html#Saving">Saving</a></li>
-        <li><a href="howto_filebased.html#Automatic Saving">Automatic Saving</a></li>
-        <li><a href="howto_filebased.html#Automatic Reloading">Automatic Reloading</a></li>
+        <li><a href="howto_filebased.html#Automatic_Saving">Automatic Saving</a></li>
+        <li><a href="howto_filebased.html#Automatic_Reloading">Automatic Reloading</a></li>
       </ul>
-      <li><a href="howto_xml.html#Hierarchical properties">Hierarchical properties</a></li>
+      <li><a href="howto_xml.html#Hierarchical_properties">Hierarchical properties</a></li>
       <ul>
-        <li><a href="howto_xml.html#Accessing properties defined in XML documents">Accessing properties defined in XML documents</a></li>
-        <li><a href="howto_xml.html#Structured XML">Structured XML</a></li>
-        <li><a href="howto_xml.html#Accessing structured properties">Accessing structured properties</a></li>
-        <li><a href="howto_xml.html#Adding new properties">Adding new properties</a></li>
-        <li><a href="howto_xml.html#Escaping dot characters in XML tags">Escaping dot characters in XML tags</a></li>
+        <li><a href="howto_xml.html#Accessing_properties_defined_in_XML_documents">Accessing properties defined in XML documents</a></li>
+        <li><a href="howto_xml.html#Structured_XML">Structured XML</a></li>
+        <li><a href="howto_xml.html#Accessing_structured_properties">Accessing structured properties</a></li>
+        <li><a href="howto_xml.html#Adding_new_properties">Adding new properties</a></li>
+        <li><a href="howto_xml.html#Escaping_dot_characters_in_XML_tags">Escaping dot characters in XML tags</a></li>
       </ul>
-      <li><a href="howto_xml.html#Expression engines">Expression engines</a></li>
+      <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
       <ul>
-        <li><a href="howto_xml.html#The default expression engine">The default expression engine</a></li>
-        <li><a href="howto_xml.html#The XPATH expression engine">The XPATH expression engine</a></li>
+        <li><a href="howto_xml.html#The_default_expression_engine">The default expression engine</a></li>
+        <li><a href="howto_xml.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
       </ul>
-      <li><a href="howto_xml.html#Validation of XML configuration files">Validation of XML configuration files</a></li>
-      <li><a href="howto_compositeconfiguration.html#Composite Configuration Details">Composite Configuration Details</a></li>
+      <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
+      <li><a href="howto_compositeconfiguration.html#Composite_Configuration_Details">Composite Configuration Details</a></li>
       <ul>
-        <li><a href="howto_compositeconfiguration.html#Setting Up Defaults">Setting Up Defaults</a></li>
-        <li><a href="howto_compositeconfiguration.html#Saving Changes">Saving Changes</a></li>
+        <li><a href="howto_compositeconfiguration.html#Setting_Up_Defaults">Setting Up Defaults</a></li>
+        <li><a href="howto_compositeconfiguration.html#Saving_Changes">Saving Changes</a></li>
       </ul>
-      <li><a href="howto_combinedconfiguration.html#Combined Configuration">Combined Configuration</a></li>
+      <li><a href="howto_combinedconfiguration.html#Combined_Configuration">Combined Configuration</a></li>
       <ul>
-        <li><a href="howto_combinedconfiguration.html#How it works">How it works</a></li>
-        <li><a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a></li>
-        <li><a href="howto_combinedconfiguration.html#Constructing a CombinedConfiguration">Constructing a CombinedConfiguration</a></li>
-        <li><a href="howto_combinedconfiguration.html#Dealing with changes">Dealing with changes</a></li>
+        <li><a href="howto_combinedconfiguration.html#How_it_works">How it works</a></li>
+        <li><a href="howto_combinedconfiguration.html#Node_combiners">Node combiners</a></li>
+        <li><a href="howto_combinedconfiguration.html#Constructing_a_CombinedConfiguration">Constructing a CombinedConfiguration</a></li>
+        <li><a href="howto_combinedconfiguration.html#Dealing_with_changes">Dealing with changes</a></li>
       </ul>
-      <li><a href="howto_beans.html#Declaring and Creating Beans">Declaring and Creating Beans</a></li>
+      <li><a href="howto_beans.html#Declaring_and_Creating_Beans">Declaring and Creating Beans</a></li>
       <ul>
-        <li><a href="howto_beans.html#Basic Concepts">Basic Concepts</a></li>
-        <li><a href="howto_beans.html#An Example">An Example</a></li>
-        <li><a href="howto_beans.html#Extending the Basic Mechanism">Extending the Basic Mechanism</a></li>
+        <li><a href="howto_beans.html#Basic_Concepts">Basic Concepts</a></li>
+        <li><a href="howto_beans.html#An_Example">An Example</a></li>
+        <li><a href="howto_beans.html#Extending_the_Basic_Mechanism">Extending the Basic Mechanism</a></li>
       </ul>
-      <li><a href="howto_configurationfactory.html#Using a Configuration Factory">Using a Configuration Factory</a></li>
+      <li><a href="howto_configurationfactory.html#Using_a_Configuration_Factory">Using a Configuration Factory</a></li>
       <ul>
-        <li><a href="howto_configurationfactory.html#The configuration definition file">The configuration definition file</a></li>
-        <li><a href="howto_configurationfactory.html#Setting up a ConfigurationFactory">Setting up a ConfigurationFactory</a></li>
-        <li><a href="howto_configurationfactory.html#Accessing properties">Accessing properties</a></li>
+        <li><a href="howto_configurationfactory.html#The_configuration_definition_file">The configuration definition file</a></li>
+        <li><a href="howto_configurationfactory.html#Setting_up_a_ConfigurationFactory">Setting up a ConfigurationFactory</a></li>
+        <li><a href="howto_configurationfactory.html#Accessing_properties">Accessing properties</a></li>
       </ul>
-      <li><a href="howto_configurationfactory.html#Multiple configuration sources">Multiple configuration sources</a></li>
+      <li><a href="howto_configurationfactory.html#Multiple_configuration_sources">Multiple configuration sources</a></li>
       <ul>
-        <li><a href="howto_configurationfactory.html#Overriding properties">Overriding properties</a></li>
-        <li><a href="howto_configurationfactory.html#Optional configuration sources">Optional configuration sources</a></li>
+        <li><a href="howto_configurationfactory.html#Overriding_properties">Overriding properties</a></li>
+        <li><a href="howto_configurationfactory.html#Optional_configuration_sources">Optional configuration sources</a></li>
       </ul>
-      <li><a href="howto_configurationfactory.html#Union configuration">Union configuration</a></li>
-      <li><a href="howto_configurationfactory.html#Configuration definition file reference">Configuration definition file reference</a></li>
+      <li><a href="howto_configurationfactory.html#Union_configuration">Union configuration</a></li>
+      <li><a href="howto_configurationfactory.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
       <ul>
-        <li><a href="howto_configurationfactory.html#Setting further options">Setting further options</a></li>
+        <li><a href="howto_configurationfactory.html#Setting_further_options">Setting further options</a></li>
         <li><a href="howto_configurationfactory.html#Referencing_system_properties">Referencing system properties</a></li>
       </ul>
-      <li><a href="howto_configurationbuilder.html#Using DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
+      <li><a href="howto_configurationbuilder.html#Using_DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
       <ul>
-        <li><a href="howto_configurationbuilder.html#Differences to ConfigurationFactory">Differences to ConfigurationFactory</a></li>
-        <li><a href="howto_configurationbuilder.html#Enhancements of the configuration definition file">Enhancements of the configuration definition file</a></li>
-        <li><a href="howto_configurationbuilder.html#An example">An example</a></li>
-        <li><a href="howto_configurationbuilder.html#Extending the configuration definition file format">Extending the configuration definition file format</a></li>
+        <li><a href="howto_configurationbuilder.html#Differences_to_ConfigurationFactory">Differences to ConfigurationFactory</a></li>
+        <li><a href="howto_configurationbuilder.html#Enhancements_of_the_configuration_definition_file">Enhancements of the configuration definition file</a></li>
+        <li><a href="howto_configurationbuilder.html#An_example">An example</a></li>
+        <li><a href="howto_configurationbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
       </ul>
-      <li><a href="howto_events.html#Configuration Events">Configuration Events</a></li>
+      <li><a href="howto_events.html#Configuration_Events">Configuration Events</a></li>
       <ul>
-        <li><a href="howto_events.html#Configuration listeners">Configuration listeners</a></li>
-        <li><a href="howto_events.html#An example">An example</a></li>
+        <li><a href="howto_events.html#Configuration_listeners">Configuration listeners</a></li>
+        <li><a href="howto_events.html#An_example">An example</a></li>
       </ul>
     </ul>
     </section>
