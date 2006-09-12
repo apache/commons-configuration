@@ -72,7 +72,13 @@ public final class PropertyConverter
     }
 
     /**
-     * Convert the specified object into a Boolean.
+     * Convert the specified object into a Boolean. Internally the
+     * <code>org.apache.commons.lang.BooleanUtils</code> class from the
+     * <a href="http://jakarta.apache.org/commons/lang/">Commons Lang</a>
+     * project is used to perform this conversion. This class accepts some more
+     * tokens for the boolean value of <b>true</b>, e.g. <code>yes</code> and
+     * <code>on</code>. Please refer to the documentation of this class for more
+     * details.
      *
      * @param value the value to convert
      * @return the converted value

@@ -472,6 +472,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see PropertyConverter#toBoolean(Object)
      */
     public boolean getBoolean(String key)
     {
@@ -488,6 +489,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see PropertyConverter#toBoolean(Object)
      */
     public boolean getBoolean(String key, boolean defaultValue)
     {
@@ -495,7 +497,16 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * Obtains the value of the specified key and tries to convert it into a
+     * <code>Boolean</code> object. If the property has no value, the passed
+     * in default value will be used.
+     *
+     * @param key the key of the property
+     * @param defaultValue the default value
+     * @return the value of this key converted to a <code>Boolean</code>
+     * @throws ConversionException if the value cannot be converted to a
+     * <code>Boolean</code>
+     * @see PropertyConverter#toBoolean(Object)
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
