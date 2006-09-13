@@ -70,10 +70,13 @@
     <p>
       <dl>
         <dt>AbstractConfiguration</dt>
-        <dd>EVENT_ADD_PROPERTY (a property was added), EVENT_SET_PROPERTY
-        (a property's value was changed), EVENT_CLEAR_PROPERTY (a property was
-        removed from the configuration), EVENT_CLEAR (the configuration was
-        cleared)</dd>
+        <dd>EVENT_ADD_PROPERTY (a property was added; the name of the affected
+        property and the value that was added can be obtained from the
+        event object), EVENT_SET_PROPERTY (a property's value was changed; the
+        event object stores the name of the affected property and its new value),
+        EVENT_CLEAR_PROPERTY (a property was removed from the configuration;
+        its name is stored in the event object), EVENT_CLEAR (the configuration
+        was cleared)</dd>
         <dt>AbstractFileConfiguration</dt>
         <dd>EVENT_RELOAD (the configuration was reloaded)</dd>
         <dt>HierarchicalConfiguration</dt>
