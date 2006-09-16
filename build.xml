@@ -20,38 +20,43 @@
   on date January 29 2005, time 1728-->
 
 <project default="jar" name="commons-configuration" basedir=".">
-  <property name="defaulttargetdir" value="target">
+
+  <!-- Manual changes for dealing with the conf directory and jdbc dependency -->
+  <property file="build.properties"/>
+  <property file="default.properties"/>
+  <property name="confdir" value="conf"/>
+  <!-- Manual changes end -->
+
+  <property name="defaulttargetdir" value="${build.home}">
   </property>
-  <property name="libdir" value="target/lib">
+  <property name="libdir" value="${build.home}/lib">
   </property>
-  <property name="classesdir" value="target/classes">
+  <property name="classesdir" value="${build.home}/classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="metadir" value="${classesdir}/META-INF"/>
+  <property name="testclassesdir" value="${build.home}/test-classes">
   </property>
-  <property name="testclassesdir" value="target/test-classes">
+  <property name="testclassesdir" value="${build.home}/test-classes">
   </property>
-  <property name="testreportdir" value="target/test-reports">
+  <property name="testreportdir" value="${build.home}/test-reports">
   </property>
   <property name="distdir" value="dist">
   </property>
   <property name="javadocdir" value="dist/docs/api">
   </property>
-  
-  <!-- Manual changes for dealing with the conf directory and jdbc dependency -->
-  <property name="confdir" value="conf"/>
   <property name="targetconfdir" value="${testclassesdir}"/>
-  <property file="build.properties"/>
-  <!-- Manual changes end -->
-  
-  <property name="final.name" value="commons-configuration-1.3RC2">
-  </property>
+
   <path id="build.classpath">
     <fileset dir="${libdir}">
       <include name="**/*.jar">
       </include>
     </fileset>
   </path>
+
   <target name="init" description="o Initializes some properties">
+    <filter token="name" value="${component.name}"/>
+    <filter token="package" value="${component.package}"/>
+    <filter token="version" value="${component.version}"/>
     <mkdir dir="${libdir}">
     </mkdir>
     <condition property="noget">
@@ -73,16 +78,17 @@
     depends="get-deps, copy-jdbc-dep">
     <mkdir dir="${classesdir}">
     </mkdir>
-    <javac destdir="${classesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
+    <javac destdir="${classesdir}" deprecation="${compile.deprecation}" 
+      debug="${compile.debug}" optimize="${compile.optimize}" excludes="**/package.html">
       <src>
-        <pathelement location="src/java">
+        <pathelement location="${source.home}">
         </pathelement>
       </src>
       <classpath refid="build.classpath">
       </classpath>
     </javac>
     <copy todir="${classesdir}">
-      <fileset dir="conf">
+      <fileset dir="${confdir}">
         <include name="digesterRules.xml">
         </include>
         <include name="properties.dtd">
@@ -90,8 +96,14 @@
       </fileset>
     </copy>
   </target>
+
   <target name="jar" description="o Create the jar" depends="compile,test">
-    <jar jarfile="${defaulttargetdir}/${final.name}.jar" excludes="**/package.html" basedir="${classesdir}">
+    <mkdir dir="${classesdir}/META-INF"/>
+    <copy file="LICENSE.txt" todir="${metadir}"/>
+    <copy file="NOTICE.txt" todir="${metadir}"/>
+    <copy file="${conf.home}/manifest.mf" todir="${defaulttargetdir}" filtering="on"/>
+    <jar jarfile="${defaulttargetdir}/${final.name}.jar" basedir="${classesdir}"
+       manifest="${defaulttargetdir}/manifest.mf" excludes="**/package.html">
     </jar>
   </target>
   <target name="clean" description="o Clean up the generated directories">
@@ -117,7 +129,8 @@
   <target name="internal-test" if="Junit.present" depends="junit-present,compile-tests">
     <mkdir dir="${testreportdir}">
     </mkdir>
-    <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="true" haltonerror="true">
+    <junit dir="./" failureproperty="test.failure" printSummary="yes" fork="${junit.fork}"
+      haltonerror="${test.failonerror}">
       <sysproperty key="basedir" value=".">
       </sysproperty>
       <formatter type="xml">
@@ -165,7 +178,7 @@
     </mkdir>
     <javac destdir="${testclassesdir}" deprecation="true" debug="true" optimize="false" excludes="**/package.html">
       <src>
-        <pathelement location="src/test">
+        <pathelement location="${test.home}">
         </pathelement>
       </src>
       <classpath>

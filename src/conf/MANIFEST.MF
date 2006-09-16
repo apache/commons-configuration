@@ -3,7 +3,8 @@ Package: @package@
 Extension-Name: @name@
 Specification-Version: @version@
 Specification-Vendor: Apache Software Foundation
-Specification-Title: @title@
+Specification-Title: Commons Configuration
 Implementation-Version: @version@
 Implementation-Vendor: Apache Software Foundation
-Implementation-Vendor-Id:
+Implementation-Title: Commons Configuration
+Implementation-Vendor-Id: org.apache
