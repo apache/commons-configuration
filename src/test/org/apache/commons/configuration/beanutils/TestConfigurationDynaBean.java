@@ -97,7 +97,7 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void setUp() throws Exception
     {
-        Configuration configuration = new BaseConfiguration();
+        Configuration configuration = createConfiguration();
 
         for (int i = 0; i < properties.length; i++)
         {
@@ -135,6 +135,14 @@ public class TestConfigurationDynaBean extends TestCase
         bean.set("stringArray", stringArray);
     }
 
+    /**
+     * Creates the underlying configuration object for the dyna bean.
+     * @return the underlying configuration object
+     */
+    protected Configuration createConfiguration()
+    {
+        return new BaseConfiguration();
+    }
 
     /**
      * Corner cases on getDynaProperty invalid arguments.
@@ -362,7 +370,7 @@ public class TestConfigurationDynaBean extends TestCase
     {
         try
         {
-            bean.get(null);
+            bean.get("a non existing property");
         }
         catch (IllegalArgumentException e)
         {
