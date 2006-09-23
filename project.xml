@@ -414,7 +414,7 @@
     <dependency>
       <groupId>maven-plugins</groupId>
       <artifactId>maven-cobertura-plugin</artifactId>
-      <version>1.1.1</version>
+      <version>1.2</version>
       <url>http://maven-plugins.sourceforge.net/maven-cobertura-plugin/</url>
       <type>plugin</type>
     </dependency>
