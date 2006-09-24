@@ -43,6 +43,7 @@ limitations under the License.
     <copy todir="${maven.dist.src.assembly.dir}">
       <fileset file="${basedir}/NOTICE.txt"/>
       <fileset file="${basedir}/RELEASE-NOTES.txt"/>
+      <fileset file="${basedir}/default.properties"/>
     </copy>
     <mkdir dir="${maven.dist.src.assembly.dir}/xdocs"/>
     <copy todir="${maven.dist.src.assembly.dir}/xdocs">
