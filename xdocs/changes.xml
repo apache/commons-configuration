@@ -23,7 +23,10 @@
 
   <body>
 
-    <release version="1.3-rc2" date="in SVN">
+    <release version="1.3" date="2006-09-24">
+    </release>
+
+    <release version="1.3-rc2" date="2006-09-03">
       <action dev="oheger" type="update" issue="CONFIGURATION-223" due-to="Gabriele Garuglieri">
         AbstractFileConfiguration now overrides addProperty() and setProperty()
         instead of addPropertyDirect() to implement the auto save feature.
