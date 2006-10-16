@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -296,6 +297,19 @@ implements FileConfiguration, ConfigurationListener
     {
         reload();
         return super.isEmpty();
+    }
+
+    /**
+     * Fetches a list of nodes, which are selected by the specified key. This
+     * implementation will perform a reload if necessary.
+     *
+     * @param key the key
+     * @return a list with the selected nodes
+     */
+    protected List fetchNodeList(String key)
+    {
+        reload();
+        return super.fetchNodeList(key);
     }
 
     /**

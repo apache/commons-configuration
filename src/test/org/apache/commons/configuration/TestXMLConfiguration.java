@@ -882,6 +882,62 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests if reloads are recognized by subset().
+     */
+    public void testSubsetWithReload() throws ConfigurationException
+    {
+        XMLConfiguration c = setUpReloadTest();
+        Configuration sub = c.subset("test");
+        assertEquals("New value not read", "newValue", sub.getString("entity"));
+    }
+
+    /**
+     * Tests if reloads are recognized by configurationAt().
+     */
+    public void testConfigurationAtWithReload() throws ConfigurationException
+    {
+        XMLConfiguration c = setUpReloadTest();
+        HierarchicalConfiguration sub = c.configurationAt("test(0)");
+        assertEquals("New value not read", "newValue", sub.getString("entity"));
+    }
+
+    /**
+     * Tests if reloads are recognized by configurationsAt().
+     */
+    public void testConfigurationsAtWithReload() throws ConfigurationException
+    {
+        XMLConfiguration c = setUpReloadTest();
+        List configs = c.configurationsAt("test");
+        assertEquals("New value not read", "newValue",
+                ((HierarchicalConfiguration) configs.get(0))
+                        .getString("entity"));
+    }
+
+    /**
+     * Prepares a configuration object for testing a reload operation.
+     *
+     * @return the initialized configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private XMLConfiguration setUpReloadTest() throws ConfigurationException
+    {
+        removeTestFile();
+        conf.save(testSaveConf);
+        XMLConfiguration c = new XMLConfiguration(testSaveConf);
+        c.setReloadingStrategy(new FileChangedReloadingStrategy()
+        {
+            // Report always a change
+            protected boolean hasChanged()
+            {
+                return true;
+            }
+        });
+        conf.setProperty("test(0).entity", "newValue");
+        conf.save(testSaveConf);
+        return c;
+    }
+
+    /**
      * Removes the test output file if it exists.
      */
     private void removeTestFile()

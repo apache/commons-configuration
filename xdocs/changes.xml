@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-228">
+        Some of the methods of file-based hierarchical configurations (e.g.
+        subset() or configurationAt()) did not take an eventually set reloading
+        strategy into account. This is now fixed by overriding the internal
+        fetchNodeList() method in AbstractHierarchicalFileConfiguration and
+        letting it always check for a reload.
+      </action>
     </release>
 
     <release version="1.3" date="2006-09-24">
