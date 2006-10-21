@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-230">
+        XPathExpressionEngine used to create wrong keys for attribute nodes.
+        This caused some operations on XMLConfiguration to fail when such an
+        expression engine was set (e.g. reloading). Now correct keys for
+        attributes are constructed.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-228">
         Some of the methods of file-based hierarchical configurations (e.g.
         subset() or configurationAt()) did not take an eventually set reloading

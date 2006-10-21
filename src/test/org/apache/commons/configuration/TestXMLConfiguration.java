@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -911,6 +912,18 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("New value not read", "newValue",
                 ((HierarchicalConfiguration) configs.get(0))
                         .getString("entity"));
+    }
+
+    /**
+     * Tests accessing properties when the XPATH expression engine is set.
+     */
+    public void testXPathExpressionEngine()
+    {
+        conf.setExpressionEngine(new XPathExpressionEngine());
+        assertEquals("Wrong attribute value", "foo\"bar", conf
+                .getString("test[1]/entity/@name"));
+        conf.clear();
+        assertNull(conf.getString("test[1]/entity/@name"));
     }
 
     /**

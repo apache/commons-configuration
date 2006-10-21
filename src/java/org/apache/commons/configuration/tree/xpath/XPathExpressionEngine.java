@@ -170,10 +170,7 @@ public class XPathExpressionEngine implements ExpressionEngine
             if (parentKey.length() > 0)
             {
                 buf.append(parentKey);
-                if (!node.isAttribute())
-                {
-                    buf.append(PATH_DELIMITER);
-                }
+                buf.append(PATH_DELIMITER);
             }
             if (node.isAttribute())
             {

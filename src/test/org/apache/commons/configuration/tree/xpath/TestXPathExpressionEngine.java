@@ -152,7 +152,7 @@ public class TestXPathExpressionEngine extends TestCase
     {
         ConfigurationNode node = new DefaultConfigurationNode("attr");
         node.setAttribute(true);
-        assertEquals("Wrong attribute key", "node@attr", engine.nodeKey(node,
+        assertEquals("Wrong attribute key", "node/@attr", engine.nodeKey(node,
                 "node"));
     }
 
