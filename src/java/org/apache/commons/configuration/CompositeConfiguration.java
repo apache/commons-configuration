@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -319,6 +320,12 @@ implements Cloneable
         if (list.isEmpty())
         {
             return defaultValue;
+        }
+        
+        ListIterator lit = list.listIterator();
+        while (lit.hasNext())
+        {
+        	lit.set(interpolate(lit.next()));
         }
 
         return list;

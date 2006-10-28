@@ -440,6 +440,24 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("2nd element", "foo.bar2", array[1]);
         assertEquals("3rd element", "foo.bar3", array[2]);
     }
+    
+    /**
+     * Tests whether global interpolation works with lists.
+     */
+    public void testListInterpolation()
+    {
+        PropertiesConfiguration c1 = new PropertiesConfiguration();
+        c1.addProperty("c1.value", "test1");
+        c1.addProperty("c1.value", "${c2.value}");
+        cc.addConfiguration(c1);
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        c2.addProperty("c2.value", "test2");
+        cc.addConfiguration(c2);
+        List lst = cc.getList("c1.value");
+        assertEquals("Wrong list size", 2, lst.size());
+        assertEquals("Wrong first element", "test1", lst.get(0));
+        assertEquals("Wrong second element", "test2", lst.get(1));
+    }
 
     public void testInstanciateWithCollection()
     {

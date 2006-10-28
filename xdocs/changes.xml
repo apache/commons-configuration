@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-233" due-to="Rainer Jung">
+        The getList() method of CompositeConfiguration does now fully support
+        variable interpolation. So it is possible to refer to a variable in
+        one (sub) configuration that is defined in another configuration.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-230">
         XPathExpressionEngine used to create wrong keys for attribute nodes.
         This caused some operations on XMLConfiguration to fail when such an
