@@ -25,6 +25,7 @@ import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.ConversionException;
+import org.apache.commons.configuration.SubsetConfiguration;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,12 +45,20 @@ import org.apache.commons.logging.LogFactory;
  * {@link org.apache.commons.configuration.Configuration#getList(String)}
  * method. Setting an indexed property always throws an exception.</p>
  *
+ * <p>Note: Some of the methods expect that a dot (&quot;.&quot;) is used as
+ * property delimitor for the wrapped configuration. This is true for most of
+ * the default configurations. Hierarchical configurations, for which a specific
+ * expression engine is set, may cause problems.</p>
+ *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  * @version $Revision$, $Date$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 {
+    /** Constant for the property delimiter.*/
+    private static final String PROPERTY_DELIMITER = ".";
+
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
@@ -184,10 +193,10 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         if (result == null)
         {
             // otherwise attempt to create bean from configuration subset
-            Configuration subset = getConfiguration().subset(name);
+            Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
             if (!subset.isEmpty())
             {
-                result = new ConfigurationDynaBean(getConfiguration().subset(name));
+                result = new ConfigurationDynaBean(subset);
             }
         }
 
@@ -265,11 +274,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
      */
     public void remove(String name, String key)
     {
-        Configuration subset = getConfiguration().subset(name);
-        if (subset == null)
-        {
-            throw new IllegalArgumentException("Mapped property '" + name + "' does not exist.");
-        }
+        Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
         subset.setProperty(key, null);
     }
 
@@ -290,6 +295,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             {
                 List list = (List) property;
                 list.set(index, value);
+                getConfiguration().setProperty(name, list);
             }
             else if (property.getClass().isArray())
             {

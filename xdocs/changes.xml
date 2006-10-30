@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-227">
+        The compatibility of ConfigurationDynaBean with other configuration types
+        than those that inherit from BaseConfiguration was improved.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-233" due-to="Rainer Jung">
         The getList() method of CompositeConfiguration does now fully support
         variable interpolation. So it is possible to refer to a variable in
