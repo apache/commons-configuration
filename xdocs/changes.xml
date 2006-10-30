@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-235">
+        Interpolation of non string values did not work when SubsetConfiguration
+        was involved. This has now been fixed.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-227">
         The compatibility of ConfigurationDynaBean with other configuration types
         than those that inherit from BaseConfiguration was improved.

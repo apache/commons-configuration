@@ -236,7 +236,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     /**
      * {@inheritDoc}
      */
-    protected String interpolate(String base)
+    protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
         {

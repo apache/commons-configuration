@@ -661,6 +661,19 @@ public class TestBaseConfiguration extends TestCase
         fail("IllegalStateException should have been thrown for looped property references");
     }
 
+    /**
+     * Tests interpolation when a subset configuration is involved.
+     */
+    public void testInterpolationSubset()
+    {
+        config.addProperty("test.a", new Integer(42));
+        config.addProperty("test.b", "${test.a}");
+        assertEquals("Wrong interpolated value", 42, config.getInt("test.b"));
+        Configuration subset = config.subset("test");
+        assertEquals("Wrong string property", "42", subset.getString("b"));
+        assertEquals("Wrong int property", 42, subset.getInt("b"));
+    }
+
     public void testGetHexadecimalValue()
     {
         config.setProperty("number", "0xFF");
