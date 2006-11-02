@@ -29,6 +29,7 @@ import java.util.Map;
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
+import org.apache.commons.digester.CallMethodRule;
 import org.apache.commons.digester.Digester;
 import org.apache.commons.digester.ObjectCreationFactory;
 import org.apache.commons.digester.Substitutor;
@@ -69,6 +70,9 @@ public class ConfigurationFactory
 
     /** Constant for the fileName attribute.*/
     private static final String ATTR_FILENAME = "fileName";
+
+    /** Constant for the load method.*/
+    private static final String METH_LOAD = "load";
 
     /** Constant for the default base path (points to actual directory).*/
     private static final String DEF_BASE_PATH = ".";
@@ -295,28 +299,28 @@ public class ConfigurationFactory
             digester,
             matchString + "properties",
             new PropertiesConfigurationFactory(),
-            null,
+            METH_LOAD,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "plist",
             new PropertyListConfigurationFactory(),
-            null,
+            METH_LOAD,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "xml",
             new FileConfigurationFactory(XMLConfiguration.class),
-            null,
+            METH_LOAD,
             additional);
 
         setupDigesterInstance(
             digester,
             matchString + "hierarchicalXml",
             new FileConfigurationFactory(XMLConfiguration.class),
-            null,
+            METH_LOAD,
             additional);
 
         setupDigesterInstance(
@@ -362,7 +366,7 @@ public class ConfigurationFactory
 
         if (method != null)
         {
-            digester.addCallMethod(matchString, method);
+            digester.addRule(matchString, new CallOptionalMethodRule(method));
         }
 
         digester.addSetNext(matchString, "addConfiguration", Configuration.class.getName());
@@ -516,24 +520,6 @@ public class ConfigurationFactory
         {
             FileConfiguration conf = createConfiguration(attributes);
             conf.setBasePath(getBasePath());
-            conf.setFileName(attributes.getValue(ATTR_FILENAME));
-            try
-            {
-                log.info("Trying to load configuration " + conf.getFileName());
-                conf.load();
-            }
-            catch (ConfigurationException cex)
-            {
-                if (attributes.getValue(ATTR_OPTIONAL) != null
-                        && PropertyConverter.toBoolean(attributes.getValue(ATTR_OPTIONAL)).booleanValue())
-                {
-                    log.warn("Could not load optional configuration " + conf.getFileName());
-                }
-                else
-                {
-                    throw cex;
-                }
-            }
             return conf;
         }
 
@@ -825,6 +811,72 @@ public class ConfigurationFactory
                 HierarchicalConfiguration hc = new HierarchicalConfiguration();
                 ConfigurationUtils.copy(cdata.getConfiguration(), hc);
                 return hc.getRoot();
+            }
+        }
+    }
+
+    /**
+     * A special implementation of Digester's <code>CallMethodRule</code> that
+     * is internally used for calling a file configuration's <code>load()</code>
+     * method. This class difers from its ancestor that it catches all occuring
+     * exceptions when the specified method is called. It then checks whether
+     * for the corresponding configuration the optional attribute is set. If
+     * this is the case, the exception will simply be ignored.
+     *
+     * @since 1.4
+     */
+    private static class CallOptionalMethodRule extends CallMethodRule
+    {
+        /** A flag whether the optional attribute is set for this node. */
+        private boolean optional;
+
+        /**
+         * Creates a new instance of <code>CallOptionalMethodRule</code> and
+         * sets the name of the method to invoke.
+         *
+         * @param methodName the name of the method
+         */
+        public CallOptionalMethodRule(String methodName)
+        {
+            super(methodName);
+        }
+
+        /**
+         * Checks if the optional attribute is set.
+         *
+         * @param attrs the attributes
+         * @throws Exception if an error occurs
+         */
+        public void begin(Attributes attrs) throws Exception
+        {
+            optional = attrs.getValue(ATTR_OPTIONAL) != null
+                    && PropertyConverter.toBoolean(
+                            attrs.getValue(ATTR_OPTIONAL)).booleanValue();
+            super.begin(attrs);
+        }
+
+        /**
+         * Calls the method. If the optional attribute was set, occurring
+         * exceptions will be ignored.
+         *
+         * @throws Exception if an error occurs
+         */
+        public void end() throws Exception
+        {
+            try
+            {
+                super.end();
+            }
+            catch (Exception ex)
+            {
+                if (optional)
+                {
+                    log.warn("Could not create optional configuration!", ex);
+                }
+                else
+                {
+                    throw ex;
+                }
             }
         }
     }

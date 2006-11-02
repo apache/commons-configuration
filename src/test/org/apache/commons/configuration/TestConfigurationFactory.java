@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Collection;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -52,6 +53,8 @@ public class TestConfigurationFactory extends TestCase
             new File("conf/testDigesterOptionalConfigurationEx.xml");
     private File testDigesterFileSysProps =
             new File("conf/testDigesterConfigurationSysProps.xml");
+    private File testDigesterFileInitProps =
+            new File("conf/testDigesterConfigurationWithProps.xml");
 
     private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
 
@@ -322,6 +325,21 @@ public class TestConfigurationFactory extends TestCase
         Configuration config = factory.getConfiguration();
         assertTrue("Configuration not loaded", config
                 .getBoolean("configuration.loaded"));
+    }
+
+    // Tests if the properties of a configuration object are correctly set
+    // before it is loaded.
+    public void testLoadInitProperties() throws ConfigurationException
+    {
+        factory.setConfigurationFileName(testDigesterFileInitProps
+                .getAbsolutePath());
+        Configuration config = factory.getConfiguration();
+        PropertiesConfiguration c = (PropertiesConfiguration) ((CompositeConfiguration) config)
+                .getConfiguration(0);
+        assertEquals("List delimiter was not set", ';', c.getListDelimiter());
+        List l = c.getList("test.mixed.array");
+        assertEquals("Wrong number of list elements", 2, l.size());
+        assertEquals("List delimiter was not applied", "b, c, d", l.get(1));
     }
 
     private void checkUnionConfig() throws Exception

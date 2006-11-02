@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-229">
+        For file-based configurations loaded by ConfigurationFactory the load()
+        method was called before all of the properties specified by attributes
+        of the XML element have been initialized. Now load() is called after
+        property initialization.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-235">
         Interpolation of non string values did not work when SubsetConfiguration
         was involved. This has now been fixed.
