@@ -34,6 +34,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -924,6 +925,28 @@ public class TestXMLConfiguration extends TestCase
                 .getString("test[1]/entity/@name"));
         conf.clear();
         assertNull(conf.getString("test[1]/entity/@name"));
+    }
+    
+    /**
+     * Tests the copy constructor.
+     */
+    public void testInitCopy() throws ConfigurationException
+    {
+    	XMLConfiguration copy = new XMLConfiguration(conf);
+        assertEquals("value", copy.getProperty("element"));
+        assertNull("Document was copied, too", copy.getDocument());
+        ConfigurationNode root = copy.getRootNode();
+        for(Iterator it = root.getChildren().iterator(); it.hasNext();)
+        {
+        	ConfigurationNode node = (ConfigurationNode) it.next();
+        	assertNull("Reference was not cleared", node.getReference());
+        }
+
+        removeTestFile();
+        copy.setFile(testSaveConf);
+        copy.save();
+        copy.clear();
+        checkSavedConfig(copy);
     }
 
     /**

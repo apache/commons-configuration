@@ -480,14 +480,7 @@ public class TestHierarchicalConfiguration extends TestCase
     {
         Configuration copy = (Configuration) config.clone();
         assertTrue(copy instanceof HierarchicalConfiguration);
-        for (int i = 0; i < tables.length; i++)
-        {
-            assertEquals(tables[i], copy.getString("tables.table(" + i + ").name"));
-            for (int j = 0; j < fields[i].length; j++)
-            {
-                assertEquals(fields[i][j], copy.getString("tables.table(" + i + ").fields.field(" + j + ").name"));
-            }
-        }
+        checkContent(copy);
     }
 
     /**
@@ -655,8 +648,38 @@ public class TestHierarchicalConfiguration extends TestCase
         }
     }
 
-    /**
+	/**
+     * Tests the copy constructor.
+     */
+	public void testInitCopy()
+	{
+		HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+		checkContent(copy);
+	}
+
+	/**
+     * Tests whether the nodes of a copied configuration are independent from
+     * the source configuration.
+     */
+	public void testInitCopyUpdate()
+	{
+		HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+		config.setProperty("tables.table(0).name", "NewTable");
+		checkContent(copy);
+	}
+
+	/**
+     * Tests the copy constructor when a null reference is passed.
+     */
+	public void testInitCopyNull()
+	{
+		HierarchicalConfiguration copy = new HierarchicalConfiguration(null);
+		assertTrue("Configuration not empty", copy.isEmpty());
+	}
+
+	/**
      * Helper method for testing the getKeys(String) method.
+     * 
      * @param prefix the key to pass into getKeys()
      * @param expected the expected result
      */
@@ -720,8 +743,27 @@ public class TestHierarchicalConfiguration extends TestCase
                 .contains("tables/table/fields/field/name"));
     }
 
-    private ExpressionEngine createAlternativeExpressionEngine()
-    {
+	/**
+     * Checks the content of the passed in configuration object. Used by some
+     * tests that copy a configuration.
+     * 
+     * @param c the configuration to check
+     */
+	private void checkContent(Configuration c)
+	{
+		for (int i = 0; i < tables.length; i++)
+		{
+			assertEquals(tables[i], c.getString("tables.table(" + i + ").name"));
+			for (int j = 0; j < fields[i].length; j++)
+			{
+				assertEquals(fields[i][j], c.getString("tables.table(" + i
+						+ ").fields.field(" + j + ").name"));
+			}
+		}
+	}
+
+	private ExpressionEngine createAlternativeExpressionEngine()
+	{
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setPropertyDelimiter("/");
         engine.setIndexStart("[");

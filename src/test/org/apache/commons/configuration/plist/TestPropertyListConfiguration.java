@@ -247,4 +247,10 @@ public class TestPropertyListConfiguration extends TestCase
         assertEquals("string with a quote", "\"foo\\\"bar\"", config.quoteString("foo\"bar"));
         assertEquals("string with a special char", "\"foo;bar\"", config.quoteString("foo;bar"));
     }
+
+    public void testInitCopy()
+    {
+    	PropertyListConfiguration copy = new PropertyListConfiguration(config);
+    	assertFalse("Nothing was copied", copy.isEmpty());
+    }
 }

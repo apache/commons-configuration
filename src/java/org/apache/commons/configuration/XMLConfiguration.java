@@ -141,10 +141,26 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         super();
     }
 
-    /**
-     * Creates a new instance of <code>XMLConfiguration</code>.
-     * The configuration is loaded from the specified file
+	/**
+     * Creates a new instance of <code>XMLConfiguration</code> and copies the
+     * content of the passed in configuration into this object. Note that only
+     * the data of the passed in configuration will be copied. If, for instance,
+     * the other configuration is a <code>XMLConfiguration</code>, too,
+     * things like comments or processing instructions will be lost.
      *
+     * @param c the configuration to copy
+     * @since 1.4
+     */
+	public XMLConfiguration(HierarchicalConfiguration c)
+	{
+		super(c);
+		clearReferences(getRootNode());
+	}
+
+	/**
+     * Creates a new instance of <code>XMLConfiguration</code>. The
+     * configuration is loaded from the specified file
+     * 
      * @param fileName the name of the file to load
      * @throws ConfigurationException if the file cannot be loaded
      */
@@ -696,13 +712,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         copy.document = null;
         copy.setDelegate(createDelegate());
         // clear all references in the nodes, too
-        copy.getRoot().visit(new NodeVisitor()
-        {
-            public void visitBeforeChildren(Node node, ConfigurationKey key)
-            {
-                node.setReference(null);
-            }
-        }, null);
+        clearReferences(copy.getRootNode());
 
         return copy;
     }

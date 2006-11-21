@@ -26,6 +26,7 @@ import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.StrictConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationComparator;
 
@@ -253,4 +254,12 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
         }
     }
+
+	public void testInitCopy()
+	{
+		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration(
+				(HierarchicalConfiguration) config);
+		StrictConfigurationComparator comp = new StrictConfigurationComparator();
+		assertTrue("Configurations are not equal", comp.compare(config, copy));
+	}
 }

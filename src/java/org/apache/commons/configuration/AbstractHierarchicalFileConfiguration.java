@@ -51,13 +51,30 @@ implements FileConfiguration, ConfigurationListener
      */
     private FileConfigurationDelegate delegate;
 
-    protected AbstractHierarchicalFileConfiguration()
-    {
-        delegate = createDelegate();
-        initDelegate(delegate);
-    }
+	/**
+     * Creates a new instance of
+     * <code>AbstractHierarchicalFileConfiguration</code>.
+     */
+	protected AbstractHierarchicalFileConfiguration()
+	{
+		initialize();
+	}
 
-    /**
+	/**
+     * Creates a new instance of
+     * <code>AbstractHierarchicalFileConfiguration</code> and copies the
+     * content of the specified configuration into this object.
+     *
+     * @param c the configuration to copy
+     * @since 1.4
+     */
+	protected AbstractHierarchicalFileConfiguration(HierarchicalConfiguration c)
+	{
+		super(c);
+		initialize();
+	}
+
+	/**
      * Creates and loads the configuration from the specified file.
      *
      * @param fileName The name of the plist file to load.
@@ -108,7 +125,16 @@ implements FileConfiguration, ConfigurationListener
         load();
     }
 
-    protected void addPropertyDirect(String key, Object obj)
+	/**
+     * Initializes this instance, mainly the internally used delegate object.
+     */
+	private void initialize()
+	{
+		delegate = createDelegate();
+		initDelegate(delegate);
+	}
+
+	protected void addPropertyDirect(String key, Object obj)
     {
         super.addPropertyDirect(key, obj);
         delegate.possiblySave();

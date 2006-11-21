@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-236">
+        HierarchicalConfiguration and some of its sub classes now define a
+	copy constructor.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-197" due-to="Trevor Charles Miller">
         A new configuration class for windows ini files was added.
       </action>

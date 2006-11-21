@@ -133,11 +133,24 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     {
     }
 
-    /**
-     * Creates and loads the property list from the specified file.
+	/**
+     * Creates a new instance of <code>XMLPropertyListConfiguration</code> and
+     * copies the content of the specified configuration into this object.
      *
+     * @param c the configuration to copy
+     * @since 1.4
+     */
+	public XMLPropertyListConfiguration(HierarchicalConfiguration c)
+	{
+		super(c);
+	}
+
+	/**
+     * Creates and loads the property list from the specified file.
+     * 
      * @param fileName The name of the plist file to load.
-     * @throws org.apache.commons.configuration.ConfigurationException Error while loading the plist file
+     * @throws org.apache.commons.configuration.ConfigurationException Error
+     * while loading the plist file
      */
     public XMLPropertyListConfiguration(String fileName) throws ConfigurationException
     {
