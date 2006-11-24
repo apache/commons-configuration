@@ -18,6 +18,8 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +36,6 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 /**
  * <p>
@@ -180,9 +181,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             .getName()
             + "/ADDITIONAL_CONFIG";
 
-    /** Constant for the expression engine used by this builder. */
-    static final XPathExpressionEngine EXPRESSION_ENGINE = new XPathExpressionEngine();
-
     /** Constant for the name of the configuration bean factory. */
     static final String CONFIG_BEAN_FACTORY_NAME = DefaultConfigurationBuilder.class
             .getName()
@@ -228,42 +226,42 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static final String SEC_HEADER = "header";
 
     /** Constant for an expression that selects the union configurations. */
-    static final String KEY_UNION = "/additional/*";
+    static final String KEY_UNION = "additional";
 
-    /** Constant for an expression that selects override configurations. */
-    static final String KEY_OVERRIDE1 = "/*[local-name() != 'additional' and "
-            + "local-name() != 'override' and local-name() != '"
-            + SEC_HEADER + "']";
+    /** An array with the names of top level configuration sections.*/
+    static final String[] CONFIG_SECTIONS = {
+        "additional", "override", SEC_HEADER
+    };
 
     /**
      * Constant for an expression that selects override configurations in the
      * override section.
      */
-    static final String KEY_OVERRIDE2 = "/override/*";
+    static final String KEY_OVERRIDE = "override";
 
     /**
      * Constant for the key that points to the list nodes definition of the
      * override combiner.
      */
     static final String KEY_OVERRIDE_LIST = SEC_HEADER
-            + "/combiner/override/list-nodes/node";
+            + ".combiner.override.list-nodes.node";
 
     /**
      * Constant for the key that points to the list nodes definition of the
      * additional combiner.
      */
     static final String KEY_ADDITIONAL_LIST = SEC_HEADER
-            + "/combiner/additional/list-nodes/node";
+            + ".combiner.additional.list-nodes.node";
 
     /**
      * Constant for the key of the result declaration. This key can point to a
      * bean declaration, which defines properties of the resulting combined
      * configuration.
      */
-    static final String KEY_RESULT = SEC_HEADER + "/result";
+    static final String KEY_RESULT = SEC_HEADER + ".result";
 
     /** Constant for the key of the combiner in the result declaration.*/
-    static final String KEY_COMBINER = KEY_RESULT + "/nodeCombiner";
+    static final String KEY_COMBINER = KEY_RESULT + ".nodeCombiner";
 
     /** Constant for the XML file extension. */
     static final String EXT_XML = ".xml";
@@ -326,7 +324,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {
         super();
         providers = new HashMap();
-        setExpressionEngine(EXPRESSION_ENGINE);
         registerDefaultProviders();
     }
 
@@ -481,11 +478,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
 
-        List overrides = configurationsAt(KEY_OVERRIDE1);
-        overrides.addAll(configurationsAt(KEY_OVERRIDE2));
+        List overrides = fetchTopLevelOverrideConfigs();
+        overrides.addAll(fetchChildConfigs(KEY_OVERRIDE));
         initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
 
-        List additionals = configurationsAt(KEY_UNION);
+        List additionals = fetchChildConfigs(KEY_UNION);
         if (!additionals.isEmpty())
         {
             CombinedConfiguration addConfig = new CombinedConfiguration(
@@ -613,6 +610,73 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             // redirect to configuration exceptions
             throw new ConfigurationException(ex);
         }
+    }
+
+    /**
+     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * child nodes of the specified configuration node.
+     *
+     * @param node the start node
+     * @return a list with subnode configurations for the node's children
+     */
+    private List fetchChildConfigs(ConfigurationNode node)
+    {
+        List children = node.getChildren();
+        List result = new ArrayList(children.size());
+        for (Iterator it = children.iterator(); it.hasNext();)
+        {
+            result.add(createSubnodeConfiguration((Node) it.next()));
+        }
+        return result;
+    }
+
+    /**
+     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * child nodes of the node specified by the given key.
+     *
+     * @param key the key (must define exactly one node)
+     * @return a list with subnode configurations for the node's children
+     */
+    private List fetchChildConfigs(String key)
+    {
+        List nodes = fetchNodeList(key);
+        if (nodes.size() > 0)
+        {
+            return fetchChildConfigs((ConfigurationNode) nodes.get(0));
+        }
+        else
+        {
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
+     * Finds the override configurations that are defined as top level elements
+     * in the configuration definition file. This method will fetch the child
+     * elements of the root node and remove the nodes that represent other
+     * configuration sections. The remaining nodes are treated as definitions
+     * for override configurations.
+     *
+     * @return a list with subnode configurations for the top level override
+     * configurations
+     */
+    private List fetchTopLevelOverrideConfigs()
+    {
+        List configs = fetchChildConfigs(getRootNode());
+        for (Iterator it = configs.iterator(); it.hasNext();)
+        {
+            String nodeName = ((SubnodeConfiguration) it.next()).getRootNode()
+                    .getName();
+            for (int i = 0; i < CONFIG_SECTIONS.length; i++)
+            {
+                if (CONFIG_SECTIONS[i].equals(nodeName))
+                {
+                    it.remove();
+                    break;
+                }
+            }
+        }
+        return configs;
     }
 
     /**

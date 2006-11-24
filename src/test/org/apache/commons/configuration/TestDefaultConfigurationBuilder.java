@@ -144,25 +144,25 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testConfigurationDeclarationGetAttributes()
     {
-        factory.addProperty("/ xml/fileName", "test.xml");
+        factory.addProperty("xml.fileName", "test.xml");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("xml"));
         assertNull("Found an at attribute", decl.getAt());
         assertFalse("Found an optional attribute", decl.isOptional());
-        factory.addProperty("/xml @config-at", "test1");
+        factory.addProperty("xml[@config-at]", "test1");
         assertEquals("Wrong value of at attribute", "test1", decl.getAt());
-        factory.addProperty("/xml @at", "test2");
+        factory.addProperty("xml[@at]", "test2");
         assertEquals("Wrong value of config-at attribute", "test1", decl.getAt());
-        factory.clearProperty("/xml/@config-at");
+        factory.clearProperty("xml[@config-at]");
         assertEquals("Old at attribute not detected", "test2", decl.getAt());
-        factory.addProperty("/xml @config-optional", "true");
+        factory.addProperty("xml[@config-optional]", "true");
         assertTrue("Wrong value of optional attribute", decl.isOptional());
-        factory.addProperty("/xml @optional", "false");
+        factory.addProperty("xml[@optional]", "false");
         assertTrue("Wrong value of config-optional attribute", decl.isOptional());
-        factory.clearProperty("/xml/@config-optional");
-        factory.setProperty("/xml/@optional", Boolean.TRUE);
+        factory.clearProperty("xml[@config-optional]");
+        factory.setProperty("xml[@optional]", Boolean.TRUE);
         assertTrue("Old optional attribute not detected", decl.isOptional());
-        factory.setProperty("/xml/@optional", "invalid value");
+        factory.setProperty("xml[@optional]", "invalid value");
         try
         {
             decl.isOptional();
@@ -246,7 +246,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.addConfigurationProvider("test",
                 new DefaultConfigurationBuilder.ConfigurationProvider(
                         PropertiesConfiguration.class));
-        factory.addProperty("/ test@throwExceptionOnMissing", "true");
+        factory.addProperty("test[@throwExceptionOnMissing]", "true");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
         PropertiesConfiguration conf = (PropertiesConfiguration) BeanHelper
@@ -261,7 +261,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testConfigurationBeanFactoryCreateUnknownTag()
     {
-        factory.addProperty("/ test@throwExceptionOnMissing", "true");
+        factory.addProperty("test[@throwExceptionOnMissing]", "true");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
         try
@@ -434,11 +434,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptionalNonFileBased() throws ConfigurationException
     {
-        factory.addProperty("/ override/configuration@fileName",
+        factory.addProperty("override.configuration[@fileName]",
                 "nonExisting.xml");
-        factory.addProperty("/override/configuration[1] @config-optional",
+        factory.addProperty("override.configuration[@config-optional]",
                 Boolean.TRUE);
-        factory.addProperty("/override/configuration[1] @config-name",
+        factory.addProperty("override.configuration[@config-name]",
                 "optionalConfig");
         CombinedConfiguration config = factory.getConfiguration(false);
         assertTrue("Configuration not empty", config.isEmpty());
@@ -485,7 +485,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
-        factory.addProperty("/ properties@fileName", "test.properties");
+        factory.addProperty("properties[@fileName]", "test.properties");
         File deepDir = new File("conf/config/deep");
         factory.setConfigurationBasePath(deepDir.getAbsolutePath());
 
@@ -593,7 +593,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testConfigurationBuilderProvider()
             throws ConfigurationException
     {
-        factory.addProperty("/ override/configuration@fileName", TEST_FILE
+        factory.addProperty("override.configuration[@fileName]", TEST_FILE
                 .getAbsolutePath());
         CombinedConfiguration cc = factory.getConfiguration(false);
         assertEquals("Wrong number of configurations", 1, cc

@@ -23,9 +23,17 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-234">
+        DefaultConfigurationBuilder now internally uses the standard expression
+        engine for hierarchical configurations. So the dependency to Commons
+        JXPath is no more needed when this class is used. Note that this change
+        has some impact on existing code that manually sets properties before
+        the combined configuration is created; this code must now be adapted to
+        the changed syntax of property keys.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-236">
         HierarchicalConfiguration and some of its sub classes now define a
-	copy constructor.
+        copy constructor.
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-197" due-to="Trevor Charles Miller">
         A new configuration class for windows ini files was added.
