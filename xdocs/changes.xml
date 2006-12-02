@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-241">
+        CompositeConfiguration.clearProperty() now generates the correct
+        update events.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-242">
         The configuration returned by HierarchicalConfiguration.subset()
         performed variable interpolation only in the keys that belong to the

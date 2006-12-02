@@ -271,7 +271,7 @@ implements Cloneable
     /**
      * {@inheritDoc}
      */
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         for (Iterator i = configList.iterator(); i.hasNext();)
         {

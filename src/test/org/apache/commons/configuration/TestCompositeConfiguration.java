@@ -440,7 +440,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("2nd element", "foo.bar2", array[1]);
         assertEquals("3rd element", "foo.bar3", array[2]);
     }
-    
+
     /**
      * Tests whether global interpolation works with lists.
      */
@@ -515,15 +515,61 @@ public class TestCompositeConfiguration extends TestCase
      */
     public void testCloneEventListener()
     {
-        cc.addConfigurationListener(new ConfigurationListener()
-        {
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                // Just a dummy
-            }
-        });
+        cc.addConfigurationListener(new TestEventListenerImpl());
         CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
         assertTrue("Listeners have been cloned", cc2
                 .getConfigurationListeners().isEmpty());
+    }
+
+    /**
+     * Tests whether add property events are triggered.
+     */
+    public void testEventAddProperty()
+    {
+        TestEventListenerImpl l = new TestEventListenerImpl();
+        cc.addConfigurationListener(l);
+        cc.addProperty("test", "value");
+        assertEquals("No add events received", 2, l.eventCount);
+    }
+
+    /**
+     * Tests whether set property events are triggered.
+     */
+    public void testEventSetProperty()
+    {
+        TestEventListenerImpl l = new TestEventListenerImpl();
+        cc.addConfigurationListener(l);
+        cc.setProperty("test", "value");
+        assertEquals("No set events received", 2, l.eventCount);
+    }
+
+    /**
+     * Tests whether clear property events are triggered.
+     */
+    public void testEventClearProperty()
+    {
+        cc.addConfiguration(conf1);
+        assertTrue("Wrong value for property", cc
+                .getBoolean("configuration.loaded"));
+        TestEventListenerImpl l = new TestEventListenerImpl();
+        cc.addConfigurationListener(l);
+        cc.clearProperty("configuration.loaded");
+        assertFalse("Key still present", cc.containsKey("configuration.loaded"));
+        assertEquals("No clear events received", 2, l.eventCount);
+    }
+
+    /**
+     * A test configuration event listener that counts the number of received
+     * events. Used for testing the event facilities.
+     */
+    static class TestEventListenerImpl implements ConfigurationListener
+    {
+        /** The number of received events.*/
+        int eventCount;
+
+        public void configurationChanged(ConfigurationEvent event)
+        {
+            eventCount++;
+        }
     }
 }
