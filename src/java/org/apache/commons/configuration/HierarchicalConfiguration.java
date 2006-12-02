@@ -410,7 +410,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             return new HierarchicalConfiguration();
         }
 
-        HierarchicalConfiguration result = new HierarchicalConfiguration();
+        final HierarchicalConfiguration parent = this;
+        HierarchicalConfiguration result = new HierarchicalConfiguration()
+        {
+            // Override interpolate to always interpolate on the parent
+            protected Object interpolate(Object value)
+            {
+                return parent.interpolate(value);
+            }
+        };
         CloneVisitor visitor = new CloneVisitor();
 
         for (Iterator it = nodes.iterator(); it.hasNext();)

@@ -293,6 +293,27 @@ public class TestSubnodeConfiguration extends TestCase
     }
 
     /**
+     * An additional test for interpolation when the configurationAt() method is
+     * involved.
+     */
+    public void testInterpolationFromConfigurationAt()
+    {
+        parent.addProperty("base.dir", "/home/foo");
+        parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
+        parent.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
+        parent.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
+
+        Configuration sub = parent.configurationAt("test.absolute.dir");
+        for (int i = 1; i < 4; i++)
+        {
+            assertEquals("Wrong interpolation in parent", "/home/foo/path" + i,
+                    parent.getString("test.absolute.dir.dir" + i));
+            assertEquals("Wrong interpolation in subnode",
+                    "/home/foo/path" + i, sub.getString("dir" + i));
+        }
+    }
+
+    /**
      * Initializes the parent configuration. This method creates the typical
      * structure of tables and fields nodes.
      *

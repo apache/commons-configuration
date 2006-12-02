@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-242">
+        The configuration returned by HierarchicalConfiguration.subset()
+        performed variable interpolation only in the keys that belong to the
+        subset. Now the parent configuration is searched, too, to resolve the
+        value of the referenced property. This is consistent with the way
+        SubnodeConfiguration works.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-234">
         DefaultConfigurationBuilder now internally uses the standard expression
         engine for hierarchical configurations. So the dependency to Commons

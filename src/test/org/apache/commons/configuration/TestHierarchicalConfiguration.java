@@ -668,6 +668,26 @@ public class TestHierarchicalConfiguration extends TestCase
 		checkContent(copy);
 	}
 
+    /**
+     * Tests interpolation facilities.
+     */
+    public void testInterpolation()
+    {
+        config.addProperty("base.dir", "/home/foo");
+        config.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
+        config.addProperty("test.absolute.dir.dir2", "${base.dir}/path2");
+        config.addProperty("test.absolute.dir.dir3", "${base.dir}/path3");
+
+        Configuration sub = config.subset("test.absolute.dir");
+        for (int i = 1; i < 4; i++)
+        {
+            assertEquals("Wrong interpolation in parent", "/home/foo/path" + i,
+                    config.getString("test.absolute.dir.dir" + i));
+            assertEquals("Wrong interpolation in subnode",
+                    "/home/foo/path" + i, sub.getString("dir" + i));
+        }
+    }
+
 	/**
      * Tests the copy constructor when a null reference is passed.
      */
@@ -679,7 +699,7 @@ public class TestHierarchicalConfiguration extends TestCase
 
 	/**
      * Helper method for testing the getKeys(String) method.
-     * 
+     *
      * @param prefix the key to pass into getKeys()
      * @param expected the expected result
      */
@@ -746,7 +766,7 @@ public class TestHierarchicalConfiguration extends TestCase
 	/**
      * Checks the content of the passed in configuration object. Used by some
      * tests that copy a configuration.
-     * 
+     *
      * @param c the configuration to check
      */
 	private void checkContent(Configuration c)
