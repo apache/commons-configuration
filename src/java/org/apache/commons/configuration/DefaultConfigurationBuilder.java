@@ -222,6 +222,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static final String ATTR_FILENAME = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
             + "fileName" + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
 
+    /** Constant for the forceCreate attribute. */
+    static final String ATTR_FORCECREATE = DefaultExpressionEngine.DEFAULT_ATTRIBUTE_START
+            + XMLBeanDeclaration.RESERVED_PREFIX
+            + "forceCreate"
+            + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
     /** Constant for the name of the header section. */
     static final String SEC_HEADER = "header";
 
@@ -761,6 +767,27 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             return (AbstractConfiguration) createBean(getConfigurationClass(),
                     decl, null);
         }
+
+        /**
+         * Returns an uninitialized configuration of the represented type. This
+         * method will be called for optional configurations when the
+         * <code>getConfiguration()</code> method caused an error and the
+         * <code>forceCreate</code> attribute is set. A concrete sub class can
+         * here try to create an uninitialized, empty configuration, which may
+         * be possible if the error was created during initialization. This base
+         * implementation just returns <b>null</b>.
+         *
+         * @param decl the bean declaration with initialization parameters for
+         * the configuration
+         * @return the new configuration object
+         * @throws Exception if an error occurs
+         * @since 1.4
+         */
+        public AbstractConfiguration getEmptyConfiguration(
+                ConfigurationDeclaration decl) throws Exception
+        {
+            return null;
+        }
     }
 
     /**
@@ -773,12 +800,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * configuration source from the configuration definition file. The
      * declaration of a configuration source is very similar to a bean
      * declaration processed by <code>XMLBeanDeclaration</code>. There are
-     * very few differences, e.g. the two reserved attributes
+     * very few differences, e.g. some reserved attributes like
      * <code>optional</code> and <code>at</code> and the fact that a bean
      * factory is never needed.
      * </p>
      */
-    protected static class ConfigurationDeclaration extends XMLBeanDeclaration
+    public static class ConfigurationDeclaration extends XMLBeanDeclaration
     {
         /** Stores a reference to the associated configuration builder. */
         private DefaultConfigurationBuilder configurationBuilder;
@@ -835,6 +862,23 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                         Boolean.FALSE);
             }
             return value.booleanValue();
+        }
+
+        /**
+         * Returns a flag whether this configuration should always be created
+         * and added to the resulting combined configuration. This flag is
+         * evaluated only for optional configurations whose normal creation has
+         * caused an error. If for such a configuration the
+         * <code>forceCreate</code> attribute is set and the corresponding
+         * configuration provider supports this mode, an empty configuration
+         * will be created and added to the resulting combined configuration.
+         *
+         * @return the value of the <code>forceCreate</code> attribute
+         * @since 1.4
+         */
+        public boolean isForceCreate()
+        {
+            return this.getConfiguration().getBoolean(ATTR_FORCECREATE, false);
         }
 
         /**
@@ -909,7 +953,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * It will determine the responsible configuration provider and delegate
          * the call to this instance. If creation of the configuration fails
          * and the <code>optional</code> attribute is set, the exception will
-         * be ignored and <b>null</b> will be returned.
+         * be ignored. If the <code>forceCreate</code> attribute is set, too,
+         * the provider is asked to create an empty configuration. A return
+         * value of <b>null</b> means that no configuration could be created.
          *
          * @param beanClass the bean class (will be ignored)
          * @param data the declaration
@@ -944,6 +990,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 }
                 else
                 {
+                    if (decl.isForceCreate())
+                    {
+                        try
+                        {
+                            return provider.getEmptyConfiguration(decl);
+                        }
+                        catch (Exception ex2)
+                        {
+                            // Ignore exception, return null in this case
+                        }
+                    }
                     return null;
                 }
             }
@@ -1000,10 +1057,32 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
-            FileConfiguration config = (FileConfiguration) super
-                    .getConfiguration(decl);
-            config.load();
-            return (AbstractConfiguration) config;
+            AbstractConfiguration result = getEmptyConfiguration(decl);
+            ((FileConfiguration) result).load();
+            return result;
+        }
+
+        /**
+         * Returns an uninitialized file configuration. This method will be
+         * called for optional configurations when the
+         * <code>getConfiguration()</code> method caused an error and the
+         * <code>forceCreate</code> attribute is set. It will create the
+         * configuration of the represented type, but the <code>load()</code>
+         * method won't be called. This way non-existing configuration files can
+         * be handled gracefully: If loading a the file fails, an empty
+         * configuration will be created that is already configured with the
+         * correct file name.
+         *
+         * @param decl the bean declaration with initialization parameters for
+         * the configuration
+         * @return the new configuration object
+         * @throws Exception if an error occurs
+         * @since 1.4
+         */
+        public AbstractConfiguration getEmptyConfiguration(
+                ConfigurationDeclaration decl) throws Exception
+        {
+            return super.getConfiguration(decl);
         }
 
         /**
@@ -1120,6 +1199,22 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             DefaultConfigurationBuilder builder = (DefaultConfigurationBuilder) super
                     .getConfiguration(decl);
             return builder.getConfiguration(true);
+        }
+
+        /**
+         * Returns an empty configuration in case of an optional configuration
+         * could not be created. This implementation returns an empty combined
+         * configuration.
+         *
+         * @param decl the configuration declaration
+         * @return the configuration
+         * @exception Exception if an error occurs
+         * @since 1.4
+         */
+        public AbstractConfiguration getEmptyConfiguration(
+                ConfigurationDeclaration decl) throws Exception
+        {
+            return new CombinedConfiguration();
         }
     }
 

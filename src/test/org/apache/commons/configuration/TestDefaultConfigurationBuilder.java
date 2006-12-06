@@ -55,6 +55,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File INIT_FILE = new File(
             "conf/testComplexInitialization.xml");
 
+    /** Constant for the name of an optional configuration.*/
+    private static final String OPTIONAL_NAME = "optionalConfig";
+
     /** Stores the object to be tested. */
     DefaultConfigurationBuilder factory;
 
@@ -434,16 +437,91 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptionalNonFileBased() throws ConfigurationException
     {
-        factory.addProperty("override.configuration[@fileName]",
-                "nonExisting.xml");
-        factory.addProperty("override.configuration[@config-optional]",
-                Boolean.TRUE);
-        factory.addProperty("override.configuration[@config-name]",
-                "optionalConfig");
-        CombinedConfiguration config = factory.getConfiguration(false);
+        CombinedConfiguration config = prepareOptionalTest("configuration", false);
         assertTrue("Configuration not empty", config.isEmpty());
         assertEquals("Wrong number of configurations", 0, config
                 .getNumberOfConfigurations());
+    }
+
+    /**
+     * Tests an optional, non existing configuration with the forceCreate
+     * attribute. This configuration should be added to the resulting
+     * configuration.
+     */
+    public void testLoadOptionalForceCreate() throws ConfigurationException
+    {
+        factory.setBasePath(TEST_FILE.getParent());
+        CombinedConfiguration config = prepareOptionalTest("xml", true);
+        assertEquals("Wrong number of configurations", 1, config
+                .getNumberOfConfigurations());
+        FileConfiguration fc = (FileConfiguration) config
+                .getConfiguration(OPTIONAL_NAME);
+        assertNotNull("Optional config not found", fc);
+        assertEquals("File name was not set", "nonExisting.xml", fc
+                .getFileName());
+        assertNotNull("Base path was not set", fc.getBasePath());
+    }
+
+    /**
+     * Tests loading an embedded optional configuration builder with the force
+     * create attribute.
+     */
+    public void testLoadOptionalBuilderForceCreate()
+            throws ConfigurationException
+    {
+        CombinedConfiguration config = prepareOptionalTest("configuration",
+                true);
+        assertEquals("Wrong number of configurations", 1, config
+                .getNumberOfConfigurations());
+        assertTrue(
+                "Wrong optional configuration type",
+                config.getConfiguration(OPTIONAL_NAME) instanceof CombinedConfiguration);
+    }
+
+    /**
+     * Tests loading an optional configuration with the force create attribute
+     * set. The provider will always throw an exception. In this case the
+     * configuration will not be added to the resulting combined configuration.
+     */
+    public void testLoadOptionalForceCreateWithException()
+            throws ConfigurationException
+    {
+        factory.addConfigurationProvider("test",
+                new DefaultConfigurationBuilder.ConfigurationBuilderProvider()
+                {
+                    // Throw an exception here, too
+                    public AbstractConfiguration getEmptyConfiguration(
+                            DefaultConfigurationBuilder.ConfigurationDeclaration decl) throws Exception
+                    {
+                        throw new Exception("Unable to create configuration!");
+                    }
+                });
+        CombinedConfiguration config = prepareOptionalTest("test", true);
+        assertEquals("Optional configuration could be created", 0, config
+                .getNumberOfConfigurations());
+    }
+
+    /**
+     * Prepares a test for loading a configuration definition file with an
+     * optional configuration declaration.
+     *
+     * @param tag the tag name with the optional configuration
+     * @param force the forceCreate attribute
+     * @return the combined configuration obtained from the builder
+     * @throws ConfigurationException if an error occurs
+     */
+    private CombinedConfiguration prepareOptionalTest(String tag, boolean force)
+            throws ConfigurationException
+    {
+        String prefix = "override." + tag;
+        factory.addProperty(prefix + "[@fileName]", "nonExisting.xml");
+        factory.addProperty(prefix + "[@config-optional]", Boolean.TRUE);
+        factory.addProperty(prefix + "[@config-name]", OPTIONAL_NAME);
+        if (force)
+        {
+            factory.addProperty(prefix + "[@config-forceCreate]", Boolean.TRUE);
+        }
+        return factory.getConfiguration(false);
     }
 
     /**

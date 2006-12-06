@@ -23,6 +23,16 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-243">
+        Configuration declarations in the configuration definition file for
+        DefaultConfigurationBuilder that are marked as optional now support a
+        new attribute <code>config-forceCreate</code>. If this attribute is set
+        to true and the initialization of the configuration fails,
+        DefaultConfigurationBuilder tries to add an empty configuration of the
+        correct type to the resulting combined configuration. Before this
+        change optional configurations that caused errors were never added to
+        the combined configuration.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-241">
         CompositeConfiguration.clearProperty() now generates the correct
         update events.

@@ -212,12 +212,38 @@
       <td valign="top"><code>config-optional</code></td>
       <td>Declares a configuration as optional. This means that errors that
       occur when creating the configuration are silently ignored. Note that in
-      case of an error no configuration is added to the resulting combined
+      case of an error per default no configuration is added to the resulting combined
       configuration. This fact can be used to find out whether an optional
       configuration could be successfully created or not: If you specify a name
       for the optional configuration (using the <code>config-name</code>
       attribute), you can later check the combined configuration whether it
-      contains a configuration with this name.</td>
+      contains a configuration with this name. With the
+      <code>config-forceCreate</code> attribute (see below) this default
+      behavior can be changed.</td>
+    </tr>
+    <tr>
+      <td valign="top"><code>config-forceCreate</code></td>
+      <td>This boolean attribute is only evaluated for configurations declared as
+      optional. It determines the behavior of the configuration builder when
+      the optional configuration could not be created. If set to <b>true</b>,
+      the builder tries to create an empty, uninitialized configuration of the
+      correct type and add it to the resulting combined configuration. This is
+      especially useful for file-based configurations. Consider a use case
+      where an application wants to store user specific configuration files in
+      the users' home directories. When a user starts this application for the
+      first time, the user configuration does not exist yet. If it is declared
+      as <em>optional</em> and <em>forceCreate</em>, the missing configuration
+      file won't cause an error, but an empty configuration will be created.
+      The application can then obtain this configuration, add properties to it
+      (e.g. user specific settings) and save it. Without the
+      <code>config-forceCreate</code> attribute the application would have to
+      check whether the user configuration exists in the combined configuration
+      and eventually create it manually. Note that not all configuration
+      providers support this mechanism. Sometimes it may not be possible to
+      create an empty configuration if the standard initialization fails. In
+      this case no configuration will be added to the combined configuration
+      (with other words: the <code>config-forceCreate</code> attribute will not
+      have any effect).</td>
     </tr>
     </table>
     </p>
