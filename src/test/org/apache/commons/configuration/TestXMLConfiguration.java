@@ -32,6 +32,7 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -556,7 +557,7 @@ public class TestXMLConfiguration extends TestCase
         conf.load(testSaveConf);
         assertEquals("foo", conf.getString("element3[@name]"));
     }
-    
+
     /**
      * Tests collaboration between XMLConfiguration and a reloading strategy.
      */
@@ -573,27 +574,22 @@ public class TestXMLConfiguration extends TestCase
             out.close();
             out = null;
             conf.setFile(testSaveConf);
-            FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+            FileAlwaysReloadingStrategy strategy = new FileAlwaysReloadingStrategy();
             strategy.setRefreshDelay(100);
             conf.setReloadingStrategy(strategy);
             assertEquals(strategy, conf.getReloadingStrategy());
+            assertEquals("Wrong file monitored", testSaveConf.getAbsolutePath(),
+                    strategy.getMonitoredFile().getAbsolutePath());
             conf.load();
             assertEquals(1, conf.getInt("test"));
-            Thread.sleep(1000);
 
             out = new PrintWriter(new FileWriter(testSaveConf));
             out.println("<?xml version=\"1.0\"?><config><test>2</test></config>");
             out.close();
             out = null;
 
-            int trial = 0, value;
-            // repeat multiple times because there are sometimes race conditions
-            do
-            {
-                Thread.sleep(1000);
-                value = conf.getInt("test");
-            } while (value != 2 && ++trial <= 10);
-            assertEquals(2, value);
+            int value = conf.getInt("test");
+            assertEquals("No reloading performed", 2, value);
         }
         finally
         {
@@ -603,7 +599,7 @@ public class TestXMLConfiguration extends TestCase
             }
         }
     }
-    
+
     /**
      * Tests access to tag names with delimiter characters.
      */
@@ -612,7 +608,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("Name with dot", conf.getString("complexNames.my..elem"));
         assertEquals("Another dot", conf.getString("complexNames.my..elem.sub..elem"));
     }
-    
+
     /**
      * Tests setting a custom document builder.
      */
@@ -646,14 +642,14 @@ public class TestXMLConfiguration extends TestCase
         {
             //ok
         }
-        
+
         // Try to load a valid document with a validating builder
         conf = new XMLConfiguration();
         conf.setDocumentBuilder(builder);
         conf.load(new File("conf/testValidateValid.xml"));
         assertTrue(conf.containsKey("table.fields.field(1).type"));
     }
-    
+
     /**
      * Tests the clone() method.
      */
@@ -666,13 +662,13 @@ public class TestXMLConfiguration extends TestCase
         assertNull(copy.getDocument());
         assertNotNull(conf.getFileName());
         assertNull(copy.getFileName());
-        
+
         copy.setProperty("element3", "clonedValue");
         assertEquals("value", conf.getString("element3"));
         conf.setProperty("element3[@name]", "originalFoo");
         assertEquals("foo", copy.getString("element3[@name]"));
     }
-    
+
     /**
      * Tests the subset() method. There was a bug that calling subset() had
      * undesired side effects.
@@ -683,11 +679,11 @@ public class TestXMLConfiguration extends TestCase
         conf.load(new File("conf/testHierarchicalXMLConfiguration.xml"));
         conf.subset("tables.table(0)");
         conf.save(testSaveConf);
-        
+
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("users", conf.getString("tables.table(0).name"));
     }
-    
+
     /**
      * Tests string properties with list delimiters and escaped delimiters.
      */
@@ -700,7 +696,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals(2, conf.getMaxIndex("split.list1"));
         assertEquals("a,b,c", conf.getString("split.list2"));
     }
-    
+
     /**
      * Tests string properties with list delimiters when delimiter parsing
      * is disabled
@@ -728,7 +724,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value1", conf.getString("entry(0)"));
         assertEquals("test2", conf.getString("entry(1)[@key]"));
     }
-    
+
     /**
      * Tests DTD validation using the setValidating() method.
      */
