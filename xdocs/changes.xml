@@ -23,6 +23,16 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-240">
+        File-based configurations with a reloading strategy did not work well
+        together with CombinedConfiguration because the reloading strategy is
+        only checked when its associated configuration is accessed (which does
+        not happen when only the combined configuration is queried).
+        As a workaround CombinedConfiguration now provides the boolean
+        forceReloadCheck property. If this is set to true, all contained
+        configurations will be triggered when a property is queried. This will
+        cause a reload if necessary.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-243">
         Configuration declarations in the configuration definition file for
         DefaultConfigurationBuilder that are marked as optional now support a

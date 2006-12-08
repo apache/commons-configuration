@@ -118,6 +118,9 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     /** Constant for the default node combiner. */
     private static final NodeCombiner DEFAULT_COMBINER = new UnionCombiner();
 
+    /** Constant for the name of the property used for the reload check.*/
+    private static final String PROP_RELOAD_CHECK = "CombinedConfigurationReloadCheck";
+
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
 
@@ -129,6 +132,9 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
 
     /** Stores a map with the named configurations. */
     private Map namedConfigurations;
+
+    /** A flag whether an enhanced reload check is to be performed.*/
+    private boolean forceReloadCheck;
 
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
@@ -183,6 +189,34 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         }
         this.nodeCombiner = nodeCombiner;
         invalidate();
+    }
+
+    /**
+     * Returns a flag whether an enhanced reload check must be performed.
+     *
+     * @return the force reload check flag
+     * @since 1.4
+     */
+    public boolean isForceReloadCheck()
+    {
+        return forceReloadCheck;
+    }
+
+    /**
+     * Sets the force reload check flag. If this flag is set, each property
+     * access on this configuration will cause a reload check on the contained
+     * configurations. This is a workaround for a problem with some reload
+     * implementations that only check if a reload is required when they are
+     * triggered. Per default this mode is disabled. If the force reload check
+     * flag is set to <b>true</b>, accessing properties will be less
+     * performant, but reloads on contained configurations will be detected.
+     *
+     * @param forceReloadCheck the value of the flag
+     * @since 1.4
+     */
+    public void setForceReloadCheck(boolean forceReloadCheck)
+    {
+        this.forceReloadCheck = forceReloadCheck;
     }
 
     /**
@@ -441,6 +475,40 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
 
         copy.setRootNode(new DefaultConfigurationNode());
         return copy;
+    }
+
+    /**
+     * Returns the value of the specified property. This implementation
+     * evaluates the <em>force reload check</em> flag. If it is set, all
+     * contained configurations will be triggered before the value of the
+     * requested property is retrieved.
+     *
+     * @param key the key of the desired property
+     * @return the value of this property
+     * @since 1.4
+     */
+    public Object getProperty(String key)
+    {
+        if (isForceReloadCheck())
+        {
+            for (Iterator it = configurations.iterator(); it.hasNext();)
+            {
+                try
+                {
+                    // simply retrieve a property; this is enough for
+                    // triggering a reload
+                    ((ConfigData) it.next()).getConfiguration().getProperty(
+                            PROP_RELOAD_CHECK);
+                }
+                catch (Exception ex)
+                {
+                    // ignore all exceptions, e.g. missing property exceptions
+                    ;
+                }
+            }
+        }
+
+        return super.getProperty(key);
     }
 
     /**

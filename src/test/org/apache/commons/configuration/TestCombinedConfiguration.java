@@ -16,11 +16,16 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Set;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 
@@ -66,6 +71,7 @@ public class TestCombinedConfiguration extends TestCase
         assertTrue("Wrong node combiner",
                 config.getNodeCombiner() instanceof UnionCombiner);
         assertNull("Test config was found", config.getConfiguration(TEST_NAME));
+        assertFalse("Force reload check flag is set", config.isForceReloadCheck());
     }
 
     /**
@@ -402,6 +408,63 @@ public class TestCombinedConfiguration extends TestCase
         assertTrue("Config is not empty", config.isEmpty());
 
         listener.checkEvent(3, 2);
+    }
+
+    /**
+     * Tests if file-based configurations can be reloaded.
+     */
+    public void testReloading() throws Exception
+    {
+        config.setForceReloadCheck(true);
+        File testDir = new File("target");
+        File testXmlFile = new File(testDir, "reload.xml");
+        File testPropsFile = new File(testDir, "reload.properties");
+        writeFile(testXmlFile, "<xml><xmlReload>0</xmlReload></xml>");
+        writeFile(testPropsFile, "propsReload = 0");
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        PropertiesConfiguration c2 = new PropertiesConfiguration(testPropsFile);
+        c2.setThrowExceptionOnMissing(true);
+        c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        config.addConfiguration(c1);
+        config.addConfiguration(c2);
+        assertEquals("Wrong xml reload value", 0, config.getInt("xmlReload"));
+        assertEquals("Wrong props reload value", 0, config
+                .getInt("propsReload"));
+
+        writeFile(testXmlFile, "<xml><xmlReload>1</xmlReload></xml>");
+        assertEquals("XML reload not detected", 1, config.getInt("xmlReload"));
+        config.setForceReloadCheck(false);
+        writeFile(testPropsFile, "propsReload = 1");
+        assertEquals("Props reload detected though check flag is false", 0, config
+                .getInt("propsReload"));
+
+        assertTrue("XML file cannot be removed", testXmlFile.delete());
+        assertTrue("Props file cannot be removed", testPropsFile.delete());
+    }
+
+    /**
+     * Helper method for writing a file.
+     *
+     * @param file the file to be written
+     * @param content the file's content
+     * @throws IOException if an error occurs
+     */
+    private static void writeFile(File file, String content) throws IOException
+    {
+        PrintWriter out = null;
+        try
+        {
+            out = new PrintWriter(new FileWriter(file));
+            out.print(content);
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+        }
     }
 
     /**
