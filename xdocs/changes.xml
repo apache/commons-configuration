@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-244">
+        The number of dependencies needed for DefaultConfigurationBuilder was
+        reduced by letting some of the default configuration providers resolve
+        their classes per reflection.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-240">
         File-based configurations with a reloading strategy did not work well
         together with CombinedConfiguration because the reloading strategy is

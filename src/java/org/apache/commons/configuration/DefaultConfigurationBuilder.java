@@ -30,8 +30,6 @@ import org.apache.commons.configuration.beanutils.BeanFactory;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
-import org.apache.commons.configuration.plist.PropertyListConfiguration;
-import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -165,8 +163,7 @@ import org.apache.commons.configuration.tree.UnionCombiner;
  * @author <a
  * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id: DefaultConfigurationBuilder.java 384601 2006-03-09 20:22:58Z
- * oheger $
+ * @version $Id$
  */
 public class DefaultConfigurationBuilder extends XMLConfiguration implements
         ConfigurationBuilder
@@ -291,8 +288,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /** Constant for the provider for plist files. */
     private static final ConfigurationProvider PLIST_PROVIDER = new FileExtensionConfigurationProvider(
-            XMLPropertyListConfiguration.class,
-            PropertyListConfiguration.class, EXT_XML);
+            "org.apache.commons.configuration.plist.XMLPropertyListConfiguration",
+            "org.apache.commons.configuration.plist.PropertyListConfiguration",
+            EXT_XML);
 
     /** Constant for the provider for configuration definition files.*/
     private static final ConfigurationProvider BUILDER_PROVIDER = new ConfigurationBuilderProvider();
@@ -709,13 +707,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /** Stores the class of the configuration to be created. */
         private Class configurationClass;
 
+        /** Stores the name of the configuration class to be created.*/
+        private String configurationClassName;
+
         /**
          * Creates a new uninitialized instance of
          * <code>ConfigurationProvider</code>.
          */
         public ConfigurationProvider()
         {
-            this(null);
+            this((Class) null);
         }
 
         /**
@@ -727,6 +728,19 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         public ConfigurationProvider(Class configClass)
         {
             setConfigurationClass(configClass);
+        }
+
+        /**
+         * Creates a new instance of <code>ConfigurationProvider</code> and
+         * sets the name of the class of the configuration created by this
+         * provider.
+         *
+         * @param configClassName the name of the configuration class
+         * @since 1.4
+         */
+        public ConfigurationProvider(String configClassName)
+        {
+            setConfigurationClassName(configClassName);
         }
 
         /**
@@ -750,6 +764,29 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
+         * Returns the name of the configuration class returned by this
+         * provider.
+         *
+         * @return the configuration class name
+         * @since 1.4
+         */
+        public String getConfigurationClassName()
+        {
+            return configurationClassName;
+        }
+
+        /**
+         * Sets the name of the configuration class returned by this provider.
+         *
+         * @param configurationClassName the name of the configuration class
+         * @since 1.4
+         */
+        public void setConfigurationClassName(String configurationClassName)
+        {
+            this.configurationClassName = configurationClassName;
+        }
+
+        /**
          * Returns the configuration. This method is called to fetch the
          * configuration from the provider. This implementation will call the
          * inherited
@@ -764,7 +801,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
-            return (AbstractConfiguration) createBean(getConfigurationClass(),
+            return (AbstractConfiguration) createBean(fetchConfigurationClass(),
                     decl, null);
         }
 
@@ -787,6 +824,39 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 ConfigurationDeclaration decl) throws Exception
         {
             return null;
+        }
+
+        /**
+         * Returns the configuration class supported by this provider. If a
+         * class object was set, it is returned. Otherwise the method tries to
+         * resolve the class name.
+         *
+         * @return the class of the configuration to be created
+         * @since 1.4
+         */
+        protected synchronized Class fetchConfigurationClass() throws Exception
+        {
+            if (getConfigurationClass() == null)
+            {
+                setConfigurationClass(loadClass(getConfigurationClassName()));
+            }
+            return getConfigurationClass();
+        }
+
+        /**
+         * Loads the class with the specified name dynamically. If the class's
+         * name is <b>null</b>, <b>null</b> will also be returned.
+         *
+         * @param className the name of the class to be loaded
+         * @return the class object
+         * @throws ClassNotFoundException if class loading fails
+         * @since 1.4
+         */
+        protected Class loadClass(String className)
+                throws ClassNotFoundException
+        {
+            return (className != null) ? Class.forName(className, true,
+                    getClass().getClassLoader()) : null;
         }
     }
 
@@ -1046,6 +1116,18 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
+         * Creates a new instance of <code>FileConfigurationProvider</code>
+         * and sets the configuration class name.
+         *
+         * @param configClassName the name of the configuration to be created
+         * @since 1.4
+         */
+        public FileConfigurationProvider(String configClassName)
+        {
+            super(configClassName);
+        }
+
+        /**
          * Creates the configuration. After that <code>load()</code> will be
          * called. If this configuration is marked as optional, exceptions will
          * be ignored.
@@ -1115,14 +1197,28 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static class FileExtensionConfigurationProvider extends
             FileConfigurationProvider
     {
-        /** Stores the class to be created when the file extension matches. */
+        /**
+         * Stores the class to be created when the file extension matches.
+         */
         private Class matchingClass;
+
+        /**
+         * Stores the name of the class to be created when the file extension
+         * matches.
+         */
+        private String matchingClassName;
 
         /**
          * Stores the class to be created when the file extension does not
          * match.
          */
         private Class defaultClass;
+
+        /**
+         * Stores the name of the class to be created when the file extension
+         * does not match.
+         */
+        private String defaultClassName;
 
         /** Stores the file extension to be checked against. */
         private String fileExtension;
@@ -1146,6 +1242,60 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
+         * Creates a new instance of
+         * <code>FileExtensionConfigurationProvider</code> and initializes it
+         * with the names of the classes to be created.
+         *
+         * @param matchingClassName the name of the class to be created when the
+         * file extension matches
+         * @param defaultClassName the name of the class to be created when the
+         * file extension does not match
+         * @param extension the file extension to be checked agains
+         * @since 1.4
+         */
+        public FileExtensionConfigurationProvider(String matchingClassName,
+                String defaultClassName, String extension)
+        {
+            this.matchingClassName = matchingClassName;
+            this.defaultClassName = defaultClassName;
+            fileExtension = extension;
+        }
+
+        /**
+         * Returns the matching class object, no matter whether it was defined
+         * as a class or as a class name.
+         *
+         * @return the matching class object
+         * @throws Exception if an error occurs
+         * @since 1.4
+         */
+        protected synchronized Class fetchMatchingClass() throws Exception
+        {
+            if (matchingClass == null)
+            {
+                matchingClass = loadClass(matchingClassName);
+            }
+            return matchingClass;
+        }
+
+        /**
+         * Returns the default class object, no matter whether it was defined as
+         * a class or as a class name.
+         *
+         * @return the default class object
+         * @throws Exception if an error occurs
+         * @since 1.4
+         */
+        protected synchronized Class fetchDefaultClass() throws Exception
+        {
+            if (defaultClass == null)
+            {
+                defaultClass = loadClass(defaultClassName);
+            }
+            return defaultClass;
+        }
+
+        /**
          * Creates the configuration object. The class is determined by the file
          * name's extension.
          *
@@ -1162,11 +1312,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             if (fileName != null
                     && fileName.toLowerCase().trim().endsWith(fileExtension))
             {
-                return super.createBeanInstance(matchingClass, data);
+                return super.createBeanInstance(fetchMatchingClass(), data);
             }
             else
             {
-                return super.createBeanInstance(defaultClass, data);
+                return super.createBeanInstance(fetchDefaultClass(), data);
             }
         }
     }
