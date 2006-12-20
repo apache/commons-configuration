@@ -48,7 +48,16 @@ import org.apache.commons.lang.BooleanUtils;
  * <li>Support for string lists. The values of properties to be added to this
  * configuration are checked whether they contain a list delimiter character. If
  * this is the case and if list splitting is enabled, the string is splitted and
- * multiple values are added for this property.</li>
+ * multiple values are added for this property. (With the
+ * <code>setListDelimiter()</code> method the delimiter character can be
+ * specified; per default a comma is used. The
+ * <code>setDelimiterParsingDisabled()</code> method can be used to disable
+ * list splitting completely.)</li>
+ * <li>Allows to specify how missing properties are treated. Per default the
+ * get methods returning an object will return <b>null</b> if the searched
+ * property key is not found (and no default value is provided). With the
+ * <code>setThrowExceptionOnMissing()</code> method this behavior can be
+ * changed to throw an exception when a requested property cannot be found.</li>
  * <li>Basic event support. Whenever this configuration is modified registered
  * event listeners are notified. Refer to the various <code>EVENT_XXX</code>
  * constants to get an impression about which event types are supported.</li>
@@ -826,6 +835,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see #setThrowExceptionOnMissing(boolean)
      */
     public BigDecimal getBigDecimal(String key)
     {
@@ -870,6 +880,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see #setThrowExceptionOnMissing(boolean)
      */
     public BigInteger getBigInteger(String key)
     {
@@ -914,6 +925,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see #setThrowExceptionOnMissing(boolean)
      */
     public String getString(String key)
     {
@@ -954,7 +966,23 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
-     * {@inheritDoc}
+     * Get an array of strings associated with the given configuration key.
+     * If the key doesn't map to an existing object, an empty array is returned.
+     * If a property is added to a configuration, it is checked whether it
+     * contains multiple values. This is obvious if the added object is a list
+     * or an array. For strings it is checked whether the string contains the
+     * list delimiter character that can be specified using the
+     * <code>setListDelimiter()</code> method. If this is the case, the string
+     * is splitted at these positions resulting in a property with multiple
+     * values.
+     *
+     * @param key The configuration key.
+     * @return The associated string array if key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an
+     *         object that is not a String/List of Strings.
+     * @see #setListDelimiter(char)
+     * @see #setDelimiterParsingDisabled(boolean)
      */
     public String[] getStringArray(String key)
     {
@@ -991,6 +1019,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * {@inheritDoc}
+     * @see #getStringArray(String)
      */
     public List getList(String key)
     {
