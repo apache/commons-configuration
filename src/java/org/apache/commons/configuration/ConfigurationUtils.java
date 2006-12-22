@@ -382,6 +382,14 @@ public final class ConfigurationUtils
      */
     public static URL locate(String base, String name)
     {
+        if (log.isDebugEnabled())
+        {
+            StringBuffer buf = new StringBuffer();
+            buf.append("ConfigurationUtils.locate(): base is ").append(base);
+            buf.append(", name is ").append(name);
+            log.debug(buf.toString());
+        }
+
         if (name == null)
         {
             // undefined, always return null
@@ -417,7 +425,7 @@ public final class ConfigurationUtils
                 }
             }
 
-            log.debug("Configuration loaded from the URL " + url);
+            log.debug("Loading configuration from the URL " + url);
         }
         catch (IOException e)
         {
@@ -433,11 +441,11 @@ public final class ConfigurationUtils
                 try
                 {
                     url = file.toURL();
-                    log.debug("Configuration loaded from the absolute path " + name);
+                    log.debug("Loading configuration from the absolute path " + name);
                 }
                 catch (MalformedURLException e)
                 {
-                    e.printStackTrace();
+                    log.warn("Could not obtain URL from file", e);
                 }
             }
         }
@@ -455,12 +463,12 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Configuration loaded from the base path " + name);
+                    log.debug("Loading configuration from the path " + file);
                 }
             }
-            catch (IOException e)
+            catch (MalformedURLException e)
             {
-                e.printStackTrace();
+                log.warn("Could not obtain URL from file", e);
             }
         }
 
@@ -477,13 +485,13 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Configuration loaded from the home path " + name);
+                    log.debug("Loading configuration from the home path " + file);
                 }
 
             }
-            catch (IOException e)
+            catch (MalformedURLException e)
             {
-                e.printStackTrace();
+                log.warn("Could not obtain URL from file", e);
             }
         }
 
@@ -512,7 +520,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Configuration loaded from the context classpath (" + resourceName + ")");
+                log.debug("Loading configuration from the context classpath (" + resourceName + ")");
             }
         }
 
@@ -523,7 +531,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Configuration loaded from the system classpath (" + resourceName + ")");
+                log.debug("Loading configuration from the system classpath (" + resourceName + ")");
             }
         }
         return url;

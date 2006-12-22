@@ -495,7 +495,8 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             catch (ParseException e)
             {
-                e.printStackTrace();
+                // ignore
+                ;
             }
         }
 

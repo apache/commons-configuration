@@ -34,6 +34,8 @@ import java.util.Iterator;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
@@ -92,6 +94,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /** Holds a reference to the reloading strategy.*/
     protected ReloadingStrategy strategy;
+
+    /** The logger.*/
+    private Log log = LogFactory.getLog(getClass());
 
     /** A lock object for protecting reload operations.*/
     private Object reloadLock = new Object();
@@ -299,7 +304,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                log.warn("Could not close input stream", e);
             }
         }
     }
@@ -463,7 +468,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                log.warn("Could not close output stream", e);
             }
         }
     }
@@ -770,6 +775,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
                     if (strategy.reloadingRequired())
                     {
+                        if (log.isInfoEnabled())
+                        {
+                            log.info("Reloading configuration. URL is " + getURL());
+                        }
                         fireEvent(EVENT_RELOAD, null, getURL(), true);
                         setDetailEvents(false);
                         try
@@ -789,7 +798,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                 }
                 catch (Exception e)
                 {
-                    e.printStackTrace();
+                    log.warn("Error when reloading configuration", e);
                     // todo rollback the changes if the file can't be reloaded
                 }
                 finally
