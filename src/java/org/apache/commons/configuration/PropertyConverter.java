@@ -681,111 +681,11 @@ public final class PropertyConverter
     {
         if (value instanceof String)
         {
-            return interpolateHelper((String) value, null, config);
+            return config.getSubstitutor().replace((String) value);
         }
         else
         {
             return value;
         }
-    }
-
-    /**
-     * Recursive handler for multple levels of interpolation. This will be
-     * replaced when Commons Lang provides an interpolation feature. When called
-     * the first time, priorVariables should be null.
-     *
-     * @param base string with the ${key} variables
-     * @param priorVariables serves two purposes: to allow checking for loops,
-     * and creating a meaningful exception message should a loop occur. It's
-     * 0'th element will be set to the value of base from the first call. All
-     * subsequent interpolated variables are added afterward.
-     * @param config the current configuration
-     * @return the string with the interpolation taken care of
-     */
-    private static String interpolateHelper(String base, List priorVariables,
-            AbstractConfiguration config)
-    {
-        if (base == null)
-        {
-            return null;
-        }
-
-        // on the first call initialize priorVariables
-        // and add base as the first element
-        if (priorVariables == null)
-        {
-            priorVariables = new ArrayList();
-            priorVariables.add(base);
-        }
-
-        int begin = -1;
-        int end = -1;
-        int prec = 0 - AbstractConfiguration.END_TOKEN.length();
-        StringBuffer result = new StringBuffer();
-
-        // FIXME: we should probably allow the escaping of the start token
-        while (((begin = base.indexOf(AbstractConfiguration.START_TOKEN, prec
-                + AbstractConfiguration.END_TOKEN.length())) > -1)
-                && ((end = base.indexOf(AbstractConfiguration.END_TOKEN, begin)) > -1))
-        {
-            result.append(base.substring(prec
-                    + AbstractConfiguration.END_TOKEN.length(), begin));
-            String variable = base.substring(begin
-                    + AbstractConfiguration.START_TOKEN.length(), end);
-
-            // if we've got a loop, create a useful exception message and throw
-            if (priorVariables.contains(variable))
-            {
-                String initialBase = priorVariables.remove(0).toString();
-                priorVariables.add(variable);
-                StringBuffer priorVariableSb = new StringBuffer();
-
-                // create a nice trace of interpolated variables like so:
-                // var1->var2->var3
-                for (Iterator it = priorVariables.iterator(); it.hasNext();)
-                {
-                    priorVariableSb.append(it.next());
-                    if (it.hasNext())
-                    {
-                        priorVariableSb.append("->");
-                    }
-                }
-
-                throw new IllegalStateException(
-                        "infinite loop in property interpolation of "
-                                + initialBase + ": "
-                                + priorVariableSb.toString());
-            }
-            // otherwise, add this variable to the interpolation list.
-            else
-            {
-                priorVariables.add(variable);
-            }
-
-            Object value = config.resolveContainerStore(variable);
-            if (value != null)
-            {
-                result.append(interpolateHelper(value.toString(),
-                        priorVariables, config));
-
-                // pop the interpolated variable off the stack
-                // this maintains priorVariables correctness for
-                // properties with multiple interpolations, e.g.
-                // prop.name=${some.other.prop1}/blahblah/${some.other.prop2}
-                priorVariables.remove(priorVariables.size() - 1);
-            }
-            else
-            {
-                // variable not defined - so put it back in the value
-                result.append(AbstractConfiguration.START_TOKEN);
-                result.append(variable);
-                result.append(AbstractConfiguration.END_TOKEN);
-            }
-
-            prec = end;
-        }
-        result.append(base.substring(prec
-                + AbstractConfiguration.END_TOKEN.length(), base.length()));
-        return result.toString();
     }
 }

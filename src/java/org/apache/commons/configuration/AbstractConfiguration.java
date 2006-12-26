@@ -28,7 +28,10 @@ import java.util.Properties;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * <p>Abstract configuration class. Provides basic functionality but does not
@@ -106,6 +109,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * return null when a property does not exist. Defaults to return null.
      */
     private boolean throwExceptionOnMissing;
+
+    /** Stores a reference to the object that handles variable interpolation.*/
+    private StrSubstitutor substitutor;
 
     /**
      * For configurations extending AbstractConfiguration, allow them to change
@@ -228,6 +234,45 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     public boolean isThrowExceptionOnMissing()
     {
         return throwExceptionOnMissing;
+    }
+
+    /**
+     * Returns the object that is responsible for variable interpolation.
+     *
+     * @return the object responsible for variable interpolation
+     * @since 1.4
+     */
+    public synchronized StrSubstitutor getSubstitutor()
+    {
+        if (substitutor == null)
+        {
+            substitutor = new StrSubstitutor(createInterpolator());
+        }
+        return substitutor;
+    }
+
+    /**
+     * Creates the interpolator object that is responsible for variable
+     * interpolation. This method is invoked on first access of the
+     * interpolation features. It creates a new instance of
+     * <code>ConfigurationInterpolator</code> and sets the default lookup
+     * object to an implementation that queries this configuration.
+     *
+     * @return the newly created interpolator object
+     * @since 1.4
+     */
+    protected ConfigurationInterpolator createInterpolator()
+    {
+        ConfigurationInterpolator interpol = new ConfigurationInterpolator();
+        interpol.setDefaultLookup(new StrLookup()
+        {
+            public String lookup(String var)
+            {
+                Object prop = resolveContainerStore(var);
+                return (prop != null) ? prop.toString() : null;
+            }
+        });
+        return interpol;
     }
 
     /**

@@ -674,6 +674,48 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("Wrong int property", 42, subset.getInt("b"));
     }
 
+    /**
+     * Tests interpolation when the referred property is not found.
+     */
+    public void testInterpolationUnknownProperty()
+    {
+        config.addProperty("test.interpol", "${unknown.property}");
+        assertEquals("Wrong interpolated unknown property",
+                "${unknown.property}", config.getString("test.interpol"));
+    }
+
+    /**
+     * Tests interpolation of system properties.
+     */
+    public void testInterpolationSystemProperties()
+    {
+        String[] sysProperties =
+        { "java.version", "java.vendor", "os.name", "java.class.path" };
+        for (int i = 0; i < sysProperties.length; i++)
+        {
+            config.addProperty("prop" + i, "${sys:" + sysProperties[i] + "}");
+        }
+
+        for (int i = 0; i < sysProperties.length; i++)
+        {
+            assertEquals("Wrong value for system property " + sysProperties[i],
+                    System.getProperty(sysProperties[i]), config
+                            .getString("prop" + i));
+        }
+    }
+
+    /**
+     * Tests whether a variable can be escaped, so that it won't be
+     * interpolated.
+     */
+    public void testInterpolationEscaped()
+    {
+        config.addProperty("var", "x");
+        config.addProperty("escVar", "Use the variable $${${var}}.");
+        assertEquals("Wrong escaped variable", "Use the variable ${x}.", config
+                .getString("escVar"));
+    }
+
     public void testGetHexadecimalValue()
     {
         config.setProperty("number", "0xFF");
