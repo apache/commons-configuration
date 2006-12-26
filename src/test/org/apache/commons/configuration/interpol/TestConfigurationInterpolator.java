@@ -323,4 +323,17 @@ public class TestConfigurationInterpolator extends TestCase
                             + ":" + key));
         }
     }
+
+    /**
+     * Tests whether constants can be correctly resolved.
+     */
+    public void testLookupConstants()
+    {
+        String varName = ConfigurationInterpolator.class.getName()
+                + ".PREFIX_CONSTANTS";
+        assertEquals("Wrong constant value",
+                ConfigurationInterpolator.PREFIX_CONSTANTS, interpolator
+                        .lookup(ConfigurationInterpolator.PREFIX_CONSTANTS
+                                + ":" + varName));
+    }
 }

@@ -86,7 +86,6 @@ import org.apache.commons.lang.text.StrLookup;
  * <code>Configuration</conde>
  * object and used for its interpolation tasks.</p>
  *
- * @author Oliver Heger
  * @version $Id$
  * @since 1.4
  * @author <a
@@ -100,6 +99,12 @@ public class ConfigurationInterpolator extends StrLookup
      * system properties.
      */
     public static final String PREFIX_SYSPROPERTIES = "sys";
+
+    /**
+     * Constant for the prefix of the standard lookup object for resolving
+     * constant values.
+     */
+    public static final String PREFIX_CONSTANTS = "const";
 
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
@@ -313,5 +318,6 @@ public class ConfigurationInterpolator extends StrLookup
         globalLookups = new HashMap();
         globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup
                 .systemPropertiesLookup());
+        globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
     }
 }
