@@ -112,8 +112,11 @@ colors.background = #FFFFFF
 
       <subsection name="Lists and arrays">
         <p>
-          Commons Configuration has the ability to return easily a list of values,
-          for example if your file contains a list of comma separated values:
+          As was already pointed out in the section
+          <a href="howto_basicfeatures.html#List_handling">List handling</a>
+          of <em>Basic features</em>, Commons Configuration has the ability to
+          return easily a list of values. For example a properties file can
+          contain a list of comma separated values:
         </p>
 <source>
 # chart colors
@@ -138,80 +141,10 @@ colors.pie = #00FF00;
 colors.pie = #0000FF;
 </source>
         <p>
-          The <code>addProperty()</code> and <code>setProperty()</code> methods
-          also implement special list handling. The property value that is passed
-          to these methods can be a list or an array resulting in a property
-          with multiple values. If the property value is a string, it is checked
-          whether it contains the <em>list delimiter character</em>. If this is
-          the case, the string is splitted, and its single parts are added one
-          by one. The list delimiter character is the comma by default. It is
-          also applied to the properties when the configuration file is loaded
-          (that's the reason why the example above with the comma separated list
-          of chart colors works). By using the <code>setListDelimiter()</code>
-          method you can set it to a different character. Here are some examples:
-        </p>
-<source>
-// Change the list delimiter character to a slash
-config.setListDelimiter('/');
-// Now add some properties
-config.addProperty("greeting", "Hello, how are you?");
-config.addProperty("colors.pie",
-  new String[] { "#FF0000", "#00FF00", "#0000FF" });
-config.addProperty("colors.graph", "#808080/#00FFCC/#6422FF");
-
-// Access data
-String salut = config.getString("greeting");
-List colPie = config.getList("colors.pie");
-String[] colGraph = config.getStringArray("colors.graph");
-
-String firstPieColor = config.getString("colors.pie");
-</source>
-        <p>
-          In this example the list delimiter character is changed from a comma
-          to a slash. Because of this the <code>greeting</code> property won't
-          be splitted, but remains a single string. The string passed as value
-          for the <code>colors.graph</code> property in opposite contains the
-          new delimiter character and thus will result in a property with three
-          values.
-        </p>
-        <p>
-          Of interest is also the last line of the example fragment. Here the
-          <code>getString()</code> method is called for a property that has
-          multiple values. This call will return the first value of the list.
-        </p>
-        <p>
-          If you want to change the list delimiter character for all configuration
-          objects, you can use the static <code>setDefaultListDelimiter()</code>
-          method of <code>AbstractConfiguration</code>. It is also possible to
-          disable splitting of string properties at all for a Configuration
-          instance by calling its <code>setDelimiterParsingDisabled()</code>
-          method with a value of <b>true</b>.
-        </p>
-        <p>
-          <em>Note:</em> The list handling and string splitting facilities
-          described in this section are not specific to <code>PropertiesConfiguration</code>,
-          but are also supported by other configuration classes.
-        </p>
-      </subsection>
-
-      <subsection name="Variable Interpolation">
-        <p>
-          If you are familiar with Ant or Maven, you have most certainly already encountered
-          the variables (like <code>${token}</code>) that are automatically expanded when the
-          configuration file is loaded. Commons Configuration supports this feature as well,
-          here is an example:
-        </p>
-<source>
-application.name = Killer App
-application.version = 1.6.2
-
-application.title = ${application.name} ${application.version}
-</source>
-        <p>
-          If you now retrieve the value for the <code>application.title</code>
-          property, the result will be <code>Killer App 1.6.2</code>. As for
-          list handling, variable interpolation is a feature supported by other
-          configuration classes as well.
+          All of the features related to list handling described for
+          <code>AbstractConfiguration</code> also apply to properties files,
+          including changing the list delimiter or disabling list handling at
+          all.
         </p>
       </subsection>
 

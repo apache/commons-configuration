@@ -66,6 +66,15 @@ import org.apache.commons.lang.text.StrLookup;
  * <td>With this prefix a lookup object is associated that is able to resolve
  * system properties.</td>
  * </tr>
+ * <tr>
+ * <td valign="top">const</td>
+ * <td>The <code>const</code> prefix indicates that a variable is to be
+ * interpreted as a constant member field of a class (i.e. a field with the
+ * <b>static final</b> modifiers). The name of the variable must be of the form
+ * <code>&lt;full qualified class name&gt;.&lt;field name&gt;</code>, e.g.
+ * <code>org.apache.commons.configuration.interpol.ConfigurationInterpolator.PREFIX_CONSTANTS
+ * </code>.</td>
+ * </tr>
  * </table>
  * </p>
  * <p>

@@ -50,12 +50,18 @@
         <li><a href="overview.html#Mixing_Configuration_Sources">Mixing Configuration Sources</a></li>
         <li><a href="overview.html#The_Configuration_interface">The Configuration interface</a></li>
       </ul>
+      <li><a href="howto_basicfeatures.html#Basic_features_and_AbstractConfiguration">Basic features and AbstractConfiguration</a></li>
+      <ul>
+        <li><a href="howto_basicfeatures.html#Handling_of_missing_properties">Handling of missing properties</a></li>
+        <li><a href="howto_basicfeatures.html#List_handling">List handling</a></li>
+        <li><a href="howto_basicfeatures.html#Variable_Interpolation">Variable Interpolation</a></li>
+        <li><a href="howto_basicfeatures.html#Customizing_interpolation">Customizing interpolation</a></li>
+      </ul>
       <li><a href="howto_properties.html#Properties_files">Properties files</a></li>
       <ul>
         <li><a href="howto_properties.html#Using_PropertiesConfiguration">Using PropertiesConfiguration</a></li>
         <li><a href="howto_properties.html#Includes">Includes</a></li>
         <li><a href="howto_properties.html#Lists_and_arrays">Lists and arrays</a></li>
-        <li><a href="howto_properties.html#Variable_Interpolation">Variable Interpolation</a></li>
         <li><a href="howto_properties.html#Saving">Saving</a></li>
         <li><a href="howto_properties.html#Special_Characters">Special Characters</a></li>
         <li><a href="howto_properties.html#Layout_Objects">Layout Objects</a></li>

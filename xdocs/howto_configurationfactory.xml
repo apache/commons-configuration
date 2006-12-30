@@ -459,7 +459,12 @@ String backColor = config.getString("color.background");
                 <dd>
                 With this element an instance of <code>SystemConfiguration</code>
                 is added to the resulting configuration allowing access to
-                system properties.
+                system properties. <em>Note:</em> This element is only
+                present for reasons of backward compatibility. With the
+                interpolation features introduced in version 1.4 (see
+                <a href="howto_basicfeatures.html#Variable_Interpolation">
+                Variable Interpolation</a> for more details) there is a much
+                easier way of accessing system properties.
                 </dd>
             </dl>
         </p>
@@ -553,6 +558,17 @@ String backColor = config.getString("color.background");
           by calling <code>System.setProperty("config.file", "myfile.properties");</code>
           or using the <code>-D</code> command line switch when starting your
           Java application).
+        </p>
+        <p>
+          <em>Note:</em> Configuration definition files for
+          <code>ConfigurationFactory</code> are treated differently than other
+          configuration sources. So the standard interpolation features as
+          described in the section
+          <a href="howto_basicfeatures.html#Variable_Interpolation">
+          Variable Interpolation</a> do not work here. The variable
+          substitution facilities described in this section are specific to
+          <code>ConfigurationFactory</code> and differ from the default
+          handling of variables.
         </p>
     </subsection>
     </section>
