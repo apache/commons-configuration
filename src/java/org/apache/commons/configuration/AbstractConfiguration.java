@@ -252,6 +252,25 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
+     * Returns the <code>ConfigurationInterpolator</code> object that manages
+     * the lookup objects for resolving variables. <em>Note:</em> If this
+     * object is manipulated (e.g. new lookup objects added), synchronisation
+     * has to be manually ensured. Because
+     * <code>ConfigurationInterpolator</code> is not thread-safe concurrent
+     * access to properties of this configuration instance (which causes the
+     * interpolator to be invoked) may cause race conditions.
+     *
+     * @return the <code>ConfigurationInterpolator</code> associated with this
+     * configuration
+     * @since 1.4
+     */
+    public ConfigurationInterpolator getInterpolator()
+    {
+        return (ConfigurationInterpolator) getSubstitutor()
+                .getVariableResolver();
+    }
+
+    /**
      * Creates the interpolator object that is responsible for variable
      * interpolation. This method is invoked on first access of the
      * interpolation features. It creates a new instance of

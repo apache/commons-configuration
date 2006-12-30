@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ import java.util.StringTokenizer;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.lang.text.StrLookup;
 
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
@@ -705,6 +708,17 @@ public class TestBaseConfiguration extends TestCase
     }
 
     /**
+     * Tests interpolation of constant values.
+     */
+    public void testInterpolationConstants()
+    {
+        config.addProperty("key.code",
+                "${const:java.awt.event.KeyEvent.VK_CANCEL}");
+        assertEquals("Wrong value of constant variable", KeyEvent.VK_CANCEL,
+                config.getInt("key.code"));
+    }
+
+    /**
      * Tests whether a variable can be escaped, so that it won't be
      * interpolated.
      */
@@ -714,6 +728,24 @@ public class TestBaseConfiguration extends TestCase
         config.addProperty("escVar", "Use the variable $${${var}}.");
         assertEquals("Wrong escaped variable", "Use the variable ${x}.", config
                 .getString("escVar"));
+    }
+
+    /**
+     * Tests accessing and manipulating the interpolator object.
+     */
+    public void testGetInterpolator()
+    {
+        config.addProperty("var", "${echo:testVar}");
+        ConfigurationInterpolator interpol = config.getInterpolator();
+        interpol.registerLookup("echo", new StrLookup()
+        {
+            public String lookup(String varName)
+            {
+                return "Value of variable " + varName;
+            }
+        });
+        assertEquals("Wrong value of echo variable",
+                "Value of variable testVar", config.getString("var"));
     }
 
     public void testGetHexadecimalValue()

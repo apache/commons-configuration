@@ -23,6 +23,14 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-192">
+        Variable interpolation features have been improved. A variable can now
+        have the form <code>${prefix:variableName}</code> where the prefix
+        defines the type of the variable. The standard types <em>sys</em> for
+        system properties and <em>const</em> for constants are supported.
+        Variables without a prefix are treated as references to other
+        configuration properties (which is compatible to earlier versions).
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-244">
         The number of dependencies needed for DefaultConfigurationBuilder was
         reduced by letting some of the default configuration providers resolve
