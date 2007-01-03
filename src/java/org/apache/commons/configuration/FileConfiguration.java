@@ -178,14 +178,28 @@ public interface FileConfiguration extends Configuration
     void setFileName(String fileName);
 
     /**
-     * Return the base path.
+     * Returns the base path. One way to specify the location of a configuration
+     * source is by setting its base path and its file name. This method returns
+     * this base path. The concrete value returned by this method depends on the
+     * way the location of the configuration file was set. If methods like
+     * <code>setFile()</code> or <code>setURL()</code> were used, the base
+     * path typically points to the parent directory of the configuration file
+     * (e.g. for the URL <code>file:/temp/test.properties</code> the base path
+     * will be <code>file:/temp/</code>). If the base path was explictly set
+     * using <code>setBasePath()</code>, this method will return the exact
+     * value specified here without further modifications.
      *
      * @return the base path
+     * @see AbstractFileConfiguration#setBasePath(String)
      */
     String getBasePath();
 
     /**
-     * Set the base path. Relative configurations are loaded from this path.
+     * Sets the base path. The methods <code>setBasePath()</code> and
+     * <code>setFileName()</code> can be used together to specify the location
+     * of the configuration file to be loaded. If relative file names are to
+     * be resolved (e.g. for the include files supported by
+     * <code>PropertiesConfiguration</code>), this base path will be used.
      *
      * @param basePath the base path.
      */

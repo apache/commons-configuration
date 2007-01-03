@@ -41,7 +41,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
  * Developpers of file based configuration may want to extend this class,
  * the two methods left to implement are <code>{@link FileConfiguration#load(Reader)}</code>
- * and <code>{@link FileConfiguration#save(Writer)}.</p>
+ * and <code>{@link FileConfiguration#save(Writer)}</code>.</p>
  * <p>This base class already implements a couple of ways to specify the location
  * of the file this configuration is based on. The following possibilities
  * exist:
@@ -548,6 +548,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * Return the base path.
      *
      * @return the base path
+     * @see FileConfiguration#getBasePath()
      */
     public String getBasePath()
     {
@@ -555,8 +556,18 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Set the base path. Relative configurations are loaded from this path. The
-     * base path can be either a path to a directory or a URL.
+     * Sets the base path. The base path is typically either a path to a
+     * directory or a URL. Together with the value passed to the
+     * <code>setFileName()</code> method it defines the location of the
+     * configuration file to be loaded. The strategies for locating the file are
+     * quite tolerant. For instance if the file name is already an absolute path
+     * or a fully defined URL, the base path will be ignored. The base path can
+     * also be a URL, in which case the file name is interpreted in this URL's
+     * context. Because the base path is used by some of the derived classes for
+     * resolving relative file names it should contain a meaningful value. If
+     * other methods are used for determining the location of the configuration
+     * file (e.g. <code>setFile()</code> or <code>setURL()</code>), the
+     * base path is automatically set.
      *
      * @param basePath the base path.
      */
