@@ -66,6 +66,9 @@ public class ConfigurationMap extends AbstractMap
     }
 
     /**
+     * Returns a set with the entries contained in this configuration-based map.
+     *
+     * @return a set with the contained entries
      * @see java.util.Map#entrySet()
      */
     public Set entrySet()
@@ -74,6 +77,12 @@ public class ConfigurationMap extends AbstractMap
     }
 
     /**
+     * Stores the value for the specified key. The value is stored in the
+     * underlying configuration.
+     *
+     * @param key the key (will be converted to a string)
+     * @param value the value
+     * @return the old value of this key or <b>null</b> if it is new
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
     public Object put(Object key, Object value)
@@ -85,6 +94,11 @@ public class ConfigurationMap extends AbstractMap
     }
 
     /**
+     * Returns the value of the specified key. The key is converted to a string
+     * and then passed to the underlying configuration.
+     *
+     * @param key the key
+     * @return the value of this key
      * @see java.util.Map#get(java.lang.Object)
      */
     public Object get(Object key)

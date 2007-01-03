@@ -636,11 +636,15 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             else
             {
-                try {
+                try
+                {
                     path = ConfigurationUtils.getURL(getBasePath(),
                             getFileName()).getPath();
-                } catch (MalformedURLException e) {
+                }
+                catch (MalformedURLException e)
+                {
                     // simply ignore it and return null
+                    ;
                 }
             }
         }

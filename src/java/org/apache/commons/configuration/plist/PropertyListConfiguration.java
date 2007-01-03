@@ -84,21 +84,21 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     {
     }
 
-	/**
+    /**
      * Creates a new instance of <code>PropertyListConfiguration</code> and
      * copies the content of the specified configuration into this object.
      *
      * @param c the configuration to copy
      * @since 1.4
      */
-	public PropertyListConfiguration(HierarchicalConfiguration c)
-	{
-		super(c);
-	}
+    public PropertyListConfiguration(HierarchicalConfiguration c)
+    {
+        super(c);
+    }
 
-	/**
+    /**
      * Creates and loads the property list from the specified file.
-     * 
+     *
      * @param fileName The name of the plist file to load.
      * @throws ConfigurationException Error while loading the plist file
      */

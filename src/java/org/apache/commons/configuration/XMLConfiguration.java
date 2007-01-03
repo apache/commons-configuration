@@ -141,7 +141,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         super();
     }
 
-	/**
+    /**
      * Creates a new instance of <code>XMLConfiguration</code> and copies the
      * content of the passed in configuration into this object. Note that only
      * the data of the passed in configuration will be copied. If, for instance,
@@ -151,16 +151,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param c the configuration to copy
      * @since 1.4
      */
-	public XMLConfiguration(HierarchicalConfiguration c)
-	{
-		super(c);
-		clearReferences(getRootNode());
-	}
+    public XMLConfiguration(HierarchicalConfiguration c)
+    {
+        super(c);
+        clearReferences(getRootNode());
+    }
 
-	/**
+    /**
      * Creates a new instance of <code>XMLConfiguration</code>. The
      * configuration is loaded from the specified file
-     * 
+     *
      * @param fileName the name of the file to load
      * @throws ConfigurationException if the file cannot be loaded
      */

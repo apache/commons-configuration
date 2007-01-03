@@ -134,7 +134,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         setRootNode(new Node());
     }
 
-	/**
+    /**
      * Creates a new instance of <code>HierarchicalConfiguration</code> and
      * copies all data contained in the specified configuration into the new
      * one.
@@ -143,18 +143,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * constructor will behave like the standard constructor)
      * @since 1.4
      */
-	public HierarchicalConfiguration(HierarchicalConfiguration c)
-	{
-		this();
-		if (c != null)
-		{
-			CloneVisitor visitor = new CloneVisitor();
-			c.getRootNode().visit(visitor);
-			setRootNode(visitor.getClone());
-		}
-	}
+    public HierarchicalConfiguration(HierarchicalConfiguration c)
+    {
+        this();
+        if (c != null)
+        {
+            CloneVisitor visitor = new CloneVisitor();
+            c.getRootNode().visit(visitor);
+            setRootNode(visitor.getClone());
+        }
+    }
 
-	/**
+    /**
      * Returns the root node of this hierarchical configuration. This method
      * exists for backwards compatibility only. New code should use the
      * <code>{@link #getRootNode()}</code> method instead, which operates on
@@ -932,7 +932,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         return child;
     }
 
-	/**
+    /**
      * Clears all reference fields in a node structure. A configuration node can
      * store a so-called &quot;reference&quot;. The meaning of this data is
      * determined by a concrete sub class. Typically such references are
@@ -943,18 +943,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * are to be cleared
      * @since 1.4
      */
-	protected static void clearReferences(ConfigurationNode node)
-	{
-		node.visit(new ConfigurationNodeVisitorAdapter()
-		{
-			public void visitBeforeChildren(ConfigurationNode node)
-			{
-				node.setReference(null);
-			}
-		});
-	}
+    protected static void clearReferences(ConfigurationNode node)
+    {
+        node.visit(new ConfigurationNodeVisitorAdapter()
+        {
+            public void visitBeforeChildren(ConfigurationNode node)
+            {
+                node.setReference(null);
+            }
+        });
+    }
 
-	/**
+    /**
      * A data class for storing (hierarchical) property information. A property
      * can have a value and an arbitrary number of child properties. From
      * version 1.3 on this class is only a thin wrapper over the

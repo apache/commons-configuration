@@ -1069,6 +1069,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                         catch (Exception ex2)
                         {
                             // Ignore exception, return null in this case
+                            ;
                         }
                     }
                     return null;

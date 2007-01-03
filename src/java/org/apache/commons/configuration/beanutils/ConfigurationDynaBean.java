@@ -76,9 +76,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, java.lang.Object)
-     */
     public void set(String name, Object value)
     {
         if (log.isTraceEnabled())
@@ -178,9 +175,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String)
-     */
     public Object get(String name)
     {
         if (log.isTraceEnabled())
@@ -212,9 +206,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return result;
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#contains(java.lang.String, java.lang.String)
-     */
     public boolean contains(String name, String key)
     {
         Configuration subset = getConfiguration().subset(name);
@@ -226,9 +217,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return subset.containsKey(key);
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String, int)
-     */
     public Object get(String name, int index)
     {
         try
@@ -247,9 +235,6 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#get(java.lang.String, java.lang.String)
-     */
     public Object get(String name, String key)
     {
         Configuration subset = getConfiguration().subset(name);
@@ -261,26 +246,17 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         return subset.getProperty(key);
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#getDynaClass()
-     */
     public DynaClass getDynaClass()
     {
         return new ConfigurationDynaClass(getConfiguration());
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#remove(java.lang.String, java.lang.String)
-     */
     public void remove(String name, String key)
     {
         Configuration subset = new SubsetConfiguration(getConfiguration(), name, PROPERTY_DELIMITER);
         subset.setProperty(key, null);
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, int, java.lang.Object)
-     */
     public void set(String name, int index, Object value)
     {
         try
@@ -317,12 +293,8 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaBean#set(java.lang.String, java.lang.String, java.lang.Object)
-     */
     public void set(String name, String key, Object value)
     {
         getConfiguration().setProperty(name + "." + key, value);
     }
-
 }

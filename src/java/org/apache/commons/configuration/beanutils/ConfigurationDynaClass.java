@@ -60,9 +60,6 @@ public class ConfigurationDynaClass implements DynaClass
         this.configuration = configuration;
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaClass#getDynaProperty(java.lang.String)
-     */
     public DynaProperty getDynaProperty(String name)
     {
         if (log.isTraceEnabled())
@@ -121,9 +118,6 @@ public class ConfigurationDynaClass implements DynaClass
         }
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaClass#getDynaProperties()
-     */
     public DynaProperty[] getDynaProperties()
     {
         if (log.isTraceEnabled())
@@ -150,20 +144,13 @@ public class ConfigurationDynaClass implements DynaClass
         return propertyArray;
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaClass#getName()
-     */
     public String getName()
     {
         return ConfigurationDynaBean.class.getName();
     }
 
-    /**
-     * @see org.apache.commons.beanutils.DynaClass#newInstance()
-     */
     public DynaBean newInstance() throws IllegalAccessException, InstantiationException
     {
         return new ConfigurationDynaBean(configuration);
     }
-
 }

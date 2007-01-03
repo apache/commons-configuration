@@ -321,11 +321,11 @@ implements Cloneable
         {
             return defaultValue;
         }
-        
+
         ListIterator lit = list.listIterator();
         while (lit.hasNext())
         {
-        	lit.set(interpolate(lit.next()));
+            lit.set(interpolate(lit.next()));
         }
 
         return list;

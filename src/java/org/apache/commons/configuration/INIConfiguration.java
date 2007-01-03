@@ -339,13 +339,13 @@ public class INIConfiguration extends AbstractFileConfiguration
         {
             return false;
         }
-        return ((s.startsWith("[")) && (s.endsWith("]")));
+        return s.startsWith("[") && s.endsWith("]");
     }
 
     /**
      * Return a set containing the sections in this ini configuration. Note that
      * changes to this set do not affect the configuration.
-     
+     *
      * @return a set containing the sections.
      */
     public Set getSections()
@@ -357,7 +357,9 @@ public class INIConfiguration extends AbstractFileConfiguration
             String key = (String) iter.next();
             int index = key.indexOf(".");
             if (index >= 0)
+            {
                 sections.add(key.substring(0, index));
+            }
         }
         return sections;
     }
