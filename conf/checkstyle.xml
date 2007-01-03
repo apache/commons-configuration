@@ -34,6 +34,7 @@
         <module name="JavadocMethod">
             <property name="scope" value="public"/>
             <property name="allowUndeclaredRTE" value="true"/>
+	    <property name="allowMissingJavadoc" value="true"/>
         </module>
         <module name="JavadocType">
             <property name="authorFormat" value="\S"/>
@@ -118,14 +119,12 @@
         <!-- See http://checkstyle.sf.net/config_coding.html -->
         <module name="CovariantEquals"/>
         <module name="DoubleCheckedLocking"/>
-        <module name="EmptyStatement"/>
         <module name="EqualsHashCode"/>
         <module name="IllegalInstantiation"/>
         <module name="InnerAssignment"/>
         <module name="MagicNumber">
             <property name="ignoreNumbers" value="-1,0,1,2,3"/>
         </module>
-        <module name="MissingSwitchDefault"/>
         <module name="RedundantThrows">
             <property name="allowUnchecked" value="true"/>
         </module>
@@ -134,7 +133,6 @@
         <module name="StringLiteralEquality"/>
         <module name="SuperClone"/>
         <module name="SuperFinalize"/>
-        <module name="IllegalType"/>
         <module name="DeclarationOrder"/>
         <module name="ExplicitInitialization"/>
         <module name="DefaultComesLast"/>
