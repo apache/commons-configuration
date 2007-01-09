@@ -253,4 +253,32 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("Wrong list delimiter in parent", ';', config
                 .getListDelimiter());
     }
+
+    public void testSetDelimiterParsingDisabled()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        Configuration subset = config.subset("prefix");
+        config.setDelimiterParsingDisabled(true);
+        subset.addProperty("list", "a,b,c");
+        assertEquals("Wrong value of property", "a,b,c", config
+                .getString("prefix.list"));
+
+        ((AbstractConfiguration) subset).setDelimiterParsingDisabled(false);
+        subset.addProperty("list2", "a,b,c");
+        assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
+                .size());
+    }
+
+    public void testIsDelimiterParsingDisabled()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        AbstractConfiguration subset = (AbstractConfiguration) config
+                .subset("prefix");
+        config.setDelimiterParsingDisabled(true);
+        assertTrue("Wrong value of list parsing flag in subset", subset
+                .isDelimiterParsingDisabled());
+        subset.setDelimiterParsingDisabled(false);
+        assertFalse("Wrong value of list parsing flag in parent", config
+                .isDelimiterParsingDisabled());
+    }
 }

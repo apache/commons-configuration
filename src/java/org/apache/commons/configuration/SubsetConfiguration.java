@@ -315,4 +315,41 @@ public class SubsetConfiguration extends AbstractConfiguration
             super.setListDelimiter(delim);
         }
     }
+
+    /**
+     * Returns a flag whether string properties should be checked for list
+     * delimiter characters. This implementation ensures that this flag is kept
+     * in sync with the parent configuration if this object supports this
+     * feature.
+     *
+     * @return the delimiter parsing disabled flag
+     * @since 1.4
+     */
+    public boolean isDelimiterParsingDisabled()
+    {
+        return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
+                .isDelimiterParsingDisabled()
+                : super.isDelimiterParsingDisabled();
+    }
+
+    /**
+     * Sets a flag whether list parsing is disabled. This implementation will
+     * also set the flag at the parent configuration if this object supports
+     * this feature.
+     *
+     * @param delimiterParsingDisabled the delimiter parsing disabled flag
+     * @since 1.4
+     */
+    public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
+    {
+        if (parent instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) parent)
+                    .setDelimiterParsingDisabled(delimiterParsingDisabled);
+        }
+        else
+        {
+            super.setDelimiterParsingDisabled(delimiterParsingDisabled);
+        }
+    }
 }
