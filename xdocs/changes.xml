@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-155">
+        SubsetConfiguration and CompositeConfiguration were updated to fully
+        support an instance specific list delimiter. Concerning splitting of
+        string properties that contain a list delimiter character, these
+        classes now behave like a "normal" configuration.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-192">
         Variable interpolation features have been improved. A variable can now
         have the form <code>${prefix:variableName}</code> where the prefix
@@ -30,6 +36,10 @@
         system properties and <em>const</em> for constants are supported.
         Variables without a prefix are treated as references to other
         configuration properties (which is compatible to earlier versions).
+      </action>
+      <action dev="oheger" type="update">
+        Commons Configuration now depends on Commons Lang 2.2. Some features
+        of Lang's new text package are used.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-244">
         The number of dependencies needed for DefaultConfigurationBuilder was
