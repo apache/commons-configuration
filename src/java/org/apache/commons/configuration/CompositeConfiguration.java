@@ -158,6 +158,8 @@ implements Cloneable
         // recreate the in memory configuration
         inMemoryConfiguration = new BaseConfiguration();
         ((BaseConfiguration) inMemoryConfiguration).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+        ((BaseConfiguration) inMemoryConfiguration).setListDelimiter(getListDelimiter());
+        ((BaseConfiguration) inMemoryConfiguration).setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         configList.add(inMemoryConfiguration);
     }
 
@@ -410,5 +412,34 @@ implements Cloneable
             // cannot happen
             throw new ConfigurationRuntimeException(cnex);
         }
+    }
+
+    /**
+     * Sets a flag whether added values for string properties should be checked
+     * for the list delimiter. This implementation ensures that the in memory
+     * configuration is correctly initialized.
+     *
+     * @param delimiterParsingDisabled the new value of the flag
+     * @since 1.4
+     */
+    public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
+    {
+        ((BaseConfiguration) getInMemoryConfiguration())
+                .setDelimiterParsingDisabled(delimiterParsingDisabled);
+        super.setDelimiterParsingDisabled(delimiterParsingDisabled);
+    }
+
+    /**
+     * Sets the character that is used as list delimiter. This implementation
+     * ensures that the in memory configuration is correctly initialized.
+     *
+     * @param listDelimiter the new list delimiter character
+     * @since 1.4
+     */
+    public void setListDelimiter(char listDelimiter)
+    {
+        ((BaseConfiguration) getInMemoryConfiguration())
+                .setListDelimiter(listDelimiter);
+        super.setListDelimiter(listDelimiter);
     }
 }

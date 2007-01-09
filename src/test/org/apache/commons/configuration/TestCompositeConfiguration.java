@@ -559,6 +559,70 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
+     * Tests chaning the list delimiter character.
+     */
+    public void testSetListDelimiter()
+    {
+        cc.setListDelimiter('/');
+        checkSetListDelimiter();
+    }
+
+    /**
+     * Tests whether the correct list delimiter is set after a clear operation.
+     */
+    public void testSetListDelimiterAfterClear()
+    {
+        cc.setListDelimiter('/');
+        cc.clear();
+        checkSetListDelimiter();
+    }
+
+    /**
+     * Helper method for testing whether the list delimiter is correctly
+     * handled.
+     */
+    private void checkSetListDelimiter()
+    {
+        cc.addProperty("test.list", "a/b/c");
+        cc.addProperty("test.property", "a,b,c");
+        assertEquals("Wrong number of list elements", 3, cc
+                .getList("test.list").size());
+        assertEquals("Wrong value of property", "a,b,c", cc
+                .getString("test.property"));
+    }
+
+    /**
+     * Tests whether list splitting can be disabled.
+     */
+    public void testSetDelimiterParsingDisabled()
+    {
+        cc.setDelimiterParsingDisabled(true);
+        checkSetListDelimiterParsingDisabled();
+    }
+
+    /**
+     * Tests whether the list parsing flag is correctly handled after a clear()
+     * operation.
+     */
+    public void testSetDelimiterParsingDisabledAfterClear()
+    {
+        cc.setDelimiterParsingDisabled(true);
+        cc.clear();
+        checkSetListDelimiterParsingDisabled();
+    }
+
+    /**
+     * Helper method for checking whether the list parsing flag is correctly
+     * handled.
+     */
+    private void checkSetListDelimiterParsingDisabled()
+    {
+        cc.addProperty("test.property", "a,b,c");
+        assertEquals("Wrong value of property", "a,b,c", cc
+                .getString("test.property"));
+    }
+
+    /**
      * A test configuration event listener that counts the number of received
      * events. Used for testing the event facilities.
      */
