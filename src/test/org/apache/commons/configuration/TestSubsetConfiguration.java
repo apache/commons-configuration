@@ -225,4 +225,32 @@ public class TestSubsetConfiguration extends TestCase
         assertTrue("the subset is not empty", subset.isEmpty());
         assertFalse("the parent configuration is empty", config.isEmpty());
     }
+
+    public void testSetListDelimiter()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        Configuration subset = config.subset("prefix");
+        config.setListDelimiter('/');
+        subset.addProperty("list", "a/b/c");
+        assertEquals("Wrong size of list", 3, config.getList("prefix.list")
+                .size());
+
+        ((AbstractConfiguration) subset).setListDelimiter(';');
+        subset.addProperty("list2", "a;b;c");
+        assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
+                .size());
+    }
+
+    public void testGetListDelimiter()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        AbstractConfiguration subset = (AbstractConfiguration) config
+                .subset("prefix");
+        config.setListDelimiter('/');
+        assertEquals("Wrong list delimiter in subset", '/', subset
+                .getListDelimiter());
+        subset.setListDelimiter(';');
+        assertEquals("Wrong list delimiter in parent", ';', config
+                .getListDelimiter());
+    }
 }

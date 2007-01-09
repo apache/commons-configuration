@@ -282,4 +282,37 @@ public class SubsetConfiguration extends AbstractConfiguration
             return super.isThrowExceptionOnMissing();
         }
     }
+
+    /**
+     * Returns the list delimiter. This property will be fetched from the parent
+     * configuration if supported.
+     *
+     * @return the list delimiter
+     * @since 1.4
+     */
+    public char getListDelimiter()
+    {
+        return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
+                .getListDelimiter()
+                : super.getListDelimiter();
+    }
+
+    /**
+     * Sets the list delimiter. If the parent configuration supports this
+     * feature, the delimiter will be set at the parent.
+     *
+     * @param delim the new list delimiter
+     * @since 1.4
+     */
+    public void setListDelimiter(char delim)
+    {
+        if (parent instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) parent).setListDelimiter(delim);
+        }
+        else
+        {
+            super.setListDelimiter(delim);
+        }
+    }
 }
