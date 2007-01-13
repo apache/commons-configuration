@@ -31,7 +31,6 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -45,9 +44,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class JNDIConfiguration extends AbstractConfiguration
 {
-    /** Logger. */
-    private static Log log = LogFactory.getLog(JNDIConfiguration.class);
-
     /** The prefix of the context. */
     private String prefix;
 
@@ -106,6 +102,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         this.context = context;
         this.prefix = prefix;
+        setLogger(LogFactory.getLog(getClass()));
     }
 
     /**
@@ -215,7 +212,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
             return new ArrayList().iterator();
         }
     }
@@ -299,7 +296,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
             return true;
         }
     }
@@ -353,7 +350,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
             return false;
         }
     }
@@ -405,7 +402,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
             return null;
         }
     }

@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add">
+        AbstractConfiguration now allows to set an instance specific logger
+        using the setLogger() method. This gives clients more control over a
+        configuration's logging behavior.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-155">
         SubsetConfiguration and CompositeConfiguration were updated to fully
         support an instance specific list delimiter. Concerning splitting of

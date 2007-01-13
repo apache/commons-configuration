@@ -34,7 +34,6 @@ import java.util.Iterator;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -95,9 +94,6 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     /** Holds a reference to the reloading strategy.*/
     protected ReloadingStrategy strategy;
 
-    /** The logger.*/
-    private Log log = LogFactory.getLog(getClass());
-
     /** A lock object for protecting reload operations.*/
     private Object reloadLock = new Object();
 
@@ -118,6 +114,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public AbstractFileConfiguration()
     {
         initReloadingStrategy();
+        setLogger(LogFactory.getLog(getClass()));
     }
 
     /**
@@ -304,7 +301,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                log.warn("Could not close input stream", e);
+                getLogger().warn("Could not close input stream", e);
             }
         }
     }
@@ -468,7 +465,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                log.warn("Could not close output stream", e);
+                getLogger().warn("Could not close output stream", e);
             }
         }
     }
@@ -790,9 +787,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
                     if (strategy.reloadingRequired())
                     {
-                        if (log.isInfoEnabled())
+                        if (getLogger().isInfoEnabled())
                         {
-                            log.info("Reloading configuration. URL is " + getURL());
+                            getLogger().info("Reloading configuration. URL is " + getURL());
                         }
                         fireEvent(EVENT_RELOAD, null, getURL(), true);
                         setDetailEvents(false);
@@ -813,7 +810,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                 }
                 catch (Exception e)
                 {
-                    log.warn("Error when reloading configuration", e);
+                    getLogger().warn("Error when reloading configuration", e);
                     // todo rollback the changes if the file can't be reloaded
                 }
                 finally

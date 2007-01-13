@@ -32,6 +32,8 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.NoOpLog;
 
 /**
  * <p>Abstract configuration class. Provides basic functionality but does not
@@ -112,6 +114,17 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /** Stores a reference to the object that handles variable interpolation.*/
     private StrSubstitutor substitutor;
+
+    /** Stores the logger.*/
+    private Log log;
+    
+    /**
+     * Creates a new instance of <code>AbstractConfiguration</code>.
+     */
+    protected AbstractConfiguration()
+    {
+        setLogger(null);
+    }
 
     /**
      * For configurations extending AbstractConfiguration, allow them to change
@@ -292,6 +305,32 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             }
         });
         return interpol;
+    }
+
+    /**
+     * Returns the logger used by this configuration object.
+     *
+     * @return the logger
+     * @since 1.4
+     */
+    public Log getLogger()
+    {
+        return log;
+    }
+
+    /**
+     * Allows to set the logger to be used by this configuration object. This
+     * method makes it possible for clients to exactly control logging behavior.
+     * Per default a logger is set that will ignore all log messages. Derived
+     * classes that want to enable logging should call this method during their
+     * initialization with the logger to be used.
+     *
+     * @param log the new logger
+     * @since 1.4
+     */
+    public void setLogger(Log log)
+    {
+        this.log = (log != null) ? log : new NoOpLog();
     }
 
     /**

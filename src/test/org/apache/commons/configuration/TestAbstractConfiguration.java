@@ -21,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 
@@ -128,4 +131,15 @@ public abstract class TestAbstractConfiguration extends TestCase
         ListAssert.assertEquals("keys", expectedKeys, actualKeys);
     }
 
+    /**
+     * Tests accessing the configuration's logger.
+     */
+    public void testSetLogger()
+    {
+        AbstractConfiguration config = getEmptyConfiguration();
+        assertNotNull("Default logger is null", config.getLogger());
+        Log log = LogFactory.getLog(config.getClass());
+        config.setLogger(log);
+        assertSame("Logger was not set", log, config.getLogger());
+    }
 }

@@ -29,7 +29,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -42,9 +41,6 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
-    /** Logger */
-    private static Log log = LogFactory.getLog(DatabaseConfiguration.class);
-
     /** The datasource to connect to the database. */
     private DataSource datasource;
 
@@ -82,6 +78,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         this.keyColumn = keyColumn;
         this.valueColumn = valueColumn;
         this.name = name;
+        setLogger(LogFactory.getLog(getClass()));
     }
 
     /**
@@ -148,7 +145,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -195,7 +192,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -241,7 +238,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -287,7 +284,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -329,7 +326,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -368,7 +365,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -414,7 +411,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
         finally
         {
@@ -447,7 +444,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            log.error(e.getMessage(), e);
+            getLogger().error(e.getMessage(), e);
         }
     }
 }
