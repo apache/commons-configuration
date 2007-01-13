@@ -168,7 +168,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
             copy.store = (Map) ConfigurationUtils.clone(store);
-            copy.clearConfigurationListeners();
             return copy;
         }
         catch (CloneNotSupportedException cex)

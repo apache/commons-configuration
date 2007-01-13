@@ -50,8 +50,17 @@ import java.util.LinkedList;
  * events will be received. Note that the number of received detail events may
  * differ for different configuration implementations.
  * <code>{@link org.apache.commons.configuration.HierarchicalConfiguration HierarchicalConfiguration}</code>
- * for instance has a custom implementation of <code>setProperty()</code>, which
- * does not generate any detail events.
+ * for instance has a custom implementation of <code>setProperty()</code>,
+ * which does not generate any detail events.
+ * </p>
+ * <p>
+ * In addition to &quot;normal&quot; events, error events are supported. Such
+ * events signal an internal problem that occurred during access of properties.
+ * For them a special listener interface exists:
+ * <code>{@link ConfigurationErrorListener}</code>. There is another set of
+ * methods dealing with event listeners of this type. The
+ * <code>fireError()</code> method can be used by derived classes to send
+ * notifications about errors to registered observers.
  * </p>
  *
  * @author <a
@@ -65,6 +74,9 @@ public class EventSource
     /** A collection for the registered event listeners. */
     private Collection listeners;
 
+    /** A collection for the registered error listeners.*/
+    private Collection errorListeners;
+
     /** A counter for the detail events. */
     private int detailEvents;
 
@@ -73,7 +85,7 @@ public class EventSource
      */
     public EventSource()
     {
-        clearConfigurationListeners();
+        initListeners();
     }
 
     /**
@@ -83,14 +95,7 @@ public class EventSource
      */
     public void addConfigurationListener(ConfigurationListener l)
     {
-        if (l == null)
-        {
-            throw new IllegalArgumentException("Listener must not be null!");
-        }
-        synchronized (listeners)
-        {
-            listeners.add(l);
-        }
+        doAddListener(listeners, l);
     }
 
     /**
@@ -102,10 +107,7 @@ public class EventSource
      */
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
-        synchronized (listeners)
-        {
-            return listeners.remove(l);
-        }
+        return doRemoveListener(listeners, l);
     }
 
     /**
@@ -113,15 +115,13 @@ public class EventSource
      * currently registered at this object.
      *
      * @return a collection with the registered
-     * <code>ConfigurationListener</code>s (this collection cannot be
-     * changed)
+     * <code>ConfigurationListener</code>s (this collection is a snapshot
+     * of the currently registered listeners; manipulating it has no effect
+     * on this event source object)
      */
     public Collection getConfigurationListeners()
     {
-        synchronized (listeners)
-        {
-            return Collections.unmodifiableCollection(listeners);
-        }
+        return doGetListeners(listeners);
     }
 
     /**
@@ -129,7 +129,7 @@ public class EventSource
      */
     public void clearConfigurationListeners()
     {
-        listeners = new LinkedList();
+        doClearListeners(listeners);
     }
 
     /**
@@ -167,6 +167,55 @@ public class EventSource
                 detailEvents--;
             }
         }
+    }
+
+    /**
+     * Adds a new configuration error listener to this object. This listener
+     * will then be notified about internal problems.
+     *
+     * @param l the listener to register (must not be <b>null</b>)
+     * @since 1.4
+     */
+    public void addErrorListener(ConfigurationErrorListener l)
+    {
+        doAddListener(errorListeners, l);
+    }
+
+    /**
+     * Removes the specified error listener so that it does not receive any
+     * further events caused by this object.
+     *
+     * @param l the listener to remove
+     * @return a flag whether the listener could be found and removed
+     * @since 1.4
+     */
+    public boolean removeErrorListener(ConfigurationErrorListener l)
+    {
+        return doRemoveListener(errorListeners, l);
+    }
+
+    /**
+     * Removes all registered error listeners.
+     *
+     * @since 1.4
+     */
+    public void clearErrorListeners()
+    {
+        doClearListeners(errorListeners);
+    }
+
+    /**
+     * Returns a collection with all configuration error listeners that are
+     * currently registered at this object.
+     *
+     * @return a collection with the registered
+     * <code>ConfigurationErrorListener</code>s (this collection is a
+     * snapshot of the currently registered listeners; it cannot be manipulated)
+     * @since 1.4
+     */
+    public Collection getErrorListeners()
+    {
+        return doGetListeners(errorListeners);
     }
 
     /**
@@ -221,5 +270,150 @@ public class EventSource
             Object propValue, boolean before)
     {
         return new ConfigurationEvent(this, type, propName, propValue, before);
+    }
+
+    /**
+     * Creates an error event object and delivers it to all registered error
+     * listeners.
+     *
+     * @param type the event's type
+     * @param propName the name of the affected property (can be <b>null</b>)
+     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param ex the <code>Throwable</code> object that caused this error
+     * event
+     * @since 1.4
+     */
+    protected void fireError(int type, String propName, Object propValue,
+            Throwable ex)
+    {
+        Collection listenersToCall = null;
+
+        synchronized (errorListeners)
+        {
+            if (errorListeners.size() > 0)
+            {
+                // Copy listeners to another collection so that manipulating
+                // the listener list during event delivery won't cause problems
+                listenersToCall = new ArrayList(errorListeners);
+            }
+        }
+
+        if (listenersToCall != null)
+        {
+            ConfigurationErrorEvent event = createErrorEvent(type, propName,
+                    propValue, ex);
+            for (Iterator it = listenersToCall.iterator(); it.hasNext();)
+            {
+                ((ConfigurationErrorListener) it.next())
+                        .configurationError(event);
+            }
+        }
+    }
+
+    /**
+     * Creates a <code>ConfigurationErrorEvent</code> object based on the
+     * passed in parameters. This is called by <code>fireError()</code> if it
+     * decides that an event needs to be generated.
+     *
+     * @param type the event's type
+     * @param propName the name of the affected property (can be <b>null</b>)
+     * @param propValue the value of the affected property (can be <b>null</b>)
+     * @param ex the <code>Throwable</code> object that caused this error
+     * event
+     * @return the event object
+     * @since 1.4
+     */
+    protected ConfigurationErrorEvent createErrorEvent(int type,
+            String propName, Object propValue, Throwable ex)
+    {
+        return new ConfigurationErrorEvent(this, type, propName, propValue, ex);
+    }
+
+    /**
+     * Overrides the <code>clone()</code> method to correctly handle so far
+     * registered event listeners. This implementation ensures that the clone
+     * will have empty event listener lists, i.e. the listeners registered at an
+     * <code>EventSource</code> object will not be copied.
+     *
+     * @return the cloned object
+     * @throws CloneNotSupportedException if cloning is not allowed
+     * @since 1.4
+     */
+    protected Object clone() throws CloneNotSupportedException
+    {
+        EventSource copy = (EventSource) super.clone();
+        copy.initListeners();
+        return copy;
+    }
+
+    /**
+     * Adds a new listener object to a listener collection. This is done in a
+     * synchronized block. The listener must not be <b>null</b>.
+     *
+     * @param listeners the collection with the listeners
+     * @param l the listener object
+     */
+    private static void doAddListener(Collection listeners, Object l)
+    {
+        if (l == null)
+        {
+            throw new IllegalArgumentException("Listener must not be null!");
+        }
+        synchronized (listeners)
+        {
+            listeners.add(l);
+        }
+    }
+
+    /**
+     * Removes an event listener from a listener collection. This is done in a
+     * synchronized block.
+     *
+     * @param listeners the collection with the listeners
+     * @param l the listener object
+     * @return a flag whether the listener could be found and removed
+     */
+    private static boolean doRemoveListener(Collection listeners, Object l)
+    {
+        synchronized (listeners)
+        {
+            return listeners.remove(l);
+        }
+    }
+
+    /**
+     * Removes all entries from the given list of event listeners.
+     *
+     * @param listeners the collection with the listeners
+     */
+    private static void doClearListeners(Collection listeners)
+    {
+        synchronized (listeners)
+        {
+            listeners.clear();
+        }
+    }
+
+    /**
+     * Returns an unmodifiable snapshot of the given event listener collection.
+     *
+     * @param listeners the collection with the listeners
+     * @return a snapshot of the listeners collection
+     */
+    private static Collection doGetListeners(Collection listeners)
+    {
+        synchronized (listeners)
+        {
+            return Collections.unmodifiableCollection(new ArrayList(listeners));
+        }
+    }
+
+    /**
+     * Initializes the collections for storing registered event listeners.
+     */
+    private void initListeners()
+    {
+        listeners = new LinkedList();
+        errorListeners = new LinkedList();
     }
 }

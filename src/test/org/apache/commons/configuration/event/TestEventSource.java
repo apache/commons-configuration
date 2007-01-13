@@ -55,6 +55,8 @@ public class TestEventSource extends TestCase
         assertFalse("Removing listener", source
                 .removeConfigurationListener(new TestListener()));
         assertFalse("Detail events are enabled", source.isDetailEvents());
+        assertTrue("Error listeners list is not empty", source
+                .getErrorListeners().isEmpty());
     }
 
     /**
@@ -135,6 +137,17 @@ public class TestEventSource extends TestCase
     }
 
     /**
+     * Tests that the collection returned by getConfigurationListeners() is
+     * really a snapshot. A later added listener must not be visible.
+     */
+    public void testGetConfigurationListenersAddNew()
+    {
+        Collection list = source.getConfigurationListeners();
+        source.addConfigurationListener(new TestListener());
+        assertTrue("Listener snapshot not empty", list.isEmpty());
+    }
+
+    /**
      * Tests enabling and disabling the detail events flag.
      */
     public void testSetDetailEvents()
@@ -212,18 +225,148 @@ public class TestEventSource extends TestCase
     }
 
     /**
+     * Tests registering a new error listener.
+     */
+    public void testAddErrorListener()
+    {
+        TestListener l = new TestListener();
+        source.addErrorListener(l);
+        Collection listeners = source.getErrorListeners();
+        assertEquals("Wrong number of listeners", 1, listeners.size());
+        assertTrue("Listener not in list", listeners.contains(l));
+    }
+
+    /**
+     * Tests adding an undefined error listener. This should cause an exception.
+     */
+    public void testAddNullErrorListener()
+    {
+        try
+        {
+            source.addErrorListener(null);
+            fail("Could add null error listener!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests removing an error listener.
+     */
+    public void testRemoveErrorListener()
+    {
+        TestListener l = new TestListener();
+        assertFalse("Listener can be removed?", source.removeErrorListener(l));
+        source.addErrorListener(l);
+        source.addErrorListener(new TestListener());
+        assertFalse("Unknown listener can be removed", source
+                .removeErrorListener(new TestListener()));
+        assertTrue("Could not remove listener", source.removeErrorListener(l));
+        assertFalse("Listener still in list", source.getErrorListeners()
+                .contains(l));
+    }
+
+    /**
+     * Tests if a null error listener can be removed. This should be a no-op.
+     */
+    public void testRemoveNullErrorListener()
+    {
+        source.addErrorListener(new TestListener());
+        assertFalse("Null listener can be removed", source
+                .removeErrorListener(null));
+        assertEquals("Listener list was modified", 1, source
+                .getErrorListeners().size());
+    }
+
+    /**
+     * Tests whether the listeners list is read only.
+     */
+    public void testGetErrorListenersUpdate()
+    {
+        source.addErrorListener(new TestListener());
+        Collection list = source.getErrorListeners();
+        try
+        {
+            list.add("test");
+            fail("Could manipulate list!");
+        }
+        catch (Exception ex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests delivering an error event to a listener.
+     */
+    public void testFireError()
+    {
+        TestListener l = new TestListener();
+        source.addErrorListener(l);
+        Exception testException = new Exception("A test");
+        source.fireError(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE,
+                testException);
+        assertEquals("Not 1 event created", 1, source.errorCount);
+        assertEquals("Error listener not called once", 1, l.numberOfErrors);
+        assertEquals("Normal event was generated", 0, l.numberOfCalls);
+        assertEquals("Wrong event type", TEST_TYPE, l.lastEvent.getType());
+        assertEquals("Wrong property name", TEST_PROPNAME, l.lastEvent
+                .getPropertyName());
+        assertEquals("Wrong property value", TEST_PROPVALUE, l.lastEvent
+                .getPropertyValue());
+        assertEquals("Wrong Throwable object", testException,
+                ((ConfigurationErrorEvent) l.lastEvent).getCause());
+    }
+
+    /**
+     * Tests firering an error event if there are no error listeners.
+     */
+    public void testFireErrorNoListeners()
+    {
+        source.fireError(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE,
+                new Exception());
+        assertEquals("An error event object was created", 0, source.errorCount);
+    }
+
+    /**
+     * Tests cloning an event source object. The registered listeners should not
+     * be registered at the clone.
+     */
+    public void testClone() throws CloneNotSupportedException
+    {
+        source.addConfigurationListener(new TestListener());
+        source.addErrorListener(new TestListener());
+        EventSource copy = (EventSource) source.clone();
+        assertTrue("Configuration listeners registered for clone", copy
+                .getConfigurationListeners().isEmpty());
+        assertTrue("Error listeners registered for clone", copy
+                .getErrorListeners().isEmpty());
+    }
+
+    /**
      * A test event listener implementation.
      */
-    static class TestListener implements ConfigurationListener
+    static class TestListener implements ConfigurationListener,
+            ConfigurationErrorListener
     {
         ConfigurationEvent lastEvent;
 
         int numberOfCalls;
 
+        int numberOfErrors;
+
         public void configurationChanged(ConfigurationEvent event)
         {
             lastEvent = event;
             numberOfCalls++;
+        }
+
+        public void configurationError(ConfigurationErrorEvent event)
+        {
+            lastEvent = event;
+            numberOfErrors++;
         }
     }
 
@@ -231,17 +374,26 @@ public class TestEventSource extends TestCase
      * A specialized event source implementation that counts the number of
      * created event objects. It is used to test whether the
      * <code>fireEvent()</code> methods only creates event objects if
-     * necessary.
+     * necessary. It also allows testing the clone() operation.
      */
-    static class CountingEventSource extends EventSource
+    static class CountingEventSource extends EventSource implements Cloneable
     {
         int eventCount;
+
+        int errorCount;
 
         protected ConfigurationEvent createEvent(int type, String propName,
                 Object propValue, boolean before)
         {
             eventCount++;
             return super.createEvent(type, propName, propValue, before);
+        }
+
+        protected ConfigurationErrorEvent createErrorEvent(int type,
+                String propName, Object value, Throwable ex)
+        {
+            errorCount++;
+            return super.createErrorEvent(type, propName, value, ex);
         }
     }
 }

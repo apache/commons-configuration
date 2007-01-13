@@ -699,7 +699,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             CloneVisitor v = new CloneVisitor();
             getRootNode().visit(v);
             copy.setRootNode(v.getClone());
-            copy.clearConfigurationListeners();
 
             return copy;
         }
