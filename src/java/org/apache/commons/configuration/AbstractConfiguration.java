@@ -27,6 +27,8 @@ import java.util.Properties;
 
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
@@ -76,17 +78,36 @@ import org.apache.commons.logging.impl.NoOpLog;
  */
 public abstract class AbstractConfiguration extends EventSource implements Configuration
 {
-    /** Constant for the add property event type.*/
+    /**
+     * Constant for the add property event type.
+     * @since 1.3
+     */
     public static final int EVENT_ADD_PROPERTY = 1;
 
-    /** Constant for the clear property event type.*/
+    /**
+     * Constant for the clear property event type.
+     * @since 1.3
+     */
     public static final int EVENT_CLEAR_PROPERTY = 2;
 
-    /** Constant for the set property event type.*/
+    /**
+     * Constant for the set property event type.
+     * @since 1.3
+     */
     public static final int EVENT_SET_PROPERTY = 3;
 
-    /** Constant for the clear configuration event type.*/
+    /**
+     * Constant for the clear configuration event type.
+     * @since 1.3
+     */
     public static final int EVENT_CLEAR = 4;
+
+    /**
+     * Constant for the get property event type. This event type is used for
+     * error events.
+     * @since 1.4
+     */
+    public static final int EVENT_READ_PROPERTY = 5;
 
     /** start token */
     protected static final String START_TOKEN = "${";
@@ -117,7 +138,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /** Stores the logger.*/
     private Log log;
-    
+
     /**
      * Creates a new instance of <code>AbstractConfiguration</code>.
      */
@@ -331,6 +352,27 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     public void setLogger(Log log)
     {
         this.log = (log != null) ? log : new NoOpLog();
+    }
+
+    /**
+     * Adds a special
+     * <code>{@link org.apache.commons.configuration.event.ConfigurationErrorListener}</code>
+     * object to this configuration that will log all internal errors. This
+     * method is intended to be used by certain derived classes, for which it is
+     * known that they can fail on property access (e.g.
+     * <code>DatabaseConfiguration</code>).
+     *
+     * @since 1.4
+     */
+    public void addErrorLogListener()
+    {
+        addErrorListener(new ConfigurationErrorListener()
+        {
+            public void configurationError(ConfigurationErrorEvent event)
+            {
+                getLogger().warn("Internal error", event.getCause());
+            }
+        });
     }
 
     /**
