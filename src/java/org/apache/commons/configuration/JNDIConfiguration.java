@@ -29,6 +29,7 @@ import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
+import javax.naming.NotContextException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
@@ -103,6 +104,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         this.context = context;
         this.prefix = prefix;
         setLogger(LogFactory.getLog(getClass()));
+        addErrorLogListener();
     }
 
     /**
@@ -212,7 +214,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            getLogger().error(e.getMessage(), e);
+            fireError(EVENT_READ_PROPERTY, null, null, e);
             return new ArrayList().iterator();
         }
     }
@@ -296,7 +298,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            getLogger().error(e.getMessage(), e);
+            fireError(EVENT_READ_PROPERTY, null, null, e);
             return true;
         }
     }
@@ -350,7 +352,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         }
         catch (NamingException e)
         {
-            getLogger().error(e.getMessage(), e);
+            fireError(EVENT_READ_PROPERTY, key, null, e);
             return false;
         }
     }
@@ -400,9 +402,14 @@ public class JNDIConfiguration extends AbstractConfiguration
             // expected exception, no need to log it
             return null;
         }
+        catch (NotContextException nctxex)
+        {
+            // expected exception, no need to log it
+            return null;
+        }
         catch (NamingException e)
         {
-            getLogger().error(e.getMessage(), e);
+            fireError(EVENT_READ_PROPERTY, key, null, e);
             return null;
         }
     }
