@@ -26,6 +26,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
@@ -520,6 +523,51 @@ public class TestFileConfiguration extends TestCase
         assertNull("File name was not reset", copy.getFileName());
         assertNotSame("Reloading strategy was not reset", config
                 .getReloadingStrategy(), copy.getReloadingStrategy());
+    }
+
+    /**
+     * Tests whether an error log listener was registered at the configuration.
+     */
+    public void testLogErrorListener()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        assertEquals("No error log listener registered", 1, config
+                .getErrorListeners().size());
+    }
+
+    /**
+     * Tests handling of errors in the reload() method.
+     */
+    public void testReloadError() throws ConfigurationException
+    {
+        class TestConfigurationErrorListener implements
+                ConfigurationErrorListener
+        {
+            ConfigurationErrorEvent event;
+
+            int errorCount;
+
+            public void configurationError(ConfigurationErrorEvent event)
+            {
+                this.event = event;
+                errorCount++;
+            }
+        };
+        TestConfigurationErrorListener l = new TestConfigurationErrorListener();
+        PropertiesConfiguration config = new PropertiesConfiguration(
+                RESOURCE_NAME);
+        config.clearErrorListeners();
+        config.addErrorListener(l);
+        config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        config.getString("test");
+        config.setFileName("Not existing file");
+        config.getString("test");
+        assertEquals("Wrong number of error events", 1, l.errorCount);
+        assertEquals("Wrong error type",
+                AbstractFileConfiguration.EVENT_RELOAD, l.event.getType());
+        assertNull("Wrong property name", l.event.getPropertyName());
+        assertNull("Wrong property value", l.event.getPropertyValue());
+        assertNotNull("Exception is not set", l.event.getCause());
     }
 
     /**

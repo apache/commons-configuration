@@ -115,6 +115,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         initReloadingStrategy();
         setLogger(LogFactory.getLog(getClass()));
+        addErrorLogListener();
     }
 
     /**
@@ -775,6 +776,16 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         strategy.init();
     }
 
+    /**
+     * Performs a reload operation if necessary. This method is called on each
+     * access of this configuration. It asks the associated reloading strategy
+     * whether a reload should be performed. If this is the case, the
+     * configuration is cleared and loaded again from its source. If this
+     * operation causes an exception, the registered error listeners will be
+     * notified. The error event passed to the listeners is of type
+     * <code>EVENT_RELOAD</code> and contains the exception that caused the
+     * event.
+     */
     public void reload()
     {
         synchronized (reloadLock)
@@ -810,7 +821,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                 }
                 catch (Exception e)
                 {
-                    getLogger().warn("Error when reloading configuration", e);
+                    fireError(EVENT_RELOAD, null, null, e);
                     // todo rollback the changes if the file can't be reloaded
                 }
                 finally
