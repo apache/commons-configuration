@@ -294,7 +294,7 @@
     </p>
     <source><![CDATA[
   <header>
-    <result delimiterParsingDisabled="true">
+    <result delimiterParsingDisabled="true" forceReloadCheck="true">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
@@ -315,7 +315,7 @@
 ]]></source>
     <p>
       The <code>result</code> element points to the bean declaration for the
-      resulting combined configuration. In this example we set an attribute
+      resulting combined configuration. In this example we set some attributes
       and initialize the node combiner (which is not necessary because the
       default override combiner is specified) and the expression engine to be
       used. Note that the <code>config-class</code> attribute makes it
@@ -340,7 +340,7 @@
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true">
+    <result delimiterParsingDisabled="true" forceReloadCheck="true">
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
@@ -366,7 +366,19 @@
 </configuration>
 ]]></source>
     <p>
-      This configuration definition file includes four configuration sources.
+      This configuration definition file includes four configuration sources and
+      sets some properties for the resulting <code>CombinedConfiguration</code>.
+      Of special interest is the <code>forceReloadCheck</code> property, which
+      enables a special check for detecting property changes in the contained
+      configuration sources. If this property is not set, reloading won't work.
+      Because we have configured a reloading strategy for one of the included
+      configuration sources we have to set this flag so that this reloading
+      strategy can function properly. More details about this topic can be
+      found in the Javadocs for
+      <code><a href="apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      CombinedConfiguration</a></code>.
+    </p>
+    <p>
       With the following code we can create a <code>DefaultConfigurationBuilder</code>
       and load this file:
     </p>
