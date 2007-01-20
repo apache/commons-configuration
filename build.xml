@@ -233,7 +233,7 @@
     </setproxy>
     <get dest="${libdir}/commons-collections-3.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.1.jar">
     </get>
-    <get dest="${libdir}/commons-lang-2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.1.jar">
+    <get dest="${libdir}/commons-lang-2.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.2.jar">
     </get>
     <get dest="${libdir}/commons-logging-1.0.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.0.4.jar">
     </get>
@@ -251,7 +251,7 @@
     </get>
     <get dest="${libdir}/xml-apis-2.0.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xml-apis/jars/xml-apis-2.0.2.jar">
     </get>
-    <get dest="${libdir}/servletapi-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.3.jar">
+    <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.4.jar">
     </get>
     <get dest="${libdir}/spice-jndikit-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/spice/jars/spice-jndikit-1.1.jar">
     </get>
