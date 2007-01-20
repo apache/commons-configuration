@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-245">
+        In addition to configuration event listeners now so-called configuration
+        error listeners are supported. These listeners are notified about
+        internal errors that had been logged and swallowed by privious versions.
+      </action>
       <action dev="oheger" type="add">
         AbstractConfiguration now allows to set an instance specific logger
         using the setLogger() method. This gives clients more control over a

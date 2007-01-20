@@ -129,6 +129,102 @@ config.addConfigurationListener(listener);
 config.addProperty("newProperty", "newValue"); // will fire an event
 ]]></source>
     </subsection>
+    <subsection name="Error listeners">
+    <p>
+      Some implementations of the <code>Configuration</code> interface operate
+      on underlying storages that can throw exceptions on each property access.
+      As an example consider <code>
+      <a href="apidocs/org/apache/commons/configuration/DatabaseConfiguration.html">
+      DatabaseConfiguration</a></code>: this configuration class issues an SQL
+      statement for each accessed property, which can potentially cause a
+      <code>SQLException</code>.
+    </p>
+    <p>
+      In earlier versions of <em>Commons Configuration</em> such exceptions
+      were simply logged and then swallowed. So for clients it was impossible
+      to find out if something went wrong. From version 1.4 on there is a new
+      way of dealing with those internal errors: the concept of <em>error
+      listeners</em>.
+    </p>
+    <p>
+      A configuration error listener is very similar to a regular configuration
+      event listener. Instead of the <code>ConfigurationListener</code>
+      interface it has to implement the
+      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationErrorListener.html">
+      ConfigurationErrorListener</a></code> interface, which defines a single method
+      <code>configurationError()</code>. In case of an internal error this
+      method is invoked, and a
+      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationErrorEvent.html">
+      ConfigurationErrorEvent</a></code> with information about that error is
+      passed. By inheriting from <code>ConfigurationEvent</code>
+      <code>ConfigurationErrorEvent</code> supports all information that is
+      available for normal configuration listeners, too (e.g. the event type or
+      the property that was accessed when the problem occurred; note that the
+      <code>isBefore()</code> method does not really make sense for error
+      events because an error can only occur after something was done, so it
+      returns always <b>false</b> is this context). This data can
+      be used to find out when and where the error happened. In addition there
+      is the <code>getCause()</code> method that returns the <code>Throwable</code>
+      object, which generated this event (i.e. the causing exception).
+    </p>
+    <p>
+      We can now continue our example from the previous section and make our
+      example configuration listener also capable of tracing error events. To
+      achieve this we let the <code>ConfigurationLogListener</code> class also
+      implement the <code>ConfigurationErrorListener</code> interface:
+    </p>
+    <source>
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
+<b>import org.apache.commons.configuration.event.ConfigurationListener;</b>
+
+public class ConfigurationLogListener
+  implements ConfigurationListener, <b>ConfigurationErrorListener</b>
+{
+    public void configurationChanged(ConfigurationEvent event)
+    {
+      // remains unchanged, see above
+      ...
+    }
+    
+    <b>public void configurationError(ConfigurationErrorEvent event)
+    {
+        System.out.println("An internal error occurred!");
+        // Log the standard properties of the configuration event
+        configurationChanged(event);
+        // Now log the exception
+        event.getCause().printStackTrace();
+    }</b>
+}
+</source>
+    <p>
+      Now the listener object has to be registered as an error listener, too.
+      For this purpose <code>AbstractConfiguration</code> provides the
+      <code>addErrorListener()</code> method. The following example fragment
+      shows the registration of the log listener object:
+    </p>
+    <source>
+AbstractConfiguration config = ... // somehow create the configuration
+ConfigurationListener listener = new ConfigurationLogListener();
+config.addConfigurationListener(listener);
+<b>config.addErrorListener((ConfigurationErrorListener) listener);</b>
+...
+config.addProperty("newProperty", "newValue"); // will fire an event
+</source>
+    <p>
+      Note: <code>AbstractConfiguration</code> already implements a mechanism
+      for writing internal errors to a logger object: It has the protected
+      <code>addErrorLogListener()</code> method that can be called by derived
+      classes to register a listener that will output all occurring internal
+      errors using the default logger. Configuration implementations like
+      <code>DatabaseConfiguration</code> that are affected by potential internal
+      errors call this method during their initialization. So the default
+      behavior of <em>Commons Configuration</em> for these classes is not
+      changed: they still catch occurring exceptions and log them. However by
+      registering specific error listeners it is now possible for clients to
+      implement their own handling of such errors.
+    </p>
+    </subsection>
     </section>
 </body>
 

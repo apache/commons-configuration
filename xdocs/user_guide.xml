@@ -134,6 +134,7 @@
       <ul>
         <li><a href="howto_events.html#Configuration_listeners">Configuration listeners</a></li>
         <li><a href="howto_events.html#An_example">An example</a></li>
+        <li><a href="howto_events.html#Error_listeners">Error listeners</a></li>
       </ul>
     </ul>
     </section>
