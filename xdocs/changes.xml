@@ -27,6 +27,9 @@
         In addition to configuration event listeners now so-called configuration
         error listeners are supported. These listeners are notified about
         internal errors that had been logged and swallowed by privious versions.
+        The new enableRuntimeExceptions() method of ConfigurationUtils
+        registers a special error listener at the passed in configuration that
+        generates a runtime exception when an error event is received.
       </action>
       <action dev="oheger" type="add">
         AbstractConfiguration now allows to set an instance specific logger

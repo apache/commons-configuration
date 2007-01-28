@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.mockobjects.dynamic.Mock;
+
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 
@@ -283,5 +285,68 @@ public class TestConfigurationUtils extends TestCase
     {
         assertNull("Wrong return value", ConfigurationUtils
                 .cloneConfiguration(null));
+    }
+
+    /**
+     * Tests whether runtime exceptions can be enabled.
+     */
+    public void testEnableRuntimeExceptions()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration()
+        {
+            protected void addPropertyDirect(String key, Object value)
+            {
+                // always simulate an exception
+                fireError(EVENT_ADD_PROPERTY, key, value, new RuntimeException(
+                        "A faked exception!"));
+            }
+        };
+        config.clearErrorListeners();
+        ConfigurationUtils.enableRuntimeExceptions(config);
+        try
+        {
+            config.addProperty("test", "testValue");
+            fail("No runtime exception was thrown!");
+        }
+        catch (ConfigurationRuntimeException crex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tries to enable runtime exceptions for a configurtion that does not
+     * inherit from EventSource. This should cause an exception.
+     */
+    public void testEnableRuntimeExceptionsInvalid()
+    {
+        try
+        {
+            ConfigurationUtils
+                    .enableRuntimeExceptions((Configuration) new Mock(
+                            Configuration.class).proxy());
+            fail("Could enable exceptions for non EventSource configuration!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tries to enable runtime exceptions for a null configuration. This should
+     * cause an exception.
+     */
+    public void testEnableRuntimeExceptionsNull()
+    {
+        try
+        {
+            ConfigurationUtils.enableRuntimeExceptions(null);
+            fail("Could enable exceptions for a null configuration!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            //ok
+        }
     }
 }

@@ -30,6 +30,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Iterator;
 
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -643,5 +646,36 @@ public final class ConfigurationUtils
         {
             return null;
         }
+    }
+
+    /**
+     * Enables runtime exceptions for the specified configuration object. This
+     * method can be used for configuration implementations that may face errors
+     * on normal property access, e.g. <code>DatabaseConfiguration</code> or
+     * <code>JNDIConfiguration</code>. Per default such errors are simply
+     * logged and then ignored. This implementation will register a special
+     * <code>{@link ConfigurationErrorListener}</code> that throws a runtime
+     * exception (namely a <code>ConfigurationRuntimeException</code>) on
+     * each received error event.
+     *
+     * @param src the configuration, for which runtime exceptions are to be
+     * enabled; this configuration must be derived from
+     * <code>{@link EventSource}</code>
+     */
+    public static void enableRuntimeExceptions(Configuration src)
+    {
+        if (!(src instanceof EventSource))
+        {
+            throw new IllegalArgumentException(
+                    "Configuration must be derived from EventSource!");
+        }
+        ((EventSource) src).addErrorListener(new ConfigurationErrorListener()
+        {
+            public void configurationError(ConfigurationErrorEvent event)
+            {
+                // Throw a runtime exception
+                throw new ConfigurationRuntimeException(event.getCause());
+            }
+        });
     }
 }
