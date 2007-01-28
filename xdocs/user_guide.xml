@@ -136,6 +136,13 @@
         <li><a href="howto_events.html#An_example">An example</a></li>
         <li><a href="howto_events.html#Error_listeners">Error listeners</a></li>
       </ul>
+      <li><a href="howto_utilities.html#Utility_classes_and_Tips_and_Tricks">Utility classes and Tips and Tricks</a></li>
+      <ul>
+        <li><a href="howto_utilities.html#Copy_a_configuration">Copy a configuration</a></li>
+        <li><a href="howto_utilities.html#Converting_a_flat_configuration_into_a_hierarchical_one">Converting a flat configuration into a hierarchical one</a></li>
+        <li><a href="howto_utilities.html#Converting_between_properties_and_configurations">Converting between properties and configurations</a></li>
+        <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
+      </ul>
     </ul>
     </section>
 </body>
