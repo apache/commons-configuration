@@ -142,7 +142,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     /**
      * Creates a new instance of <code>AbstractConfiguration</code>.
      */
-    protected AbstractConfiguration()
+    public AbstractConfiguration()
     {
         setLogger(null);
     }

@@ -251,6 +251,14 @@ public class SubsetConfiguration extends AbstractConfiguration
 
     /**
      * {@inheritDoc}
+     */
+    protected String interpolate(String base)
+    {
+        return super.interpolate(base);
+    }
+
+    /**
+     * {@inheritDoc}
      *
      * Change the behaviour of the parent configuration if it supports this feature.
      */
