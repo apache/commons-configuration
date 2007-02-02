@@ -24,8 +24,6 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.NodeAddData;
 import org.apache.commons.jxpath.JXPathContext;
-import org.apache.commons.jxpath.JXPathContextFactory;
-import org.apache.commons.jxpath.JXPathContextFactoryConfigurationError;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 
@@ -52,14 +50,7 @@ public class TestXPathExpressionEngine extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        initMockContextFactory();
-        engine = new XPathExpressionEngine();
-    }
-
-    protected void tearDown() throws Exception
-    {
-        MockJXPathContextFactory.context = null; // reset context
-        super.tearDown();
+        engine = new MockJXPathContextExpressionEngine();
     }
 
     /**
@@ -118,7 +109,8 @@ public class TestXPathExpressionEngine extends TestCase
      */
     public void testCreateContext()
     {
-        JXPathContext ctx = engine.createContext(ROOT, TEST_KEY);
+        JXPathContext ctx = new XPathExpressionEngine().createContext(ROOT,
+                TEST_KEY);
         assertNotNull("Context is null", ctx);
         assertTrue("Lenient mode is not set", ctx.isLenient());
         assertSame("Incorrect context bean set", ROOT, ctx.getContextBean());
@@ -436,16 +428,6 @@ public class TestXPathExpressionEngine extends TestCase
     }
 
     /**
-     * Initializes the mock JXPath context factory. Sets a system property, so
-     * that this implementation will be used.
-     */
-    protected void initMockContextFactory()
-    {
-        System.setProperty(JXPathContextFactory.FACTORY_NAME_PROPERTY,
-                MockJXPathContextFactory.class.getName());
-    }
-
-    /**
      * Checks if the JXPath context's selectNodes() method was called as often
      * as expected.
      *
@@ -453,7 +435,7 @@ public class TestXPathExpressionEngine extends TestCase
      */
     protected void checkSelectCalls(int expected)
     {
-        MockJXPathContext ctx = MockJXPathContextFactory.getContext();
+        MockJXPathContext ctx = ((MockJXPathContextExpressionEngine) engine).getContext();
         int calls = (ctx == null) ? 0 : ctx.selectInvocations;
         assertEquals("Incorrect number of select calls", expected, calls);
     }
@@ -495,20 +477,18 @@ public class TestXPathExpressionEngine extends TestCase
     }
 
     /**
-     * A mock implementation of the JXPathContextFactory class. This class is
-     * used to inject the mock context, so that we can trace the invocations of
-     * selectNodes().
+     * A special implementation of XPathExpressionEngine that overrides
+     * createContext() to return a mock context object.
      */
-    public static class MockJXPathContextFactory extends JXPathContextFactory
+    static class MockJXPathContextExpressionEngine extends
+            XPathExpressionEngine
     {
         /** Stores the context instance. */
-        static MockJXPathContext context;
+        private MockJXPathContext context;
 
-        public JXPathContext newContext(JXPathContext parentContext,
-                Object contextBean)
-                throws JXPathContextFactoryConfigurationError
+        protected JXPathContext createContext(ConfigurationNode root, String key)
         {
-            context = new MockJXPathContext(contextBean);
+            context = new MockJXPathContext(root);
             return context;
         }
 
@@ -517,7 +497,7 @@ public class TestXPathExpressionEngine extends TestCase
          *
          * @return the current context
          */
-        public static MockJXPathContext getContext()
+        public MockJXPathContext getContext()
         {
             return context;
         }

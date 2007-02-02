@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestConfigurationIteratorAttributes extends XPathTest
+public class TestConfigurationIteratorAttributes extends AbstractXPathTest
 {
     /** Constant for the name of another test attribute.*/
     private static final String TEST_ATTR = "test";

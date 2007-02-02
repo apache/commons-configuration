@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  * @author Oliver Heger
  * @version $Id$
  */
-public class XPathTest extends TestCase
+public class AbstractXPathTest extends TestCase
 {
     /** Constant for the name of the counter attribute. */
     protected static final String ATTR_NAME = "counter";
@@ -48,7 +48,7 @@ public class XPathTest extends TestCase
     protected static final int CHILD_COUNT = 5;
 
     /** Constant for the number of levels in the hierarchy. */
-    protected static final int LEVEL_COUNT = 4;
+    protected static final int LEVEL_COUNT = 3;
 
     /** Stores the root node of the hierarchy. */
     protected ConfigurationNode root;
@@ -57,6 +57,14 @@ public class XPathTest extends TestCase
     {
         super.setUp();
         root = constructHierarchy(LEVEL_COUNT);
+    }
+
+    /**
+     * Clears the test environment.
+     */
+    protected void tearDown() throws Exception
+    {
+        root = null;
     }
 
     /**

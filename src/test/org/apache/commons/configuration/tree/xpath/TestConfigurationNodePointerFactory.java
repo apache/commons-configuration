@@ -32,7 +32,7 @@ import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestConfigurationNodePointerFactory extends XPathTest
+public class TestConfigurationNodePointerFactory extends AbstractXPathTest
 {
     /** Stores the JXPathContext used for testing. */
     JXPathContext context;

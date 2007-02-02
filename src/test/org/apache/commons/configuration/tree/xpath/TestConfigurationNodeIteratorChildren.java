@@ -37,7 +37,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestConfigurationNodeIteratorChildren extends XPathTest
+public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
 {
     /** Stores the node pointer to the root node. */
     NodePointer rootPointer;

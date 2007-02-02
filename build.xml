@@ -159,7 +159,7 @@
           </exclude>
           <exclude name="**/TestAbstractConfiguration.java">
           </exclude>
-          <exclude name="**/XPathTest.java">
+          <exclude name="**/AbstractXPathTest.java">
           </exclude>
           <exclude name="**/AbstractCombinerTest.java"/>
           <exclude name="**/AbstractTestConfigurationEvents.java"/>

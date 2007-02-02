@@ -498,7 +498,7 @@
         <exclude>**/TestBasePropertiesConfiguration.java</exclude>
         <exclude>**/NonStringTestHolder.java</exclude>
         <exclude>**/TestAbstractConfiguration.java</exclude>
-        <exclude>**/XPathTest.java</exclude>
+        <exclude>**/AbstractXPathTest.java</exclude>
         <exclude>**/AbstractCombinerTest.java</exclude>
         <exclude>**/AbstractTestConfigurationEvents.java</exclude>
         <exclude>**/AbstractTestFileConfigurationEvents.java</exclude>

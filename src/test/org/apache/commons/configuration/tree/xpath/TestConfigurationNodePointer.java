@@ -30,7 +30,7 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestConfigurationNodePointer extends XPathTest
+public class TestConfigurationNodePointer extends AbstractXPathTest
 {
     /** Stores the node pointer to be tested. */
     NodePointer pointer;
