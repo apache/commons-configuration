@@ -23,6 +23,9 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="add">
+        A pom for maven 2 was added.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-251">
         The dependency to xml-apis was changed to the version 1.0.b2. The so
         far used version 2.0.2 is reported to be bogus.
