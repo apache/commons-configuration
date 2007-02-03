@@ -595,7 +595,22 @@ public final class ConfigurationUtils
      * Tries to convert the specified base path and file name into a file object.
      * This method is called e.g. by the save() methods of file based
      * configurations. The parameter strings can be relative files, absolute
-     * files and URLs as well.
+     * files and URLs as well. This implementation checks first whether the passed in
+     * file name is absolute. If this is the case, it is returned. Otherwise
+     * further checks are performed whether the base path and file name can be
+     * combined to a valid URL or a valid file name. <em>Note:</em> The test
+     * if the passed in file name is absolute is performed using
+     * <code>java.io.File.isAbsolute()</code>. If the file name starts with a
+     * slash, this method will return <b>true</b> on Unix, but <b>false</b> on
+     * Windows. So to ensure correct behavior for relative file names on all
+     * platforms you should never let relative paths start with a slash. E.g.
+     * in a configuration definition file do not use something like that:
+     * <pre>
+     * &lt;properties fileName="/subdir/my.properties"/&gt;
+     * </pre>
+     * Under Windows this path would be resolved relative to the configuration
+     * definition file. Under Unix this would be treated as an absolute path
+     * name.
      *
      * @param basePath the base path
      * @param fileName the file name
@@ -603,6 +618,13 @@ public final class ConfigurationUtils
      */
     public static File getFile(String basePath, String fileName)
     {
+        // Check if the file name is absolute
+        File f = new File(fileName);
+        if (f.isAbsolute())
+        {
+            return f;
+        }
+
         // Check if URLs are involved
         URL url;
         try

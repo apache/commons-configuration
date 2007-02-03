@@ -175,7 +175,7 @@ public class TestConfigurationUtils extends TestCase
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
     }
-    
+
     public void testGetFile() throws Exception
     {
         File directory = new File("target");
@@ -186,6 +186,9 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));        
         assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
         assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
+        assertEquals(reference, ConfigurationUtils.getFile(
+                "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
+                reference.getAbsolutePath()));
     }
 
     public void testLocateWithNullTCCL() throws Exception

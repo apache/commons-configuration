@@ -26,6 +26,12 @@
       <action dev="oheger" type="add">
         A pom for maven 2 was added.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-252">
+        ConfigurationUtils.getFile() now always checks first whether the passed
+        in file name is absolute. If it is, this file will be returned. This
+        prevents that on Unix under certain circumstances absolute file names
+        are interpreted as relative ones.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-251">
         The dependency to xml-apis was changed to the version 1.0.b2. The so
         far used version 2.0.2 is reported to be bogus.
