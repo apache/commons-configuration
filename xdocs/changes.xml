@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.4-dev" date="in SVN">
+      <action dev="oheger" type="update">
+        The dependencies to Commons Collections and Commons Digester are
+        updated to use the recent available version. However older versions
+        will still work.
+      </action>
       <action dev="oheger" type="add">
         A pom for maven 2 was added.
       </action>
