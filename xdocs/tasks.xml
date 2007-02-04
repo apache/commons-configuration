@@ -61,12 +61,18 @@
         </category>
 
         <category name="Version 1.4" description="">
-            <task status="">
+            <task status="done">
                 INI file support
             </task>
-            <task status="">
+            <task status="done">
                 enhanced interpolation support
             </task>
+            <task status="partly done">
+                observable configurations ?
+            </task>
+        </category>
+
+        <category name="Version 1.5" description="">
             <task status="">
                 JMX integration ?
             </task>
@@ -75,9 +81,6 @@
             </task>
             <task status="">
                 Windows configuration (Registry wrapper)
-            </task>
-            <task status="partly done">
-                observable configurations ?
             </task>
         </category>
 
