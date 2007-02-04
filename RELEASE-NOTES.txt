@@ -1,7 +1,7 @@
 $Id$
 
                            Commons Configuration Package
-                               Version 1.3
+                               Version 1.4
                                Release Notes
 
 
@@ -10,113 +10,146 @@ INTRODUCTION
 
 This document contains the release notes for this version of the Commons
 Configuration component, and highlights changes since the previous version.
+Commons Configuration provides a generic configuration interface which enables
+an application to read configuration data from a variety of sources.
 
-Release 1.3 adds many new features. Some highlights are
+The focus of release 1.4 lies in bug-fixing, but there are also some new
+features. Some highlights are
 
-- Support for XPATH expressions when querying properties from hierarchical
-  configurations.
-- The new DefaultConfigurationBuilder class as a hierarchical alternative to
-  ConfigurationFactory that allows for more configuration options.
-- Support for configuration listeners that are notified about modifications
-  on a configuration object.
+- The support for variable interpolation has been improved.
+- A new configuration class for windows ini files was added.
+- In addition to configuration event listeners now so-called configuration
+  error listeners are supported, which can be used to track internal errors.
 
 A complete list of changes can be found below.
 
-CHANGES
-=======
+BUG FIXES IN 1.4
+================
+* [CONFIGURATION-227]
+  The compatibility of ConfigurationDynaBean with other configuration types
+  than those that inherit from BaseConfiguration was improved.
 
-- ConfigurationFactory now supports variables in its configuration
-  definition files. These variables are resolved using system properties
-  and have the typical ${} syntax. Fixes CONFIGURATION-221.
-  Thanks to Rainer Jung.
-- DataConfiguration.getDateArray() used to ignore the format argument.
-  This was fixed. Fixes CONFIGURATION-220.
-- The dependency to servletapi was updated from version 2.3 to version 2.4, but
-  version 2.3 will still work. Fixes CONFIGURATION-217.
-- A new class PropertiesConfigurationLayout was introduced whose task is to
-  preserve the structure (e.g. comments, blanc lines) of a file loaded by
-  PropertiesConfiguration. Each PropertiesConfiguration object is now associated
-  with such a layout object. A saved properties file will look very similar to
-  its original. Fixes CONFIGURATION-104.
-- clone() methods have been added to BaseConfiguration,
-  AbstractFileConfiguration, MapConfiguration, CompositeConfiguration, and
-  CombinedConfiguration. So the most important Configuration implementations now
-  support cloning. To ConfigurationUtils an utility method cloneConfiguration()
-  was added that allows to conveniently clone a configuration.
-  Fixes CONFIGURATION-145.
-- If a configuration file was to be loaded from classpath, the constructor of
-  AbstractFileConfiguration dropped the file's path. The path is now taken into
-  account. Fixes CONFIGURATION-216. Thanks to Gabriele Garuglieri.
-- The getter methods for numeric data types in AbstractConfiguration now support
-  conversions between different Number types, e.g. you can now call getLong(key)
-  when key points to an Integer value. Fixes CONFIGURATION-214.
-- The new class DefaultConfigurationBuilder was added as an alternative to
-  ConfigurationFactory. It provides some more features and creates a
-  CombinedConfiguration object.
-- The new class CombinedConfiguration was added as a hierarchical alternative to
-  CompositeConfiguration.
-- Support for low-level configuration events was added to all classes derived
-  from AbstractConfiguration. The major part of this is handled by the new super
-  class EventSource of AbstractConfiguration. Related to CONFIGURATION-143.
-- A new method convertToHierarchical() was added to ConfigurationUtils, which is
-  able to convert an arbitrary configuration object into a hierarchical
-  configuration.
-- Loading of file-based configurations no longer throws a NullPointerException
-  in setups where the thread context class loader is not set.
-  Fixes CONFIGURATION-63.
-- The dependency to dom4j was removed; it was only used by two test classes,
-  which have been re-written.
-- XMLConfiguration used to drop the DOCTYPE declaration when saving the
-  configuration. It is now able to extract the DTD's public and system ID and
-  write them back (more complex DOCTYPE declarations are still not supported).
-  With the new methods setSystemID() and setPublicID(), the DOCTYPE declaration
-  can be configured. Fixes CONFIGURATION-100.
-- Added two new constructors in CompositeConfiguration accepting a collection of
-  configurations as a parameter. Fixes CONFIGURATION-178.
-- (Basic) Support for declaring beans in configuration files was added. Some new
-  classes in the beanutils package allow to create instances from these
-  declarations. Fixes CONFIGURATION-186.
-- The implementation of the interpolation features have been extracted out off
-  AbstractConfiguration and moved to PropertyConverter. The interpolateHelper()
-  method of AbstractConfiguration is now deprectated and will not be called any
-  more during interpolation.
-- A new method configurationsAt() was added to HierarchicalConfiguration that
-  provides a convenient way of iterating over complex list-like structures
-  without the need of manually constructing configuration keys with indices.
-  Fixes CONFIGURATION-182.
-- A new class SubnodeConfiguration was introduced that wraps a configuration
-  node of a HierarchicalConfiguration. All operations performed on this
-  configuration use this wrapped node as root. The new configurationAt() method
-  of HierarchicalConfiguration returns such a SubnodeConfiguration for a
-  specified sub node.
-- With XPathExpressionEngine an expression engine for hierarchical
-  configurations is now available that can evaluate XPATH expressions in
-  property keys. This expression engine implementation is based on Commons
-  JXPath, which is now declared as a new dependency (but at runtime it is only
-  needed if the XPathExpressionEngine class is used). Fixes CONFIGURATION-173.
-- The code for interpreting property keys was refactored out off
-  HierarchicalConfiguration. Instead this class now supports pluggable
-  expression engines (using the setExpressionEngine() method). So it is possible
-  to plug in different expression languages. A default expression engine is
-  provided that understands the native expression language used by hierarchical
-  configurations in older versions. During the process of this refactoring some
-  methods of HierarchicalConfiguration have been deprecated; they will not be
-  called any more when searching or adding properties. These are the following:
-  createAddPath(), fetchAddNode(), findLastPathNode(), findPropertyNodes().
-- A larger refactoring was performed on the inner Node class of
-  HierarchicalConfiguration: A ConfigurationNode interface was extracted for
-  which a default implementation (DefaultConfigurationNode) is provided.
-  HierarchicalConfiguration.Node now extends this default implementation. The
-  new ConfigurationNode interface defines some more methods than the Node class
-  did originally for conveniently dealing with sub nodes and attributes.
-  HierarchicalConfiguration now uses the new type ConfigurationNode whereever
-  possible. Some methods dealing with Node objects have been deprecated and
-  replaced by versions operating on ConfigurationNode objects instead.
-- All configuration classes derived from AbstractConfiguration now allow to set
-  an instance specific list delimiter. This can be done through the new method
-  setListDelimiter(). As before it is possible to define a default list
-  delimiter, which will be used if no instance specific delimiter is set. This
-  can be done using the new setDefaultListDelimiter() method (the methods
-  get/setDelimiter() have been deprecated). With the new
-  setDelimiterParsingDisabled() method parsing of lists can be disabled at all.
-  Fixes CONFIGURATION-155. Thanks to Jorge Ferrer.
+* [CONFIGURATION-228]
+  Some of the methods of file-based hierarchical configurations (e.g. subset()
+  or configurationAt()) did not take an eventually set reloading strategy into
+  account. This is now fixed by overriding the internal fetchNodeList() method
+  in AbstractHierarchicalFileConfiguration and letting it always check for a
+  reload.
+
+* [CONFIGURATION-229]
+  For file-based configurations loaded by ConfigurationFactory the load()
+  method was called before all of the properties specified by attributes of
+  the XML element have been initialized. Now load() is called after property
+  initialization.
+
+* [CONFIGURATION-230]
+  XPathExpressionEngine used to create wrong keys for attribute nodes. This
+  caused some operations on XMLConfiguration to fail when such an expression
+  engine was set (e.g. reloading). Now correct keys for attributes are
+  constructed.
+
+* [CONFIGURATION-233]
+  The getList() method of CompositeConfiguration does now fully support
+  variable interpolation. So it is possible to refer to a variable in one
+  (sub) configuration that is defined in another configuration.
+
+* [CONFIGURATION-234]
+  DefaultConfigurationBuilder now internally uses the standard expression
+  engine for hierarchical configurations. So the dependency to Commons JXPath
+  is no more needed when this class is used. Note that this change has some
+  impact on exist ing code that manually sets properties before the combined
+  configuration is created; this code must now be adapted to the changed
+  syntax of property keys.
+
+* [CONFIGURATION-235]
+  Interpolation of non string values did not work when SubsetConfiguration
+  was involved. This has now been fixed.
+
+* [CONFIGURATION-240]
+  File-based configurations with a reloading strategy did not work well
+  together with CombinedConfiguration because the reloading strategy is only
+  checked when its associated configuration is accessed (which does not happen
+  when only the combined configuration is queried). As a workaround
+  CombinedConfiguration now provides the boolean forceReloadCheck property.
+  If this is set to true, all contained configurations will be triggered when
+  a property is queried. This will cause a reload if necessary.
+
+* [CONFIGURATION-241]
+  CompositeConfiguration.clearProperty() now generates the correct update
+  events.
+
+* [CONFIGURATION-242]
+  The configuration returned by HierarchicalConfiguration.subset() performed
+  variable interpolation only in the keys that belong to the subset. Now the
+  parent configuration is searched, too, to resolve the value of the
+  referenced property. This is consistent with the way SubnodeConfiguration
+  works.
+
+* [CONFIGURATION-244]
+  The number of dependencies needed for DefaultConfigurationBuilder was reduced
+  by letting some of the default configuration providers resolve their classes
+  per reflection.
+
+* [CONFIGURATION-251]
+  The dependency to xml-apis was changed to the version 1.0.b2. The so far
+  used version 2.0.2 is reported to be bogus.
+
+* [CONFIGURATION-252]
+  ConfigurationUtils.getFile() now always checks first´whether the passed in
+  file name is absolute. If it is, this file will be returned. This prevents
+  that on Unix under certain circumstances absolute file names are interpreted
+  as relative ones.
+
+IMPROVEMENTS IN 1.4
+===================
+* [CONFIGURATION-155]
+  SubsetConfiguration and CompositeConfiguration were updated to fully support
+  an instance specific list delimiter. Concerning splitting of string
+  properties that contain a list delimiter character, these classes now
+  behave like a "normal" configuration.
+
+* [CONFIGURATION-192]
+  Variable interpolation features have been improved. A variable can now have
+  the form ${prefix:variableName} where the prefix defines the type of the
+  variable. The standard types sys for system properties and const for
+  constants are supported. Variables without a prefix are treated as references
+  to other configuration properties (which is compatible to earlier versions).
+
+* [CONFIGURATION-197]
+  A new configuration class for windows ini files was added.
+
+* [CONFIGURATION-236]
+  HierarchicalConfiguration and some of its sub classes now define a copy
+  constructor.
+
+* [CONFIGURATION-243]
+  Configuration declarations in the configuration definition file for
+  DefaultConfigurationBuilder that are marked as optional now support a new
+  attribute config-forceCreate. If this attribute is set to true and the
+  initialization of the configuration fails, DefaultConfigurationBuilder
+  tries to add an empty configuration of the correct type to the resulting
+  combined configuration. Before this change optional configurations that
+  caused errors were never added to the combined configuration.
+
+* [CONFIGURATION-245]
+  In addition to configuration event listeners now so-called configuration
+  error listeners are supported. These listeners are notified about internal
+  errors that had been logged and swallowed by privious versions. The new
+  enableRuntimeExceptions() method of ConfigurationUtils registers a special
+  error listener at the passed in configuration that generates a runtime
+  exception when an error event is received.
+
+OTHER CHANGES
+=============
+
+* AbstractConfiguration now allows to set an instance specific logger using
+  the setLogger() method. This gives clients more control over a
+  configuration's logging behavior.
+
+* Commons Configuration now depends on Commons Lang 2.2. Some features of
+  Lang's new text package are used.
+
+* The dependencies to Commons Collections and Commons Digester are updated to
+  use the recent available version. However older versions will still work.
+
+* A pom for maven 2 was added.
