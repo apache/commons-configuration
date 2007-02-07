@@ -22,7 +22,7 @@
   </properties>
 
   <body>
-    <release version="1.4-dev" date="in SVN">
+    <release version="1.4" date="2007-02-06">
       <action dev="oheger" type="update">
         The dependencies to Commons Collections and Commons Digester are
         updated to use the recent available version. However older versions
