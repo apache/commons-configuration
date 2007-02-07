@@ -388,7 +388,7 @@ builder.setFile(new File("configuration.xml"));
 CombinedConfiguration cc = builder.getConfiguration(true);
 ]]></source>
     <p>
-      It would have been possible to specifiy the location of the configuration
+      It would have been possible to specify the location of the configuration
       definition file in multiple other ways, e.g. as a URL. The boolean argument
       in the call to <code>getConfiguration()</code> determines whether the
       configuration definition file should be loaded. For our simple example we
