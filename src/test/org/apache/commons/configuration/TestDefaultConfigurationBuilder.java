@@ -66,7 +66,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         super.setUp();
         System
                 .setProperty("java.naming.factory.initial",
-                        "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+                        "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", "test.xml");
         System.setProperty("test_file_combine", "testcombine1.xml");
         factory = new DefaultConfigurationBuilder();

@@ -69,7 +69,7 @@ public class TestConfigurationFactory extends TestCase
 
     public void setUp() throws Exception
     {
-        System.setProperty("java.naming.factory.initial", "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory");
+        System.setProperty("java.naming.factory.initial", "org.apache.commons.configuration.MockInitialContextFactory");
         factory = new ConfigurationFactory();
     }
 

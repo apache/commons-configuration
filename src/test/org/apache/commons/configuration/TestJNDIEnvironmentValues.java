@@ -75,7 +75,7 @@ public class TestJNDIEnvironmentValues extends TestCase
     public void testContainsKey() throws Exception
     {
         assertTrue(conf.containsKey("test.key"));
-        assertTrue(!conf.containsKey("test.imaginerykey"));
+        assertTrue(!conf.containsKey("test.imaginarykey"));
     }
     
     public void testClearProperty()

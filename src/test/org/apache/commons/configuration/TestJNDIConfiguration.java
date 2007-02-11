@@ -33,8 +33,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
  */
 public class TestJNDIConfiguration extends TestCase {
 
-    public static final String CONTEXT_FACTORY =
-            "org.apache.commons.configuration.MockStaticMemoryInitialContextFactory";
+    public static final String CONTEXT_FACTORY = MockInitialContextFactory.class.getName();
 
     private JNDIConfiguration conf;
     private NonStringTestHolder nonStringTestHolder;
