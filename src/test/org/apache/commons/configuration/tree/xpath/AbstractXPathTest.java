@@ -33,7 +33,7 @@ import junit.framework.TestCase;
  * @author Oliver Heger
  * @version $Id$
  */
-public class AbstractXPathTest extends TestCase
+public abstract class AbstractXPathTest extends TestCase
 {
     /** Constant for the name of the counter attribute. */
     protected static final String ATTR_NAME = "counter";
