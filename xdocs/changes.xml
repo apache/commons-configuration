@@ -22,7 +22,11 @@
   </properties>
 
   <body>
-    <release version="1.4" date="2007-02-06">
+    <release version="1.4-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="add" issue="CONFIGURATION-237" due-to="Nicolas de Loof">
+        With ManagedReloadingStrategy a new reloading strategy for file-based
+        configurations was added that can be triggered through JMX.
+      </action>
       <action dev="oheger" type="update">
         The dependencies to Commons Collections and Commons Digester are
         updated to use the recent available version. However older versions

@@ -24,15 +24,15 @@
  </properties>
 
 <body>
-	<section name="File-based Configurations">
-		<p>
- 	 	  Often configuration properties are stored in files on the user's hard
+    <section name="File-based Configurations">
+        <p>
+            Often configuration properties are stored in files on the user's hard
           disk, e.g. in .properties files or as XML documents. Configuration
           classes that deal with such properties need to provide typical operations
           like loading or saving files. The files to be processed can be specified
           in several different flavors like <code>java.io.File</code> objects,
           relative or absolute path names, or URLs.
-    	</p>
+        </p>
         <p>
           To provide a consistent way of dealing with configuration files in
           Commons Configuration the <code><a href="apidocs/org/apache/commons/configuration/FileConfiguration.html">FileConfiguration</a></code>
@@ -45,7 +45,7 @@
           In the following sections we take a closer look at the methods of the
           <code>FileConfiguration</code> interface and how they are used.
         </p>
-        
+
         <subsection name="Specifying the file">
           <p>
             The <code>FileConfiguration</code> interface contains several
@@ -85,7 +85,7 @@
             be thrown.
           </p>
         </subsection>
-        
+
         <subsection name="Loading">
           <p>
             After the file name has been defined using one of the methods mentioned
@@ -122,7 +122,7 @@
             content can be done in a single step.
           </p>
         </subsection>
-        
+
         <subsection name="Saving">
           <p>
             Saving is implemented analogously to loading: There is a no argument
@@ -150,7 +150,7 @@ config.setProperty("colors.background", "#000000);
 config.save("usergui.backup.properties);
 </source>
         </subsection>
-        
+
         <subsection name="Automatic Saving">
           <p>
             If you want to ensure that every modification of a configuration
@@ -168,7 +168,7 @@ config.setProperty("colors.background", "#000000); // the configuration is saved
             configuration. This will lead to many I/O operations, too.
           </p>
         </subsection>
-        
+
         <subsection name="Automatic Reloading">
         <p>
           A common issue with file-based configurations is to handle the
@@ -196,6 +196,45 @@ config.setReloadingStrategy(new FileChangedReloadingStrategy());
           the reloading strategy. This is a time in milli seconds with the meaning
           that the reloading strategy will only once check the file's last
           modification time in the period specified here.
+        </p>
+        </subsection>
+
+        <subsection name="Managed Reloading">
+        <p>
+          <code>ManagedReloadingStrategy</code> is an alternative to automatic
+          reloading. It allows to hot-reload properties on a running application
+          but only when requested by admin. The <code>refresh()</code> method
+          will force a reload of the configuration source.
+        </p>
+        <p>
+          A typical use of this feature is to setup ManagedReloadingStrategy as
+          a JMX MBean. The following code sample uses Springframework
+          MBeanExporter to expose the ManagedReloadingStrategy to the JMX
+          console :
+<source>
+<![CDATA[
+<!-- A file based configuration bean -->
+<bean id="configuration" class="(...).PropertiesConfiguration">
+    <constructor-arg type="java.net.URL" value="file:${user.home}/custom.properties"/>
+    <property name="reloadingStrategy" ref="reloadingStrategy"/>
+</bean>
+
+<!-- The managed reloading strategy for the configuration bean -->
+<bean id="reloadingStrategy" class="...ManagedReloadingStrategy"/>
+
+<!-- The MBeanExporter that exposes reloadingStrategy to the JMX console -->
+<bean id="mbeanMetadataExporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="server" ref="mbeanServer"/>
+    <property name="beans">
+        <map>
+            <entry key="myApp:bean=configuration" value-ref="reloadingStrategy"/>
+        </map>
+    </property>
+</bean>
+]]>
+</source>
+          With this configuration, the JMX console will expose the
+          "myApp:bean=configuration" MBean and it's refresh operation.
         </p>
         </subsection>
     </section>
