@@ -212,6 +212,12 @@
       <organization>Infoblu S.p.A</organization>
     </contributor>
 
+    <contributor>
+      <name>Nicolas De Loof</name>
+      <email>nicolas.deloof@gmail.com</email>
+      <organization>capgemini</organization>
+    </contributor>
+
   </contributors>
 
   <dependencies>

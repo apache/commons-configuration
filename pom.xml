@@ -176,6 +176,12 @@
           <email>gabriele.garuglieri@infoblu.it</email>
           <organization>Infoblu S.p.A</organization>
         </contributor>
+
+        <contributor>
+          <name>Nicolas De Loof</name>
+          <email>nicolas.deloof@gmail.com</email>
+          <organization>capgemini</organization>
+        </contributor>
     </contributors>
 
   <!-- Lang should depend on very little -->
