@@ -789,9 +789,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Returns the configuration. This method is called to fetch the
          * configuration from the provider. This implementation will call the
-         * inherited
-         * <code>{@link org.apache.commons.configuration.beanutils.DefaultBeanFactory#createBean(Class, BeanDeclaration, Object) createBean()}</code>
-         * method to create a new instance of the configuration class.
+         * inherited <code>{@link
+         * org.apache.commons.configuration.beanutils.DefaultBeanFactory#createBean(Class, BeanDeclaration, Object)
+         * createBean()}</code> method to create a new instance of the
+         * configuration class.
          *
          * @param decl the bean declaration with initialization parameters for
          * the configuration
