@@ -109,7 +109,7 @@
             </p>
             <p>
               <ul>
-                <li>Commons Configuration makes use of a couple of other
+                <li>Commons Configuration makes use of other
                 Commons components. You should be able to use the current
                 versions of these components together with Commons Configuration.
                 In some cases, when no specific features are used, older

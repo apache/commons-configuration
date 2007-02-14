@@ -94,6 +94,11 @@
       <name>1.3</name>
       <tag>CONFIGURATION_1_3</tag>
     </version>
+    <version>
+      <id>1.4</id>
+      <name>1.4</name>
+      <tag>CONFIGURATION_1_4</tag>
+    </version>
   </versions>
 
   <mailingLists>
