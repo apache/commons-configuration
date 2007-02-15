@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update">
+        Class loading in BeanHelper is now done using ClassUtils of Commons
+        Lang.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-237" due-to="Nicolas de Loof">
         With ManagedReloadingStrategy a new reloading strategy for file-based
         configurations was added that can be triggered through JMX.

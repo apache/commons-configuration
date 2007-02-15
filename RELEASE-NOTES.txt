@@ -165,3 +165,6 @@ OTHER CHANGES
   use the recent available version. However older versions will still work.
 
 * A pom for maven 2 was added.
+
+* Class loading in BeanHelper is now done using ClassUtils of Commons Lang.
+

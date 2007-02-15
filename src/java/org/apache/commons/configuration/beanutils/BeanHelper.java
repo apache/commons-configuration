@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.lang.ClassUtils;
 
 /**
  * <p>
@@ -293,29 +294,7 @@ public class BeanHelper
     static Class loadClass(String name, Class callingClass)
             throws ClassNotFoundException
     {
-        ClassLoader loader = findClassLoader(callingClass);
-        return Class.forName(name, true, loader);
-    }
-
-    /**
-     * Determines which class loader should be used in the context of the given
-     * class.
-     *
-     * @param callingClass the calling class
-     * @return the class loader to be used
-     */
-    private static ClassLoader findClassLoader(Class callingClass)
-    {
-        ClassLoader loader = Thread.currentThread().getContextClassLoader();
-        if (loader == null)
-        {
-            loader = callingClass.getClassLoader();
-            if (loader == null)
-            {
-                loader = ClassLoader.getSystemClassLoader();
-            }
-        }
-        return loader;
+        return ClassUtils.getClass(name);
     }
 
     /**
