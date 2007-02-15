@@ -32,8 +32,8 @@
         configurations was added that can be triggered through JMX.
       </action>
       <action dev="oheger" type="update">
-        The dependencies to Commons Collections and Commons Digester are
-        updated to use the recent available version. However older versions
+        The dependencies to Commons Lang, Commons Collections, and Commons Digester
+        are updated to use the recent available version. However older versions
         will still work.
       </action>
       <action dev="oheger" type="add">

@@ -125,7 +125,7 @@
                   <tbody>
                     <tr>
                       <td>commons-lang</td>
-                      <td>2.2</td>
+                      <td>2.2, 2.3</td>
                     </tr>
                     <tr>
                       <td>commons-collections</td>
@@ -137,7 +137,7 @@
                     </tr>
                     <tr>
                       <td>commons-digester</td>
-                      <td>1.6, 1.7</td>
+                      <td>1.6, 1.7, 1.8</td>
                     </tr>
                     <tr>
                       <td>commons-beanutils</td>

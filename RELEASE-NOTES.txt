@@ -158,8 +158,9 @@ OTHER CHANGES
   the setLogger() method. This gives clients more control over a
   configuration's logging behavior.
 
-* Commons Configuration now depends on Commons Lang 2.2. Some features of
-  Lang's new text package are used.
+* Commons Configuration now depends on Commons Lang 2.2 minimum. Some features of
+  Lang's new text package are used. The dependency in the pom was set to 2.3
+  because this is the recent available version of Lang.
 
 * The dependencies to Commons Collections and Commons Digester are updated to
   use the recent available version. However older versions will still work.
