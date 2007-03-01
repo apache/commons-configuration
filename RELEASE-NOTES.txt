@@ -85,6 +85,12 @@ BUG FIXES IN 1.4
   that on Unix under certain circumstances absolute file names are interpreted
   as relative ones.
 
+* [CONFIGURATION-254]
+  After cloning a XMLConfiguration there was still a connection to the original
+  configuration. So when the clone was modified and then saved the content of
+  the original configuration was written. This has now been fixed.
+
+
 IMPROVEMENTS IN 1.4
 ===================
 * [CONFIGURATION-155]

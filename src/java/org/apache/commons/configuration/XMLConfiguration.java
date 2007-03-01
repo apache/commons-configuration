@@ -710,7 +710,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
         // clear document related properties
         copy.document = null;
-        copy.setDelegate(createDelegate());
+        copy.setDelegate(copy.createDelegate());
         // clear all references in the nodes, too
         clearReferences(copy.getRootNode());
 

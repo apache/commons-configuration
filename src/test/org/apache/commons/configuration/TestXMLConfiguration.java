@@ -670,6 +670,23 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests saving a configuration after cloning to ensure that the clone and
+     * the original are completely detachted.
+     */
+    public void testCloneWithSave() throws ConfigurationException
+    {
+        XMLConfiguration c = (XMLConfiguration) conf.clone();
+        c.addProperty("test.newProperty", Boolean.TRUE);
+        conf.addProperty("test.orgProperty", Boolean.TRUE);
+        c.save(testSaveConf);
+        XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
+        assertTrue("New property after clone() was not saved", c2
+                .getBoolean("test.newProperty"));
+        assertFalse("Property of original config was saved", c2
+                .containsKey("test.orgProperty"));
+    }
+
+    /**
      * Tests the subset() method. There was a bug that calling subset() had
      * undesired side effects.
      */
