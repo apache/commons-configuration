@@ -436,6 +436,47 @@ public class TestDatabaseConfiguration extends TestCase
     }
 
     /**
+     * Tests obtaining a property as list whose value contains the list
+     * delimiter. Multiple values should be returned.
+     */
+    public void testGetListWithDelimiter()
+    {
+        DatabaseConfiguration config = setUpConfig();
+        config.setListDelimiter(';');
+        List values = config.getList("keyMulti");
+        assertEquals("Wrong number of list elements", 3, values.size());
+        assertEquals("Wrong list element 0", "a", values.get(0));
+        assertEquals("Wrong list element 2", "c", values.get(2));
+    }
+
+    /**
+     * Tests obtaining a property whose value contains the list delimiter when
+     * delimiter parsing is disabled.
+     */
+    public void testGetListWithDelimiterParsingDisabled()
+    {
+        DatabaseConfiguration config = setUpConfig();
+        config.setListDelimiter(';');
+        config.setDelimiterParsingDisabled(true);
+        assertEquals("Wrong value of property", "a;b;c", config
+                .getString("keyMulti"));
+    }
+
+    /**
+     * Tests adding a property containing the list delimiter. When this property
+     * is queried multiple values should be returned.
+     */
+    public void testAddWithDelimiter()
+    {
+        DatabaseConfiguration config = setUpConfig();
+        config.setListDelimiter(';');
+        config.addProperty("keyList", "1;2;3");
+        String[] values = config.getStringArray("keyList");
+        assertEquals("Wrong number of property values", 3, values.length);
+        assertEquals("Wrong value at index 1", "2", values[1]);
+    }
+
+    /**
      * A specialized database configuration implementation that can be
      * configured to throw an exception when obtaining a connection. This way
      * database exceptions can be simulated.

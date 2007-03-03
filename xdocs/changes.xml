@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.4-SNAPSHOT" date="in SVN">
+      <action dev="oheger" type="update" issue="CONFIGURATION-255">
+        DatabaseConfiguration now handles list delimiters in property values
+        correctly.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-254" due-to="Carsten Kaiser">
         After cloning a XMLConfiguration there was still a connection to the
         original configuration. So when the clone was modified and then saved

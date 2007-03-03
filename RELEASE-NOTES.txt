@@ -90,6 +90,9 @@ BUG FIXES IN 1.4
   configuration. So when the clone was modified and then saved the content of
   the original configuration was written. This has now been fixed.
 
+* [CONFIGURATION-255]
+  DatabaseConfiguration now handles list delimiters in property values
+  correctly.
 
 IMPROVEMENTS IN 1.4
 ===================

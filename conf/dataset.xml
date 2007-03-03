@@ -14,7 +14,11 @@
         <row>
             <value>key2</value>
             <value>value2</value>
-        </row>		
+        </row>
+        <row>
+            <value>keyMulti</value>
+            <value>a;b;c</value>
+        </row>
     </table>
 
     <table name="configurations">

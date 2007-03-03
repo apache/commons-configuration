@@ -29,6 +29,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -110,7 +111,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
         Object result = null;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
+        StringBuffer query = new StringBuffer("SELECT * FROM ");
+        query.append(table).append(" WHERE ");
+        query.append(keyColumn).append("=?");
         if (nameColumn != null)
         {
             query.append(" AND " + nameColumn + "=?");
@@ -133,22 +136,25 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
             ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next())
+            List results = new ArrayList();
+            while (rs.next())
             {
-                result = rs.getObject(valueColumn);
+                Object val = rs.getObject(valueColumn);
+                if (isDelimiterParsingDisabled())
+                {
+                    results.add(val);
+                }
+                else
+                {
+                    // Split value if it containts the list delimiter
+                    CollectionUtils.addAll(results, PropertyConverter
+                            .toIterator(val, getListDelimiter()));
+                }
             }
 
-            // build a list if there is more than one row in the resultset
-            if (rs.next())
+            if (!results.isEmpty())
             {
-                List results = new ArrayList();
-                results.add(result);
-                results.add(rs.getObject(valueColumn));
-                while (rs.next())
-                {
-                    results.add(rs.getObject(valueColumn));
-                }
-                result = results;
+                result = (results.size() > 1) ? results : results.get(0);
             }
         }
         catch (SQLException e)
@@ -213,6 +219,36 @@ public class DatabaseConfiguration extends AbstractConfiguration
         {
             // clean up
             closeQuietly(conn, pstmt);
+        }
+    }
+
+    /**
+     * Adds a property to this configuration. This implementation will
+     * temporarily disable list delimiter parsing, so that even if the value
+     * contains the list delimiter, only a single record will be written into
+     * the managed table. The implementation of <code>getProperty()</code>
+     * will take care about delimiters. So list delimiters are fully supported
+     * by <code>DatabaseConfiguration</code>, but internally treated a bit
+     * differently.
+     *
+     * @param key the key of the new property
+     * @param value the value to be added
+     */
+    public void addProperty(String key, Object value)
+    {
+        boolean parsingFlag = isDelimiterParsingDisabled();
+        try
+        {
+            if (value instanceof String)
+            {
+                // temporarily disable delimiter parsing
+                setDelimiterParsingDisabled(true);
+            }
+            super.addProperty(key, value);
+        }
+        finally
+        {
+            setDelimiterParsingDisabled(parsingFlag);
         }
     }
 
