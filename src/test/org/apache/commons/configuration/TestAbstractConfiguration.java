@@ -36,11 +36,12 @@ import junitx.framework.ListAssert;
 public abstract class TestAbstractConfiguration extends TestCase
 {
     /**
-     * Return an abstract configuration with 2 key/value pairs:<br>
+     * Return an abstract configuration with the following data:<br>
      * <pre>
      * key1 = value1
      * key2 = value2
      * list = value1, value2
+     * listesc = value1\\,value2
      * </pre>
      */
     protected abstract AbstractConfiguration getConfiguration();
@@ -67,6 +68,16 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' is not in the list", list.contains("value1"));
         assertTrue("'value2' is not in the list", list.contains("value2"));
+    }
+
+    /**
+     * Tests whether the escape character for list delimiters is recocknized and
+     * removed.
+     */
+    public void testListEscaped()
+    {
+        assertEquals("Wrong value for escaped list", "value1,value2",
+                getConfiguration().getString("listesc"));
     }
 
     public void testAddPropertyDirect()
@@ -118,6 +129,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         expectedKeys.add("key1");
         expectedKeys.add("key2");
         expectedKeys.add("list");
+        expectedKeys.add("listesc");
 
         assertNotNull("null iterator", keys);
         assertTrue("empty iterator", keys.hasNext());

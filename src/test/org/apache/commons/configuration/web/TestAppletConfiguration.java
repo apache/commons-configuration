@@ -64,6 +64,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
         parameters.setProperty("list", "value1, value2");
+        parameters.setProperty("listesc", "value1\\,value2");
 
         if (supportsApplet)
         {
@@ -80,7 +81,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                     {
                     { "key1", "String", "" },
                     { "key2", "String", "" },
-                    { "list", "String[]", "" } };
+                    { "list", "String[]", "" },
+                    { "listesc", "String", "" } };
                 }
             };
 

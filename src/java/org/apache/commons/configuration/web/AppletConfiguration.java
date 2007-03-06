@@ -19,10 +19,8 @@ package org.apache.commons.configuration.web;
 
 import java.applet.Applet;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.collections.iterators.ArrayIterator;
-import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper to read applet parameters. This configuration is
@@ -51,14 +49,7 @@ public class AppletConfiguration extends BaseWebConfiguration
 
     public Object getProperty(String key)
     {
-        Object value = applet.getParameter(key);
-        if (!isDelimiterParsingDisabled())
-        {
-            List list = PropertyConverter.split((String) value, getListDelimiter());
-            value = list.size() > 1 ? list : value;
-        }
-
-        return value;
+        return handleDelimiters(applet.getParameter(key));
     }
 
     public Iterator getKeys()

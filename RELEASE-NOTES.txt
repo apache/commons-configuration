@@ -94,6 +94,11 @@ BUG FIXES IN 1.4
   DatabaseConfiguration now handles list delimiters in property values
   correctly.
 
+* [CONFIGURATION-256]
+  MapConfiguration and the web-based configurations now treat strings that
+  contain an escaped list delimiter correctly: The escape character will be
+  removed, so that for instance "foo\,bar" becomes "foo,bar".
+
 IMPROVEMENTS IN 1.4
 ===================
 * [CONFIGURATION-155]

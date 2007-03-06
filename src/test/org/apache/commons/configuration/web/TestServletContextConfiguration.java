@@ -43,6 +43,7 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
         parameters.setProperty("list", "value1, value2");
+        parameters.setProperty("listesc", "value1\\,value2");
 
         // create a servlet context
         ServletContext context = new MockServletContext()

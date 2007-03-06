@@ -62,7 +62,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
             List list = PropertyConverter.split((String) value, getListDelimiter());
-            return list.size() > 1 ? list : value;
+            return list.size() > 1 ? list : list.get(0);
         }
         else
         {

@@ -16,7 +16,10 @@
  */
 package org.apache.commons.configuration.web;
 
+import java.util.List;
+
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * <p>
@@ -82,5 +85,25 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("Read only configuration");
+    }
+
+    /**
+     * Takes care of list delimiters in property values. This method checks if
+     * delimiter parsing is enabled and the passed in value contains a delimiter
+     * character. If this is the case, a split operation is performed.
+     *
+     * @param value the property value to be examined
+     * @return the processed value
+     */
+    protected Object handleDelimiters(Object value)
+    {
+        if (!isDelimiterParsingDisabled() && value instanceof String)
+        {
+            List list = PropertyConverter.split((String) value,
+                    getListDelimiter());
+            value = list.size() > 1 ? list : list.get(0);
+        }
+
+        return value;
     }
 }

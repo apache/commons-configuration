@@ -18,11 +18,9 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Iterator;
-import java.util.List;
 import javax.servlet.FilterConfig;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
-import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper around a {@link FilterConfig}. This configuration is
@@ -50,14 +48,7 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
 
     public Object getProperty(String key)
     {
-        Object value = config.getInitParameter(key);
-        if (!isDelimiterParsingDisabled())
-        {
-            List list = PropertyConverter.split((String) value, getListDelimiter());
-            value = list.size() > 1 ? list : value;
-        }
-
-        return value;
+        return handleDelimiters(config.getInitParameter(key));
     }
 
     public Iterator getKeys()

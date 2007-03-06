@@ -18,12 +18,10 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Iterator;
-import java.util.List;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
-import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * A configuration wrapper to read the initialization parameters of a servlet
@@ -63,14 +61,7 @@ public class ServletContextConfiguration extends BaseWebConfiguration
 
     public Object getProperty(String key)
     {
-        Object value = context.getInitParameter(key);
-        if (!isDelimiterParsingDisabled())
-        {
-            List list = PropertyConverter.split((String) value, getListDelimiter());
-            value = list.size() > 1 ? list : value;
-        }
-
-        return value;
+        return handleDelimiters(context.getInitParameter(key));
     }
 
     public Iterator getKeys()

@@ -18,6 +18,8 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Enumeration;
+import java.util.List;
+
 import javax.servlet.ServletRequest;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
@@ -26,6 +28,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
@@ -38,25 +41,14 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     protected AbstractConfiguration getConfiguration()
     {
         final Configuration configuration = new BaseConfiguration();
+        ((BaseConfiguration) configuration).setListDelimiter('\0');
         configuration.setProperty("key1", "value1");
         configuration.setProperty("key2", "value2");
         configuration.addProperty("list", "value1");
         configuration.addProperty("list", "value2");
+        configuration.addProperty("listesc", "value1\\,value2");
 
-        ServletRequest request = new MockHttpServletRequest()
-        {
-            public String[] getParameterValues(String key)
-            {
-                return configuration.getStringArray(key);
-            }
-
-            public Enumeration getParameterNames()
-            {
-                return new IteratorEnumeration(configuration.getKeys());
-            }
-        };
-
-        return new ServletRequestConfiguration(request);
+        return createConfiguration(configuration);
     }
 
     protected AbstractConfiguration getEmptyConfiguration()
@@ -73,6 +65,32 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
             public Enumeration getParameterNames()
             {
                 return new IteratorEnumeration(configuration.getKeys());
+            }
+        };
+
+        return new ServletRequestConfiguration(request);
+    }
+
+    /**
+     * Returns a new servlet request configuration that is backed by the passed
+     * in configuration.
+     *
+     * @param base the configuration with the underlying values
+     * @return the servlet request configuration
+     */
+    private ServletRequestConfiguration createConfiguration(
+            final Configuration base)
+    {
+        ServletRequest request = new MockHttpServletRequest()
+        {
+            public String[] getParameterValues(String key)
+            {
+                return base.getStringArray(key);
+            }
+
+            public Enumeration getParameterNames()
+            {
+                return new IteratorEnumeration(base.getKeys());
             }
         };
 
@@ -105,4 +123,27 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
         }
     }
 
+    /**
+     * Tests a list with elements that contain an escaped list delimiter.
+     */
+    public void testListWithEscapedElements()
+    {
+        String[] values =
+        { "test1", "test2\\,test3", "test4\\,test5" };
+        final String listKey = "test.list";
+        BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiter('\0');
+        config.addProperty(listKey, values);
+        assertEquals("Wrong number of list elements", values.length, config
+                .getList(listKey).size());
+        Configuration c = createConfiguration(config);
+        List v = c.getList(listKey);
+        assertEquals("Wrong number of elements in list", values.length, v
+                .size());
+        for (int i = 0; i < values.length; i++)
+        {
+            assertEquals("Wrong value at index " + i, StringUtils.replace(
+                    values[i], "\\", StringUtils.EMPTY), v.get(i));
+        }
+    }
 }

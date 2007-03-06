@@ -37,6 +37,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         map.put("key1", "value1");
         map.put("key2", "value2");
         map.put("list", "value1, value2");
+        map.put("listesc", "value1\\,value2");
 
         return new MapConfiguration(map);
     }

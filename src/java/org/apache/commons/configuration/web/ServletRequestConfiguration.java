@@ -17,8 +17,11 @@
 
 package org.apache.commons.configuration.web;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Arrays;
+import java.util.List;
+
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.collections.iterators.EnumerationIterator;
@@ -57,11 +60,25 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         }
         else if (values.length == 1)
         {
-            return values[0];
+            return handleDelimiters(values[0]);
         }
         else
         {
-            return Arrays.asList(values);
+            // ensure that escape characters in all list elements are removed
+            List result = new ArrayList(values.length);
+            for (int i = 0; i < values.length; i++)
+            {
+                Object val = handleDelimiters(values[i]);
+                if (val instanceof Collection)
+                {
+                    result.addAll((Collection) val);
+                }
+                else
+                {
+                    result.add(val);
+                }
+            }
+            return result;
         }
     }
 

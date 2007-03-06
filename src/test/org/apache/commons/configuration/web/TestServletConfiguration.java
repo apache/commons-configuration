@@ -39,6 +39,7 @@ public class TestServletConfiguration extends TestAbstractConfiguration
         config.setInitParameter("key1", "value1");
         config.setInitParameter("key2", "value2");
         config.setInitParameter("list", "value1, value2");
+        config.setInitParameter("listesc", "value1\\,value2");
 
         Servlet servlet = new HttpServlet() {
             public ServletConfig getServletConfig()
