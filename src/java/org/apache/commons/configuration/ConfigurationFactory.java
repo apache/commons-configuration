@@ -43,11 +43,20 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
+ * <p>
  * Factory class to create a CompositeConfiguration from a .xml file using
  * Digester.  By default it can handle the Configurations from commons-
  * configuration.  If you need to add your own, then you can pass in your own
  * digester rules to use.  It is also namespace aware, by providing a
  * digesterRuleNamespaceURI.
+ * </p>
+ * <p>
+ * <em>Note:</em> Almost all of the features provided by this class and many
+ * more are also available for the <code>{@link DefaultConfigurationBuilder}</code>
+ * class. <code>DefaultConfigurationBuilder</code> also has a more robust
+ * merge algorithm for constructing combined configurations. So it is
+ * recommended to use this class instead of <code>ConfigurationFactory</code>.
+ * </p>
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
