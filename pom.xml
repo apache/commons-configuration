@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>1.4-SNAPSHOT</version>
+  <version>1.4</version>
   <name>Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
@@ -147,7 +147,7 @@
 
     <contributors>
         <contributor>
-          <name>J�rg Schaible</name>
+          <name>J&#xF6;rg Schaible</name>
           <email>joerg.schaible@gmx.de</email>
           <organization>Elsag-Solutions AG</organization>
           <timezone>+1</timezone>
