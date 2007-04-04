@@ -253,7 +253,7 @@
     </get>
     <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.4.jar">
     </get>
-    <get dest="${libdir}/commons-dbcp-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-dbcp/jars/commons-dbcp-1.1.jar">
+    <get dest="${libdir}/commons-dbcp-1.2.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-dbcp/jars/commons-dbcp-1.2.2.jar">
     </get>
     <get dest="${libdir}/commons-pool-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-pool/jars/commons-pool-1.1.jar">
     </get>
