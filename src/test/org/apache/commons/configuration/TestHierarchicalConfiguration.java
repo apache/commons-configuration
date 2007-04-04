@@ -227,6 +227,62 @@ public class TestHierarchicalConfiguration extends TestCase
         assertNull(config.getProperty("tables.table.fields.field.name"));
     }
 
+    /**
+     * Tests removing more complex node structures.
+     */
+    public void testClearTreeComplex()
+    {
+        final int count = 5;
+        // create the structure
+        for (int idx = 0; idx < count; idx++)
+        {
+            config.addProperty("indexList.index(-1)[@default]", Boolean.FALSE);
+            config.addProperty("indexList.index[@name]", "test" + idx);
+            config.addProperty("indexList.index.dir", "testDir" + idx);
+        }
+        assertEquals("Wrong number of nodes", count - 1, config
+                .getMaxIndex("indexList.index[@name]"));
+
+        // Remove a sub tree
+        boolean found = false;
+        for (int idx = 0; true; idx++)
+        {
+            String name = config.getString("indexList.index(" + idx
+                    + ")[@name]");
+            if (name == null)
+            {
+                break;
+            }
+            if ("test3".equals(name))
+            {
+                assertEquals("Wrong dir", "testDir3", config
+                        .getString("indexList.index(" + idx + ").dir"));
+                config.clearTree("indexList.index(" + idx + ")");
+                found = true;
+            }
+        }
+        assertTrue("Key to remove not found", found);
+        assertEquals("Wrong number of nodes after remove", count - 2, config
+                .getMaxIndex("indexList.index[@name]"));
+        assertEquals("Wrong number of dir nodes after remove", count - 2,
+                config.getMaxIndex("indexList.index.dir"));
+
+        // Verify
+        for (int idx = 0; true; idx++)
+        {
+            String name = config.getString("indexList.index(" + idx
+                    + ")[@name]");
+            if (name == null)
+            {
+                break;
+            }
+            if ("test3".equals(name))
+            {
+                fail("Key was not removed!");
+            }
+        }
+    }
+
     public void testContainsKey()
     {
         assertTrue(config.containsKey("tables.table(0).name"));
