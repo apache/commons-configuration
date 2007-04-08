@@ -22,7 +22,9 @@
   </properties>
 
   <body>
-    <release version="1.4-SNAPSHOT" date="in SVN">
+    <release version="1.5-SNAPSHOT" date="in SVN">
+    </release>
+    <release version="1.4" date="2007-04-08">
       <action dev="oheger" type="update" issue="CONFIGURATION-256">
         MapConfiguration and the web-based configurations now treat strings
         that contain an escaped list delimiter correctly: The escape character
