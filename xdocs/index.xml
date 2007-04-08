@@ -85,14 +85,11 @@ Integer integer = config.getInteger("number");
     </section>
 
     <section name="Bugs">
-      <p>Bugs may be reported via the Bugzilla Management system. The following links may prove useful:</p>
-
-      <ul>
-        <li><a href="http://issues.apache.org/bugzilla/createaccount.cgi">Create a Bugzilla account</a></li>
-        <li><a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Commons&amp;component=Configuration">Submit a bug report</a></li>
-        <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?product=Commons&amp;component=Configuration&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED">All open Configuration bugs</a></li>
-        <li><a href="http://issues.apache.org/bugzilla/buglist.cgi?product=Commons&amp;component=Configuration">All Configuration bugs</a></li>
-      </ul>
+      <p>
+        Bugs may be reported via the <a href="http://issues.apache.org/jira/browse/CONFIGURATION">ASF JIRA</a>
+        system. Detailed information can be found on the
+        <a href="issue-tracking.html">issue tracking page</a>.
+      </p>
     </section>
 
   </body>
