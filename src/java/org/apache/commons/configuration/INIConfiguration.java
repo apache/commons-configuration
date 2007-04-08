@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * <p>
  * An initialization or ini file is a configuration file tpically found on
@@ -242,7 +244,7 @@ public class INIConfiguration extends AbstractFileConfiguration
                 String value = values.getString(key);
                 pw.print(key);
                 pw.print(" = ");
-                pw.print(value);
+                pw.print(formatValue(value));
                 pw.print(LINE_SEPARATOR);
             }
 
@@ -283,7 +285,7 @@ public class INIConfiguration extends AbstractFileConfiguration
                         if (index >= 0)
                         {
                             key = section + line.substring(0, index);
-                            value = line.substring(index + 1);
+                            value = parseValue(line.substring(index + 1));
                         }
                         else
                         {
@@ -291,14 +293,14 @@ public class INIConfiguration extends AbstractFileConfiguration
                             if (index >= 0)
                             {
                                 key = section + line.substring(0, index);
-                                value = line.substring(index + 1);
+                                value = parseValue(line.substring(index + 1));
                             }
                             else
                             {
                                 key = section + line;
                             }
                         }
-                        this.addProperty(key.trim(), value.trim());
+                        this.addProperty(key.trim(), value);
                     }
                 }
                 line = bufferedReader.readLine();
@@ -307,6 +309,99 @@ public class INIConfiguration extends AbstractFileConfiguration
         catch (IOException ioe)
         {
             throw new ConfigurationException(ioe.getMessage());
+        }
+    }
+
+    /**
+     * Parse the value to remove the quotes and ignoring the comment.
+     * Example:
+     *
+     * <code>"value" ; comment -> value</code>
+     *
+     * @param value
+     */
+    private String parseValue(String value)
+    {
+        value = value.trim();
+
+        boolean quoted = value.startsWith("\"");
+        boolean stop = false;
+        boolean escape = false;
+
+        int i = quoted ? 1 : 0;
+
+        StringBuffer result = new StringBuffer();
+        while (i < value.length() && !stop)
+        {
+            char c = value.charAt(i);
+
+            if (quoted)
+            {
+                if ('\\' == c && !escape)
+                {
+                    escape = true;
+                }
+                else if (!escape && '"' == c)
+                {
+                    stop = true;
+                }
+                else if (escape && '"' == c)
+                {
+                    escape = false;
+                    result.append(c);
+                }
+                else
+                {
+                    if (escape)
+                    {
+                        escape = false;
+                        result.append('\\');
+                    }
+
+                    result.append(c);
+                }
+            }
+            else
+            {
+                if (COMMENT_CHARS.indexOf(c) == -1)
+                {
+                    result.append(c);
+                }
+                else
+                {
+                    stop = true;
+                }
+            }
+
+            i++;
+        }
+
+        return result.toString().trim();
+    }
+
+    /**
+     * Add quotes around the specified value if it contains a comment character.
+     */
+    private String formatValue(String value)
+    {
+        boolean quoted = false;
+
+        for (int i = 0; i < COMMENT_CHARS.length() && !quoted; i++)
+        {
+            char c = COMMENT_CHARS.charAt(i);
+            if (value.indexOf(c) != -1)
+            {
+                quoted = true;
+            }
+        }
+
+        if (quoted)
+        {
+            return '"' + StringUtils.replace(value, "\"", "\\\"") + '"';
+        }
+        else
+        {
+            return value;
         }
     }
 

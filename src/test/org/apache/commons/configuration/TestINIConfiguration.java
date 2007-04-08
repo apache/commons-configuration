@@ -37,13 +37,28 @@ import junit.framework.TestCase;
 public class TestINIConfiguration extends TestCase
 {
 	/** Constant for the content of an ini file. */
-	private static final String INI_DATA = "[section1]\r\nvar1 = foo\r\n"
-			+ "var2 = 451\r\n\r\n[section2]\r\nvar1 = 123.45\r\nvar2 = bar\r\n\r\n"
-			+ "[section3]\r\nvar1 = true\r\n\r\n";
+	private static final String INI_DATA =
+            "[section1]\r\n"
+            + "var1 = foo\r\n"
+            + "var2 = 451\r\n"
+            + "\r\n"
+            + "[section2]\r\n"
+            + "var1 = 123.45\r\n"
+            + "var2 = bar\r\n"
+            + "\r\n"
+            + "[section3]\r\n"
+            + "var1 = true\r\n"
+            + "\r\n";
 
-	/**
-     * Test of save method, of class
-     * org.apache.commons.configuration.INIConfiguration.
+	private static final String INI_DATA2 =
+            "[section4]\r\n"
+            + "var1 = \"quoted value\"\r\n"
+            + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"\r\n"
+            + "var3 = 123 ; comment\r\n"
+            + "var4 = \"1;2;3\" ; comment\r\n";
+
+    /**
+     * Test of save method, of class {@link INIConfiguration}.
      */
 	public void testSave() throws Exception
 	{
@@ -59,8 +74,7 @@ public class TestINIConfiguration extends TestCase
 	}
 
 	/**
-     * Test of load method, of class
-     * org.apache.commons.configuration.INIConfiguration.
+     * Test of load method, of class {@link INIConfiguration}.
      */
 	public void testLoad() throws Exception
 	{
@@ -82,8 +96,7 @@ public class TestINIConfiguration extends TestCase
      *
      * @param data the data to load
      */
-	private void checkLoad(String data) throws ConfigurationException,
-			IOException
+	private void checkLoad(String data) throws ConfigurationException, IOException
 	{
 		Reader reader = new StringReader(data);
 		INIConfiguration instance = new INIConfiguration();
@@ -98,8 +111,7 @@ public class TestINIConfiguration extends TestCase
 	}
 
 	/**
-     * Test of isCommentLine method, of class
-     * org.apache.commons.configuration.INIConfiguration.
+     * Test of isCommentLine method, of class {@link INIConfiguration}.
      */
 	public void testIsCommentLine()
 	{
@@ -111,8 +123,7 @@ public class TestINIConfiguration extends TestCase
 	}
 
 	/**
-     * Test of isSectionLine method, of class
-     * org.apache.commons.configuration.INIConfiguration.
+     * Test of isSectionLine method, of class {@link INIConfiguration}.
      */
 	public void testIsSectionLine()
 	{
@@ -123,8 +134,7 @@ public class TestINIConfiguration extends TestCase
 	}
 
 	/**
-     * Test of getSections method, of class
-     * org.apache.commons.configuration.INIConfiguration.
+     * Test of getSections method, of class {@link INIConfiguration}.
      */
 	public void testGetSections()
 	{
@@ -137,4 +147,50 @@ public class TestINIConfiguration extends TestCase
 		Set result = instance.getSections();
 		assertEquals(expResult, result);
 	}
+
+    public void testQuotedValue() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(INI_DATA2));
+
+        assertEquals("value", "quoted value", config.getString("section4.var1"));
+    }
+
+    public void testQuotedValueWithQuotes() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(INI_DATA2));
+
+        assertEquals("value", "quoted value\\nwith \"quotes\"", config.getString("section4.var2"));
+    }
+
+    public void testValueWithComment() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(INI_DATA2));
+
+        assertEquals("value", "123", config.getString("section4.var3"));
+    }
+
+    public void testQuotedValueWithComment() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(INI_DATA2));
+
+        assertEquals("value", "1;2;3", config.getString("section4.var4"));
+    }
+
+    public void testWriteValueWithCommentChar() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.setProperty("section.key1", "1;2;3");
+
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+
+        INIConfiguration config2 = new INIConfiguration();
+        config2.load(new StringReader(writer.toString()));
+
+        assertEquals("value", "1;2;3", config2.getString("section.key1"));
+    }
 }
