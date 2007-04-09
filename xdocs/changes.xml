@@ -24,6 +24,10 @@
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN">
       <action dev="ebourg" type="update">
+        XMLPropertyListConfiguration no longer requires commons-digester and
+        commons-beanutils to work.
+      </action>
+      <action dev="ebourg" type="update">
         Fixed INIConfiguration to handle the quoted values and the lines
         containing a value and a comment.
       </action>

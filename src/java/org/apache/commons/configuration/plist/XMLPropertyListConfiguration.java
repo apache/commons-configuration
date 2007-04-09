@@ -32,6 +32,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration.AbstractHierarchicalFileConfiguration;
@@ -39,15 +41,14 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
-import org.apache.commons.digester.AbstractObjectCreationFactory;
-import org.apache.commons.digester.Digester;
-import org.apache.commons.digester.ObjectCreateRule;
-import org.apache.commons.digester.SetNextRule;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * Mac OS X configuration file (http://www.apple.com/DTDs/PropertyList-1.0.dtd).
@@ -137,12 +138,12 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      * Creates a new instance of <code>XMLPropertyListConfiguration</code> and
      * copies the content of the specified configuration into this object.
      *
-     * @param c the configuration to copy
+     * @param configuration the configuration to copy
      * @since 1.4
      */
-    public XMLPropertyListConfiguration(HierarchicalConfiguration c)
+    public XMLPropertyListConfiguration(HierarchicalConfiguration configuration)
     {
-        super(c);
+        super(configuration);
     }
 
     /**
@@ -181,108 +182,30 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
     public void load(Reader in) throws ConfigurationException
     {
-        // set up the digester
-        Digester digester = new Digester();
-
         // set up the DTD validation
-        digester.setEntityResolver(new EntityResolver()
+        EntityResolver resolver = new EntityResolver()
         {
             public InputSource resolveEntity(String publicId, String systemId)
             {
                 return new InputSource(getClass().getClassLoader().getResourceAsStream("PropertyList-1.0.dtd"));
             }
-        });
-        digester.setValidating(true);
-
-        // dictionary rules
-        digester.addRule("*/key", new ObjectCreateRule(PListNode.class)
-        {
-            public void end() throws Exception
-            {
-                // leave the node on the stack to set the value
-            }
-        });
-
-        digester.addCallMethod("*/key", "setName", 0);
-
-        digester.addRule("*/dict/string", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/data", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/integer", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/real", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/true", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/false", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/date", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/dict", new SetNextAndPopRule("addChild"));
-
-        digester.addCallMethod("*/dict/string", "addValue", 0);
-        digester.addCallMethod("*/dict/data", "addDataValue", 0);
-        digester.addCallMethod("*/dict/integer", "addIntegerValue", 0);
-        digester.addCallMethod("*/dict/real", "addRealValue", 0);
-        digester.addCallMethod("*/dict/true", "addTrueValue");
-        digester.addCallMethod("*/dict/false", "addFalseValue");
-        digester.addCallMethod("*/dict/date", "addDateValue", 0);
-
-        // rules for arrays
-        digester.addRule("*/dict/array", new SetNextAndPopRule("addChild"));
-        digester.addRule("*/dict/array", new ObjectCreateRule(ArrayNode.class));
-        digester.addSetNext("*/dict/array", "addList");
-
-        digester.addRule("*/array/array", new ObjectCreateRule(ArrayNode.class));
-        digester.addSetNext("*/array/array", "addList");
-
-        digester.addCallMethod("*/array/string", "addValue", 0);
-        digester.addCallMethod("*/array/data", "addDataValue", 0);
-        digester.addCallMethod("*/array/integer", "addIntegerValue", 0);
-        digester.addCallMethod("*/array/real", "addRealValue", 0);
-        digester.addCallMethod("*/array/true", "addTrueValue");
-        digester.addCallMethod("*/array/false", "addFalseValue");
-        digester.addCallMethod("*/array/date", "addDateValue", 0);
-
-        // rule for a dictionary in an array
-        digester.addFactoryCreate("*/array/dict", new AbstractObjectCreationFactory()
-        {
-            public Object createObject(Attributes attributes) throws Exception
-            {
-                // create the configuration
-                XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
-
-                // add it to the ArrayNode
-                ArrayNode node = (ArrayNode) getDigester().peek();
-                node.addValue(config);
-
-                // push the root on the stack
-                return config.getRoot();
-            }
-        });
+        };
 
         // parse the file
-        digester.push(getRoot());
+        XMLPropertyListHandler handler = new XMLPropertyListHandler(getRoot());
         try
         {
-            digester.parse(in);
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            factory.setValidating(true);
+
+            SAXParser parser = factory.newSAXParser();
+            parser.getXMLReader().setEntityResolver(resolver);
+            parser.getXMLReader().setContentHandler(handler);
+            parser.getXMLReader().parse(new InputSource(in));
         }
         catch (Exception e)
         {
             throw new ConfigurationException("Unable to parse the configuration file", e);
-        }
-    }
-
-    /**
-     * Digester rule that sets the object on the stack to the n-1 object
-     * and remove both of them from the stack. This rule is used to remove
-     * the configuration node from the stack once its value has been parsed.
-     */
-    private class SetNextAndPopRule extends SetNextRule
-    {
-        public SetNextAndPopRule(String methodName)
-        {
-            super(methodName);
-        }
-
-        public void end(String namespace, String name) throws Exception
-        {
-            super.end(namespace, name);
-            digester.pop();
         }
     }
 
@@ -438,6 +361,148 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
+    /**
+     * SAX Handler to build the configuration nodes while the document is being parsed.
+     */
+    private class XMLPropertyListHandler extends DefaultHandler
+    {
+        private StringBuffer buffer = new StringBuffer();
+
+        private List stack = new ArrayList();
+
+        public XMLPropertyListHandler(Node root)
+        {
+            push(root);
+        }
+
+        /**
+         * Return the node on the top of the stack.
+         */
+        private Node peek()
+        {
+            if (!stack.isEmpty())
+            {
+                return (Node) stack.get(stack.size() - 1);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /**
+         * Remove and return the node on the top of the stack.
+         */
+        private Node pop()
+        {
+            if (!stack.isEmpty())
+            {
+                return (Node) stack.remove(stack.size() - 1);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /**
+         * Put a node on the top of the stack.
+         */
+        private void push(Node node)
+        {
+            stack.add(node);
+        }
+
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
+        {
+            if ("array".equals(qName))
+            {
+                push(new ArrayNode());
+            }
+            else if ("dict".equals(qName))
+            {
+                if (peek() instanceof ArrayNode)
+                {
+                    // create the configuration
+                    XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
+
+                    // add it to the ArrayNode
+                    ArrayNode node = (ArrayNode) peek();
+                    node.addValue(config);
+
+                    // push the root on the stack
+                    push(config.getRoot());
+                }
+            }
+        }
+
+        public void endElement(String uri, String localName, String qName) throws SAXException
+        {
+            if ("key".equals(qName))
+            {
+                // create a new node, link it to its parent and push it on the stack
+                PListNode node = new PListNode();
+                node.setName(buffer.toString());
+                peek().addChild(node);
+                push(node);
+            }
+            else if ("dict".equals(qName))
+            {
+                // remove the root of the XMLPropertyListConfiguration previously pushed on the stack
+                pop();
+            }
+            else
+            {
+                if ("string".equals(qName))
+                {
+                    ((PListNode) peek()).addValue(buffer.toString());
+                }
+                else if ("integer".equals(qName))
+                {
+                    ((PListNode) peek()).addIntegerValue(buffer.toString());
+                }
+                else if ("real".equals(qName))
+                {
+                    ((PListNode) peek()).addRealValue(buffer.toString());
+                }
+                else if ("true".equals(qName))
+                {
+                    ((PListNode) peek()).addTrueValue();
+                }
+                else if ("false".equals(qName))
+                {
+                    ((PListNode) peek()).addFalseValue();
+                }
+                else if ("data".equals(qName))
+                {
+                    ((PListNode) peek()).addDataValue(buffer.toString());
+                }
+                else if ("date".equals(qName))
+                {
+                    ((PListNode) peek()).addDateValue(buffer.toString());
+                }
+                else if ("array".equals(qName))
+                {
+                    ArrayNode array = (ArrayNode) pop();
+                    ((PListNode) peek()).addList(array);
+                }
+
+                // remove the plist node on the stack once the value has been parsed,
+                // array nodes remains on the stack for the next values in the list
+                if (!(peek() instanceof ArrayNode))
+                {
+                    pop();
+                }
+            }
+
+            buffer.setLength(0);
+        }
+
+        public void characters(char ch[], int start, int length) throws SAXException
+        {
+            buffer.append(ch, start, length);
+        }
+    }
 
     /**
      * Node extension with addXXX methods to parse the typed data passed by Digester.

@@ -58,14 +58,14 @@
                         <td>
                             commons-digester<br/>
                             commons-beanutils<br/>
-                            JDK 1.4 or xml-apis
+                            Java 1.4 or xml-apis
                         </td>
                     </tr>
                     <tr>
                         <td>DefaultConfigurationBuilder</td>
                         <td>
                             commons-beanutils<br/>
-                            JDK 1.4 or (xml-apis + xerces + xalan)
+                            Java 1.4 or (xml-apis + xerces + xalan)
                         </td>
                     </tr>
                     <tr>
@@ -87,10 +87,8 @@
                     <tr>
                         <td>XMLPropertyListConfiguration</td>
                         <td>
-                            commons-digester<br/>
-                            commons-beanutils<br/>
                             commons-codec<br/>
-                            JDK 1.4 or xml-apis
+                            Java 1.4 or xml-apis
                         </td>
                     </tr>
                     <tr>
@@ -155,7 +153,7 @@
                 </table>
                 </li>
                 <li>
-                  In JDK versions before 1.4 XML support is not integrated. To
+                  In Java versions before 1.4 XML support is not integrated. To
                   make use of components that require XML processing you need
                   to add a suitable replacement. We used 
                   <a href="http://xml.apache.org/xerces2-j/">Xerces 2.2.1</a>,

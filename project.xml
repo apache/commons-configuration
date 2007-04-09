@@ -171,7 +171,9 @@
     <developer>
       <name>Emmanuel Bourg</name>
       <id>ebourg</id>
-      <email>smanux@lfjr.net</email>
+      <email>ebourg@apache.org</email>
+      <organization>Ariane Software</organization>
+      <timezone>+1</timezone>
     </developer>
 	
     <developer>
@@ -220,7 +222,7 @@
     <contributor>
       <name>Nicolas De Loof</name>
       <email>nicolas.deloof@gmail.com</email>
-      <organization>capgemini</organization>
+      <organization>Cap Gemini</organization>
     </contributor>
 
   </contributors>
