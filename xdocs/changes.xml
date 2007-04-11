@@ -23,6 +23,9 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-261">
+          Date objects are now supported in ASCII plist files.
+      </action>
       <action dev="ebourg" type="update">
         XMLPropertyListConfiguration no longer requires commons-digester and
         commons-beanutils to work.

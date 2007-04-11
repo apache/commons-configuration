@@ -26,6 +26,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.configuration.AbstractHierarchicalFileConfiguration;
@@ -36,8 +39,14 @@ import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * NeXT / OpenStep style configuration.
- * (http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/Concepts/OldStylePListsConcept.html)
+ * NeXT / OpenStep style configuration. This configuration can read and write
+ * ASCII plist files. It support the GNUStep extension to specify date objects.
+ * <p>
+ * References:
+ * <ul>
+ *   <li><a href="http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/Articles/OldStylePListsConcept.html">Apple Documentation - Old-Style ASCII Property Lists</a></li>
+ *   <li><a href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">GNUStep Documentation</a></li>
+ * </ul>
  *
  * <p>Example:</p>
  * <pre>
@@ -47,6 +56,8 @@ import org.apache.commons.lang.StringUtils;
  *     array = ( value1, value2, value3 );
  *
  *     data = &lt;4f3e0145ab>;
+ *
+ *     date = &lt;*D2007-05-05 20:05:00 +0100>;
  *
  *     nested =
  *     {
@@ -67,13 +78,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
-    /**
-     * The serial version UID.
-     */
+    /** The serial version UID. */
     private static final long serialVersionUID = 3227248503779092127L;
 
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
+
+    /** The format used for the date objects in the plist files. */
+    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
     /**
      * Creates an empty PropertyListConfiguration object which can be
@@ -134,7 +146,6 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         PropertyListParser parser = new PropertyListParser(in);
         try
         {
-
             HierarchicalConfiguration config = parser.parse();
             setRoot(config.getRoot());
         }
@@ -276,6 +287,10 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         else if (value instanceof byte[])
         {
             out.print("<" + new String(Hex.encodeHex((byte[]) value)) + ">");
+        }
+        else if (value instanceof Date)
+        {
+            out.print("<*D" + DATE_FORMAT.format((Date) value) + ">");
         }
         else if (value != null)
         {

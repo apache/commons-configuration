@@ -13,14 +13,16 @@ interface PropertyListParserConstants
     int EQUAL = 11;
     int DATA_START = 12;
     int DATA_END = 13;
-    int QUOTE = 14;
-    int LETTER = 15;
-    int WHITE = 16;
-    int HEXA = 17;
-    int DATA = 18;
-    int STRING = 19;
-    int QUOTED_STRING = 20;
-    int ESCAPED_QUOTE = 21;
+    int DATE_START = 14;
+    int QUOTE = 15;
+    int LETTER = 16;
+    int WHITE = 17;
+    int HEXA = 18;
+    int DATA = 19;
+    int DATE = 20;
+    int STRING = 21;
+    int QUOTED_STRING = 22;
+    int ESCAPED_QUOTE = 23;
 
     int DEFAULT = 0;
 
@@ -39,11 +41,13 @@ interface PropertyListParserConstants
         "\"=\"",
         "\"<\"",
         "\">\"",
+        "\"<*D\"",
         "\"\\\"\"",
         "<LETTER>",
         "<WHITE>",
         "<HEXA>",
         "<DATA>",
+        "<DATE>",
         "<STRING>",
         "<QUOTED_STRING>",
         "\"\\\\\\\"\"",

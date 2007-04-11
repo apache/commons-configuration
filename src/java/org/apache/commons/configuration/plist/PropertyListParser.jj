@@ -24,6 +24,7 @@ PARSER_BEGIN(PropertyListParser)
 
 package org.apache.commons.configuration.plist;
 
+import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -97,7 +98,25 @@ class PropertyListParser {
         }
         catch (Exception e)
         {
-            throw new ParseException(e.getMessage());
+            throw (ParseException) new ParseException("Unable to parse the byte[]").initCause(e);
+        }
+    }
+
+    /**
+     * Parse a date formatted as <*D2002-03-22 11:30:00 +0100>
+     */
+    protected Date parseDate(String s) throws ParseException
+    {
+        // remove the prefix "<*D" and the suffix ">"
+        String substring = s.substring(3, s.length() - 1);
+
+        try
+        {
+            return PropertyListConfiguration.DATE_FORMAT.parse(substring);
+        }
+        catch (Exception e)
+        {
+            throw (ParseException) new ParseException("Unable to parse the date '" + s + "'").initCause(e);
         }
     }
 
@@ -119,11 +138,14 @@ TOKEN : { <EQUAL : "=" > }
 TOKEN : { <DATA_START : "<" > }
 TOKEN : { <DATA_END : ">" > }
 
+TOKEN : { <DATE_START : "<*D" > }
+
 TOKEN : { < QUOTE : "\"" > }
 TOKEN : { < #LETTER : ~[" ", "\t", "\n", "\r", "(", ")", ",", "{", "}", ";", "=", "\""] > }
 TOKEN : { < #WHITE : " " | "\t" | "\n" | "\r" > }
 TOKEN : { < #HEXA : ["0"-"9", "a"-"f", "A"-"F"] > }
 TOKEN : { < DATA : <DATA_START> (<HEXA> | <WHITE>)* <DATA_END> > }
+TOKEN : { < DATE : <DATE_START> (["0"-"9"] | ":" | " " | "+" | "-" | "Z")* <DATA_END> > }
 TOKEN : { < STRING :  (<LETTER>)+ > }
 TOKEN : { < QUOTED_STRING :
             <QUOTE>
@@ -200,6 +222,8 @@ Object Element() :
     Object value = null;
 }
 {
+    LOOKAHEAD(2)
+    
     value = Array()
     { return value; }
     |
@@ -210,6 +234,9 @@ Object Element() :
     { return value; }
     |
     value = Data()
+    { return value; }
+    |
+    value = Date()
     { return value; }
 }
 
@@ -253,4 +280,13 @@ byte[] Data() :
 {
     token = <DATA>
     { return filterData(token.image); }
+}
+
+Date Date() :
+{
+    Token token;
+}
+{
+    token = <DATE>
+    { return parseDate(token.image); }
 }

@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Date;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -174,6 +175,12 @@ public class TestPropertyListConfiguration extends TestCase
         ArrayAssert.assertEquals("data", "foo bar".getBytes(), (byte[]) config.getProperty("data"));
     }
 
+    public void testDate() throws Exception
+    {
+        Date date = PropertyListConfiguration.DATE_FORMAT.parse("2002-03-22 11:30:00 +0100");
+
+        assertEquals("date", date, config.getProperty("date"));        
+    }
 
     public void testSave() throws Exception
     {

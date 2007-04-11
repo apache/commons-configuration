@@ -18,6 +18,9 @@
 package org.apache.commons.configuration.plist;
 
 import java.io.Reader;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.SimpleTimeZone;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -43,6 +46,21 @@ public class TestPropertyListParser extends TestCase
     {
         assertEquals("non escaped quotes", "aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\"bbb\"ccc"));
         assertEquals("escaped quotes", "aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\\\"bbb\\\"ccc"));
+    }
+
+    public void testParseDate() throws Exception
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, 2002);
+        calendar.set(Calendar.MONTH, Calendar.MARCH);
+        calendar.set(Calendar.DAY_OF_MONTH, 22);
+        calendar.set(Calendar.HOUR_OF_DAY, 11);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.setTimeZone(new SimpleTimeZone(60 * 60 * 1000, "Apache/Jakarta"));
+
+        assertEquals("parsed date", calendar.getTime(), parser.parseDate("<*D2002-03-22 11:30:00 +0100>"));
     }
 
     public void testFilterData() throws Exception
