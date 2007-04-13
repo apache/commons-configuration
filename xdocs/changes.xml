@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-180">
+        Fixed a potential issue in DatabaseConfiguration where an error on
+        closing a statement would prevent the connection from being closed.
+      </action>
       <action dev="ebourg" type="add" issue="CONFIGURATION-261">
         Date objects are now supported in ASCII plist files.
       </action>

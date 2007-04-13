@@ -139,16 +139,15 @@ public class DatabaseConfiguration extends AbstractConfiguration
             List results = new ArrayList();
             while (rs.next())
             {
-                Object val = rs.getObject(valueColumn);
+                Object value = rs.getObject(valueColumn);
                 if (isDelimiterParsingDisabled())
                 {
-                    results.add(val);
+                    results.add(value);
                 }
                 else
                 {
                     // Split value if it containts the list delimiter
-                    CollectionUtils.addAll(results, PropertyConverter
-                            .toIterator(val, getListDelimiter()));
+                    CollectionUtils.addAll(results, PropertyConverter.toIterator(value, getListDelimiter()));
                 }
             }
 
@@ -163,7 +162,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         finally
         {
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
 
         return result;
@@ -218,7 +217,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
     }
 
@@ -299,7 +298,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
 
         return empty;
@@ -352,7 +351,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
 
         return found;
@@ -400,7 +399,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
     }
 
@@ -443,7 +442,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
     }
 
@@ -496,7 +495,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            closeQuietly(conn, pstmt);
+            close(conn, pstmt);
         }
 
         return keys.iterator();
@@ -534,7 +533,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param conn The database connection to close
      * @param stmt The statement to close
      */
-    private void closeQuietly(Connection conn, Statement stmt)
+    private void close(Connection conn, Statement stmt)
     {
         try
         {
@@ -542,6 +541,14 @@ public class DatabaseConfiguration extends AbstractConfiguration
             {
                 stmt.close();
             }
+        }
+        catch (SQLException e)
+        {
+            getLogger().error("An error occured on closing the statement", e);
+        }
+        
+        try
+        {
             if (conn != null)
             {
                 conn.close();
@@ -549,7 +556,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            getLogger().error(e.getMessage(), e);
+            getLogger().error("An error occured on closing the connection", e);
         }
     }
 }
