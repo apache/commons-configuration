@@ -75,7 +75,7 @@ class PropertyListParser implements PropertyListParserConstants {
         }
         catch (Exception e)
         {
-            throw (ParseException) new ParseException("Unable to parse the byte[]").initCause(e);
+            throw (ParseException) new ParseException("Unable to parse the byte[] : " + e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ class PropertyListParser implements PropertyListParserConstants {
         }
         catch (Exception e)
         {
-            throw (ParseException) new ParseException("Unable to parse the date '" + s + "'").initCause(e);
+            throw (ParseException) new ParseException("Unable to parse the date '" + s + "' : " + e.getMessage());
         }
     }
 
