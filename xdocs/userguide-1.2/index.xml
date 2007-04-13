@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<document>
+
+  <properties>
+    <author email="oheger@apache.org">Oliver Heger</author>
+    <title>Howtos index</title>
+  </properties>
+
+  <body>
+    <section name="Howtos">
+      <p>
+        Here you can find documents that describe the usage of some of
+        the main classes provided by the Commons Configuration project. Prior
+        to the 1.3 release these howto documents made up the user
+        documentation. In Commons Configuration 1.3 they have been replaced by
+        a new <a href="../user_guide.html">user's guide</a>. So if you are using
+        a newer version of Commons Configuration you should jump to this new
+        user's guide. For versions up to 1.2 you are right here.
+      </p>
+      <p>
+        The following doucments are available:
+        <ul>
+          <li><a href="overview.html">Using Configuration</a></li>
+          <li><a href="howto_properties.html">Properties Howto</a></li>
+          <li><a href="howto_configurationfactory.html">ConfigurationFactory Howto</a></li>
+          <li><a href="howto_xml.html">XML Howto</a></li>
+          <li><a href="howto_compositeconfiguration.html">Composite Config Howto</a></li>
+        </ul>
+      </p>
+    </section>
+
+  </body>
+</document>

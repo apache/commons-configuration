@@ -55,9 +55,13 @@
               Takes values from an XML document.
           </li>
           <li>
+              <strong>INIConfiguration</strong>
+              Loads the values from a .ini file as used by Windows.
+          </li>
+          <li>
               <strong>PropertyListConfiguration</strong>
               Loads values from an OpenStep .plist file. XMLPropertyListConfiguration is also
-              available to read the XML variant used by Mac OSX.
+              available to read the XML variant used by Mac OS X.
           </li>
           <li>
               <strong>JNDIConfiguration</strong>
@@ -78,7 +82,7 @@
           </li>
           <li>
               <strong>ConfigurationConverter</strong>
-              Takes a java.util.Properties or an o.a.c.collections.ExtendedProperties
+              Takes a java.util.Properties or an org.aapache.commons.collections.ExtendedProperties
               and converts it to a Configuration object.
           </li>
        </ul>

@@ -22,9 +22,9 @@
   </properties>
 
   <body>
-    <release version="1.5-SNAPSHOT" date="in SVN">
+    <release version="1.5-SNAPSHOT" date="in SVN" description="">
       <action dev="ebourg" type="add" issue="CONFIGURATION-261">
-          Date objects are now supported in ASCII plist files.
+        Date objects are now supported in ASCII plist files.
       </action>
       <action dev="ebourg" type="update">
         XMLPropertyListConfiguration no longer requires commons-digester and
@@ -36,7 +36,7 @@
       </action>
     </release>
 
-    <release version="1.4" date="2007-04-08">
+    <release version="1.4" date="2007-04-08" description="Improved interpolation, configuration for INI files, reloading strategy triggered with JMX, bug fixes.">
       <action dev="oheger" type="update" issue="CONFIGURATION-256">
         MapConfiguration and the web-based configurations now treat strings
         that contain an escaped list delimiter correctly: The escape character
@@ -232,6 +232,7 @@
         the associated PropertiesConfigurationLayout object correctly.
       </action>
     </release>
+
     <release version="1.3-rc1" date="2006-07-30">
       <action dev="oheger" type="update" issue="CONFIGURATION-217">
         The dependency to servletapi was updated from version 2.3 to version
@@ -762,7 +763,7 @@
       </action>
     </release>
 
-    <release version="1.0" date="2004-10-11">
+    <release version="1.0" date="2004-10-11" description="First official release">
       <action dev="ebourg" type="fix" issue="CONFIGURATION-66">
         The getStringArray() method in CompositeConfiguration now interpolates
         the strings.

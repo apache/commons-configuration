@@ -23,14 +23,14 @@
     <author email="jason@zenplex.com">Jason van Zyl</author>
     <author email="epugh@upstate.com">Eric Pugh</author>
     <author email="tobrien@discursive.com">Tim O'Brien</author>
-    <title>Configuration</title>
+    <title>Java Configuration API</title>
   </properties>
 
   <body>
     <section name="Intro">
       <p>
       	Commons Configuration provides a generic configuration interface which enables
-        an application to read configuration data from a variety of sources. Commons Configuration
+        a Java application to read configuration data from a variety of sources. Commons Configuration
       	provides typed access to single, and multi-valued configuration parameters as demonstrated
         by the following code:
 
@@ -47,7 +47,7 @@ Integer integer = config.getInteger("number");
           <li>Properties files</li>
           <li>XML documents</li>
           <li>Windows INI files</li>
-          <li>Property list files (.plist)</li>
+          <li>Property list files (plist)</li>
           <li>JNDI</li>
           <li>JDBC Datasource</li>
           <li>System properties</li>
@@ -88,8 +88,7 @@ Integer integer = config.getInteger("number");
     <section name="Bugs">
       <p>
         Bugs may be reported via the <a href="http://issues.apache.org/jira/browse/CONFIGURATION">ASF JIRA</a>
-        system. Detailed information can be found on the
-        <a href="issue-tracking.html">issue tracking page</a>.
+        system. Detailed information can be found on the <a href="issue-tracking.html">issue tracking page</a>.
       </p>
     </section>
 

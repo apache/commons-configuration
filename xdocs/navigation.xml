@@ -16,12 +16,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="Configuration">
+<project name="Jakarta Commons Configuration">
 
-  <title>Configuration</title>
-  <organizationLogo href="/images/jakarta-logo-blue.gif">
-   Jakarta
-  </organizationLogo>
+  <title>Jakarta - Commons Configuration</title>
 
   <body>
     <links>
@@ -31,16 +28,18 @@
 	<menu name="Configuration">
       <item name="Home"                         href="/index.html"/>  
       <item name="Download"                     href="http://jakarta.apache.org/site/downloads/downloads_commons-configuration.cgi"/>  
-      <item name="User's Guide"                 href="/user_guide.html"/>
-      <item name="Howtos (Release 1.2)"         href="/howtos_index.html"/>
+      <item name="Release History"              href="/changes-report.html"/>
+      <item name="User's Guide"                 href="/userguide/user_guide.html"/>
+      <item name="Howtos (1.2 release)"         href="/userguide-1.2/index.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
+      <item name="Javadoc (1.4 release)"        href="/apidocs/index.html"/>
+      <item name="Javadoc (old releases)"       href="/javadoc.html"/>
+    </menu>
+
+    <menu name="Development">
       <item name="Building"                     href="/building.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
-      <item name="Javadoc (Release 1.4)"        href="/apidocs/index.html"/>
-      <item name="Javadoc (Release 1.3)"        href="/apidocs_1.3/index.html"/>
-      <item name="Javadoc (Release 1.2)"        href="/apidocs_1.2/index.html"/>
-      <item name="Javadoc (Release 1.1)"        href="/apidocs_1.1/index.html"/>
-      <item name="Javadoc (Release 1.0)"        href="/apidocs_1.0/index.html"/>
+      <item name="Issue Tracking"               href="issue-tracking.html"/>
       <item name="SVN"                          href="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/"/>
     </menu>
 

@@ -24,7 +24,8 @@
  </properties>
 
 <body>
-	<section name="About this document">
+
+    <section name="About this document">
 		<p>
  	 		This document describes the features of the Commons Configuration
             component starting with the very basics and up to the more advanced
@@ -37,7 +38,7 @@
             Note that many features described in this guide are only available
             since the 1.3 release of Commons Configuration. If you are using
             a 1.2 version, have a look at the older
-            <a href="howtos_index.html">Howtos</a> documents, which specifically
+            <a href="../userguide-1.2/index.html">Howtos</a> documents, which specifically
             deal with this version.
         </p>
     </section>
@@ -145,6 +146,7 @@
       </ul>
     </ul>
     </section>
+
 </body>
 
 </document>
