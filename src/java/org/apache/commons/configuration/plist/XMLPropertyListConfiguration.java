@@ -506,7 +506,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     }
 
     /**
-     * Node extension with addXXX methods to parse the typed data passed by Digester.
+     * Node extension with addXXX methods to parse the typed data passed by the SAX handler.
      * <b>Do not use this class !</b> It is used internally by XMLPropertyConfiguration
      * to parse the configuration file, it may be removed at any moment in the future.
      */

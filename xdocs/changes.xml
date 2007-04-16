@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-249">
+        File configurations can now be saved to FTP URLs, or any other URL
+        protocol supporting data output.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-180">
         Fixed a potential issue in DatabaseConfiguration where an error on
         closing a statement would prevent the connection from being closed.

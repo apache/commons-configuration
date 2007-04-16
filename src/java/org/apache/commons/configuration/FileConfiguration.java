@@ -126,7 +126,7 @@ public interface FileConfiguration extends Configuration
     void save(File file) throws ConfigurationException;
 
     /**
-     * Save the configuration to the specified URL if it's a file URL.
+     * Save the configuration to the specified URL.
      *
      * @param url the URL
      *

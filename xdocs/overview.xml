@@ -82,7 +82,7 @@
           </li>
           <li>
               <strong>ConfigurationConverter</strong>
-              Takes a java.util.Properties or an org.aapache.commons.collections.ExtendedProperties
+              Takes a java.util.Properties or an org.apache.commons.collections.ExtendedProperties
               and converts it to a Configuration object.
           </li>
        </ul>

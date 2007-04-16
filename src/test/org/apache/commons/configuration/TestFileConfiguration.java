@@ -49,8 +49,7 @@ public class TestFileConfiguration extends TestCase
         FileConfiguration config = new PropertiesConfiguration();
         config.setURL(new URL("http://jakarta.apache.org/commons/configuration/index.html"));
 
-        assertEquals("base path", "http://jakarta.apache.org/commons/configuration/", config
-                .getBasePath());
+        assertEquals("base path", "http://jakarta.apache.org/commons/configuration/", config.getBasePath());
         assertEquals("file name", "index.html", config.getFileName());
 
         // file URL
@@ -62,13 +61,10 @@ public class TestFileConfiguration extends TestCase
     public void testSetURLWithParams() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
-        URL url = new URL(
-                "http://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
+        URL url = new URL("http://issues.apache.org/bugzilla/show_bug.cgi?id=37886");
         config.setURL(url);
-        assertEquals("Base path incorrect",
-                "http://issues.apache.org/bugzilla/", config.getBasePath());
-        assertEquals("File name incorrect", "show_bug.cgi", config
-                .getFileName());
+        assertEquals("Base path incorrect", "http://issues.apache.org/bugzilla/", config.getBasePath());
+        assertEquals("File name incorrect", "show_bug.cgi", config.getFileName());
         assertEquals("URL was not correctly stored", url, config.getURL());
     }
 
@@ -202,9 +198,10 @@ public class TestFileConfiguration extends TestCase
     public void testSaveInvalidURL() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
+
         try
         {
-            config.save(new URL("http://jakarta.apache.org"));
+            config.save(new URL("http://jakarta.apache.org/test.properties"));
             fail("Should throw a ConfigurationException!");
         }
         catch (ConfigurationException cex)
@@ -214,7 +211,7 @@ public class TestFileConfiguration extends TestCase
 
         try
         {
-            config.save("http://www.apache.org");
+            config.save("http://www.apache.org/test.properties");
             fail("Should throw a ConfigurationException!");
         }
         catch (ConfigurationException cex)

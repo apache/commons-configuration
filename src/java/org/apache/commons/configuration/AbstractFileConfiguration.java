@@ -27,8 +27,10 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Iterator;
 
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
@@ -409,7 +411,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     }
 
     /**
-     * Save the configuration to the specified URL if it's a file URL.
+     * Save the configuration to the specified URL.
      * This doesn't change the source of the configuration, use setURL()
      * if you need it.
      *
@@ -419,6 +421,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void save(URL url) throws ConfigurationException
     {
+        // file URLs have to be converted to Files since FileURLConnection is
+        // read only (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
         File file = ConfigurationUtils.fileFromURL(url);
         if (file != null)
         {
@@ -426,7 +430,35 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         else
         {
-            throw new ConfigurationException("Could not save to URL " + url);
+            // for non file URLs save through an URLConnection
+            try
+            {
+                URLConnection connection = url.openConnection();
+                connection.setDoOutput(true);
+
+                // use the PUT method for http URLs
+                if (connection instanceof HttpURLConnection)
+                {
+                    HttpURLConnection conn = (HttpURLConnection) connection;
+                    conn.setRequestMethod("PUT");
+                }
+
+                save(connection.getOutputStream());
+
+                // check the response code for http URLs and throw an exception if an error occured
+                if (connection instanceof HttpURLConnection)
+                {
+                    HttpURLConnection conn = (HttpURLConnection) connection;
+                    if (conn.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST)
+                    {
+                        throw new IOException("HTTP Error " + conn.getResponseCode() + " " + conn.getResponseMessage());
+                    }
+                }
+            }
+            catch (IOException e)
+            {
+                throw new ConfigurationException("Could not save to URL " + url + " : " + e.getMessage());
+            }
         }
     }
 
@@ -647,8 +679,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             {
                 try
                 {
-                    path = ConfigurationUtils.getURL(getBasePath(),
-                            getFileName()).getPath();
+                    path = ConfigurationUtils.getURL(getBasePath(), getFileName()).getPath();
                 }
                 catch (MalformedURLException e)
                 {
@@ -877,8 +908,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * @param propValue the value of the property
      * @param before the before update flag
      */
-    protected void fireEvent(int type, String propName, Object propValue,
-            boolean before)
+    protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
         enterNoReload();
         try
@@ -959,8 +989,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public Object clone()
     {
-        AbstractFileConfiguration copy = (AbstractFileConfiguration) super
-                .clone();
+        AbstractFileConfiguration copy = (AbstractFileConfiguration) super.clone();
         copy.setBasePath(null);
         copy.setFileName(null);
         copy.initReloadingStrategy();
