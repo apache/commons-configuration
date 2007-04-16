@@ -133,8 +133,7 @@ public class TestDatabaseConfiguration extends TestCase
      */
     private PotentialErrorDatabaseConfiguration setUpConfig()
     {
-        return new PotentialErrorDatabaseConfiguration(datasource, TABLE,
-                COL_KEY, COL_VALUE);
+        return new PotentialErrorDatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
     }
 
     /**
@@ -145,8 +144,7 @@ public class TestDatabaseConfiguration extends TestCase
      */
     private DatabaseConfiguration setUpMultiConfig()
     {
-        return new DatabaseConfiguration(datasource, TABLE_MULTI, COL_NAME,
-                COL_KEY, COL_VALUE, CONFIG_NAME);
+        return new DatabaseConfiguration(datasource, TABLE_MULTI, COL_NAME, COL_KEY, COL_VALUE, CONFIG_NAME);
     }
 
     /**
@@ -157,8 +155,7 @@ public class TestDatabaseConfiguration extends TestCase
     private void setUpErrorListener(PotentialErrorDatabaseConfiguration config)
     {
         // remove log listener to avoid exception longs
-        config.removeErrorListener((ConfigurationErrorListener) config
-                .getErrorListeners().iterator().next());
+        config.removeErrorListener((ConfigurationErrorListener) config.getErrorListeners().iterator().next());
         listener = new TestErrorListener();
         config.addErrorListener(listener);
         config.failOnConnect = true;
@@ -189,10 +186,8 @@ public class TestDatabaseConfiguration extends TestCase
     {
         assertEquals("Wrong number of errors", 1, listener.errorCount);
         assertEquals("Wrong event type", type, listener.event.getType());
-        assertTrue("Wrong event source",
-                listener.event.getSource() instanceof DatabaseConfiguration);
-        assertTrue("Wrong exception",
-                listener.event.getCause() instanceof SQLException);
+        assertTrue("Wrong event source", listener.event.getSource() instanceof DatabaseConfiguration);
+        assertTrue("Wrong exception", listener.event.getCause() instanceof SQLException);
         assertTrue("Wrong property key", (key == null) ? listener.event
                 .getPropertyName() == null : key.equals(listener.event
                 .getPropertyName()));
@@ -357,10 +352,8 @@ public class TestDatabaseConfiguration extends TestCase
      */
     public void testLogErrorListener()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource,
-                TABLE, COL_KEY, COL_VALUE);
-        assertEquals("No error listener registered", 1, config
-                .getErrorListeners().size());
+        DatabaseConfiguration config = new DatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
+        assertEquals("No error listener registered", 1, config.getErrorListeners().size());
     }
 
     /**
@@ -369,8 +362,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testGetPropertyError()
     {
         setUpErrorConfig().getProperty("key1");
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1",
-                null);
+        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1", null);
     }
 
     /**
@@ -379,8 +371,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testAddPropertyError()
     {
         setUpErrorConfig().addProperty("key1", "value");
-        checkErrorListener(AbstractConfiguration.EVENT_ADD_PROPERTY, "key1",
-                "value");
+        checkErrorListener(AbstractConfiguration.EVENT_ADD_PROPERTY, "key1", "value");
     }
 
     /**
@@ -388,10 +379,8 @@ public class TestDatabaseConfiguration extends TestCase
      */
     public void testIsEmptyError()
     {
-        assertTrue("Wrong return value for failure", setUpErrorConfig()
-                .isEmpty());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
+        assertTrue("Wrong return value for failure", setUpErrorConfig().isEmpty());
+        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
     }
 
     /**
@@ -399,10 +388,8 @@ public class TestDatabaseConfiguration extends TestCase
      */
     public void testContainsKeyError()
     {
-        assertFalse("Wrong return value for failure", setUpErrorConfig()
-                .containsKey("key1"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1",
-                null);
+        assertFalse("Wrong return value for failure", setUpErrorConfig().containsKey("key1"));
+        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key1", null);
     }
 
     /**
@@ -411,8 +398,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testClearPropertyError()
     {
         setUpErrorConfig().clearProperty("key1");
-        checkErrorListener(AbstractConfiguration.EVENT_CLEAR_PROPERTY, "key1",
-                null);
+        checkErrorListener(AbstractConfiguration.EVENT_CLEAR_PROPERTY, "key1", null);
     }
 
     /**
@@ -430,8 +416,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testGetKeysError()
     {
         Iterator it = setUpErrorConfig().getKeys();
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
+        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
         assertFalse("Iteration is not empty", it.hasNext());
     }
 
@@ -458,8 +443,7 @@ public class TestDatabaseConfiguration extends TestCase
         DatabaseConfiguration config = setUpConfig();
         config.setListDelimiter(';');
         config.setDelimiterParsingDisabled(true);
-        assertEquals("Wrong value of property", "a;b;c", config
-                .getString("keyMulti"));
+        assertEquals("Wrong value of property", "a;b;c", config.getString("keyMulti"));
     }
 
     /**
@@ -481,8 +465,7 @@ public class TestDatabaseConfiguration extends TestCase
      * configured to throw an exception when obtaining a connection. This way
      * database exceptions can be simulated.
      */
-    static class PotentialErrorDatabaseConfiguration extends
-            DatabaseConfiguration
+    static class PotentialErrorDatabaseConfiguration extends DatabaseConfiguration
     {
         /** A flag whether a getConnection() call should fail. */
         boolean failOnConnect;

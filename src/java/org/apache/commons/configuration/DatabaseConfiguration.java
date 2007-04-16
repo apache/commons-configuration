@@ -33,11 +33,51 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * Configuration stored in a database.
+ * Configuration stored in a database. The properties are retrieved from a
+ * table containing at least one column for the keys, and one column for the
+ * values. It's possible to store several configurations in the same table by
+ * adding a column containing the name of the configuration. The name of the
+ * table and the columns is specified in the constructor.
+ *
+ * <h4>Example 1 - One configuration per table</h4>
+ *
+ * <pre>
+ * CREATE TABLE myconfig (
+ *     `key`   VARCHAR NOT NULL PRIMARY KEY,
+ *     `value` VARCHAR
+ * );
+ *
+ * INSERT INTO myconfig (key, value) VALUES ('foo', 'bar');
+ *
+ *
+ * Configuration config = new DatabaseConfiguration(datasource, "myconfig", "key", "value");
+ * String value = config.getString("foo");
+ * </pre>
+ *
+ * <h4>Example 2 - Multiple configurations per table</h4>
+ *
+ * <pre>
+ * CREATE TABLE myconfigs (
+ *     `name`  VARCHAR NOT NULL,
+ *     `key`   VARCHAR NOT NULL,
+ *     `value` VARCHAR,
+ *     CONSTRAINT sys_pk_myconfigs PRIMARY KEY (`name`, `key`)
+ * );
+ *
+ * INSERT INTO myconfigs (name, key, value) VALUES ('config1', 'key1', 'value1');
+ * INSERT INTO myconfigs (name, key, value) VALUES ('config2', 'key2', 'value2');
+ *
+ *
+ * Configuration config1 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config1");
+ * String value1 = conf.getString("key1");
+ *
+ * Configuration config2 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config2");
+ * String value2 = conf.getString("key2");
+ * </pre>
  *
  * @since 1.0
  *
- * @author Emmanuel Bourg
+ * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Revision$, $Date$
  */
 public class DatabaseConfiguration extends AbstractConfiguration
@@ -521,7 +561,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @throws SQLException if an error occurs
      * @since 1.4
      */
-    protected Connection getConnection() throws SQLException
+    Connection getConnection() throws SQLException
     {
         return getDatasource().getConnection();
     }
