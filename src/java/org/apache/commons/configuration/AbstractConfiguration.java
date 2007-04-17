@@ -21,6 +21,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -1112,21 +1113,21 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Returns an object from the store described by the key. If the value is a
-     * List object, replace it with the first object in the list.
+     * Collection object, replace it with the first object in the collection.
      *
      * @param key The property key.
      *
-     * @return value Value, transparently resolving a possible List dependency.
+     * @return value Value, transparently resolving a possible collection dependency.
      */
     protected Object resolveContainerStore(String key)
     {
         Object value = getProperty(key);
         if (value != null)
         {
-            if (value instanceof List)
+            if (value instanceof Collection)
             {
-                List list = (List) value;
-                value = list.isEmpty() ? null : list.get(0);
+                Collection collection = (Collection) value;
+                value = collection.isEmpty() ? null : collection.iterator().next();
             }
             else if (value.getClass().isArray() && Array.getLength(value) > 0)
             {

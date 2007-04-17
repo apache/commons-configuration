@@ -26,8 +26,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -781,6 +783,14 @@ public class TestBaseConfiguration extends TestCase
         config.addPropertyDirect("list", list);
 
         assertEquals("first element of the 'list' property", "foo", config.resolveContainerStore("list"));
+
+        // set of objects
+        Set set = new ListOrderedSet();
+        set.add("foo");
+        set.add("bar");
+        config.addPropertyDirect("set", set);
+
+        assertEquals("first element of the 'set' property", "foo", config.resolveContainerStore("set"));
 
         // arrays of primitives
         config.addPropertyDirect("array.boolean", new boolean[] { true, false });
