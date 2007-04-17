@@ -54,8 +54,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("boolean.list2", "true, false");
         conf.addProperty("boolean.list3", Boolean.TRUE);
         conf.addProperty("boolean.list3", Boolean.FALSE);
-        conf.addProperty("boolean.list4", new Boolean[] { Boolean.TRUE, Boolean.FALSE });
-        conf.addProperty("boolean.list5", new boolean[] { true, false });
+        conf.addPropertyDirect("boolean.list4", new Boolean[] { Boolean.TRUE, Boolean.FALSE });
+        conf.addPropertyDirect("boolean.list5", new boolean[] { true, false });
         List booleans = new ArrayList();
         booleans.add(Boolean.TRUE);
         booleans.add(Boolean.FALSE);
@@ -70,8 +70,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("byte.list2", "1, 2");
         conf.addProperty("byte.list3", new Byte("1"));
         conf.addProperty("byte.list3", new Byte("2"));
-        conf.addProperty("byte.list4", new Byte[] { new Byte("1"), new Byte("2") });
-        conf.addProperty("byte.list5", new byte[] { 1, 2 });
+        conf.addPropertyDirect("byte.list4", new Byte[] { new Byte("1"), new Byte("2") });
+        conf.addPropertyDirect("byte.list5", new byte[] { 1, 2 });
         List bytes = new ArrayList();
         bytes.add(new Byte("1"));
         bytes.add(new Byte("2"));
@@ -86,8 +86,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("short.list2", "1, 2");
         conf.addProperty("short.list3", new Short("1"));
         conf.addProperty("short.list3", new Short("2"));
-        conf.addProperty("short.list4", new Short[] { new Short("1"), new Short("2") });
-        conf.addProperty("short.list5", new short[] { 1, 2 });
+        conf.addPropertyDirect("short.list4", new Short[] { new Short("1"), new Short("2") });
+        conf.addPropertyDirect("short.list5", new short[] { 1, 2 });
         List shorts = new ArrayList();
         shorts.add(new Short("1"));
         shorts.add(new Short("2"));
@@ -102,8 +102,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("integer.list2", "1, 2");
         conf.addProperty("integer.list3", new Integer("1"));
         conf.addProperty("integer.list3", new Integer("2"));
-        conf.addProperty("integer.list4", new Integer[] { new Integer("1"), new Integer("2") });
-        conf.addProperty("integer.list5", new int[] { 1, 2 });
+        conf.addPropertyDirect("integer.list4", new Integer[] { new Integer("1"), new Integer("2") });
+        conf.addPropertyDirect("integer.list5", new int[] { 1, 2 });
         List integers = new ArrayList();
         integers.add(new Integer("1"));
         integers.add(new Integer("2"));
@@ -118,8 +118,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("long.list2", "1, 2");
         conf.addProperty("long.list3", new Long("1"));
         conf.addProperty("long.list3", new Long("2"));
-        conf.addProperty("long.list4", new Long[] { new Long("1"), new Long("2") });
-        conf.addProperty("long.list5", new long[] { 1, 2 });
+        conf.addPropertyDirect("long.list4", new Long[] { new Long("1"), new Long("2") });
+        conf.addPropertyDirect("long.list5", new long[] { 1, 2 });
         List longs = new ArrayList();
         longs.add(new Long("1"));
         longs.add(new Long("2"));
@@ -134,8 +134,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("float.list2", "1, 2");
         conf.addProperty("float.list3", new Float("1"));
         conf.addProperty("float.list3", new Float("2"));
-        conf.addProperty("float.list4", new Float[] { new Float("1"), new Float("2") });
-        conf.addProperty("float.list5", new float[] { 1, 2 });
+        conf.addPropertyDirect("float.list4", new Float[] { new Float("1"), new Float("2") });
+        conf.addPropertyDirect("float.list5", new float[] { 1, 2 });
         List floats = new ArrayList();
         floats.add(new Float("1"));
         floats.add(new Float("2"));
@@ -150,8 +150,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("double.list2", "1, 2");
         conf.addProperty("double.list3", new Double("1"));
         conf.addProperty("double.list3", new Double("2"));
-        conf.addProperty("double.list4", new Double[] { new Double("1"), new Double("2") });
-        conf.addProperty("double.list5", new double[] { 1, 2 });
+        conf.addPropertyDirect("double.list4", new Double[] { new Double("1"), new Double("2") });
+        conf.addPropertyDirect("double.list5", new double[] { 1, 2 });
         List doubles = new ArrayList();
         doubles.add(new Double("1"));
         doubles.add(new Double("2"));
@@ -166,7 +166,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("biginteger.list2", "1, 2");
         conf.addProperty("biginteger.list3", new BigInteger("1"));
         conf.addProperty("biginteger.list3", new BigInteger("2"));
-        conf.addProperty("biginteger.list4", new BigInteger[] { new BigInteger("1"), new BigInteger("2") });
+        conf.addPropertyDirect("biginteger.list4", new BigInteger[] { new BigInteger("1"), new BigInteger("2") });
         List bigintegers = new ArrayList();
         bigintegers.add(new BigInteger("1"));
         bigintegers.add(new BigInteger("2"));
@@ -181,7 +181,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("bigdecimal.list2", "1, 2");
         conf.addProperty("bigdecimal.list3", new BigDecimal("1"));
         conf.addProperty("bigdecimal.list3", new BigDecimal("2"));
-        conf.addProperty("bigdecimal.list4", new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") });
+        conf.addPropertyDirect("bigdecimal.list4", new BigDecimal[] { new BigDecimal("1"), new BigDecimal("2") });
         List bigdecimals = new ArrayList();
         bigdecimals.add(new BigDecimal("1"));
         bigdecimals.add(new BigDecimal("2"));
@@ -201,7 +201,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("url.list2", url1 + ", " + url2);
         conf.addProperty("url.list3", new URL(url1));
         conf.addProperty("url.list3", new URL(url2));
-        conf.addProperty("url.list4", new URL[] { new URL(url1), new URL(url2) });
+        conf.addPropertyDirect("url.list4", new URL[] { new URL(url1), new URL(url2) });
         List urls = new ArrayList();
         urls.add(new URL(url1));
         urls.add(new URL(url2));
@@ -217,7 +217,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("locale.list2", "fr, de");
         conf.addProperty("locale.list3", Locale.FRENCH);
         conf.addProperty("locale.list3", Locale.GERMAN);
-        conf.addProperty("locale.list4", new Locale[] { Locale.FRENCH, Locale.GERMAN });
+        conf.addPropertyDirect("locale.list4", new Locale[] { Locale.FRENCH, Locale.GERMAN });
         List locales = new ArrayList();
         locales.add(Locale.FRENCH);
         locales.add(Locale.GERMAN);
@@ -235,7 +235,7 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("color.list2", color1 + ", " + color2);
         conf.addProperty("color.list3", Color.red);
         conf.addProperty("color.list3", Color.blue);
-        conf.addProperty("color.list4", new Color[] { Color.red, Color.blue });
+        conf.addPropertyDirect("color.list4", new Color[] { Color.red, Color.blue });
         List colors = new ArrayList();
         colors.add(Color.red);
         colors.add(Color.blue);
@@ -262,8 +262,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("date.list2", "2004-01-01, 2004-12-31");
         conf.addProperty("date.list3", date1);
         conf.addProperty("date.list3", date2);
-        conf.addProperty("date.list4", new Date[] { date1, date2 });
-        conf.addProperty("date.list5", new Calendar[] { calendar1, calendar2 });
+        conf.addPropertyDirect("date.list4", new Date[] { date1, date2 });
+        conf.addPropertyDirect("date.list5", new Calendar[] { calendar1, calendar2 });
         List dates = new ArrayList();
         dates.add(date1);
         dates.add(date2);
@@ -278,8 +278,8 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("calendar.list2", "2004-01-01, 2004-12-31");
         conf.addProperty("calendar.list3", calendar1);
         conf.addProperty("calendar.list3", calendar2);
-        conf.addProperty("calendar.list4", new Calendar[] { calendar1, calendar2 });
-        conf.addProperty("calendar.list5", new Date[] { date1, date2 });
+        conf.addPropertyDirect("calendar.list4", new Calendar[] { calendar1, calendar2 });
+        conf.addPropertyDirect("calendar.list5", new Date[] { date1, date2 });
         List calendars = new ArrayList();
         calendars.add(date1);
         calendars.add(date2);

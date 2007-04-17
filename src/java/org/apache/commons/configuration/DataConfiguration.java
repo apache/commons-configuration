@@ -91,7 +91,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
     protected void addPropertyDirect(String key, Object obj)
     {
-        configuration.addProperty(key, obj);
+        if (configuration instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) configuration).addPropertyDirect(key, obj);
+        }
+        else
+        {
+            configuration.addProperty(key, obj);
+        }
     }
 
     public boolean isEmpty()
