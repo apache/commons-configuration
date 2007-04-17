@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration;
 
-import java.awt.*;
+import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -285,6 +286,51 @@ public class TestDataConfiguration extends TestCase
         calendars.add(date2);
         conf.addProperty("calendar.list6", calendars);
         conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
+    }
+
+    public void testGetConfiguration()
+    {
+        Configuration baseconf = new BaseConfiguration();
+        DataConfiguration conf = new DataConfiguration(baseconf);
+
+        assertEquals("base configuration", baseconf, conf.getConfiguration());
+    }
+
+    public void testIsEmpty()
+    {
+        Configuration baseconf = new BaseConfiguration();
+        DataConfiguration conf = new DataConfiguration(baseconf);
+
+        assertTrue("not empty", conf.isEmpty());
+
+        baseconf.setProperty("foo", "bar");
+
+        assertFalse("empty", conf.isEmpty());
+    }
+
+    public void testContainsKey()
+    {
+        Configuration baseconf = new BaseConfiguration();
+        DataConfiguration conf = new DataConfiguration(baseconf);
+
+        assertFalse(conf.containsKey("foo"));
+
+        baseconf.setProperty("foo", "bar");
+
+        assertTrue(conf.containsKey("foo"));
+    }
+
+    public void testGetKeys()
+    {
+        Configuration baseconf = new BaseConfiguration();
+        DataConfiguration conf = new DataConfiguration(baseconf);
+
+        baseconf.setProperty("foo", "bar");
+
+        Iterator it = conf.getKeys();
+        assertTrue("the iterator is empty", it.hasNext());
+        assertEquals("unique key", "foo", it.next());
+        assertFalse("the iterator is not exhausted", it.hasNext());
     }
 
     public void testGetBooleanArray()
