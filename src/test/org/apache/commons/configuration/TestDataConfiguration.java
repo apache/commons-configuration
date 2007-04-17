@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -270,6 +271,7 @@ public class TestDataConfiguration extends TestCase
         dates.add(date2);
         conf.addProperty("date.list6", dates);
         conf.addProperty("date.list.interpolated", "${date.string},2004-12-31");
+        conf.addPropertyDirect("date.list7", new String[] { "2004-01-01", "2004-12-31" });
 
         conf.addProperty("calendar.string", "2004-01-01");
         conf.addProperty("calendar.string.interpolated", "${calendar.string}");
@@ -286,6 +288,7 @@ public class TestDataConfiguration extends TestCase
         calendars.add(date2);
         conf.addProperty("calendar.list6", calendars);
         conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
+        conf.addPropertyDirect("calendar.list7", new String[] { "2004-01-01", "2004-12-31" });
     }
 
     public void testGetConfiguration()
@@ -331,6 +334,59 @@ public class TestDataConfiguration extends TestCase
         assertTrue("the iterator is empty", it.hasNext());
         assertEquals("unique key", "foo", it.next());
         assertFalse("the iterator is not exhausted", it.hasNext());
+    }
+
+    public void testGet()
+    {
+        try
+        {
+            conf.get(Boolean.class, "url.object", null);
+            fail("No ConversionException thrown despite the wrong type of the property");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        assertNull("non null object for a missing key", conf.get(Object.class, "unknownkey"));
+
+        conf.setThrowExceptionOnMissing(true);
+
+        try
+        {
+            conf.get(Object.class, "unknownkey");
+            fail("NoSuchElementException should be thrown for missing properties");
+        }
+        catch (NoSuchElementException e)
+        {
+            // expected
+        }
+    }
+
+    public void testGetArray()
+    {
+        try
+        {
+            conf.getArray(Boolean.class, "unknownkey", new URL[] {});
+            fail("No ConversionException thrown despite the wrong type of the default value");
+        }
+        catch (Exception e)
+        {
+            // expected
+        }
+    }
+
+    public void testGetPrimitiveArray()
+    {
+        try
+        {
+            conf.getArray(Boolean.TYPE, "calendar.list4");
+            fail("No ConversionException thrown despite the wrong type of the property");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
     }
 
     public void testGetBooleanArray()
@@ -1230,6 +1286,9 @@ public class TestDataConfiguration extends TestCase
 
         // interpolated value
         assertEquals(Color.red, conf.getColor("color.string.interpolated"));
+
+        // default value
+        assertEquals(Color.cyan, conf.getColor("unknownkey", Color.cyan));
     }
 
     public void testGetColorArray() throws Exception
@@ -1310,11 +1369,25 @@ public class TestDataConfiguration extends TestCase
         // missing Date
         Date defaultValue = new Date();
         assertEquals(defaultValue, conf.getDate("date", defaultValue));
+        assertNull("non null object for a missing key", conf.getDate("unknownkey", "yyyy-MM-dd"));
+
+        conf.setThrowExceptionOnMissing(true);
+
+        try
+        {
+            conf.getDate("unknownkey", "yyyy-MM-dd");
+            fail("NoSuchElementException should be thrown for missing properties");
+        }
+        catch (NoSuchElementException e)
+        {
+            // expected
+        }
 
         Date expected = format.parse("2004-01-01");
 
         // Date string
         assertEquals(expected, conf.getDate("date.string"));
+        assertEquals(expected, conf.getDate("date.string", "yyyy-MM-dd"));
 
         // Date object
         assertEquals(expected, conf.getDate("date.object"));
@@ -1372,13 +1445,11 @@ public class TestDataConfiguration extends TestCase
         DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         Date date1 = format.parse("01/01/2004");
         Date date2 = format.parse("12/31/2004");
-        Date[] expected = new Date[]
-        { date1, date2 };
+        Date[] expected = new Date[] { date1, date2 };
 
         conf.addProperty("date.format", "01/01/2004");
         conf.addProperty("date.format", "12/31/2004");
-        ArrayAssert.assertEquals("Wrong dates with format", expected, conf
-                .getDateArray("date.format", "MM/dd/yyyy"));
+        ArrayAssert.assertEquals("Wrong dates with format", expected, conf.getDateArray("date.format", "MM/dd/yyyy"));
     }
 
     public void testGetDateList() throws Exception
@@ -1396,6 +1467,7 @@ public class TestDataConfiguration extends TestCase
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getDateList("date.list1"));
+        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list1"));
 
         // list of strings, comma separated
         ListAssert.assertEquals(expected, conf.getDateList("date.list2"));
@@ -1411,6 +1483,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Date objects
         ListAssert.assertEquals(expected, conf.getDateList("date.list6"));
+
+        // array of strings
+        ListAssert.assertEquals(expected, conf.getList(Date.class, "date.list7"));
 
         // list of interpolated values
         ListAssert.assertEquals(expected, conf.getDateList("date.list.interpolated"));
@@ -1433,12 +1508,26 @@ public class TestDataConfiguration extends TestCase
         Calendar defaultValue = Calendar.getInstance();
         defaultValue.setTime(new Date());
         assertEquals(defaultValue, conf.getCalendar("calendar", defaultValue));
+        assertNull("non null object for a missing key", conf.getCalendar("unknownkey", "yyyy-MM-dd"));
+
+        conf.setThrowExceptionOnMissing(true);
+
+        try
+        {
+            conf.getCalendar("unknownkey", "yyyy-MM-dd");
+            fail("NoSuchElementException should be thrown for missing properties");
+        }
+        catch (NoSuchElementException e)
+        {
+            // expected
+        }
 
         Calendar expected = Calendar.getInstance();
         expected.setTime(format.parse("2004-01-01"));
 
         // Calendar string
         assertEquals(expected, conf.getCalendar("calendar.string"));
+        assertEquals(expected, conf.getCalendar("calendar.string",  "yyyy-MM-dd"));
 
         // Calendar object
         assertEquals(expected, conf.getCalendar("calendar.object"));
@@ -1449,7 +1538,6 @@ public class TestDataConfiguration extends TestCase
         // interpolated value
         assertEquals(expected, conf.getCalendar("calendar.string.interpolated"));
     }
-
 
     public void testGetCalendarArray() throws Exception
     {
@@ -1496,6 +1584,23 @@ public class TestDataConfiguration extends TestCase
         ArrayAssert.assertEquals(new Calendar[] { }, conf.getCalendarArray("empty"));
     }
 
+    public void testGetCalendarArrayWithFormat() throws Exception
+    {
+        DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+        Date date1 = format.parse("01/01/2004");
+        Date date2 = format.parse("12/31/2004");
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTime(date1);
+        Calendar calendar2 = Calendar.getInstance();
+        calendar2.setTime(date2);
+        Calendar[] expected = new Calendar[] { calendar1, calendar2 };
+
+        conf.addProperty("calendar.format", "01/01/2004");
+        conf.addProperty("calendar.format", "12/31/2004");
+        ArrayAssert.assertEquals("Wrong calendars with format", expected, conf.getCalendarArray("calendar.format", "MM/dd/yyyy"));
+    }
+
     public void testGetCalendarList() throws Exception
     {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -1515,6 +1620,7 @@ public class TestDataConfiguration extends TestCase
 
         // list of strings
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list1"));
+        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list1"));
 
         // list of strings, comma separated
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list2"));
@@ -1530,6 +1636,9 @@ public class TestDataConfiguration extends TestCase
 
         // list of Calendar objects
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list6"));
+
+        // array of strings
+        ListAssert.assertEquals(expected, conf.getList(Calendar.class, "calendar.list7"));
 
         // list of interpolated values
         ListAssert.assertEquals(expected, conf.getCalendarList("calendar.list.interpolated"));
@@ -2041,6 +2150,26 @@ public class TestDataConfiguration extends TestCase
 
         try
         {
+            conf.getDate("key1", "yyyy-MM-dd");
+            fail("getDate didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
+            conf.getDate("key2", "yyyy-MM-dd");
+            fail("getDate didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
             conf.getDateArray("key2");
             fail("getDateArray didn't throw a ConversionException");
         }
@@ -2063,6 +2192,26 @@ public class TestDataConfiguration extends TestCase
         {
             conf.getDateList("key2");
             fail("getDateList didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
+            conf.getCalendar("key1", "yyyy-MM-dd");
+            fail("getCalendar didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
+            conf.getCalendar("key2","yyyy-MM-dd");
+            fail("getCalendar didn't throw a ConversionException");
         }
         catch (ConversionException e)
         {

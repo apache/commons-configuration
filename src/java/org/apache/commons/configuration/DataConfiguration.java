@@ -18,6 +18,8 @@
 package org.apache.commons.configuration;
 
 import java.awt.Color;
+import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
@@ -28,10 +30,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.io.Serializable;
+import java.util.NoSuchElementException;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -39,9 +40,32 @@ import org.apache.commons.lang.StringUtils;
  * Configuration supports more types: URL, Locale, Date, Calendar, Color, as
  * well as lists and arrays for all types.
  *
- * <p>Let us know if you find this useful, the most frequently used getters
- * are likely to be integrated in the Configuration interface in a future
- * version.</p>
+ * <h4>Example</h4>
+ *
+ * Configuration file <tt>config.properties</tt>:
+ * <pre>
+ * title.color = #0000FF
+ * default.locales = fr,en,de
+ * </pre>
+ *
+ * Usage:
+ *
+ * <pre>
+ * DataConfiguration config = new DataConfiguration(new PropertiesConfiguration("config.properties"));
+ *
+ * // retrieve a property using a specialized getter
+ * Color color = config.getColor("title.color");
+ *
+ * // retrieve a property using a generic getter
+ * Locale[] locales = (Locale[]) config.getArray(Locale.class, "default.locales");
+ * </pre>
+ *
+ * <h4>Dates</h4>
+ *
+ * Date objects are expected to be formatted with the pattern <tt>yyyy-MM-dd HH:mm:ss</tt>.
+ * This default format can be changed by specifying another format in the
+ * getters, or by putting a date format in the configuration under the key
+ * <tt>org.apache.commons.configuration.format.date</tt>.
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Revision$, $Date$
@@ -122,6 +146,334 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     }
 
     /**
+     * Get an object of the specified type associated with the given
+     * configuration key. If the key doesn't map to an existing object, the
+     * method returns null unless {@link #isThrowExceptionOnMissing()} is set
+     * to <tt>true</tt>.
+     *
+     * @param cls the target type of the value
+     * @param key the key of the value
+     *
+     * @return the value of the requested type for the key
+     *
+     * @throws NoSuchElementException if the key doesn't map to an existing
+     *     object and <tt>throwExceptionOnMissing=true</tt>
+     * @throws ConversionException if the value is not compatible with the requested type
+     *
+     * @since 1.5
+     */
+    public Object get(Class cls, String key)
+    {
+        Object value = get(cls, key, null);
+        if (value != null)
+        {
+            return value;
+        }
+        else if (isThrowExceptionOnMissing())
+        {
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Get an object of the specified type associated with the given
+     * configuration key. If the key doesn't map to an existing object, the
+     * default value is returned.
+     *
+     * @param cls          the target type of the value
+     * @param key          the key of the value
+     * @param defaultValue the default value
+     *
+     * @return the value of the requested type for the key
+     *
+     * @throws ConversionException if the value is not compatible with the requested type
+     *
+     * @since 1.5
+     */
+    public Object get(Class cls, String key, Object defaultValue)
+    {
+        Object value = resolveContainerStore(key);
+
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        else
+        {
+            try
+            {
+                if (Date.class.equals(cls) || Calendar.class.equals(cls))
+                {
+                    return PropertyConverter.to(cls, interpolate(value), new String[] { getDefaultDateFormat() });
+                }
+                else
+                {
+                    return PropertyConverter.to(cls, interpolate(value), null);
+                }
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException('\'' + key + "' doesn't map to a " + cls, e);
+            }
+        }
+    }
+
+    /**
+     * Get a list of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, an empty list is returned.
+     *
+     * @param cls the type expected for the elements of the list
+     * @param key The configuration key.
+     * @return The associated list if the key is found.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 1.5
+     */
+    public List getList(Class cls, String key)
+    {
+        return getList(cls, key, new ArrayList());
+    }
+
+    /**
+     * Get a list of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
+     *
+     * @param cls the      type expected for the elements of the list
+     * @param key          the configuration key.
+     * @param defaultValue the default value.
+     * @return The associated List.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 1.5
+     */
+    public List getList(Class cls, String key, List defaultValue)
+    {
+        Object value = getProperty(key);
+        Class valueClass = value != null ? value.getClass() : null;
+
+        List list;
+
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
+        {
+            // the value is null or is an empty string
+            list = defaultValue;
+        }
+        else
+        {
+            list = new ArrayList();
+
+            Object[] params = null;
+            if (cls.equals(Date.class) || cls.equals(Calendar.class))
+            {
+                params = new Object[] { getDefaultDateFormat() };
+            }
+
+            try
+            {
+                if (valueClass.isArray())
+                {
+                    // get the class of the objects contained in the array
+                    Class arrayType = valueClass.getComponentType();
+                    int length = Array.getLength(value);
+
+                    if (arrayType.equals(cls) || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
+                    {
+                        // the value is an array of the specified type, or an array
+                        // of the primitive type derived from the specified type
+                        for (int i = 0; i < length; i++)
+                        {
+                            list.add(Array.get(value, i));
+                        }
+                    }
+                    else
+                    {
+                        // attempt to convert the elements of the array
+                        for (int i = 0; i < length; i++)
+                        {
+                            list.add(PropertyConverter.to(cls, interpolate(Array.get(value, i)), params));
+                        }
+                    }
+                }
+                else if (value instanceof Collection)
+                {
+                    Collection values = (Collection) value;
+
+                    Iterator it = values.iterator();
+                    while (it.hasNext())
+                    {
+                        list.add(PropertyConverter.to(cls, interpolate(it.next()), params));
+                    }
+                }
+                else
+                {
+                    // attempt to convert a single value
+                    list.add(PropertyConverter.to(cls, interpolate(value), params));
+                }
+            }
+            catch (ConversionException e)
+            {
+                throw new ConversionException("'" + key + "' doesn't map to a list of " + cls, e);
+            }
+        }
+
+        return list;
+    }
+
+    /**
+     * Get an array of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, an empty list is returned.
+     *
+     * @param cls the type expected for the elements of the array
+     * @param key The configuration key.
+     * @return The associated array if the key is found, and the value compatible with the type specified.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with a list of the specified class.
+     *
+     * @since 1.5
+     */
+    public Object getArray(Class cls, String key)
+    {
+        return getArray(cls, key, Array.newInstance(cls, 0));
+    }
+
+    /**
+     * Get an array of typed objects associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value is returned.
+     *
+     * @param cls          the type expected for the elements of the array
+     * @param key          the configuration key.
+     * @param defaultValue the default value
+     * @return The associated array if the key is found, and the value compatible with the type specified.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with an array of the specified class.
+     * @throws IllegalArgumentException if the default value is not an array of the specified type
+     *
+     * @since 1.5
+     */
+    public Object getArray(Class cls, String key, Object defaultValue)
+    {
+        // check the type of the default value
+        if (defaultValue != null && (!defaultValue.getClass().isArray() || !cls.isAssignableFrom(defaultValue.getClass().getComponentType())))
+        {
+            throw new IllegalArgumentException("The type of the default value (" + defaultValue.getClass() + ") is not an array of the specified class (" + cls + ")");
+        }
+
+        if (cls.isPrimitive())
+        {
+            return getPrimitiveArray(cls, key, defaultValue);
+        }
+
+        List list = getList(cls, key);
+        if (list.isEmpty())
+        {
+            return defaultValue;
+        }
+        else
+        {
+            return list.toArray((Object[]) Array.newInstance(cls, list.size()));
+        }
+    }
+
+    /**
+     * Get an array of primitive values associated with the given configuration key.
+     * If the key doesn't map to an existing object, the default value is returned.
+     *
+     * @param cls          the primitive type expected for the elements of the array
+     * @param key          the configuration key.
+     * @param defaultValue the default value
+     * @return The associated array if the key is found, and the value compatible with the type specified.
+     *
+     * @throws ConversionException is thrown if the key maps to an object that
+     *     is not compatible with an array of the specified class.
+     *
+     * @since 1.5
+     */
+    private Object getPrimitiveArray(Class cls, String key, Object defaultValue)
+    {
+        Object value = getProperty(key);
+        Class valueClass = value != null ? value.getClass() : null;
+
+        Object array;
+
+        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
+        {
+            // the value is null or is an empty string
+            array = defaultValue;
+        }
+        else
+        {
+            if (valueClass.isArray())
+            {
+                // get the class of the objects contained in the array
+                Class arrayType = valueClass.getComponentType();
+                int length = Array.getLength(value);
+
+                if (arrayType.equals(cls))
+                {
+                    // the value is an array of the same primitive type
+                    array = value;
+                }
+                else if (arrayType.equals(ClassUtils.primitiveToWrapper(cls)))
+                {
+                    // the value is an array of the wrapper type derived from the specified primitive type
+                    array = Array.newInstance(cls, length);
+
+                    for (int i = 0; i < length; i++)
+                    {
+                        Array.set(array, i, Array.get(value, i));
+                    }
+                }
+                else
+                {
+                    throw new ConversionException('\'' + key + "' (" + arrayType + ") doesn't map to a compatible array of " + cls);
+                }
+            }
+            else if (value instanceof Collection)
+            {
+                Collection values = (Collection) value;
+
+                array = Array.newInstance(cls, values.size());
+
+                Iterator it = values.iterator();
+                int i = 0;
+                while (it.hasNext())
+                {
+                    Array.set(array, i++, PropertyConverter.to(cls, interpolate(it.next()), null));
+                }
+            }
+            else
+            {
+                try
+                {
+                    // attempt to convert a single value
+                    Object convertedValue = PropertyConverter.to(cls, interpolate(value), null);
+
+                    // create an array of one element
+                    array = Array.newInstance(cls, 1);
+                    Array.set(array, 0, convertedValue);
+                }
+                catch (ConversionException e)
+                {
+                    throw new ConversionException('\'' + key + "' doesn't map to an array of " + cls, e);
+                }
+            }
+        }
+
+        return array;
+    }
+
+    /**
      * Get a list of Boolean objects associated with the given
      * configuration key. If the key doesn't map to an existing object
      * an empty list is returned.
@@ -144,57 +496,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
-     * @return The associated List of strings.
+     * @return The associated List of Booleans.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of booleans.
      */
     public List getBooleanList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof boolean[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((boolean[]) value));
-        }
-        else if (value instanceof Boolean[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Boolean[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toBoolean(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toBoolean(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of booleans", e);
-            }
-        }
-
-        return list;
+         return getList(Boolean.class, key, defaultValue);
     }
 
     /**
@@ -210,7 +519,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public boolean[] getBooleanArray(String key)
     {
-        return getBooleanArray(key, new boolean[0]);
+        return (boolean[]) getArray(Boolean.TYPE, key);
     }
 
     /**
@@ -227,49 +536,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public boolean[] getBooleanArray(String key, boolean[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        boolean[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof boolean[])
-        {
-            array = (boolean[]) value;
-        }
-        else if (value instanceof Boolean[])
-        {
-            array = ArrayUtils.toPrimitive((Boolean[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new boolean[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toBoolean(interpolate(it.next())).booleanValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new boolean[1];
-                array[0] = PropertyConverter.toBoolean(interpolate(value)).booleanValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of booleans", e);
-            }
-        }
-
-        return array;
+        return (boolean[]) getArray(Boolean.TYPE, key, defaultValue);
     }
 
     /**
@@ -301,50 +568,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getByteList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof byte[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((byte[]) value));
-        }
-        else if (value instanceof Byte[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Byte[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toByte(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toByte(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of bytes", e);
-            }
-        }
-
-        return list;
+        return getList(Byte.class, key, defaultValue);
     }
 
     /**
@@ -377,49 +601,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public byte[] getByteArray(String key, byte[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        byte[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof byte[])
-        {
-            array = (byte[]) value;
-        }
-        else if (value instanceof Byte[])
-        {
-            array = ArrayUtils.toPrimitive((Byte[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new byte[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toByte(interpolate(it.next())).byteValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new byte[1];
-                array[0] = PropertyConverter.toByte(interpolate(value)).byteValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of bytes", e);
-            }
-        }
-
-        return array;
+        return (byte[]) getArray(Byte.TYPE, key, defaultValue);
     }
 
     /**
@@ -451,50 +633,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getShortList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof short[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((short[]) value));
-        }
-        else if (value instanceof Short[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Short[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toShort(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toShort(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of shorts", e);
-            }
-        }
-
-        return list;
+        return getList(Short.class, key, defaultValue);
     }
 
     /**
@@ -527,49 +666,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public short[] getShortArray(String key, short[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        short[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof short[])
-        {
-            array = (short[]) value;
-        }
-        else if (value instanceof Short[])
-        {
-            array = ArrayUtils.toPrimitive((Short[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new short[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toShort(interpolate(it.next())).shortValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new short[1];
-                array[0] = PropertyConverter.toShort(interpolate(value)).shortValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of shorts", e);
-            }
-        }
-
-        return array;
+        return (short[]) getArray(Short.TYPE, key, defaultValue);
     }
 
     /**
@@ -602,50 +699,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getIntegerList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof int[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((int[]) value));
-        }
-        else if (value instanceof Integer[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Integer[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toInteger(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toInteger(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of integers", e);
-            }
-        }
-
-        return list;
+        return getList(Integer.class, key, defaultValue);
     }
 
     /**
@@ -678,49 +732,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public int[] getIntArray(String key, int[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        int[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof int[])
-        {
-            array = (int[]) value;
-        }
-        else if (value instanceof Integer[])
-        {
-            array = ArrayUtils.toPrimitive((Integer[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new int[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toInteger(interpolate(it.next())).intValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new int[1];
-                array[0] = PropertyConverter.toInteger(interpolate(value)).intValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of integers", e);
-            }
-        }
-
-        return array;
+        return (int[]) getArray(Integer.TYPE, key, defaultValue);
     }
 
     /**
@@ -752,50 +764,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getLongList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof long[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((long[]) value));
-        }
-        else if (value instanceof Long[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Long[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toLong(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toLong(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of longs", e);
-            }
-        }
-
-        return list;
+        return getList(Long.class, key, defaultValue);
     }
 
     /**
@@ -828,49 +797,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public long[] getLongArray(String key, long[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        long[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof long[])
-        {
-            array = (long[]) value;
-        }
-        else if (value instanceof Long[])
-        {
-            array = ArrayUtils.toPrimitive((Long[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new long[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toLong(interpolate(it.next())).longValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new long[1];
-                array[0] = PropertyConverter.toLong(interpolate(value)).longValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of longs", e);
-            }
-        }
-
-        return array;
+        return (long[]) getArray(Long.TYPE, key, defaultValue);
     }
 
     /**
@@ -902,50 +829,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getFloatList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof float[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((float[]) value));
-        }
-        else if (value instanceof Float[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Float[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toFloat(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toFloat(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of floats", e);
-            }
-        }
-
-        return list;
+        return getList(Float.class, key, defaultValue);
     }
 
     /**
@@ -978,49 +862,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public float[] getFloatArray(String key, float[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        float[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof float[])
-        {
-            array = (float[]) value;
-        }
-        else if (value instanceof Float[])
-        {
-            array = ArrayUtils.toPrimitive((Float[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new float[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toFloat(interpolate(it.next())).floatValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new float[1];
-                array[0] = PropertyConverter.toFloat(interpolate(value)).floatValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of floats", e);
-            }
-        }
-
-        return array;
+        return (float[]) getArray(Float.TYPE, key, defaultValue);
     }
 
     /**
@@ -1053,50 +895,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getDoubleList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof double[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, ArrayUtils.toObject((double[]) value));
-        }
-        else if (value instanceof Double[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Double[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toDouble(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toDouble(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of doubles", e);
-            }
-        }
-
-        return list;
+        return getList(Double.class, key, defaultValue);
     }
 
     /**
@@ -1129,49 +928,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public double[] getDoubleArray(String key, double[] defaultValue)
     {
-        Object value = getProperty(key);
-
-        double[] array;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            array = defaultValue;
-        }
-        else if (value instanceof double[])
-        {
-            array = (double[]) value;
-        }
-        else if (value instanceof Double[])
-        {
-            array = ArrayUtils.toPrimitive((Double[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            array = new double[values.size()];
-
-            int i = 0;
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                array[i++] = PropertyConverter.toDouble(interpolate(it.next())).doubleValue();
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                array = new double[1];
-                array[0] = PropertyConverter.toDouble(interpolate(value)).doubleValue();
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of doubles", e);
-            }
-        }
-
-        return array;
+        return (double[]) getArray(Double.TYPE, key, defaultValue);
     }
 
     /**
@@ -1203,45 +960,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getBigIntegerList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof BigInteger[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (BigInteger[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toBigInteger(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toBigInteger(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of big integers", e);
-            }
-        }
-
-        return list;
+        return getList(BigInteger.class, key, defaultValue);
     }
 
     /**
@@ -1274,15 +993,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public BigInteger[] getBigIntegerArray(String key, BigInteger[] defaultValue)
     {
-        List list = getBigIntegerList(key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return (BigInteger[]) list.toArray(new BigInteger[list.size()]);
-        }
+        return (BigInteger[]) getArray(BigInteger.class, key, defaultValue);
     }
 
     /**
@@ -1314,45 +1025,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getBigDecimalList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof BigDecimal[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (BigDecimal[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toBigDecimal(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toBigDecimal(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of big decimals", e);
-            }
-        }
-
-        return list;
+        return getList(BigDecimal.class, key, defaultValue);
     }
 
     /**
@@ -1385,15 +1058,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public BigDecimal[] getBigDecimalArray(String key, BigDecimal[] defaultValue)
     {
-        List list = getBigDecimalList(key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return (BigDecimal[]) list.toArray(new BigDecimal[list.size()]);
-        }
+        return (BigDecimal[]) getArray(BigDecimal.class, key, defaultValue);
     }
 
     /**
@@ -1407,7 +1072,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key)
     {
-        return getURL(key, null);
+        return (URL) get(URL.class, key);
     }
 
     /**
@@ -1424,23 +1089,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key, URL defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toURL(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to an URL", e);
-            }
-        }
+        return (URL) get(URL.class, key, defaultValue);
     }
 
     /**
@@ -1472,45 +1121,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getURLList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof URL[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (URL[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toURL(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toURL(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of URLs", e);
-            }
-        }
-
-        return list;
+        return getList(URL.class, key, defaultValue);
     }
 
     /**
@@ -1541,15 +1152,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL[] getURLArray(String key, URL[] defaultValue)
     {
-        List list = getURLList(key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return (URL[]) list.toArray(new URL[list.size()]);
-        }
+        return (URL[]) getArray(URL.class, key, defaultValue);
     }
 
     /**
@@ -1566,7 +1169,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key)
     {
-        return getDate(key, getDefaultDateFormat());
+        return (Date) get(Date.class, key);
     }
 
     /**
@@ -1582,7 +1185,19 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key, String format)
     {
-        return getDate(key, null, format);
+        Date value = getDate(key, null, format);
+        if (value != null)
+        {
+            return value;
+        }
+        else if (isThrowExceptionOnMissing())
+        {
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**
@@ -1719,19 +1334,13 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         {
             list = defaultValue;
         }
-        else if (value instanceof Date[])
+        else if (value.getClass().isArray())
         {
             list = new ArrayList();
-            CollectionUtils.addAll(list, (Date[]) value);
-        }
-        else if (value instanceof Calendar[])
-        {
-            list = new ArrayList();
-            Calendar[] values = (Calendar[]) value;
-
-            for (int i = 0; i < values.length; i++)
+            int length = Array.getLength(value);
+            for (int i = 0; i < length; i++)
             {
-                list.add(values[i].getTime());
+                list.add(PropertyConverter.toDate(interpolate(Array.get(value, i)), format));
             }
         }
         else if (value instanceof Collection)
@@ -1858,7 +1467,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key)
     {
-        return getCalendar(key, getDefaultDateFormat());
+        return (Calendar) get(Calendar.class, key);
     }
 
     /**
@@ -1875,7 +1484,19 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key, String format)
     {
-        return getCalendar(key, null, format);
+        Calendar value = getCalendar(key, null, format);
+        if (value != null)
+        {
+            return value;
+        }
+        else if (isThrowExceptionOnMissing())
+        {
+            throw new NoSuchElementException('\'' + key + "' doesn't map to an existing object");
+        }
+        else
+        {
+            return null;
+        }
     }
 
     /**
@@ -2012,21 +1633,13 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         {
             list = defaultValue;
         }
-        else if (value instanceof Calendar[])
+        else if (value.getClass().isArray())
         {
             list = new ArrayList();
-            CollectionUtils.addAll(list, (Calendar[]) value);
-        }
-        else if (value instanceof Date[])
-        {
-            list = new ArrayList();
-            Date[] values = (Date[]) value;
-
-            for (int i = 0; i < values.length; i++)
+            int length = Array.getLength(value);
+            for (int i = 0; i < length; i++)
             {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(values[i]);
-                list.add(calendar);
+                list.add(PropertyConverter.toCalendar(interpolate(Array.get(value, i)), format));
             }
         }
         else if (value instanceof Collection)
@@ -2161,7 +1774,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key)
     {
-        return getLocale(key, null);
+        return (Locale) get(Locale.class, key);
     }
 
     /**
@@ -2178,23 +1791,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key, Locale defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toLocale(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Locale", e);
-            }
-        }
+        return (Locale) get(Locale.class, key, defaultValue);
     }
 
     /**
@@ -2226,45 +1823,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getLocaleList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof Locale[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Locale[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toLocale(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toLocale(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of Locales", e);
-            }
-        }
-
-        return list;
+        return getList(Locale.class, key, defaultValue);
     }
 
     /**
@@ -2297,15 +1856,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale[] getLocaleArray(String key, Locale[] defaultValue)
     {
-        List list = getLocaleList(key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return (Locale[]) list.toArray(new Locale[list.size()]);
-        }
+        return (Locale[]) getArray(Locale.class, key, defaultValue);
     }
 
     /**
@@ -2319,7 +1870,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key)
     {
-        return getColor(key, null);
+        return (Color) get(Color.class, key);
     }
 
     /**
@@ -2336,23 +1887,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key, Color defaultValue)
     {
-        Object value = resolveContainerStore(key);
-
-        if (value == null)
-        {
-            return defaultValue;
-        }
-        else
-        {
-            try
-            {
-                return PropertyConverter.toColor(interpolate(value));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a Color", e);
-            }
-        }
+        return (Color) get(Color.class, key, defaultValue);
     }
 
     /**
@@ -2384,45 +1919,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public List getColorList(String key, List defaultValue)
     {
-        Object value = getProperty(key);
-
-        List list;
-
-        if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
-        {
-            list = defaultValue;
-        }
-        else if (value instanceof Color[])
-        {
-            list = new ArrayList();
-            CollectionUtils.addAll(list, (Color[]) value);
-        }
-        else if (value instanceof Collection)
-        {
-            Collection values = (Collection) value;
-            list = new ArrayList();
-
-            Iterator it = values.iterator();
-            while (it.hasNext())
-            {
-                list.add(PropertyConverter.toColor(interpolate(it.next())));
-            }
-        }
-        else
-        {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toColor(interpolate(value)));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of Colors", e);
-            }
-        }
-
-        return list;
+        return getList(Color.class, key, defaultValue);
     }
 
     /**
@@ -2455,15 +1952,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color[] getColorArray(String key, Color[] defaultValue)
     {
-        List list = getColorList(key);
-        if (list.isEmpty())
-        {
-            return defaultValue;
-        }
-        else
-        {
-            return (Color[]) list.toArray(new Color[list.size()]);
-        }
+        return (Color[]) getArray(Color.class, key, defaultValue);
     }
 
 }
