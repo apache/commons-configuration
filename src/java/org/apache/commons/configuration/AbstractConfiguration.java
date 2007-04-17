@@ -376,9 +376,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void addProperty(String key, Object value)
     {
         fireEvent(EVENT_ADD_PROPERTY, key, value, true);
@@ -454,27 +451,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return base; // just a dummy implementation
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Configuration subset(String prefix)
     {
         return new SubsetConfiguration(this, prefix, ".");
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public abstract boolean isEmpty();
-
-    /**
-     * {@inheritDoc}
-     */
-    public abstract boolean containsKey(String key);
-
-    /**
-     * {@inheritDoc}
-     */
     public void setProperty(String key, Object value)
     {
         fireEvent(EVENT_SET_PROPERTY, key, value, true);
@@ -518,9 +499,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         // override in sub classes
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
@@ -547,14 +525,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         fireEvent(EVENT_CLEAR, null, null, false);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public abstract Iterator getKeys();
-
-    /**
-     * {@inheritDoc}
-     */
     public Iterator getKeys(final String prefix)
     {
         return new FilterIterator(getKeys(), new Predicate()
@@ -567,9 +537,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Properties getProperties(String key)
     {
         return getProperties(key, null);
@@ -624,8 +591,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
         return props;
     }
-
-
 
     /**
      * {@inheritDoc}
@@ -686,9 +651,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public byte getByte(String key)
     {
         Byte b = getByte(key, null);
@@ -702,17 +664,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public byte getByte(String key, byte defaultValue)
     {
         return getByte(key, new Byte(defaultValue)).byteValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Byte getByte(String key, Byte defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -734,9 +690,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public double getDouble(String key)
     {
         Double d = getDouble(key, null);
@@ -750,17 +703,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public double getDouble(String key, double defaultValue)
     {
         return getDouble(key, new Double(defaultValue)).doubleValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Double getDouble(String key, Double defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -782,9 +729,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public float getFloat(String key)
     {
         Float f = getFloat(key, null);
@@ -798,17 +742,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public float getFloat(String key, float defaultValue)
     {
         return getFloat(key, new Float(defaultValue)).floatValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Float getFloat(String key, Float defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -830,9 +768,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int getInt(String key)
     {
         Integer i = getInteger(key, null);
@@ -846,9 +781,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int getInt(String key, int defaultValue)
     {
         Integer i = getInteger(key, null);
@@ -861,9 +793,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return i.intValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Integer getInteger(String key, Integer defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -885,9 +814,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public long getLong(String key)
     {
         Long l = getLong(key, null);
@@ -901,17 +827,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public long getLong(String key, long defaultValue)
     {
         return getLong(key, new Long(defaultValue)).longValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Long getLong(String key, Long defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -933,9 +853,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public short getShort(String key)
     {
         Short s = getShort(key, null);
@@ -949,17 +866,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public short getShort(String key, short defaultValue)
     {
         return getShort(key, new Short(defaultValue)).shortValue();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Short getShort(String key, Short defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1002,9 +913,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1047,9 +955,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1092,9 +997,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String getString(String key, String defaultValue)
     {
         Object value = resolveContainerStore(key);
@@ -1174,9 +1076,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return getList(key, new ArrayList());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List getList(String key, List defaultValue)
     {
         Object value = getProperty(key);
@@ -1198,7 +1097,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             {
                 list.add(interpolate(it.next()));
             }
-
         }
         else if (value == null)
         {

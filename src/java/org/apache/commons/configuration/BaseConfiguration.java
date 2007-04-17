@@ -133,9 +133,6 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);

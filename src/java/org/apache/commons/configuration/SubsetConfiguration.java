@@ -149,65 +149,41 @@ public class SubsetConfiguration extends AbstractConfiguration
         this.prefix = prefix;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Configuration subset(String prefix)
     {
         return parent.subset(getParentKey(prefix));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isEmpty()
     {
         return !getKeys().hasNext();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean containsKey(String key)
     {
         return parent.containsKey(getParentKey(key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void addPropertyDirect(String key, Object value)
     {
         parent.addProperty(getParentKey(key), value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setProperty(String key, Object value)
     {
         parent.setProperty(getParentKey(key), value);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void clearProperty(String key)
     {
         parent.clearProperty(getParentKey(key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Object getProperty(String key)
     {
         return parent.getProperty(getParentKey(key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Iterator getKeys(String prefix)
     {
         return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer()
@@ -219,9 +195,6 @@ public class SubsetConfiguration extends AbstractConfiguration
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Iterator getKeys()
     {
         return new TransformIterator(parent.getKeys(prefix), new Transformer()
@@ -233,9 +206,6 @@ public class SubsetConfiguration extends AbstractConfiguration
         });
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
@@ -249,9 +219,6 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected String interpolate(String base)
     {
         return super.interpolate(base);

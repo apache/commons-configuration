@@ -204,9 +204,6 @@ implements Cloneable
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Iterator getKeys()
     {
         List keys = new ArrayList();
@@ -228,9 +225,6 @@ implements Cloneable
         return keys.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public Iterator getKeys(String key)
     {
         List keys = new ArrayList();
@@ -252,9 +246,6 @@ implements Cloneable
         return keys.iterator();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isEmpty()
     {
         boolean isEmpty = true;
@@ -270,9 +261,6 @@ implements Cloneable
         return isEmpty;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     protected void clearPropertyDirect(String key)
     {
         for (Iterator i = configList.iterator(); i.hasNext();)
@@ -282,9 +270,6 @@ implements Cloneable
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean containsKey(String key)
     {
         for (Iterator i = configList.iterator(); i.hasNext();)
@@ -298,9 +283,6 @@ implements Cloneable
         return false;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List getList(String key, List defaultValue)
     {
         List list = new ArrayList();
@@ -333,9 +315,6 @@ implements Cloneable
         return list;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public String[] getStringArray(String key)
     {
         List list = getList(key);
