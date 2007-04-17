@@ -963,6 +963,69 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests list nodes with multiple values and attributes.
+     */
+    public void testListWithAttributes()
+    {
+        assertEquals("Wrong number of <a> elements", 6, conf.getList(
+                "attrList.a").size());
+        assertEquals("Wrong value of first element", "ABC", conf
+                .getString("attrList.a(0)"));
+        assertEquals("Wrong value of first name attribute", "x", conf
+                .getString("attrList.a(0)[@name]"));
+        assertEquals("Wrong number of name attributes", 5, conf.getList(
+                "attrList.a[@name]").size());
+    }
+
+    /**
+     * Tests a list node with attributes that has multiple values separated by
+     * the list delimiter. In this scenario the attribute should be added to the
+     * node with the first value.
+     */
+    public void testListWithAttributesMultiValue()
+    {
+        assertEquals("Wrong value of 2nd element", "1", conf
+                .getString("attrList.a(1)"));
+        assertEquals("Wrong value of 2nd name attribute", "y", conf
+                .getString("attrList.a(1)[@name]"));
+        for (int i = 2; i <= 3; i++)
+        {
+            assertEquals("Wrong value of element " + (i + 1), i, conf
+                    .getInt("attrList.a(" + i + ")"));
+            assertFalse("element " + (i + 1) + " has attribute", conf
+                    .containsKey("attrList.a(2)[@name]"));
+        }
+    }
+
+    /**
+     * Tests a list node with a multi-value attribute and multiple values. All
+     * attribute values should be assigned to the node with the first value.
+     */
+    public void testListWithMultiAttributesMultiValue()
+    {
+        for (int i = 1; i <= 2; i++)
+        {
+            assertEquals("Wrong value of multi-valued node", "value" + i, conf
+                    .getString("attrList.a(" + (i + 3) + ")"));
+        }
+        List attrs = conf.getList("attrList.a(4)[@name]");
+        final String attrVal = "uvw";
+        assertEquals("Wrong number of name attributes", attrVal.length(), attrs
+                .size());
+        for (int i = 0; i < attrVal.length(); i++)
+        {
+            assertEquals("Wrong value for attribute " + i, String
+                    .valueOf(attrVal.charAt(i)), attrs.get(i));
+        }
+        assertEquals("Wrong value of test attribute", "yes", conf
+                .getString("attrList.a(4)[@test]"));
+        assertFalse("Name attribute for 2nd value", conf
+                .containsKey("attrList.a(5)[@name]"));
+        assertFalse("Test attribute for 2nd value", conf
+                .containsKey("attrList.a(5)[@test]"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration

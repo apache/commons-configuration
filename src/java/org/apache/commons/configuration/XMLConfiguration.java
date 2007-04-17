@@ -477,12 +477,25 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
             if (values.size() > 1)
             {
-                // remove the original child
-                parent.remove(child);
-                // add multiple new children
-                for (Iterator it = values.iterator(); it.hasNext();)
+                Iterator it = values.iterator();
+                // Create new node for the original child's first value
+                Node c = createNode(child.getName());
+                c.setValue(it.next());
+                // Copy original attributes to the new node
+                for (Iterator itAttrs = child.getAttributes().iterator(); itAttrs
+                        .hasNext();)
                 {
-                    Node c = new XMLNode(child.getName(), null);
+                    Node ndAttr = (Node) itAttrs.next();
+                    ndAttr.setReference(null);
+                    c.addAttribute(ndAttr);
+                }
+                parent.remove(child);
+                parent.addChild(c);
+
+                // add multiple new children
+                while (it.hasNext())
+                {
+                    c = new XMLNode(child.getName(), null);
                     c.setValue(it.next());
                     parent.addChild(c);
                 }
