@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -624,6 +625,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return props;
     }
 
+
+
     /**
      * {@inheritDoc}
      * @see PropertyConverter#toBoolean(Object)
@@ -1227,45 +1230,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
                 List list = (List) value;
                 value = list.isEmpty() ? null : list.get(0);
             }
-            else if (value instanceof Object[])
+            else if (value.getClass().isArray() && Array.getLength(value) > 0)
             {
-                Object[] array = (Object[]) value;
-                value = array.length == 0 ? null : array[0];
-            }
-            else if (value instanceof boolean[])
-            {
-                boolean[] array = (boolean[]) value;
-                value = array.length == 0 ? null : array[0] ? Boolean.TRUE : Boolean.FALSE;
-            }
-            else if (value instanceof byte[])
-            {
-                byte[] array = (byte[]) value;
-                value = array.length == 0 ? null : new Byte(array[0]);
-            }
-            else if (value instanceof short[])
-            {
-                short[] array = (short[]) value;
-                value = array.length == 0 ? null : new Short(array[0]);
-            }
-            else if (value instanceof int[])
-            {
-                int[] array = (int[]) value;
-                value = array.length == 0 ? null : new Integer(array[0]);
-            }
-            else if (value instanceof long[])
-            {
-                long[] array = (long[]) value;
-                value = array.length == 0 ? null : new Long(array[0]);
-            }
-            else if (value instanceof float[])
-            {
-                float[] array = (float[]) value;
-                value = array.length == 0 ? null : new Float(array[0]);
-            }
-            else if (value instanceof double[])
-            {
-                double[] array = (double[]) value;
-                value = array.length == 0 ? null : new Double(array[0]);
+                value = Array.get(value, 0);
             }
         }
 
