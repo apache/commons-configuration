@@ -434,6 +434,14 @@
     </dependency>
 
     <dependency>
+      <groupId>maven</groupId>
+      <artifactId>maven-checkstyle-plugin</artifactId>
+      <version>3.0.1</version>
+      <url>http://maven.apache.org/maven-1.x/plugins/checkstyle/</url>
+      <type>plugin</type>
+    </dependency>
+
+    <dependency>
       <groupId>maven-plugins</groupId>
       <artifactId>maven-cobertura-plugin</artifactId>
       <version>1.2</version>
