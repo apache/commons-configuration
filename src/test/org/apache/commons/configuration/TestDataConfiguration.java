@@ -1678,7 +1678,7 @@ public class TestDataConfiguration extends TestCase
         // interpolated value
         assertEquals(expected, conf.get(InetAddress.class, "ip.string.interpolated"));
 
-        conf.setProperty("ip.unknownhost", "123");
+        conf.setProperty("ip.unknownhost", "foo");
         try
         {
             conf.get(InetAddress.class, "ip.unknownhost");
