@@ -37,16 +37,27 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Decorator providing additional getters for any Configuration. This extended
- * Configuration supports more types: URL, Locale, Date, Calendar, Color,
- * InetAddress, as well as lists and arrays for all types.
+ * Configuration supports more types:
+ * <ul>
+ *   <li>{@link java.net.URL}</li>
+ *   <li>{@link java.util.Locale}</li>
+ *   <li>{@link java.util.Date}</li>
+ *   <li>{@link java.util.Calendar}</li>
+ *   <li>{@link java.awt.Color}</li>
+ *   <li>{@link java.net.InetAddress}</li>
+ *   <li>{@link javax.mail.internet.InternetAddress} (requires Javamail in the classpath)</li>
+ * </ul>
+ *
+ * Lists and arrays are available for all types.
  *
  * <h4>Example</h4>
  *
  * Configuration file <tt>config.properties</tt>:
  * <pre>
  * title.color = #0000FF
- * default.locales = fr,en,de
  * remote.host = 192.168.0.53
+ * default.locales = fr,en,de
+ * email.contact = ebourg@apache.org, oheger@apache.org
  * </pre>
  *
  * Usage:
@@ -58,8 +69,9 @@ import org.apache.commons.lang.StringUtils;
  * Color color = config.getColor("title.color");
  *
  * // retrieve a property using a generic getter
- * Locale[] locales = (Locale[]) config.getArray(Locale.class, "default.locales");
  * InetAddress host = (InetAddress) config.get(InetAddress.class, "remote.host");
+ * Locale[] locales = (Locale[]) config.getArray(Locale.class, "default.locales");
+ * List contacts = config.getList(InternetAddress.class, "email.contact");
  * </pre>
  *
  * <h4>Dates</h4>

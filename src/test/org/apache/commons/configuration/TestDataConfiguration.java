@@ -20,8 +20,8 @@ package org.apache.commons.configuration;
 import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
 import java.net.InetAddress;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import javax.mail.internet.InternetAddress;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -291,9 +292,15 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
         conf.addPropertyDirect("calendar.list7", new String[] { "2004-01-01", "2004-12-31" });
 
+        // host address
         conf.addProperty("ip.string", "127.0.0.1");
         conf.addProperty("ip.string.interpolated", "${ip.string}");
         conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
+
+        // email address
+        conf.addProperty("email.string", "ebourg@apache.org");
+        conf.addProperty("email.string.interpolated", "${email.string}");
+        conf.addProperty("email.object", new InternetAddress("ebourg@apache.org"));
     }
 
     public void testGetConfiguration()
@@ -1683,6 +1690,31 @@ public class TestDataConfiguration extends TestCase
         }
     }
 
+    public void testGetInternetAddress() throws Exception
+    {
+        InternetAddress expected = new InternetAddress("ebourg@apache.org");
+
+        // address as string
+        assertEquals(expected, conf.get(InternetAddress.class, "email.string"));
+
+        // address object
+        assertEquals(expected, conf.get(InternetAddress.class, "email.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.get(InternetAddress.class, "email.string.interpolated"));
+
+        conf.setProperty("email.invalid", "ebourg@apache@org");
+        try
+        {
+            conf.get(InternetAddress.class, "email.invalid");
+            fail("ConversionException should be thrown for invalid emails");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+    }
+
     public void testConversionException()
     {
         conf.addProperty("key1", new Object());
@@ -2292,6 +2324,16 @@ public class TestDataConfiguration extends TestCase
         {
             conf.get(InetAddress.class, "key1");
             fail("getInetAddress didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
+            conf.get(InternetAddress.class, "key1");
+            fail("getInternetAddress didn't throw a ConversionException");
         }
         catch (ConversionException e)
         {

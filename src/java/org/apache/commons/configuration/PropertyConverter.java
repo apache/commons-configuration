@@ -20,12 +20,11 @@ package org.apache.commons.configuration;
 import java.awt.Color;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,7 +41,6 @@ import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * A utility class to convert the configuration properties into any type.
@@ -148,6 +146,10 @@ public final class PropertyConverter
         else if (Color.class.equals(cls))
         {
             return PropertyConverter.toColor(value);
+        }
+        else if (cls.getName().equals("javax.mail.internet.InternetAddress"))
+        {
+            return PropertyConverter.toInternetAddress(value);
         }
         else if (InetAddress.class.isAssignableFrom(cls))
         {
@@ -648,6 +650,39 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a InetAddress");
+        }
+    }
+
+    /**
+     * Convert the specified value into an email address.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an email address
+     *
+     * @since 1.5
+     */
+    static Object toInternetAddress(Object value) throws ConversionException
+    {
+        if (value.getClass().getName().equals("javax.mail.internet.InternetAddress"))
+        {
+            return value;
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                Constructor ctor = Class.forName("javax.mail.internet.InternetAddress").getConstructor(new Class[] { String.class });
+                return ctor.newInstance(new Object[] { value });
+            }
+            catch (Exception e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a InternetAddress", e);
+            }
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
         }
     }
 
