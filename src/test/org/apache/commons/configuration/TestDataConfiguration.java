@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
+import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -289,6 +290,10 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("calendar.list6", calendars);
         conf.addProperty("calendar.list.interpolated", "${calendar.string},2004-12-31");
         conf.addPropertyDirect("calendar.list7", new String[] { "2004-01-01", "2004-12-31" });
+
+        conf.addProperty("ip.string", "127.0.0.1");
+        conf.addProperty("ip.string.interpolated", "${ip.string}");
+        conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
     }
 
     public void testGetConfiguration()
@@ -1653,6 +1658,31 @@ public class TestDataConfiguration extends TestCase
         ListAssert.assertEquals(new ArrayList(), conf.getCalendarList("empty"));
     }
 
+    public void testGetInetAddress() throws Exception
+    {
+        InetAddress expected = InetAddress.getByName("127.0.0.1");
+
+        // address as string
+        assertEquals(expected, conf.get(InetAddress.class, "ip.string"));
+
+        // address object
+        assertEquals(expected, conf.get(InetAddress.class, "ip.object"));
+
+        // interpolated value
+        assertEquals(expected, conf.get(InetAddress.class, "ip.string.interpolated"));
+
+        conf.setProperty("ip.unknownhost", "123");
+        try
+        {
+            conf.get(InetAddress.class, "ip.unknownhost");
+            fail("ConversionException should be thrown for unknown hosts");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+    }
+
     public void testConversionException()
     {
         conf.addProperty("key1", new Object());
@@ -2252,6 +2282,16 @@ public class TestDataConfiguration extends TestCase
         {
             conf.getCalendarList("key2");
             fail("getCalendarList didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+
+        try
+        {
+            conf.get(InetAddress.class, "key1");
+            fail("getInetAddress didn't throw a ConversionException");
         }
         catch (ConversionException e)
         {

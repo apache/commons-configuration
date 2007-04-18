@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="add">
+        DataConfiguration now supports the InetAddress type, properties are
+        converted to this type using the new generic getters.
+      </action>
       <action dev="ebourg" type="fix">
         The object getters in DataConfiguration with no default value
         (i.e getURL(key)) now throw a NoSuchElementException if the flag

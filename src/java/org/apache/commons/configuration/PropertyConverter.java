@@ -20,10 +20,13 @@ package org.apache.commons.configuration;
 import java.awt.Color;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * A utility class to convert the configuration properties into any type.
@@ -144,6 +148,10 @@ public final class PropertyConverter
         else if (Color.class.equals(cls))
         {
             return PropertyConverter.toColor(value);
+        }
+        else if (InetAddress.class.isAssignableFrom(cls))
+        {
+            return PropertyConverter.toInetAddress(value);
         }
 
         throw new ConversionException("The value '" + value + "' (" + value.getClass() + ") can't be converted to a " + cls.getName() + " object");
@@ -608,6 +616,38 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a Color");
+        }
+    }
+
+    /**
+     * Convert the specified value into an internet address.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a InetAddress
+     *
+     * @since 1.5
+     */
+    static InetAddress toInetAddress(Object value) throws ConversionException
+    {
+        if (value instanceof InetAddress)
+        {
+            return (InetAddress) value;
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                return InetAddress.getByName((String) value);
+            }
+            catch (UnknownHostException e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a InetAddress", e);
+            }
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a InetAddress");
         }
     }
 

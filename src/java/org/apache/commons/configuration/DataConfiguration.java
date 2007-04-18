@@ -37,8 +37,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Decorator providing additional getters for any Configuration. This extended
- * Configuration supports more types: URL, Locale, Date, Calendar, Color, as
- * well as lists and arrays for all types.
+ * Configuration supports more types: URL, Locale, Date, Calendar, Color,
+ * InetAddress, as well as lists and arrays for all types.
  *
  * <h4>Example</h4>
  *
@@ -46,6 +46,7 @@ import org.apache.commons.lang.StringUtils;
  * <pre>
  * title.color = #0000FF
  * default.locales = fr,en,de
+ * remote.host = 192.168.0.53
  * </pre>
  *
  * Usage:
@@ -58,6 +59,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * // retrieve a property using a generic getter
  * Locale[] locales = (Locale[]) config.getArray(Locale.class, "default.locales");
+ * InetAddress host = (InetAddress) config.get(InetAddress.class, "remote.host");
  * </pre>
  *
  * <h4>Dates</h4>
