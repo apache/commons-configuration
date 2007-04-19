@@ -10,23 +10,54 @@
     <download-page rdf:resource="http://jakarta.apache.org/site/downloads/downloads_commons-configuration.cgi"/>
     <asfext:pmc rdf:resource="http://jakarta.apache.org/"/>
     <shortdesc xml:lang="en">Common Configuration</shortdesc>
+
     <description xml:lang="en">
-    Tools to assist in the reading of configuration/preferences files in
-    various formats
-  </description>
+      Library to use configuration/preferences of various sources and formats.
+    </description>
+
     <repository>
       <SVNRepository>
         <browse rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/trunk"/>
         <location rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration"/>
       </SVNRepository>
     </repository>
+
     <release>
-      <revision>
-        <name>commons-configuration</name>
-        <created>2005-12-17</created>
-        <version>1.2</version>
-      </revision>
+      <Version>
+        <name>Commons Configuration 1.2</name>
+        <created>2004-10-12</created>
+        <revision>1.2</revision>
+      </Version>
     </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.1</name>
+        <created>2005-04-04</created>
+        <revision>1.1</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.2</name>
+        <created>2005-12-17</created>
+        <revision>1.2</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.3</name>
+        <created>2006-09-24</created>
+        <revision>1.3</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.4</name>
+        <created>2007-04-08</created>
+        <revision>1.4</revision>
+      </Version>
+    </release>
+
     <mailing-list rdf:resource="http://jakarta.apache.org/site/mail2.html#Commons"/>
   </Project>
 </rdf:RDF>
