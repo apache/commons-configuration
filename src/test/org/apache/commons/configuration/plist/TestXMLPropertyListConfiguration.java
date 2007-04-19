@@ -274,6 +274,24 @@ public class TestXMLPropertyListConfiguration extends TestCase
         ArrayAssert.assertEquals(expected, (byte[]) array);
     }
 
+    /**
+     * Ensure that addProperty doesn't alter an array of byte
+     */
+    public void testAddDataProperty() throws Exception
+    {
+        byte[] expected = new byte[]{1, 2, 3, 4};
+        XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
+        config.addProperty("foo", expected);
+        config.save("target/testdata.plist.xml");
+
+        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration("target/testdata.plist.xml");
+        Object array = config2.getProperty("foo");
+
+        assertNotNull("data not found", array);
+        assertEquals("property type", byte[].class, array.getClass());
+        ArrayAssert.assertEquals(expected, (byte[]) array);
+    }
+
     public void testInitCopy()
 	{
 		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);

@@ -155,6 +155,20 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
     }
 
+    public void addProperty(String key, Object value)
+    {
+        if (value instanceof byte[])
+        {
+            fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+            addPropertyDirect(key, value);
+            fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+        }
+        else
+        {
+            super.setProperty(key, value);
+        }
+    }
+
     public void load(Reader in) throws ConfigurationException
     {
         PropertyListParser parser = new PropertyListParser(in);

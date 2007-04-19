@@ -195,6 +195,20 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
+    public void addProperty(String key, Object value)
+    {
+        if (value instanceof byte[])
+        {
+            fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+            addPropertyDirect(key, value);
+            fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+        }
+        else
+        {
+            super.setProperty(key, value);
+        }
+    }
+
     public void load(Reader in) throws ConfigurationException
     {
         // set up the DTD validation
