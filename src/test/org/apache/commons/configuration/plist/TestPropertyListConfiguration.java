@@ -255,6 +255,25 @@ public class TestPropertyListConfiguration extends TestCase
         assertEquals("string with a special char", "\"foo;bar\"", config.quoteString("foo;bar"));
     }
 
+    /**
+     * Ensure that setProperty doesn't alter an array of byte
+     * since it's a first class type in plist file
+     */
+    public void testSetDataProperty() throws Exception
+    {
+        byte[] expected = new byte[]{1, 2, 3, 4};
+        PropertyListConfiguration config = new PropertyListConfiguration();
+        config.setProperty("foo", expected);
+        config.save("target/testdata.plist");
+
+        PropertyListConfiguration config2 = new PropertyListConfiguration("target/testdata.plist");
+        Object array = config2.getProperty("foo");
+
+        assertNotNull("data not found", array);
+        assertEquals("property type", byte[].class, array.getClass());
+        ArrayAssert.assertEquals(expected, (byte[]) array);
+    }
+
     public void testInitCopy()
     {
     	PropertyListConfiguration copy = new PropertyListConfiguration(config);

@@ -181,6 +181,20 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         super(url);
     }
 
+    public void setProperty(String key, Object value)
+    {
+        // special case for byte arrays, they must be stored as is in the configuration
+        if (value instanceof byte[])
+        {
+            clearProperty(key);
+            addPropertyDirect(key, value);
+        }
+        else
+        {
+            super.setProperty(key, value);
+        }
+    }
+
     public void load(Reader in) throws ConfigurationException
     {
         // set up the DTD validation

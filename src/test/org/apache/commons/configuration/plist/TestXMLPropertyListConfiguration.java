@@ -255,10 +255,28 @@ public class TestXMLPropertyListConfiguration extends TestCase
         }
     }
 
-	public void testInitCopy()
+    /**
+     * Ensure that setProperty doesn't alter an array of byte
+     * since it's a first class type in plist file
+     */
+    public void testSetDataProperty() throws Exception
+    {
+        byte[] expected = new byte[]{1, 2, 3, 4};
+        XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
+        config.setProperty("foo", expected);
+        config.save("target/testdata.plist.xml");
+
+        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration("target/testdata.plist.xml");
+        Object array = config2.getProperty("foo");
+
+        assertNotNull("data not found", array);
+        assertEquals("property type", byte[].class, array.getClass());
+        ArrayAssert.assertEquals(expected, (byte[]) array);
+    }
+
+    public void testInitCopy()
 	{
-		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration(
-				(HierarchicalConfiguration) config);
+		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);
 		StrictConfigurationComparator comp = new StrictConfigurationComparator();
 		assertTrue("Configurations are not equal", comp.compare(config, copy));
 	}

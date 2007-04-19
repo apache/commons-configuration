@@ -552,6 +552,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         fireEvent(EVENT_SET_PROPERTY, key, value, true);
 
+        // Update the existing nodes for this property
         Iterator itNodes = fetchNodeList(key).iterator();
         Iterator itValues;
         if (!isDelimiterParsingDisabled())
@@ -562,6 +563,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         {
             itValues = new SingletonIterator(value);
         }
+
         while (itNodes.hasNext() && itValues.hasNext())
         {
             ((ConfigurationNode) itNodes.next()).setValue(itValues.next());

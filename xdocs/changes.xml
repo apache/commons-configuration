@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="fix">
+        byte[] properties are properly saved as data fields in the plist
+        configurations (PropertyListConfiguration and XMLPropertyListConfiguration).
+      </action>
       <action dev="ebourg" type="add">
         DataConfiguration now supports the java.net.InetAddress and
         javax.mail.internet.InternetAddress types. Properties are
@@ -34,8 +38,8 @@
         throwExceptionOnMissing is set.
       </action>
       <action dev="ebourg" type="add">
-        Generic getters have been added to DataConfiguration (get(), getArray()
-        and getList())
+        Generic get methods have been added to DataConfiguration (get(),
+        getArray() and getList())
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-263">
         XMLConfiguration used to drop attributes when an element's value was a
