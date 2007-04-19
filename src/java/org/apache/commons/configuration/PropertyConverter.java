@@ -18,8 +18,10 @@
 package org.apache.commons.configuration;
 
 import java.awt.Color;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -41,6 +43,7 @@ import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * A utility class to convert the configuration properties into any type.
@@ -90,70 +93,74 @@ public final class PropertyConverter
     {
         if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
         {
-            return PropertyConverter.toBoolean(value);
+            return toBoolean(value);
         }
         else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
         {
             if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
             {
-                return PropertyConverter.toInteger(value);
+                return toInteger(value);
             }
             else if (Long.class.equals(cls) || Long.TYPE.equals(cls))
             {
-                return PropertyConverter.toLong(value);
+                return toLong(value);
             }
             else if (Byte.class.equals(cls) || Byte.TYPE.equals(cls))
             {
-                return PropertyConverter.toByte(value);
+                return toByte(value);
             }
             else if (Short.class.equals(cls) || Short.TYPE.equals(cls))
             {
-                return PropertyConverter.toShort(value);
+                return toShort(value);
             }
             else if (Float.class.equals(cls) || Float.TYPE.equals(cls))
             {
-                return PropertyConverter.toFloat(value);
+                return toFloat(value);
             }
             else if (Double.class.equals(cls) || Double.TYPE.equals(cls))
             {
-                return PropertyConverter.toDouble(value);
+                return toDouble(value);
             }
             else if (BigInteger.class.equals(cls))
             {
-                return PropertyConverter.toBigInteger(value);
+                return toBigInteger(value);
             }
             else if (BigDecimal.class.equals(cls))
             {
-                return PropertyConverter.toBigDecimal(value);
+                return toBigDecimal(value);
             }
         }
         else if (Date.class.equals(cls))
         {
-            return PropertyConverter.toDate(value, (String) params[0]);
+            return toDate(value, (String) params[0]);
         }
         else if (Calendar.class.equals(cls))
         {
-            return PropertyConverter.toCalendar(value, (String) params[0]);
+            return toCalendar(value, (String) params[0]);
         }
         else if (URL.class.equals(cls))
         {
-            return PropertyConverter.toURL(value);
+            return toURL(value);
         }
         else if (Locale.class.equals(cls))
         {
-            return PropertyConverter.toLocale(value);
+            return toLocale(value);
+        }
+        else if (isEnum(cls))
+        {
+            return toEnum(value, cls);
         }
         else if (Color.class.equals(cls))
         {
-            return PropertyConverter.toColor(value);
+            return toColor(value);
         }
         else if (cls.getName().equals("javax.mail.internet.InternetAddress"))
         {
-            return PropertyConverter.toInternetAddress(value);
+            return toInternetAddress(value);
         }
         else if (InetAddress.class.isAssignableFrom(cls))
         {
-            return PropertyConverter.toInetAddress(value);
+            return toInetAddress(value);
         }
 
         throw new ConversionException("The value '" + value + "' (" + value.getClass() + ") can't be converted to a " + cls.getName() + " object");
@@ -683,6 +690,76 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
+        }
+    }
+
+    /**
+     * Calls Class.isEnum() on Java 5, returns false on older JRE.
+     */
+    static boolean isEnum(Class cls)
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return false;
+        }
+
+        try
+        {
+            Method isEnumMethod = Class.class.getMethod("isEnum", new Class[] {});
+            return ((Boolean) isEnumMethod.invoke(cls, new Object[] {})).booleanValue();
+        }
+        catch (Exception e)
+        {
+            // impossible
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Convert the specified value into a Java 5 enum.
+     *
+     * @param value the value to convert
+     * @param cls   the type of the enumeration
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to an enumeration
+     *
+     * @since 1.5
+     */
+    static Object toEnum(Object value, Class cls) throws ConversionException
+    {
+        if (value.getClass().equals(cls))
+        {
+            return value;
+        }
+        else if (value instanceof String)
+        {
+            try
+            {
+                Method valueOfMethod = cls.getMethod("valueOf", new Class[] { String.class });
+                return valueOfMethod.invoke(null, new Object[] { value });
+            }
+            catch (Exception e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
+            }
+        }
+        else if (value instanceof Number)
+        {
+            try
+            {
+                Method valuesMethod = cls.getMethod("values", new Class[] {});
+                Object valuesArray = valuesMethod.invoke(null, new Object[] {});
+
+                return Array.get(valuesArray, ((Number) value).intValue());
+            }
+            catch (Exception e)
+            {
+                throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
+            }
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a " + cls.getName());
         }
     }
 

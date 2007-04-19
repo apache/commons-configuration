@@ -28,9 +28,9 @@
         configurations (PropertyListConfiguration and XMLPropertyListConfiguration).
       </action>
       <action dev="ebourg" type="add">
-        DataConfiguration now supports the java.net.InetAddress and
-        javax.mail.internet.InternetAddress types. Properties are
-        converted to these types using the new generic getters.
+        DataConfiguration now supports java.net.InetAddress,
+        javax.mail.internet.InternetAddress, and Java 5 enumeration types.
+        Properties are converted to these types using the new generic getters.
       </action>
       <action dev="ebourg" type="fix">
         The object getters in DataConfiguration with no default value

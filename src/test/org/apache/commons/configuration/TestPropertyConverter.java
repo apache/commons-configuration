@@ -14,11 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration;
 
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.lang.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -100,8 +104,7 @@ public class TestPropertyConverter extends TestCase
         config.addProperty("target", "lazy dog");
         assertEquals("Wrong interpolation",
                 "The quick brown fox jumps over the lazy dog.",
-                PropertyConverter.interpolate(
-                        "The ${animal} jumps over the ${target}.", config));
+                PropertyConverter.interpolate("The ${animal} jumps over the ${target}.", config));
     }
 
     /**
@@ -110,8 +113,7 @@ public class TestPropertyConverter extends TestCase
     public void testInterpolateObject()
     {
         assertEquals("Object was not correctly interpolated", new Integer(42),
-                PropertyConverter.interpolate(new Integer(42),
-                        new PropertiesConfiguration()));
+                PropertyConverter.interpolate(new Integer(42), new PropertiesConfiguration()));
     }
 
     /**
@@ -127,8 +129,7 @@ public class TestPropertyConverter extends TestCase
         config.addProperty("target_attr", "lazy");
         assertEquals("Wrong complex interpolation",
                 "The quick brown fox jumps over the lazy dog.",
-                PropertyConverter.interpolate(
-                        "The ${animal} jumps over the ${target}.", config));
+                PropertyConverter.interpolate("The ${animal} jumps over the ${target}.", config));
     }
 
     /**
@@ -161,9 +162,8 @@ public class TestPropertyConverter extends TestCase
         PropertiesConfiguration config = new PropertiesConfiguration();
         config.addProperty("animal", "quick brown fox");
         assertEquals("Wrong interpolation",
-                "The quick brown fox jumps over ${target}.", PropertyConverter
-                        .interpolate("The ${animal} jumps over ${target}.",
-                                config));
+                "The quick brown fox jumps over ${target}.",
+                PropertyConverter.interpolate("The ${animal} jumps over ${target}.", config));
     }
 
     /**
@@ -173,11 +173,9 @@ public class TestPropertyConverter extends TestCase
     public void testToNumberDirect()
     {
         Integer i = new Integer(42);
-        assertSame("Wrong integer", i, PropertyConverter.toNumber(i,
-                Integer.class));
+        assertSame("Wrong integer", i, PropertyConverter.toNumber(i, Integer.class));
         BigDecimal d = new BigDecimal("3.1415");
-        assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d,
-                Integer.class));
+        assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d, Integer.class));
     }
 
     /**
@@ -186,10 +184,8 @@ public class TestPropertyConverter extends TestCase
      */
     public void testToNumberFromString()
     {
-        assertEquals("Incorrect Integer value", new Integer(42),
-                PropertyConverter.toNumber("42", Integer.class));
-        assertEquals("Incorrect Short value", new Short((short) 10),
-                PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
+        assertEquals("Incorrect Integer value", new Integer(42), PropertyConverter.toNumber("42", Integer.class));
+        assertEquals("Incorrect Short value", new Short((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
     }
 
     /**
@@ -250,6 +246,91 @@ public class TestPropertyConverter extends TestCase
         catch (ConversionException cex)
         {
             //ok
+        }
+    }
+
+    // enumeration type used for the tests, Java 5 only
+    private Class enumClass;
+    private Object enumObject;
+    {
+        if (SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            try
+            {
+                enumClass = Class.forName("java.lang.annotation.ElementType");
+
+                Method valueOfMethod = enumClass.getMethod("valueOf", new Class[] { String.class });
+                enumObject = valueOfMethod.invoke(null, new Object[] { "METHOD" });
+            }
+            catch (Exception e)
+            {
+            }
+        }
+    }
+
+    public void testToEnumFromEnum()
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return;
+        }
+
+        assertEquals(enumObject, PropertyConverter.toEnum(enumObject, enumClass));
+    }
+
+    public void testToEnumFromString()
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return;
+        }
+
+        assertEquals(enumObject, PropertyConverter.toEnum("METHOD", enumClass));
+    }
+
+    public void testToEnumFromInvalidString()
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return;
+        }
+
+        try
+        {
+            assertEquals(enumObject, PropertyConverter.toEnum("FOO", enumClass));
+            fail("Could convert invalid String!");
+        }
+        catch (ConversionException e)
+        {
+            // expected
+        }
+    }
+
+    public void testToEnumFromNumber()
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return;
+        }
+
+        assertEquals(enumObject, PropertyConverter.toEnum(new Integer(2), enumClass));
+    }
+
+    public void testToEnumFromInvalidNumber()
+    {
+        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        {
+            return;
+        }
+        
+        try
+        {
+            assertEquals(enumObject, PropertyConverter.toEnum(new Integer(-1), enumClass));
+            fail("Could convert invalid number!");
+        }
+        catch (ConversionException e)
+        {
+            // expected
         }
     }
 }

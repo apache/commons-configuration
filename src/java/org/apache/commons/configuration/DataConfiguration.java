@@ -46,6 +46,7 @@ import org.apache.commons.lang.StringUtils;
  *   <li>{@link java.awt.Color}</li>
  *   <li>{@link java.net.InetAddress}</li>
  *   <li>{@link javax.mail.internet.InternetAddress} (requires Javamail in the classpath)</li>
+ *   <li>{@link java.lang.Enum} (Java 5 enumeration types)</li>
  * </ul>
  *
  * Lists and arrays are available for all types.
