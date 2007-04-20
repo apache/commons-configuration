@@ -711,7 +711,7 @@ public final class PropertyConverter
         catch (Exception e)
         {
             // impossible
-            throw new RuntimeException(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
         }
     }
 
