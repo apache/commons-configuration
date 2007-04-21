@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-266" due-to="Tobias Noebel">
+        ConfigurationInterpolator now also invokes the default lookup object for
+        variables with a prefix that could not be resolved by their associated
+        lookup object.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-264">
         A SubnodeConfiguration per default does not see certain changes of its
         parent configuration (e.g. reloads). With a new boolean parameter of

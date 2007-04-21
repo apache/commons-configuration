@@ -336,4 +336,20 @@ public class TestConfigurationInterpolator extends TestCase
                         .lookup(ConfigurationInterpolator.PREFIX_CONSTANTS
                                 + ":" + varName));
     }
+
+    /**
+     * Tests whether the default lookup is called for variables with a prefix
+     * when the lookup that was registered for this prefix is not able to
+     * resolve the variable.
+     */
+    public void testLookupDefaultAfterPrefixFails()
+    {
+        final String varName = TEST_PREFIX + ':' + TEST_NAME + "2";
+        interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
+        Map map = new HashMap();
+        map.put(varName, TEST_VALUE);
+        interpolator.setDefaultLookup(StrLookup.mapLookup(map));
+        assertEquals("Variable is not resolved by default lookup", TEST_VALUE,
+                interpolator.lookup(varName));
+    }
 }

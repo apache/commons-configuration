@@ -29,7 +29,7 @@ import org.apache.commons.lang.text.StrLookup;
  * </p>
  * <p>
  * Each instance of <code>AbstractConfiguration</code> is associated with an
- * object of this class. Each interpolation tasks are delegated to this object.
+ * object of this class. All interpolation tasks are delegated to this object.
  * </p>
  * <p>
  * <code>ConfigurationInterpolator</code> works together with the
@@ -40,13 +40,14 @@ import org.apache.commons.lang.text.StrLookup;
  * </p>
  * <p>
  * The basic idea of this class is that it can maintain a set of primitive
- * <code>StrLookup</code> objects, each of which are identified by a special
+ * <code>StrLookup</code> objects, each of which is identified by a special
  * prefix. The variables to be processed have the form
  * <code>${prefix:name}</code>. <code>ConfigurationInterpolator</code> will
  * extract the prefix and determine, which primitive lookup object is registered
  * for it. Then the name of the variable is passed to this object to obtain the
  * actual value. It is also possible to define a default lookup object, which
- * will be used for variables that do not have a prefix.
+ * will be used for variables that do not have a prefix or that cannot be
+ * resolved by their associated lookup object.
  * </p>
  * <p>
  * When a new instance of this class is created it is initialized with a default
@@ -92,8 +93,8 @@ import org.apache.commons.lang.text.StrLookup;
  * Implementation node: Instances of this class are not thread-safe related to
  * modifications of their current set of registered lookup objects. It is
  * intended that each instance is associated with a single
- * <code>Configuration</conde>
- * object and used for its interpolation tasks.</p>
+ * <code>Configuration</code> object and used for its interpolation tasks.
+ * </p>
  *
  * @version $Id$
  * @since 1.4
@@ -262,7 +263,8 @@ public class ConfigurationInterpolator extends StrLookup
      * a variable prefix from the given variable name (the first colon (':') is
      * used as prefix separator). It then passes the name of the variable with
      * the prefix stripped to the lookup object registered for this prefix. If
-     * no prefix can be found, the default lookup object will be used.
+     * no prefix can be found or if the associated lookup object cannot resolve
+     * this variable, the default lookup object will be used.
      *
      * @param var the name of the variable whose value is to be looked up
      * @return the value of this variable or <b>null</b> if it cannot be
@@ -274,18 +276,19 @@ public class ConfigurationInterpolator extends StrLookup
         {
             return null;
         }
-
+        
         int prefixPos = var.indexOf(PREFIX_SEPARATOR);
-        if (prefixPos < 0)
-        {
-            return fetchNoPrefixLookup().lookup(var);
-        }
-        else
+        if (prefixPos >= 0)
         {
             String prefix = var.substring(0, prefixPos);
             String name = var.substring(prefixPos + 1);
-            return fetchLookupForPrefix(prefix).lookup(name);
+            String value = fetchLookupForPrefix(prefix).lookup(name);
+            if (value != null) 
+            {
+                return value;
+            }
         }
+        return fetchNoPrefixLookup().lookup(var);
     }
 
     /**
