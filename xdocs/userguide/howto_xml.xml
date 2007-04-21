@@ -393,6 +393,14 @@ for(Iterator it = fields.iterator(); it.hasNext();)
     String fieldType = sub.getString("type");
     ...
 ]]></source>
+        <p>
+          The configurations returned by the <code>configurationAt()</code> and
+          <code>configurationsAt()</code> method are in fact instances of the
+          <a href="apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+          <code>SubnodeConfiguration</code></a> class. The API documentation of
+          this class contains more information about its features and
+          limitations.
+        </p>
 		</subsection>
 		<subsection name="Adding new properties">
 			<p>

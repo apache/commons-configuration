@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-264">
+        A SubnodeConfiguration per default does not see certain changes of its
+        parent configuration (e.g. reloads). With a new boolean parameter of
+        HierarchicalConfiguration's configurationAt() method a mode can be
+        enabled, in which the subnode configuration checks for such changes and
+        reconstructs itself if necessary.
+      </action>
       <action dev="ebourg" type="fix">
         byte[] properties are properly saved as data fields in the plist
         configurations (PropertyListConfiguration and XMLPropertyListConfiguration).

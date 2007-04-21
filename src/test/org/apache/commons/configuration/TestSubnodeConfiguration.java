@@ -16,12 +16,14 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
@@ -45,6 +47,12 @@ public class TestSubnodeConfiguration extends TestCase
     { "docid", "docname", "author", "dateOfCreation", "version", "size" },
     { "userid", "uname", "firstName", "lastName" } };
 
+    /** Constant for a test output file.*/
+    private static final File TEST_FILE = new File("target/test.xml");
+
+    /** Constant for an updated table name.*/
+    private static final String NEW_TABLE_NAME = "newTable";
+
     /** The parent configuration. */
     HierarchicalConfiguration parent;
 
@@ -62,6 +70,15 @@ public class TestSubnodeConfiguration extends TestCase
         super.setUp();
         parent = setUpParentConfig();
         nodeCounter = 0;
+    }
+
+    protected void tearDown() throws Exception
+    {
+        // remove the test output file if necessary
+        if (TEST_FILE.exists())
+        {
+            TEST_FILE.delete();
+        }
     }
 
     /**
@@ -311,6 +328,134 @@ public class TestSubnodeConfiguration extends TestCase
             assertEquals("Wrong interpolation in subnode",
                     "/home/foo/path" + i, sub.getString("dir" + i));
         }
+    }
+
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration does not support reloads. Then the new value should not be
+     * detected.
+     */
+    public void testParentReloadNotSupported() throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(false);
+        assertEquals("Name changed in sub config", TABLE_NAMES[1], config
+                .getString("name"));
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+    }
+
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration does support reloads. The new value should be returned.
+     */
+    public void testParentReloadSupported() throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(true);
+        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
+                .getString("name"));
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+    }
+
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration is aware of reloads, and the parent configuration is
+     * accessed first. The new value should be returned.
+     */
+    public void testParentReloadSupportAccessParent()
+            throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(true);
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
+                .getString("name"));
+    }
+
+    /**
+     * Tests whether reloads work with sub subnode configurations.
+     */
+    public void testParentReloadSubSubnode() throws ConfigurationException
+    {
+        setUpReloadTest(true);
+        SubnodeConfiguration sub = config.configurationAt("fields", true);
+        assertEquals("Wrong subnode key", "tables.table(1).fields", sub
+                .getSubnodeKey());
+        assertEquals("Changed field not detected", "newField", sub
+                .getString("field(0).name"));
+    }
+
+    /**
+     * Tests creating a sub sub config when the sub config is not aware of
+     * changes. Then the sub sub config shouldn't be either.
+     */
+    public void testParentReloadSubSubnodeNoChangeSupport()
+            throws ConfigurationException
+    {
+        setUpReloadTest(false);
+        SubnodeConfiguration sub = config.configurationAt("fields", true);
+        assertNull("Sub sub config is attached to parent", sub.getSubnodeKey());
+        assertEquals("Changed field name returned", TABLE_FIELDS[1][0], sub
+                .getString("field(0).name"));
+    }
+
+    /**
+     * Prepares a test for a reload operation.
+     *
+     * @param supportReload a flag whether the subnode configuration should
+     * support reload operations
+     * @return the parent configuration that can be used for testing
+     * @throws ConfigurationException if an error occurs
+     */
+    private XMLConfiguration setUpReloadTest(boolean supportReload)
+            throws ConfigurationException
+    {
+        XMLConfiguration xmlConf = new XMLConfiguration(parent);
+        xmlConf.setFile(TEST_FILE);
+        xmlConf.save();
+        config = xmlConf.configurationAt("tables.table(1)", supportReload);
+        assertEquals("Wrong table name", TABLE_NAMES[1], config
+                .getString("name"));
+        xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        // Now change the configuration file
+        XMLConfiguration confUpdate = new XMLConfiguration(TEST_FILE);
+        confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
+        confUpdate.setProperty("tables.table(1).fields.field(0).name",
+                "newField");
+        confUpdate.save();
+        return xmlConf;
+    }
+
+    /**
+     * Tests a manipulation of the parent configuration that causes the subnode
+     * configuration to become invalid. In this case the sub config should be
+     * detached and keep its old values.
+     */
+    public void testParentChangeDetach()
+    {
+        final String key = "tables.table(1)";
+        config = parent.configurationAt(key, true);
+        assertEquals("Wrong subnode key", key, config.getSubnodeKey());
+        assertEquals("Wrong table name", TABLE_NAMES[1], config
+                .getString("name"));
+        parent.clearTree(key);
+        assertEquals("Wrong table name after change", TABLE_NAMES[1], config
+                .getString("name"));
+        assertNull("Sub config was not detached", config.getSubnodeKey());
+    }
+
+    /**
+     * Tests detaching a subnode configuration when an exception is thrown
+     * during reconstruction. This can happen e.g. if the expression engine is
+     * changed for the parent.
+     */
+    public void testParentChangeDetatchException()
+    {
+        config = parent.configurationAt("tables.table(1)", true);
+        parent.setExpressionEngine(new XPathExpressionEngine());
+        assertEquals("Wrong name of table", TABLE_NAMES[1], config
+                .getString("name"));
+        assertNull("Sub config was not detached", config.getSubnodeKey());
     }
 
     /**

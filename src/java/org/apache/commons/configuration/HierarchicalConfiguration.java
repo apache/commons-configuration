@@ -458,6 +458,52 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * <code>SubnodeConfiguration</code> class to obtain further information
      * about subnode configurations and when they should be used.
      * </p>
+     * <p>
+     * With the <code>supportUpdate</code> flag the behavior of the returned
+     * <code>SubnodeConfiguration</code> regarding updates of its parent
+     * configuration can be determined. A subnode configuration operates on the
+     * same nodes as its parent, so changes at one configuration are normally
+     * directly visible for the other configuration. There are however changes
+     * of the parent configuration, which are not recognized by the subnode
+     * configuration per default. An example for this is a reload operation (for
+     * file-based configurations): Here the complete node set of the parent
+     * configuration is replaced, but the subnode configuration still references
+     * the old nodes. If such changes should be detected by the subnode
+     * configuration, the <code>supportUpdates</code> flag must be set to
+     * <b>true</b>. This causes the subnode configuration to reevaluate the key
+     * used for its creation each time it is accessed. This guarantees that the
+     * subnode configuration always stays in sync with its key, even if the
+     * parent configuration's data significantly changes. If such a change
+     * makes the key invalid - because it now no longer points to exactly one
+     * node -, the subnode configuration is not reconstructed, but keeps its
+     * old data. It is then quasi detached from its parent.
+     * </p>
+     *
+     * @param key the key that selects the sub tree
+     * @param supportUpdates a flag whether the returned subnode configuration
+     * should be able to handle updates of its parent
+     * @return a hierarchical configuration that contains this sub tree
+     * @see SubnodeConfiguration
+     * @since 1.5
+     */
+    public SubnodeConfiguration configurationAt(String key,
+            boolean supportUpdates)
+    {
+        List nodes = fetchNodeList(key);
+        if (nodes.size() != 1)
+        {
+            throw new IllegalArgumentException(
+                    "Passed in key must select exactly one node: " + key);
+        }
+        return supportUpdates ? createSubnodeConfiguration(
+                (ConfigurationNode) nodes.get(0), key)
+                : createSubnodeConfiguration((ConfigurationNode) nodes.get(0));
+    }
+
+    /**
+     * Returns a hierarchical subnode configuration for the node specified by
+     * the given key. This is a short form for <code>configurationAt(key,
+     * <b>false</b>)</code>.
      *
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree
@@ -466,13 +512,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public SubnodeConfiguration configurationAt(String key)
     {
-        List nodes = fetchNodeList(key);
-        if (nodes.size() != 1)
-        {
-            throw new IllegalArgumentException(
-                    "Passed in key must select exactly one node: " + key);
-        }
-        return createSubnodeConfiguration((ConfigurationNode) nodes.get(0));
+        return configurationAt(key, false);
     }
 
     /**
@@ -525,6 +565,24 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         return new SubnodeConfiguration(this, node);
+    }
+
+    /**
+     * Creates a new subnode configuration for the specified node and sets its
+     * construction key. A subnode configuration created this way will be aware
+     * of structural changes of its parent.
+     *
+     * @param node the node, for which a subnode configuration is to be created
+     * @param subnodeKey the key used to construct the configuration
+     * @return the configuration for the given node
+     * @since 1.5
+     */
+    protected SubnodeConfiguration createSubnodeConfiguration(
+            ConfigurationNode node, String subnodeKey)
+    {
+        SubnodeConfiguration result = createSubnodeConfiguration(node);
+        result.setSubnodeKey(subnodeKey);
+        return result;
     }
 
     /**
