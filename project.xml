@@ -524,6 +524,7 @@
         <exclude>**/AbstractCombinerTest.java</exclude>
         <exclude>**/AbstractTestConfigurationEvents.java</exclude>
         <exclude>**/AbstractTestFileConfigurationEvents.java</exclude>
+        <exclude>**/AbstractTestPListEvents.java</exclude>
       </excludes>
       <resources>
         <resource>

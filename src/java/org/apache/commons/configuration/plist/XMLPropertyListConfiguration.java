@@ -186,8 +186,18 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         // special case for byte arrays, they must be stored as is in the configuration
         if (value instanceof byte[])
         {
-            clearProperty(key);
-            addPropertyDirect(key, value);
+            fireEvent(EVENT_SET_PROPERTY, key, value, true);
+            setDetailEvents(false);
+            try
+            {
+                clearProperty(key);
+                addPropertyDirect(key, value);
+            }
+            finally
+            {
+                setDetailEvents(true);
+            }
+            fireEvent(EVENT_SET_PROPERTY, key, value, false);
         }
         else
         {
@@ -205,7 +215,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
         else
         {
-            super.setProperty(key, value);
+            super.addProperty(key, value);
         }
     }
 

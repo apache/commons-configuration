@@ -164,6 +164,7 @@
           <exclude name="**/AbstractCombinerTest.java"/>
           <exclude name="**/AbstractTestConfigurationEvents.java"/>
           <exclude name="**/AbstractTestFileConfigurationEvents.java"/>
+          <exclude name="**/AbstractTestPListEvents.java"/>
         </fileset>
       </batchtest>
     </junit>
