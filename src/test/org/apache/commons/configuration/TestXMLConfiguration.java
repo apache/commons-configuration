@@ -33,7 +33,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
-import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -510,7 +509,7 @@ public class TestXMLConfiguration extends TestCase
 
     public void testAutoSave() throws Exception
     {
-        conf.setFile(new File("target/testsave.xml"));
+        conf.setFile(testSaveConf);
         assertFalse(conf.isAutoSave());
         conf.setAutoSave(true);
         assertTrue(conf.isAutoSave());
@@ -1026,6 +1025,43 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether the auto save mechanism is triggered by changes at a
+     * subnode configuration.
+     */
+    public void testAutoSaveWithSubnodeConfig() throws ConfigurationException
+    {
+        final String newValue = "I am autosaved";
+        conf.setFile(testSaveConf);
+        conf.setAutoSave(true);
+        Configuration sub = conf.configurationAt("element2.subelement");
+        sub.setProperty("subsubelement", newValue);
+        assertEquals("Change not visible to parent", newValue, conf
+                .getString("element2.subelement.subsubelement"));
+        XMLConfiguration conf2 = new XMLConfiguration(testSaveConf);
+        assertEquals("Change was not saved", newValue, conf2
+                .getString("element2.subelement.subsubelement"));
+    }
+
+    /**
+     * Tests whether a subnode configuration created from another subnode
+     * configuration of a XMLConfiguration can trigger the auto save mechanism.
+     */
+    public void testAutoSaveWithSubSubnodeConfig() throws ConfigurationException
+    {
+        final String newValue = "I am autosaved";
+        conf.setFile(testSaveConf);
+        conf.setAutoSave(true);
+        SubnodeConfiguration sub1 = conf.configurationAt("element2");
+        SubnodeConfiguration sub2 = sub1.configurationAt("subelement");
+        sub2.setProperty("subsubelement", newValue);
+        assertEquals("Change not visible to parent", newValue, conf
+                .getString("element2.subelement.subsubelement"));
+        XMLConfiguration conf2 = new XMLConfiguration(testSaveConf);
+        assertEquals("Change was not saved", newValue, conf2
+                .getString("element2.subelement.subsubelement"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
@@ -1036,14 +1072,7 @@ public class TestXMLConfiguration extends TestCase
         removeTestFile();
         conf.save(testSaveConf);
         XMLConfiguration c = new XMLConfiguration(testSaveConf);
-        c.setReloadingStrategy(new FileChangedReloadingStrategy()
-        {
-            // Report always a change
-            protected boolean hasChanged()
-            {
-                return true;
-            }
-        });
+        c.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         conf.setProperty("test(0).entity", "newValue");
         conf.save(testSaveConf);
         return c;

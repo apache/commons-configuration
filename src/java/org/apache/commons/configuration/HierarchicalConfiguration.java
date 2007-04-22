@@ -28,12 +28,15 @@ import java.util.Stack;
 
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.collections.iterators.SingletonIterator;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -94,18 +97,50 @@ import org.apache.commons.lang.StringUtils;
  * <code>getMaxIndex()</code> method that returns the maximum allowed index
  * that can be added to a given property key. This method can be used to iterate
  * over all values defined for a certain property.</p>
+ * <p>Since the 1.3 release of <em>Commons Configuration</em> hierarchical
+ * configurations support an <em>expression engine</em>. This expression engine
+ * is responsible for evaluating the passed in configuration keys and map them
+ * to the stored properties. The examples above are valid for the default
+ * expression engine, which is used when a new <code>HierarchicalConfiguration</code>
+ * instance is created. With the <code>setExpressionEngine()</code> method a
+ * different expression engine can be set. For instance with
+ * <code>{@link XPathExpressionEngine}</code> there is an expression engine
+ * available that supports configuration keys in XPATH syntax.</p>
+ * <p>In addition to the events common for all configuration classes hierarchical
+ * configurations support some more events that correspond to some specific
+ * methods and features:
+ * <dl><dt><em>EVENT_ADD_NODES</em></dt><dd>The <code>addNodes()</code> method
+ * was called; the event object contains the key, to which the nodes were added,
+ * and a collection with the new nodes as value.</dd>
+ * <dt><em>EVENT_CLEAR_TREE</em></dt><dd>The <code>clearTree()</code> method was
+ * called; the event object stores the key of the removed sub tree.</dd>
+ * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A <code>SubnodeConfiguration</code>
+ * that was created from this configuration has been changed. The value property
+ * of the event object contains the original event object as it was sent by the
+ * subnode configuration.</dd></dl></p> 
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
- * @version $Id: HierarchicalConfiguration.java,v 1.14 2004/12/02 22:05:52
- * ebourg Exp $
+ * @author Oliver Heger
+ * @version $Id$
  */
 public class HierarchicalConfiguration extends AbstractConfiguration implements Serializable, Cloneable
 {
-    /** Constant for the clear tree event.*/
+    /**
+     * Constant for the clear tree event.
+     * @since 1.3
+     */
     public static final int EVENT_CLEAR_TREE = 10;
 
-    /** Constant for the add nodes event.*/
+    /**
+     * Constant for the add nodes event.
+     * @since 1.3
+     */
     public static final int EVENT_ADD_NODES = 11;
+
+    /**
+     * Constant for the subnode configuration modified event.
+     * @since 1.5
+     */
+    public static final int EVENT_SUBNODE_CHANGED = 12;
 
     /**
      * The serial version UID.
@@ -564,7 +599,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
-        return new SubnodeConfiguration(this, node);
+        SubnodeConfiguration result = new SubnodeConfiguration(this, node);
+        registerSubnodeConfiguration(result);
+        return result;
     }
 
     /**
@@ -583,6 +620,39 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         SubnodeConfiguration result = createSubnodeConfiguration(node);
         result.setSubnodeKey(subnodeKey);
         return result;
+    }
+
+    /**
+     * This method is always called when a subnode configuration created from
+     * this configuration has been modified. This implementation transforms the
+     * received event into an event of type <code>EVENT_SUBNODE_CHANGED</code>
+     * and notifies the registered listeners.
+     *
+     * @param event the event describing the change
+     * @since 1.5
+     */
+    protected void subnodeConfigurationChanged(ConfigurationEvent event)
+    {
+        fireEvent(EVENT_SUBNODE_CHANGED, null, event, event.isBeforeUpdate());
+    }
+
+    /**
+     * Registers this instance at the given subnode configuration. This
+     * implementation will register a change listener, so that modifications of
+     * the subnode configuration can be tracked.
+     *
+     * @param config the subnode configuration
+     * @since 1.5
+     */
+    void registerSubnodeConfiguration(SubnodeConfiguration config)
+    {
+        config.addConfigurationListener(new ConfigurationListener()
+        {
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                subnodeConfigurationChanged(event);
+            }
+        });
     }
 
     /**

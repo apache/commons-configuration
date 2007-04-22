@@ -245,7 +245,9 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      */
     protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
-        return new SubnodeConfiguration(getParent(), node);
+        SubnodeConfiguration result = new SubnodeConfiguration(getParent(), node);
+        getParent().registerSubnodeConfiguration(result);
+        return result;
     }
 
     /**

@@ -80,8 +80,17 @@
         <dt>AbstractFileConfiguration</dt>
         <dd>EVENT_RELOAD (the configuration was reloaded)</dd>
         <dt>HierarchicalConfiguration</dt>
-        <dd>EVENT_ADD_NODES (the <code>addNodes()</code> method was called),
-        EVENT_CLEAR_TREE (the <code>clearTree()</code> method was called)</dd>
+        <dd>EVENT_ADD_NODES (the <code>addNodes()</code> method was called;
+        the event object contains the key, to which the nodes were added, and
+        a collection with the new nodes as value),
+        EVENT_CLEAR_TREE (the <code>clearTree()</code> method was called; the
+        event object stores the key of the removed sub tree),
+        EVENT_SUBNODE_CHANGED (a <code>SubnodeConfiguration</code> that was
+        created from this configuration has been changed. The value property
+        of the event object contains the original event object as it was sent by
+        the subnode configuration. <em>Note: At the moment it is not possible
+        to map the property key as it was received from the subnode configuration
+        into the namespace of the parent configuration.)</em></dd>
       </dl>
     </p>
     </subsection>

@@ -218,14 +218,27 @@ public abstract class AbstractTestConfigurationEvents extends TestCase
         public void checkEvent(int type, String propName, Object propValue,
                 boolean before)
         {
-            assertFalse("Too few events received", events.isEmpty());
-            ConfigurationEvent e = (ConfigurationEvent) events.removeFirst();
-            assertEquals("Wrong event source", config, e.getSource());
-            assertEquals("Wrong event type", type, e.getType());
+            ConfigurationEvent e = nextEvent(type);
             assertEquals("Wrong property name", propName, e.getPropertyName());
             assertEquals("Wrong property value", propValue, e
                     .getPropertyValue());
             assertEquals("Wrong before flag", before, e.isBeforeUpdate());
+        }
+
+        /**
+         * Returns the next received event and checks for the expected type.
+         * This method can be used instead of <code>checkEvent()</code> for
+         * comparing complex event values.
+         * @param expectedType the expected type of the event
+         * @return the event object
+         */
+        public ConfigurationEvent nextEvent(int expectedType)
+        {
+            assertFalse("Too few events received", events.isEmpty());
+            ConfigurationEvent e = (ConfigurationEvent) events.removeFirst();
+            assertEquals("Wrong event source", config, e.getSource());
+            assertEquals("Wrong event type", expectedType, e.getType());
+            return e;
         }
 
         /**

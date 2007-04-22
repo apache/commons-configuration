@@ -21,6 +21,7 @@ import java.util.Collection;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
 /**
@@ -78,5 +79,45 @@ public class TestHierarchicalConfigurationEvents extends
         ((HierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
                 new ArrayList());
         l.done();
+    }
+
+    /**
+     * Tests whether manipulations of a subnode configuration trigger correct
+     * events.
+     */
+    public void testSubnodeChangedEvent()
+    {
+        SubnodeConfiguration sub = ((HierarchicalConfiguration) config)
+                .configurationAt(EXIST_PROPERTY);
+        sub.addProperty("newProp", "newValue");
+        checkSubnodeEvent(l
+                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                true);
+        checkSubnodeEvent(l
+                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                false);
+        l.done();
+    }
+
+    /**
+     * Tests whether a received event contains a correct subnode event.
+     *
+     * @param event the event object
+     * @param before the expected before flag
+     */
+    private void checkSubnodeEvent(ConfigurationEvent event, boolean before)
+    {
+        assertEquals("Wrong before flag of nesting event", before, event
+                .isBeforeUpdate());
+        assertTrue("No subnode event found in value",
+                event.getPropertyValue() instanceof ConfigurationEvent);
+        ConfigurationEvent evSub = (ConfigurationEvent) event
+                .getPropertyValue();
+        assertEquals("Wrong event type",
+                HierarchicalConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
+        assertEquals("Wrong property name", "newProp", evSub.getPropertyName());
+        assertEquals("Wrong property value", "newValue", evSub
+                .getPropertyValue());
+        assertEquals("Wrong before flag", before, evSub.isBeforeUpdate());
     }
 }

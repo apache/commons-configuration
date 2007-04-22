@@ -339,6 +339,19 @@ implements FileConfiguration, ConfigurationListener
     }
 
     /**
+     * Reacts on changes of an associated subnode configuration. If the auto
+     * save mechanism is active, the configuration must be saved.
+     *
+     * @param event the event describing the change
+     * @since 1.5
+     */
+    protected void subnodeConfigurationChanged(ConfigurationEvent event)
+    {
+        delegate.possiblySave();
+        super.subnodeConfigurationChanged(event);
+    }
+
+    /**
      * Creates the file configuration delegate, i.e. the object that implements
      * functionality required by the <code>FileConfiguration</code> interface.
      * This base implementation will return an instance of the
