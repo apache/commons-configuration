@@ -55,7 +55,8 @@ public class TestINIConfiguration extends TestCase
             + "var1 = \"quoted value\"\r\n"
             + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"\r\n"
             + "var3 = 123 ; comment\r\n"
-            + "var4 = \"1;2;3\" ; comment\r\n";
+            + "var4 = \"1;2;3\" ; comment\r\n"
+            + "var5 = '\\'quoted\\' \"value\"' ; comment\r\n";
 
     /**
      * Test of save method, of class {@link INIConfiguration}.
@@ -178,6 +179,14 @@ public class TestINIConfiguration extends TestCase
         config.load(new StringReader(INI_DATA2));
 
         assertEquals("value", "1;2;3", config.getString("section4.var4"));
+    }
+
+    public void testQuotedValueWithSingleQuotes() throws Exception
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(INI_DATA2));
+
+        assertEquals("value", "'quoted' \"value\"", config.getString("section4.var5"));
     }
 
     public void testWriteValueWithCommentChar() throws Exception

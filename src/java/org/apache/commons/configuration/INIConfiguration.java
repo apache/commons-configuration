@@ -157,7 +157,7 @@ import org.apache.commons.lang.StringUtils;
  * <code>getSections</code> method.
  * </p>
  *
- * @author trevor.miller
+ * @author Trevor Miller
  * @version $Id$
  * @since 1.4
  */
@@ -299,7 +299,7 @@ public class INIConfiguration extends AbstractFileConfiguration
                                 key = section + line;
                             }
                         }
-                        this.addProperty(key.trim(), value);
+                        addProperty(key.trim(), value);
                     }
                 }
                 line = bufferedReader.readLine();
@@ -315,7 +315,9 @@ public class INIConfiguration extends AbstractFileConfiguration
      * Parse the value to remove the quotes and ignoring the comment.
      * Example:
      *
-     * <code>"value" ; comment -> value</code>
+     * <pre>"value" ; comment -> value</pre>
+     *
+     * <pre>'value' ; comment -> value</pre>
      *
      * @param value
      */
@@ -323,9 +325,11 @@ public class INIConfiguration extends AbstractFileConfiguration
     {
         value = value.trim();
 
-        boolean quoted = value.startsWith("\"");
+        boolean quoted = value.startsWith("\"") || value.startsWith("'");
         boolean stop = false;
         boolean escape = false;
+
+        char quote = quoted ? value.charAt(0) : 0;
 
         int i = quoted ? 1 : 0;
 
@@ -340,11 +344,11 @@ public class INIConfiguration extends AbstractFileConfiguration
                 {
                     escape = true;
                 }
-                else if (!escape && '"' == c)
+                else if (!escape && quote == c)
                 {
                     stop = true;
                 }
-                else if (escape && '"' == c)
+                else if (escape && quote == c)
                 {
                     escape = false;
                     result.append(c);
@@ -407,33 +411,33 @@ public class INIConfiguration extends AbstractFileConfiguration
     /**
      * Determine if the given line is a comment line.
      *
-     * @param s The line to check.
+     * @param line The line to check.
      * @return true if the line is empty or starts with one of the comment
      * characters
      */
-    protected boolean isCommentLine(String s)
+    protected boolean isCommentLine(String line)
     {
-        if (s == null)
+        if (line == null)
         {
             return false;
         }
         // blank lines are also treated as comment lines
-        return s.length() < 1 || COMMENT_CHARS.indexOf(s.charAt(0)) >= 0;
+        return line.length() < 1 || COMMENT_CHARS.indexOf(line.charAt(0)) >= 0;
     }
 
     /**
      * Determine if the given line is a section.
      *
-     * @param s The line to check.
+     * @param line The line to check.
      * @return true if the line contains a secion
      */
-    protected boolean isSectionLine(String s)
+    protected boolean isSectionLine(String line)
     {
-        if (s == null)
+        if (line == null)
         {
             return false;
         }
-        return s.startsWith("[") && s.endsWith("]");
+        return line.startsWith("[") && line.endsWith("]");
     }
 
     /**
@@ -445,16 +449,18 @@ public class INIConfiguration extends AbstractFileConfiguration
     public Set getSections()
     {
         Set sections = new TreeSet();
-        Iterator iter = this.getKeys();
-        while (iter.hasNext())
+
+        Iterator keys = getKeys();
+        while (keys.hasNext())
         {
-            String key = (String) iter.next();
+            String key = (String) keys.next();
             int index = key.indexOf(".");
             if (index >= 0)
             {
                 sections.add(key.substring(0, index));
             }
         }
+
         return sections;
     }
 }
