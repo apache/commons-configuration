@@ -173,9 +173,6 @@ public class INIConfiguration extends AbstractFileConfiguration
      */
     protected static final String SEPARATOR_CHARS = "=:";
 
-    /** Constant for the used line separator.*/
-    private static final String LINE_SEPARATOR = "\r\n";
-
     /**
      * Create a new empty INI Configuration.
      */
@@ -227,29 +224,31 @@ public class INIConfiguration extends AbstractFileConfiguration
     public void save(Writer writer) throws ConfigurationException
     {
         PrintWriter pw = new PrintWriter(writer);
-        Iterator iter = this.getSections().iterator();
-        while (iter.hasNext())
+        Iterator it = getSections().iterator();
+        while (it.hasNext())
         {
-            String section = (String) iter.next();
+            String section = (String) it.next();
             pw.print("[");
             pw.print(section);
             pw.print("]");
-            pw.print(LINE_SEPARATOR);
+            pw.println();
 
-            Configuration values = this.subset(section);
-            Iterator iterator = values.getKeys();
-            while (iterator.hasNext())
+            Configuration values = subset(section);
+            Iterator keys = values.getKeys();
+            while (keys.hasNext())
             {
-                String key = (String) iterator.next();
+                String key = (String) keys.next();
                 String value = values.getString(key);
                 pw.print(key);
                 pw.print(" = ");
                 pw.print(formatValue(value));
-                pw.print(LINE_SEPARATOR);
+                pw.println();
             }
 
-            pw.print(LINE_SEPARATOR);
+            pw.println();
         }
+
+        pw.flush();
     }
 
     /**

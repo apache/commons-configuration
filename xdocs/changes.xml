@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="update">
+        INIConfiguration uses the platform's specific line separator instead
+        of the Windows line separator.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-267">
+        INIConfiguration flushes the output at the end of a save operation.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-265">
         For hierarchical file-based configurations the auto-save mechanism is
         now also triggered if a subnode configuration is changed. In such a case
