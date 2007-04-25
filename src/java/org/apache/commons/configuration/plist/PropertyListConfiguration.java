@@ -78,14 +78,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /** The format used for the date objects in the plist files. */
+    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+
     /** The serial version UID. */
     private static final long serialVersionUID = 3227248503779092127L;
 
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
-
-    /** The format used for the date objects in the plist files. */
-    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
     /**
      * Creates an empty PropertyListConfiguration object which can be

@@ -405,8 +405,10 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     private class XMLPropertyListHandler extends DefaultHandler
     {
+        /** The buffer containing the text node being read */
         private StringBuffer buffer = new StringBuffer();
 
+        /** The stack of configuration nodes */
         private List stack = new ArrayList();
 
         public XMLPropertyListHandler(Node root)
@@ -537,7 +539,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             buffer.setLength(0);
         }
 
-        public void characters(char ch[], int start, int length) throws SAXException
+        public void characters(char[] ch, int start, int length) throws SAXException
         {
             buffer.append(ch, start, length);
         }

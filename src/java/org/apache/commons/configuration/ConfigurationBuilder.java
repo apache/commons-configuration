@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration;
 
 /**
@@ -28,9 +29,7 @@ package org.apache.commons.configuration;
  * configuration constructed by this builder.
  * </p>
  *
- * @author <a
- * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  */
 public interface ConfigurationBuilder

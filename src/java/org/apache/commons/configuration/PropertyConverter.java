@@ -63,10 +63,11 @@ public final class PropertyConverter
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
-    /** Constant for the argument classes of the Number constructor that takes
-     * a String.
-     */
+    /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class[] CONSTR_ARGS = {String.class};
+
+    /** The fully qualified name of {@link javax.mail.internet.InternetAddress} */
+    private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 
     /**
      * Private constructor prevents instances from being created.
@@ -154,7 +155,7 @@ public final class PropertyConverter
         {
             return toColor(value);
         }
-        else if (cls.getName().equals("javax.mail.internet.InternetAddress"))
+        else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME))
         {
             return toInternetAddress(value);
         }
@@ -163,7 +164,8 @@ public final class PropertyConverter
             return toInetAddress(value);
         }
 
-        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ") can't be converted to a " + cls.getName() + " object");
+        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")"
+                + " can't be converted to a " + cls.getName() + " object");
     }
 
     /**
@@ -671,7 +673,7 @@ public final class PropertyConverter
      */
     static Object toInternetAddress(Object value) throws ConversionException
     {
-        if (value.getClass().getName().equals("javax.mail.internet.InternetAddress"))
+        if (value.getClass().getName().equals(INTERNET_ADDRESS_CLASSNAME))
         {
             return value;
         }
@@ -679,8 +681,8 @@ public final class PropertyConverter
         {
             try
             {
-                Constructor ctor = Class.forName("javax.mail.internet.InternetAddress").getConstructor(new Class[] { String.class });
-                return ctor.newInstance(new Object[] { value });
+                Constructor ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
+                return ctor.newInstance(new Object[] {value});
             }
             catch (Exception e)
             {
@@ -735,8 +737,8 @@ public final class PropertyConverter
         {
             try
             {
-                Method valueOfMethod = cls.getMethod("valueOf", new Class[] { String.class });
-                return valueOfMethod.invoke(null, new Object[] { value });
+                Method valueOfMethod = cls.getMethod("valueOf", new Class[] {String.class});
+                return valueOfMethod.invoke(null, new Object[] {value});
             }
             catch (Exception e)
             {

@@ -63,9 +63,7 @@ import java.util.LinkedList;
  * notifications about errors to registered observers.
  * </p>
  *
- * @author <a
- * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -229,8 +227,7 @@ public class EventSource
      * @param propValue the value of the affected property (can be <b>null</b>)
      * @param before the before update flag
      */
-    protected void fireEvent(int type, String propName, Object propValue,
-            boolean before)
+    protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
         Collection listenersToCall = null;
 
@@ -246,8 +243,7 @@ public class EventSource
 
         if (listenersToCall != null)
         {
-            ConfigurationEvent event = createEvent(type, propName, propValue,
-                    before);
+            ConfigurationEvent event = createEvent(type, propName, propValue, before);
             for (Iterator it = listenersToCall.iterator(); it.hasNext();)
             {
                 ((ConfigurationListener) it.next()).configurationChanged(event);
@@ -266,8 +262,7 @@ public class EventSource
      * @param before the before update flag
      * @return the newly created event object
      */
-    protected ConfigurationEvent createEvent(int type, String propName,
-            Object propValue, boolean before)
+    protected ConfigurationEvent createEvent(int type, String propName, Object propValue, boolean before)
     {
         return new ConfigurationEvent(this, type, propName, propValue, before);
     }
@@ -279,12 +274,10 @@ public class EventSource
      * @param type the event's type
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the <code>Throwable</code> object that caused this error
-     * event
+     * @param ex the <code>Throwable</code> object that caused this error event
      * @since 1.4
      */
-    protected void fireError(int type, String propName, Object propValue,
-            Throwable ex)
+    protected void fireError(int type, String propName, Object propValue, Throwable ex)
     {
         Collection listenersToCall = null;
 
@@ -300,12 +293,10 @@ public class EventSource
 
         if (listenersToCall != null)
         {
-            ConfigurationErrorEvent event = createErrorEvent(type, propName,
-                    propValue, ex);
+            ConfigurationErrorEvent event = createErrorEvent(type, propName, propValue, ex);
             for (Iterator it = listenersToCall.iterator(); it.hasNext();)
             {
-                ((ConfigurationErrorListener) it.next())
-                        .configurationError(event);
+                ((ConfigurationErrorListener) it.next()).configurationError(event);
             }
         }
     }
@@ -323,8 +314,7 @@ public class EventSource
      * @return the event object
      * @since 1.4
      */
-    protected ConfigurationErrorEvent createErrorEvent(int type,
-            String propName, Object propValue, Throwable ex)
+    protected ConfigurationErrorEvent createErrorEvent(int type, String propName, Object propValue, Throwable ex)
     {
         return new ConfigurationErrorEvent(this, type, propName, propValue, ex);
     }

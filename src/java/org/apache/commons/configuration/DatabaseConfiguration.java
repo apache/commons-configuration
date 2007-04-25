@@ -587,7 +587,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         {
             getLogger().error("An error occured on closing the statement", e);
         }
-        
+
         try
         {
             if (conn != null)

@@ -276,14 +276,14 @@ public class ConfigurationInterpolator extends StrLookup
         {
             return null;
         }
-        
+
         int prefixPos = var.indexOf(PREFIX_SEPARATOR);
         if (prefixPos >= 0)
         {
             String prefix = var.substring(0, prefixPos);
             String name = var.substring(prefixPos + 1);
             String value = fetchLookupForPrefix(prefix).lookup(name);
-            if (value != null) 
+            if (value != null)
             {
                 return value;
             }
@@ -301,8 +301,7 @@ public class ConfigurationInterpolator extends StrLookup
      */
     protected StrLookup fetchNoPrefixLookup()
     {
-        return (getDefaultLookup() != null) ? getDefaultLookup() : StrLookup
-                .noneLookup();
+        return (getDefaultLookup() != null) ? getDefaultLookup() : StrLookup.noneLookup();
     }
 
     /**
@@ -328,8 +327,7 @@ public class ConfigurationInterpolator extends StrLookup
     static
     {
         globalLookups = new HashMap();
-        globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup
-                .systemPropertiesLookup());
+        globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
         globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
     }
 }

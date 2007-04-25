@@ -223,7 +223,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             {
                 if (Date.class.equals(cls) || Calendar.class.equals(cls))
                 {
-                    return PropertyConverter.to(cls, interpolate(value), new String[] { getDefaultDateFormat() });
+                    return PropertyConverter.to(cls, interpolate(value), new String[] {getDefaultDateFormat()});
                 }
                 else
                 {
@@ -289,7 +289,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             Object[] params = null;
             if (cls.equals(Date.class) || cls.equals(Calendar.class))
             {
-                params = new Object[] { getDefaultDateFormat() };
+                params = new Object[] {getDefaultDateFormat()};
             }
 
             try
@@ -300,7 +300,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                     Class arrayType = valueClass.getComponentType();
                     int length = Array.getLength(value);
 
-                    if (arrayType.equals(cls) || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
+                    if (arrayType.equals(cls)
+                            || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
                     {
                         // the value is an array of the specified type, or an array
                         // of the primitive type derived from the specified type
@@ -381,7 +382,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         // check the type of the default value
         if (defaultValue != null && (!defaultValue.getClass().isArray() || !cls.isAssignableFrom(defaultValue.getClass().getComponentType())))
         {
-            throw new IllegalArgumentException("The type of the default value (" + defaultValue.getClass() + ") is not an array of the specified class (" + cls + ")");
+            throw new IllegalArgumentException("The type of the default value (" + defaultValue.getClass() + ")"
+                    + " is not an array of the specified class (" + cls + ")");
         }
 
         if (cls.isPrimitive())
@@ -451,7 +453,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 }
                 else
                 {
-                    throw new ConversionException('\'' + key + "' (" + arrayType + ") doesn't map to a compatible array of " + cls);
+                    throw new ConversionException('\'' + key + "' (" + arrayType + ")"
+                            + " doesn't map to a compatible array of " + cls);
                 }
             }
             else if (value instanceof Collection)

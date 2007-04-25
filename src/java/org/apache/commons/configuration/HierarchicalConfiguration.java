@@ -117,7 +117,7 @@ import org.apache.commons.lang.StringUtils;
  * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A <code>SubnodeConfiguration</code>
  * that was created from this configuration has been changed. The value property
  * of the event object contains the original event object as it was sent by the
- * subnode configuration.</dd></dl></p> 
+ * subnode configuration.</dd></dl></p>
  *
  * @author Oliver Heger
  * @version $Id$
