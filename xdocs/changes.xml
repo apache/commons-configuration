@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-253">
+        The return value of FileConfiguration.getFile() is now always
+        consistent with the result of getURL().
+      </action>
       <action dev="ebourg" type="update">
         INIConfiguration uses the platform's specific line separator instead
         of the Windows line separator.

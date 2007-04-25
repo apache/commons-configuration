@@ -617,7 +617,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public File getFile()
     {
-        if (getFileName() == null)
+        if (getFileName() == null && sourceURL == null)
         {
             return null;
         }

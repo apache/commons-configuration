@@ -39,8 +39,19 @@ import junit.framework.TestCase;
  */
 public class TestFileConfiguration extends TestCase
 {
+    /** Constant for the output directory.*/
     private static final File TARGET_DIR = new File("target");
 
+    /** Constant for the directory with the test configuration files.*/
+    private static final File TEST_DIR = new File("conf");
+
+    /** Constant for the name of a test file.*/
+    private static final String TEST_FILENAME = "test.properties";
+
+    /** Constant for a test file.*/
+    private static final File TEST_FILE = new File(TEST_DIR, TEST_FILENAME);
+
+    /** Constant for the name of a resource to be resolved.*/
     private static final String RESOURCE_NAME = "config/deep/deeptest.properties";
 
     public void testSetURL() throws Exception
@@ -72,23 +83,23 @@ public class TestFileConfiguration extends TestCase
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
 
-        File directory = new File("conf");
-        File file = new File(directory, "test.properties");
+        File directory = TEST_DIR;
+        File file = TEST_FILE;
         config.setFile(file);
         assertEquals(directory.getAbsolutePath(), config.getBasePath());
-        assertEquals("test.properties", config.getFileName());
+        assertEquals(TEST_FILENAME, config.getFileName());
         assertEquals(file.getAbsolutePath(), config.getPath());
 
-        config.setPath("conf" + File.separator + "test.properties");
-        assertEquals("test.properties", config.getFileName());
+        config.setPath("conf" + File.separator + TEST_FILENAME);
+        assertEquals(TEST_FILENAME, config.getFileName());
         assertEquals(directory.getAbsolutePath(), config.getBasePath());
         assertEquals(file.getAbsolutePath(), config.getPath());
         assertEquals(file.toURL(), config.getURL());
 
         config.setBasePath(null);
-        config.setFileName("test.properties");
+        config.setFileName(TEST_FILENAME);
         assertNull(config.getBasePath());
-        assertEquals("test.properties", config.getFileName());
+        assertEquals(TEST_FILENAME, config.getFileName());
     }
 
     public void testCreateFile1() throws Exception
@@ -289,7 +300,7 @@ public class TestFileConfiguration extends TestCase
      */
     public void testReloadingWithAutoSave() throws Exception
     {
-        File configFile = new File(TARGET_DIR, "test.properties");
+        File configFile = new File(TARGET_DIR, TEST_FILENAME);
         PrintWriter out = null;
 
         try
@@ -379,11 +390,41 @@ public class TestFileConfiguration extends TestCase
     {
         FileConfiguration config = new PropertiesConfiguration();
         assertNull(config.getFile());
-        File file = new File("conf/test.properties").getAbsoluteFile();
+        File file = TEST_FILE.getAbsoluteFile();
         config.setFile(file);
         assertEquals(file, config.getFile());
         config.load();
         assertEquals(file, config.getFile());
+    }
+
+    /**
+     * Tests whether getFile() returns a valid file after a configuration has
+     * been loaded.
+     */
+    public void testGetFileAfterLoad() throws ConfigurationException,
+            IOException
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        config.load(TEST_FILE.getAbsolutePath());
+        assertNotNull("No source URL set", config.getURL());
+        assertEquals("Wrong source file", TEST_FILE.getCanonicalFile(), config
+                .getFile().getCanonicalFile());
+    }
+
+    /**
+     * Tests whether calling load() multiple times changes the source. This
+     * should not be the case.
+     */
+    public void testLoadMultiple() throws ConfigurationException
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        config.load(TEST_FILE.getAbsolutePath());
+        URL srcUrl = config.getURL();
+        File srcFile = config.getFile();
+        File file2 = new File(TEST_DIR, "testEqual.properties");
+        config.load(file2.getAbsolutePath());
+        assertEquals("Source URL was changed", srcUrl, config.getURL());
+        assertEquals("Source file was changed", srcFile, config.getFile());
     }
 
     /**
@@ -393,7 +434,7 @@ public class TestFileConfiguration extends TestCase
     public void testSaveWithoutFileName() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
-        File file = new File("conf/test.properties");
+        File file = TEST_FILE;
         config.load(file);
         try
         {
@@ -406,7 +447,7 @@ public class TestFileConfiguration extends TestCase
         }
 
         config = new PropertiesConfiguration();
-        config.load("conf/test.properties");
+        config.load(TEST_FILE);
         try
         {
             config.save();
@@ -493,12 +534,12 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
-     * Tests the loading of configuration file in a Combined configuration 
+     * Tests the loading of configuration file in a Combined configuration
      * when the configuration source is in the classpath.
      */
     public void testLoadFromClassPath() throws ConfigurationException
     {
-        DefaultConfigurationBuilder cf = 
+        DefaultConfigurationBuilder cf =
             new DefaultConfigurationBuilder("conf/config/deep/testFileFromClasspath.xml");
         CombinedConfiguration config = cf.getConfiguration(true);
         Configuration config1 = config.getConfiguration("propConf");
