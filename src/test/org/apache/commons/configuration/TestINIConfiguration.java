@@ -30,33 +30,34 @@ import junit.framework.TestCase;
 /**
  * Test class for INIConfiguration.
  *
- * @author trevor.miller
- * @version $Id: TestHierarchicalConfiguration.java 439648 2006-09-02 20:42:10Z
- * oheger $
+ * @author Trevor Miller
+ * @version $Id$
  */
 public class TestINIConfiguration extends TestCase
 {
-	/** Constant for the content of an ini file. */
+    private static String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /** Constant for the content of an ini file. */
 	private static final String INI_DATA =
-            "[section1]\r\n"
-            + "var1 = foo\r\n"
-            + "var2 = 451\r\n"
-            + "\r\n"
-            + "[section2]\r\n"
-            + "var1 = 123.45\r\n"
-            + "var2 = bar\r\n"
-            + "\r\n"
-            + "[section3]\r\n"
-            + "var1 = true\r\n"
-            + "\r\n";
+            "[section1]" + LINE_SEPARATOR
+            + "var1 = foo" + LINE_SEPARATOR
+            + "var2 = 451" + LINE_SEPARATOR
+             + LINE_SEPARATOR
+            + "[section2]" + LINE_SEPARATOR
+            + "var1 = 123.45" + LINE_SEPARATOR
+            + "var2 = bar" + LINE_SEPARATOR
+             + LINE_SEPARATOR
+            + "[section3]" + LINE_SEPARATOR
+            + "var1 = true" + LINE_SEPARATOR
+             + LINE_SEPARATOR;
 
 	private static final String INI_DATA2 =
-            "[section4]\r\n"
-            + "var1 = \"quoted value\"\r\n"
-            + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"\r\n"
-            + "var3 = 123 ; comment\r\n"
-            + "var4 = \"1;2;3\" ; comment\r\n"
-            + "var5 = '\\'quoted\\' \"value\"' ; comment\r\n";
+            "[section4]" + LINE_SEPARATOR
+            + "var1 = \"quoted value\"" + LINE_SEPARATOR
+            + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"" + LINE_SEPARATOR
+            + "var3 = 123 ; comment" + LINE_SEPARATOR
+            + "var4 = \"1;2;3\" ; comment" + LINE_SEPARATOR
+            + "var5 = '\\'quoted\\' \"value\"' ; comment";
 
     /**
      * Test of save method, of class {@link INIConfiguration}.
@@ -71,7 +72,8 @@ public class TestINIConfiguration extends TestCase
 		instance.addProperty("section2.var2", "bar");
 		instance.addProperty("section3.var1", "true");
 		instance.save(writer);
-		assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
+        
+        assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
 	}
 
 	/**
