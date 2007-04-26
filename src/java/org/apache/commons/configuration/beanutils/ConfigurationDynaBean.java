@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration.beanutils;
 
+import java.lang.reflect.Array;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +28,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.SubsetConfiguration;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -65,6 +66,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     /**
      * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
      * the configuration this bean is associated with.
+     *
      * @param configuration the configuration
      */
     public ConfigurationDynaBean(Configuration configuration)
@@ -88,85 +90,21 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             throw new NullPointerException("Error trying to set property to null.");
         }
 
-        if (value instanceof List)
+        if (value instanceof Collection)
         {
-            List list = (List) value;
-            Iterator iterator = list.iterator();
+            Collection collection = (Collection) value;
+            Iterator iterator = collection.iterator();
             while (iterator.hasNext())
             {
                 getConfiguration().addProperty(name, iterator.next());
             }
         }
-        else if (value instanceof int[])
+        else if (value.getClass().isArray())
         {
-            int[] array = (int[]) value;
-            for (int i = 0; i < array.length; i++)
+            int length = Array.getLength(value);
+            for (int i = 0; i < length; i++)
             {
-                getConfiguration().addProperty(name, new Integer(array[i]));
-            }
-        }
-        else if (value instanceof boolean[])
-        {
-            boolean[] array = (boolean[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, BooleanUtils.toBooleanObject(array[i]));
-            }
-        }
-        else if (value instanceof char[])
-        {
-            char[] array = (char[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Character(array[i]));
-            }
-        }
-        else if (value instanceof byte[])
-        {
-            byte[] array = (byte[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Byte(array[i]));
-            }
-        }
-        else if (value instanceof short[])
-        {
-            short[] array = (short[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Short(array[i]));
-            }
-        }
-        else if (value instanceof long[])
-        {
-            long[] array = (long[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Long(array[i]));
-            }
-        }
-        else if (value instanceof float[])
-        {
-            float[] array = (float[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Float(array[i]));
-            }
-        }
-        else if (value instanceof double[])
-        {
-            double[] array = (double[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, new Double(array[i]));
-            }
-        }
-        else if (value instanceof Object[])
-        {
-            Object[] array = (Object[]) value;
-            for (int i = 0; i < array.length; i++)
-            {
-                getConfiguration().addProperty(name, array[i]);
+                getConfiguration().addProperty(name, Array.get(value, i));
             }
         }
         else
@@ -275,8 +213,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
             else if (property.getClass().isArray())
             {
-                Object[] array = (Object[]) property;
-                array[index] = value;
+                Array.set(value, index, value);
             }
             else if (index == 0)
             {
