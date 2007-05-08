@@ -1062,6 +1062,76 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests saving and loading a configuration when delimiter parsing is
+     * disabled.
+     */
+    public void testSaveDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        checkSaveDelimiterParsingDisabled("list.delimiter.test");
+    }
+
+    /**
+     * Tests saving and loading a configuration when delimiter parsing is
+     * disabled and attributes are involved.
+     */
+    public void testSaveDelimiterParsingDisabledAttrs()
+            throws ConfigurationException
+    {
+        checkSaveDelimiterParsingDisabled("list.delimiter.test[@attr]");
+    }
+
+    /**
+     * Helper method for testing saving and loading a configuration when
+     * delimiter parsing is disabled.
+     *
+     * @param key the key to be checked
+     * @throws ConfigurationException if an error occurs
+     */
+    private void checkSaveDelimiterParsingDisabled(String key)
+            throws ConfigurationException
+    {
+        conf.clear();
+        conf.setDelimiterParsingDisabled(true);
+        conf.load();
+        conf.setProperty(key, "C:\\Temp\\,C:\\Data\\");
+        conf.addProperty(key, "a,b,c");
+        conf.save(testSaveConf);
+        XMLConfiguration checkConf = new XMLConfiguration();
+        checkConf.setDelimiterParsingDisabled(true);
+        checkConf.setFile(testSaveConf);
+        checkSavedConfig(checkConf);
+    }
+
+    /**
+     * Tests multiple attribute values in delimiter parsing disabled mode.
+     */
+    public void testDelimiterParsingDisabledMultiAttrValues() throws ConfigurationException
+    {
+        conf.clear();
+        conf.setDelimiterParsingDisabled(true);
+        conf.load();
+        List expr = conf.getList("expressions[@value]");
+        assertEquals("Wrong list size", 2, expr.size());
+        assertEquals("Wrong element 1", "a || (b && c)", expr.get(0));
+        assertEquals("Wrong element 2", "!d", expr.get(1));
+    }
+
+    /**
+     * Tests using multiple attribute values, which are partly escaped when
+     * delimiter parsing is not disabled.
+     */
+    public void testMultipleAttrValuesEscaped() throws ConfigurationException
+    {
+        conf.addProperty("test.dir[@name]", "C:\\Temp\\");
+        conf.addProperty("test.dir[@name]", "C:\\Data\\");
+        conf.save(testSaveConf);
+        XMLConfiguration checkConf = new XMLConfiguration();
+        checkConf.setFile(testSaveConf);
+        checkSavedConfig(checkConf);
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration

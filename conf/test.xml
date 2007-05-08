@@ -85,4 +85,9 @@ And even longer.
       <a name="y">1,2,3</a>
       <a name="u,v,w" test="yes">value1,value2</a>
     </attrList>
+
+    <!-- An attribute with multiple values and escape characters for testing
+         splitting when delimiter parsing is disabled.
+    -->
+    <expressions value="a \|\| (b &amp;&amp; c)|!d"/>
 </testconfig>

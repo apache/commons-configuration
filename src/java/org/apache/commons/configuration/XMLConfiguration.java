@@ -40,7 +40,6 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.collections.iterators.SingletonIterator;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -93,6 +92,35 @@ import org.xml.sax.helpers.DefaultHandler;
  * <code>cite</code> element the comma is escaped, so that no splitting is
  * performed.</p>
  *
+ * <p>The configuration API allows setting multiple values for a single attribute,
+ * e.g. something like the following is legal (assuming that the default
+ * expression engine is used):
+ * <pre>
+ * XMLConfiguration config = new XMLConfiguration();
+ * config.addProperty("test.dir[@name]", "C:\\Temp\\");
+ * config.addProperty("test.dir[@name]", "D:\\Data\\");
+ * </pre></p>
+ *
+ * <p>Because in XML such a constellation is not directly supported (an attribute
+ * can appear only once for a single element), the values are concatenated to a
+ * single value. If delimiter parsing is enabled (refer to the
+ * <code>{@link #setDelimiterParsingDisabled(boolean)}</code> method), the
+ * current list delimiter character will be used as separator. Otherwise the
+ * pipe symbol ("|") will be used for this purpose. No matter which character is
+ * used as delimiter, it can always be escaped with a backslash. A backslash
+ * itself can also be escaped with another backslash. Consider the following
+ * example fragment from a configuration file:
+ * <pre>
+ * &lt;directories names="C:\Temp\\|D:\Data\"/&gt;
+ * </pre>
+ * Here the backslash after Temp is escaped. This is necessary because it
+ * would escape the list delimiter (the pipe symbol assuming that list delimiter
+ * parsing is disabled) otherwise. So this attribute would have two values.</p>
+ *
+ * <p>Note: You should ensure that the <em>delimiter parsing disabled</em>
+ * property is always consistent when you load and save a configuration file.
+ * Otherwise the values of properties can become corrupted.</p>
+ *
  * <p><code>XMLConfiguration</code> implements the <code>{@link FileConfiguration}</code>
  * interface and thus provides full support for loading XML documents from
  * different sources like files, URLs, or streams. A full description of these
@@ -102,7 +130,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
+ * @author Oliver Heger
  * @version $Revision$, $Date$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
@@ -114,6 +142,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
+
+    /** Constant for the delimiter for multiple attribute values.*/
+    private static final char ATTR_VALUE_DELIMITER = '|';
 
     /** The document from this configuration's data source. */
     private Document document;
@@ -432,15 +463,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                Iterator it;
-                if (isDelimiterParsingDisabled())
-                {
-                    it = new SingletonIterator(attr.getValue());
-                }
-                else
-                {
-                    it = PropertyConverter.split(attr.getValue(), getListDelimiter()).iterator();
-                }
+                Iterator it = PropertyConverter.split(
+                        attr.getValue(),
+                        isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER
+                                : getListDelimiter()).iterator();
                 while (it.hasNext())
                 {
                     Node child = new XMLNode(attr.getName(),
@@ -570,7 +596,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 document = newDocument;
             }
 
-            XMLBuilderVisitor builder = new XMLBuilderVisitor(document, getListDelimiter());
+            XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
+                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
             builder.processDocument(getRoot());
             return document;
         } /* try */
@@ -966,8 +993,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Element elem = document.createElement(newNode.getName());
                 if (newNode.getValue() != null)
                 {
-                    elem.appendChild(document.createTextNode(
-                            PropertyConverter.escapeDelimiters(newNode.getValue().toString(), listDelimiter)));
+                    String txt = newNode.getValue().toString();
+                    if (listDelimiter != 0)
+                    {
+                        txt = PropertyConverter.escapeDelimiters(txt, listDelimiter);
+                    }
+                    elem.appendChild(document.createTextNode(txt));
                 }
                 if (sibling2 == null)
                 {
@@ -992,7 +1023,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param node the affected node
          * @param elem the element that is associated with this node
          * @param name the name of the affected attribute
-         * @param listDelimiter the delimiter vor attributes with multiple values
+         * @param listDelimiter the delimiter for attributes with multiple values
          */
         private static void updateAttribute(Node node, Element elem, String name, char listDelimiter)
         {
@@ -1000,6 +1031,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             {
                 List attrs = node.getAttributes(name);
                 StringBuffer buf = new StringBuffer();
+                char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
                 for (Iterator it = attrs.iterator(); it.hasNext();)
                 {
                     Node attr = (Node) it.next();
@@ -1007,10 +1039,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     {
                         if (buf.length() > 0)
                         {
-                            buf.append(listDelimiter);
+                            buf.append(delimiter);
                         }
                         buf.append(PropertyConverter.escapeDelimiters(attr
-                                .getValue().toString(), getDefaultListDelimiter()));
+                                .getValue().toString(), delimiter));
                     }
                     attr.setReference(elem);
                 }

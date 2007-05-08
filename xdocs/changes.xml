@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-268">
+        When delimiter parsing was disabled for XMLConfiguration, saving and
+        loading the configuration accidently added escape characters to properties
+        containing the list delimiter character. This has been fixed. It is now
+        also possible to escape the escape character itself.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-253">
         The return value of FileConfiguration.getFile() is now always
         consistent with the result of getURL().
