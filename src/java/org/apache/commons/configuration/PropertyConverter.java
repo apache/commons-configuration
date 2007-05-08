@@ -54,8 +54,11 @@ import org.apache.commons.lang.SystemUtils;
  */
 public final class PropertyConverter
 {
-    /** Constant for the list delimiter escaping character.*/
-    static final String LIST_ESCAPE = "\\";
+    /** Constant for the list delimiter as char.*/
+    static final char LIST_ESC_CHAR = '\\';
+
+    /** Constant for the list delimiter escaping character as string.*/
+    static final String LIST_ESCAPE = String.valueOf(LIST_ESC_CHAR);
 
     /** Constant for the prefix of hex numbers.*/
     private static final String HEX_PREFIX = "0x";
@@ -506,39 +509,53 @@ public final class PropertyConverter
 
         StringBuffer token = new StringBuffer();
         int begin = 0;
-        int end = 0;
-        while (begin <= s.length())
+        boolean inEscape = false;
+
+        while (begin < s.length())
         {
-            // find the next delimiter
-            int index = s.indexOf(delimiter, end);
-
-            // move the end index at the end of the string if the delimiter is not found
-            end = (index != -1) ? index : s.length();
-
-            // extract the chunk
-            String chunk = s.substring(begin , end);
-
-            if (chunk.endsWith(LIST_ESCAPE) && end != s.length())
+            char c = s.charAt(begin);
+            if (inEscape)
             {
-                token.append(chunk.substring(0, chunk.length() - 1));
-                token.append(delimiter);
+                // last character was the escape marker
+                // can current character be escaped?
+                if (c != delimiter && c != LIST_ESC_CHAR)
+                {
+                    // no, also add escape character
+                    token.append(LIST_ESC_CHAR);
+                }
+                token.append(c);
+                inEscape = false;
             }
+
             else
             {
-                // append the chunk to the token
-                token.append(chunk);
-
-                // add the token to the list
-                list.add(token.toString().trim());
-
-                // reset the token
-                token = new StringBuffer();
+                if (c == delimiter)
+                {
+                    // found a list delimiter -> add token and reset buffer
+                    list.add(token.toString().trim());
+                    token = new StringBuffer();
+                }
+                else if (c == LIST_ESC_CHAR)
+                {
+                    // eventually escape next character
+                    inEscape = true;
+                }
+                else
+                {
+                    token.append(c);
+                }
             }
 
-            // move to the next chunk
-            end = end + 1;
-            begin = end;
+            begin++;
         }
+
+        // Trailing delimiter?
+        if (inEscape)
+        {
+            token.append(LIST_ESC_CHAR);
+        }
+        // Add last token
+        list.add(token.toString().trim());
 
         return list;
     }
@@ -548,7 +565,7 @@ public final class PropertyConverter
      * method ensures that list delimiter characters that are part of a
      * property's value are correctly escaped when a configuration is saved to a
      * file. Otherwise when loaded again the property will be treated as a list
-     * property.
+     * property. A single backslash will also be escaped.
      *
      * @param s the string with the value
      * @param delimiter the list delimiter to use
@@ -556,7 +573,8 @@ public final class PropertyConverter
      */
     public static String escapeDelimiters(String s, char delimiter)
     {
-        return StringUtils.replace(s, String.valueOf(delimiter), LIST_ESCAPE + delimiter);
+        String s1 = StringUtils.replace(s, LIST_ESCAPE, LIST_ESCAPE + LIST_ESCAPE);
+        return StringUtils.replace(s1, String.valueOf(delimiter), LIST_ESCAPE + delimiter);
     }
 
     /**

@@ -83,6 +83,27 @@ public class TestPropertyConverter extends TestCase
         assertTrue(list.isEmpty());
     }
 
+    /**
+     * Tests whether an escape character can be itself escaped.
+     */
+    public void testSplitEscapeEscapeChar()
+    {
+        List list = PropertyConverter.split("C:\\Temp\\\\,xyz", ',');
+        assertEquals("Wrong list size", 2, list.size());
+        assertEquals("Wrong element 1", "C:\\Temp\\", list.get(0));
+        assertEquals("Wrong element 2", "xyz", list.get(1));
+    }
+
+    /**
+     * Tests whether delimiters are correctly escaped.
+     */
+    public void testEscapeDelimiters()
+    {
+        assertEquals("Wrong escaped delimiters",
+                "C:\\\\Temp\\\\\\,D:\\\\Data\\\\", PropertyConverter
+                        .escapeDelimiters("C:\\Temp\\,D:\\Data\\", ','));
+    }
+
     public void testToIterator()
     {
         int[] array = new int[]{1, 2, 3};
