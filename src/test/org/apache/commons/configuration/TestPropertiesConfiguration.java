@@ -18,6 +18,8 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,10 +30,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
+import org.mortbay.jetty.Handler;
+import org.mortbay.jetty.Request;
+import org.mortbay.jetty.Server;
+import org.mortbay.jetty.handler.AbstractHandler;
+import org.mortbay.util.IO;
 
 /**
  * Test for loading and saving properties files.
@@ -172,6 +182,66 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("true", config2.getString("configuration.loaded"));        
     }
 
+    public void testSaveToHTTPServer() throws Exception
+    {
+        // set up the web server
+        Handler handler = new AbstractHandler()
+        {
+            public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException
+            {
+                File file = new File("." + target);
+
+                if ("GET".equals(request.getMethod())) {
+                    if (file.exists() && file.isFile()) {
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        response.setContentType("text/plain");
+                        FileInputStream in = new FileInputStream(file);
+                        try
+                        {
+                            IO.copy(in, response.getOutputStream());
+                        }
+                        finally
+                        {
+                            in.close();
+                        }
+
+                    } else {
+                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    }
+
+                } else if ("PUT".equals(request.getMethod())) {
+                    FileOutputStream out = new FileOutputStream(file);
+                    try
+                    {
+                        IO.copy(request.getInputStream(), out);
+                    }
+                    finally
+                    {
+                        out.close();
+                    }
+
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+                }
+
+                ((Request) request).setHandled(true);
+            }
+        };
+
+        Server server = new Server(65432);
+        server.setHandler(handler);
+        server.start();
+
+        // save the configuration
+        URL url = new URL("http://localhost:65432/target/testsave-httpput.properties");
+        conf.save(url);
+
+        // reload the configuration
+        Configuration config2 = new PropertiesConfiguration(url);
+        assertEquals("true", config2.getString("configuration.loaded"));        
+    }
+
     public void testInMemoryCreatedSave() throws Exception
     {
         // remove the file previously saved if necessary
@@ -201,10 +271,8 @@ public class TestPropertiesConfiguration extends TestCase
         for (Iterator i = pc.getKeys(); i.hasNext();)
         {
             String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'",
-                    checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property",
-                    pc.getProperty(key), checkConfig.getProperty(key));
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", pc.getProperty(key), checkConfig.getProperty(key));
         }
 
         // Save it again, verifing a save with a filename works.
@@ -349,8 +417,7 @@ public class TestPropertiesConfiguration extends TestCase
         setUpSavedProperties();
         conf.clearProperty("c");
         PropertiesConfiguration checkConfig = checkSavedConfig();
-        assertFalse("The saved configuration contain the key '" + "c" + "'",
-                checkConfig.containsKey("c"));
+        assertFalse("The saved configuration contain the key '" + "c" + "'", checkConfig.containsKey("c"));
     }
 
     /**
@@ -359,8 +426,7 @@ public class TestPropertiesConfiguration extends TestCase
      *
      * @throws IOException if an I/O error occurs
      */
-    private void setUpSavedProperties() throws IOException,
-            ConfigurationException
+    private void setUpSavedProperties() throws IOException, ConfigurationException
     {
         PrintWriter out = null;
 
@@ -400,15 +466,12 @@ public class TestPropertiesConfiguration extends TestCase
     private PropertiesConfiguration checkSavedConfig()
             throws ConfigurationException
     {
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile);
         for (Iterator i = conf.getKeys(); i.hasNext();)
         {
             String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '"
-                    + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", conf
-                    .getProperty(key), checkConfig.getProperty(key));
+            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
+            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
         return checkConfig;
     }
@@ -575,8 +638,7 @@ public class TestPropertiesConfiguration extends TestCase
         String content = out.toString();
         assertTrue("Header could not be found", content.indexOf("# My header"
                 + EOL + EOL) == 0);
-        assertTrue("Property could not be found", content
-                .indexOf("prop = value" + EOL) > 0);
+        assertTrue("Property could not be found", content.indexOf("prop = value" + EOL) > 0);
     }
 
     /**
@@ -619,8 +681,7 @@ public class TestPropertiesConfiguration extends TestCase
         conf.setLayout(layout);
         conf.propertyLoaded("layoutLoadedProperty", "yes");
         assertEquals("Layout's load() was called", 0, layout.loadCalls);
-        assertEquals("Property not added", "yes", conf
-                .getString("layoutLoadedProperty"));
+        assertEquals("Property not added", "yes", conf.getString("layoutLoadedProperty"));
     }
 
     /**
@@ -630,29 +691,23 @@ public class TestPropertiesConfiguration extends TestCase
     {
         DummyLayout layout = new DummyLayout(conf);
         conf.setLayout(layout);
-        conf.propertyLoaded(PropertiesConfiguration.getInclude(),
-                "testClasspath.properties,testEqual.properties");
-        assertEquals("Layout's load() was not correctly called", 2,
-                layout.loadCalls);
-        assertFalse("Property was added", conf
-                .containsKey(PropertiesConfiguration.getInclude()));
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties");
+        assertEquals("Layout's load() was not correctly called", 2, layout.loadCalls);
+        assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
     /**
      * Tests propertyLoaded() for an include property, when includes are
      * disabled.
      */
-    public void testPropertyLoadedIncludeNotAllowed()
-            throws ConfigurationException
+    public void testPropertyLoadedIncludeNotAllowed() throws ConfigurationException
     {
         DummyLayout layout = new DummyLayout(conf);
         conf.setLayout(layout);
         conf.setIncludesAllowed(false);
-        conf.propertyLoaded(PropertiesConfiguration.getInclude(),
-                "testClassPath.properties,testEqual.properties");
+        conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties");
         assertEquals("Layout's load() was called", 0, layout.loadCalls);
-        assertFalse("Property was added", conf
-                .containsKey(PropertiesConfiguration.getInclude()));
+        assertFalse("Property was added", conf.containsKey(PropertiesConfiguration.getInclude()));
     }
 
     /**
@@ -660,16 +715,11 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testIsCommentLine()
     {
-        assertTrue("Comment not detected", PropertiesConfiguration
-                .isCommentLine("# a comment"));
-        assertTrue("Alternative comment not detected", PropertiesConfiguration
-                .isCommentLine("! a comment"));
-        assertTrue("Comment with no space not detected",
-                PropertiesConfiguration.isCommentLine("#a comment"));
-        assertTrue("Comment with leading space not detected",
-                PropertiesConfiguration.isCommentLine("    ! a comment"));
-        assertFalse("Wrong comment", PropertiesConfiguration
-                .isCommentLine("   a#comment"));
+        assertTrue("Comment not detected", PropertiesConfiguration.isCommentLine("# a comment"));
+        assertTrue("Alternative comment not detected", PropertiesConfiguration.isCommentLine("! a comment"));
+        assertTrue("Comment with no space not detected", PropertiesConfiguration.isCommentLine("#a comment"));
+        assertTrue("Comment with leading space not detected", PropertiesConfiguration.isCommentLine("    ! a comment"));
+        assertFalse("Wrong comment", PropertiesConfiguration.isCommentLine("   a#comment"));
     }
 
     /**
@@ -679,22 +729,16 @@ public class TestPropertiesConfiguration extends TestCase
     public void testClone() throws ConfigurationException
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
-        assertNotSame("Copy has same layout object", conf.getLayout(), copy
-                .getLayout());
-        assertEquals("Wrong number of event listeners for original", 1, conf
-                .getConfigurationListeners().size());
-        assertEquals("Wrong number of event listeners for clone", 1, copy
-                .getConfigurationListeners().size());
-        assertSame("Wrong event listener for original", conf.getLayout(), conf
-                .getConfigurationListeners().iterator().next());
-        assertSame("Wrong event listener for clone", copy.getLayout(), copy
-                .getConfigurationListeners().iterator().next());
+        assertNotSame("Copy has same layout object", conf.getLayout(), copy.getLayout());
+        assertEquals("Wrong number of event listeners for original", 1, conf.getConfigurationListeners().size());
+        assertEquals("Wrong number of event listeners for clone", 1, copy.getConfigurationListeners().size());
+        assertSame("Wrong event listener for original", conf.getLayout(), conf.getConfigurationListeners().iterator().next());
+        assertSame("Wrong event listener for clone", copy.getLayout(), copy.getConfigurationListeners().iterator().next());
         StringWriter outConf = new StringWriter();
         conf.save(outConf);
         StringWriter outCopy = new StringWriter();
         copy.save(outCopy);
-        assertEquals("Output from copy is different", outConf.toString(),
-                outCopy.toString());
+        assertEquals("Output from copy is different", outConf.toString(), outCopy.toString());
     }
 
     /**
@@ -704,8 +748,7 @@ public class TestPropertiesConfiguration extends TestCase
     {
         conf = new PropertiesConfiguration();
         PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
-        assertNotSame("Layout objects are the same", conf.getLayout(), copy
-                .getLayout());
+        assertNotSame("Layout objects are the same", conf.getLayout(), copy.getLayout());
     }
 
     /**

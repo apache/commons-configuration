@@ -621,16 +621,13 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         {
             return null;
         }
+        else if (sourceURL != null)
+        {
+            return ConfigurationUtils.fileFromURL(sourceURL);
+        }
         else
         {
-            if (sourceURL != null)
-            {
-                return ConfigurationUtils.fileFromURL(sourceURL);
-            }
-            else
-            {
-                return ConfigurationUtils.getFile(getBasePath(), getFileName());
-            }
+            return ConfigurationUtils.getFile(getBasePath(), getFileName());
         }
     }
 
