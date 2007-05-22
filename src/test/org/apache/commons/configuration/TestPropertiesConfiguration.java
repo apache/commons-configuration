@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -158,6 +159,17 @@ public class TestPropertiesConfiguration extends TestCase
 
         // Save it again, verifing a save with a filename works.
         checkConfig.save();
+    }
+
+    public void testSaveToCustomURL() throws Exception
+    {
+        // save the configuration to a custom URL
+        URL url = new URL("foo", "", 0, "./target/testsave-custom-url.properties", new FileURLStreamHandler());
+        conf.save(url);
+
+        // reload the configuration
+        Configuration config2 = new PropertiesConfiguration(url);
+        assertEquals("true", config2.getString("configuration.loaded"));        
     }
 
     public void testInMemoryCreatedSave() throws Exception
