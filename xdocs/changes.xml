@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-270">
+        List properties and properties containing interpolated variables
+        are now properly saved by INIConfiguration.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-268">
         When delimiter parsing was disabled for XMLConfiguration, saving and
         loading the configuration accidently added escape characters to properties

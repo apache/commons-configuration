@@ -24,6 +24,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -57,7 +58,7 @@ import org.apache.commons.lang.StringUtils;
  * </code>
  *
  * <p>
- * The format of ini files is fairly straight forward and is comosed of three
+ * The format of ini files is fairly straight forward and is composed of three
  * components:<br>
  * <ul>
  * <li><b>Sections:</b> Ini files are split into sections, each section
@@ -223,32 +224,44 @@ public class INIConfiguration extends AbstractFileConfiguration
      */
     public void save(Writer writer) throws ConfigurationException
     {
-        PrintWriter pw = new PrintWriter(writer);
+        PrintWriter out = new PrintWriter(writer);
         Iterator it = getSections().iterator();
         while (it.hasNext())
         {
             String section = (String) it.next();
-            pw.print("[");
-            pw.print(section);
-            pw.print("]");
-            pw.println();
+            out.print("[");
+            out.print(section);
+            out.print("]");
+            out.println();
 
-            Configuration values = subset(section);
-            Iterator keys = values.getKeys();
+            Configuration subset = subset(section);
+            Iterator keys = subset.getKeys();
             while (keys.hasNext())
             {
                 String key = (String) keys.next();
-                String value = values.getString(key);
-                pw.print(key);
-                pw.print(" = ");
-                pw.print(formatValue(value));
-                pw.println();
+                Object value = subset.getProperty(key);
+                if (value instanceof Collection) {
+                    Iterator values = ((Collection) value).iterator();
+                    while (values.hasNext())
+                    {
+                        value = (Object) values.next();
+                        out.print(key);
+                        out.print(" = ");
+                        out.print(formatValue(value.toString()));
+                        out.println();
+                    }
+                } else {
+                    out.print(key);
+                    out.print(" = ");
+                    out.print(formatValue(value.toString()));
+                    out.println();
+                }
             }
 
-            pw.println();
+            out.println();
         }
 
-        pw.flush();
+        out.flush();
     }
 
     /**

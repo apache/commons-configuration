@@ -42,14 +42,17 @@ public class TestINIConfiguration extends TestCase
             "[section1]" + LINE_SEPARATOR
             + "var1 = foo" + LINE_SEPARATOR
             + "var2 = 451" + LINE_SEPARATOR
-             + LINE_SEPARATOR
+            + LINE_SEPARATOR
             + "[section2]" + LINE_SEPARATOR
             + "var1 = 123.45" + LINE_SEPARATOR
             + "var2 = bar" + LINE_SEPARATOR
-             + LINE_SEPARATOR
+            + LINE_SEPARATOR
             + "[section3]" + LINE_SEPARATOR
             + "var1 = true" + LINE_SEPARATOR
-             + LINE_SEPARATOR;
+            + "interpolated = ${section3.var1}" + LINE_SEPARATOR
+            + "multi = foo" + LINE_SEPARATOR
+            + "multi = bar" + LINE_SEPARATOR
+            + LINE_SEPARATOR;
 
 	private static final String INI_DATA2 =
             "[section4]" + LINE_SEPARATOR
@@ -71,6 +74,9 @@ public class TestINIConfiguration extends TestCase
 		instance.addProperty("section2.var1", "123.45");
 		instance.addProperty("section2.var2", "bar");
 		instance.addProperty("section3.var1", "true");
+		instance.addProperty("section3.interpolated", "${section3.var1}");
+		instance.addProperty("section3.multi", "foo");
+		instance.addProperty("section3.multi", "bar");
 		instance.save(writer);
         
         assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
