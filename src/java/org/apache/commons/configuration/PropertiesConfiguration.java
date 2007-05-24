@@ -930,9 +930,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         private String escapeValue(Object value)
         {
-            String v = StringEscapeUtils.escapeJava(String.valueOf(value));
-            return StringUtils.replace(v, String.valueOf(delimiter), "\\"
-                    + delimiter);
+            String escapedValue = StringEscapeUtils.escapeJava(String.valueOf(value));
+            if (delimiter != 0)
+            {
+                escapedValue = StringUtils.replace(escapedValue, String.valueOf(delimiter), "\\" + delimiter);
+            }
+            return escapedValue;
         }
 
         /**

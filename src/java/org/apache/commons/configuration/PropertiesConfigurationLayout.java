@@ -348,7 +348,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * Sets the &quot;force single line&quot; flag. If this flag is set, all
      * properties with multiple values are written on single lines. This mode
      * provides more compatibility with <code>java.lang.Properties</code>,
-     * which cannot deal with multiple definitions of a single property.
+     * which cannot deal with multiple definitions of a single property. This
+     * mode has no effect if the list delimiter parsing is disabled.
      *
      * @param f the force single line flag
      */
@@ -442,8 +443,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         try
         {
-            PropertiesConfiguration.PropertiesWriter writer = new PropertiesConfiguration.PropertiesWriter(
-                    out, getConfiguration().getListDelimiter());
+            char delimiter = getConfiguration().isDelimiterParsingDisabled() ? 0 : getConfiguration().getListDelimiter();
+            PropertiesConfiguration.PropertiesWriter writer = new PropertiesConfiguration.PropertiesWriter(out, delimiter);
             if (headerComment != null)
             {
                 writer.writeln(getCanonicalHeaderComment(true));
@@ -469,8 +470,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     }
 
                     // Output the property and its value
-                    writer.writeProperty(key, getConfiguration().getProperty(
-                            key), isForceSingleLine() || isSingleLine(key));
+                    boolean singleLine = (isForceSingleLine() || isSingleLine(key)) && !getConfiguration().isDelimiterParsingDisabled();
+                    writer.writeProperty(key, getConfiguration().getProperty(key), singleLine);
                 }
             }
             writer.flush();

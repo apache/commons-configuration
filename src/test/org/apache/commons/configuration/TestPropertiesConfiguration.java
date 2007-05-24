@@ -160,12 +160,7 @@ public class TestPropertiesConfiguration extends TestCase
 
         // read the configuration and compare the properties
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
-        for (Iterator i = conf.getKeys(); i.hasNext();)
-        {
-            String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
-        }
+        ConfigurationAssert.assertEquals(conf, checkConfig);
 
         // Save it again, verifing a save with a filename works.
         checkConfig.save();
@@ -268,15 +263,33 @@ public class TestPropertiesConfiguration extends TestCase
 
         // read the configuration and compare the properties
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
-        for (Iterator i = pc.getKeys(); i.hasNext();)
-        {
-            String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", pc.getProperty(key), checkConfig.getProperty(key));
-        }
+        ConfigurationAssert.assertEquals(pc, checkConfig);
 
         // Save it again, verifing a save with a filename works.
         checkConfig.save();
+    }
+
+    /**
+     * Tests saving a configuration when delimiter parsing is disabled.
+     */
+    public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException
+    {
+        conf.clear();
+        conf.setDelimiterParsingDisabled(true);
+        conf.addProperty("test.list", "a,b,c");
+        conf.addProperty("test.dirs", "C:\\Temp\\,D:\\Data\\");
+        // remove the file previously saved if necessary
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue(testSavePropertiesFile.delete());
+        }
+        conf.save(testSavePropertiesFile);
+
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setDelimiterParsingDisabled(true);
+        checkConfig.setFile(testSavePropertiesFile);
+        checkConfig.load();
+        ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
     public void testSaveMissingFilename()

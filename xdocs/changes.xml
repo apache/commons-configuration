@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-269">
+        PropertiesConfiguration no longer escape the list delimiter on saving
+        if the list delimiter has been disabled.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-270">
         List properties and properties containing interpolated variables
         are now properly saved by INIConfiguration.
