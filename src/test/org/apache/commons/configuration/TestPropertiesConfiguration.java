@@ -174,7 +174,7 @@ public class TestPropertiesConfiguration extends TestCase
 
         // reload the configuration
         Configuration config2 = new PropertiesConfiguration(url);
-        assertEquals("true", config2.getString("configuration.loaded"));        
+        assertEquals("true", config2.getString("configuration.loaded"));
     }
 
     public void testSaveToHTTPServer() throws Exception
@@ -234,7 +234,7 @@ public class TestPropertiesConfiguration extends TestCase
 
         // reload the configuration
         Configuration config2 = new PropertiesConfiguration(url);
-        assertEquals("true", config2.getString("configuration.loaded"));        
+        assertEquals("true", config2.getString("configuration.loaded"));
     }
 
     public void testInMemoryCreatedSave() throws Exception
@@ -323,6 +323,27 @@ public class TestPropertiesConfiguration extends TestCase
         conf.setFileName(testSavePropertiesFile.getName());
         conf.save();
         assertTrue(testSavePropertiesFile.exists());
+    }
+
+    /**
+     * Tests whether the escape character for list delimiters can be itself
+     * escaped and survives a save operation.
+     */
+    public void testSaveEscapedEscapingCharacter()
+            throws ConfigurationException
+    {
+        conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
+        List dirs = conf.getList("test.dirs");
+        assertEquals("Wrong number of list elements", 3, dirs.size());
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue(testSavePropertiesFile.delete());
+        }
+        conf.save(testSavePropertiesFile);
+
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
     public void testLoadViaProperty() throws Exception

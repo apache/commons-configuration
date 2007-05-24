@@ -185,6 +185,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+    /** Constant for the escaping character.*/
+    private static final String ESCAPE = "\\";
+
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
@@ -933,7 +936,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             String escapedValue = StringEscapeUtils.escapeJava(String.valueOf(value));
             if (delimiter != 0)
             {
-                escapedValue = StringUtils.replace(escapedValue, String.valueOf(delimiter), "\\" + delimiter);
+                escapedValue = StringUtils.replace(escapedValue, String.valueOf(delimiter), ESCAPE + delimiter);
             }
             return escapedValue;
         }
@@ -950,11 +953,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             if (!values.isEmpty())
             {
                 Iterator it = values.iterator();
-                StringBuffer buf = new StringBuffer(escapeValue(it.next()));
+                String lastValue = escapeValue(it.next());
+                StringBuffer buf = new StringBuffer(lastValue);
                 while (it.hasNext())
                 {
+                    // if the last value ended with an escape character, it has
+                    // to be escaped itself; otherwise the list delimiter will
+                    // be escaped
+                    if (lastValue.endsWith(ESCAPE))
+                    {
+                        buf.append(ESCAPE).append(ESCAPE);
+                    }
                     buf.append(delimiter);
-                    buf.append(escapeValue(it.next()));
+                    lastValue = escapeValue(it.next());
+                    buf.append(lastValue);
                 }
                 return buf.toString();
             }

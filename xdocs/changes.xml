@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-274">
+        PropertiesConfiguration now supports escaping the escape character for
+        list delimiters.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-269">
         PropertiesConfiguration no longer escape the list delimiter on saving
         if the list delimiter has been disabled.
