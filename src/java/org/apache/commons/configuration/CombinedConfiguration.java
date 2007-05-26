@@ -512,6 +512,59 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     }
 
     /**
+     * Returns the configuration source, in which the specified key is defined.
+     * This method will determine the configuration node that is identified by
+     * the given key. The following constellations are possible:
+     * <ul>
+     * <li>If no node object is found for this key, <b>null</b> is returned.</li>
+     * <li>If the key maps to multiple nodes belonging to different
+     * configuration sources, a <code>IllegalArgumentException</code> is
+     * thrown (in this case no unique source can be determined).</li>
+     * <li>If exactly one node is found for the key, the (child) configuration
+     * object, to which the node belongs is determined and returned.</li>
+     * <li>For keys that have been added directly to this combined
+     * configuration and that do not belong to the namespaces defined by
+     * existing child configurations this configuration will be returned.</li>
+     * </ul>
+     *
+     * @param key the key of a configuration property
+     * @return the configuration, to which this property belongs or <b>null</b>
+     * if the key cannot be resolved
+     * @throws IllegalArgumentException if the key maps to multiple properties
+     * and the source cannot be determined, or if the key is <b>null</b>
+     * @since 1.5
+     */
+    public Configuration getSource(String key)
+    {
+        if (key == null)
+        {
+            throw new IllegalArgumentException("Key must not be null!");
+        }
+
+        List nodes = fetchNodeList(key);
+        if (nodes.isEmpty())
+        {
+            return null;
+        }
+
+        Iterator it = nodes.iterator();
+        Configuration source = findSourceConfiguration((ConfigurationNode) it
+                .next());
+        while (it.hasNext())
+        {
+            Configuration src = findSourceConfiguration((ConfigurationNode) it
+                    .next());
+            if (src != source)
+            {
+                throw new IllegalArgumentException("The key " + key
+                        + " is defined by multiple sources!");
+            }
+        }
+
+        return source;
+    }
+
+    /**
      * Creates the root node of this combined configuration.
      *
      * @return the combined root node
@@ -538,6 +591,37 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     }
 
     /**
+     * Determines the configuration that owns the specified node.
+     *
+     * @param node the node
+     * @return the owning configuration
+     */
+    private Configuration findSourceConfiguration(ConfigurationNode node)
+    {
+        ConfigurationNode root = null;
+        ConfigurationNode current = node;
+
+        // find the root node in this hierarchy
+        while (current != null)
+        {
+            root = current;
+            current = current.getParentNode();
+        }
+
+        // Check with the root nodes of the child configurations
+        for (Iterator it = configurations.iterator(); it.hasNext();)
+        {
+            ConfigData cd = (ConfigData) it.next();
+            if (root == cd.getRootNode())
+            {
+                return cd.getConfiguration();
+            }
+        }
+
+        return this;
+    }
+
+    /**
      * An internal helper class for storing information about contained
      * configurations.
      */
@@ -554,6 +638,9 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
 
         /** Stores the at string.*/
         private String at;
+
+        /** Stores the root node for this child configuration.*/
+        private ConfigurationNode rootNode;
 
         /**
          * Creates a new instance of <code>ConfigData</code> and initializes
@@ -602,6 +689,17 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         }
 
         /**
+         * Returns the root node for this child configuration.
+         *
+         * @return the root node of this child configuration
+         * @since 1.5
+         */
+        public ConfigurationNode getRootNode()
+        {
+            return rootNode;
+        }
+
+        /**
          * Returns the transformed root node of the stored configuration. The
          * term &quot;transformed&quot; means that an eventually defined at path
          * has been applied.
@@ -630,6 +728,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
                     .convertToHierarchical(getConfiguration());
             atParent.appendChildren(hc.getRootNode());
             atParent.appendAttributes(hc.getRootNode());
+            rootNode = hc.getRootNode();
 
             return result;
         }

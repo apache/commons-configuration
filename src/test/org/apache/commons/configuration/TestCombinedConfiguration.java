@@ -45,6 +45,12 @@ public class TestCombinedConfiguration extends TestCase
     /** Constant for a test key. */
     static final String TEST_KEY = "test.value";
 
+    /** Constant for the name of the first child configuration.*/
+    static final String CHILD1 = TEST_NAME + "1";
+
+    /** Constant for the name of the second child configuration.*/
+    static final String CHILD2 = TEST_NAME + "2";
+
     /** The configuration to be tested. */
     CombinedConfiguration config;
 
@@ -441,6 +447,115 @@ public class TestCombinedConfiguration extends TestCase
 
         assertTrue("XML file cannot be removed", testXmlFile.delete());
         assertTrue("Props file cannot be removed", testPropsFile.delete());
+    }
+
+    /**
+     * Prepares a test of the getSource() method.
+     */
+    private void setUpSourceTest()
+    {
+        HierarchicalConfiguration c1 = new HierarchicalConfiguration();
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        c1.addProperty(TEST_KEY, TEST_NAME);
+        c2.addProperty("another.key", "test");
+        config.addConfiguration(c1, CHILD1);
+        config.addConfiguration(c2, CHILD2);
+    }
+
+    /**
+     * Tests the gestSource() method when the source property is defined in a
+     * hierarchical configuration.
+     */
+    public void testGetSourceHierarchical()
+    {
+        setUpSourceTest();
+        assertEquals("Wrong source configuration", config
+                .getConfiguration(CHILD1), config.getSource(TEST_KEY));
+    }
+
+    /**
+     * Tests whether the source configuration can be detected for non
+     * hierarchical configurations.
+     */
+    public void testGetSourceNonHierarchical()
+    {
+        setUpSourceTest();
+        assertEquals("Wrong source configuration", config
+                .getConfiguration(CHILD2), config.getSource("another.key"));
+    }
+
+    /**
+     * Tests the getSource() method when the passed in key is not contained.
+     * Result should be null in this case.
+     */
+    public void testGetSourceUnknown()
+    {
+        setUpSourceTest();
+        assertNull("Wrong result for unknown key", config
+                .getSource("an.unknown.key"));
+    }
+
+    /**
+     * Tests the getSource() method when a null key is passed in. This should
+     * cause an exception.
+     */
+    public void testGetSourceNull()
+    {
+        try
+        {
+            config.getSource(null);
+            fail("Could resolve source for null key!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests the getSource() method when the passed in key belongs to the
+     * combined configuration itself.
+     */
+    public void testGetSourceCombined()
+    {
+        setUpSourceTest();
+        final String key = "yet.another.key";
+        config.addProperty(key, Boolean.TRUE);
+        assertEquals("Wrong source for key", config, config.getSource(key));
+    }
+
+    /**
+     * Tests the getSource() method when the passed in key refers to multiple
+     * values, which are all defined in the same source configuration.
+     */
+    public void testGetSourceMulti()
+    {
+        setUpSourceTest();
+        final String key = "list.key";
+        config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
+        assertEquals("Wrong source for multi-value property", config
+                .getConfiguration(CHILD1), config.getSource(key));
+    }
+
+    /**
+     * Tests the getSource() method when the passed in key refers to multiple
+     * values defined by different sources. This should cause an exception.
+     */
+    public void testGetSourceMultiSources()
+    {
+        setUpSourceTest();
+        final String key = "list.key";
+        config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
+        config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
+        try
+        {
+            config.getSource(key);
+            fail("Multiple sources not detected!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            //ok
+        }
     }
 
     /**
