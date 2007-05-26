@@ -421,4 +421,52 @@ implements Cloneable
                 .setListDelimiter(listDelimiter);
         super.setListDelimiter(listDelimiter);
     }
+
+    /**
+     * Returns the configuration source, in which the specified key is defined.
+     * This method will iterate over all existing child configurations and check
+     * whether they contain the specified key. The following constellations are
+     * possible:
+     * <ul>
+     * <li>If exactly one child configuration contains the key, this
+     * configuration is returned as the source configuration. This may be the
+     * <em>in memory configuration</em> (this has to be explicitly checked by
+     * the calling application).</li>
+     * <li>If none of the child configurations contain the key, <b>null</b> is
+     * returned.</li>
+     * <li>If the key is contained in multiple child configurations or if the
+     * key is <b>null</b>, a <code>IllegalArgumentException</code> is thrown.
+     * In this case the source configuration cannot be determined.</li>
+     * </ul>
+     *
+     * @param key the key to be checked
+     * @return the source configuration of this key
+     * @throws IllegalArgumentException if the source configuration cannot be
+     * determined
+     * @since 1.5
+     */
+    public Configuration getSource(String key)
+    {
+        if (key == null)
+        {
+            throw new IllegalArgumentException("Key must not be null!");
+        }
+
+        Configuration source = null;
+        for (Iterator it = configList.iterator(); it.hasNext();)
+        {
+            Configuration conf = (Configuration) it.next();
+            if (conf.containsKey(key))
+            {
+                if (source != null)
+                {
+                    throw new IllegalArgumentException("The key " + key
+                            + " is defined by multiple sources!");
+                }
+                source = conf;
+            }
+        }
+
+        return source;
+    }
 }

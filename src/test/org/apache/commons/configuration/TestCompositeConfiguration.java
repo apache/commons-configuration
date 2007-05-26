@@ -40,6 +40,9 @@ import junit.framework.TestCase;
  */
 public class TestCompositeConfiguration extends TestCase
 {
+    /** Constant for a test property to be checked.*/
+    private static final String TEST_PROPERTY = "test.source.property";
+
     protected PropertiesConfiguration conf1;
     protected PropertiesConfiguration conf2;
     protected XMLConfiguration xmlConf;
@@ -504,7 +507,7 @@ public class TestCompositeConfiguration extends TestCase
 
     /**
      * Writes a test properties file containing a single property definition.
-     * 
+     *
      * @param f the file to write
      * @param prop the property name
      * @param value the property value
@@ -681,6 +684,85 @@ public class TestCompositeConfiguration extends TestCase
         cc.addProperty("test.property", "a,b,c");
         assertEquals("Wrong value of property", "a,b,c", cc
                 .getString("test.property"));
+    }
+
+    /**
+     * Prepares a test of the getSource() method.
+     */
+    private void setUpSourceTest()
+    {
+        cc.addConfiguration(conf1);
+        cc.addConfiguration(conf2);
+    }
+
+    /**
+     * Tests the getSource() method if the property is defined in a single child
+     * configuration.
+     */
+    public void testGetSourceSingle()
+    {
+        setUpSourceTest();
+        conf1.addProperty(TEST_PROPERTY, Boolean.TRUE);
+        assertSame("Wrong source configuration", conf1, cc
+                .getSource(TEST_PROPERTY));
+    }
+
+    /**
+     * Tests the getSource() method for an unknown property key.
+     */
+    public void testGetSourceUnknown()
+    {
+        setUpSourceTest();
+        assertNull("Wrong source for unknown key", cc.getSource(TEST_PROPERTY));
+    }
+
+    /**
+     * Tests the getSource() method for a property contained in the in memory
+     * configuration.
+     */
+    public void testGetSourceInMemory()
+    {
+        setUpSourceTest();
+        cc.addProperty(TEST_PROPERTY, Boolean.TRUE);
+        assertSame("Source not found in in-memory config", cc
+                .getInMemoryConfiguration(), cc.getSource(TEST_PROPERTY));
+    }
+
+    /**
+     * Tests the getSource() method if the property is defined by multiple child
+     * configurations. In this case an exception should be thrown.
+     */
+    public void testGetSourceMultiple()
+    {
+        setUpSourceTest();
+        conf1.addProperty(TEST_PROPERTY, Boolean.TRUE);
+        cc.addProperty(TEST_PROPERTY, "a value");
+        try
+        {
+            cc.getSource(TEST_PROPERTY);
+            fail("Property in multiple configurations did not cause an error!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests the getSource() method for a null key. This should cause an
+     * exception.
+     */
+    public void testGetSourceNull()
+    {
+        try
+        {
+            cc.getSource(null);
+            fail("Could pass null key to getSource()!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
     }
 
     /**

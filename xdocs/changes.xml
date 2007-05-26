@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-215">
+        A new getSource() method was added to CompositeConfiguration and
+        CombinedConfiguration, which returns the child configuration, in which
+        a given property is defined.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-274">
         PropertiesConfiguration now supports escaping the escape character for
         list delimiters.
