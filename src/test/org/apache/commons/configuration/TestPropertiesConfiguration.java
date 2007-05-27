@@ -18,30 +18,25 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.Request;
-import org.mortbay.jetty.Server;
-import org.mortbay.jetty.handler.AbstractHandler;
-import org.mortbay.util.IO;
 
 /**
  * Test for loading and saving properties files.
@@ -170,66 +165,6 @@ public class TestPropertiesConfiguration extends TestCase
     {
         // save the configuration to a custom URL
         URL url = new URL("foo", "", 0, "./target/testsave-custom-url.properties", new FileURLStreamHandler());
-        conf.save(url);
-
-        // reload the configuration
-        Configuration config2 = new PropertiesConfiguration(url);
-        assertEquals("true", config2.getString("configuration.loaded"));
-    }
-
-    public void testSaveToHTTPServer() throws Exception
-    {
-        // set up the web server
-        Handler handler = new AbstractHandler()
-        {
-            public void handle(String target, HttpServletRequest request, HttpServletResponse response, int dispatch) throws IOException, ServletException
-            {
-                File file = new File("." + target);
-
-                if ("GET".equals(request.getMethod())) {
-                    if (file.exists() && file.isFile()) {
-                        response.setStatus(HttpServletResponse.SC_OK);
-                        response.setContentType("text/plain");
-                        FileInputStream in = new FileInputStream(file);
-                        try
-                        {
-                            IO.copy(in, response.getOutputStream());
-                        }
-                        finally
-                        {
-                            in.close();
-                        }
-
-                    } else {
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                    }
-
-                } else if ("PUT".equals(request.getMethod())) {
-                    FileOutputStream out = new FileOutputStream(file);
-                    try
-                    {
-                        IO.copy(request.getInputStream(), out);
-                    }
-                    finally
-                    {
-                        out.close();
-                    }
-
-                    response.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-                }
-
-                ((Request) request).setHandled(true);
-            }
-        };
-
-        Server server = new Server(65432);
-        server.setHandler(handler);
-        server.start();
-
-        // save the configuration
-        URL url = new URL("http://localhost:65432/target/testsave-httpput.properties");
         conf.save(url);
 
         // reload the configuration
@@ -786,6 +721,51 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests saving a file-based configuration to a HTTP server.
+     */
+    public void testSaveToHTTPServerSuccess() throws Exception
+    {
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue("Could not delete test file", testSavePropertiesFile
+                    .delete());
+        }
+
+        MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
+                HttpURLConnection.HTTP_OK, testSavePropertiesFile);
+        URL url = new URL(null, "http://jakarta.apache.org", handler);
+        conf.save(url);
+        MockHttpURLConnection con = handler.getMockConnection();
+        assertTrue("Wrong output flag", con.getDoOutput());
+        assertEquals("Wrong method", "PUT", con.getRequestMethod());
+
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        ConfigurationAssert.assertEquals(conf, checkConfig);
+    }
+
+    /**
+     * Tests saving a file-based configuration to a HTTP server when the server
+     * reports a failure. This should cause an exception.
+     */
+    public void testSaveToHTTPServerFail() throws Exception
+    {
+        MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
+                HttpURLConnection.HTTP_BAD_REQUEST, testSavePropertiesFile);
+        URL url = new URL(null, "http://jakarta.apache.org", handler);
+        try
+        {
+            conf.save(url);
+            fail("Response code was not checked!");
+        }
+        catch (ConfigurationException cex)
+        {
+            assertTrue("Wrong root cause: " + cex,
+                    cex.getCause() instanceof IOException);
+        }
+    }
+
+    /**
      * A dummy layout implementation for checking whether certain methods are
      * correctly called by the configuration.
      */
@@ -802,6 +782,81 @@ public class TestPropertiesConfiguration extends TestCase
         public void load(Reader in) throws ConfigurationException
         {
             loadCalls++;
+        }
+    }
+
+    /**
+     * A mock implementation of a HttpURLConnection used for testing saving to
+     * a HTTP server.
+     */
+    static class MockHttpURLConnection extends HttpURLConnection
+    {
+        /** The response code to return.*/
+        private int responseCode;
+
+        /** The output file. The output stream will point to this file.*/
+        private File outputFile;
+
+        protected MockHttpURLConnection(URL u, int respCode, File outFile)
+        {
+            super(u);
+            responseCode = respCode;
+            outputFile = outFile;
+        }
+
+        public void disconnect()
+        {
+        }
+
+        public boolean usingProxy()
+        {
+            return false;
+        }
+
+        public void connect() throws IOException
+        {
+        }
+
+        public int getResponseCode() throws IOException
+        {
+            return responseCode;
+        }
+
+        public OutputStream getOutputStream() throws IOException
+        {
+            return new FileOutputStream(outputFile);
+        }
+    }
+
+    /**
+     * A mock stream handler for working with the mock HttpURLConnection.
+     */
+    static class MockHttpURLStreamHandler extends URLStreamHandler
+    {
+        /** Stores the response code.*/
+        private int responseCode;
+
+        /** Stores the output file.*/
+        private File outputFile;
+
+        /** Stores the connection.*/
+        private MockHttpURLConnection connection;
+
+        public MockHttpURLStreamHandler(int respCode, File outFile)
+        {
+            responseCode = respCode;
+            outputFile = outFile;
+        }
+
+        public MockHttpURLConnection getMockConnection()
+        {
+            return connection;
+        }
+
+        protected URLConnection openConnection(URL u) throws IOException
+        {
+            connection = new MockHttpURLConnection(u, responseCode, outputFile);
+            return connection;
         }
     }
 }

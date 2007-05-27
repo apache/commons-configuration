@@ -457,7 +457,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                throw new ConfigurationException("Could not save to URL " + url + " : " + e.getMessage());
+                throw new ConfigurationException("Could not save to URL " + url, e);
             }
         }
     }

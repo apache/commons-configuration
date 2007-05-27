@@ -417,24 +417,6 @@
       </properties>
     </dependency>
 
-    <dependency>
-      <groupId>jetty</groupId>
-      <artifactId>jetty</artifactId>
-      <version>6.0.2</version>
-      <properties>
-        <scope>test</scope>
-      </properties>
-    </dependency>
-
-    <dependency>
-      <groupId>jetty</groupId>
-      <artifactId>jetty-util</artifactId>
-      <version>6.0.2</version>
-      <properties>
-        <scope>test</scope>
-      </properties>
-    </dependency>
-
     <!-- Plugins -->
 
     <dependency>
