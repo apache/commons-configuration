@@ -431,6 +431,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         else
         {
             // for non file URLs save through an URLConnection
+            OutputStream out = null;
             try
             {
                 URLConnection connection = url.openConnection();
@@ -443,7 +444,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                     conn.setRequestMethod("PUT");
                 }
 
-                save(connection.getOutputStream());
+                out = connection.getOutputStream();
+                save(out);
 
                 // check the response code for http URLs and throw an exception if an error occured
                 if (connection instanceof HttpURLConnection)
@@ -458,6 +460,10 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             catch (IOException e)
             {
                 throw new ConfigurationException("Could not save to URL " + url, e);
+            }
+            finally
+            {
+                closeSilent(out);
             }
         }
     }
@@ -488,18 +494,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         finally
         {
-            // close the output stream
-            try
-            {
-                if (out != null)
-                {
-                    out.close();
-                }
-            }
-            catch (IOException e)
-            {
-                getLogger().warn("Could not close output stream", e);
-            }
+            closeSilent(out);
         }
     }
 
@@ -999,5 +994,27 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     private void initReloadingStrategy()
     {
         setReloadingStrategy(new InvariantReloadingStrategy());
+    }
+
+    /**
+     * A helper method for closing an output stream. Occurring exceptions will
+     * be ignored.
+     *
+     * @param out the output stream to be closed (may be <b>null</b>)
+     * @since 1.5
+     */
+    private void closeSilent(OutputStream out)
+    {
+        try
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+        }
+        catch (IOException e)
+        {
+            getLogger().warn("Could not close output stream", e);
+        }
     }
 }
