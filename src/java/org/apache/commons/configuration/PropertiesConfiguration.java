@@ -232,7 +232,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /**
      * Creates and loads the extended properties from the specified file.
      * The specified file can contain "include = " properties which then
-     * are loaded and merged into the properties.
+     * are loaded and merged into the properties. If the file does not exist,
+     * an empty configuration will be created. Later the <code>save()</code>
+     * method can be called to save the properties to the specified file.
      *
      * @param file The properties file to load.
      * @throws ConfigurationException Error while loading the properties file
@@ -240,6 +242,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public PropertiesConfiguration(File file) throws ConfigurationException
     {
         super(file);
+
+        // If the file does not exist, no layout object was created. We have to
+        // do this manually in this case.
+        if (layout == null)
+        {
+            layout = createLayout();
+        }
     }
 
     /**

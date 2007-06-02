@@ -57,6 +57,13 @@ public class TestPropertiesConfiguration extends TestCase
     protected void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
+
+        // remove the test save file if it exists
+        if (testSavePropertiesFile.exists())
+        {
+            assertTrue("Test output file could not be deleted",
+                    testSavePropertiesFile.delete());
+        }
     }
 
     public void testLoad() throws Exception
@@ -132,12 +139,6 @@ public class TestPropertiesConfiguration extends TestCase
 
     public void testSave() throws Exception
     {
-        // remove the file previously saved if necessary
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue(testSavePropertiesFile.delete());
-        }
-
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
         List list = new ArrayList();
@@ -174,12 +175,6 @@ public class TestPropertiesConfiguration extends TestCase
 
     public void testInMemoryCreatedSave() throws Exception
     {
-        // remove the file previously saved if necessary
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue(testSavePropertiesFile.delete());
-        }
-
         PropertiesConfiguration pc = new PropertiesConfiguration();
         // add an array of strings to the configuration
         pc.addProperty("string", "value1");
@@ -213,11 +208,6 @@ public class TestPropertiesConfiguration extends TestCase
         conf.setDelimiterParsingDisabled(true);
         conf.addProperty("test.list", "a,b,c");
         conf.addProperty("test.dirs", "C:\\Temp\\,D:\\Data\\");
-        // remove the file previously saved if necessary
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue(testSavePropertiesFile.delete());
-        }
         conf.save(testSavePropertiesFile);
 
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
@@ -247,12 +237,6 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testSaveWithBasePath() throws Exception
     {
-        // remove the file previously saved if necessary
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue(testSavePropertiesFile.delete());
-        }
-
         conf.setProperty("test", "true");
         conf.setBasePath(testSavePropertiesFile.getParentFile().toURL().toString());
         conf.setFileName(testSavePropertiesFile.getName());
@@ -270,10 +254,6 @@ public class TestPropertiesConfiguration extends TestCase
         conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
         List dirs = conf.getList("test.dirs");
         assertEquals("Wrong number of list elements", 3, dirs.size());
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue(testSavePropertiesFile.delete());
-        }
         conf.save(testSavePropertiesFile);
 
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(
@@ -725,12 +705,6 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testSaveToHTTPServerSuccess() throws Exception
     {
-        if (testSavePropertiesFile.exists())
-        {
-            assertTrue("Could not delete test file", testSavePropertiesFile
-                    .delete());
-        }
-
         MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
                 HttpURLConnection.HTTP_OK, testSavePropertiesFile);
         URL url = new URL(null, "http://jakarta.apache.org", handler);
@@ -763,6 +737,23 @@ public class TestPropertiesConfiguration extends TestCase
             assertTrue("Wrong root cause: " + cex,
                     cex.getCause() instanceof IOException);
         }
+    }
+
+    /**
+     * Tests initializing a properties configuration from a non existing file.
+     * There was a bug, which caused properties getting lost when later save()
+     * is called.
+     */
+    public void testInitFromNonExistingFile() throws ConfigurationException
+    {
+        final String testProperty = "test.successfull";
+        conf = new PropertiesConfiguration(testSavePropertiesFile);
+        conf.addProperty(testProperty, Boolean.TRUE);
+        conf.save();
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        assertTrue("Test property not found", checkConfig
+                .getBoolean(testProperty));
     }
 
     /**

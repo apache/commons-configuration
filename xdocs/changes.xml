@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-279">
+        A PropertiesConfiguration that was created from a non existing file
+        lost its content when it was saved. This problem has been solved.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-215">
         A new getSource() method was added to CompositeConfiguration and
         CombinedConfiguration, which returns the child configuration, in which
