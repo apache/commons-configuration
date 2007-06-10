@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-280"
+        due-to="Roman Kurmanowytsch">
+        Using file-based configurations in auto-save mode together with a
+        reloading strategy could cause data loss. This has been fixed.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-279">
         A PropertiesConfiguration that was created from a non existing file
         lost its content when it was saved. This problem has been solved.

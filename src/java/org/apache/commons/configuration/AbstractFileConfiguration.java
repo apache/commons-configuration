@@ -827,6 +827,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                         }
                         fireEvent(EVENT_RELOAD, null, getURL(), true);
                         setDetailEvents(false);
+                        boolean autoSaveBak = this.isAutoSave(); // save the current state
+                        this.setAutoSave(false); // deactivate autoSave to prevent information loss
                         try
                         {
                             clear();
@@ -834,6 +836,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
                         }
                         finally
                         {
+                            this.setAutoSave(autoSaveBak); // set autoSave to previous value
                             setDetailEvents(true);
                         }
                         fireEvent(EVENT_RELOAD, null, getURL(), false);

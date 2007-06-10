@@ -263,7 +263,7 @@ public class TestXMLConfiguration extends TestCase
         // set a new attribute
         conf.setProperty("foo[@bar]", "value");
         assertEquals("foo[@bar]", "value", conf.getProperty("foo[@bar]"));
-        
+
         conf.setProperty("name1","value1");
         assertEquals("value1",conf.getProperty("name1"));
     }
@@ -352,11 +352,11 @@ public class TestXMLConfiguration extends TestCase
         assertTrue(conf.isEmpty());
         conf.addProperty("test", "yes");
         conf.save();
-        
+
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("yes", conf.getString("test"));
     }
-    
+
     /**
      * Tests loading a configuration from a URL.
      */
@@ -367,7 +367,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value", conf.getProperty("element"));
         assertEquals(url, conf.getURL());
     }
-    
+
     /**
      * Tests loading from a stream.
      */
@@ -377,12 +377,12 @@ public class TestXMLConfiguration extends TestCase
         conf = new XMLConfiguration();
         conf.load(new ByteArrayInputStream(xml.getBytes()));
         assertEquals(1, conf.getInt("test"));
-        
+
         conf = new XMLConfiguration();
         conf.load(new ByteArrayInputStream(xml.getBytes()), "UTF8");
         assertEquals(1, conf.getInt("test"));
     }
-    
+
     /**
      * Tests loading a non well formed XML from a string.
      */
@@ -439,7 +439,7 @@ public class TestXMLConfiguration extends TestCase
         {
            conf.addProperty("test.attribute[@array]", "value" + i);
         }
-        
+
         // add comma delimited lists with escaped delimiters
         conf.addProperty("split.list5", "a\\,b\\,c");
         conf.setProperty("element3", "value\\,value1\\,value2");
@@ -453,7 +453,7 @@ public class TestXMLConfiguration extends TestCase
         checkConfig.setFileName(testSaveConf.getAbsolutePath());
         checkSavedConfig(checkConfig);
     }
-    
+
     /**
      * Tests saving to a URL.
      */
@@ -464,7 +464,7 @@ public class TestXMLConfiguration extends TestCase
         checkConfig.setFile(testSaveConf);
         checkSavedConfig(checkConfig);
     }
-    
+
     /**
      * Tests saving to a stream.
      */
@@ -485,11 +485,11 @@ public class TestXMLConfiguration extends TestCase
                 out.close();
             }
         }
-        
+
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
         checkSavedConfig(checkConfig);
-        
+
         try
         {
             out = new FileOutputStream(testSaveConf);
@@ -502,7 +502,7 @@ public class TestXMLConfiguration extends TestCase
                 out.close();
             }
         }
-        
+
         checkConfig.clear();
         checkSavedConfig(checkConfig);
     }
@@ -518,13 +518,13 @@ public class TestXMLConfiguration extends TestCase
         // reload the configuration
         XMLConfiguration conf2 = new XMLConfiguration(conf.getFile());
         assertEquals("'autosave' property", "ok", conf2.getString("autosave"));
-        
+
         conf.clearTree("clear");
         conf2 = new XMLConfiguration(conf.getFile());
         Configuration sub = conf2.subset("clear");
         assertTrue(sub.isEmpty());
     }
-    
+
     /**
      * Tests if a second file can be appended to a first.
      */
@@ -536,14 +536,14 @@ public class TestXMLConfiguration extends TestCase
         conf.load(testProperties2);
         assertEquals("value", conf.getString("element"));
         assertEquals("tasks", conf.getString("table.name"));
-        
+
         conf.save(testSaveConf);
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("value", conf.getString("element"));
         assertEquals("tasks", conf.getString("table.name"));
         assertEquals("application", conf.getString("table[@tableType]"));
     }
-    
+
     /**
      * Tests saving attributes (related to issue 34442).
      */
@@ -749,12 +749,12 @@ public class TestXMLConfiguration extends TestCase
         File nonValidFile = new File("conf/testValidateInvalid.xml");
         conf = new XMLConfiguration();
         assertFalse(conf.isValidating());
-        
+
         // Load a non valid XML document. Should work for isValidating() == false
         conf.load(nonValidFile);
         assertEquals("customers", conf.getString("table.name"));
         assertFalse(conf.containsKey("table.fields.field(1).type"));
-        
+
         // Now set the validating flag to true
         conf.setValidating(true);
         try
@@ -767,7 +767,7 @@ public class TestXMLConfiguration extends TestCase
             //ok
         }
     }
-    
+
     /**
      * Tests handling of empty elements.
      */
@@ -778,12 +778,12 @@ public class TestXMLConfiguration extends TestCase
         conf.addProperty("empty2", "");
         conf.setProperty("empty", "no more empty");
         conf.save(testSaveConf);
-        
+
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("no more empty", conf.getString("empty"));
         assertEquals("", conf.getProperty("empty2"));
     }
-    
+
     /**
      * Tests whether the encoding is correctly detected by the XML parser. This
      * is done by loading an XML file with the encoding "UTF-16". If this
@@ -798,7 +798,7 @@ public class TestXMLConfiguration extends TestCase
         conf.load(file);
         assertEquals("test3_yoge", conf.getString("yoge"));
     }
-    
+
     /**
      * Tests whether the encoding is written to the generated XML file.
      */
@@ -813,7 +813,7 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("Encoding was not written to file", out.toString().indexOf(
                 "encoding=\"" + ENCODING + "\"") >= 0);
     }
-    
+
     /**
      * Tests whether a default encoding is used if no specific encoding is set.
      * According to the XSLT specification (http://www.w3.org/TR/xslt#output)
@@ -938,7 +938,7 @@ public class TestXMLConfiguration extends TestCase
         conf.clear();
         assertNull(conf.getString("test[1]/entity/@name"));
     }
-    
+
     /**
      * Tests the copy constructor.
      */
@@ -1132,6 +1132,19 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests a combination of auto save = true and an associated reloading
+     * strategy.
+     */
+    public void testAutoSaveWithReloadingStrategy() throws ConfigurationException
+    {
+        conf.setFile(testSaveConf);
+        conf.save();
+        conf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        conf.setAutoSave(true);
+        assertEquals("Value not found", "value", conf.getProperty("element"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
@@ -1168,12 +1181,6 @@ public class TestXMLConfiguration extends TestCase
     private void checkSavedConfig(FileConfiguration checkConfig) throws ConfigurationException
     {
         checkConfig.load();
-
-        for (Iterator i = conf.getKeys(); i.hasNext();)
-        {
-            String key = (String) i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
-        }
+        ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 }
