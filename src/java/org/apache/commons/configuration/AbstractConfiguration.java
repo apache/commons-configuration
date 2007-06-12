@@ -504,17 +504,34 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         fireEvent(EVENT_CLEAR, null, null, true);
         setDetailEvents(false);
+        boolean useIterator = true;
         try
         {
             Iterator it = getKeys();
             while (it.hasNext())
             {
                 String key = (String) it.next();
-                it.remove();
-
-                if (containsKey(key))
+                if (useIterator)
                 {
-                    // workaround for Iterators that do not remove the property on calling remove()
+                    try
+                    {
+                        it.remove();
+                    }
+                    catch (UnsupportedOperationException usoex)
+                    {
+                        useIterator = false;
+                    }
+                }
+
+                if (useIterator && containsKey(key))
+                {
+                    useIterator = false;
+                }
+
+                if (!useIterator)
+                {
+                    // workaround for Iterators that do not remove the property
+                    // on calling remove() or do not support remove() at all
                     clearProperty(key);
                 }
             }

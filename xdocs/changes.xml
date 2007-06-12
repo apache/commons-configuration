@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-277">
+        The base implementation of clear() in AbstractConfiguration now checks
+        for a potential UnsupportedOperationException when iterating over the
+        existing properties.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-280"
         due-to="Roman Kurmanowytsch">
         Using file-based configurations in auto-save mode together with a
