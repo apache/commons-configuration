@@ -57,6 +57,10 @@ import org.xml.sax.helpers.DefaultHandler;
  * <code>PropertiesConfiguration</code>, <code>XMLPropertiesConfiguration</code>
  * does not support includes.
  *
+ * <em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.
+ *
  * @author Emmanuel Bourg
  * @author Alistair Young
  * @version $Revision$, $Date$

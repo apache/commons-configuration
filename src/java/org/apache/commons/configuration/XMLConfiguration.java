@@ -127,6 +127,10 @@ import org.xml.sax.helpers.DefaultHandler;
  * features can be found in the documentation of
  * <code>{@link AbstractFileConfiguration}</code>.</p>
  *
+ * <p><em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.</p>
+ *
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible

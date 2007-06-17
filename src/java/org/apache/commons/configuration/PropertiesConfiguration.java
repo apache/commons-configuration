@@ -140,6 +140,9 @@ import org.apache.commons.lang.StringUtils;
  * method can be used to obtain this layout object. With <code>setLayout()</code>
  * a new layout object can be set. This should be done before a properties file
  * was loaded.
+ * <p><em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.
  *
  * @see java.util.Properties#load
  *
@@ -155,7 +158,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author Oliver Heger
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */

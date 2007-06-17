@@ -118,6 +118,9 @@ import org.apache.commons.lang.StringUtils;
  * that was created from this configuration has been changed. The value property
  * of the event object contains the original event object as it was sent by the
  * subnode configuration.</dd></dl></p>
+ * <p><em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.</p>
  *
  * @author Oliver Heger
  * @version $Id$

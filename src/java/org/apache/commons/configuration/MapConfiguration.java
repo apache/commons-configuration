@@ -23,7 +23,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A Map based Configuration.
+ * <p>A Map based Configuration.</p>
+ * <p><em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.</p>
  *
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$

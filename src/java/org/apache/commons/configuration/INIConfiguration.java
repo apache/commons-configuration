@@ -157,6 +157,11 @@ import org.apache.commons.lang.StringUtils;
  * The set of sections in this configuration can be retrieved using the
  * <code>getSections</code> method.
  * </p>
+ * <p>
+ * <em>Note:</em>Configuration objects of this type can be read concurrently
+ * by multiple threads. However if one of these threads modifies the object,
+ * synchronization has to be performed manually.
+ * </p>
  *
  * @author Trevor Miller
  * @version $Id$
