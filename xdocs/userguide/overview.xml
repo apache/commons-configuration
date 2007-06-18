@@ -199,9 +199,9 @@ Configuration config = factory.getConfiguration();
       <subsection name="Threading issues">
       <p>
         The most concrete implementations of the <code>Configuration</code>
-        interface that are shipped with this library are thread-safe as long as
-        they are accessed in a read-only manner. However if one thread
-        modifies a configuration object, manual synchronization has to be
+        interface that are shipped with this library are not thread-safe.
+        They can be accessed concurrently in a read-only manner. However if one
+        thread modifies a configuration object, manual synchronization has to be
         performed to ensure correctness of data. Notes about the thread
         safety of conrete implementation classes can be found in the Javadocs
         for these classes.
