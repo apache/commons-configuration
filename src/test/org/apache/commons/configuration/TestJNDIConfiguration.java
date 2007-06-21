@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration;
 
+import java.util.Hashtable;
+
 import junit.framework.TestCase;
 
 import javax.naming.Context;
@@ -259,6 +261,18 @@ public class TestJNDIConfiguration extends TestCase {
     }
 
     /**
+     * Tests the getKeys() method when there are cycles in the tree.
+     */
+    public void testGetKeysWithCycles() throws NamingException
+    {
+        Hashtable env = new Hashtable();
+        env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
+        InitialContext initCtx = new InitialContext(env);
+        conf = new JNDIConfiguration(initCtx);
+        conf.getKeys("cycle");
+    }
+
+    /**
      * A special JNDI configuration implementation that can be configured to
      * throw an exception when accessing the base context. Used for testing the
      * exception handling.
@@ -271,6 +285,11 @@ public class TestJNDIConfiguration extends TestCase {
         public PotentialErrorJNDIConfiguration() throws NamingException
         {
             super();
+        }
+
+        public PotentialErrorJNDIConfiguration(Context ctx) throws NamingException
+        {
+            super(ctx);
         }
 
         public Context getBaseContext() throws NamingException

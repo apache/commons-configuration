@@ -115,10 +115,12 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param keys All the keys that have been found.
      * @param context The parent context
      * @param prefix What prefix we are building on.
+     * @param processedCtx a set with the so far processed objects
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(Set keys, Context context, String prefix) throws NamingException
+    private void recursiveGetKeys(Set keys, Context context, String prefix, Set processedCtx) throws NamingException
     {
+        processedCtx.add(context);
         NamingEnumeration elements = null;
 
         try
@@ -145,7 +147,11 @@ public class JNDIConfiguration extends AbstractConfiguration
                 {
                     // add the keys of the sub context
                     Context subcontext = (Context) object;
-                    recursiveGetKeys(keys, subcontext, key.toString());
+                    if (!processedCtx.contains(subcontext))
+                    {
+                        recursiveGetKeys(keys, subcontext, key.toString(),
+                                processedCtx);
+                    }
                 }
                 else
                 {
@@ -202,7 +208,7 @@ public class JNDIConfiguration extends AbstractConfiguration
             Set keys = new HashSet();
             if (context != null)
             {
-                recursiveGetKeys(keys, context, prefix);
+                recursiveGetKeys(keys, context, prefix, new HashSet());
             }
             else if (containsKey(prefix))
             {
