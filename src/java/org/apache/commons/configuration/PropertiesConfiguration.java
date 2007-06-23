@@ -82,7 +82,17 @@ import org.apache.commons.lang.StringUtils;
  *  </li>
  *  <li>
  *   If a <i>key</i> is used more than once, the values are appended
- *   like if they were on the same line separated with commas.
+ *   like if they were on the same line separated with commas. <em>Note</em>:
+ *   When the configuration file is written back to disk the associated
+ *   <code>{@link PropertiesConfigurationLayout}</code> object (see below) will
+ *   try to preserve as much of the original format as possible, i.e. properties
+ *   with multiple values defined on a single line will also be written back on
+ *   a single line, and multiple occurrences of a single key will be written on
+ *   multiple lines. If the <code>addProperty()</code> method was called
+ *   multiple times for adding multiple values to a property, these properties
+ *   will per default be written on multiple lines in the output file, too.
+ *   Some options of the <code>PropertiesConfigurationLayout</code> class have
+ *   influence on that behavior.
  *  </li>
  *  <li>
  *   Blank lines and lines starting with character '#' or '!' are skipped.
