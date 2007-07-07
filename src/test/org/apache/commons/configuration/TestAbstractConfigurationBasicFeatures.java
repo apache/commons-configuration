@@ -61,6 +61,24 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     }
 
     /**
+     * Tests escaping the variable marker, so that no interpolation will be
+     * performed.
+     */
+    public void testInterpolateEscape()
+    {
+        AbstractConfiguration config = new TestConfigurationImpl(
+                new PropertiesConfiguration());
+        config
+                .addProperty(
+                        "mypath",
+                        "$${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar\\,$${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar");
+        assertEquals(
+                "Wrong interpolated value",
+                "${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar,${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar",
+                config.getString("mypath"));
+    }
+
+    /**
      * A test configuration implementation. This implementation inherits
      * directly from AbstractConfiguration. For implementing the required
      * functionality another implementation of AbstractConfiguration is used;
