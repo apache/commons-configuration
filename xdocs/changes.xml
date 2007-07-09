@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-282">
+        The default expression engine used by HierarchicalConfiguration
+        instances is now lazily initialized. This avoids NullPointerExceptions
+        in certain server environments after a redeploy.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-281">
         Cycles in the JNDI tree no longer cause a stack overflow in
         JNDIConfiguration.

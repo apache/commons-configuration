@@ -151,7 +151,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     private static final long serialVersionUID = 3373812230395363192L;
 
     /** Stores the default expression engine to be used for new objects.*/
-    private static ExpressionEngine defaultExpressionEngine = new DefaultExpressionEngine();
+    private static ExpressionEngine defaultExpressionEngine;
 
     /** Stores the root node of this configuration. This field is required for
      * backwards compatibility only.
@@ -258,8 +258,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the default expression engine
      * @since 1.3
      */
-    public static ExpressionEngine getDefaultExpressionEngine()
+    public static synchronized ExpressionEngine getDefaultExpressionEngine()
     {
+        if (defaultExpressionEngine == null)
+        {
+            defaultExpressionEngine = new DefaultExpressionEngine();
+        }
         return defaultExpressionEngine;
     }
 
@@ -272,7 +276,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param engine the new default expression engine
      * @since 1.3
      */
-    public static void setDefaultExpressionEngine(ExpressionEngine engine)
+    public static synchronized void setDefaultExpressionEngine(ExpressionEngine engine)
     {
         if (engine == null)
         {
