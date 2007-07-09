@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -76,6 +77,50 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
                 "Wrong interpolated value",
                 "${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc.jar,${DB2UNIVERSAL_JDBC_DRIVER_PATH}/db2jcc_license_cu.jar",
                 config.getString("mypath"));
+    }
+
+    /**
+     * Tests adding list properties. The single elements of the list should be
+     * added.
+     */
+    public void testAddPropertyList()
+    {
+        checkAddListProperty(new TestConfigurationImpl(
+                new PropertiesConfiguration()));
+    }
+
+    /**
+     * Tests adding list properties when delimiter parsing is disabled.
+     */
+    public void testAddPropertyListNoDelimiterParsing()
+    {
+        AbstractConfiguration config = new TestConfigurationImpl(
+                new PropertiesConfiguration());
+        config.setDelimiterParsingDisabled(true);
+        checkAddListProperty(config);
+    }
+
+    /**
+     * Helper method for adding properties with multiple values.
+     *
+     * @param config the configuration to be used for testing
+     */
+    private void checkAddListProperty(AbstractConfiguration config)
+    {
+        config.addProperty("test", "value1");
+        Object[] lstValues1 = new Object[]
+        { "value2", "value3" };
+        Object[] lstValues2 = new Object[]
+        { "value4", "value5", "value6" };
+        config.addProperty("test", lstValues1);
+        config.addProperty("test", Arrays.asList(lstValues2));
+        List lst = config.getList("test");
+        assertEquals("Wrong number of list elements", 6, lst.size());
+        for (int i = 0; i < lst.size(); i++)
+        {
+            assertEquals("Wrong list element at " + i, "value" + (i + 1), lst
+                    .get(i));
+        }
     }
 
     /**

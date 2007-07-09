@@ -117,6 +117,13 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     /** end token */
     protected static final String END_TOKEN = "}";
 
+    /**
+     * Constant for the disabled list delimiter. This character is passed to the
+     * list parsing methods if delimiter parsing is disabled. So this character
+     * should not occur in string property values.
+     */
+    private static final char DISABLED_DELIMITER = '\0';
+
     /** The default value for listDelimiter */
     private static char defaultListDelimiter = ',';
 
@@ -381,17 +388,12 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         fireEvent(EVENT_ADD_PROPERTY, key, value, true);
 
-        if (!isDelimiterParsingDisabled())
+        Iterator it = PropertyConverter.toIterator(value,
+                isDelimiterParsingDisabled() ? DISABLED_DELIMITER
+                        : getListDelimiter());
+        while (it.hasNext())
         {
-            Iterator it = PropertyConverter.toIterator(value, getListDelimiter());
-            while (it.hasNext())
-            {
-                addPropertyDirect(key, it.next());
-            }
-        }
-        else
-        {
-            addPropertyDirect(key, value);
+            addPropertyDirect(key, it.next());
         }
 
         fireEvent(EVENT_ADD_PROPERTY, key, value, false);
@@ -399,7 +401,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Adds a key/value pair to the Configuration. Override this method to
-     * provide write acces to underlying Configuration store.
+     * provide write access to underlying Configuration store.
      *
      * @param key key to use for mapping
      * @param value object to store
