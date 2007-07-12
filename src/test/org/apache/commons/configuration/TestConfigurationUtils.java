@@ -48,10 +48,10 @@ public class TestConfigurationUtils extends TestCase
 
         config.setProperty("two", "2");
         assertEquals("String representation of a configuration", "one=1" + lineSeparator + "two=2" , ConfigurationUtils.toString(config));
-        
+
         config.clearProperty("one");
         assertEquals("String representation of a configuration", "two=2" , ConfigurationUtils.toString(config));
-                
+
         config.setProperty("one","1");
         assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1" , ConfigurationUtils.toString(config));
     }
@@ -75,7 +75,7 @@ public class TestConfigurationUtils extends TestCase
         URL url = ConfigurationUtils.getURL(null, "config.xml");
         assertEquals("file", url.getProtocol());
         assertEquals("", url.getHost());
-        
+
         assertEquals(
             "http://localhost:8080/webapp/config/config.xml",
             ConfigurationUtils
@@ -97,7 +97,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(
             absFile.toURL(),
             ConfigurationUtils.getURL(null, absFile.getAbsolutePath()));
-        
+
 		assertEquals(absFile.toURL(),
 		ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
@@ -180,10 +180,10 @@ public class TestConfigurationUtils extends TestCase
     {
         File directory = new File("target");
         File reference = new File(directory, "test.txt").getAbsoluteFile();
-        
+
         assertEquals(reference, ConfigurationUtils.getFile(null, reference.getAbsolutePath()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));        
+        assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
         assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
         assertEquals(reference, ConfigurationUtils.getFile(
@@ -249,6 +249,22 @@ public class TestConfigurationUtils extends TestCase
     {
         assertNull("Wrong conversion result for null config",
                 ConfigurationUtils.convertToHierarchical(null));
+    }
+
+    /**
+     * Tests converting a configuration into a hierarchical one if some of its
+     * properties contain escaped list delimiter characters.
+     */
+    public void testConvertToHierarchicalDelimiters()
+    {
+        Configuration conf = new BaseConfiguration();
+        conf.addProperty("test.key", "1\\,2\\,3");
+        assertEquals("Wrong property value", "1,2,3", conf
+                .getString("test.key"));
+        HierarchicalConfiguration hc = ConfigurationUtils
+                .convertToHierarchical(conf);
+        assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
+                hc.getString("test.key"));
     }
 
     /**

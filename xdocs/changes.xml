@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-283">
+        ConfigurationUtils.convertToHierarchical() now correctly deals with
+        property values containing escaped list delimiters. This also affects
+        CombinedConfiguration when sub configurations with such property values
+        are contained.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-275">
         AbstractConfiguration.addProperty() now correctly deals with list and
         array properties if delimiter parsing is disabled.

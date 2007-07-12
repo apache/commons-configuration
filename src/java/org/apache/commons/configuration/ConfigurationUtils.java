@@ -188,7 +188,11 @@ public final class ConfigurationUtils
         else
         {
             HierarchicalConfiguration hc = new HierarchicalConfiguration();
+            // Workaround for problem with copy()
+            boolean delimiterParsingStatus = hc.isDelimiterParsingDisabled();
+            hc.setDelimiterParsingDisabled(true);
             ConfigurationUtils.copy(conf, hc);
+            hc.setDelimiterParsingDisabled(delimiterParsingStatus);
             return hc;
         }
     }

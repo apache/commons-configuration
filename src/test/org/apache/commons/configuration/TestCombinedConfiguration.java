@@ -559,6 +559,17 @@ public class TestCombinedConfiguration extends TestCase
     }
 
     /**
+     * Tests whether escaped list delimiters are treated correctly.
+     */
+    public void testEscapeListDelimiters()
+    {
+        PropertiesConfiguration sub = new PropertiesConfiguration();
+        sub.addProperty("test.pi", "3\\,1415");
+        config.addConfiguration(sub);
+        assertEquals("Wrong value", "3,1415", config.getString("test.pi"));
+    }
+
+    /**
      * Helper method for writing a file.
      *
      * @param file the file to be written
