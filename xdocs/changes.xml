@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-285">
+        DefaultConfigurationBuilder will now notify registered error listeners
+        about optional configuration sources that could not be created. Before
+        exceptions thrown by optional configurations were swallowed
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-283">
         ConfigurationUtils.convertToHierarchical() now correctly deals with
         property values containing escaped list delimiters. This also affects

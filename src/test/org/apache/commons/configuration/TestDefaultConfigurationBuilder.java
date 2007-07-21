@@ -31,8 +31,7 @@ import junit.framework.TestCase;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id: TestDefaultConfigurationBuilder.java 384601 2006-03-09
- * 20:22:58Z oheger $
+ * @version $Id$
  */
 public class TestDefaultConfigurationBuilder extends TestCase
 {
@@ -70,6 +69,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         System.setProperty("test_file_xml", "test.xml");
         System.setProperty("test_file_combine", "testcombine1.xml");
         factory = new DefaultConfigurationBuilder();
+        factory.clearErrorListeners();  // avoid exception messages
     }
 
     /**
@@ -401,6 +401,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
     }
 
     /**
+     * Tests whether a default log error listener is registered at the builder
+     * instance.
+     */
+    public void testLogErrorListener()
+    {
+        assertEquals("No default error listener registered", 1,
+                new DefaultConfigurationBuilder().getErrorListeners().size());
+    }
+
+    /**
      * Tests loading a definition file that contains optional configurations.
      */
     public void testLoadOptional() throws Exception
@@ -409,6 +419,20 @@ public class TestDefaultConfigurationBuilder extends TestCase
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
+    }
+
+    /**
+     * Tests whether loading a failing optional configuration causes an error
+     * event.
+     */
+    public void testLoadOptionalErrorEvent() throws Exception
+    {
+        factory.clearErrorListeners();
+        ConfigurationErrorListenerImpl listener = new ConfigurationErrorListenerImpl();
+        factory.addErrorListener(listener);
+        prepareOptionalTest("configuration", false);
+        listener.verify(DefaultConfigurationBuilder.EVENT_ERR_LOAD_OPTIONAL,
+                OPTIONAL_NAME, null);
     }
 
     /**
