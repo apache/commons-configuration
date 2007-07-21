@@ -19,13 +19,12 @@ package org.apache.commons.configuration;
 
 import java.util.Hashtable;
 
-import junit.framework.TestCase;
-
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 
 /**
@@ -41,7 +40,7 @@ public class TestJNDIConfiguration extends TestCase {
     private NonStringTestHolder nonStringTestHolder;
 
     /** A test error listener for counting internal errors.*/
-    private TestErrorListener listener;
+    private ConfigurationErrorListenerImpl listener;
 
     public void setUp() throws Exception {
 
@@ -52,7 +51,7 @@ public class TestJNDIConfiguration extends TestCase {
         nonStringTestHolder = new NonStringTestHolder();
         nonStringTestHolder.setConfiguration(conf);
 
-        listener = new TestErrorListener();
+        listener = new ConfigurationErrorListenerImpl();
         conf.addErrorListener(listener);
     }
 
@@ -204,6 +203,8 @@ public class TestJNDIConfiguration extends TestCase {
     private void checkErrorListener(int type, String propName, Object propValue)
     {
         listener.verify(type, propName, propValue);
+        assertTrue("Wrong exception class",
+                listener.getLastEvent().getCause() instanceof NamingException);
         listener = null;
     }
 
@@ -299,54 +300,6 @@ public class TestJNDIConfiguration extends TestCase {
                 throw new NamingException("Simulated JNDI exception!");
             }
             return super.getBaseContext();
-        }
-    }
-
-    /**
-     * A test listener implementation that is used for counting and testing
-     * internal errors.
-     */
-    static class TestErrorListener implements ConfigurationErrorListener
-    {
-        /** Stores the last received error event. */
-        ConfigurationErrorEvent event;
-
-        /** Stores the number of calls. */
-        int errorCount;
-
-        public void configurationError(ConfigurationErrorEvent event)
-        {
-            this.event = event;
-            errorCount++;
-        }
-
-        /**
-         * Checks whether no error event was received.
-         */
-        public void verify()
-        {
-            assertEquals("Error events received", 0, errorCount);
-        }
-
-        /**
-         * Checks whether an expected error event was received.
-         *
-         * @param type the type of the event
-         * @param propName the name of the property
-         * @param propValue the value of the property
-         */
-        public void verify(int type, String propName, Object propValue)
-        {
-            assertEquals("Wrong number of error events", 1, errorCount);
-            assertEquals("Wrong event type", type, event.getType());
-            assertTrue("Wrong property name", (propName == null) ? event
-                    .getPropertyName() == null : propName.equals(event
-                    .getPropertyName()));
-            assertTrue("Wrong property value", (propValue == null) ? event
-                    .getPropertyValue() == null : propValue.equals(event
-                    .getPropertyValue()));
-            assertTrue("Wrong exception class",
-                    event.getCause() instanceof NamingException);
         }
     }
 }

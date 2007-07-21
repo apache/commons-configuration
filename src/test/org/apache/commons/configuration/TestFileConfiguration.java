@@ -26,8 +26,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import org.apache.commons.configuration.event.ConfigurationErrorEvent;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 
@@ -578,20 +576,7 @@ public class TestFileConfiguration extends TestCase
      */
     public void testReloadError() throws ConfigurationException
     {
-        class TestConfigurationErrorListener implements
-                ConfigurationErrorListener
-        {
-            ConfigurationErrorEvent event;
-
-            int errorCount;
-
-            public void configurationError(ConfigurationErrorEvent event)
-            {
-                this.event = event;
-                errorCount++;
-            }
-        };
-        TestConfigurationErrorListener l = new TestConfigurationErrorListener();
+        ConfigurationErrorListenerImpl l = new ConfigurationErrorListenerImpl();
         PropertiesConfiguration config = new PropertiesConfiguration(
                 RESOURCE_NAME);
         config.clearErrorListeners();
@@ -600,12 +585,8 @@ public class TestFileConfiguration extends TestCase
         config.getString("test");
         config.setFileName("Not existing file");
         config.getString("test");
-        assertEquals("Wrong number of error events", 1, l.errorCount);
-        assertEquals("Wrong error type",
-                AbstractFileConfiguration.EVENT_RELOAD, l.event.getType());
-        assertNull("Wrong property name", l.event.getPropertyName());
-        assertNull("Wrong property value", l.event.getPropertyValue());
-        assertNotNull("Exception is not set", l.event.getCause());
+        l.verify(AbstractFileConfiguration.EVENT_RELOAD, null, null);
+        assertNotNull("Exception is not set", l.getLastEvent().getCause());
     }
 
     /**

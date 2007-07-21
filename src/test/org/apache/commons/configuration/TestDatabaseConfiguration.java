@@ -27,7 +27,6 @@ import javax.sql.DataSource;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
@@ -74,7 +73,7 @@ public class TestDatabaseConfiguration extends TestCase
     private DataSource datasource;
 
     /** An error listener for testing whether internal errors occurred.*/
-    private TestErrorListener listener;
+    private ConfigurationErrorListenerImpl listener;
 
     protected void setUp() throws Exception
     {
@@ -121,7 +120,7 @@ public class TestDatabaseConfiguration extends TestCase
         // if an error listener is defined, we check whether an error occurred
         if(listener != null)
         {
-            assertEquals("An internal error occurred", 0, listener.errorCount);
+            assertEquals("An internal error occurred", 0, listener.getErrorCount());
         }
         super.tearDown();
     }
@@ -156,7 +155,7 @@ public class TestDatabaseConfiguration extends TestCase
     {
         // remove log listener to avoid exception longs
         config.removeErrorListener((ConfigurationErrorListener) config.getErrorListeners().iterator().next());
-        listener = new TestErrorListener();
+        listener = new ConfigurationErrorListenerImpl();
         config.addErrorListener(listener);
         config.failOnConnect = true;
     }
@@ -184,16 +183,12 @@ public class TestDatabaseConfiguration extends TestCase
      */
     private void checkErrorListener(int type, String key, Object value)
     {
-        assertEquals("Wrong number of errors", 1, listener.errorCount);
-        assertEquals("Wrong event type", type, listener.event.getType());
-        assertTrue("Wrong event source", listener.event.getSource() instanceof DatabaseConfiguration);
-        assertTrue("Wrong exception", listener.event.getCause() instanceof SQLException);
-        assertTrue("Wrong property key", (key == null) ? listener.event
-                .getPropertyName() == null : key.equals(listener.event
-                .getPropertyName()));
-        assertTrue("Wrong property value", (value == null) ? listener.event
-                .getPropertyValue() == null : value.equals(listener.event
-                .getPropertyValue()));
+        listener.verify(type, key, value);
+        assertTrue(
+                "Wrong event source",
+                listener.getLastEvent().getSource() instanceof DatabaseConfiguration);
+        assertTrue("Wrong exception",
+                listener.getLastEvent().getCause() instanceof SQLException);
         listener = null; // mark as checked
     }
 
@@ -483,25 +478,6 @@ public class TestDatabaseConfiguration extends TestCase
                 throw new SQLException("Simulated DB error");
             }
             return super.getConnection();
-        }
-    }
-
-    /**
-     * A test error listener implementation that is used for finding out whether
-     * error events are correctly triggered.
-     */
-    static class TestErrorListener implements ConfigurationErrorListener
-    {
-        /** Stores the number of calls. */
-        int errorCount;
-
-        /** Stores the last error event. */
-        ConfigurationErrorEvent event;
-
-        public void configurationError(ConfigurationErrorEvent event)
-        {
-            errorCount++;
-            this.event = event;
         }
     }
 }
