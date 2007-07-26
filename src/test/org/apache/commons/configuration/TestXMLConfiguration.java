@@ -1145,6 +1145,19 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests adding nodes from another configuration.
+     */
+    public void testAddNodesCopy() throws ConfigurationException
+    {
+        XMLConfiguration c2 = new XMLConfiguration(testProperties2);
+        conf.addNodes("copiedProperties", c2.getRootNode().getChildren());
+        conf.save(testSaveConf);
+        XMLConfiguration checkConf = new XMLConfiguration();
+        checkConf.setFile(testSaveConf);
+        checkSavedConfig(checkConf);
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration

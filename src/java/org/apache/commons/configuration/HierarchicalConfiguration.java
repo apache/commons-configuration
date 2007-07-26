@@ -31,6 +31,7 @@ import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ConfigurationNodeVisitor;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
@@ -373,9 +374,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * instead of a single property a whole collection of nodes can be added -
      * and thus complete configuration sub trees. E.g. with this method it is
      * possible to add parts of another <code>HierarchicalConfiguration</code>
-     * object to this object. If the passed in key refers to an existing and
-     * unique node, the new nodes are added to this node. Otherwise a new node
-     * will be created at the specified position in the hierarchy.
+     * object to this object. (However be aware that a
+     * <code>ConfigurationNode</code> object can only belong to a single
+     * configuration. So if nodes from one configuration are directly added to
+     * another one using this method, the structure of the source configuration
+     * will be broken. In this case you should clone the nodes to be added
+     * before calling <code>addNodes()</code>.) If the passed in key refers to
+     * an existing and unique node, the new nodes are added to this node.
+     * Otherwise a new node will be created at the specified position in the
+     * hierarchy.
      *
      * @param key the key where the nodes are to be added; can be <b>null </b>,
      * then they are added to the root node
@@ -409,6 +416,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             throw new IllegalArgumentException(
                     "Cannot add nodes to an attribute node!");
         }
+
+        // a visitor to ensure that the nodes' references are cleared; this is
+        // necessary if the nodes are moved from another configuration
+        ConfigurationNodeVisitor clearRefVisitor = new ConfigurationNodeVisitorAdapter()
+        {
+            public void visitBeforeChildren(ConfigurationNode node)
+            {
+                node.setReference(null);
+            }
+        };
+
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             ConfigurationNode child = (ConfigurationNode) it.next();
@@ -420,6 +438,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             {
                 parent.addChild(child);
             }
+            child.visit(clearRefVisitor);
         }
         fireEvent(EVENT_ADD_NODES, key, nodes, false);
     }

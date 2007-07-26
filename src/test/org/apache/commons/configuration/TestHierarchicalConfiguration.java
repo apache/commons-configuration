@@ -608,6 +608,30 @@ public class TestHierarchicalConfiguration extends TestCase
     }
 
     /**
+     * Tests copying nodes from one configuration to another one.
+     */
+    public void testAddNodesCopy()
+    {
+        HierarchicalConfiguration configDest = new HierarchicalConfiguration();
+        configDest.addProperty("test", "TEST");
+        Collection nodes = config.getRootNode().getChildren();
+        assertEquals("Wrong number of children", 1, nodes.size());
+        configDest.addNodes("newNodes", nodes);
+        for (int i = 0; i < tables.length; i++)
+        {
+            String keyTab = "newNodes.tables.table(" + i + ").";
+            assertEquals("Table " + i + " not found", tables[i], configDest
+                    .getString(keyTab + "name"));
+            for (int j = 0; j < fields[i].length; j++)
+            {
+                assertEquals("Invalid field " + j + " in table " + i,
+                        fields[i][j], configDest.getString(keyTab
+                                + "fields.field(" + j + ").name"));
+            }
+        }
+    }
+
+    /**
      * Tests removing children from a configuration node.
      */
     public void testNodeRemove()
