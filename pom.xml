@@ -39,7 +39,7 @@
         various formats
     </description>
 
-  <url>http://jakarta.apache.org/commons/configuration/</url>
+  <url>http://commons.apache.org/configuration/</url>
 
   <issueManagement>
     <system>jira</system>
@@ -47,9 +47,9 @@
   </issueManagement>
 
   <scm>
-    <connection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/trunk</connection>
-    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/trunk</developerConnection>
-    <url>http://svn.apache.org/viewvc/jakarta/commons/proper/configuration/trunk</url>
+    <connection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/trunk</connection>
+    <developerConnection>scm:svn:https://svn.apache.org/repos/asf/commons/proper/configuration/trunk</developerConnection>
+    <url>http://svn.apache.org/viewvc/commons/proper/configuration/trunk</url>
   </scm>
 
     <developers>
