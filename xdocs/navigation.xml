@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE org.apache.commons.menus SYSTEM 'http://jakarta.apache.org/commons/build/maven-build.dtd'>
+<!DOCTYPE org.apache.commons.menus SYSTEM 'http://commons.apache.org/build/maven-build.dtd'>
 <!--
    Licensed to the Apache Software Foundation (ASF) under one or more
    contributor license agreements.  See the NOTICE file distributed with
@@ -16,13 +16,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="Jakarta Commons Configuration">
+<project name="Apache Commons Configuration">
 
   <title>Jakarta - Commons Configuration</title>
 
   <body>
     <links>
-      <item name="Jakarta Commons" href="http://jakarta.apache.org/commons/"/>
+      <item name="Apache Commons" href="http://commons.apache.org/"/>
     </links>
 
 	<menu name="Configuration">
@@ -40,7 +40,7 @@
       <item name="Building"                     href="/building.html"/>
       <item name="Roadmap"                      href="/tasks-report.html"/>
       <item name="Issue Tracking"               href="issue-tracking.html"/>
-      <item name="SVN"                          href="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/"/>
+      <item name="SVN"                          href="http://svn.apache.org/repos/asf/commons/proper/configuration/"/>
     </menu>
 
     <menu name="Extensions">

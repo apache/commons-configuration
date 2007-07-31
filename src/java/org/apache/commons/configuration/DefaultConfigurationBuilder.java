@@ -167,7 +167,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @since 1.3
  * @author <a
- * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @version $Id$
  */

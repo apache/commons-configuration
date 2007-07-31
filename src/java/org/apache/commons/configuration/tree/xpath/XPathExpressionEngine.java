@@ -34,7 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * that is able to evaluate XPATH expressions.
  * </p>
  * <p>
- * This class makes use of <a href="http://jakarta.apache.org/commons/jxpath/">
+ * This class makes use of <a href="http://commons.apache.org/jxpath/">
  * Commons JXPath</a> for handling XPath expressions and mapping them to the
  * nodes of a hierarchical configuration. This makes the rich and powerfull
  * XPATH syntax available for accessing properties from a configuration object.

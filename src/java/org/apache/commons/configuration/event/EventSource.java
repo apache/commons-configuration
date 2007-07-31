@@ -63,7 +63,7 @@ import java.util.LinkedList;
  * notifications about errors to registered observers.
  * </p>
  *
- * @author <a href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */

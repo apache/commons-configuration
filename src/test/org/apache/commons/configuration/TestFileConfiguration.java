@@ -56,9 +56,9 @@ public class TestFileConfiguration extends TestCase
     {
         // http URL
         FileConfiguration config = new PropertiesConfiguration();
-        config.setURL(new URL("http://jakarta.apache.org/commons/configuration/index.html"));
+        config.setURL(new URL("http://commons.apache.org/configuration/index.html"));
 
-        assertEquals("base path", "http://jakarta.apache.org/commons/configuration/", config.getBasePath());
+        assertEquals("base path", "http://commons.apache.org/configuration/", config.getBasePath());
         assertEquals("file name", "index.html", config.getFileName());
 
         // file URL

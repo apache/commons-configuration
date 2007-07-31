@@ -34,7 +34,7 @@ import org.apache.commons.lang.text.StrLookup;
  * <p>
  * <code>ConfigurationInterpolator</code> works together with the
  * <code>StrSubstitutor</code> class from <a
- * href="http://jakarta.apache.org/commons/lang">Commons Lang</a>. By extending
+ * href="http://commons.apache.org/lang">Commons Lang</a>. By extending
  * <code>StrLookup</code> it is able to provide values for variables that
  * appear in expressions.
  * </p>
@@ -99,7 +99,7 @@ import org.apache.commons.lang.text.StrLookup;
  * @version $Id$
  * @since 1.4
  * @author <a
- * href="http://jakarta.apache.org/commons/configuration/team-list.html">Commons
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
 public class ConfigurationInterpolator extends StrLookup

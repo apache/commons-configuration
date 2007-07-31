@@ -211,7 +211,7 @@ action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
       explains some approaches how you can add your own interpolation facilities.
       Under the hood interpolation is implemented using the
       <code>StrSubstitutor</code> class of the <code>text</code> package of
-      <a href="http://jakarta.apache.org/commons/lang/">Commons Lang</a>. This
+      <a href="http://commons.apache.org/lang/">Commons Lang</a>. This
       class uses objects derived from the <code>StrLookup</code> class for
       resolving variables. <code>StrLookup</code> defines a simple
       <code>lookup()</code> method that must be implemented by custom

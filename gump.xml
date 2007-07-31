@@ -2,7 +2,7 @@
 
 <module name="commons-configuration">
   <description>Common ConfigurationTools</description>
-  <url href="http://jakarta.apache.org/commons/configuration/">
+  <url href="http://commons.apache.org/configuration/">
   </url>
   <cvs module="jakarta-commons" repository="jakarta">
   </cvs>
