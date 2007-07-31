@@ -17,8 +17,8 @@
 
     <repository>
       <SVNRepository>
-        <browse rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration/trunk"/>
-        <location rdf:resource="http://svn.apache.org/repos/asf/jakarta/commons/proper/configuration"/>
+        <browse rdf:resource="http://svn.apache.org/repos/asf/commons/proper/configuration/trunk"/>
+        <location rdf:resource="http://svn.apache.org/repos/asf/commons/proper/configuration"/>
       </SVNRepository>
     </repository>
 
