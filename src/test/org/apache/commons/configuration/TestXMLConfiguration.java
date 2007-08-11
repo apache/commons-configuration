@@ -26,6 +26,8 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -1155,6 +1157,23 @@ public class TestXMLConfiguration extends TestCase
         XMLConfiguration checkConf = new XMLConfiguration();
         checkConf.setFile(testSaveConf);
         checkSavedConfig(checkConf);
+    }
+
+    /**
+     * Tests whether the addNodes() method triggers an auto save.
+     */
+    public void testAutoSaveAddNodes() throws ConfigurationException
+    {
+        conf.setFile(testSaveConf);
+        conf.setAutoSave(true);
+        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
+                "addNodesTest", Boolean.TRUE);
+        Collection nodes = new ArrayList(1);
+        nodes.add(node);
+        conf.addNodes("test.autosave", nodes);
+        XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
+        assertTrue("Added nodes are not saved", c2
+                .getBoolean("test.autosave.addNodesTest"));
     }
 
     /**

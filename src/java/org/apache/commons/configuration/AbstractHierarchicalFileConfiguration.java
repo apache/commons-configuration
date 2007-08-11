@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -323,6 +324,20 @@ implements FileConfiguration, ConfigurationListener
     {
         reload();
         return super.isEmpty();
+    }
+
+    /**
+     * Directly adds sub nodes to this configuration. This implementation checks
+     * whether auto save is necessary after executing the operation.
+     *
+     * @param the key where the nodes are to be added
+     * @param nodes a collection with the nodes to be added
+     * @since 1.5
+     */
+    public void addNodes(String key, Collection nodes)
+    {
+        super.addNodes(key, nodes);
+        delegate.possiblySave();
     }
 
     /**
