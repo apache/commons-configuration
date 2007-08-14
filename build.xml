@@ -274,6 +274,8 @@
     </get>
     <get dest="${libdir}/maven-findbugs-plugin-0.8.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-findbugs-plugin-0.8.4.jar">
     </get>
+    <get dest="${libdir}/mail-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar">
+    </get>
   </target>
   <target name="install-maven">
     <get dest="${user.home}/maven-install-latest.jar" usetimestamp="true" src="${repo}/maven/maven-install-latest.jar">
