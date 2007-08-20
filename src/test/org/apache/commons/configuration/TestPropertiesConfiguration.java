@@ -757,6 +757,66 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests copying another configuration into the test configuration. This
+     * test ensures that the layout object is informed about the newly added
+     * properties.
+     */
+    public void testCopyAndSave() throws ConfigurationException
+    {
+        Configuration copyConf = setUpCopyConfig();
+        conf.copy(copyConf);
+        checkCopiedConfig(copyConf);
+    }
+
+    /**
+     * Tests appending a configuration to the test configuration. Again it has
+     * to be ensured that the layout object is correctly updated.
+     */
+    public void testAppendAndSave() throws ConfigurationException
+    {
+        Configuration copyConf = setUpCopyConfig();
+        conf.append(copyConf);
+        checkCopiedConfig(copyConf);
+    }
+
+    /**
+     * Creates a configuration that can be used for testing copy operations.
+     *
+     * @return the configuration to be copied
+     */
+    private Configuration setUpCopyConfig()
+    {
+        final int count = 25;
+        Configuration result = new BaseConfiguration();
+        for (int i = 1; i <= count; i++)
+        {
+            result.addProperty("copyKey" + i, "copyValue" + i);
+        }
+        return result;
+    }
+
+    /**
+     * Tests whether the data of a configuration that was copied into the test
+     * configuration is correctly saved.
+     *
+     * @param copyConf the copied configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private void checkCopiedConfig(Configuration copyConf)
+            throws ConfigurationException
+    {
+        conf.save(testSavePropertiesFile);
+        PropertiesConfiguration checkConf = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        for (Iterator it = copyConf.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertEquals("Wrong value for property " + key, checkConf
+                    .getProperty(key), copyConf.getProperty(key));
+        }
+    }
+
+    /**
      * A dummy layout implementation for checking whether certain methods are
      * correctly called by the configuration.
      */

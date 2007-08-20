@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-272">
+        New copy() and append() methods have been added to AbstractConfiguration.
+        They replace the methods with the same names in ConfigurationUtils,
+        which do not handle all features of AbstractConfiguration properly (e.g.
+        list delimiters in property values are incorrectly treated). To avoid
+        such problems, the new methods should be used.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-291">
         The addNodes() method of hierarchical file-based configurations now
         correctly triggers an auto save.

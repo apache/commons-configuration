@@ -37,13 +37,13 @@
 	<p>
       Often it is required to copy the data of one <code>Configuration</code>
       object into another one. For this purpose the
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
-      ConfigurationUtils</a></code> class can be used. It provides two methods
-      implementing a basic copy operation:
+      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> class (which serves as the base class for
+      most of the configuration implementations shipped with this library)
+      provides two methods implementing a basic copy operation:
       <ul>
-        <li><code>append()</code> takes the source and the target configurations
-        as arguments and adds all properties found in the source to the
-        target configuration.</li>
+        <li><code>append()</code> takes the configuration to be copied
+        as argument and adds all of its properties to the current configuration.</li>
         <li><code>copy()</code> is very similar to <code>append()</code>. The
         difference is that properties that already exist in the target
         configuration are replaced by the properties of the source configuration.

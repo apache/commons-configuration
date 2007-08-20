@@ -46,7 +46,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * implement only abstract methods from this class. A lot of functionality
  * needed by typical implementations of the <code>Configuration</conde>
  * interface is already provided by this base class. Following is a list of
- * feauters implemented here:
+ * features implemented here:
  * <ul><li>Data conversion support. The various data types required by the
  * <code>Configuration</code> interface are already handled by this base class.
  * A concrete sub class only needs to provide a generic <code>getProperty()</code>
@@ -73,10 +73,9 @@ import org.apache.commons.logging.impl.NoOpLog;
  * </ul></p>
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger </a>
+ * @author Oliver Heger
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
- * @version $Id: AbstractConfiguration.java,v 1.29 2004/12/02 22:05:52 ebourg
- * Exp $
+ * @version $Id$
  */
 public abstract class AbstractConfiguration extends EventSource implements Configuration
 {
@@ -387,15 +386,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     public void addProperty(String key, Object value)
     {
         fireEvent(EVENT_ADD_PROPERTY, key, value, true);
-
-        Iterator it = PropertyConverter.toIterator(value,
+        addPropertyValues(key, value,
                 isDelimiterParsingDisabled() ? DISABLED_DELIMITER
                         : getListDelimiter());
-        while (it.hasNext())
-        {
-            addPropertyDirect(key, it.next());
-        }
-
         fireEvent(EVENT_ADD_PROPERTY, key, value, false);
     }
 
@@ -407,6 +400,25 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @param value object to store
      */
     protected abstract void addPropertyDirect(String key, Object value);
+
+    /**
+     * Adds the specified value for the given property. This method supports
+     * single values and containers (e.g. collections or arrays) as well. In the
+     * latter case, <code>addPropertyDirect()</code> will be called for each
+     * element.
+     *
+     * @param key the property key
+     * @param value the value object
+     * @param delimiter the list delimiter character
+     */
+    private void addPropertyValues(String key, Object value, char delimiter)
+    {
+        Iterator it = PropertyConverter.toIterator(value, delimiter);
+        while (it.hasNext())
+        {
+            addPropertyDirect(key, it.next());
+        }
+    }
 
     /**
      * interpolate key names to handle ${key} stuff
@@ -1157,4 +1169,74 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return value;
     }
 
+    /**
+     * Copies the content of the specified configuration into this
+     * configuration. If the specified configuration contains a key that is also
+     * present in this configuration, the value of this key will be replaced by
+     * the new value. <em>Note:</em> This method won't work well when copying
+     * hierarchical configurations because it is not able to copy information
+     * about the properties' structure (i.e. the parent-child-relationships will
+     * get lost). So when dealing with hierarchical configuration objects their
+     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * should be used.
+     *
+     * @param c the configuration to copy (can be <b>null</b>, then this
+     * operation will have no effect)
+     * @since 1.5
+     */
+    public void copy(Configuration c)
+    {
+        if (c != null)
+        {
+            for (Iterator it = c.getKeys(); it.hasNext();)
+            {
+                String key = (String) it.next();
+                Object value = c.getProperty(key);
+                fireEvent(EVENT_SET_PROPERTY, key, value, true);
+                setDetailEvents(false);
+                try
+                {
+                    clearProperty(key);
+                    addPropertyValues(key, value, DISABLED_DELIMITER);
+                }
+                finally
+                {
+                    setDetailEvents(true);
+                }
+                fireEvent(EVENT_SET_PROPERTY, key, value, false);
+            }
+        }
+    }
+
+    /**
+     * Appends the content of the specified configuration to this configuration.
+     * The values of all properties contained in the specified configuration
+     * will be appended to this configuration. So if a property is already
+     * present in this configuration, its new value will be a union of the
+     * values in both configurations. <em>Note:</em> This method won't work
+     * well when appending hierarchical configurations because it is not able to
+     * copy information about the properties' structure (i.e. the
+     * parent-child-relationships will get lost). So when dealing with
+     * hierarchical configuration objects their
+     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * should be used.
+     *
+     * @param c the configuration to be appended (can be <b>null</b>, then this
+     * operation will have no effect)
+     * @since 1.5
+     */
+    public void append(Configuration c)
+    {
+        if (c != null)
+        {
+            for (Iterator it = c.getKeys(); it.hasNext();)
+            {
+                String key = (String) it.next();
+                Object value = c.getProperty(key);
+                fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+                addPropertyValues(key, value, DISABLED_DELIMITER);
+                fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+            }
+        }
+    }
 }
