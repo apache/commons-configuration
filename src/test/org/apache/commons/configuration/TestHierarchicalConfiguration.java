@@ -283,6 +283,20 @@ public class TestHierarchicalConfiguration extends TestCase
         }
     }
 
+    /**
+     * Tests the clearTree() method on a hierarchical structure of nodes. This
+     * is a test case for CONFIGURATION-293.
+     */
+    public void testClearTreeHierarchy()
+    {
+        config.addProperty("a.b.c", "c");
+        config.addProperty("a.b.c.d", "d");
+        config.addProperty("a.b.c.d.e", "e");
+        config.clearTree("a.b.c");
+        assertFalse("Property not removed", config.containsKey("a.b.c"));
+        assertFalse("Sub property not removed", config.containsKey("a.b.c.d"));
+    }
+
     public void testContainsKey()
     {
         assertTrue(config.containsKey("tables.table(0).name"));
