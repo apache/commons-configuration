@@ -31,7 +31,7 @@
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
   <version>1.5-SNAPSHOT</version>
-  <name>Configuration</name>
+  <name>Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
     <description>
