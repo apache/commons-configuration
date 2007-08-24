@@ -40,6 +40,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -770,6 +771,66 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     protected FileConfigurationDelegate createDelegate()
     {
         return new XMLFileConfigurationDelegate();
+    }
+
+    /**
+     * Adds a collection of nodes directly to this configuration. This
+     * implementation ensures that the nodes to be added are of the correct node
+     * type (they have to be converted to <code>XMLNode</code> if necessary).
+     *
+     * @param key the key where the nodes are to be added
+     * @param nodes the collection with the new nodes
+     * @since 1.5
+     */
+    public void addNodes(String key, Collection nodes)
+    {
+        Collection xmlNodes;
+
+        if (nodes != null && !nodes.isEmpty())
+        {
+            xmlNodes = new ArrayList(nodes.size());
+            for (Iterator it = nodes.iterator(); it.hasNext();)
+            {
+                xmlNodes.add(convertToXMLNode((ConfigurationNode) it.next()));
+            }
+        }
+        else
+        {
+            xmlNodes = nodes;
+        }
+
+        super.addNodes(key, xmlNodes);
+    }
+
+    /**
+     * Converts the specified node into a <code>XMLNode</code> if necessary.
+     * This is required for nodes that are directly added, e.g. by
+     * <code>addNodes()</code>. If the passed in node is already an instance
+     * of <code>XMLNode</code>, it is directly returned, and conversion
+     * stops. Otherwise a new <code>XMLNode</code> is created, and the
+     * children are also converted.
+     *
+     * @param node the node to be converted
+     * @return the converted node
+     */
+    private XMLNode convertToXMLNode(ConfigurationNode node)
+    {
+        if (node instanceof XMLNode)
+        {
+            return (XMLNode) node;
+        }
+
+        XMLNode nd = (XMLNode) createNode(node.getName());
+        nd.setValue(node.getValue());
+        for (Iterator it = node.getChildren().iterator(); it.hasNext();)
+        {
+            nd.addChild(convertToXMLNode((ConfigurationNode) it.next()));
+        }
+        for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+        {
+            nd.addAttribute(convertToXMLNode((ConfigurationNode) it.next()));
+        }
+        return nd;
     }
 
     /**

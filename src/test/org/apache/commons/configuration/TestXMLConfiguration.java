@@ -34,6 +34,8 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -41,8 +43,6 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
-
-import junit.framework.TestCase;
 
 /**
  * test for loading and saving xml properties files
@@ -1174,6 +1174,40 @@ public class TestXMLConfiguration extends TestCase
         XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
         assertTrue("Added nodes are not saved", c2
                 .getBoolean("test.autosave.addNodesTest"));
+    }
+
+    /**
+     * Tests saving a configuration after a node was added. Test for
+     * CONFIGURATION-294.
+     */
+    public void testAddNodesAndSave() throws ConfigurationException
+    {
+        ConfigurationNode node = new HierarchicalConfiguration.Node("test");
+        ConfigurationNode child = new HierarchicalConfiguration.Node("child");
+        node.addChild(child);
+        ConfigurationNode attr = new HierarchicalConfiguration.Node("attr");
+        node.addAttribute(attr);
+        ConfigurationNode node2 = conf.createNode("test2");
+        Collection nodes = new ArrayList(2);
+        nodes.add(node);
+        nodes.add(node2);
+        conf.addNodes("add.nodes", nodes);
+        conf.setFile(testSaveConf);
+        conf.save();
+        conf.setProperty("add.nodes.test", "true");
+        conf.setProperty("add.nodes.test.child", "yes");
+        conf.setProperty("add.nodes.test[@attr]", "existing");
+        conf.setProperty("add.nodes.test2", "anotherValue");
+        conf.save();
+        XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
+        assertEquals("Value was not saved", "true", c2
+                .getString("add.nodes.test"));
+        assertEquals("Child value was not saved", "yes", c2
+                .getString("add.nodes.test.child"));
+        assertEquals("Attr value was not saved", "existing", c2
+                .getString("add.nodes.test[@attr]"));
+        assertEquals("Node2 not saved", "anotherValue", c2
+                .getString("add.nodes.test2"));
     }
 
     /**

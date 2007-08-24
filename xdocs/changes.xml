@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-294">
+        Nodes added to a XMLConfiguration using the addNodes() method could
+        lose their value when the configuration was saved. This is now fixed.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-272">
         New copy() and append() methods have been added to AbstractConfiguration.
         They replace the methods with the same names in ConfigurationUtils,
