@@ -49,34 +49,101 @@ import org.apache.commons.configuration.tree.ViewNode;
  * the combination process.
  * </p>
  * <p>
- * The big advantage of this class is that it creates a truely hierarchical
+ * The big advantage of this class is that it creates a truly hierarchical
  * structure of all the properties stored in the contained configurations - even
  * if some of them are no hierarchical configurations per se. So all enhanced
  * features provided by a hierarchical configuration (e.g. choosing an
  * expression engine) are applicable.
  * </p>
  * <p>
- * The class works by registering itself as an event listener add all added
+ * The class works by registering itself as an event listener at all added
  * configurations. So it gets notified whenever one of these configurations is
  * changed and can invalidate its internal node structure. The next time a
  * property is accessed the node structure will be re-constructed using the
- * current state of the managed configurations. Node that, depending on the used
+ * current state of the managed configurations. Note that, depending on the used
  * <code>NodeCombiner</code>, this may be a complex operation.
  * </p>
  * <p>
- * It is not strictly forbidden to manipulate a
- * <code>CombinedConfiguration</code> directly, but the results may be
- * unpredictable. For instance some node combiners use special view nodes for
- * linking parts of the original configurations' data together. If new
- * properties are added to such a special node, they do not belong to any of the
- * managed configurations and thus hang in the air. It is also possible that
- * direct updates on a <code>CombinedConfiguration</code> are incompatible
- * with the used node combiner (e.g. if the
+ * Because of the way a <code>CombinedConfiguration</code> is working it has
+ * more or less view character: it provides a logic view on the configurations
+ * it contains. In this constellation not all methods defined for hierarchical
+ * configurations - especially methods that update the stored properties - can
+ * be implemented in a consistent manner. Using such methods (like
+ * <code>addProperty()</code>, or <code>clearProperty()</code> on a
+ * <code>CombinedConfiguration</code> is not strictly forbidden, however,
+ * depending on the current <code>{@link NodeCombiner}</code> and the involved
+ * properties, the results may be different than expected. Some examples may
+ * illustrate this:
+ * </p>
+ * <p>
+ * <ul>
+ * <li>Imagine a <code>CombinedConfiguration</code> <em>cc</em> containing
+ * two child configurations with the following content:
+ * <dl>
+ * <dt>user.properties</dt>
+ * <dd>
+ *
+ * <pre>
+ * gui.background = blue
+ * gui.position = (10, 10, 400, 200)
+ * </pre>
+ *
+ * </dd>
+ * <dt>default.properties</dt>
+ * <dd>
+ *
+ * <pre>
+ * gui.background = black
+ * gui.foreground = white
+ * home.dir = /data
+ * </pre>
+ *
+ * </dd>
+ * </dl>
+ * As a <code>NodeCombiner</code> a
  * <code>{@link org.apache.commons.configuration.tree.OverrideCombiner OverrideCombiner}</code>
- * is used and properties are removed the resulting node structure may be
- * incorrect because some properties that were hidden by the removed properties
- * are not visible). So it is recommended to perform updates only on the managed
- * configurations.
+ * is used. This combiner will ensure that defined user settings take precedence
+ * over the default values. If the resulting <code>CombinedConfiguration</code>
+ * is queried for the background color, <code>blue</code> will be returned
+ * because this value is defined in <code>user.properties</code>. Now
+ * consider what happens if the key <code>gui.background</code> is removed
+ * from the <code>CombinedConfiguration</code>:
+ *
+ * <pre>cc.clearProperty("gui.background");</pre>
+ *
+ * Will a <code>cc.containsKey("gui.background")</code> now return <b>false</b>?
+ * No, it won't! The <code>clearProperty()</code> operation is executed on the
+ * node set of the combined configuration, which was constructed from the nodes
+ * of the two child configurations. It causes the value of the
+ * <em>background</em> node to be cleared, which is also part of the first
+ * child configuration. This modification of one of its child configurations
+ * causes the <code>CombinedConfiguration</code> to be re-constructed. This
+ * time the <code>OverrideCombiner</code> cannot find a
+ * <code>gui.background</code> property in the first child configuration, but
+ * it finds one in the second, and adds it to the resulting combined
+ * configuration. So the property is still present (with a different value now).</li>
+ * <li><code>addProperty()</code> can also be problematic: Most node
+ * combiners use special view nodes for linking parts of the original
+ * configurations' data together. If new properties are added to such a special
+ * node, they do not belong to any of the managed configurations and thus hang
+ * in the air. Using the same configurations as in the last example, the
+ * statement
+ *
+ * <pre>
+ * addProperty("database.user", "scott");
+ * </pre>
+ *
+ * would cause such a hanging property. If now one of the child configurations
+ * is changed and the <code>CombinedConfiguration</code> is re-constructed,
+ * this property will disappear! (Add operations are not problematic if they
+ * result in a child configuration being updated. For instance an
+ * <code>addProperty("home.url", "localhost");</code> will alter the second
+ * child configuration - because the prefix <em>home</em> is here already
+ * present; when the <code>CombinedConfiguration</code> is re-constructed,
+ * this change is taken into account.)</li>
+ * </ul>
+ * Because of such problems it is recommended to perform updates only on the
+ * managed child configurations.
  * </p>
  * <p>
  * Whenever the node structure of a <code>CombinedConfiguration</code> becomes
