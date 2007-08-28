@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>1</version>
+    <version>4</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
@@ -232,8 +232,8 @@
 
     <dependency>
       <groupId>xerces</groupId>
-      <artifactId>xerces</artifactId>
-      <version>2.2.1</version>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.3.0</version>
       <!-- this is test instead of provided, since you can really provide whatever implementation you want -->
       <scope>test</scope>
     </dependency>
@@ -254,8 +254,8 @@
     </dependency>
 
     <dependency>
-      <groupId>servletapi</groupId>
-      <artifactId>servletapi</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
       <version>2.4</version>
       <optional>true</optional>
     </dependency>
