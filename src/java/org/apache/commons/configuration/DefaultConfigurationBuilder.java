@@ -341,6 +341,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         super();
         providers = new HashMap();
         registerDefaultProviders();
+        registerBeanFactory();
         setLogger(LogFactory.getLog(getClass()));
         addErrorLogListener();  // log errors per default
     }
@@ -695,6 +696,24 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             }
         }
         return configs;
+    }
+
+    /**
+     * Registers the bean factory used by this class if necessary. This method
+     * is called by the constructor to ensure that the required bean factory is
+     * available.
+     */
+    private void registerBeanFactory()
+    {
+        synchronized (getClass())
+        {
+            if (!BeanHelper.registeredFactoryNames().contains(
+                    CONFIG_BEAN_FACTORY_NAME))
+            {
+                BeanHelper.registerBeanFactory(CONFIG_BEAN_FACTORY_NAME,
+                        new ConfigurationBeanFactory());
+            }
+        }
     }
 
     /**
@@ -1388,12 +1407,5 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             return new CombinedConfiguration();
         }
-    }
-
-    static
-    {
-        // register the configuration bean factory
-        BeanHelper.registerBeanFactory(CONFIG_BEAN_FACTORY_NAME,
-                new ConfigurationBeanFactory());
     }
 }

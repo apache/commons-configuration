@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.beanutils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,7 +56,7 @@ import org.apache.commons.lang.ClassUtils;
 public class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static Map beanFactories = new HashMap();
+    private static Map beanFactories = Collections.synchronizedMap(new HashMap());
 
     /**
      * Stores the default bean factory, which will be used if no other factory

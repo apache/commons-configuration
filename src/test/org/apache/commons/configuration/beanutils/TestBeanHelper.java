@@ -46,11 +46,24 @@ public class TestBeanHelper extends TestCase
     {
         super.setUp();
         tempDefaultBeanFactory = BeanHelper.getDefaultBeanFactory();
+        deregisterFactories();
     }
 
     protected void tearDown() throws Exception
     {
-        // Remove all bean factories that might have been registered
+        deregisterFactories();
+
+        // Reset old default bean factory
+        BeanHelper.setDefaultBeanFactory(tempDefaultBeanFactory);
+
+        super.tearDown();
+    }
+
+    /**
+     * Removes all bean factories that might have been registered during a test.
+     */
+    private void deregisterFactories()
+    {
         for (Iterator it = BeanHelper.registeredFactoryNames().iterator(); it
                 .hasNext();)
         {
@@ -58,11 +71,6 @@ public class TestBeanHelper extends TestCase
         }
         assertTrue("Remaining registered bean factories", BeanHelper
                 .registeredFactoryNames().isEmpty());
-
-        // Reset old default bean factory
-        BeanHelper.setDefaultBeanFactory(tempDefaultBeanFactory);
-
-        super.tearDown();
     }
 
     /**
