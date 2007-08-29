@@ -24,7 +24,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.xml.sax.SAXParseException;
+import org.xml.sax.SAXException;
 
 /**
  * Test the ConfigurationFactory.
@@ -196,7 +196,8 @@ public class TestConfigurationFactory extends TestCase
         }
         catch (ConfigurationException cle)
         {
-            assertTrue(cle.getCause() instanceof SAXParseException);
+            assertTrue("Unexpected cause: " + cle.getCause(),
+                    cle.getCause() instanceof SAXException);
         }
     }
 
