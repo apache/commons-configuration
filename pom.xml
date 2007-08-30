@@ -371,7 +371,12 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <forkMode>once</forkMode>
-            <argLine>-Djava.awt.headless=true</argLine>
+            <systemProperties>
+              <property>
+                <name>java.awt.headless</name>
+                <value>true</value>
+              </property>
+            </systemProperties>
           </configuration>
         </plugin>
       </plugins>
