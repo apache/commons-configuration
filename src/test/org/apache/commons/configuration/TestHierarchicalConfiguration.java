@@ -457,9 +457,38 @@ public class TestHierarchicalConfiguration extends TestCase
 
         assertEquals(fields[0][0], subset.getProperty("name(0)"));
 
-        // tset the subset on the field names
+        // test the subset on the field names
         subset = config.subset("tables.table.fields.field.name");
         assertTrue("subset is not empty", subset.isEmpty());
+    }
+
+    /**
+     * Tests the subset() method when the specified node has a value. This value
+     * must be available in the subset, too. Related to CONFIGURATION-295.
+     */
+    public void testSubsetNodeWithValue()
+    {
+        config.setProperty("tables.table(0).fields", "My fields");
+        Configuration subset = config.subset("tables.table(0).fields");
+        assertEquals("Wrong field name", fields[0][0], subset
+                .getString("field(0).name"));
+        assertEquals("Wrong value of root", "My fields", subset.getString(""));
+    }
+
+    /**
+     * Tests the subset() method when the specified key selects multiple keys.
+     * The resulting root node should have a value only if exactly one of the
+     * selected nodes has a value. Related to CONFIGURATION-295.
+     */
+    public void testSubsetMultipleNodesWithValues()
+    {
+        config.setProperty("tables.table(0).fields", "My fields");
+        Configuration subset = config.subset("tables.table.fields");
+        assertEquals("Wrong value of root", "My fields", subset.getString(""));
+        config.setProperty("tables.table(1).fields", "My other fields");
+        subset = config.subset("tables.table.fields");
+        assertNull("Root value is not null though there are multiple values",
+                subset.getString(""));
     }
 
     /**

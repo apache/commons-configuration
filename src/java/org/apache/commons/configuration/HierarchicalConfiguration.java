@@ -458,7 +458,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Creates a new <code>Configuration</code> object containing all keys
      * that start with the specified prefix. This implementation will return a
      * <code>HierarchicalConfiguration</code> object so that the structure of
-     * the keys will be saved.
+     * the keys will be saved. The nodes selected by the prefix (it is possible
+     * that multiple nodes are selected) are mapped to the root node of the
+     * returned configuration, i.e. their children and attributes will become
+     * children and attributes of the new root node. However a value of the root
+     * node is only set if exactly one of the selected nodes contain a value (if
+     * multiple nodes have a value, there is simply no way to decide how these
+     * values are merged together). Note that the returned
+     * <code>Configuration</code> object is not connected to its source
+     * configuration: updates on the source configuration are not reflected in
+     * the subset and vice versa.
      *
      * @param prefix the prefix of the keys for the subset
      * @return a new configuration object representing the selected subset
@@ -482,21 +491,37 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         };
         CloneVisitor visitor = new CloneVisitor();
 
+        // Initialize the new root node
+        Object value = null;
+        int valueCount = 0;
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             ConfigurationNode nd = (ConfigurationNode) it.next();
+            if (nd.getValue() != null)
+            {
+                value = nd.getValue();
+                valueCount++;
+            }
             nd.visit(visitor);
 
-            for (Iterator it2 = visitor.getClone().getChildren().iterator(); it2.hasNext();)
+            for (Iterator it2 = visitor.getClone().getChildren().iterator(); it2
+                    .hasNext();)
             {
                 result.getRootNode().addChild((ConfigurationNode) it2.next());
             }
-            for (Iterator it2 = visitor.getClone().getAttributes().iterator(); it2.hasNext();)
+            for (Iterator it2 = visitor.getClone().getAttributes().iterator(); it2
+                    .hasNext();)
             {
-                result.getRootNode().addAttribute((ConfigurationNode) it2.next());
+                result.getRootNode().addAttribute(
+                        (ConfigurationNode) it2.next());
             }
         }
 
+        // Determine the value of the new root
+        if (valueCount == 1)
+        {
+            result.getRootNode().setValue(value);
+        }
         return (result.isEmpty()) ? new HierarchicalConfiguration() : result;
     }
 
