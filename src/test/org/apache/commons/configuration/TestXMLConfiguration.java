@@ -287,6 +287,22 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("test.boolean[@value]", conf.getBoolean("test.boolean[@value]"));
     }
 
+    /**
+     * Tests setting an attribute on the root element.
+     */
+    public void testSetRootAttribute() throws ConfigurationException
+    {
+        conf.setProperty("[@test]", "true");
+        assertEquals("Root attribute not set", "true", conf
+                .getString("[@test]"));
+        conf.save(testSaveConf);
+        XMLConfiguration checkConf = new XMLConfiguration();
+        checkConf.setFile(testSaveConf);
+        checkSavedConfig(checkConf);
+        assertTrue("Attribute not found after save", checkConf
+                .containsKey("[@test]"));
+    }
+
     public void testAddList()
     {
         conf.addProperty("test.array", "value1");
