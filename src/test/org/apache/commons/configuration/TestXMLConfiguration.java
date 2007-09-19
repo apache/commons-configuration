@@ -1227,6 +1227,40 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests registering the publicId of a DTD.
+     */
+    public void testRegisterEntityId() throws ConfigurationException,
+            IOException
+    {
+        File dtdFile = new File("conf/properties.dtd");
+        final String publicId = "http://commons.apache.org/test/properties.dtd";
+        conf = new XMLConfiguration("testDtd.xml");
+        conf.setPublicID(publicId);
+        conf.save(testSaveConf);
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFile(testSaveConf);
+        checkConfig.registerEntityId(publicId, dtdFile.toURL());
+        checkConfig.setValidating(true);
+        checkSavedConfig(checkConfig);
+    }
+
+    /**
+     * Tries to register a null public ID. This should cause an exception.
+     */
+    public void testRegisterEntityIdNull() throws IOException
+    {
+        try
+        {
+            conf.registerEntityId(null, new URL("http://commons.apache.org"));
+            fail("Could register null public ID!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration

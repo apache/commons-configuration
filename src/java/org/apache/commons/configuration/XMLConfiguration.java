@@ -18,14 +18,18 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,6 +53,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -71,9 +76,9 @@ import org.xml.sax.helpers.DefaultHandler;
  * path set for this configuration.</p>
  *
  * <p>By inheriting from <code>{@link AbstractConfiguration}</code> this class
- * provides some extended functionaly, e.g. interpolation of property values.
+ * provides some extended functionality, e.g. interpolation of property values.
  * Like in <code>{@link PropertiesConfiguration}</code> property values can
- * contain delimiter characters (the comma ',' per default) and are then splitted
+ * contain delimiter characters (the comma ',' per default) and are then split
  * into multiple values. This works for XML attributes and text content of
  * elements as well. The delimiter can be escaped by a backslash. As an example
  * consider the following XML fragment:</p>
@@ -87,7 +92,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * &lt;/config&gt;
  * </pre>
  * </p>
- * <p>Here the content of the <code>array</code> element will be splitted at
+ * <p>Here the content of the <code>array</code> element will be split at
  * the commas, so the <code>array</code> key will be assigned 4 values. In the
  * <code>scalar</code> property and the <code>text</code> attribute of the
  * <code>cite</code> element the comma is escaped, so that no splitting is
@@ -139,6 +144,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Revision$, $Date$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
+    implements EntityResolver
 {
     /**
      * The serial version UID.
@@ -153,6 +159,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /** The document from this configuration's data source. */
     private Document document;
+
+    /** Stores a map with the registered public IDs.*/
+    private Map registeredEntities = new HashMap();
 
     /** Stores the name of the root element. */
     private String rootElementName;
@@ -566,6 +575,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     .newInstance();
             factory.setValidating(isValidating());
             DocumentBuilder result = factory.newDocumentBuilder();
+            result.setEntityResolver(this);
 
             if (isValidating())
             {
@@ -831,6 +841,97 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             nd.addAttribute(convertToXMLNode((ConfigurationNode) it.next()));
         }
         return nd;
+    }
+
+    /**
+     * <p>
+     * Registers the specified DTD URL for the specified public identifier.
+     * </p>
+     * <p>
+     * <code>XMLConfiguration</code> contains an internal
+     * <code>EntityResolver</code> implementation. This maps
+     * <code>PUBLICID</code>'s to URLs (from which the resource will be
+     * loaded). A common use case for this method is to register local URLs
+     * (possibly computed at runtime by a class loader) for DTDs. This allows
+     * the performance advantage of using a local version without having to
+     * ensure every <code>SYSTEM</code> URI on every processed XML document is
+     * local. This implementation provides only basic functionality. If more
+     * sophisticated features are required, using
+     * {@link #setDocumentBuilder(DocumentBuilder)} to set a custom
+     * <code>DocumentBuilder</code> (which also can be initialized with a
+     * custom <code>EntityResolver</code>) is recommended.
+     * </p>
+     * <p>
+     * <strong>Note:</strong> This method will have no effect when a custom
+     * <code>DocumentBuilder</code> has been set. (Setting a custom
+     * <code>DocumentBuilder</code> overrides the internal implementation.)
+     * </p>
+     * <p>
+     * <strong>Note:</strong> This method must be called before the
+     * configuration is loaded. So the default constructor of
+     * <code>XMLConfiguration</code> should be used, the location of the
+     * configuration file set, <code>registerEntityId()</code> called, and
+     * finally the <code>load()</code> method can be invoked.
+     * </p>
+     *
+     * @param publicId Public identifier of the DTD to be resolved
+     * @param entityURL The URL to use for reading this DTD
+     * @throws IllegalArgumentException if the public ID is undefined
+     * @since 1.5
+     */
+    public void registerEntityId(String publicId, URL entityURL)
+    {
+        if (publicId == null)
+        {
+            throw new IllegalArgumentException("Public ID must not be null!");
+        }
+        registeredEntities.put(publicId, entityURL);
+    }
+
+    /**
+     * Resolves the requested external entity. This is the default
+     * implementation of the <code>EntityResolver</code> interface. It checks
+     * the passed in public ID against the registered entity IDs and uses a
+     * local URL if possible.
+     *
+     * @param publicId the public identifier of the entity being referenced
+     * @param systemId the system identifier of the entity being referenced
+     * @throws SAXException if a parsing exception occurs
+     * @since 1.5
+     */
+    public InputSource resolveEntity(String publicId, String systemId)
+            throws SAXException
+    {
+        // Has this system identifier been registered?
+        URL entityURL = null;
+        if (publicId != null)
+        {
+            entityURL = (URL) registeredEntities.get(publicId);
+        }
+
+        if (entityURL != null)
+        {
+            // Obtain an InputSource for this URL. This code is based on the
+            // createInputSourceFromURL() method of Commons Digester.
+            try
+            {
+                URLConnection connection = entityURL.openConnection();
+                connection.setUseCaches(false);
+                InputStream stream = connection.getInputStream();
+                InputSource source = new InputSource(stream);
+                source.setSystemId(entityURL.toExternalForm());
+                return source;
+            }
+            catch (IOException e)
+            {
+                throw new SAXException(e);
+            }
+        }
+        else
+        {
+            // default processing behavior
+            return null;
+        }
     }
 
     /**
