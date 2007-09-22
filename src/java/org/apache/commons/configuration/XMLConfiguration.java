@@ -885,7 +885,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             throw new IllegalArgumentException("Public ID must not be null!");
         }
-        registeredEntities.put(publicId, entityURL);
+        getRegisteredEntities().put(publicId, entityURL);
     }
 
     /**
@@ -906,7 +906,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         URL entityURL = null;
         if (publicId != null)
         {
-            entityURL = (URL) registeredEntities.get(publicId);
+            entityURL = (URL) getRegisteredEntities().get(publicId);
         }
 
         if (entityURL != null)
@@ -932,6 +932,17 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             // default processing behavior
             return null;
         }
+    }
+
+    /**
+     * Returns a map with the entity IDs that have been registered using the
+     * <code>registerEntityId()</code> method.
+     *
+     * @return a map with the registered entity IDs
+     */
+    Map getRegisteredEntities()
+    {
+        return registeredEntities;
     }
 
     /**

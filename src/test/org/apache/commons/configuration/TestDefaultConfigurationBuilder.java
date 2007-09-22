@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
@@ -701,5 +702,45 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Wrong number of configurations", 1, cc
                 .getNumberOfConfigurations());
         checkProperties(cc);
+    }
+
+    /**
+     * Tests whether XML settings can be inherited.
+     */
+    public void testLoadXMLWithSettings() throws ConfigurationException,
+            IOException
+    {
+        File confDir = new File("conf");
+        File targetDir = new File("target");
+        File testXMLSource = new File(confDir, "testDtd.xml");
+        File testXMLValidationSource = new File(confDir,
+                "testValidateInvalid.xml");
+        File testSavedXML = new File(targetDir, "testSave.xml");
+        File testSavedFactory = new File(targetDir, "testSaveFactory.xml");
+        File dtdFile = new File(confDir, "properties.dtd");
+        final String publicId = "http://commons.apache.org/test.dtd";
+
+        XMLConfiguration config = new XMLConfiguration(testXMLSource);
+        config.setPublicID(publicId);
+        config.save(testSavedXML);
+        factory.addProperty("xml[@fileName]", testSavedXML.getAbsolutePath());
+        factory.addProperty("xml(0)[@validating]", "true");
+        factory.addProperty("xml(-1)[@fileName]", testXMLValidationSource
+                .getAbsolutePath());
+        factory.addProperty("xml(1)[@config-optional]", "true");
+        factory.addProperty("xml(1)[@validating]", "true");
+        factory.save(testSavedFactory);
+
+        factory = new DefaultConfigurationBuilder();
+        factory.setFile(testSavedFactory);
+        factory.registerEntityId(publicId, dtdFile.toURL());
+        factory.clearErrorListeners();
+        Configuration c = factory.getConfiguration();
+        assertEquals("Wrong property value", "value1", c.getString("entry(0)"));
+        assertFalse("Invalid XML source was loaded", c
+                .containsKey("table.name"));
+
+        testSavedXML.delete();
+        testSavedFactory.delete();
     }
 }

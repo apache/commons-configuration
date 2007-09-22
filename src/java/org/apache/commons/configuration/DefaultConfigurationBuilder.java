@@ -96,7 +96,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>
  * Each configuration declaration consists of a tag whose name is associated
  * with a <code>ConfigurationProvider</code>. This can be one of the
- * pre-defined tags like <code>properties</code>, or <code>xml</code>, or
+ * predefined tags like <code>properties</code>, or <code>xml</code>, or
  * a custom tag, for which a configuration provider was registered. Attributes
  * and sub elements with specific initialization parameters can be added. There
  * are some reserved attributes with a special meaning that can be used in every
@@ -287,8 +287,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             EXT_XML);
 
     /** Constant for the provider for XML files. */
-    private static final ConfigurationProvider XML_PROVIDER = new FileConfigurationProvider(
-            XMLConfiguration.class);
+    private static final ConfigurationProvider XML_PROVIDER = new XMLConfigurationProvider();
 
     /** Constant for the provider for JNDI sources. */
     private static final ConfigurationProvider JNDI_PROVIDER = new ConfigurationProvider(
@@ -1228,6 +1227,46 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
+     * A specialized configuration provider for XML configurations. This
+     * implementation acts like a <code>FileConfigurationProvider</code>, but
+     * it will copy all entity IDs that have been registered for the
+     * configuration builder to the new XML configuration before it is loaded.
+     */
+    static class XMLConfigurationProvider extends FileConfigurationProvider
+    {
+        /**
+         * Creates a new instance of <code>XMLConfigurationProvider</code>.
+         */
+        public XMLConfigurationProvider()
+        {
+            super(XMLConfiguration.class);
+        }
+
+        /**
+         * Returns a new empty configuration instance. This implementation
+         * performs some additional initialization specific to XML
+         * configurations.
+         *
+         * @param decl the configuration declaration
+         * @return the new configuration
+         * @throws Exception if an error occurs
+         */
+        public AbstractConfiguration getEmptyConfiguration(
+                ConfigurationDeclaration decl) throws Exception
+        {
+            XMLConfiguration config = (XMLConfiguration) super
+                    .getEmptyConfiguration(decl);
+
+            // copy the registered entities
+            DefaultConfigurationBuilder builder = decl
+                    .getConfigurationBuilder();
+            config.getRegisteredEntities().putAll(
+                    builder.getRegisteredEntities());
+            return config;
+        }
+    }
+
+    /**
      * A specialized configuration provider for file based configurations that
      * can handle configuration sources whose concrete type depends on the
      * extension of the file to be loaded. One example is the
@@ -1291,7 +1330,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * file extension matches
          * @param defaultClassName the name of the class to be created when the
          * file extension does not match
-         * @param extension the file extension to be checked agains
+         * @param extension the file extension to be checked against
          * @since 1.4
          */
         public FileExtensionConfigurationProvider(String matchingClassName,
