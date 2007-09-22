@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-290">
+        A new method registerEntityId() was added to XMLConfiguration, which
+        allows to register URLs for entities. A new default implementation of
+        the EntityResolver interface handles these entities automatically.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-295">
         The subset() method of HierarchicalConfiguration now takes the value of
         the subset's root node into account if it is not ambigous.

@@ -27,7 +27,7 @@
 	<section name="Using DefaultConfigurationBuilder">
     <p>
       The <code>ConfigurationFactory</code> class that was introduced in the
-      <a href="howto_configurationfactory.html#Using a Configuration Factory">last
+      <a href="howto_configurationfactory.html#Using_a_Configuration_Factory">last
       section</a> is a powerful tool for dealing with multiple different
       configuration sources, but it also has some shortcommings:
       <ul>
@@ -361,7 +361,8 @@
   </override>
   <additional>
     <xml config-name="tab1" fileName="table1.xml" config-at="database.tables"/>
-    <xml config-name="tab2" fileName="table2.xml" config-at="database.tables"/>
+    <xml config-name="tab2" fileName="table2.xml" config-at="database.tables"
+        validating="true"/>
   </additional>
 </configuration>
 ]]></source>
@@ -376,7 +377,9 @@
       strategy can function properly. More details about this topic can be
       found in the Javadocs for
       <code><a href="apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
-      CombinedConfiguration</a></code>.
+      CombinedConfiguration</a></code>. We also set some properties for the
+      configurations to be loaded; for instance we declare that one of the XML
+      configurations should be validated.
     </p>
     <p>
       With the following code we can create a <code>DefaultConfigurationBuilder</code>
@@ -395,10 +398,18 @@ CombinedConfiguration cc = builder.getConfiguration(true);
       want this to happen, but it would also be possible to load the file
       manually (by calling the <code>load()</code> method), and after that
       updating the configuration. (Remember that <code>DefaultConfigurationBuilder</code>
-      is a hierarchical configuration, that means you can use all methods
+      is derived from <code>XMLConfiguration</code>, that means you can use all methods
       provided by this class to alter its data, e.g. to add further configuration
       sources.) If the configuration's data was manually changed, you should
       call <code>getConfiguration()</code> with the argument <b>false</b>.
+      <code>XMLConfiguration</code> also provides the <code>registerEntityId()</code>
+      method that can be used to define the location of DTD files (refer to the
+      section <a href="howto_xml.html#Validation_of_XML_configuration_files">
+      Validation of XML configuration files</a> for more details). This method
+      is available for <code>DefaultConfigurationBuilder</code>, too. The
+      entities registered here will be passed to the loaded child XML
+      configurations. So you can register the DTDs of all child XML configurations
+      globally at the configuration builder.
     </p>
     <p>
       In the <code>header</code> section we have chosen an XPATH expression

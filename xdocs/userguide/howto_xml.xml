@@ -23,7 +23,7 @@
   <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
-<body>		
+<body>
 	<section name="Using XML based Configurations">
 		<p>
  	 		This section explains how to use hierarchical
@@ -884,6 +884,54 @@ config.load();
             exceptions on simple and fatal parsing errors.
         </p>
         <p>
+            There is also some support for dealing with DTD files. Often the
+            DTD of an XML document is stored locally so that it can be quickly
+            accessed. However the <code>DOCTYPE</code> declaration of the document
+            points to a location on the web as in the following example:
+        </p>
+        <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE web-app
+  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+  "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+]]></source>
+        <p>
+            When working with XML documents directly you would use an
+            <code>EntityResolver</code> in such a case. The task of such an
+            entity resolver is to point the XML parser to the location of the
+            file referred to by the declaration. So in our example the entity
+            resolver would load the DTD file from a local cache instead of
+            retrieving it from the internet.
+        </p>
+        <p>
+            <code>XMLConfiguration</code> provides a simple default implementation of
+            an <code>EntityResolver</code>. This implementation is initialized
+            by calling the <code>registerEntityId()</code> method with the
+            public IDs of the entities to be retrieved and their corresponding
+            local URLs. This method has to be called before the configuration
+            is loaded. To continue our example, consider that the DTD file for
+            our example document is stored on the class path. We can register it
+            at <code>XMLConfiguration</code> using the following code:
+        </p>
+        <source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+// load the URL to the DTD file from class path
+URL dtdURL = getClass().getResource("web-app_2.2.dtd");
+// register it at the configuration
+config.registerEntityId("-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN",
+    dtdURL);
+config.setValidating(true);  // enable validation
+config.setFileName("web.xml");
+config.load();
+]]></source>
+        <p>
+            This basically tells the XML configuration to use the specified
+            URL when it encounters the given public ID. Note that the call to
+            <code>registerEntityId()</code> has to be performed before the
+            configuration is loaded. So you cannot use one of the constructors
+            that directly load the configuration.
+        </p>
+        <p>
             While using the <code>validating</code> flag is a simple means of
             enabling validation it cannot fullfil more complex requirements,
             e.g. schema validation. To be able to deal with such requirements
@@ -897,7 +945,11 @@ config.load();
             object must be passed to the <code>XMLConfiguration</code> instance
             before invocation of the <code>load()</code> method. When loading
             a configuration file, the passed in <code>DocumentBuilder</code> will
-            be used instead of the default one.
+            be used instead of the default one. <em>Note:</em> If a custom
+            <code>DocumentBuilder</code> is used, the default implementation of
+            the <code>EntityResolver</code> interface is disabled. This means
+            that the <code>registerEntityId()</code> method has no effect in
+            this mode.
         </p>
     </section>
 </body>
