@@ -301,6 +301,24 @@ public class TestXMLConfiguration extends TestCase
         checkSavedConfig(checkConf);
         assertTrue("Attribute not found after save", checkConf
                 .containsKey("[@test]"));
+        checkConf.setProperty("[@test]", "newValue");
+        checkConf.save();
+        conf = checkConf;
+        checkConf = new XMLConfiguration();
+        checkConf.setFile(testSaveConf);
+        checkSavedConfig(checkConf);
+        assertEquals("Attribute not modified after save", "newValue", checkConf
+                .getString("[@test]"));
+    }
+
+    /**
+     * Tests whether the configuration's root node is initialized with a
+     * reference to the corresponding XML element.
+     */
+    public void testGetRootReference()
+    {
+        assertNotNull("Root node has no reference", conf.getRootNode()
+                .getReference());
     }
 
     public void testAddList()

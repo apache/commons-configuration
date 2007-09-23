@@ -419,7 +419,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             setPublicID(document.getDoctype().getPublicId());
             setSystemID(document.getDoctype().getSystemId());
         }
+
         constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
+        if (elemRefs)
+        {
+            getRoot().setReference(document.getDocumentElement());
+        }
     }
 
     /**
@@ -1242,7 +1247,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          *
          * @param node the affected node
          * @param name the name of the attribute
-         * @param listDelimiter the delimiter vor attributes with multiple values
+         * @param listDelimiter the delimiter for attributes with multiple values
          */
         static void updateAttribute(Node node, String name, char listDelimiter)
         {

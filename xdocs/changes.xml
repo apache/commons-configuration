@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-296">
+        A bug in XMLConfiguration caused that attributes of the root element
+        could not be changed. This has been fixed.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-290">
         A new method registerEntityId() was added to XMLConfiguration, which
         allows to register URLs for entities. A new default implementation of
