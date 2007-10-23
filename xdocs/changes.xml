@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="update" due-to="Nicolas De Loof">
+        The dependencies to commons-codec and commons-jxpath have been marked
+        as optional. They are not required by the core classes.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-284" due-to="Nicolas De Loof">
         There is a new configuration implementation EnvironmentConfiguration,
         which provides access to (OS) environment variables. On Java &gt;= 1.5
