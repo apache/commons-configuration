@@ -99,6 +99,10 @@
                         <td>XPathExpressionEngine</td>
                         <td>commons-jxpath</td>
                     </tr>
+                    <tr>
+                        <td>EnvironmentConfiguration</td>
+                        <td>Java 1.5 or ant 1.6.5</td>
+                    </tr>
                 </tbody>
             </table>
 

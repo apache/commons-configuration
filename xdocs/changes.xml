@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-284" due-to="Nicolas De Loof">
+        There is a new configuration implementation EnvironmentConfiguration,
+        which provides access to (OS) environment variables. On Java &gt;= 1.5
+        this class can be directly used; on earlier versions a dependency to ant
+        is required.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-296">
         A bug in XMLConfiguration caused that attributes of the root element
         could not be changed. This has been fixed.

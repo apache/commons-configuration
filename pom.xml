@@ -260,6 +260,13 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>ant</groupId>
+      <artifactId>ant</artifactId>
+      <version>1.6.5</version>
+      <optional>true</optional>
+    </dependency>
+
     <!-- Needed for testing -->
 
     <dependency>
