@@ -1239,4 +1239,37 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             }
         }
     }
+
+    /**
+     * Returns a configuration with the same content as this configuration, but
+     * with all variables replaced by their actual values. This method tries to
+     * clone the configuration and then perform interpolation on all properties.
+     * So property values of the form <code>${var}</code> will be resolved as
+     * far as possible (if a variable cannot be resolved, it remains unchanged).
+     * This operation is useful if the content of a configuration is to be
+     * exported or processed by an external component that does not support
+     * variable interpolation.
+     *
+     * @return a configuration with all variables interpolated
+     * @throws ConfigurationRuntimeException if this configuration cannot be
+     * cloned
+     * @since 1.5
+     */
+    public Configuration interpolatedConfiguration()
+    {
+        // first clone this configuration
+        AbstractConfiguration c = (AbstractConfiguration) ConfigurationUtils
+                .cloneConfiguration(this);
+
+        // now perform interpolation
+        c.setDelimiterParsingDisabled(true);
+        for (Iterator it = getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            c.setProperty(key, getList(key));
+        }
+
+        c.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        return c;
+    }
 }
