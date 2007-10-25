@@ -107,9 +107,8 @@ public class ConstantLookup extends StrLookup
                 {
                     // In worst case, the value will be fetched multiple times
                     // because of this lax synchronisation, but for constant
-                    // values
-                    // this shouldn't be a problem.
-                    constantCache.put(var, value);
+                    // values this shouldn't be a problem.
+                    constantCache.put(var, String.valueOf(value));
                 }
                 result = value.toString();
             }

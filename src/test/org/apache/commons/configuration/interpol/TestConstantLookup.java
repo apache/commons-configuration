@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import java.awt.event.KeyEvent;
+
 import junit.framework.TestCase;
 
 /**
@@ -119,5 +121,18 @@ public class TestConstantLookup extends TestCase
     {
         testLookupConstant();
         testLookupConstant();
+    }
+
+    /**
+     * Tests resolving a non string constant. Then looks the same variable up
+     * from the cache.
+     */
+    public void testLookupNonStringFromCache()
+    {
+        final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
+        final String expected = String.valueOf(KeyEvent.VK_ESCAPE);
+        assertEquals("Wrong result of first lookup", expected, lookup
+                .lookup(var));
+        assertEquals("Wrong result of 2nd lookup", expected, lookup.lookup(var));
     }
 }
