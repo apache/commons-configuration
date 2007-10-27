@@ -811,6 +811,91 @@ public class TestHierarchicalConfiguration extends TestCase
         }
     }
 
+    /**
+     * Basic interpolation tests.
+     */
+    public void testInterpolationBasic()
+    {
+        InterpolationTestHelper.testInterpolation(config);
+    }
+
+    /**
+     * Tests multiple levels of interpolation.
+     */
+    public void testInterpolationMultipleLevels()
+    {
+        InterpolationTestHelper.testMultipleInterpolation(config);
+    }
+
+    /**
+     * Tests an invalid interpolation that causes an endless loop.
+     */
+    public void testInterpolationLoop()
+    {
+        InterpolationTestHelper.testInterpolationLoop(config);
+    }
+
+    /**
+     * Tests interpolation with a subset.
+     */
+    public void testInterpolationSubset()
+    {
+        InterpolationTestHelper.testInterpolationSubset(config);
+    }
+
+    /**
+     * Tests interpolation of a variable, which cannot be resolved.
+     */
+    public void testInterpolationUnknownProperty()
+    {
+        InterpolationTestHelper.testInterpolationUnknownProperty(config);
+    }
+
+    /**
+     * Tests interpolation with system properties.
+     */
+    public void testInterpolationSysProperties()
+    {
+        InterpolationTestHelper.testInterpolationSystemProperties(config);
+    }
+
+    /**
+     * Tests interpolation with constant values.
+     */
+    public void testInterpolationConstants()
+    {
+        InterpolationTestHelper.testInterpolationConstants(config);
+    }
+
+    /**
+     * Tests escaping variables.
+     */
+    public void testInterpolationEscaped()
+    {
+        InterpolationTestHelper.testInterpolationEscaped(config);
+    }
+
+    /**
+     * Tests manipulating the interpolator.
+     */
+    public void testInterpolator()
+    {
+        InterpolationTestHelper.testGetInterpolator(config);
+    }
+
+    /**
+     * Tests obtaining a configuration with all variables substituted.
+     */
+    public void testInterpolatedConfiguration()
+    {
+        HierarchicalConfiguration c = (HierarchicalConfiguration) InterpolationTestHelper
+                .testInterpolatedConfiguration(config);
+
+        // tests whether the hierarchical structure has been maintained
+        config = c;
+        testGetProperty();
+    }
+
 	/**
      * Tests the copy constructor when a null reference is passed.
      */

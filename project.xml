@@ -551,6 +551,7 @@
         <exclude>**/AbstractTestConfigurationEvents.java</exclude>
         <exclude>**/AbstractTestFileConfigurationEvents.java</exclude>
         <exclude>**/AbstractTestPListEvents.java</exclude>
+        <exclude>**/InterpolationTestHelper.java</exclude>
       </excludes>
       <resources>
         <resource>

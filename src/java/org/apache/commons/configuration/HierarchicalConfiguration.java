@@ -90,7 +90,7 @@ import org.apache.commons.lang.StringUtils;
  * element if there are multiple hits.</p><p>For instance the key
  * <code>tables.table(0).name</code> can be used to find out the name of the
  * first table. In opposite <code>tables.table.name</code> would return a
- * collection with the names of all available tables. Similarily the key
+ * collection with the names of all available tables. Similarly the key
  * <code>tables.table(1).fields.field.name</code> returns a collection with
  * the names of all fields of the second table. If another index is added after
  * the <code>field</code> element, a single field can be accessed:
@@ -891,6 +891,29 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
+     * Returns a configuration with the same content as this configuration, but
+     * with all variables replaced by their actual values. This implementation
+     * is specific for hierarchical configurations. It clones the current
+     * configuration and runs a specialized visitor on the clone, which performs
+     * interpolation on the single configuration nodes.
+     *
+     * @return a configuration with all variables interpolated
+     * @since 1.5
+     */
+    public Configuration interpolatedConfiguration()
+    {
+        HierarchicalConfiguration c = (HierarchicalConfiguration) clone();
+        c.getRootNode().visit(new ConfigurationNodeVisitorAdapter()
+        {
+            public void visitAfterChildren(ConfigurationNode node)
+            {
+                node.setValue(interpolate(node.getValue()));
+            }
+        });
+        return c;
+    }
+
+    /**
      * Helper method for fetching a list of all nodes that are addressed by the
      * specified key.
      *
@@ -984,7 +1007,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Clears the value of the specified node. If the node becomes undefined by
      * this operation, it is removed from the hierarchy.
      *
-     * @param node the node to be cleard
+     * @param node the node to be cleared
      * @deprecated Use the method <code>{@link #clearNode(ConfigurationNode)}</code>
      * instead
      */
@@ -997,7 +1020,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Clears the value of the specified node. If the node becomes undefined by
      * this operation, it is removed from the hierarchy.
      *
-     * @param node the node to be cleard
+     * @param node the node to be cleared
      */
     protected void clearNode(ConfigurationNode node)
     {

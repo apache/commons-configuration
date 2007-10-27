@@ -216,8 +216,9 @@ public class InterpolationTestHelper
      * actual values.
      *
      * @param config the configuration to test
+     * @return the interpolated configuration
      */
-    public static void testInterpolatedConfiguration(
+    public static Configuration testInterpolatedConfiguration(
             AbstractConfiguration config)
     {
         config.setProperty("applicationRoot", "/home/applicationRoot");
@@ -249,5 +250,7 @@ public class InterpolationTestHelper
                         .get(1));
         Assert.assertEquals("Unresolvable variable not found",
                 "${unknown.property}", c.getProperty("inttest.interpol"));
+
+        return c;
     }
 }
