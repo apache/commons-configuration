@@ -44,7 +44,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * store any data.</p>
  * <p>If you want to write your own Configuration class then you should
  * implement only abstract methods from this class. A lot of functionality
- * needed by typical implementations of the <code>Configuration</conde>
+ * needed by typical implementations of the <code>Configuration</code>
  * interface is already provided by this base class. Following is a list of
  * features implemented here:
  * <ul><li>Data conversion support. The various data types required by the
@@ -56,7 +56,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * corresponding values.</li>
  * <li>Support for string lists. The values of properties to be added to this
  * configuration are checked whether they contain a list delimiter character. If
- * this is the case and if list splitting is enabled, the string is splitted and
+ * this is the case and if list splitting is enabled, the string is split and
  * multiple values are added for this property. (With the
  * <code>setListDelimiter()</code> method the delimiter character can be
  * specified; per default a comma is used. The
