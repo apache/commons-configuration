@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.5-SNAPSHOT" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-273">
+        A new method interpolatedConfiguration() was added to AbstractConfiguration.
+        This method returns a configuration with the same type and
+        content as the original configuration, however all variables have been
+        resolved.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-299">
         Resolving of variables with the prefix const (constant fields) caused
         a ClassCastException under certain circumstances if non-String fields

@@ -151,6 +151,44 @@ Properties processConfiguration(Properties props)
     </p>
     </subsection>
 
+    <subsection name="Interpolation of all variables">
+    <p>
+      Another issue with the integration of <em>Commons Configuration</em> with
+      native Java applications can be variables: Configuration implementations
+      are able to detect variables like <code>${myReference}</code> or
+      <code>${sys:java.version}</code> in the values of their properties and
+      substitute them by their current values (see the section
+      <a href="howto_basicfeatures.html#Variable_Interpolation">Variable
+      Interpolation</a> for more details). External components probably do not
+      know how to handle such placeholders when processing configuration files
+      written by <em>Commons Configuration</em>.
+    </p>
+    <p>
+      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> provides the method
+      <code>interpolatedConfiguration()</code>. This method creates a clone of
+      the current configuration and then performs interpolation on all of its
+      properties. So the result of this method is a configuration object with
+      basically the same content as the original configuration, but with all
+      variables replaced by their actual values (as far as this was possible).
+      The following code fragment shows how a
+      <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+      PropertiesConfiguration</a></code> object can be saved in a way that the
+      resulting properties file does not contain any variables:
+    </p>
+    <source><![CDATA[
+// Load a properties file (which may contain variables)
+PropertiesConfiguration config = new PropertiesConfiguration("config.properties");
+
+// Perform interpolation on all variables
+PropertiesConfiguration extConfig =
+    (PropertiesConfiguration) config.interpolatedConfiguration();
+
+// Save the interpolated configuration (no more variables)
+extConfig.save("external_config.properties");
+]]></source>
+    </subsection>
+
     <subsection name="Handling of runtime exceptions">
     <p>
       Section <a href="howto_events.html#Error_listeners">Error listeners</a>

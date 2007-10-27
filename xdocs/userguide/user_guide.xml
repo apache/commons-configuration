@@ -143,6 +143,7 @@
         <li><a href="howto_utilities.html#Copy_a_configuration">Copy a configuration</a></li>
         <li><a href="howto_utilities.html#Converting_a_flat_configuration_into_a_hierarchical_one">Converting a flat configuration into a hierarchical one</a></li>
         <li><a href="howto_utilities.html#Converting_between_properties_and_configurations">Converting between properties and configurations</a></li>
+        <li><a href="howto_utilities.html#Interpolation_of_all_variables">Interpolation of all variables</a></li>
         <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
       </ul>
     </ul>
