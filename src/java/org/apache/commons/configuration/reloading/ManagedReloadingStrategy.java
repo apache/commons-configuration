@@ -44,7 +44,6 @@ public class ManagedReloadingStrategy implements ReloadingStrategy,
      */
     public void init()
     {
-        return;
     }
 
     /**
