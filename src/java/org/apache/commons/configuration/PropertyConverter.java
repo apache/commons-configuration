@@ -66,6 +66,9 @@ public final class PropertyConverter
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
+    /** Constant for the Java version 1.5.*/
+    private static final float JAVA_VERSION_1_5 = 1.5f;
+
     /** Constant for the argument classes of the Number constructor that takes a String. */
     private static final Class[] CONSTR_ARGS = {String.class};
 
@@ -718,7 +721,7 @@ public final class PropertyConverter
      */
     static boolean isEnum(Class cls)
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
+        if (!SystemUtils.isJavaVersionAtLeast(JAVA_VERSION_1_5))
         {
             return false;
         }

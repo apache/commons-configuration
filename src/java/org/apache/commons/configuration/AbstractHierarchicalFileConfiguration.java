@@ -330,7 +330,7 @@ implements FileConfiguration, ConfigurationListener
      * Directly adds sub nodes to this configuration. This implementation checks
      * whether auto save is necessary after executing the operation.
      *
-     * @param the key where the nodes are to be added
+     * @param key the key where the nodes are to be added
      * @param nodes a collection with the nodes to be added
      * @since 1.5
      */

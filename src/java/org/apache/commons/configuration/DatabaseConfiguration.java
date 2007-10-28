@@ -560,7 +560,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @return the <code>Connection</code> object to be used
      * @throws SQLException if an error occurs
      * @since 1.4
-     * @deprecated Use a custom datasource to change the connection used by the class. To be removed in Commons Configuration 2.0
+     * @deprecated Use a custom data source to change the connection used by the
+     * class. To be removed in Commons Configuration 2.0
      */
     protected Connection getConnection() throws SQLException
     {

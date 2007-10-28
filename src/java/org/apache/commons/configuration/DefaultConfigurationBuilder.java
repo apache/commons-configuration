@@ -30,7 +30,6 @@ import org.apache.commons.configuration.beanutils.BeanFactory;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -123,10 +122,11 @@ import org.apache.commons.logging.LogFactory;
  * <td valign="top"><code>config-optional</code></td>
  * <td>Declares a configuration as optional. This means that errors that occur
  * when creating the configuration are ignored. (However
- * <code>{@link ConfigurationErrorListener}</code>s registered at the builder
- * instance will get notified about this error: they receive an event of type
- * <code>EVENT_ERR_LOAD_OPTIONAL</code>. The key property of this event contains
- * the name of the optional configuration source that caused this problem.)</td>
+ * <code>{@link org.apache.commons.configuration.event.ConfigurationErrorListener}</code>s
+ * registered at the builder instance will get notified about this error: they
+ * receive an event of type <code>EVENT_ERR_LOAD_OPTIONAL</code>. The key
+ * property of this event contains the name of the optional configuration source
+ * that caused this problem.)</td>
  * </tr>
  * </table>
  * </p>

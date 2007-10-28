@@ -901,6 +901,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @param publicId the public identifier of the entity being referenced
      * @param systemId the system identifier of the entity being referenced
+     * @return an input source for the specified entity
      * @throws SAXException if a parsing exception occurs
      * @since 1.5
      */

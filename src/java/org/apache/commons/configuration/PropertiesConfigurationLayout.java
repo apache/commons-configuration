@@ -443,8 +443,10 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         try
         {
-            char delimiter = getConfiguration().isDelimiterParsingDisabled() ? 0 : getConfiguration().getListDelimiter();
-            PropertiesConfiguration.PropertiesWriter writer = new PropertiesConfiguration.PropertiesWriter(out, delimiter);
+            char delimiter = getConfiguration().isDelimiterParsingDisabled() ? 0
+                    : getConfiguration().getListDelimiter();
+            PropertiesConfiguration.PropertiesWriter writer = new PropertiesConfiguration.PropertiesWriter(
+                    out, delimiter);
             if (headerComment != null)
             {
                 writer.writeln(getCanonicalHeaderComment(true));
@@ -457,7 +459,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                 if (getConfiguration().containsKey(key))
                 {
 
-                    // Output blanc lines before property
+                    // Output blank lines before property
                     for (int i = 0; i < getBlancLinesBefore(key); i++)
                     {
                         writer.writeln(null);
@@ -470,8 +472,10 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     }
 
                     // Output the property and its value
-                    boolean singleLine = (isForceSingleLine() || isSingleLine(key)) && !getConfiguration().isDelimiterParsingDisabled();
-                    writer.writeProperty(key, getConfiguration().getProperty(key), singleLine);
+                    boolean singleLine = (isForceSingleLine() || isSingleLine(key))
+                            && !getConfiguration().isDelimiterParsingDisabled();
+                    writer.writeProperty(key, getConfiguration().getProperty(
+                            key), singleLine);
                 }
             }
             writer.flush();

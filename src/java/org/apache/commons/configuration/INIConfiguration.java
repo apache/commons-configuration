@@ -245,7 +245,8 @@ public class INIConfiguration extends AbstractFileConfiguration
             {
                 String key = (String) keys.next();
                 Object value = subset.getProperty(key);
-                if (value instanceof Collection) {
+                if (value instanceof Collection)
+                {
                     Iterator values = ((Collection) value).iterator();
                     while (values.hasNext())
                     {
@@ -255,7 +256,9 @@ public class INIConfiguration extends AbstractFileConfiguration
                         out.print(formatValue(value.toString()));
                         out.println();
                     }
-                } else {
+                }
+                else
+                {
                     out.print(key);
                     out.print(" = ");
                     out.print(formatValue(value.toString()));

@@ -37,7 +37,6 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
-import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -105,8 +104,9 @@ import org.apache.commons.lang.StringUtils;
  * expression engine, which is used when a new <code>HierarchicalConfiguration</code>
  * instance is created. With the <code>setExpressionEngine()</code> method a
  * different expression engine can be set. For instance with
- * <code>{@link XPathExpressionEngine}</code> there is an expression engine
- * available that supports configuration keys in XPATH syntax.</p>
+ * <code>{@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}</code>
+ * there is an expression engine available that supports configuration keys in
+ * XPATH syntax.</p>
  * <p>In addition to the events common for all configuration classes hierarchical
  * configurations support some more events that correspond to some specific
  * methods and features:

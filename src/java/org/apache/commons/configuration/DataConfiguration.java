@@ -380,10 +380,15 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     public Object getArray(Class cls, String key, Object defaultValue)
     {
         // check the type of the default value
-        if (defaultValue != null && (!defaultValue.getClass().isArray() || !cls.isAssignableFrom(defaultValue.getClass().getComponentType())))
+        if (defaultValue != null
+                && (!defaultValue.getClass().isArray() || !cls
+                        .isAssignableFrom(defaultValue.getClass()
+                                .getComponentType())))
         {
-            throw new IllegalArgumentException("The type of the default value (" + defaultValue.getClass() + ")"
-                    + " is not an array of the specified class (" + cls + ")");
+            throw new IllegalArgumentException(
+                    "The type of the default value (" + defaultValue.getClass()
+                            + ")" + " is not an array of the specified class ("
+                            + cls + ")");
         }
 
         if (cls.isPrimitive())
