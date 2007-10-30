@@ -19,7 +19,6 @@ package org.apache.commons.configuration.plist;
 
 import java.io.Reader;
 import java.util.Calendar;
-import java.util.TimeZone;
 import java.util.SimpleTimeZone;
 
 import junit.framework.TestCase;

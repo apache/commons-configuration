@@ -84,17 +84,7 @@ class PropertyListParser implements PropertyListParserConstants {
      */
     protected Date parseDate(String s) throws ParseException
     {
-        // remove the prefix "<*D" and the suffix ">"
-        String substring = s.substring(3, s.length() - 1);
-
-        try
-        {
-            return PropertyListConfiguration.DATE_FORMAT.parse(substring);
-        }
-        catch (Exception e)
-        {
-            throw (ParseException) new ParseException("Unable to parse the date '" + s + "' : " + e.getMessage());
-        }
+        return PropertyListConfiguration.parseDate(s);
     }
 
   final public PropertyListConfiguration parse() throws ParseException {

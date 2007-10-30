@@ -19,9 +19,11 @@ package org.apache.commons.configuration.plist;
 
 import java.io.File;
 import java.io.StringReader;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -177,9 +179,13 @@ public class TestPropertyListConfiguration extends TestCase
 
     public void testDate() throws Exception
     {
-        Date date = PropertyListConfiguration.DATE_FORMAT.parse("2002-03-22 11:30:00 +0100");
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2002, 2, 22, 11, 30, 0);
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+0100"));
+        Date date = cal.getTime();
 
-        assertEquals("date", date, config.getProperty("date"));        
+        assertEquals("date", date, config.getProperty("date"));
     }
 
     public void testSave() throws Exception
@@ -296,5 +302,89 @@ public class TestPropertyListConfiguration extends TestCase
     {
     	PropertyListConfiguration copy = new PropertyListConfiguration(config);
     	assertFalse("Nothing was copied", copy.isEmpty());
+    }
+
+    /**
+     * Tests parsing a date with an invalid numeric value.
+     */
+    public void testParseDateNoNumber()
+    {
+        try
+        {
+            PropertyListConfiguration
+                    .parseDate("<*D2002-03-22 1c:30:00 +0100>");
+            fail("Could parse date with an invalid number!");
+        }
+        catch (ParseException pex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests parsing a date that is not long enough.
+     */
+    public void testParseDateTooShort()
+    {
+        try
+        {
+            PropertyListConfiguration.parseDate("<*D2002-03-22 11:3>");
+            fail("Could parse too short date!");
+        }
+        catch (ParseException pex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests parsing a date that contains an invalid separator character.
+     */
+    public void testParseDateInvalidChar()
+    {
+        try
+        {
+            PropertyListConfiguration
+                    .parseDate("<*D2002+03-22 11:30:00 +0100>");
+            fail("Could parse date with an invalid separator!");
+        }
+        catch (ParseException pex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tries parsing a null date. This should cause an exception.n
+     */
+    public void testParseDateNull()
+    {
+        try
+        {
+            PropertyListConfiguration.parseDate(null);
+            fail("Could parse null date!");
+        }
+        catch (ParseException pex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests formatting a date.
+     */
+    public void testFormatDate()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.clear();
+        cal.set(2007, 9, 29, 23, 4, 30);
+        cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));
+        assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>",
+                PropertyListConfiguration.formatDate(cal));
+        cal.clear();
+        cal.set(2007, 9, 30, 22, 2, 15);
+        cal.setTimeZone(TimeZone.getTimeZone("GMT+1111"));
+        assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>",
+                PropertyListConfiguration.formatDate(cal));
     }
 }
