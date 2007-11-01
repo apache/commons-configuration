@@ -24,7 +24,7 @@
 
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <currentVersion>1.5-SNAPSHOT</currentVersion>
+  <currentVersion>1.5</currentVersion>
   <inceptionYear>2001</inceptionYear>
   <name>Commons Configuration</name>
   <shortDescription>Common Configuration</shortDescription>

@@ -22,7 +22,7 @@
   </properties>
 
   <body>
-    <release version="1.5-SNAPSHOT" date="in SVN" description="">
+    <release version="1.5" date="in SVN" description="">
       <action dev="oheger" type="add" issue="CONFIGURATION-273">
         A new method interpolatedConfiguration() was added to AbstractConfiguration.
         This method returns a configuration with the same type and
