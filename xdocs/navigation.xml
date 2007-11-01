@@ -32,7 +32,7 @@
       <item name="User's Guide"                 href="/userguide/user_guide.html"/>
       <item name="Howtos (1.2 release)"         href="/userguide-1.2/index.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
-      <item name="Javadoc (1.4 release)"        href="/apidocs/index.html"/>
+      <item name="Javadoc (current release)"    href="/apidocs/index.html"/>
       <item name="Javadoc (old releases)"       href="/javadocarchive.html"/>
     </menu>
 
