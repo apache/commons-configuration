@@ -126,7 +126,7 @@
         list delimiters.
       </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-269">
-        PropertiesConfiguration no longer escape the list delimiter on saving
+        PropertiesConfiguration no longer escapes the list delimiter on saving
         if the list delimiter has been disabled.
       </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-270">

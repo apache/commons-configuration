@@ -55,7 +55,7 @@
             <task status="done">
                 ConfigurationFactory refactoring for pluggable extensions
             </task>
-            <task status="partly done">
+            <task status="done">
                 comments and layout preservation in .properties files
             </task>
         </category>
@@ -73,14 +73,29 @@
         </category>
 
         <category name="Version 1.5" description="">
-            <task status="">
-                JMX integration ?
+            <task status="done">
+                JMX integration
             </task>
+        </category>
+
+        <category name="Version 1.6" description="">
             <task status="">
                 Preference API integration ?
             </task>
             <task status="">
                 Windows configuration (Registry wrapper)
+            </task>
+        </category>
+
+        <category name="Version 2.0" description="">
+            <task status="">
+                Polishing of involved interfaces
+            </task>
+            <task status="">
+                Use locators for loading and saving file-based configurations
+            </task>
+            <task status="">
+                Enhanced event handling
             </task>
         </category>
 
