@@ -29,7 +29,7 @@
         the main classes provided by the Commons Configuration project. Prior
         to the 1.3 release these howto documents made up the user
         documentation. In Commons Configuration 1.3 they have been replaced by
-        a new <a href="../user_guide.html">user's guide</a>. So if you are using
+        a new <a href="../userguide/user_guide.html">user's guide</a>. So if you are using
         a newer version of Commons Configuration you should jump to this new
         user's guide. For versions up to 1.2 you are right here.
       </p>
