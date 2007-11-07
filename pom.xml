@@ -145,16 +145,19 @@
             <role>Java Developer</role>
           </roles>
         </developer>
+
+        <developer>
+          <name>J&#xF6;rg Schaible</name>
+          <id>joehni</id>
+          <email>joerg.schaible@gmx.de</email>
+          <timezone>+1</timezone>
+          <roles>
+            <role>Java Developer</role>
+          </roles>
+        </developer>
     </developers>
 
     <contributors>
-        <contributor>
-          <name>J&#xF6;rg Schaible</name>
-          <email>joerg.schaible@gmx.de</email>
-          <organization>Elsag-Solutions AG</organization>
-          <timezone>+1</timezone>
-        </contributor>
-
         <contributor>
           <name>Konstantin Shaposhnikov</name>
           <email>ksh@scand.com</email>
@@ -202,8 +205,18 @@
 
     <dependency>
       <groupId>commons-logging</groupId>
-      <artifactId>commons-logging-api</artifactId>
-      <version>1.0.4</version>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
+      <exclusions>
+        <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -230,6 +243,16 @@
       <artifactId>commons-jxpath</artifactId>
       <version>1.2</version>
       <optional>true</optional>
+      <exclusions>
+        <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xerces</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant-optional</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -259,7 +282,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -311,6 +334,12 @@
       <artifactId>junit-addons</artifactId>
       <version>1.4</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xmlParserAPIs</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -332,6 +361,13 @@
       <artifactId>mail</artifactId>
       <version>1.4</version>
       <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
+      <optional>true</optional>
     </dependency>
   </dependencies>
 

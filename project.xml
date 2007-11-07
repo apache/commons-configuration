@@ -184,16 +184,16 @@
       <timezone>+1</timezone>
     </developer>
 
+    <developer>
+      <name>J&#xF6;rg Schaible</name>
+      <id>oheger</id>
+      <email>joerg.schaible@gmx.de</email>
+      <timezone>+1</timezone>
+    </developer>
+
   </developers>
 
   <contributors>
-
-    <contributor>
-      <name>J&#xF6;rg Schaible</name>
-      <email>joerg.schaible@gmx.de</email>
-      <organization>Elsag-Solutions AG</organization>
-      <timezone>+1</timezone>
-    </contributor>
 
     <contributor>
       <name>Konstantin Shaposhnikov</name>
@@ -248,8 +248,8 @@
 
     <dependency>
       <groupId>commons-logging</groupId>
-      <artifactId>commons-logging-api</artifactId>
-      <version>1.0.4</version>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1</version>
       <properties>
         <war.bundle>true</war.bundle>
       </properties>
@@ -295,8 +295,8 @@
 
     <dependency>
       <groupId>xerces</groupId>
-      <artifactId>xerces</artifactId>
-      <version>2.2.1</version>
+      <artifactId>xercesImpl</artifactId>
+      <version>2.3.0</version>
       <url>http://xml.apache.org/xerces2-j/</url>
       <properties>
         <scope>provided</scope>
@@ -327,8 +327,8 @@
     </dependency>
 
     <dependency>
-      <groupId>servletapi</groupId>
-      <artifactId>servletapi</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>servlet-api</artifactId>
       <version>2.4</version>
       <properties>
         <optional>true</optional>
@@ -423,6 +423,15 @@
       <groupId>mockobjects</groupId>
       <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
       <version>0.09</version>
+      <properties>
+        <scope>test</scope>
+      </properties>
+    </dependency>
+
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.8</version>
       <properties>
         <scope>test</scope>
       </properties>
