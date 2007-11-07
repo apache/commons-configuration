@@ -219,7 +219,7 @@
     </tstamp>
     <property name="copyright" value="Copyright &amp;copy;  The Apache Software Foundation. All Rights Reserved.">
     </property>
-    <property name="title" value="Commons Configuration 1.1-dev API">
+    <property name="title" value="Commons Configuration ${component.version} API">
     </property>
     <javadoc use="true" private="true" destdir="${javadocdir}" author="true" version="true" sourcepath="src/java" packagenames="org.apache.commons.configuration.*">
       <classpath>
@@ -237,7 +237,7 @@
     </get>
     <get dest="${libdir}/commons-lang-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.3.jar">
     </get>
-    <get dest="${libdir}/commons-logging-1.0.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.0.4.jar">
+    <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.jar">
     </get>
     <get dest="${libdir}/commons-digester-1.8.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.8.jar">
     </get>
@@ -247,7 +247,7 @@
     </get>
     <get dest="${libdir}/commons-jxpath-1.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jxpath/jars/commons-jxpath-1.2.jar">
     </get>
-    <get dest="${libdir}/xerces-2.2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.2.1.jar">
+    <get dest="${libdir}/xerces-2.3.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xerces-2.3.0.jar">
     </get>
     <get dest="${libdir}/xalan-2.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xalan/jars/xalan-2.7.0.jar">
     </get>
