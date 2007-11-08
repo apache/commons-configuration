@@ -206,3 +206,9 @@ OTHER CHANGES
 
 * The dependencies to commons-codec and commons-jxpath have been marked as
   optional. They are not required by the core classes.
+
+* The dependency to commons-logging was updated to the current version
+  1.1. Older versions of commons-logging will still work.
+
+* Some of the dependencies in the m2 pom have been updated to be more
+  consistent.
