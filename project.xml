@@ -99,6 +99,11 @@
       <name>1.4</name>
       <tag>CONFIGURATION_1_4</tag>
     </version>
+    <version>
+      <id>1.5</id>
+      <name>1.5</name>
+      <tag>CONFIGURATION_1_5</tag>
+    </version>
   </versions>
 
   <mailingLists>
@@ -186,7 +191,7 @@
 
     <developer>
       <name>J&#xF6;rg Schaible</name>
-      <id>oheger</id>
+      <id>joehni</id>
       <email>joerg.schaible@gmx.de</email>
       <timezone>+1</timezone>
     </developer>
