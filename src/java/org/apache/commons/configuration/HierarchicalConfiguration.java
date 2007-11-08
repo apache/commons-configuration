@@ -163,7 +163,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     private ConfigurationNode rootNode;
 
     /** Stores the expression engine for this instance.*/
-    private ExpressionEngine expressionEngine;
+    private transient ExpressionEngine expressionEngine;
 
     /**
      * Creates a new instance of <code>HierarchicalConfiguration</code>.
