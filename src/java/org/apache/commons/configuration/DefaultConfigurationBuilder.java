@@ -607,6 +607,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
         return result;
     }
+    
+    protected void fireError(int type, String propName, Object propValue,
+            Throwable ex)
+    {
+        super.fireError(type, propName, propValue, ex);
+    }
 
     /**
      * Creates a configuration object from the specified configuration
