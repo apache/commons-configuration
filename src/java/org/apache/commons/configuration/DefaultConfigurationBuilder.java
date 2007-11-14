@@ -607,10 +607,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
         return result;
     }
-    
+
     protected void fireError(int type, String propName, Object propValue,
             Throwable ex)
     {
+        // This method is only overridden to fix a mysterious MethodNotFound
+        // error in the test cases when run under a JDK 1.3.
         super.fireError(type, propName, propValue, ex);
     }
 
