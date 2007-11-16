@@ -41,10 +41,6 @@
       <item name="SVN"                          href="http://svn.apache.org/repos/asf/commons/proper/configuration/"/>
     </menu>
 
-    <menu name="Extensions">
-      <item name="Avalon Component" href="http://jakarta.apache.org/turbine/fulcrum/fulcrum-configuration/index.html"/>
-    </menu>
-
   </body>
 
 </project>
