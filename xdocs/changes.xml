@@ -22,7 +22,10 @@
   </properties>
 
   <body>
-    <release version="1.5" date="in SVN" description="">
+    <release version="1.6" date="in SVN" description="">
+    </release>
+
+    <release version="1.5" date="2007-11-24" description="Many smaller bugfixes">
       <action dev="oheger" type="update" due-to="J&#xF6;rg Schaible">
         Some of the dependencies in the m2 pom have been updated to be more
         consistent.

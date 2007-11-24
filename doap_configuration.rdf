@@ -24,9 +24,9 @@
 
     <release>
       <Version>
-        <name>Commons Configuration 1.2</name>
+        <name>Commons Configuration 1.0</name>
         <created>2004-10-12</created>
-        <revision>1.2</revision>
+        <revision>1.0</revision>
       </Version>
     </release>
     <release>
@@ -55,6 +55,13 @@
         <name>Commons Configuration 1.4</name>
         <created>2007-04-08</created>
         <revision>1.4</revision>
+      </Version>
+    </release>
+    <release>
+      <Version>
+        <name>Commons Configuration 1.5</name>
+        <created>2007-11-24</created>
+        <revision>1.5</revision>
       </Version>
     </release>
 
