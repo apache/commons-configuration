@@ -200,6 +200,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         super(c);
         clearReferences(getRootNode());
+        setRootElementName(getRootNode().getName());
     }
 
     /**
@@ -1266,8 +1267,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          */
         private Element getElement(Node node)
         {
-            // special treatement for root node of the hierarchy
-            return (node.getName() != null) ? (Element) node.getReference() : document.getDocumentElement();
+            // special treatment for root node of the hierarchy
+            return (node.getName() != null && node.getReference() != null) ? (Element) node
+                    .getReference()
+                    : document.getDocumentElement();
         }
     }
 

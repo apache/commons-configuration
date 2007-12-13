@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-301">
+        Fixed a NullPointerException that could be thrown under certain
+        circumstances when saving an XMLConfiguration that was created using
+        the constructor that takes a HierarchicalConfiguration.
+      </action>
     </release>
 
     <release version="1.5" date="2007-11-24" description="Many smaller bugfixes">

@@ -1279,6 +1279,23 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests saving a configuration that was created from a hierarchical
+     * configuration. This test exposes bug CONFIGURATION-301.
+     */
+    public void testSaveAfterCreateWithCopyConstructor()
+            throws ConfigurationException
+    {
+        HierarchicalConfiguration hc = conf.configurationAt("element2");
+        conf = new XMLConfiguration(hc);
+        conf.save(testSaveConf);
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFile(testSaveConf);
+        checkSavedConfig(checkConfig);
+        assertEquals("Wrong name of root element", "element2", checkConfig
+                .getRootElementName());
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
