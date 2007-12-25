@@ -61,6 +61,9 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
     /** The minimum delay in milliseconds between checks. */
     protected long refreshDelay = DEFAULT_REFRESH_DELAY;
 
+    /** A flag whether a reload is required.*/
+    private boolean reloading;
+
     public void setConfiguration(FileConfiguration configuration)
     {
         this.configuration = configuration;
@@ -73,16 +76,17 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
     public boolean reloadingRequired()
     {
-        boolean reloading = false;
-
-        long now = System.currentTimeMillis();
-
-        if (now > lastChecked + refreshDelay)
+        if (!reloading)
         {
-            lastChecked = now;
-            if (hasChanged())
+            long now = System.currentTimeMillis();
+
+            if (now > lastChecked + refreshDelay)
             {
-                reloading = true;
+                lastChecked = now;
+                if (hasChanged())
+                {
+                    reloading = true;
+                }
             }
         }
 
@@ -124,6 +128,7 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
         {
             lastModified = file.lastModified();
         }
+        reloading = false;
     }
 
     /**

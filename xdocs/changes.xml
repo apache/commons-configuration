@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-302">
+        If a change has been detected by FileChangedReloadingStrategy, the
+        reloadingRequired() method will now return true until
+        reloadingPerformed() has been called.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-301">
         Fixed a NullPointerException that could be thrown under certain
         circumstances when saving an XMLConfiguration that was created using

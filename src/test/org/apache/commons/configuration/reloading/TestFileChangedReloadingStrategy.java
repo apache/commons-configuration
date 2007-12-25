@@ -22,6 +22,8 @@ import java.io.FileWriter;
 import java.net.URL;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 
@@ -33,6 +35,9 @@ import org.apache.commons.configuration.XMLConfiguration;
  */
 public class TestFileChangedReloadingStrategy extends TestCase
 {
+    /** Constant for the name of a test properties file.*/
+    private static final String TEST_FILE = "test.properties";
+
     public void testAutomaticReloading() throws Exception
     {
         // create a new configuration
@@ -111,14 +116,14 @@ public class TestFileChangedReloadingStrategy extends TestCase
     public void testFromClassPath() throws Exception
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
-        config.setFileName("test.properties");
+        config.setFileName(TEST_FILE);
         config.load();
         assertTrue(config.getBoolean("configuration.loaded"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
         assertEquals(config.getURL(), strategy.getFile().toURL());
     }
-    
+
     /**
      * Tests to watch a configuration file in a jar. In this case the jar file
      * itself should be monitored.
@@ -133,5 +138,29 @@ public class TestFileChangedReloadingStrategy extends TestCase
         File file = strategy.getFile();
         assertNotNull("Strategy's file is null", file);
         assertEquals("Strategy does not monitor the jar file", "resources.jar", file.getName());
+    }
+
+    /**
+     * Tests calling reloadingRequired() multiple times before a reload actually
+     * happens. This test is related to CONFIGURATION-302.
+     */
+    public void testReloadingRequiredMultipleTimes()
+            throws ConfigurationException
+    {
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy()
+        {
+            protected boolean hasChanged()
+            {
+                // signal always a change
+                return true;
+            }
+        };
+        strategy.setRefreshDelay(100000);
+        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        config.setReloadingStrategy(strategy);
+        assertTrue("Reloading not required", strategy.reloadingRequired());
+        assertTrue("Reloading no more required", strategy.reloadingRequired());
+        strategy.reloadingPerformed();
+        assertFalse("Reloading still required", strategy.reloadingRequired());
     }
 }
