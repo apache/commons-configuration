@@ -382,32 +382,6 @@
           </includes>
         </resource>
       </resources>
-      <testResources>
-        <testResource>
-          <directory>conf</directory>
-          <includes>
-            <include>*.xml</include>
-            <include>testdb.script</include>
-            <include>*.properties</include>
-            <include>*.dtd</include>
-          </includes>
-        </testResource>
-        <testResource>
-          <directory>conf</directory>
-          <targetPath>org/apache/commons/configuration</targetPath>
-          <includes>
-            <include>test.properties</include>
-            <include>include.properties</include>
-          </includes>
-        </testResource>
-        <testResource>
-          <directory>conf/config</directory>
-          <targetPath>config</targetPath>
-          <includes>
-            <include>**/*.properties</include>
-          </includes>
-        </testResource>
-      </testResources>
       <plugins>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
