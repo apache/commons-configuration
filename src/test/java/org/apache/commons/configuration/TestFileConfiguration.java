@@ -37,17 +37,11 @@ import junit.framework.TestCase;
  */
 public class TestFileConfiguration extends TestCase
 {
-    /** Constant for the output directory.*/
-    private static final File TARGET_DIR = new File("target");
-
-    /** Constant for the directory with the test configuration files.*/
-    private static final File TEST_DIR = new File("conf");
-
     /** Constant for the name of a test file.*/
     private static final String TEST_FILENAME = "test.properties";
 
     /** Constant for a test file.*/
-    private static final File TEST_FILE = new File(TEST_DIR, TEST_FILENAME);
+    private static final File TEST_FILE = ConfigurationAssert.getTestFile(TEST_FILENAME);
 
     /** Constant for the name of a resource to be resolved.*/
     private static final String RESOURCE_NAME = "config/deep/deeptest.properties";
@@ -81,14 +75,14 @@ public class TestFileConfiguration extends TestCase
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
 
-        File directory = TEST_DIR;
+        File directory = ConfigurationAssert.TEST_DIR;
         File file = TEST_FILE;
         config.setFile(file);
         assertEquals(directory.getAbsolutePath(), config.getBasePath());
         assertEquals(TEST_FILENAME, config.getFileName());
         assertEquals(file.getAbsolutePath(), config.getPath());
 
-        config.setPath("conf" + File.separator + TEST_FILENAME);
+        config.setPath(ConfigurationAssert.TEST_DIR_NAME + File.separator + TEST_FILENAME);
         assertEquals(TEST_FILENAME, config.getFileName());
         assertEquals(directory.getAbsolutePath(), config.getBasePath());
         assertEquals(file.getAbsolutePath(), config.getPath());
@@ -160,8 +154,7 @@ public class TestFileConfiguration extends TestCase
      */
     public void testWithConfigurationFactory() throws Exception
     {
-        File dir = new File("conf");
-        File file = new File(dir, "testFileConfiguration.properties");
+        File file = ConfigurationAssert.getOutFile("testFileConfiguration.properties");
 
         if (file.exists())
         {
@@ -171,7 +164,7 @@ public class TestFileConfiguration extends TestCase
         try
         {
             ConfigurationFactory factory = new ConfigurationFactory();
-            factory.setConfigurationURL(new File(dir, "testDigesterConfiguration2.xml").toURL());
+            factory.setConfigurationURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURL());
             CompositeConfiguration cc = (CompositeConfiguration) factory.getConfiguration();
             PropertiesConfiguration config = null;
             for (int i = 0; config == null; i++)
@@ -183,7 +176,7 @@ public class TestFileConfiguration extends TestCase
             }
 
             config.setProperty("test", "yes");
-            config.save(file.getName());
+            config.save(file);
             assertTrue(file.exists());
             config = new PropertiesConfiguration();
             config.setFile(file);
@@ -298,7 +291,7 @@ public class TestFileConfiguration extends TestCase
      */
     public void testReloadingWithAutoSave() throws Exception
     {
-        File configFile = new File(TARGET_DIR, TEST_FILENAME);
+        File configFile = ConfigurationAssert.getOutFile(TEST_FILENAME);
         PrintWriter out = null;
 
         try
@@ -336,7 +329,7 @@ public class TestFileConfiguration extends TestCase
      */
     public void testPathWithSpaces() throws Exception
     {
-        File path = new File(TARGET_DIR, "path with spaces");
+        File path = ConfigurationAssert.getOutFile("path with spaces");
         File confFile = new File(path, "config-test.properties");
         PrintWriter out = null;
 
@@ -351,7 +344,7 @@ public class TestFileConfiguration extends TestCase
             out.close();
             out = null;
 
-            URL url = new URL(TARGET_DIR.toURL()
+            URL url = new URL(ConfigurationAssert.OUT_DIR.toURL()
                     + "path%20with%20spaces/config-test.properties");
             PropertiesConfiguration config = new PropertiesConfiguration(url);
             config.load();
@@ -419,7 +412,7 @@ public class TestFileConfiguration extends TestCase
         config.load(TEST_FILE.getAbsolutePath());
         URL srcUrl = config.getURL();
         File srcFile = config.getFile();
-        File file2 = new File(TEST_DIR, "testEqual.properties");
+        File file2 = ConfigurationAssert.getTestFile("testEqual.properties");
         config.load(file2.getAbsolutePath());
         assertEquals("Source URL was changed", srcUrl, config.getURL());
         assertEquals("Source file was changed", srcFile, config.getFile());
@@ -538,7 +531,7 @@ public class TestFileConfiguration extends TestCase
     public void testLoadFromClassPath() throws ConfigurationException
     {
         DefaultConfigurationBuilder cf =
-            new DefaultConfigurationBuilder("conf/config/deep/testFileFromClasspath.xml");
+            new DefaultConfigurationBuilder("config/deep/testFileFromClasspath.xml");
         CombinedConfiguration config = cf.getConfiguration(true);
         Configuration config1 = config.getConfiguration("propConf");
         Configuration config2 = config.getConfiguration("propConfDeep");
