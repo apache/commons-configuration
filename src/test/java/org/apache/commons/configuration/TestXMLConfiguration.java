@@ -70,10 +70,10 @@ public class TestXMLConfiguration extends TestCase
     static final String PROP_FACTORY = "javax.xml.transform.TransformerFactory";
 
     /** The File that we test with */
-    private String testProperties = new File("conf/test.xml").getAbsolutePath();
-    private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
-    private String testBasePath = new File("conf").getAbsolutePath();
-    private File testSaveConf = new File("target/testsave.xml");
+    private String testProperties = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
+    private String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
+    private String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+    private File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
 
     private XMLConfiguration conf;
 
@@ -649,10 +649,11 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testCustomDocBuilder() throws Exception
     {
+        File testFile = ConfigurationAssert.getTestFile("testValidateInvalid.xml");
         // Load an invalid XML file with the default (non validating)
         // doc builder. This should work...
         conf = new XMLConfiguration();
-        conf.load(new File("conf/testValidateInvalid.xml"));
+        conf.load(testFile);
         assertEquals("customers", conf.getString("table.name"));
         assertFalse(conf.containsKey("table.fields.field(1).type"));
 
@@ -670,7 +671,7 @@ public class TestXMLConfiguration extends TestCase
         conf.setDocumentBuilder(builder);
         try
         {
-            conf.load(new File("conf/testValidateInvalid.xml"));
+            conf.load(testFile);
             fail("Could load invalid file with validating set to true!");
         }
         catch(ConfigurationException ex)
@@ -681,7 +682,7 @@ public class TestXMLConfiguration extends TestCase
         // Try to load a valid document with a validating builder
         conf = new XMLConfiguration();
         conf.setDocumentBuilder(builder);
-        conf.load(new File("conf/testValidateValid.xml"));
+        conf.load(ConfigurationAssert.getTestFile("testValidateValid.xml"));
         assertTrue(conf.containsKey("table.fields.field(1).type"));
     }
 
@@ -728,7 +729,7 @@ public class TestXMLConfiguration extends TestCase
     public void testSubset() throws ConfigurationException
     {
         conf = new XMLConfiguration();
-        conf.load(new File("conf/testHierarchicalXMLConfiguration.xml"));
+        conf.load(ConfigurationAssert.getTestFile("testHierarchicalXMLConfiguration.xml"));
         conf.subset("tables.table(0)");
         conf.save(testSaveConf);
 
@@ -782,7 +783,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testValidating() throws ConfigurationException
     {
-        File nonValidFile = new File("conf/testValidateInvalid.xml");
+        File nonValidFile = ConfigurationAssert.getTestFile("testValidateInvalid.xml");
         conf = new XMLConfiguration();
         assertFalse(conf.isValidating());
 
@@ -829,7 +830,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testLoadWithEncoding() throws ConfigurationException
     {
-        File file = new File("conf/testEncoding.xml");
+        File file = ConfigurationAssert.getTestFile("testEncoding.xml");
         conf = new XMLConfiguration();
         conf.load(file);
         assertEquals("test3_yoge", conf.getString("yoge"));
@@ -879,7 +880,7 @@ public class TestXMLConfiguration extends TestCase
                 + "<properties version=\"1.0\"><entry key=\"test\">value</entry></properties>";
         StringReader in = new StringReader(content);
         conf = new XMLConfiguration();
-        conf.setFileName("conf/testDtd.xml");
+        conf.setFileName(ConfigurationAssert.getTestFile("testDtd.xml").getAbsolutePath());
         conf.load();
         conf.clear();
         conf.load(in);
@@ -1250,7 +1251,7 @@ public class TestXMLConfiguration extends TestCase
     public void testRegisterEntityId() throws ConfigurationException,
             IOException
     {
-        File dtdFile = new File("conf/properties.dtd");
+        File dtdFile = ConfigurationAssert.getTestFile("properties.dtd");
         final String publicId = "http://commons.apache.org/test/properties.dtd";
         conf = new XMLConfiguration("testDtd.xml");
         conf.setPublicID(publicId);
