@@ -17,8 +17,6 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import java.io.File;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +24,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.configuration.BaseConfiguration;
 
 /**
  * Test that the configuration factory returns keys in the same
@@ -39,8 +36,8 @@ public class TestPropertiesSequence extends TestCase
 
     public void testConfigurationValuesInSameOrderFromFile() throws Exception
     {
-        String simpleConfigurationFile = new File("conf/testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = new File("conf/testSequenceDigester.xml").getAbsolutePath();
+        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
@@ -65,8 +62,8 @@ public class TestPropertiesSequence extends TestCase
 
     public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception
     {
-        String simpleConfigurationFile = new File("conf/testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = new File("conf/testSequenceDigester.xml").getAbsolutePath();
+        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
@@ -97,8 +94,8 @@ public class TestPropertiesSequence extends TestCase
 
     public void testMappingInSameOrder() throws Exception
     {
-        String simpleConfigurationFile = new File("conf/testSequence.properties").getAbsolutePath();
-        String compositeConfigurationFile = new File("conf/testSequenceDigester.xml").getAbsolutePath();
+        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
+        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
