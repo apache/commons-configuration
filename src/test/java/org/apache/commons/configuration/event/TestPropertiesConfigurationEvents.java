@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.PropertiesConfiguration;
 
 /**
@@ -33,8 +34,8 @@ public class TestPropertiesConfigurationEvents extends
         AbstractTestFileConfigurationEvents
 {
     /** The file to be loaded.*/
-    static final File TEST_FILE = new File("conf/test.properties");
-    
+    static final File TEST_FILE = ConfigurationAssert.getTestFile("test.properties");
+
     protected AbstractConfiguration createConfiguration()
     {
         return new PropertiesConfiguration();
