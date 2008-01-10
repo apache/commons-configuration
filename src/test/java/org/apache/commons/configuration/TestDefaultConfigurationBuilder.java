@@ -37,23 +37,23 @@ import junit.framework.TestCase;
 public class TestDefaultConfigurationBuilder extends TestCase
 {
     /** Test configuration definition file. */
-    private static final File TEST_FILE = new File(
-            "conf/testDigesterConfiguration.xml");
+    private static final File TEST_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration.xml");
 
-    private static final File ADDITIONAL_FILE = new File(
-            "conf/testDigesterConfiguration2.xml");
+    private static final File ADDITIONAL_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration2.xml");
 
-    private static final File OPTIONAL_FILE = new File(
-            "conf/testDigesterOptionalConfiguration.xml");
+    private static final File OPTIONAL_FILE = ConfigurationAssert
+            .getTestFile("testDigesterOptionalConfiguration.xml");
 
-    private static final File OPTIONALEX_FILE = new File(
-            "conf/testDigesterOptionalConfigurationEx.xml");
+    private static final File OPTIONALEX_FILE = ConfigurationAssert
+            .getTestFile("testDigesterOptionalConfigurationEx.xml");
 
-    private static final File MULTI_FILE = new File(
-            "conf/testDigesterConfiguration3.xml");
+    private static final File MULTI_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration3.xml");
 
-    private static final File INIT_FILE = new File(
-            "conf/testComplexInitialization.xml");
+    private static final File INIT_FILE = ConfigurationAssert
+            .getTestFile("testComplexInitialization.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -589,7 +589,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
         factory.addProperty("properties[@fileName]", "test.properties");
-        File deepDir = new File("conf/config/deep");
+        File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         factory.setConfigurationBasePath(deepDir.getAbsolutePath());
 
         Configuration config = factory.getConfiguration(false);
@@ -710,8 +710,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testLoadXMLWithSettings() throws ConfigurationException,
             IOException
     {
-        File confDir = new File("conf");
-        File targetDir = new File("target");
+        File confDir = ConfigurationAssert.TEST_DIR;
+        File targetDir = ConfigurationAssert.OUT_DIR;
         File testXMLSource = new File(confDir, "testDtd.xml");
         File testXMLValidationSource = new File(confDir,
                 "testValidateInvalid.xml");
