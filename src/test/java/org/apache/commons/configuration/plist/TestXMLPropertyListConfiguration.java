@@ -24,6 +24,8 @@ import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
+
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -41,7 +43,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
     protected void setUp() throws Exception
     {
         config = new XMLPropertyListConfiguration();
-        config.setFileName("conf/test.plist.xml");
+        config.setFile(ConfigurationAssert.getTestFile("test.plist.xml"));
         config.load();
     }
 
