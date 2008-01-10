@@ -19,6 +19,7 @@ package org.apache.commons.configuration.plist;
 import java.io.File;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 
@@ -31,7 +32,7 @@ public class TestPropertyListConfigurationEvents extends
         AbstractTestPListEvents
 {
     /** Constant for the test file that will be loaded. */
-    private static final File TEST_FILE = new File("conf/test.plist");
+    private static final File TEST_FILE = ConfigurationAssert.getTestFile("test.plist");
 
     protected AbstractConfiguration createConfiguration()
     {
@@ -44,5 +45,4 @@ public class TestPropertyListConfigurationEvents extends
             throw new ConfigurationRuntimeException(cex);
         }
     }
-
 }
