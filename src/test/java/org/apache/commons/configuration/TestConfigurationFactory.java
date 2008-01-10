@@ -34,34 +34,34 @@ import org.xml.sax.SAXException;
 public class TestConfigurationFactory extends TestCase
 {
     /** The Files that we test with */
-    private File digesterRules = new File("conf/digesterRules.xml");
+    private File digesterRules = ConfigurationAssert.getTestFile("digesterRules.xml");
     private File testDigesterFile =
-            new File("conf/testDigesterConfiguration.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfiguration.xml");
     private File testDigesterFileReverseOrder =
-            new File("conf/testDigesterConfigurationReverseOrder.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfigurationReverseOrder.xml");
     private File testDigesterFileNamespaceAware =
-            new File("conf/testDigesterConfigurationNamespaceAware.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfigurationNamespaceAware.xml");
     private File testDigesterFileBasePath =
-            new File("conf/testDigesterConfigurationBasePath.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfigurationBasePath.xml");
     private File testDigesterFileEnhanced =
-            new File("conf/testDigesterConfiguration2.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml");
     private File testDigesterFileComplete =
-            new File("conf/testDigesterConfiguration3.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfiguration3.xml");
     private File testDigesterFileOptional =
-            new File("conf/testDigesterOptionalConfiguration.xml");
+        ConfigurationAssert.getTestFile("testDigesterOptionalConfiguration.xml");
     private File testDigesterFileOptionalEx =
-            new File("conf/testDigesterOptionalConfigurationEx.xml");
+        ConfigurationAssert.getTestFile("testDigesterOptionalConfigurationEx.xml");
     private File testDigesterFileSysProps =
-            new File("conf/testDigesterConfigurationSysProps.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfigurationSysProps.xml");
     private File testDigesterFileInitProps =
-            new File("conf/testDigesterConfigurationWithProps.xml");
+        ConfigurationAssert.getTestFile("testDigesterConfigurationWithProps.xml");
 
-    private File testDigesterBadXML = new File("conf/testDigesterBadXML.xml");
+    private File testDigesterBadXML = ConfigurationAssert.getTestFile("testDigesterBadXML.xml");
 
-    private String testBasePath = new File("conf").getAbsolutePath();
+    private String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
 
-    private File testProperties = new File("conf/test.properties");
-    private File testAbsConfig = new File("target/testAbsConfig.xml");
+    private File testProperties = ConfigurationAssert.getTestFile("test.properties");
+    private File testAbsConfig = ConfigurationAssert.getOutFile("testAbsConfig.xml");
 
     private Configuration configuration;
     private CompositeConfiguration compositeConfiguration;
