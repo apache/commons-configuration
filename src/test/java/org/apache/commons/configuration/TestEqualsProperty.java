@@ -17,8 +17,6 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import java.io.File;
-
 import junit.framework.TestCase;
 
 /**
@@ -29,7 +27,7 @@ import junit.framework.TestCase;
 public class TestEqualsProperty extends TestCase
 {
     /** The File that we test with */
-    private String testProperties = new File("conf/test.properties").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     public void testEquals() throws Exception
     {
