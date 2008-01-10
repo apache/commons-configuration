@@ -36,7 +36,8 @@ import junit.framework.TestCase;
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
-    private static final String TEST_FILE = "conf/testHierarchicalXMLConfiguration.xml";
+    private static final String TEST_FILE = ConfigurationAssert.getTestFile(
+            "testHierarchicalXMLConfiguration.xml").getAbsolutePath();
 
     private HierarchicalConfigurationXMLReader parser;
 
