@@ -17,14 +17,13 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 /**
- * Compare the behaviour of various methods between CompositeConfiguration
+ * Compare the behavior of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  * 
  * @version $Id$
@@ -34,14 +33,14 @@ public class TestEqualBehaviour  extends TestCase
     private Configuration setupSimpleConfiguration()
             throws Exception
     {
-        String simpleConfigurationFile = new File("conf/testEqual.properties").getAbsolutePath();
+        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
         return new PropertiesConfiguration(simpleConfigurationFile);
     }
 
     private Configuration setupCompositeConfiguration()
             throws Exception
     {
-        String compositeConfigurationFile = new File("conf/testEqualDigester.xml").getAbsolutePath();
+        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testEqualDigester.xml").getAbsolutePath();
 
         ConfigurationFactory configurationFactory = new ConfigurationFactory();
         configurationFactory.setConfigurationFileName(compositeConfigurationFile);
