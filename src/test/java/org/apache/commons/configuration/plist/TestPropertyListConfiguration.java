@@ -30,6 +30,7 @@ import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.StrictConfigurationComparator;
@@ -42,7 +43,7 @@ public class TestPropertyListConfiguration extends TestCase
 {
     private PropertyListConfiguration config;
 
-    private String testProperties = new File("conf/test.plist").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.plist").getAbsolutePath();
 
     protected void setUp() throws Exception
     {
