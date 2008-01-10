@@ -35,7 +35,7 @@ import junit.framework.TestCase;
  */
 public class TestSubsetConfiguration extends TestCase
 {
-    static final String TEST_DIR = "conf";
+    static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
     public void testGetProperty()
