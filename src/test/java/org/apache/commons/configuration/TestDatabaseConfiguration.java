@@ -87,7 +87,9 @@ public class TestDatabaseConfiguration extends TestCase
 
         if (hsqlDB == null)
         {
-            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, "conf/testdb.script");
+            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER,
+                    ConfigurationAssert.getTestFile("testdb.script")
+                            .getAbsolutePath());
         }
 
         BasicDataSource datasource = new BasicDataSource();
@@ -98,10 +100,11 @@ public class TestDatabaseConfiguration extends TestCase
 
         this.datasource = datasource;
 
-
         // prepare the database
-        IDatabaseConnection connection = new DatabaseConnection(datasource.getConnection());
-        IDataSet dataSet = new XmlDataSet(new FileInputStream("conf/dataset.xml"));
+        IDatabaseConnection connection = new DatabaseConnection(datasource
+                .getConnection());
+        IDataSet dataSet = new XmlDataSet(new FileInputStream(
+                ConfigurationAssert.getTestFile("dataset.xml")));
 
         try
         {
