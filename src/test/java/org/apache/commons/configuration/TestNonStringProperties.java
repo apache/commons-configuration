@@ -17,8 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
-
 /**
  * Test if non-string properties are handled correctly.
  *
@@ -27,12 +25,11 @@ import java.io.File;
 public class TestNonStringProperties extends BaseNonStringProperties
 {
     /** The File that we test with */
-    private String testProperties = new File("conf/test.properties").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
     public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
         nonStringTestHolder.setConfiguration(conf);
     }
-
 }
