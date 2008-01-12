@@ -4,23 +4,23 @@
 <digester-rules>
 
     <pattern value="configuration/properties">
-        <object-create-rule classname="org.apache.commons.configuration.PropertiesConfiguration"/>
+        <object-create-rule classname="org.apache.commons.configuration2.PropertiesConfiguration"/>
         <set-properties-rule/>
-        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration2.Configuration"/>
         <call-method-rule methodname="load"/>
     </pattern>
 
     <pattern value="configuration/xml">
-        <object-create-rule classname="org.apache.commons.configuration.XMLConfiguration"/>
+        <object-create-rule classname="org.apache.commons.configuration2.XMLConfiguration"/>
         <set-properties-rule/>
-        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration2.Configuration"/>
         <call-method-rule methodname="load"/>
     </pattern>
 
     <pattern value="configuration/jndi">
-        <object-create-rule classname="org.apache.commons.configuration.JNDIConfiguration"/>
+        <object-create-rule classname="org.apache.commons.configuration2.JNDIConfiguration"/>
         <set-properties-rule/>
-        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration.Configuration"/>
+        <set-next-rule methodname="addConfiguration" paramtype="org.apache.commons.configuration2.Configuration"/>
     </pattern>
 
 </digester-rules>
