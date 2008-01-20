@@ -74,6 +74,7 @@ import org.apache.commons.logging.LogFactory;
  * Configuration config2 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config2");
  * String value2 = conf.getString("key2");
  * </pre>
+ * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
  *
  * @since 1.0
  *
