@@ -19,6 +19,9 @@ package org.apache.commons.configuration2;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,6 +40,9 @@ import junit.framework.TestCase;
  */
 public class TestPropertyConverter extends TestCase
 {
+    /** An array with test values for the flatten test.*/
+    private static final Integer[] FLATTEN_VALUES = { 1, 2, 3, 4, 5, 6, 28 };
+
     public void testSplit()
     {
         String s = "abc, xyz , 123";
@@ -116,6 +122,95 @@ public class TestPropertyConverter extends TestCase
         assertEquals("1st element", new Integer(1), it.next());
         assertEquals("2nd element", new Integer(2), it.next());
         assertEquals("3rd element", new Integer(3), it.next());
+    }
+
+    /**
+     * Tests flattening an array of values.
+     */
+    public void testFlattenArray()
+    {
+        checkFlattenResult(PropertyConverter.flatten(FLATTEN_VALUES, ','));
+    }
+
+    /**
+     * Tests flattening a collection.
+     */
+    public void testFlattenCollection()
+    {
+        checkFlattenResult(PropertyConverter.flatten(Arrays
+                .asList(FLATTEN_VALUES), ','));
+    }
+
+    /**
+     * Tests flattening an iterator.
+     */
+    public void testFlattenIterator()
+    {
+        checkFlattenResult(PropertyConverter.flatten(Arrays.asList(
+                FLATTEN_VALUES).iterator(), ','));
+    }
+
+    /**
+     * Tests flattening a comma delimited string.
+     */
+    public void testFlattenString()
+    {
+        StringBuilder buf = new StringBuilder();
+        for (Integer val : FLATTEN_VALUES)
+        {
+            if (buf.length() > 0)
+            {
+                buf.append(',');
+            }
+            buf.append(val);
+        }
+        checkFlattenResult(PropertyConverter.flatten(buf.toString(), ','));
+    }
+
+    /**
+     * Tests flattening a null value.
+     */
+    public void testFlattenNull()
+    {
+        assertTrue("Result collection not empty", PropertyConverter.flatten(
+                null, ',').isEmpty());
+    }
+
+    /**
+     * Tests the flatten() method with a complex mixed input.
+     */
+    public void testFlattenMixed()
+    {
+        Collection<Object> data = new ArrayList<Object>();
+        data.add(1);
+        data.add("2,3");
+        Object[] ar = new Object[2];
+        ar[0] = 4;
+        Collection<Object> data2 = new ArrayList<Object>();
+        data2.add("5");
+        data2.add(new Object[] {
+                6, "28"
+        });
+        ar[1] = data2;
+        data.add(ar);
+        checkFlattenResult(PropertyConverter.flatten(data, ','));
+    }
+
+    /**
+     * Tests the result of a flatten operation.
+     *
+     * @param col the resulting collection
+     */
+    private void checkFlattenResult(Collection<Object> col)
+    {
+        assertEquals("Wrong number of elements", FLATTEN_VALUES.length, col
+                .size());
+        Iterator<Object> it = col.iterator();
+        for (Integer val : FLATTEN_VALUES)
+        {
+            assertEquals("Wrong value in result", val.toString(), String
+                    .valueOf(it.next()));
+        }
     }
 
     /**
@@ -346,7 +441,7 @@ public class TestPropertyConverter extends TestCase
         {
             return;
         }
-        
+
         try
         {
             assertEquals(enumObject, PropertyConverter.toEnum(new Integer(-1), enumClass));
