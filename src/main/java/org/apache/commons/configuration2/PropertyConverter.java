@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -41,7 +40,6 @@ import java.util.Locale;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * A utility class to convert the configuration properties into any type.
@@ -64,11 +62,8 @@ public final class PropertyConverter
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
-    /** Constant for the Java version 1.5.*/
-    private static final float JAVA_VERSION_1_5 = 1.5f;
-
     /** Constant for the argument classes of the Number constructor that takes a String. */
-    private static final Class[] CONSTR_ARGS = {String.class};
+    private static final Class<?>[] CONSTR_ARGS = {String.class};
 
     /** The fully qualified name of {@link javax.mail.internet.InternetAddress} */
     private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
@@ -94,82 +89,93 @@ public final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object to(Class cls, Object value, Object[] params) throws ConversionException
+    @SuppressWarnings("unchecked")
+    static <T> T to(Class<T> cls, Object value, Object[] params)
+            throws ConversionException
     {
+        Object result = null;
+
         if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
         {
-            return toBoolean(value);
+            result = toBoolean(value);
         }
         else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
         {
             if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
             {
-                return toInteger(value);
+                result = toInteger(value);
             }
             else if (Long.class.equals(cls) || Long.TYPE.equals(cls))
             {
-                return toLong(value);
+                result = toLong(value);
             }
             else if (Byte.class.equals(cls) || Byte.TYPE.equals(cls))
             {
-                return toByte(value);
+                result = toByte(value);
             }
             else if (Short.class.equals(cls) || Short.TYPE.equals(cls))
             {
-                return toShort(value);
+                result = toShort(value);
             }
             else if (Float.class.equals(cls) || Float.TYPE.equals(cls))
             {
-                return toFloat(value);
+                result = toFloat(value);
             }
             else if (Double.class.equals(cls) || Double.TYPE.equals(cls))
             {
-                return toDouble(value);
+                result = toDouble(value);
             }
             else if (BigInteger.class.equals(cls))
             {
-                return toBigInteger(value);
+                result = toBigInteger(value);
             }
             else if (BigDecimal.class.equals(cls))
             {
-                return toBigDecimal(value);
+                result = toBigDecimal(value);
             }
         }
         else if (Date.class.equals(cls))
         {
-            return toDate(value, (String) params[0]);
+            result = toDate(value, (String) params[0]);
         }
         else if (Calendar.class.equals(cls))
         {
-            return toCalendar(value, (String) params[0]);
+            result = toCalendar(value, (String) params[0]);
         }
         else if (URL.class.equals(cls))
         {
-            return toURL(value);
+            result = toURL(value);
         }
         else if (Locale.class.equals(cls))
         {
-            return toLocale(value);
+            result = toLocale(value);
         }
         else if (isEnum(cls))
         {
-            return toEnum(value, cls);
+            // This causes an unchecked warning because the concrete Enum class
+            // cannot be fully determined.
+            result = toEnum(value, cls.asSubclass(Enum.class));
         }
         else if (Color.class.equals(cls))
         {
-            return toColor(value);
+            result = toColor(value);
         }
         else if (cls.getName().equals(INTERNET_ADDRESS_CLASSNAME))
         {
-            return toInternetAddress(value);
+            result = toInternetAddress(value);
         }
         else if (InetAddress.class.isAssignableFrom(cls))
         {
-            return toInetAddress(value);
+            result = toInetAddress(value);
+        }
+        else
+        {
+            throw new ConversionException("The value '" + value + "' ("
+                    + value.getClass() + ")" + " can't be converted to a "
+                    + cls.getName() + " object");
         }
 
-        throw new ConversionException("The value '" + value + "' (" + value.getClass() + ")"
-                + " can't be converted to a " + cls.getName() + " object");
+        return cls.cast(result);
     }
 
     /**
@@ -378,7 +384,7 @@ public final class PropertyConverter
      * @return the converted number
      * @throws ConversionException if the object cannot be converted
      */
-    static Number toNumber(Object value, Class targetClass) throws ConversionException
+    static Number toNumber(Object value, Class<? extends Number> targetClass) throws ConversionException
     {
         if (value instanceof Number)
         {
@@ -403,7 +409,7 @@ public final class PropertyConverter
 
             try
             {
-                Constructor constr = targetClass.getConstructor(CONSTR_ARGS);
+                Constructor<? extends Number> constr = targetClass.getConstructor(CONSTR_ARGS);
                 return (Number) constr.newInstance(new Object[]{str});
             }
             catch (InvocationTargetException itex)
@@ -467,14 +473,14 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            List elements = split((String) value, '_');
+            List<String> elements = split((String) value, '_');
             int size = elements.size();
 
-            if (size >= 1 && (((String) elements.get(0)).length() == 2 || ((String) elements.get(0)).length() == 0))
+            if (size >= 1 && ((elements.get(0)).length() == 2 || (elements.get(0)).length() == 0))
             {
-                String language = (String) elements.get(0);
-                String country = (String) ((size >= 2) ? elements.get(1) : "");
-                String variant = (String) ((size >= 3) ? elements.get(2) : "");
+                String language = elements.get(0);
+                String country = (size >= 2) ? elements.get(1) : "";
+                String variant = (size >= 3) ? elements.get(2) : "";
 
                 return new Locale(language, country, variant);
             }
@@ -499,16 +505,16 @@ public final class PropertyConverter
      * @param delimiter  the delimiter
      * @return a list with the single tokens
      */
-    public static List split(String s, char delimiter)
+    public static List<String> split(String s, char delimiter)
     {
         if (s == null)
         {
-            return new ArrayList();
+            return new ArrayList<String>();
         }
 
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
 
-        StringBuffer token = new StringBuffer();
+        StringBuilder token = new StringBuilder();
         int begin = 0;
         boolean inEscape = false;
 
@@ -534,7 +540,7 @@ public final class PropertyConverter
                 {
                     // found a list delimiter -> add token and reset buffer
                     list.add(token.toString().trim());
-                    token = new StringBuffer();
+                    token = new StringBuilder();
                 }
                 else if (c == LIST_ESC_CHAR)
                 {
@@ -698,9 +704,11 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
+            // Invoke per reflection because the dependency to Java mail
+            // should be optional.
             try
             {
-                Constructor ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
+                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
                 return ctor.newInstance(new Object[] {value});
             }
             catch (Exception e)
@@ -717,23 +725,9 @@ public final class PropertyConverter
     /**
      * Calls Class.isEnum() on Java 5, returns false on older JRE.
      */
-    static boolean isEnum(Class cls)
+    static boolean isEnum(Class<?> cls)
     {
-        if (!SystemUtils.isJavaVersionAtLeast(JAVA_VERSION_1_5))
-        {
-            return false;
-        }
-
-        try
-        {
-            Method isEnumMethod = Class.class.getMethod("isEnum", new Class[] {});
-            return ((Boolean) isEnumMethod.invoke(cls, new Object[] {})).booleanValue();
-        }
-        catch (Exception e)
-        {
-            // impossible
-            throw new RuntimeException(e.getMessage());
-        }
+        return cls.isEnum();
     }
 
     /**
@@ -746,18 +740,19 @@ public final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object toEnum(Object value, Class cls) throws ConversionException
+    static <T extends Enum<T>> T toEnum(Object value, Class<T> cls) throws ConversionException
     {
         if (value.getClass().equals(cls))
         {
-            return value;
+            // already an enum => return directly
+            return cls.cast(value);
         }
         else if (value instanceof String)
         {
+            // For strings try to find the matching enum literal
             try
             {
-                Method valueOfMethod = cls.getMethod("valueOf", new Class[] {String.class});
-                return valueOfMethod.invoke(null, new Object[] {value});
+                return Enum.valueOf(cls, String.valueOf(value));
             }
             catch (Exception e)
             {
@@ -766,12 +761,11 @@ public final class PropertyConverter
         }
         else if (value instanceof Number)
         {
+            // A number is interpreted as the ordinal index of an enum literal
             try
             {
-                Method valuesMethod = cls.getMethod("values", new Class[] {});
-                Object valuesArray = valuesMethod.invoke(null, new Object[] {});
-
-                return Array.get(valuesArray, ((Number) value).intValue());
+                T[] valuesArray = cls.getEnumConstants();
+                return valuesArray[((Number) value).intValue()];
             }
             catch (Exception e)
             {
@@ -867,7 +861,7 @@ public final class PropertyConverter
      * @param delimiter the delimiter for String values
      * @return an iterator for accessing the single values
      */
-    public static Iterator<Object> toIterator(Object value, char delimiter)
+    public static Iterator<?> toIterator(Object value, char delimiter)
     {
         return flatten(value, delimiter).iterator();
     }
@@ -895,7 +889,7 @@ public final class PropertyConverter
      * @return a &quot;flat&quot; collection containing all primitive values of
      *         the passed in object
      */
-    public static Collection<Object> flatten(Object value, char delimiter)
+    public static Collection<?> flatten(Object value, char delimiter)
     {
         if (value instanceof String)
         {

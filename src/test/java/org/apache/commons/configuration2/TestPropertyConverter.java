@@ -17,18 +17,13 @@
 
 package org.apache.commons.configuration2;
 
-import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.configuration2.ConversionException;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertyConverter;
-import org.apache.commons.lang.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -43,10 +38,16 @@ public class TestPropertyConverter extends TestCase
     /** An array with test values for the flatten test.*/
     private static final Integer[] FLATTEN_VALUES = { 1, 2, 3, 4, 5, 6, 28 };
 
+    /** The enum class we use in tests for enum conversions.*/
+    private static Class<ElementType> ENUM_CLASS = ElementType.class;
+
+    /** An enumeration object used for testing conversions with enums.*/
+    private static ElementType ENUM_OBJECT = ElementType.METHOD;
+
     public void testSplit()
     {
         String s = "abc, xyz , 123";
-        List list = PropertyConverter.split(s, ',');
+        List<String> list = PropertyConverter.split(s, ',');
 
         assertEquals("size", 3, list.size());
         assertEquals("1st token for '" + s + "'", "abc", list.get(0));
@@ -57,7 +58,7 @@ public class TestPropertyConverter extends TestCase
     public void testSplitWithEscapedSeparator()
     {
         String s = "abc\\,xyz, 123";
-        List list = PropertyConverter.split(s, ',');
+        List<String> list = PropertyConverter.split(s, ',');
 
         assertEquals("size", 2, list.size());
         assertEquals("1st token for '" + s + "'", "abc,xyz", list.get(0));
@@ -67,7 +68,7 @@ public class TestPropertyConverter extends TestCase
     public void testSplitEmptyValues()
     {
         String s = ",,";
-        List list = PropertyConverter.split(s, ',');
+        List<String> list = PropertyConverter.split(s, ',');
 
         assertEquals("size", 3, list.size());
         assertEquals("1st token for '" + s + "'", "", list.get(0));
@@ -78,7 +79,7 @@ public class TestPropertyConverter extends TestCase
     public void testSplitWithEndingSlash()
     {
         String s = "abc, xyz\\";
-        List list = PropertyConverter.split(s, ',');
+        List<String> list = PropertyConverter.split(s, ',');
 
         assertEquals("size", 2, list.size());
         assertEquals("1st token for '" + s + "'", "abc", list.get(0));
@@ -87,7 +88,7 @@ public class TestPropertyConverter extends TestCase
 
     public void testSplitNull()
     {
-        List list = PropertyConverter.split(null, ',');
+        List<String> list = PropertyConverter.split(null, ',');
         assertNotNull(list);
         assertTrue(list.isEmpty());
     }
@@ -97,7 +98,7 @@ public class TestPropertyConverter extends TestCase
      */
     public void testSplitEscapeEscapeChar()
     {
-        List list = PropertyConverter.split("C:\\Temp\\\\,xyz", ',');
+        List<String> list = PropertyConverter.split("C:\\Temp\\\\,xyz", ',');
         assertEquals("Wrong list size", 2, list.size());
         assertEquals("Wrong element 1", "C:\\Temp\\", list.get(0));
         assertEquals("Wrong element 2", "xyz", list.get(1));
@@ -117,7 +118,7 @@ public class TestPropertyConverter extends TestCase
     {
         int[] array = new int[]{1, 2, 3};
 
-        Iterator it = PropertyConverter.toIterator(array, ',');
+        Iterator<?> it = PropertyConverter.toIterator(array, ',');
 
         assertEquals("1st element", new Integer(1), it.next());
         assertEquals("2nd element", new Integer(2), it.next());
@@ -201,11 +202,11 @@ public class TestPropertyConverter extends TestCase
      *
      * @param col the resulting collection
      */
-    private void checkFlattenResult(Collection<Object> col)
+    private void checkFlattenResult(Collection<?> col)
     {
         assertEquals("Wrong number of elements", FLATTEN_VALUES.length, col
                 .size());
-        Iterator<Object> it = col.iterator();
+        Iterator<?> it = col.iterator();
         for (Integer val : FLATTEN_VALUES)
         {
             assertEquals("Wrong value in result", val.toString(), String
@@ -351,72 +352,21 @@ public class TestPropertyConverter extends TestCase
         }
     }
 
-    /**
-     * Tests conversion to numbers when the passed in target class is invalid.
-     * This should cause an exception.
-     */
-    public void testToNumberWithInvalidClass()
-    {
-        try
-        {
-            PropertyConverter.toNumber("42", Object.class);
-            fail("Could convert to invalid target class!");
-        }
-        catch (ConversionException cex)
-        {
-            //ok
-        }
-    }
-
-    // enumeration type used for the tests, Java 5 only
-    private Class enumClass;
-    private Object enumObject;
-    {
-        if (SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            try
-            {
-                enumClass = Class.forName("java.lang.annotation.ElementType");
-
-                Method valueOfMethod = enumClass.getMethod("valueOf", new Class[] { String.class });
-                enumObject = valueOfMethod.invoke(null, new Object[] { "METHOD" });
-            }
-            catch (Exception e)
-            {
-            }
-        }
-    }
-
     public void testToEnumFromEnum()
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            return;
-        }
-
-        assertEquals(enumObject, PropertyConverter.toEnum(enumObject, enumClass));
+        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum(ENUM_OBJECT, ENUM_CLASS));
     }
 
     public void testToEnumFromString()
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            return;
-        }
-
-        assertEquals(enumObject, PropertyConverter.toEnum("METHOD", enumClass));
+        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum("METHOD", ENUM_CLASS));
     }
 
     public void testToEnumFromInvalidString()
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            return;
-        }
-
         try
         {
-            assertEquals(enumObject, PropertyConverter.toEnum("FOO", enumClass));
+            PropertyConverter.toEnum("FOO", ENUM_CLASS);
             fail("Could convert invalid String!");
         }
         catch (ConversionException e)
@@ -427,24 +377,14 @@ public class TestPropertyConverter extends TestCase
 
     public void testToEnumFromNumber()
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            return;
-        }
-
-        assertEquals(enumObject, PropertyConverter.toEnum(new Integer(2), enumClass));
+        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum(new Integer(2), ENUM_CLASS));
     }
 
     public void testToEnumFromInvalidNumber()
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.5f))
-        {
-            return;
-        }
-
         try
         {
-            assertEquals(enumObject, PropertyConverter.toEnum(new Integer(-1), enumClass));
+            PropertyConverter.toEnum(new Integer(-1), ENUM_CLASS);
             fail("Could convert invalid number!");
         }
         catch (ConversionException e)

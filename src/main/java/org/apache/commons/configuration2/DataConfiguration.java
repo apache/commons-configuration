@@ -472,7 +472,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 int i = 0;
                 while (it.hasNext())
                 {
-                    Array.set(array, i++, PropertyConverter.to(cls, interpolate(it.next()), null));
+                    Array.set(array, i++, PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(it.next()), null));
                 }
             }
             else
@@ -480,7 +480,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 try
                 {
                     // attempt to convert a single value
-                    Object convertedValue = PropertyConverter.to(cls, interpolate(value), null);
+                    Object convertedValue = PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(value), null);
 
                     // create an array of one element
                     array = Array.newInstance(cls, 1);
