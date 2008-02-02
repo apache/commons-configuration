@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -58,12 +57,14 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
                 new BaseConfiguration())
         {
             // return an iterator that does not support remove operations
-            public Iterator getKeys()
+            public Iterator<String> getKeys()
             {
-                Collection keyCol = new ArrayList();
-                CollectionUtils.addAll(keyCol, getUnderlyingConfiguration()
-                        .getKeys());
-                Object[] keys = keyCol.toArray();
+                Collection<String> keyCol = new ArrayList<String>();
+                for(Iterator<?> it = getUnderlyingConfiguration().getKeys(); it.hasNext();)
+                {
+                    keyCol.add(it.next().toString());
+                }
+                String[] keys = keyCol.toArray(new String[keyCol.size()]);
                 return Arrays.asList(keys).iterator();
             }
         };
@@ -128,7 +129,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
         { "value4", "value5", "value6" };
         config.addProperty("test", lstValues1);
         config.addProperty("test", Arrays.asList(lstValues2));
-        List lst = config.getList("test");
+        List<?> lst = config.getList("test");
         assertEquals("Wrong number of list elements", 6, lst.size());
         for (int i = 0; i < lst.size(); i++)
         {
@@ -209,7 +210,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             String key = KEY_PREFIX + i;
             if (srcConfig.containsKey(key))
             {
-                List values = config.getList(key);
+                List<?> values = config.getList(key);
                 assertEquals("Value not added: " + key, 2, values.size());
                 assertEquals("Wrong value 1 for " + key, "value" + i, values
                         .get(0));
@@ -302,7 +303,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
      */
     private void checkListProperties(Configuration config)
     {
-        List values = config.getList("list1");
+        List<?> values = config.getList("list1");
         assertEquals("Wrong number of elements in list 1", 3, values.size());
         values = config.getList("list2");
         assertEquals("Wrong number of elements in list 2", 2, values.size());
@@ -320,10 +321,9 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     private void checkCopyEvents(CollectingConfigurationListener l,
             Configuration src, int eventType)
     {
-        Map events = new HashMap();
-        for (Iterator it = l.events.iterator(); it.hasNext();)
+        Map<String, ConfigurationEvent> events = new HashMap<String, ConfigurationEvent>();
+        for (ConfigurationEvent e : l.events)
         {
-            ConfigurationEvent e = (ConfigurationEvent) it.next();
             assertEquals("Wrong event type", eventType, e.getType());
             assertTrue("Unknown property: " + e.getPropertyName(), src
                     .containsKey(e.getPropertyName()));
@@ -340,7 +340,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             }
         }
 
-        for (Iterator it = src.getKeys(); it.hasNext();)
+        for (Iterator<?> it = src.getKeys(); it.hasNext();)
         {
             String key = (String) it.next();
             assertTrue("No event received for key " + key, events
@@ -380,7 +380,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             return config.containsKey(key);
         }
 
-        public Iterator getKeys()
+        public Iterator<?> getKeys()
         {
             return config.getKeys();
         }
@@ -408,7 +408,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     static class CollectingConfigurationListener implements
             ConfigurationListener
     {
-        List events = new ArrayList();
+        List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
         public void configurationChanged(ConfigurationEvent event)
         {
