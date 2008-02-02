@@ -18,9 +18,9 @@
 package org.apache.commons.configuration2.web;
 
 import java.applet.Applet;
+import java.util.ArrayList;
 import java.util.Iterator;
-
-import org.apache.commons.collections.iterators.ArrayIterator;
+import java.util.List;
 
 /**
  * A configuration wrapper to read applet parameters. This configuration is
@@ -52,15 +52,15 @@ public class AppletConfiguration extends BaseWebConfiguration
         return handleDelimiters(applet.getParameter(key));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         String[][] paramsInfo = applet.getParameterInfo();
-        String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
-        for (int i = 0; i < keys.length; i++)
+        List<String> keyList = new ArrayList<String>(paramsInfo.length);
+        for (int i = 0; i < paramsInfo.length; i++)
         {
-            keys[i] = paramsInfo[i][0];
+            keyList.add(paramsInfo[i][0]);
         }
 
-        return new ArrayIterator(keys);
+        return keyList.iterator();
     }
 }
