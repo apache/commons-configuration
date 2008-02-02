@@ -29,7 +29,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -152,7 +151,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         Object result = null;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT * FROM ");
+        StringBuilder query = new StringBuilder("SELECT * FROM ");
         query.append(table).append(" WHERE ");
         query.append(keyColumn).append("=?");
         if (nameColumn != null)
@@ -177,7 +176,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
             ResultSet rs = pstmt.executeQuery();
 
-            List results = new ArrayList();
+            List<Object> results = new ArrayList<Object>();
             while (rs.next())
             {
                 Object value = rs.getObject(valueColumn);
@@ -187,8 +186,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 else
                 {
-                    // Split value if it containts the list delimiter
-                    CollectionUtils.addAll(results, PropertyConverter.toIterator(value, getListDelimiter()));
+                    // Split value if it contains the list delimiter
+                    results.addAll(PropertyConverter.flatten(value, getListDelimiter()));
                 }
             }
 
@@ -222,7 +221,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     protected void addPropertyDirect(String key, Object obj)
     {
         // build the query
-        StringBuffer query = new StringBuffer("INSERT INTO " + table);
+        StringBuilder query = new StringBuilder("INSERT INTO " + table);
         if (nameColumn != null)
         {
             query.append(" (" + nameColumn + ", " + keyColumn + ", " + valueColumn + ") VALUES (?, ?, ?)");
@@ -305,7 +304,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         boolean empty = true;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT count(*) FROM " + table);
+        StringBuilder query = new StringBuilder("SELECT count(*) FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");
@@ -360,7 +359,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         boolean found = false;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
+        StringBuilder query = new StringBuilder("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
         if (nameColumn != null)
         {
             query.append(" AND " + nameColumn + "=?");
@@ -410,7 +409,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public void clearProperty(String key)
     {
         // build the query
-        StringBuffer query = new StringBuffer("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
+        StringBuilder query = new StringBuilder("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
         if (nameColumn != null)
         {
             query.append(" AND " + nameColumn + "=?");
@@ -454,7 +453,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public void clear()
     {
         // build the query
-        StringBuffer query = new StringBuffer("DELETE FROM " + table);
+        StringBuilder query = new StringBuilder("DELETE FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");
@@ -497,12 +496,12 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @return an iterator with the contained keys (an empty iterator in case
      * of an error)
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        Collection keys = new ArrayList();
+        Collection<String> keys = new ArrayList<String>();
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT DISTINCT " + keyColumn + " FROM " + table);
+        StringBuilder query = new StringBuilder("SELECT DISTINCT " + keyColumn + " FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");

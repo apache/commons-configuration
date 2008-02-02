@@ -275,7 +275,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testGetKeysSingle()
     {
         Configuration config = setUpConfig();
-        Iterator it = config.getKeys();
+        Iterator<?> it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
         assertEquals("2nd key", "key2", it.next());
@@ -284,7 +284,7 @@ public class TestDatabaseConfiguration extends TestCase
     public void testGetKeysMultiple()
     {
         Configuration config = setUpMultiConfig();
-        Iterator it = config.getKeys();
+        Iterator<?> it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
         assertEquals("2nd key", "key2", it.next());
@@ -322,14 +322,14 @@ public class TestDatabaseConfiguration extends TestCase
     public void testGetList()
     {
         Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", COL_KEY, COL_VALUE);
-        List list = config1.getList("key3");
+        List<?> list = config1.getList("key3");
         assertEquals(3,list.size());
     }
 
     public void testGetKeys()
     {
         Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", COL_KEY, COL_VALUE);
-        Iterator i = config1.getKeys();
+        Iterator<?> i = config1.getKeys();
         assertTrue(i.hasNext());
         Object key = i.next();
         assertEquals("key3",key.toString());
@@ -416,7 +416,7 @@ public class TestDatabaseConfiguration extends TestCase
      */
     public void testGetKeysError()
     {
-        Iterator it = setUpErrorConfig().getKeys();
+        Iterator<?> it = setUpErrorConfig().getKeys();
         checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
         assertFalse("Iteration is not empty", it.hasNext());
     }
@@ -429,7 +429,7 @@ public class TestDatabaseConfiguration extends TestCase
     {
         DatabaseConfiguration config = setUpConfig();
         config.setListDelimiter(';');
-        List values = config.getList("keyMulti");
+        List<?> values = config.getList("keyMulti");
         assertEquals("Wrong number of list elements", 3, values.size());
         assertEquals("Wrong list element 0", "a", values.get(0));
         assertEquals("Wrong list element 2", "c", values.get(2));
