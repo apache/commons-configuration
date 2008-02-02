@@ -18,11 +18,11 @@ package org.apache.commons.configuration2;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -139,7 +139,7 @@ public class TestSubnodeConfiguration extends TestCase
         setUpSubnodeConfig();
         assertEquals("Wrong table name", TABLE_NAMES[0], config
                 .getString("name"));
-        List fields = config.getList("fields.field.name");
+        List<?> fields = config.getList("fields.field.name");
         assertEquals("Wrong number of fields", TABLE_FIELDS[0].length, fields
                 .size());
         for (int i = 0; i < TABLE_FIELDS[0].length; i++)
@@ -180,7 +180,7 @@ public class TestSubnodeConfiguration extends TestCase
                 .getString("tables.table(0)[@table-type]"));
 
         parent.addProperty("tables.table(0).fields.field(-1).name", "newField");
-        List fields = config.getList("fields.field.name");
+        List<?> fields = config.getList("fields.field.name");
         assertEquals("New field was not added", TABLE_FIELDS[0].length + 1,
                 fields.size());
         assertEquals("Wrong last field", "newField", fields
@@ -193,8 +193,11 @@ public class TestSubnodeConfiguration extends TestCase
     public void testGetKeys()
     {
         setUpSubnodeConfig();
-        Set keys = new HashSet();
-        CollectionUtils.addAll(keys, config.getKeys());
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<?> it = config.getKeys(); it.hasNext();)
+        {
+            keys.add(it.next().toString());
+        }
         assertEquals("Incorrect number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields.field.name"));
@@ -273,8 +276,11 @@ public class TestSubnodeConfiguration extends TestCase
         setUpSubnodeConfig();
         assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
                 .getString("fields/field[2]/name"));
-        Set keys = new HashSet();
-        CollectionUtils.addAll(keys, config.getKeys());
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<?> it = config.getKeys(); it.hasNext();)
+        {
+            keys.add(it.next().toString());
+        }
         assertEquals("Wrong number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
         assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
@@ -471,6 +477,7 @@ public class TestSubnodeConfiguration extends TestCase
      */
     protected HierarchicalConfiguration setUpParentConfig()
     {
+        @SuppressWarnings("serial")
         HierarchicalConfiguration conf = new HierarchicalConfiguration()
         {
             // Provide a special implementation of createNode() to check
