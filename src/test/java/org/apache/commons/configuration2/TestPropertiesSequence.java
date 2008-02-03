@@ -17,12 +17,12 @@ package org.apache.commons.configuration2;
  * limitations under the License.
  */
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationFactory;
@@ -32,7 +32,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * Test that the configuration factory returns keys in the same
  * sequence as the properties configurator
- * 
+ *
  * @version $Id$
  */
 public class TestPropertiesSequence extends TestCase
@@ -52,8 +52,8 @@ public class TestPropertiesSequence extends TestCase
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<String> keysSimpleConfiguration = keyList(a);
+        List<String> keysCompositeConfiguration = keyList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -84,8 +84,8 @@ public class TestPropertiesSequence extends TestCase
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<String> keysSimpleConfiguration = keyList(a);
+        List<String> keysCompositeConfiguration = keyList(b);
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -110,9 +110,9 @@ public class TestPropertiesSequence extends TestCase
         Configuration mapping = new BaseConfiguration();
         Configuration mapping2 = new BaseConfiguration();
 
-        for (Iterator keys = simpleConfiguration.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
@@ -126,9 +126,9 @@ public class TestPropertiesSequence extends TestCase
             }
         }
 
-        for (Iterator keys = compositeConfiguration.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
@@ -141,5 +141,21 @@ public class TestPropertiesSequence extends TestCase
                 }
             }
         }
+    }
+
+    /**
+     * Returns a list with the keys of the specified configuration.
+     *
+     * @param config the configuration
+     * @return a list with the keys of this configuration
+     */
+    private static List<String> keyList(Configuration config)
+    {
+        List<String> keys = new ArrayList<String>();
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
+        {
+            keys.add(it.next());
+        }
+        return keys;
     }
 }
