@@ -17,10 +17,9 @@
 
 package org.apache.commons.configuration2.web;
 
+import java.util.Collections;
 import java.util.Iterator;
 import javax.servlet.FilterConfig;
-
-import org.apache.commons.collections.iterators.EnumerationIterator;
 
 /**
  * A configuration wrapper around a {@link FilterConfig}. This configuration is
@@ -51,8 +50,9 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
         return handleDelimiters(config.getInitParameter(key));
     }
 
-    public Iterator getKeys()
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getKeys()
     {
-        return new EnumerationIterator(config.getInitParameterNames());
+        return Collections.list(config.getInitParameterNames()).iterator();
     }
 }
