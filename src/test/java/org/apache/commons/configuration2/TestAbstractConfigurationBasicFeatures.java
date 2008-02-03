@@ -380,7 +380,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             return config.containsKey(key);
         }
 
-        public Iterator<?> getKeys()
+        public Iterator<String> getKeys()
         {
             return config.getKeys();
         }
