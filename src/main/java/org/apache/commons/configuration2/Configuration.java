@@ -174,7 +174,7 @@ public interface Configuration
      * @return An Iterator of keys that match the prefix.
      * @see #getKeys()
      */
-    Iterator getKeys(String prefix);
+    Iterator<String> getKeys(String prefix);
 
     /**
      * Get the list of the keys contained in the configuration. The returned
@@ -189,7 +189,7 @@ public interface Configuration
      *
      * @return An Iterator.
      */
-    Iterator getKeys();
+    Iterator<String> getKeys();
 
     /**
      * Get a list of properties associated with the given configuration key.
@@ -572,7 +572,7 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List getList(String key);
+    List<?> getList(String key);
 
     /**
      * Get a List of strings associated with the given configuration key.
@@ -586,5 +586,5 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List getList(String key, List defaultValue);
+    <T> List<T> getList(String key, List<T> defaultValue);
 }
