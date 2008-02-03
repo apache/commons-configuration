@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
@@ -36,23 +35,6 @@ import org.apache.commons.configuration2.ConfigurationConverter;
  */
 public class TestConfigurationConverter extends TestCase
 {
-    public void testExtendedPropertiesToConfiguration()
-    {
-        ExtendedProperties eprops = new ExtendedProperties();
-        eprops.setProperty("string", "teststring");
-        eprops.setProperty("int", "123");
-        eprops.addProperty("list", "item 1");
-        eprops.addProperty("list", "item 2");
-
-        Configuration config = ConfigurationConverter.getConfiguration(eprops);
-
-        assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
-
-        assertEquals("This returns 123", 123, config.getInt("int"));
-    }
-
     public void testPropertiesToConfiguration()
     {
         Properties props = new Properties();
@@ -63,26 +45,10 @@ public class TestConfigurationConverter extends TestCase
         Configuration config = ConfigurationConverter.getConfiguration(props);
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List item1 = config.getList("list");
+        List<?> item1 = config.getList("list");
         assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
 
         assertEquals("This returns 123", 123, config.getInt("int"));
-    }
-
-    public void testConfigurationToExtendedProperties()
-    {
-        Configuration config = new BaseConfiguration();
-        config.setProperty("string", "teststring");
-        config.setProperty("int", "123");
-        config.addProperty("list", "item 1");
-        config.addProperty("list", "item 2");
-
-        ExtendedProperties eprops = ConfigurationConverter.getExtendedProperties(config);
-
-        assertEquals("This returns 'teststring'", "teststring", eprops.getString("string"));
-        List list = eprops.getVector("list");
-        assertEquals("This returns 'item 1'", "item 1", (String) list.get(0));
-        assertEquals("This returns 123", 123, eprops.getInt("int"));
     }
 
     public void testConfigurationToProperties()
@@ -114,7 +80,7 @@ public class TestConfigurationConverter extends TestCase
         Configuration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
 
-        Map map = ConfigurationConverter.getMap(config);
+        Map<String, Object> map = ConfigurationConverter.getMap(config);
 
         assertNotNull("null map", map);
         assertEquals("'string' property", "teststring", map.get("string"));

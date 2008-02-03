@@ -21,9 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
-import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -40,18 +38,7 @@ public final class ConfigurationConverter
      */
     private ConfigurationConverter()
     {
-        // to prevent instanciation...
-    }
-
-    /**
-     * Convert a ExtendedProperties class into a Configuration class.
-     *
-     * @param eprops ExtendedProperties object to convert
-     * @return Configuration created from the ExtendedProperties
-     */
-    public static Configuration getConfiguration(ExtendedProperties eprops)
-    {
-        return new MapConfiguration(eprops);
+        // to prevent instantiation...
     }
 
     /**
@@ -63,35 +50,6 @@ public final class ConfigurationConverter
     public static Configuration getConfiguration(Properties props)
     {
         return new MapConfiguration(props);
-    }
-
-    /**
-     * Convert a Configuration class into a ExtendedProperties class.
-     *
-     * @param config Configuration object to convert
-     * @return ExtendedProperties created from the Configuration
-     */
-    public static ExtendedProperties getExtendedProperties(Configuration config)
-    {
-        ExtendedProperties props = new ExtendedProperties();
-
-        Iterator keys = config.getKeys();
-
-        while (keys.hasNext())
-        {
-            String key = (String) keys.next();
-            Object property = config.getProperty(key);
-
-            // turn lists into vectors
-            if (property instanceof List)
-            {
-                property = new Vector((List) property);
-            }
-
-            props.setProperty(key, property);
-        }
-
-        return props;
     }
 
     /**
@@ -109,11 +67,11 @@ public final class ConfigurationConverter
         char delimiter = (config instanceof AbstractConfiguration)
             ? ((AbstractConfiguration) config).getListDelimiter() : ',';
 
-        Iterator keys = config.getKeys();
+        Iterator<String> keys = config.getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
-            List list = config.getList(key);
+            String key = keys.next();
+            List<?> list = config.getList(key);
 
             // turn the list into a string
             props.setProperty(key, StringUtils.join(list.iterator(), delimiter));
@@ -128,7 +86,7 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Map created from the Configuration
      */
-    public static Map getMap(Configuration config)
+    public static Map<String, Object> getMap(Configuration config)
     {
         return new ConfigurationMap(config);
     }
