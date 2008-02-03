@@ -24,8 +24,6 @@ import java.util.List;
 
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.collections.iterators.EnumerationIterator;
-
 /**
  * A configuration wrapper to read the parameters of a servlet request. This
  * configuration is read only, adding or removing a property will throw an
@@ -65,13 +63,13 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         else
         {
             // ensure that escape characters in all list elements are removed
-            List result = new ArrayList(values.length);
-            for (int i = 0; i < values.length; i++)
+            List<Object> result = new ArrayList<Object>(values.length);
+            for (String value : values)
             {
-                Object val = handleDelimiters(values[i]);
+                Object val = handleDelimiters(value);
                 if (val instanceof Collection)
                 {
-                    result.addAll((Collection) val);
+                    result.addAll((Collection<?>) val);
                 }
                 else
                 {
@@ -82,8 +80,9 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         }
     }
 
-    public Iterator getKeys()
+    @SuppressWarnings("unchecked")
+    public Iterator<String> getKeys()
     {
-        return new EnumerationIterator(request.getParameterNames());
+        return request.getParameterMap().keySet().iterator();
     }
 }
