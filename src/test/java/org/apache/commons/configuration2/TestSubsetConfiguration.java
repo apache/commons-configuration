@@ -107,7 +107,7 @@ public class TestSubsetConfiguration extends TestCase
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
-        Iterator it = subset.getKeys();
+        Iterator<String> it = subset.getKeys();
         assertEquals("1st key", "", it.next());
         assertEquals("2nd key", "key1", it.next());
         assertFalse("too many elements", it.hasNext());
@@ -122,7 +122,7 @@ public class TestSubsetConfiguration extends TestCase
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
-        Iterator it = subset.getKeys("abc");
+        Iterator<String> it = subset.getKeys("abc");
         assertEquals("1st key", "abc", it.next());
         assertEquals("2nd key", "abc.key1", it.next());
         assertFalse("too many elements", it.hasNext());
@@ -135,7 +135,7 @@ public class TestSubsetConfiguration extends TestCase
         conf.addProperty("test.abc", "value3");
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
-        List list = subset.getList("abc", new ArrayList());
+        List<Object> list = subset.getList("abc", new ArrayList<Object>());
         assertEquals(3, list.size());
     }
 
@@ -201,13 +201,13 @@ public class TestSubsetConfiguration extends TestCase
     {
         ConfigurationFactory factory = new ConfigurationFactory();
         File src = new File(new File(TEST_DIR), TEST_FILE);
-        factory.setConfigurationURL(src.toURL());
+        factory.setConfigurationURL(src.toURI().toURL());
         Configuration config = factory.getConfiguration();
         Configuration subConf = config.subset("tables.table(0)");
         assertTrue(subConf.getKeys().hasNext());
         Configuration subSubConf = subConf.subset("fields.field(1)");
-        Iterator itKeys = subSubConf.getKeys();
-        Set keys = new HashSet();
+        Iterator<String> itKeys = subSubConf.getKeys();
+        Set<String> keys = new HashSet<String>();
         keys.add("name");
         keys.add("type");
         while(itKeys.hasNext())

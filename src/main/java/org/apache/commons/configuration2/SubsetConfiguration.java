@@ -19,9 +19,6 @@ package org.apache.commons.configuration2;
 
 import java.util.Iterator;
 
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.iterators.TransformIterator;
-
 /**
  * <p>A subset of another configuration. The new Configuration object contains
  * every key from the parent Configuration that starts with prefix. The prefix
@@ -149,6 +146,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         this.prefix = prefix;
     }
 
+    @Override
     public Configuration subset(String prefix)
     {
         return parent.subset(getParentKey(prefix));
@@ -164,16 +162,19 @@ public class SubsetConfiguration extends AbstractConfiguration
         return parent.containsKey(getParentKey(key));
     }
 
+    @Override
     public void addPropertyDirect(String key, Object value)
     {
         parent.addProperty(getParentKey(key), value);
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         parent.setProperty(getParentKey(key), value);
     }
 
+    @Override
     public void clearProperty(String key)
     {
         parent.clearProperty(getParentKey(key));
@@ -184,28 +185,18 @@ public class SubsetConfiguration extends AbstractConfiguration
         return parent.getProperty(getParentKey(key));
     }
 
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
-        return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer()
-        {
-            public Object transform(Object obj)
-            {
-                return getChildKey((String) obj);
-            }
-        });
+        return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        return new TransformIterator(parent.getKeys(prefix), new Transformer()
-        {
-            public Object transform(Object obj)
-            {
-                return getChildKey((String) obj);
-            }
-        });
+        return new SubsetIterator(parent.getKeys(prefix));
     }
 
+    @Override
     protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
@@ -219,6 +210,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
     }
 
+    @Override
     protected String interpolate(String base)
     {
         return super.interpolate(base);
@@ -229,6 +221,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      *
      * Change the behaviour of the parent configuration if it supports this feature.
      */
+    @Override
     public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
     {
         if (parent instanceof AbstractConfiguration)
@@ -246,6 +239,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      *
      * The subset inherits this feature from its parent if it supports this feature.
      */
+    @Override
     public boolean isThrowExceptionOnMissing()
     {
         if (parent instanceof AbstractConfiguration)
@@ -265,6 +259,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @return the list delimiter
      * @since 1.4
      */
+    @Override
     public char getListDelimiter()
     {
         return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
@@ -279,6 +274,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param delim the new list delimiter
      * @since 1.4
      */
+    @Override
     public void setListDelimiter(char delim)
     {
         if (parent instanceof AbstractConfiguration)
@@ -300,6 +296,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @return the delimiter parsing disabled flag
      * @since 1.4
      */
+    @Override
     public boolean isDelimiterParsingDisabled()
     {
         return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
@@ -315,6 +312,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param delimiterParsingDisabled the delimiter parsing disabled flag
      * @since 1.4
      */
+    @Override
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {
         if (parent instanceof AbstractConfiguration)
@@ -325,6 +323,61 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             super.setDelimiterParsingDisabled(delimiterParsingDisabled);
+        }
+    }
+
+    /**
+     * A specialized iterator to be returned by the <code>getKeys()</code>
+     * methods. This implementation wraps an iterator from the parent
+     * configuration. The keys returned by this iterator are correspondigly
+     * transformed.
+     */
+    private class SubsetIterator implements Iterator<String>
+    {
+        /** Stores the wrapped iterator. */
+        private final Iterator<String> parentIterator;
+
+        /**
+         * Creates a new instance of <code>SubsetIterator</code> and
+         * initializes it with the parent iterator.
+         *
+         * @param it the iterator of the parent configuration
+         */
+        public SubsetIterator(Iterator<String> it)
+        {
+            parentIterator = it;
+        }
+
+        /**
+         * Checks whether there are more elements. Delegates to the parent
+         * iterator.
+         *
+         * @return a flag whether there are more elements
+         */
+        public boolean hasNext()
+        {
+            return parentIterator.hasNext();
+        }
+
+        /**
+         * Returns the next element in the iteration. This is the next key from
+         * the parent configuration, transformed to correspond to the point of
+         * view of this subset configuration.
+         *
+         * @return the next element
+         */
+        public String next()
+        {
+            return getChildKey(parentIterator.next());
+        }
+
+        /**
+         * Removes the current element from the iteration. Delegates to the
+         * parent iterator.
+         */
+        public void remove()
+        {
+            parentIterator.remove();
         }
     }
 }
