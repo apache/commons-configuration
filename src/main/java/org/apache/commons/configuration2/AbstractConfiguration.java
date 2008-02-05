@@ -411,7 +411,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      */
     private void addPropertyValues(String key, Object value, char delimiter)
     {
-        Iterator it = PropertyConverter.toIterator(value, delimiter);
+        Iterator<?> it = PropertyConverter.toIterator(value, delimiter);
         while (it.hasNext())
         {
             addPropertyDirect(key, it.next());
@@ -444,7 +444,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
-     * Recursive handler for multple levels of interpolation.
+     * Recursive handler for multiple levels of interpolation.
      *
      * When called the first time, priorVariables should be null.
      *
@@ -459,7 +459,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * <code>{@link PropertyConverter}</code>; this method will no longer be
      * called
      */
-    protected String interpolateHelper(String base, List priorVariables)
+    protected String interpolateHelper(String base, List<?> priorVariables)
     {
         return base; // just a dummy implementation
     }
@@ -519,10 +519,10 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         boolean useIterator = true;
         try
         {
-            Iterator it = getKeys();
+            Iterator<String> it = getKeys();
             while (it.hasNext())
             {
-                String key = (String) it.next();
+                String key = it.next();
                 if (useIterator)
                 {
                     try
@@ -1071,7 +1071,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
         else if (value instanceof List)
         {
-            List list = (List) value;
+            List<?> list = (List<?>) value;
             array = new String[list.size()];
 
             for (int i = 0; i < array.length; i++)
@@ -1094,31 +1094,31 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * {@inheritDoc}
      * @see #getStringArray(String)
      */
-    public List getList(String key)
+    public List<?> getList(String key)
     {
-        return getList(key, new ArrayList());
+        return getList(key, new ArrayList<Object>());
     }
 
-    public List getList(String key, List defaultValue)
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getList(String key, List<T> defaultValue)
     {
         Object value = getProperty(key);
         List list;
 
         if (value instanceof String)
         {
-            list = new ArrayList(1);
+            list = new ArrayList<Object>(1);
             list.add(interpolate((String) value));
         }
         else if (value instanceof List)
         {
-            list = new ArrayList();
-            List l = (List) value;
+            List<?> l = (List<?>) value;
+            list = new ArrayList<Object>(l.size());
 
             // add the interpolated elements in the new list
-            Iterator it = l.iterator();
-            while (it.hasNext())
+            for (Object elem : l)
             {
-                list.add(interpolate(it.next()));
+                list.add(interpolate(elem));
             }
         }
         else if (value == null)
@@ -1148,7 +1148,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             if (value instanceof Collection)
             {
-                Collection collection = (Collection) value;
+                Collection<?> collection = (Collection<?>) value;
                 value = collection.isEmpty() ? null : collection.iterator().next();
             }
             else if (value.getClass().isArray() && Array.getLength(value) > 0)
@@ -1179,9 +1179,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         if (c != null)
         {
-            for (Iterator it = c.getKeys(); it.hasNext();)
+            for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
-                String key = (String) it.next();
+                String key = it.next();
                 Object value = c.getProperty(key);
                 fireEvent(EVENT_SET_PROPERTY, key, value, true);
                 setDetailEvents(false);
@@ -1220,9 +1220,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         if (c != null)
         {
-            for (Iterator it = c.getKeys(); it.hasNext();)
+            for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
-                String key = (String) it.next();
+                String key = it.next();
                 Object value = c.getProperty(key);
                 fireEvent(EVENT_ADD_PROPERTY, key, value, true);
                 addPropertyValues(key, value, DISABLED_DELIMITER);
@@ -1254,9 +1254,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
         // now perform interpolation
         c.setDelimiterParsingDisabled(true);
-        for (Iterator it = getKeys(); it.hasNext();)
+        for (Iterator<String> it = getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             c.setProperty(key, getList(key));
         }
 
