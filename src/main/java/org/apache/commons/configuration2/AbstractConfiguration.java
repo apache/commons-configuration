@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.iterators.FilterIterator;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
@@ -557,16 +555,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         fireEvent(EVENT_CLEAR, null, null, false);
     }
 
-    public Iterator getKeys(final String prefix)
+    public Iterator<String> getKeys(final String prefix)
     {
-        return new FilterIterator(getKeys(), new Predicate()
-        {
-            public boolean evaluate(Object obj)
-            {
-                String key = (String) obj;
-                return key.startsWith(prefix + ".") || key.equals(prefix);
-            }
-        });
+        return new PrefixedKeysIterator(getKeys(), prefix);
     }
 
     public Properties getProperties(String key)
