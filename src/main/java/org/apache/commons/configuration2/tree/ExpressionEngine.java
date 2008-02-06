@@ -59,7 +59,7 @@ public interface ExpressionEngine
      * @return a list with the nodes that are matched by the key (should never
      * be <b>null</b>)
      */
-    List query(ConfigurationNode root, String key);
+    List<ConfigurationNode> query(ConfigurationNode root, String key);
 
     /**
      * Returns the key for the specified node in the expression language

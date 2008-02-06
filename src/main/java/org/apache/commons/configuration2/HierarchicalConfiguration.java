@@ -1078,9 +1078,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         ConfigurationNode node = data.getParent();
 
         // Create missing nodes on the path
-        for (Iterator it = data.getPathNodes().iterator(); it.hasNext();)
+        for (String nodeName : data.getPathNodes())
         {
-            ConfigurationNode child = createNode((String) it.next());
+            ConfigurationNode child = createNode(nodeName);
             node.addChild(child);
             node = child;
         }

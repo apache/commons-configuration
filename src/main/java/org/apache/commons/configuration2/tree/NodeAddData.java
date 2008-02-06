@@ -57,7 +57,7 @@ public class NodeAddData
      * Stores a list with nodes that are on the path between the parent node and
      * the new node.
      */
-    private List pathNodes;
+    private List<String> pathNodes;
 
     /** Stores the name of the new node. */
     private String newNodeName;
@@ -163,10 +163,16 @@ public class NodeAddData
      * @return a list with the names of nodes that must be added as parents of
      * the new node (never <b>null</b>)
      */
-    public List getPathNodes()
+    public List<String> getPathNodes()
     {
-        return (pathNodes != null) ? Collections.unmodifiableList(pathNodes)
-                : Collections.EMPTY_LIST;
+        if (pathNodes != null)
+        {
+            return Collections.unmodifiableList(pathNodes);
+        }
+        else
+        {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -180,7 +186,7 @@ public class NodeAddData
     {
         if (pathNodes == null)
         {
-            pathNodes = new LinkedList();
+            pathNodes = new LinkedList<String>();
         }
         pathNodes.add(nodeName);
     }
