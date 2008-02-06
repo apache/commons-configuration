@@ -106,7 +106,7 @@ public interface ConfigurationNode
      *
      * @return a list with the children of this node (never <b>null</b>)
      */
-    List getChildren();
+    List<ConfigurationNode> getChildren();
 
     /**
      * Returns the number of this node's children.
@@ -121,7 +121,7 @@ public interface ConfigurationNode
      * @param name the name of the searched children
      * @return a list with all child nodes with this name (never <b>null</b>)
      */
-    List getChildren(String name);
+    List<ConfigurationNode> getChildren(String name);
 
     /**
      * Returns the number of children with the given name.
@@ -180,7 +180,7 @@ public interface ConfigurationNode
      *
      * @return a list with the attributes
      */
-    List getAttributes();
+    List<ConfigurationNode> getAttributes();
 
     /**
      * Returns the number of attributes of this node.
@@ -196,7 +196,7 @@ public interface ConfigurationNode
      * @param name the name of the attribute
      * @return the attribute nodes with this name (never <b>null</b>)
      */
-    List getAttributes(String name);
+    List<ConfigurationNode> getAttributes(String name);
 
     /**
      * Returns the number of attributes with the given name.

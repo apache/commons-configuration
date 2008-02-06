@@ -30,6 +30,7 @@ import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
@@ -664,7 +665,7 @@ public class TestHierarchicalConfiguration extends TestCase
     {
         HierarchicalConfiguration configDest = new HierarchicalConfiguration();
         configDest.addProperty("test", "TEST");
-        Collection<?> nodes = config.getRootNode().getChildren();
+        Collection<ConfigurationNode> nodes = config.getRootNode().getChildren();
         assertEquals("Wrong number of children", 1, nodes.size());
         configDest.addNodes("newNodes", nodes);
         for (int i = 0; i < tables.length; i++)
