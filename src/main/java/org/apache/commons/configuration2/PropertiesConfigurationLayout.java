@@ -19,12 +19,11 @@ package org.apache.commons.configuration2;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.lang.StringUtils;
@@ -127,7 +126,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     private PropertiesConfiguration configuration;
 
     /** Stores a map with the contained layout information. */
-    private Map layoutData;
+    private Map<String, PropertyLayoutData> layoutData;
 
     /** Stores the header comment. */
     private String headerComment;
@@ -166,7 +165,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     "Configuration must not be null!");
         }
         configuration = config;
-        layoutData = new LinkedMap();
+        layoutData = new LinkedHashMap<String, PropertyLayoutData>();
         config.addConfigurationListener(this);
 
         if (c != null)
@@ -363,7 +362,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      *
      * @return a set with all contained property keys
      */
-    public Set getKeys()
+    public Set<String> getKeys()
     {
         return layoutData.keySet();
     }
@@ -453,9 +452,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                 writer.writeln(null);
             }
 
-            for (Iterator it = layoutData.keySet().iterator(); it.hasNext();)
+            for (String key : layoutData.keySet())
             {
-                String key = (String) it.next();
                 if (getConfiguration().containsKey(key))
                 {
 
@@ -661,7 +659,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * @param to the end index (inclusive)
      * @return the comment string (<b>null</b> if it is undefined)
      */
-    private String extractComment(List commentLines, int from, int to)
+    private String extractComment(List<String> commentLines, int from, int to)
     {
         if (to < from)
         {
@@ -670,7 +668,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
         else
         {
-            StringBuffer buf = new StringBuffer((String) commentLines.get(from));
+            StringBuilder buf = new StringBuilder(commentLines.get(from));
             for (int i = from + 1; i <= to; i++)
             {
                 buf.append(CR);
@@ -684,22 +682,21 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * Checks if parts of the passed in comment can be used as header comment.
      * This method checks whether a header comment can be defined (i.e. whether
      * this is the first comment in the loaded file). If this is the case, it is
-     * searched for the lates blanc line. This line will mark the end of the
+     * searched for the latest blanc line. This line will mark the end of the
      * header comment. The return value is the index of the first line in the
      * passed in list, which does not belong to the header comment.
      *
      * @param commentLines the comment lines
      * @return the index of the next line after the header comment
      */
-    private int checkHeaderComment(List commentLines)
+    private int checkHeaderComment(List<String> commentLines)
     {
         if (loadCounter == 1 && getHeaderComment() == null
                 && layoutData.isEmpty())
         {
             // This is the first comment. Search for blanc lines.
             int index = commentLines.size() - 1;
-            while (index >= 0
-                    && ((String) commentLines.get(index)).length() > 0)
+            while (index >= 0 && commentLines.get(index).length() > 0)
             {
                 index--;
             }
@@ -719,12 +716,11 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     private void copyFrom(PropertiesConfigurationLayout c)
     {
-        for (Iterator it = c.getKeys().iterator(); it.hasNext();)
+        for (String key : c.getKeys())
         {
-            String key = (String) it.next();
             PropertyLayoutData data = (PropertyLayoutData) c.layoutData
                     .get(key);
-            layoutData.put(key, data.clone());
+            layoutData.put(key, (PropertyLayoutData) data.clone());
         }
     }
 

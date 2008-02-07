@@ -61,6 +61,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     /** A properties builder that can be used for testing. */
     PropertiesBuilder builder;
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -77,7 +78,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     {
         assertTrue("Object contains keys", layout.getKeys().isEmpty());
         assertNull("Header comment not null", layout.getHeaderComment());
-        Iterator it = config.getConfigurationListeners().iterator();
+        Iterator<?> it = config.getConfigurationListeners().iterator();
         assertTrue("No event listener registered", it.hasNext());
         assertSame("Layout not registered as event listener", layout, it.next());
         assertFalse("Multiple event listeners registered", it.hasNext());
@@ -575,9 +576,8 @@ public class TestPropertiesConfigurationLayout extends TestCase
                 config, layout);
         assertEquals("Wrong number of keys", layout.getKeys().size(), l2
                 .getKeys().size());
-        for (Iterator it = layout.getKeys().iterator(); it.hasNext();)
+        for (String key : layout.getKeys())
         {
-            Object key = it.next();
             assertTrue("Key was not found: " + key, l2.getKeys().contains(key));
         }
     }

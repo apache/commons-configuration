@@ -543,7 +543,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public static class PropertiesReader extends LineNumberReader
     {
         /** Stores the comment lines for the currently processed property.*/
-        private List commentLines;
+        private List<String> commentLines;
 
         /** Stores the name of the last read property.*/
         private String propertyName;
@@ -575,7 +575,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public PropertiesReader(Reader reader, char listDelimiter)
         {
             super(reader);
-            commentLines = new ArrayList();
+            commentLines = new ArrayList<String>();
             delimiter = listDelimiter;
         }
 
@@ -660,7 +660,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * <code>readProperty()</code>
          * @since 1.3
          */
-        public List getCommentLines()
+        public List<String> getCommentLines()
         {
             return commentLines;
         }
@@ -854,11 +854,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @throws IOException if an I/O error occurs
          */
-        public void writeProperty(String key, List values) throws IOException
+        public void writeProperty(String key, List<?> values) throws IOException
         {
-            for (int i = 0; i < values.size(); i++)
+            for (Object v : values)
             {
-                writeProperty(key, values.get(i));
+                writeProperty(key, v);
             }
         }
 
@@ -881,7 +881,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
             if (value instanceof List)
             {
-                List values = (List) value;
+                List<?> values = (List<?>) value;
                 if (forceSingleLine)
                 {
                     v = makeSingleLineValue(values);
@@ -970,13 +970,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * @return a string with the single line value (can be <b>null</b>)
          * @since 1.3
          */
-        private String makeSingleLineValue(List values)
+        private String makeSingleLineValue(List<?> values)
         {
             if (!values.isEmpty())
             {
-                Iterator it = values.iterator();
+                Iterator<?> it = values.iterator();
                 String lastValue = escapeValue(it.next());
-                StringBuffer buf = new StringBuffer(lastValue);
+                StringBuilder buf = new StringBuilder(lastValue);
                 while (it.hasNext())
                 {
                     // if the last value ended with an escape character, it has
