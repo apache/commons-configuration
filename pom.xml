@@ -189,14 +189,7 @@
         </contributor>
     </contributors>
 
-  <!-- Lang should depend on very little -->
   <dependencies>
-    <dependency>
-      <groupId>commons-collections</groupId>
-      <artifactId>commons-collections</artifactId>
-      <version>3.2</version>
-    </dependency>
-
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
