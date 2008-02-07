@@ -19,10 +19,9 @@ package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * Basic configuration classe. Stores the configuration data but does not
@@ -45,13 +44,13 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author Oliver Heger
  * @version $Id$
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
-    private Map store = new LinkedMap();
+    private Map<String, Object> store = new LinkedHashMap<String, Object>();
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -60,6 +59,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @param key key to use for mapping
      * @param value object to store
      */
+    @SuppressWarnings("unchecked")
     protected void addPropertyDirect(String key, Object value)
     {
         Object previousValue = getProperty(key);
@@ -71,12 +71,12 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         else if (previousValue instanceof List)
         {
             // the value is added to the existing list
-            ((List) previousValue).add(value);
+            ((List<Object>) previousValue).add(value);
         }
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
             list.add(previousValue);
             list.add(value);
 
@@ -146,7 +146,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @return An Iterator.
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return store.keySet().iterator();
     }
@@ -159,12 +159,13 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @return the copy
      * @since 1.3
      */
+    @SuppressWarnings("unchecked")
     public Object clone()
     {
         try
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
-            copy.store = (Map) ConfigurationUtils.clone(store);
+            copy.store = (Map<String, Object>) ConfigurationUtils.clone(store);
             return copy;
         }
         catch (CloneNotSupportedException cex)

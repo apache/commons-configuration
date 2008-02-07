@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -32,7 +33,6 @@ import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
@@ -53,9 +53,10 @@ public class TestBaseConfiguration extends TestCase
 
     protected BaseConfiguration config = null;
 
-    protected static Class missingElementException = NoSuchElementException.class;
-    protected static Class incompatibleElementException = ConversionException.class;
+    protected static Class<?> missingElementException = NoSuchElementException.class;
+    protected static Class<?> incompatibleElementException = ConversionException.class;
 
+    @Override
     protected void setUp() throws Exception
     {
         config = new BaseConfiguration();
@@ -409,7 +410,7 @@ public class TestBaseConfiguration extends TestCase
     {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
-        List list = config.getList("number");
+        List<?> list = config.getList("number");
         assertNotNull("The list is null", list);
         assertEquals("List size", 2, list.size());
         assertTrue("The number 1 is missing from the list", list.contains("1"));
@@ -435,7 +436,7 @@ public class TestBaseConfiguration extends TestCase
         config.addProperty("array", "${number}");
         config.addProperty("array", "${number}");
 
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         list.add("1");
         list.add("1");
 
@@ -501,7 +502,7 @@ public class TestBaseConfiguration extends TestCase
 
     public void testAddProperty() throws Exception
     {
-        Collection props = new ArrayList();
+        Collection<Object> props = new ArrayList<Object>();
         props.add("one");
         props.add("two,three,four");
         props.add(new String[] { "5.1", "5.2", "5.3,5.4", "5.5" });
@@ -510,10 +511,10 @@ public class TestBaseConfiguration extends TestCase
 
         Object val = config.getProperty("complex.property");
         assertTrue(val instanceof Collection);
-        Collection col = (Collection) val;
+        Collection<?> col = (Collection<?>) val;
         assertEquals(10, col.size());
 
-        props = new ArrayList();
+        props = new ArrayList<Object>();
         props.add("quick");
         props.add("brown");
         props.add("fox,jumps");
@@ -523,8 +524,8 @@ public class TestBaseConfiguration extends TestCase
         config.setProperty("complex.property", data);
         val = config.getProperty("complex.property");
         assertTrue(val instanceof Collection);
-        col = (Collection) val;
-        Iterator it = col.iterator();
+        col = (Collection<?>) val;
+        Iterator<?> it = col.iterator();
         StringTokenizer tok = new StringTokenizer("The quick brown fox jumps over the lazy dog.", " ");
         while(tok.hasMoreTokens())
         {
@@ -593,7 +594,7 @@ public class TestBaseConfiguration extends TestCase
             fail("Should return a list");
         }
 
-        Iterator it = subEprop.getKeys();
+        Iterator<String> it = subEprop.getKeys();
         it.next();
         assertFalse(it.hasNext());
 
@@ -702,7 +703,7 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("first element of the 'array' property", "foo", config.resolveContainerStore("array"));
 
         // list of objects
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         list.add("foo");
         list.add("bar");
         config.addPropertyDirect("list", list);
@@ -710,7 +711,7 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("first element of the 'list' property", "foo", config.resolveContainerStore("list"));
 
         // set of objects
-        Set set = new ListOrderedSet();
+        Set<String> set = new LinkedHashSet<String>();
         set.add("foo");
         set.add("bar");
         config.addPropertyDirect("set", set);
@@ -774,7 +775,7 @@ public class TestBaseConfiguration extends TestCase
         }
         BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
-        for (Iterator it = config.getKeys(); it.hasNext();)
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
             String key = (String) it.next();
             assertTrue("Key not found: " + key, config2.containsKey(key));
