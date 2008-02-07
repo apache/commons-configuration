@@ -22,6 +22,21 @@
   </properties>
 
   <body>
+
+    <release version="2.0" date="in SVN" description="">
+      <action dev="oheger" type="update">
+        The dependency to commons-collections is no longer needed.
+      </action>
+      <action dev="oheger" type="update">
+        To avoid incompatibilities with older versions the package structure
+	has been changed. The main package is now
+	org.apache.commons.configuration2.
+      </action>
+      <action dev="oheger" type="update">
+        Commons Configuration now requires Java 1.5.
+      </action>
+    </release>
+
     <release version="1.6" date="in SVN" description="">
       <action dev="oheger" type="fix" issue="CONFIGURATION-302">
         If a change has been detected by FileChangedReloadingStrategy, the
