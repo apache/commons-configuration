@@ -38,6 +38,9 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-306">
+        INIConfiguration now preserves whitespace in quoted values.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-302">
         If a change has been detected by FileChangedReloadingStrategy, the
         reloadingRequired() method will now return true until
