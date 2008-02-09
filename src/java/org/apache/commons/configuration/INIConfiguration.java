@@ -400,7 +400,12 @@ public class INIConfiguration extends AbstractFileConfiguration
             i++;
         }
 
-        return result.toString().trim();
+        String v = result.toString();
+        if(!quoted)
+        {
+            v = v.trim();
+        }
+        return v;
     }
 
     /**

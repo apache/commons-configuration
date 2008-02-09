@@ -5,9 +5,9 @@
  * licenses this file to You under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -78,7 +78,7 @@ public class TestINIConfiguration extends TestCase
 		instance.addProperty("section3.multi", "foo");
 		instance.addProperty("section3.multi", "bar");
 		instance.save(writer);
-        
+
         assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
 	}
 
@@ -209,5 +209,29 @@ public class TestINIConfiguration extends TestCase
         config2.load(new StringReader(writer.toString()));
 
         assertEquals("value", "1;2;3", config2.getString("section.key1"));
+    }
+
+    /**
+     * Tests whether whitespace is left unchanged for quoted values.
+     */
+    public void testQuotedValueWithWhitespace() throws Exception
+    {
+        final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(content));
+        assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
+                .getString("CmdPrompt"));
+    }
+
+    /**
+     * Tests a quoted value with space and a comment.
+     */
+    public void testQuotedValueWithWhitespaceAndComment() throws Exception
+    {
+        final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(content));
+        assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
+                .getString("CmdPrompt"));
     }
 }
