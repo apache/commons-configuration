@@ -472,11 +472,11 @@ public class INIConfiguration extends AbstractFileConfiguration
      *
      * @return a set containing the sections.
      */
-    public Set getSections()
+    public Set<String> getSections()
     {
-        Set sections = new TreeSet();
+        Set<String> sections = new TreeSet<String>();
 
-        Iterator keys = getKeys();
+        Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
             String key = (String) keys.next();

@@ -153,10 +153,10 @@ public class TestINIConfiguration extends TestCase
 		INIConfiguration instance = new INIConfiguration();
 		instance.addProperty("test1.foo", "bar");
 		instance.addProperty("test2.foo", "abc");
-		Set expResult = new HashSet();
+		Set<String> expResult = new HashSet<String>();
 		expResult.add("test1");
 		expResult.add("test2");
-		Set result = instance.getSections();
+		Set<String> result = instance.getSections();
 		assertEquals(expResult, result);
 	}
 
