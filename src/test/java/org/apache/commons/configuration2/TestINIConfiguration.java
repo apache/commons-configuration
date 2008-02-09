@@ -213,4 +213,28 @@ public class TestINIConfiguration extends TestCase
 
         assertEquals("value", "1;2;3", config2.getString("section.key1"));
     }
+
+    /**
+     * Tests whether whitespace is left unchanged for quoted values.
+     */
+    public void testQuotedValueWithWhitespace() throws Exception
+    {
+        final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(content));
+        assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
+                .getString("CmdPrompt"));
+    }
+
+    /**
+     * Tests a quoted value with space and a comment.
+     */
+    public void testQuotedValueWithWhitespaceAndComment() throws Exception
+    {
+        final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
+        INIConfiguration config = new INIConfiguration();
+        config.load(new StringReader(content));
+        assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
+                .getString("CmdPrompt"));
+    }
 }
