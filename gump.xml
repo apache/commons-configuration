@@ -26,8 +26,6 @@
     </depend>
     <depend project="dom4j">
     </depend>
-    <depend project="jakarta-ant">
-    </depend>
     <depend project="junit">
     </depend>
     <depend project="xml-apis">

@@ -350,15 +350,6 @@
       </properties>
     </dependency>
 
-    <dependency>
-      <groupId>ant</groupId>
-      <artifactId>ant</artifactId>
-      <version>1.6.5</version>
-      <properties>
-	    <optional>true</optional>
-      </properties>
-    </dependency>
-
     <!-- Needed for testing -->
 
     <dependency>
