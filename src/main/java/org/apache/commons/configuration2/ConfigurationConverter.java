@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Configuration converter. Helper class to convert between Configuration,
- * ExtendedProperties and standard Properties.
+ * Map, and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @version $Revision$, $Date$

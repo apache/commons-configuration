@@ -14,8 +14,6 @@
     <package>org.apache.commons.configuration</package>
     <depend project="commons-beanutils">
     </depend>
-    <depend project="commons-collections">
-    </depend>
     <depend project="commons-digester">
     </depend>
     <depend project="commons-lang">

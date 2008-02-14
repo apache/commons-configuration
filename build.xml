@@ -233,8 +233,6 @@
 
     <setproxy>
     </setproxy>
-    <get dest="${libdir}/commons-collections-3.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.2.jar">
-    </get>
     <get dest="${libdir}/commons-lang-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.3.jar">
     </get>
     <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.jar">
