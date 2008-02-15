@@ -26,12 +26,6 @@
     </depend>
     <depend project="junit">
     </depend>
-    <depend project="xml-apis">
-    </depend>
-    <depend project="xml-xerces">
-    </depend>
-    <depend project="xml-xerces2">
-    </depend>
     <work nested="target/classes">
     </work>
     <home nested="target">

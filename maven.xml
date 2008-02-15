@@ -18,18 +18,6 @@ limitations under the License.
 -->
 
 <project default="jar:jar" xmlns:j="jelly:core" xmlns:maven="jelly:maven">
-
-  <!-- Adds the jdbc-stdext to the dependency classpath if the
-       dependency.jdbc property is defined.
-  -->
-  <preGoal name="java:compile">
-    <j:if test="${dependency.jdbc != ''}">
-      <path id="extended.dependency.path">
-        <pathelement path="${dependency.jdbc}"/>
-      </path>
-      <maven:addPath id="maven.dependency.classpath" refid="extended.dependency.path"/>
-    </j:if>
-  </preGoal>
     
   <!-- Ensures that the conf directory and NOTICE.txt are included in the 
        source distro.

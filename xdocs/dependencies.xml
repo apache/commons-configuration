@@ -56,28 +56,12 @@
                         <td>ConfigurationFactory</td>
                         <td>
                             commons-digester<br/>
-                            commons-beanutils<br/>
-                            Java 1.4 or xml-apis
+                            commons-beanutils
                         </td>
                     </tr>
                     <tr>
                         <td>DefaultConfigurationBuilder</td>
-                        <td>
-                            commons-beanutils<br/>
-                            Java 1.4 or (xml-apis + xerces + xalan)
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>DatabaseConfiguration</td>
-                        <td>JDBC 3.0 (Java 1.4 or jdbc2_0-stdext.jar)</td>
-                    </tr>
-                    <tr>
-                        <td>XMLConfiguration</td>
-                        <td>Java 1.4 or (xml-apis + xerces + xalan)</td>
-                    </tr>
-                    <tr>
-                        <td>XMLPropertiesConfiguration</td>
-                        <td>Java 1.4 or (xml-apis + xerces)</td>
+                        <td>commons-beanutils</td>
                     </tr>
                     <tr>
                         <td>PropertyListConfiguration</td>
@@ -85,10 +69,7 @@
                     </tr>
                     <tr>
                         <td>XMLPropertyListConfiguration</td>
-                        <td>
-                            commons-codec<br/>
-                            Java 1.4 or xml-apis
-                        </td>
+                        <td>commons-codec</td>
                     </tr>
                     <tr>
                         <td>ConfigurationDynaBean</td>
@@ -97,10 +78,6 @@
                     <tr>
                         <td>XPathExpressionEngine</td>
                         <td>commons-jxpath</td>
-                    </tr>
-                    <tr>
-                        <td>EnvironmentConfiguration</td>
-                        <td>Java 1.5 or ant 1.6.5</td>
                     </tr>
                 </tbody>
             </table>
@@ -150,21 +127,6 @@
                     </tr>
                   </tbody>
                 </table>
-                </li>
-                <li>
-                  In Java versions before 1.4 XML support is not integrated. To
-                  make use of components that require XML processing you need
-                  to add a suitable replacement. We used 
-                  <a href="http://xml.apache.org/xerces2-j/">Xerces 2.2.1</a>,
-                  <a href="http://xml.apache.org/xalan-j/">Xalan 2.7.0</a>, and
-                  <a href="http://xml.apache.org/commons/">XML APIs 2.0.2</a>.
-                  Version 2.7.0 of Xalan seems to cause some problems in a few
-                  of our JUnit tests (a <code>java.lang.NoSuchMethodError</code>
-                  is thrown when a SAX data source is to be transformed into a
-                  DOM result). With version 2.6.0 these problems do not occur.
-                  In both cases the error happened only in test code; the actual
-                  code was not affected. But if you face a similar problem with
-                  Xalan 2.7.0 it is worth trying the older version.
                 </li>
               </ul>
             </p>
