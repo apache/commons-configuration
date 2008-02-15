@@ -150,7 +150,7 @@ public final class PropertyConverter
         {
             result = toLocale(value);
         }
-        else if (isEnum(cls))
+        else if (cls.isEnum())
         {
             // This causes an unchecked warning because the concrete Enum class
             // cannot be fully determined.
@@ -410,7 +410,7 @@ public final class PropertyConverter
             try
             {
                 Constructor<? extends Number> constr = targetClass.getConstructor(CONSTR_ARGS);
-                return (Number) constr.newInstance(new Object[]{str});
+                return (Number) constr.newInstance(str);
             }
             catch (InvocationTargetException itex)
             {
@@ -708,8 +708,8 @@ public final class PropertyConverter
             // should be optional.
             try
             {
-                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
-                return ctor.newInstance(new Object[] {value});
+                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(String.class);
+                return ctor.newInstance(value);
             }
             catch (Exception e)
             {
@@ -720,14 +720,6 @@ public final class PropertyConverter
         {
             throw new ConversionException("The value " + value + " can't be converted to a InternetAddress");
         }
-    }
-
-    /**
-     * Calls Class.isEnum() on Java 5, returns false on older JRE.
-     */
-    static boolean isEnum(Class<?> cls)
-    {
-        return cls.isEnum();
     }
 
     /**
