@@ -57,16 +57,8 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
         SAXSource source = new SAXSource(parser, new InputSource());
         DOMResult result = new DOMResult();
         Transformer trans = TransformerFactory.newInstance().newTransformer();
-        try
-        {
-            //When executed on a JDK 1.3 this line throws a NoSuchMethodError
-            //somewhere deep in Xalan. We simply ignore this.
-            trans.transform(source, result);
-        }
-        catch(NoSuchMethodError ex)
-        {
-            return;
-        }
+        trans.transform(source, result);
+
         Node root = ((Document) result.getNode()).getDocumentElement();
         JXPathContext ctx = JXPathContext.newContext(root);
 
