@@ -63,10 +63,6 @@
                         <td>commons-beanutils</td>
                     </tr>
                     <tr>
-                        <td>PropertyListConfiguration</td>
-                        <td>commons-codec</td>
-                    </tr>
-                    <tr>
                         <td>XMLPropertyListConfiguration</td>
                         <td>commons-codec</td>
                     </tr>

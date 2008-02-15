@@ -9,7 +9,6 @@ import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.codec.binary.Hex;
 
 /**
  * JavaCC based parser for the PropertyList format.

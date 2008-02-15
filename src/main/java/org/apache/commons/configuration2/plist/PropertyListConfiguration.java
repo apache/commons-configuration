@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;

@@ -25,6 +25,14 @@
 
     <release version="2.0" date="in SVN" description="">
       <action dev="oheger" type="update">
+        Commons Configuration now requires Java 5.
+      </action>
+      <action dev="oheger" type="update">
+        To avoid incompatibilities with older versions the package structure
+	    has been changed. The main package is now
+	    org.apache.commons.configuration2.
+      </action>
+      <action dev="oheger" type="update">
         The dependency to commons-collections is no longer needed.
       </action>
       <action dev="ebourg" type="update">
@@ -33,13 +41,8 @@
         bridging mechanism such as the one available for Log4J
         (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
       </action>
-      <action dev="oheger" type="update">
-        To avoid incompatibilities with older versions the package structure
-	    has been changed. The main package is now
-	    org.apache.commons.configuration2.
-      </action>
-      <action dev="oheger" type="update">
-        Commons Configuration now requires Java 5.
+      <action dev="ebourg" type="update">
+        PropertyListConfiguration no longer requires commons-codec
       </action>
       <action dev="ebourg" type="update">
         Calendar objects in PropertyListConfiguration are now saved with their own time zone.
