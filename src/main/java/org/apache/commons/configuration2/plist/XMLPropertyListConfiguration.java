@@ -35,7 +35,6 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
@@ -614,7 +613,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          */
         public void addDataValue(String value)
         {
-            addValue(Base64.decodeBase64(value.getBytes()));
+            addValue(Base64.decodeBase64(value));
         }
 
         /**

@@ -20,7 +20,7 @@ package org.apache.commons.configuration2.plist;
 /**
  * Hex encoder and decoder. This is a modified copy of the Hex class in Commons Codec 
  *
- * @since 1.1
+ * @since 2.0
  * @author Apache Software Foundation
  * @version $Id$
  */

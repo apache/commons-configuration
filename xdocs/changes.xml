@@ -42,7 +42,7 @@
         (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
       </action>
       <action dev="ebourg" type="update">
-        PropertyListConfiguration no longer requires commons-codec
+        The dependency to commons-codec is no longer needed.
       </action>
       <action dev="ebourg" type="update">
         Calendar objects in PropertyListConfiguration are now saved with their own time zone.

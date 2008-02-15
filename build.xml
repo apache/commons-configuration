@@ -233,8 +233,6 @@
     </get>
     <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-core-1.7.0.jar">
     </get>
-    <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-codec/jars/commons-codec-1.3.jar">
-    </get>
     <get dest="${libdir}/commons-jxpath-1.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jxpath/jars/commons-jxpath-1.2.jar">
     </get>
     <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.4.jar">
