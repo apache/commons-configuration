@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.beanutils.BeanDeclaration;
 import org.apache.commons.configuration2.beanutils.BeanFactory;
@@ -35,7 +36,6 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.OverrideCombiner;
 import org.apache.commons.configuration2.tree.UnionCombiner;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -342,7 +342,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         providers = new HashMap<String, ConfigurationProvider>();
         registerDefaultProviders();
         registerBeanFactory();
-        setLogger(LogFactory.getLog(getClass()));
+        setLogger(Logger.getLogger(getClass().getName()));
         addErrorLogListener();  // log errors per default
     }
 

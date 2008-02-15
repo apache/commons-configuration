@@ -26,10 +26,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
-
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Configuration stored in a database. The properties are retrieved from a
@@ -119,7 +118,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         this.keyColumn = keyColumn;
         this.valueColumn = valueColumn;
         this.name = name;
-        setLogger(LogFactory.getLog(getClass()));
+        setLogger(Logger.getLogger(getClass().getName()));
         addErrorLogListener();  // log errors per default
     }
 
@@ -586,7 +585,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            getLogger().error("An error occured on closing the statement", e);
+            getLogger().log(Level.SEVERE, "An error occured on closing the statement", e);
         }
 
         try
@@ -598,7 +597,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         catch (SQLException e)
         {
-            getLogger().error("An error occured on closing the connection", e);
+            getLogger().log(Level.SEVERE, "An error occured on closing the connection", e);
         }
     }
 }

@@ -18,8 +18,6 @@
     </depend>
     <depend project="commons-lang">
     </depend>
-    <depend project="commons-logging">
-    </depend>
     <depend project="commons-codec">
     </depend>
     <depend project="dom4j">

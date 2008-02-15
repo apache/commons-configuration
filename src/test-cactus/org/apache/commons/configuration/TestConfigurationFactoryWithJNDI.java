@@ -23,13 +23,15 @@ import java.util.List;
 
 import org.apache.cactus.ServletTestCase;
 import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.ConfigurationFactory;
+import org.apache.commons.configuration2.JNDIConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 
 public class TestConfigurationFactoryWithJNDI extends ServletTestCase
 {
     private File testDigesterFile = new File("conf/testDigesterConfigurationWJNDI.xml");
-    private static Log log = LogFactory.getLog(TestConfigurationFactoryWithJNDI.class);
 
     public void testLoadingWithDigester() throws Exception
     {

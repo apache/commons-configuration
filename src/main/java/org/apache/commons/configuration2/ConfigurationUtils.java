@@ -29,13 +29,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Miscellaneous utility methods for configurations.
@@ -59,7 +59,7 @@ public final class ConfigurationUtils
     private static final String METHOD_CLONE = "clone";
 
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationUtils.class);
+    private static Logger log = Logger.getLogger(ConfigurationUtils.class.getName());
 
     /**
      * Private constructor. Prevents instances from being created.
@@ -391,12 +391,12 @@ public final class ConfigurationUtils
      */
     public static URL locate(String base, String name)
     {
-        if (log.isDebugEnabled())
+        if (log.isLoggable(Level.FINE))
         {
             StringBuilder buf = new StringBuilder();
             buf.append("ConfigurationUtils.locate(): base is ").append(base);
             buf.append(", name is ").append(name);
-            log.debug(buf.toString());
+            log.fine(buf.toString());
         }
 
         if (name == null)
@@ -434,7 +434,7 @@ public final class ConfigurationUtils
                 }
             }
 
-            log.debug("Loading configuration from the URL " + url);
+            log.fine("Loading configuration from the URL " + url);
         }
         catch (IOException e)
         {
@@ -450,11 +450,11 @@ public final class ConfigurationUtils
                 try
                 {
                     url = file.toURL();
-                    log.debug("Loading configuration from the absolute path " + name);
+                    log.fine("Loading configuration from the absolute path " + name);
                 }
                 catch (MalformedURLException e)
                 {
-                    log.warn("Could not obtain URL from file", e);
+                    log.log(Level.WARNING, "Could not obtain URL from file", e);
                 }
             }
         }
@@ -472,12 +472,12 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Loading configuration from the path " + file);
+                    log.fine("Loading configuration from the path " + file);
                 }
             }
             catch (MalformedURLException e)
             {
-                log.warn("Could not obtain URL from file", e);
+                log.log(Level.WARNING, "Could not obtain URL from file", e);
             }
         }
 
@@ -494,13 +494,13 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Loading configuration from the home path " + file);
+                    log.fine("Loading configuration from the home path " + file);
                 }
 
             }
             catch (MalformedURLException e)
             {
-                log.warn("Could not obtain URL from file", e);
+                log.log(Level.WARNING, "Could not obtain URL from file", e);
             }
         }
 
@@ -529,7 +529,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Loading configuration from the context classpath (" + resourceName + ")");
+                log.fine("Loading configuration from the context classpath (" + resourceName + ")");
             }
         }
 
@@ -540,7 +540,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Loading configuration from the system classpath (" + resourceName + ")");
+                log.fine("Loading configuration from the system classpath (" + resourceName + ")");
             }
         }
         return url;

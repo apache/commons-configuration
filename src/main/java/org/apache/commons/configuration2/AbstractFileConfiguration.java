@@ -32,11 +32,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
@@ -116,7 +117,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public AbstractFileConfiguration()
     {
         initReloadingStrategy();
-        setLogger(LogFactory.getLog(getClass()));
+        setLogger(Logger.getLogger(getClass().getName()));
         addErrorLogListener();
     }
 
@@ -304,7 +305,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             }
             catch (IOException e)
             {
-                getLogger().warn("Could not close input stream", e);
+                getLogger().log(Level.WARNING, "Could not close input stream", e);
             }
         }
     }
@@ -821,9 +822,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
                     if (strategy.reloadingRequired())
                     {
-                        if (getLogger().isInfoEnabled())
+                        if (getLogger().isLoggable(Level.FINE))
                         {
-                            getLogger().info("Reloading configuration. URL is " + getURL());
+                            getLogger().fine("Reloading configuration. URL is " + getURL());
                         }
                         fireEvent(EVENT_RELOAD, null, getURL(), true);
                         setDetailEvents(false);
@@ -1017,7 +1018,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (IOException e)
         {
-            getLogger().warn("Could not close output stream", e);
+            getLogger().log(Level.WARNING, "Could not close output stream", e);
         }
     }
 }

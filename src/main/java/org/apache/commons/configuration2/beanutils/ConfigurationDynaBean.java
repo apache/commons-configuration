@@ -19,8 +19,9 @@ package org.apache.commons.configuration2.beanutils;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -28,8 +29,6 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationMap;
 import org.apache.commons.configuration2.ConversionException;
 import org.apache.commons.configuration2.SubsetConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The <tt>ConfigurationDynaBean</tt> dynamically reads and writes
@@ -61,7 +60,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     private static final String PROPERTY_DELIMITER = ".";
 
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
+    private static Logger log = Logger.getLogger(ConfigurationDynaBean.class.getName());
 
     /**
      * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
@@ -72,17 +71,17 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     public ConfigurationDynaBean(Configuration configuration)
     {
         super(configuration);
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("ConfigurationDynaBean(" + configuration + ")");
+            log.finest("ConfigurationDynaBean(" + configuration + ")");
         }
     }
 
     public void set(String name, Object value)
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("set(" + name + "," + value + ")");
+            log.finest("set(" + name + "," + value + ")");
         }
 
         if (value == null)
@@ -92,11 +91,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
         if (value instanceof Collection)
         {
-            Collection collection = (Collection) value;
-            Iterator iterator = collection.iterator();
-            while (iterator.hasNext())
+            for (Object item : (Collection) value)
             {
-                getConfiguration().addProperty(name, iterator.next());
+                getConfiguration().addProperty(name, item);
             }
         }
         else if (value.getClass().isArray())
@@ -115,9 +112,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
     public Object get(String name)
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("get(" + name + ")");
+            log.finest("get(" + name + ")");
         }
 
         // get configuration property
@@ -132,9 +129,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
         }
 
-        if (log.isDebugEnabled())
+        if (log.isLoggable(Level.FINE))
         {
-            log.debug(name + "=[" + result + "]");
+            log.fine(name + "=[" + result + "]");
         }
 
         if (result == null)

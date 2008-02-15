@@ -84,6 +84,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
+    /** The default date format, its use must be synchronized */
     static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("<*'D'yyyy-MM-dd HH:mm:ss Z>");
 
     /** Instance specific format that can be used to format date in differents time zones */

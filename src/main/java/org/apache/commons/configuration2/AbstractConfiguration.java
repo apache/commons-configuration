@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
@@ -34,8 +36,6 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.NoOpLog;
 
 /**
  * <p>Abstract configuration class. Provides basic functionality but does not
@@ -143,7 +143,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     private StrSubstitutor substitutor;
 
     /** Stores the logger.*/
-    private Log log;
+    private Logger log;
 
     /**
      * Creates a new instance of <code>AbstractConfiguration</code>.
@@ -340,7 +340,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @return the logger
      * @since 1.4
      */
-    public Log getLogger()
+    public Logger getLogger()
     {
         return log;
     }
@@ -355,9 +355,16 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @param log the new logger
      * @since 1.4
      */
-    public void setLogger(Log log)
+    public void setLogger(Logger log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
+        if (log == null)
+        {
+            // create a NoOp logger
+            log = Logger.getLogger(getClass().getName() + "." + hashCode());
+            log.setLevel(Level.OFF);
+        }
+
+        this.log = log;
     }
 
     /**
@@ -376,7 +383,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             public void configurationError(ConfigurationErrorEvent event)
             {
-                getLogger().warn("Internal error", event.getCause());
+                getLogger().log(Level.WARNING, "Internal error", event.getCause());
             }
         });
     }
@@ -384,9 +391,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     public void addProperty(String key, Object value)
     {
         fireEvent(EVENT_ADD_PROPERTY, key, value, true);
-        addPropertyValues(key, value,
-                isDelimiterParsingDisabled() ? DISABLED_DELIMITER
-                        : getListDelimiter());
+        addPropertyValues(key, value, isDelimiterParsingDisabled() ? DISABLED_DELIMITER : getListDelimiter());
         fireEvent(EVENT_ADD_PROPERTY, key, value, false);
     }
 

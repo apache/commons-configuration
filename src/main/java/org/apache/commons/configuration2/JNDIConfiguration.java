@@ -18,12 +18,12 @@
 package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
-
+import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
@@ -33,7 +33,6 @@ import javax.naming.NamingException;
 import javax.naming.NotContextException;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
@@ -104,7 +103,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         this.context = context;
         this.prefix = prefix;
-        setLogger(LogFactory.getLog(getClass()));
+        setLogger(Logger.getLogger(getClass().getName()));
         addErrorLogListener();
     }
 

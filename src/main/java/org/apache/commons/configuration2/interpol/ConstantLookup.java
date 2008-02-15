@@ -14,16 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.interpol;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -48,9 +49,7 @@ import org.apache.commons.logging.LogFactory;
  *
  * @version $Id$
  * @since 1.4
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public class ConstantLookup extends StrLookup
 {
@@ -58,10 +57,10 @@ public class ConstantLookup extends StrLookup
     private static final char FIELD_SEPRATOR = '.';
 
     /** An internally used cache for already retrieved values. */
-    private static Map constantCache = new HashMap();
+    private static Map<String, String> constantCache = new HashMap<String, String>();
 
     /** The logger. */
-    private Log log = LogFactory.getLog(getClass());
+    private Logger log = Logger.getLogger(getClass().getName());
 
     /**
      * Tries to resolve the specified variable. The passed in variable name is
@@ -85,7 +84,7 @@ public class ConstantLookup extends StrLookup
         String result;
         synchronized (constantCache)
         {
-            result = (String) constantCache.get(var);
+            result = constantCache.get(var);
         }
         if (result != null)
         {
@@ -99,8 +98,7 @@ public class ConstantLookup extends StrLookup
         }
         try
         {
-            Object value = resolveField(var.substring(0, fieldPos), var
-                    .substring(fieldPos + 1));
+            Object value = resolveField(var.substring(0, fieldPos), var.substring(fieldPos + 1));
             if (value != null)
             {
                 synchronized (constantCache)
@@ -115,7 +113,7 @@ public class ConstantLookup extends StrLookup
         }
         catch (Exception ex)
         {
-            log.warn("Could not obtain value for variable " + var, ex);
+            log.log(Level.WARNING, "Could not obtain value for variable " + var, ex);
         }
 
         return result;
@@ -144,8 +142,7 @@ public class ConstantLookup extends StrLookup
      * @return the field's value
      * @throws Exception if an error occurs
      */
-    protected Object resolveField(String className, String fieldName)
-            throws Exception
+    protected Object resolveField(String className, String fieldName) throws Exception
     {
         Class clazz = fetchClass(className);
         Field field = clazz.getField(fieldName);

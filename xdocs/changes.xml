@@ -27,6 +27,12 @@
       <action dev="oheger" type="update">
         The dependency to commons-collections is no longer needed.
       </action>
+      <action dev="ebourg" type="update">
+        The dependency to commons-logging is no longer needed. The java.util.logging API is used instead.
+        If necessary it's still possible to redirect the log messages to a 3rd party logging API using a
+        bridging mechanism such as the one available for Log4J
+        (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
+      </action>
       <action dev="oheger" type="update">
         To avoid incompatibilities with older versions the package structure
 	    has been changed. The main package is now

@@ -20,11 +20,7 @@ package org.apache.commons.configuration2;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
@@ -152,7 +148,7 @@ public abstract class TestAbstractConfiguration extends TestCase
     {
         AbstractConfiguration config = getEmptyConfiguration();
         assertNotNull("Default logger is null", config.getLogger());
-        Log log = LogFactory.getLog(config.getClass());
+        Logger log = Logger.getLogger(config.getClass().getName());
         config.setLogger(log);
         assertSame("Logger was not set", log, config.getLogger());
     }

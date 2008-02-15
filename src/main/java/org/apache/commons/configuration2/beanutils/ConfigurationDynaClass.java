@@ -17,16 +17,16 @@
 
 package org.apache.commons.configuration2.beanutils;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * The <tt>ConfigurationDynaClass</tt> dynamically determines properties for
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 public class ConfigurationDynaClass implements DynaClass
 {
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationDynaClass.class);
+    private static Logger log = Logger.getLogger(ConfigurationDynaClass.class.getName());
 
     /** Stores the associated configuration.*/
     private Configuration configuration;
@@ -53,18 +53,18 @@ public class ConfigurationDynaClass implements DynaClass
     public ConfigurationDynaClass(Configuration configuration)
     {
         super();
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("ConfigurationDynaClass(" + configuration + ")");
+            log.finest("ConfigurationDynaClass(" + configuration + ")");
         }
         this.configuration = configuration;
     }
 
     public DynaProperty getDynaProperty(String name)
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("getDynaProperty(" + name + ")");
+            log.finest("getDynaProperty(" + name + ")");
         }
 
         if (name == null)
@@ -120,13 +120,13 @@ public class ConfigurationDynaClass implements DynaClass
 
     public DynaProperty[] getDynaProperties()
     {
-        if (log.isTraceEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.trace("getDynaProperties()");
+            log.finest("getDynaProperties()");
         }
 
         Iterator keys = configuration.getKeys();
-        List properties = new ArrayList();
+        List<DynaProperty> properties = new ArrayList<DynaProperty>();
         while (keys.hasNext())
         {
             String key = (String) keys.next();
@@ -136,9 +136,9 @@ public class ConfigurationDynaClass implements DynaClass
 
         DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
-        if (log.isDebugEnabled())
+        if (log.isLoggable(Level.FINEST))
         {
-            log.debug("Found " + properties.size() + " properties.");
+            log.finest("Found " + properties.size() + " properties.");
         }
 
         return propertyArray;

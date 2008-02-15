@@ -143,8 +143,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Oliver Heger
  * @version $Revision$, $Date$
  */
-public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
-    implements EntityResolver
+public class XMLConfiguration extends AbstractHierarchicalFileConfiguration implements EntityResolver
 {
     /**
      * The serial version UID.
@@ -572,8 +571,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         else
         {
-            DocumentBuilderFactory factory = DocumentBuilderFactory
-                    .newInstance();
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setValidating(isValidating());
             DocumentBuilder result = factory.newDocumentBuilder();
             result.setEntityResolver(this);

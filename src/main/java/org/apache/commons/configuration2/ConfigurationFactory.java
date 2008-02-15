@@ -25,6 +25,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.plist.PropertyListConfiguration;
 import org.apache.commons.configuration2.plist.XMLPropertyListConfiguration;
@@ -37,8 +39,7 @@ import org.apache.commons.digester.substitution.MultiVariableExpander;
 import org.apache.commons.digester.substitution.VariableSubstitutor;
 import org.apache.commons.digester.xmlrules.DigesterLoader;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -87,7 +88,7 @@ public class ConfigurationFactory
     private static final String DEF_BASE_PATH = ".";
 
     /** static logger */
-    private static Log log = LogFactory.getLog(ConfigurationFactory.class);
+    private static Logger log = Logger.getLogger(ConfigurationFactory.class.getName());
 
     /** The XML file with the details about the configuration to load */
     private String configurationFileName;
@@ -154,7 +155,6 @@ public class ConfigurationFactory
         }
         catch (Exception e)
         {
-            log.error("Exception caught opening stream to URL", e);
             throw new ConfigurationException("Exception caught opening stream to URL", e);
         }
 
@@ -186,12 +186,10 @@ public class ConfigurationFactory
         }
         catch (SAXException saxe)
         {
-            log.error("SAX Exception caught", saxe);
             throw new ConfigurationException("SAX Exception caught", saxe);
         }
         catch (IOException ioe)
         {
-            log.error("IO Exception caught", ioe);
             throw new ConfigurationException("IO Exception caught", ioe);
         }
         return builder.getConfiguration();
@@ -859,8 +857,7 @@ public class ConfigurationFactory
         public void begin(Attributes attrs) throws Exception
         {
             optional = attrs.getValue(ATTR_OPTIONAL) != null
-                    && PropertyConverter.toBoolean(
-                            attrs.getValue(ATTR_OPTIONAL)).booleanValue();
+                    && PropertyConverter.toBoolean(attrs.getValue(ATTR_OPTIONAL)).booleanValue();
             super.begin(attrs);
         }
 
@@ -880,7 +877,7 @@ public class ConfigurationFactory
             {
                 if (optional)
                 {
-                    log.warn("Could not create optional configuration!", ex);
+                    log.log(Level.WARNING, "Could not create optional configuration!", ex);
                 }
                 else
                 {

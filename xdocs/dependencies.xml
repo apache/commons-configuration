@@ -49,7 +49,6 @@
                         <td>
                             Java 5<br/>
                             commons-lang<br/>
-                            commons-logging
                         </td>
                     </tr>
                     <tr>
@@ -104,10 +103,6 @@
                     <tr>
                       <td>commons-lang</td>
                       <td>2.2, 2.3</td>
-                    </tr>
-                    <tr>
-                      <td>commons-logging</td>
-                      <td>1.0.4, 1.1</td>
                     </tr>
                     <tr>
                       <td>commons-digester</td>

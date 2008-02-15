@@ -18,15 +18,13 @@
 package org.apache.commons.configuration2.test;
 
 import java.io.FileReader;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Logger;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Stolen from Turbine
@@ -38,7 +36,7 @@ import org.apache.commons.logging.LogFactory;
 public class HsqlDB
 {
     private Connection connection = null;
-    private static Log log = LogFactory.getLog(HsqlDB.class);
+    private Logger log = Logger.getLogger(getClass().getName());
 
     public HsqlDB(String uri, String databaseDriver, String loadFile)throws Exception
     {
@@ -86,7 +84,7 @@ public class HsqlDB
                 }
                 catch (SQLException sqle)
                 {
-                    log.warn("Statement: " + cmd + ": " + sqle.getMessage());
+                    log.warning("Statement: " + cmd + ": " + sqle.getMessage());
                 }
                 
                 commands = commands.substring(targetPos + 2);
