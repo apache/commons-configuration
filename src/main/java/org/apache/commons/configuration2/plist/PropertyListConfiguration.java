@@ -84,7 +84,7 @@ import org.apache.commons.lang.StringUtils;
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
     /** The default date format, its use must be synchronized */
-    static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("<*'D'yyyy-MM-dd HH:mm:ss Z>");
+    private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("<*'D'yyyy-MM-dd HH:mm:ss Z>");
 
     /** Instance specific format that can be used to format date in differents time zones */
     final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT.toPattern());
@@ -336,19 +336,25 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
         else if (value instanceof Date)
         {
-            out.print(DATE_FORMAT.format((Date) value));
+            synchronized (DATE_FORMAT)
+            {
+                out.print(DATE_FORMAT.format((Date) value));
+            }
         }
         else if (value instanceof Calendar)
         {
             // change the time zone of the date format
-            Calendar calendar = (Calendar) value;
-            TimeZone previousZone = DATE_FORMAT.getTimeZone();
-            DATE_FORMAT.setTimeZone(calendar.getTimeZone());
+            synchronized (DATE_FORMAT)
+            {
+                Calendar calendar = (Calendar) value;
+                TimeZone previousZone = DATE_FORMAT.getTimeZone();
+                DATE_FORMAT.setTimeZone(calendar.getTimeZone());
 
-            out.print(DATE_FORMAT.format(calendar.getTime()));
+                out.print(DATE_FORMAT.format(calendar.getTime()));
 
-            // restore the previous time zone of the date format
-            DATE_FORMAT.setTimeZone(previousZone);
+                // restore the previous time zone of the date format
+                DATE_FORMAT.setTimeZone(previousZone);
+            }
         }
         else if (value != null)
         {
