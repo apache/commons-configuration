@@ -70,14 +70,7 @@ class PrefixedKeysIterator implements Iterator<String>
      */
     public boolean hasNext()
     {
-        if (nextElementSet)
-        {
-            return true;
-        }
-        else
-        {
-            return setNextElement();
-        }
+        return nextElementSet || setNextElement();
     }
 
     /**

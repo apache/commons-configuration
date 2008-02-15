@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
 import java.util.ArrayList;
@@ -44,8 +45,7 @@ class ConfigurationNodeIteratorAttribute extends
     public ConfigurationNodeIteratorAttribute(NodePointer parent, QName name)
     {
         super(parent, false);
-        initSubNodeList(createSubNodeList((ConfigurationNode) parent.getNode(),
-                name));
+        initSubNodeList(createSubNodeList((ConfigurationNode) parent.getNode(), name));
     }
 
     /**
@@ -55,15 +55,15 @@ class ConfigurationNodeIteratorAttribute extends
      * @param name the name of the selected attribute
      * @return a list with the selected attributes
      */
-    protected List createSubNodeList(ConfigurationNode node, QName name)
+    protected List<ConfigurationNode> createSubNodeList(ConfigurationNode node, QName name)
     {
         if (name.getPrefix() != null)
         {
             // namespace prefixes are not supported
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
-        List result = new ArrayList();
+        List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
         if (!WILDCARD.equals(name.getName()))
         {
             result.addAll(node.getAttributes(name.getName()));

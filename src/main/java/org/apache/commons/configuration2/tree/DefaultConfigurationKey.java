@@ -627,11 +627,11 @@ public class DefaultConfigurationKey
          *
          * @return a clone of this object
          */
-        public Object clone()
+        public KeyIterator clone()
         {
             try
             {
-                return super.clone();
+                return (KeyIterator) super.clone();
             }
             catch (CloneNotSupportedException cex)
             {

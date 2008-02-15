@@ -934,7 +934,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         return super.containsKey(key);
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         reload();
         return super.getKeys();

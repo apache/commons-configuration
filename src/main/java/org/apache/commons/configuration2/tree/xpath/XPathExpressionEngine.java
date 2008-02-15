@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
 import java.util.ArrayList;
@@ -110,8 +111,7 @@ public class XPathExpressionEngine implements ExpressionEngine
     static final String ATTR_DELIMITER = "@";
 
     /** Constant for the delimiters for splitting node paths. */
-    private static final String NODE_PATH_DELIMITERS = PATH_DELIMITER
-            + ATTR_DELIMITER;
+    private static final String NODE_PATH_DELIMITERS = PATH_DELIMITER + ATTR_DELIMITER;
 
     /**
      * Executes a query. The passed in property key is directly passed to a
@@ -121,19 +121,26 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param key the query to be executed
      * @return a list with the nodes that are selected by the query
      */
-    public List query(ConfigurationNode root, String key)
+    public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
         if (StringUtils.isEmpty(key))
         {
-            List result = new ArrayList(1);
+            List<ConfigurationNode> result = new ArrayList<ConfigurationNode>(1);
             result.add(root);
             return result;
         }
         else
         {
             JXPathContext context = createContext(root, key);
-            List result = context.selectNodes(key);
-            return (result != null) ? result : Collections.EMPTY_LIST;
+            List<ConfigurationNode> result = context.selectNodes(key);
+            if (result != null)
+            {
+                return result;
+            }
+            else
+            {
+                return Collections.emptyList();
+            }
         }
     }
 
@@ -205,19 +212,17 @@ public class XPathExpressionEngine implements ExpressionEngine
         }
         if (index < 0)
         {
-            throw new IllegalArgumentException(
-                    "prepareAdd: Passed in key must contain a whitespace!");
+            throw new IllegalArgumentException("prepareAdd: Passed in key must contain a whitespace!");
         }
 
-        List nodes = query(root, key.substring(0, index).trim());
+        List<ConfigurationNode> nodes = query(root, key.substring(0, index).trim());
         if (nodes.size() != 1)
         {
-            throw new IllegalArgumentException(
-                    "prepareAdd: key must select exactly one target node!");
+            throw new IllegalArgumentException("prepareAdd: key must select exactly one target node!");
         }
 
         NodeAddData data = new NodeAddData();
-        data.setParent((ConfigurationNode) nodes.get(0));
+        data.setParent(nodes.get(0));
         initNodeAddData(data, key.substring(index).trim());
         return data;
     }

@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration2.tree;
 
-import java.util.Iterator;
+package org.apache.commons.configuration2.tree;
 
 /**
  * <p>
@@ -32,9 +31,7 @@ import java.util.Iterator;
  * configuration.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -93,9 +90,9 @@ public class ViewNode extends DefaultConfigurationNode
     {
         if (source != null)
         {
-            for (Iterator it = source.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode attribute : source.getAttributes())
             {
-                addAttribute((ConfigurationNode) it.next());
+                addAttribute(attribute);
             }
         }
     }
@@ -109,9 +106,9 @@ public class ViewNode extends DefaultConfigurationNode
     {
         if (source != null)
         {
-            for (Iterator it = source.getChildren().iterator(); it.hasNext();)
+            for (ConfigurationNode child : source.getChildren())
             {
-                addChild((ConfigurationNode) it.next());
+                addChild(child);
             }
         }
     }

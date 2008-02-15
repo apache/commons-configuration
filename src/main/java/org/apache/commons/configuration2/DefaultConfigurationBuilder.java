@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
 import java.io.File;
@@ -324,7 +325,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private CombinedConfiguration constructedConfiguration;
 
     /** Stores a map with the registered configuration providers. */
-    private Map providers;
+    private Map<String, ConfigurationProvider> providers;
 
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;
@@ -338,7 +339,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     public DefaultConfigurationBuilder()
     {
         super();
-        providers = new HashMap();
+        providers = new HashMap<String, ConfigurationProvider>();
         registerDefaultProviders();
         registerBeanFactory();
         setLogger(LogFactory.getLog(getClass()));
@@ -420,8 +421,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param tagName the name of the tag in the configuration definition file
      * @param provider the provider for this tag
      */
-    public void addConfigurationProvider(String tagName,
-            ConfigurationProvider provider)
+    public void addConfigurationProvider(String tagName, ConfigurationProvider provider)
     {
         if (tagName == null)
         {
@@ -496,18 +496,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
 
-        List overrides = fetchTopLevelOverrideConfigs();
+        List<SubnodeConfiguration> overrides = fetchTopLevelOverrideConfigs();
         overrides.addAll(fetchChildConfigs(KEY_OVERRIDE));
         initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
 
-        List additionals = fetchChildConfigs(KEY_UNION);
+        List<SubnodeConfiguration> additionals = fetchChildConfigs(KEY_UNION);
         if (!additionals.isEmpty())
         {
-            CombinedConfiguration addConfig = new CombinedConfiguration(
-                    new UnionCombiner());
+            CombinedConfiguration addConfig = new CombinedConfiguration(new UnionCombiner());
             result.addConfiguration(addConfig, ADDITIONAL_NAME);
-            initCombinedConfiguration(addConfig, additionals,
-                    KEY_ADDITIONAL_LIST);
+            initCombinedConfiguration(addConfig, additionals, KEY_ADDITIONAL_LIST);
         }
 
         return result;
@@ -552,7 +550,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @throws ConfigurationException if an error occurs
      */
     protected void initCombinedConfiguration(CombinedConfiguration config,
-            List containedConfigs, String keyListNodes) throws ConfigurationException
+            List<? extends HierarchicalConfiguration> containedConfigs, String keyListNodes) throws ConfigurationException
     {
         List listNodes = getList(keyListNodes);
         for (Iterator it = listNodes.iterator(); it.hasNext();)
@@ -560,17 +558,13 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             config.getNodeCombiner().addListNode((String) it.next());
         }
 
-        for (Iterator it = containedConfigs.iterator(); it.hasNext();)
+        for (HierarchicalConfiguration conf : containedConfigs)
         {
-            HierarchicalConfiguration conf = (HierarchicalConfiguration) it
-                    .next();
-            ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
-                    conf);
+            ConfigurationDeclaration decl = new ConfigurationDeclaration(this, conf);
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
-                config.addConfiguration(newConf, decl.getConfiguration()
-                        .getString(ATTR_NAME), decl.getAt());
+                config.addConfiguration(newConf, decl.getConfiguration().getString(ATTR_NAME), decl.getAt());
             }
         }
     }
@@ -637,10 +631,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param node the start node
      * @return a list with subnode configurations for the node's children
      */
-    private List fetchChildConfigs(ConfigurationNode node)
+    private List<SubnodeConfiguration> fetchChildConfigs(ConfigurationNode node)
     {
-        List children = node.getChildren();
-        List result = new ArrayList(children.size());
+        List<ConfigurationNode> children = node.getChildren();
+        List<SubnodeConfiguration> result = new ArrayList<SubnodeConfiguration>(children.size());
         for (Iterator it = children.iterator(); it.hasNext();)
         {
             result.add(createSubnodeConfiguration((Node) it.next()));
@@ -655,16 +649,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param key the key (must define exactly one node)
      * @return a list with subnode configurations for the node's children
      */
-    private List fetchChildConfigs(String key)
+    private List<SubnodeConfiguration> fetchChildConfigs(String key)
     {
-        List nodes = fetchNodeList(key);
-        if (nodes.size() > 0)
+        List<ConfigurationNode> nodes = fetchNodeList(key);
+        if (!nodes.isEmpty())
         {
-            return fetchChildConfigs((ConfigurationNode) nodes.get(0));
+            return fetchChildConfigs(nodes.get(0));
         }
         else
         {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -678,13 +672,13 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @return a list with subnode configurations for the top level override
      * configurations
      */
-    private List fetchTopLevelOverrideConfigs()
+    private List<SubnodeConfiguration> fetchTopLevelOverrideConfigs()
     {
-        List configs = fetchChildConfigs(getRootNode());
-        for (Iterator it = configs.iterator(); it.hasNext();)
+        List<SubnodeConfiguration> configs = fetchChildConfigs(getRootNode());
+        Iterator<SubnodeConfiguration> it = configs.iterator();
+        while (it.hasNext())
         {
-            String nodeName = ((SubnodeConfiguration) it.next()).getRootNode()
-                    .getName();
+            String nodeName = (it.next()).getRootNode().getName();
             for (int i = 0; i < CONFIG_SECTIONS.length; i++)
             {
                 if (CONFIG_SECTIONS[i].equals(nodeName))
@@ -1251,17 +1245,13 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration
          * @throws Exception if an error occurs
          */
-        public AbstractConfiguration getEmptyConfiguration(
-                ConfigurationDeclaration decl) throws Exception
+        public AbstractConfiguration getEmptyConfiguration(ConfigurationDeclaration decl) throws Exception
         {
-            XMLConfiguration config = (XMLConfiguration) super
-                    .getEmptyConfiguration(decl);
+            XMLConfiguration config = (XMLConfiguration) super.getEmptyConfiguration(decl);
 
             // copy the registered entities
-            DefaultConfigurationBuilder builder = decl
-                    .getConfigurationBuilder();
-            config.getRegisteredEntities().putAll(
-                    builder.getRegisteredEntities());
+            DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
+            config.getRegisteredEntities().putAll(builder.getRegisteredEntities());
             return config;
         }
     }
@@ -1274,8 +1264,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * XMLPropertiesConfiguration object must be created, otherwise a
      * PropertiesConfiguration object.
      */
-    static class FileExtensionConfigurationProvider extends
-            FileConfigurationProvider
+    static class FileExtensionConfigurationProvider extends FileConfigurationProvider
     {
         /**
          * Stores the class to be created when the file extension matches.

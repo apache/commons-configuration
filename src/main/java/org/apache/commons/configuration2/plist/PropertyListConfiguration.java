@@ -36,6 +36,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -253,7 +254,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
 
         // get all non trivial nodes
-        List children = new ArrayList(node.getChildren());
+        List<ConfigurationNode> children = new ArrayList<ConfigurationNode>(node.getChildren());
         Iterator it = children.iterator();
         while (it.hasNext())
         {

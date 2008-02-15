@@ -203,7 +203,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
         {
             try
             {
-                List nodes = getParent().fetchNodeList(getSubnodeKey());
+                List<ConfigurationNode> nodes = getParent().fetchNodeList(getSubnodeKey());
                 if (nodes.size() != 1)
                 {
                     // key is invalid, so detach this subnode configuration
@@ -211,12 +211,10 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
                 }
                 else
                 {
-                    ConfigurationNode currentRoot = (ConfigurationNode) nodes
-                            .get(0);
+                    ConfigurationNode currentRoot = nodes.get(0);
                     if (currentRoot != super.getRootNode())
                     {
-                        // the root node was changed due to a change of the
-                        // parent
+                        // the root node was changed due to a change of the parent
                         setRootNode(currentRoot);
                     }
                     return currentRoot;
@@ -274,7 +272,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
         {
             // construct the correct subnode key
             // determine path to root node
-            List lstPathToRoot = new ArrayList();
+            List<ConfigurationNode> lstPathToRoot = new ArrayList<ConfigurationNode>();
             ConfigurationNode top = super.getRootNode();
             ConfigurationNode nd = node;
             while (nd != top)

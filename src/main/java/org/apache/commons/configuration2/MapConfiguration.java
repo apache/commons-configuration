@@ -64,7 +64,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         Object value = map.get(key);
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
-            List list = PropertyConverter.split((String) value, getListDelimiter());
+            List<String> list = PropertyConverter.split((String) value, getListDelimiter());
             return list.size() > 1 ? list : list.get(0);
         }
         else
@@ -112,7 +112,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         map.remove(key);
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return map.keySet().iterator();
     }

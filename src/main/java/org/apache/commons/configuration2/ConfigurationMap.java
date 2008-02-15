@@ -35,7 +35,7 @@ import java.util.Set;
  * @version $Revision$, $Date$
  * @since 1.0
  */
-public class ConfigurationMap extends AbstractMap
+public class ConfigurationMap extends AbstractMap<String, Object>
 {
     /**
      * The <code>Configuration</code> wrapped by this class.
@@ -71,7 +71,7 @@ public class ConfigurationMap extends AbstractMap
      * @return a set with the contained entries
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet()
+    public Set<Entry<String, Object>> entrySet()
     {
         return new ConfigurationSet(configuration);
     }
@@ -85,7 +85,7 @@ public class ConfigurationMap extends AbstractMap
      * @return the old value of this key or <b>null</b> if it is new
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
-    public Object put(Object key, Object value)
+    public Object put(String key, Object value)
     {
         String strKey = String.valueOf(key);
         Object old = configuration.getProperty(strKey);
@@ -109,7 +109,7 @@ public class ConfigurationMap extends AbstractMap
     /**
      * Set of entries in the map.
      */
-    static class ConfigurationSet extends AbstractSet
+    static class ConfigurationSet extends AbstractSet<Entry<String, Object>>
     {
         /** The configuration mapped to this entry set. */
         private Configuration configuration;
@@ -117,30 +117,30 @@ public class ConfigurationMap extends AbstractMap
         /**
          * A Map entry in the ConfigurationMap.
          */
-        private final class Entry implements Map.Entry
+        private final class Entry implements Map.Entry<String, Object>
         {
             /** The key of the map entry. */
-            private Object key;
+            private String key;
 
-            private Entry(Object key)
+            private Entry(String key)
             {
                 this.key = key;
             }
 
-            public Object getKey()
+            public String getKey()
             {
                 return key;
             }
 
             public Object getValue()
             {
-                return configuration.getProperty((String) key);
+                return configuration.getProperty(key);
             }
 
             public Object setValue(Object value)
             {
                 Object old = getValue();
-                configuration.setProperty((String) key, value);
+                configuration.setProperty(key, value);
                 return old;
             }
         }
@@ -148,10 +148,10 @@ public class ConfigurationMap extends AbstractMap
         /**
          * Iterator over the entries in the ConfigurationMap.
          */
-        private final class ConfigurationSetIterator implements Iterator
+        private final class ConfigurationSetIterator implements Iterator<Map.Entry<String, Object>>
         {
             /** An iterator over the keys in the configuration. */
-            private Iterator keys;
+            private Iterator<String> keys;
 
             private ConfigurationSetIterator()
             {
@@ -163,7 +163,7 @@ public class ConfigurationMap extends AbstractMap
                 return keys.hasNext();
             }
 
-            public Object next()
+            public Entry next()
             {
                 return new Entry(keys.next());
             }
@@ -197,7 +197,7 @@ public class ConfigurationMap extends AbstractMap
         /**
          * @see java.util.Collection#iterator()
          */
-        public Iterator iterator()
+        public Iterator<Map.Entry<String, Object>> iterator()
         {
             return new ConfigurationSetIterator();
         }

@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -45,6 +44,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -161,7 +161,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     private Document document;
 
     /** Stores a map with the registered public IDs.*/
-    private Map registeredEntities = new HashMap();
+    private Map<String, URL> registeredEntities = new HashMap<String, URL>();
 
     /** Stores the name of the root element. */
     private String rootElementName;
@@ -483,15 +483,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                Iterator it = PropertyConverter.split(
-                        attr.getValue(),
-                        isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER
-                                : getListDelimiter()).iterator();
-                while (it.hasNext())
+                char delimiter = isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER : getListDelimiter();
+                List<String> values = PropertyConverter.split(attr.getValue(), delimiter);
+
+                for (String value : values)
                 {
-                    Node child = new XMLNode(attr.getName(),
-                            elemRefs ? element : null);
-                    child.setValue(it.next());
+                    Node child = new XMLNode(attr.getName(), elemRefs ? element : null);
+                    child.setValue(value);
                     node.addAttribute(child);
                 }
             }
@@ -517,8 +515,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             }
             else
             {
-                values = PropertyConverter.split(child.getValue().toString(),
-                    getListDelimiter());
+                values = PropertyConverter.split(child.getValue().toString(), getListDelimiter());
             }
 
             if (values.size() > 1)
@@ -528,8 +525,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Node c = createNode(child.getName());
                 c.setValue(it.next());
                 // Copy original attributes to the new node
-                for (Iterator itAttrs = child.getAttributes().iterator(); itAttrs
-                        .hasNext();)
+                for (Iterator itAttrs = child.getAttributes().iterator(); itAttrs.hasNext();)
                 {
                     Node ndAttr = (Node) itAttrs.next();
                     ndAttr.setReference(null);
@@ -800,14 +796,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public void addNodes(String key, Collection nodes)
     {
-        Collection xmlNodes;
+        Collection<ConfigurationNode> xmlNodes;
 
         if (nodes != null && !nodes.isEmpty())
         {
-            xmlNodes = new ArrayList(nodes.size());
-            for (Iterator it = nodes.iterator(); it.hasNext();)
+            xmlNodes = new ArrayList<ConfigurationNode>(nodes.size());
+            for (ConfigurationNode node : (Collection<ConfigurationNode>) nodes)
             {
-                xmlNodes.add(convertToXMLNode((ConfigurationNode) it.next()));
+                xmlNodes.add(convertToXMLNode(node));
             }
         }
         else
@@ -836,17 +832,18 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             return (XMLNode) node;
         }
 
-        XMLNode nd = (XMLNode) createNode(node.getName());
-        nd.setValue(node.getValue());
-        for (Iterator it = node.getChildren().iterator(); it.hasNext();)
+        XMLNode xmlNode = (XMLNode) createNode(node.getName());
+        xmlNode.setValue(node.getValue());
+        for (ConfigurationNode child : node.getChildren())
         {
-            nd.addChild(convertToXMLNode((ConfigurationNode) it.next()));
+            xmlNode.addChild(convertToXMLNode(child));
         }
-        for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+
+        for (ConfigurationNode attribute : node.getAttributes())
         {
-            nd.addAttribute(convertToXMLNode((ConfigurationNode) it.next()));
+            xmlNode.addAttribute(convertToXMLNode(attribute));
         }
-        return nd;
+        return xmlNode;
     }
 
     /**
@@ -947,7 +944,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @return a map with the registered entity IDs
      */
-    Map getRegisteredEntities()
+    Map<String, URL> getRegisteredEntities()
     {
         return registeredEntities;
     }
@@ -1086,7 +1083,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             Element elem = (Element) getReference();
             // Find all Text nodes
             NodeList children = elem.getChildNodes();
-            Collection textNodes = new ArrayList();
+            Collection<org.w3c.dom.Node> textNodes = new ArrayList<org.w3c.dom.Node>();
             for (int i = 0; i < children.getLength(); i++)
             {
                 org.w3c.dom.Node nd = children.item(i);
@@ -1213,22 +1210,20 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (node != null && elem != null)
             {
-                List attrs = node.getAttributes(name);
+                List<ConfigurationNode> attributes = node.getAttributes(name);
                 StringBuffer buf = new StringBuffer();
                 char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
-                for (Iterator it = attrs.iterator(); it.hasNext();)
+                for (ConfigurationNode attribute : attributes)
                 {
-                    Node attr = (Node) it.next();
-                    if (attr.getValue() != null)
+                    if (attribute.getValue() != null)
                     {
                         if (buf.length() > 0)
                         {
                             buf.append(delimiter);
                         }
-                        buf.append(PropertyConverter.escapeDelimiters(attr
-                                .getValue().toString(), delimiter));
+                        buf.append(PropertyConverter.escapeDelimiters(attribute.getValue().toString(), delimiter));
                     }
-                    attr.setReference(elem);
+                    attribute.setReference(elem);
                 }
 
                 if (buf.length() < 1)

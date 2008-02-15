@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.tree;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -125,8 +124,7 @@ public class UnionCombiner extends NodeCombiner
      * @param node2 the second source node
      * @return the union node
      */
-    public ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2)
+    public ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2)
     {
         ViewNode result = createViewNode();
         result.setName(node1.getName());
@@ -134,12 +132,10 @@ public class UnionCombiner extends NodeCombiner
         result.appendAttributes(node2);
 
         // Check if nodes can be combined
-        List children2 = new LinkedList(node2.getChildren());
-        for (Iterator it = node1.getChildren().iterator(); it.hasNext();)
+        List<ConfigurationNode> children2 = new LinkedList<ConfigurationNode>(node2.getChildren());
+        for (ConfigurationNode child1 : node1.getChildren())
         {
-            ConfigurationNode child1 = (ConfigurationNode) it.next();
-            ConfigurationNode child2 = findCombineNode(node1, node2, child1,
-                    children2);
+            ConfigurationNode child2 = findCombineNode(node1, node2, child1, children2);
             if (child2 != null)
             {
                 result.addChild(combine(child1, child2));
@@ -152,9 +148,9 @@ public class UnionCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (Iterator it = children2.iterator(); it.hasNext();)
+        for (ConfigurationNode child : children2)
         {
-            result.addChild((ConfigurationNode) it.next());
+            result.addChild(child);
         }
 
         return result;
@@ -193,15 +189,13 @@ public class UnionCombiner extends NodeCombiner
      * @return the matching child node of the second source node or <b>null</b>
      * if there is none
      */
-    protected ConfigurationNode findCombineNode(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child, List children)
+    protected ConfigurationNode findCombineNode(ConfigurationNode node1, ConfigurationNode node2, ConfigurationNode child, List children)
     {
         if (child.getValue() == null && !isListNode(child)
                 && node1.getChildrenCount(child.getName()) == 1
                 && node2.getChildrenCount(child.getName()) == 1)
         {
-            ConfigurationNode child2 = (ConfigurationNode) node2.getChildren(
-                    child.getName()).iterator().next();
+            ConfigurationNode child2 = node2.getChildren(child.getName()).iterator().next();
             if (child2.getValue() == null)
             {
                 return child2;

@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration2.tree.ConfigurationNode;
@@ -49,17 +49,15 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
      * @param reverse the reverse flag
      * @param startsWith the first element of the iteration
      */
-    public ConfigurationNodeIteratorChildren(NodePointer parent,
-            NodeTest nodeTest, boolean reverse, NodePointer startsWith)
+    public ConfigurationNodeIteratorChildren(NodePointer parent, NodeTest nodeTest, boolean reverse, NodePointer startsWith)
     {
         super(parent, reverse);
         ConfigurationNode root = (ConfigurationNode) parent.getNode();
-        List childNodes = createSubNodeList(root, nodeTest);
+        List<ConfigurationNode> childNodes = createSubNodeList(root, nodeTest);
         initSubNodeList(childNodes);
         if (startsWith != null)
         {
-            setStartOffset(findStartIndex(root,
-                    (ConfigurationNode) startsWith.getNode()));
+            setStartOffset(findStartIndex(root, (ConfigurationNode) startsWith.getNode()));
         }
     }
 
@@ -72,9 +70,9 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
      * @param test the test object
      * @return a list with the matching nodes
      */
-    protected List createSubNodeList(ConfigurationNode node, NodeTest test)
+    protected List<ConfigurationNode> createSubNodeList(ConfigurationNode node, NodeTest test)
     {
-        List children = node.getChildren();
+        List<ConfigurationNode> children = node.getChildren();
 
         if (test == null)
         {
@@ -93,10 +91,9 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
                         return children;
                     }
 
-                    List result = new ArrayList();
-                    for (Iterator it = children.iterator(); it.hasNext();)
+                    List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
+                    for (ConfigurationNode child : children)
                     {
-                        ConfigurationNode child = (ConfigurationNode) it.next();
                         if (StringUtils.equals(name.getName(), child.getName()))
                         {
                             result.add(child);
@@ -117,7 +114,7 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
             }
         }
 
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**

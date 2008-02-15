@@ -59,7 +59,7 @@ abstract class HierarchicalConfigurationConverter
         {
             ConfigurationKey keyEmpty = new ConfigurationKey();
             ConfigurationKey keyLast = keyEmpty;
-            Set keySet = new HashSet();
+            Set<String> keySet = new HashSet<String>();
 
             for (Iterator it = config.getKeys(); it.hasNext();)
             {
@@ -138,10 +138,10 @@ abstract class HierarchicalConfigurationConverter
      */
     protected Iterator reverseIterator(ConfigurationKey key)
     {
-        List list = new ArrayList();
-        for (ConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
+        List<String> list = new ArrayList<String>();
+        for (String k : key.iterator())
         {
-            list.add(it.nextKey());
+            list.add(k);
         }
 
         Collections.reverse(list);
@@ -160,7 +160,7 @@ abstract class HierarchicalConfigurationConverter
      * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set keySet)
+    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set<String> keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
         ConfigurationKey k = keyLast.commonKey(keyAct);

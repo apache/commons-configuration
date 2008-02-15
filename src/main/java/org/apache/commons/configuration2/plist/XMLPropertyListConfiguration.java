@@ -41,6 +41,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -273,7 +274,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, Node node)
+    private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
     {
         String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
@@ -282,15 +283,15 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             out.println(padding + "<key>" + StringEscapeUtils.escapeXml(node.getName()) + "</key>");
         }
 
-        List children = node.getChildren();
+        List<ConfigurationNode> children = node.getChildren();
         if (!children.isEmpty())
         {
             out.println(padding + "<dict>");
 
-            Iterator it = children.iterator();
+            Iterator<ConfigurationNode> it = children.iterator();
             while (it.hasNext())
             {
-                Node child = (Node) it.next();
+                ConfigurationNode child = it.next();
                 printNode(out, indentLevel + 1, child);
 
                 if (it.hasNext())
@@ -348,10 +349,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else if (value instanceof List)
         {
             out.println(padding + "<array>");
-            Iterator it = ((List) value).iterator();
-            while (it.hasNext())
+            for (Object val : ((List) value))
             {
-                printValue(out, indentLevel + 1, it.next());
+                printValue(out, indentLevel + 1, val);
             }
             out.println(padding + "</array>");
         }
@@ -409,7 +409,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         private StringBuffer buffer = new StringBuffer();
 
         /** The stack of configuration nodes */
-        private List stack = new ArrayList();
+        private List<Node> stack = new ArrayList<Node>();
 
         public XMLPropertyListHandler(Node root)
         {

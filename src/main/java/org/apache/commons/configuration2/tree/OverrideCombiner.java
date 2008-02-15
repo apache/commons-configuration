@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree;
 
 import java.util.Iterator;
@@ -63,16 +64,15 @@ public class OverrideCombiner extends NodeCombiner
      * @param node2 the second node
      * @return the resulting combined node structure
      */
-    public ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2)
+    public ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2)
     {
         ViewNode result = createViewNode();
         result.setName(node1.getName());
 
         // Process nodes from the first structure, which override the second
-        for (Iterator it = node1.getChildren().iterator(); it.hasNext();)
+        for (Iterator<ConfigurationNode> it = node1.getChildren().iterator(); it.hasNext();)
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
+            ConfigurationNode child = it.next();
             ConfigurationNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
             {
@@ -86,9 +86,8 @@ public class OverrideCombiner extends NodeCombiner
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (Iterator it = node2.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode child : node2.getChildren())
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             if (node1.getChildrenCount(child.getName()) < 1)
             {
                 result.addChild(child);
@@ -97,8 +96,7 @@ public class OverrideCombiner extends NodeCombiner
 
         // Handle attributes and value
         addAttributes(result, node1, node2);
-        result.setValue((node1.getValue() != null) ? node1.getValue() : node2
-                .getValue());
+        result.setValue((node1.getValue() != null) ? node1.getValue() : node2.getValue());
 
         return result;
     }
@@ -113,13 +111,11 @@ public class OverrideCombiner extends NodeCombiner
      * @param node1 the first node
      * @param node2 the second node
      */
-    protected void addAttributes(ViewNode result, ConfigurationNode node1,
-            ConfigurationNode node2)
+    protected void addAttributes(ViewNode result, ConfigurationNode node1, ConfigurationNode node2)
     {
         result.appendAttributes(node1);
-        for (Iterator it = node2.getAttributes().iterator(); it.hasNext();)
+        for (ConfigurationNode attr : node2.getAttributes())
         {
-            ConfigurationNode attr = (ConfigurationNode) it.next();
             if (node1.getAttributeCount(attr.getName()) == 0)
             {
                 result.addAttribute(attr);
@@ -139,15 +135,13 @@ public class OverrideCombiner extends NodeCombiner
      * @param child the child node (of the first node)
      * @return a child of the second node, with which a combination is possible
      */
-    protected ConfigurationNode canCombine(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child)
+    protected ConfigurationNode canCombine(ConfigurationNode node1, ConfigurationNode node2, ConfigurationNode child)
     {
         if (node2.getChildrenCount(child.getName()) == 1
                 && node1.getChildrenCount(child.getName()) == 1
                 && !isListNode(child))
         {
-            return (ConfigurationNode) node2.getChildren(child.getName())
-                    .get(0);
+            return node2.getChildren(child.getName()).get(0);
         }
         else
         {

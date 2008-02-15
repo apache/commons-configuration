@@ -155,7 +155,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         configuration.clearProperty(key);
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return configuration.getKeys();
     }

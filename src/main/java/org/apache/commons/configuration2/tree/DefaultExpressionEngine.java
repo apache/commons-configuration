@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -280,11 +280,10 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param key the key
      * @return a list with the matching nodes
      */
-    public List query(ConfigurationNode root, String key)
+    public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
-        List nodes = new LinkedList();
-        findNodesForKey(new DefaultConfigurationKey(this, key).iterator(),
-                root, nodes);
+        List<ConfigurationNode> nodes = new LinkedList<ConfigurationNode>();
+        findNodesForKey(new DefaultConfigurationKey(this, key).iterator(), root, nodes);
         return nodes;
     }
 
@@ -449,8 +448,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param node the actual node
      * @param nodes here the found nodes are stored
      */
-    protected void findNodesForKey(DefaultConfigurationKey.KeyIterator keyPart,
-            ConfigurationNode node, Collection nodes)
+    protected void findNodesForKey(DefaultConfigurationKey.KeyIterator keyPart, ConfigurationNode node, Collection<ConfigurationNode> nodes)
     {
         if (!keyPart.hasNext())
         {
@@ -490,20 +488,16 @@ public class DefaultExpressionEngine implements ExpressionEngine
             if (!keyIt.isPropertyKey())
             {
                 // Attribute keys can only appear as last elements of the path
-                throw new IllegalArgumentException(
-                        "Invalid path for add operation: "
-                                + "Attribute key in the middle!");
+                throw new IllegalArgumentException("Invalid path for add operation: Attribute key in the middle!");
             }
-            int idx = keyIt.hasIndex() ? keyIt.getIndex() : node
-                    .getChildrenCount(keyPart) - 1;
+            int idx = keyIt.hasIndex() ? keyIt.getIndex() : node.getChildrenCount(keyPart) - 1;
             if (idx < 0 || idx >= node.getChildrenCount(keyPart))
             {
                 return node;
             }
             else
             {
-                return findLastPathNode(keyIt, (ConfigurationNode) node
-                        .getChildren(keyPart).get(idx));
+                return findLastPathNode(keyIt, node.getChildren(keyPart).get(idx));
             }
         }
 
@@ -522,24 +516,20 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param subNodes a list with the sub nodes to process
      * @param nodes the target collection
      */
-    private void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart,
-            List subNodes, Collection nodes)
+    private void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart, List<ConfigurationNode> subNodes, Collection<ConfigurationNode> nodes)
     {
         if (keyPart.hasIndex())
         {
             if (keyPart.getIndex() >= 0 && keyPart.getIndex() < subNodes.size())
             {
-                findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), (ConfigurationNode) subNodes.get(keyPart
-                        .getIndex()), nodes);
+                findNodesForKey(keyPart.clone(), subNodes.get(keyPart.getIndex()), nodes);
             }
         }
         else
         {
-            for (Iterator it = subNodes.iterator(); it.hasNext();)
+            for (ConfigurationNode subNode : subNodes)
             {
-                findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), (ConfigurationNode) it.next(), nodes);
+                findNodesForKey(keyPart.clone(), subNode, nodes);
             }
         }
     }

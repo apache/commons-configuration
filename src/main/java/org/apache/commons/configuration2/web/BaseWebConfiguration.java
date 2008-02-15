@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.web;
 
 import java.util.List;
@@ -99,8 +100,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
     {
         if (!isDelimiterParsingDisabled() && value instanceof String)
         {
-            List list = PropertyConverter.split((String) value,
-                    getListDelimiter());
+            List<String> list = PropertyConverter.split((String) value, getListDelimiter());
             value = list.size() > 1 ? list : list.get(0);
         }
 

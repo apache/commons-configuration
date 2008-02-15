@@ -35,11 +35,10 @@ import java.util.ListIterator;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @version $Id$
  */
-public class CompositeConfiguration extends AbstractConfiguration
-implements Cloneable
+public class CompositeConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** List holding all the configuration */
-    private List configList = new LinkedList();
+    private List<Configuration> configList = new LinkedList<Configuration>();
 
     /**
      * Configuration that holds in memory stuff.  Inserted as first so any
@@ -76,7 +75,7 @@ implements Cloneable
      *
      * @param configurations the collection of configurations to add
      */
-    public CompositeConfiguration(Collection configurations)
+    public CompositeConfiguration(Collection<Configuration> configurations)
     {
         this(new BaseConfiguration(), configurations);
     }
@@ -88,16 +87,15 @@ implements Cloneable
      * @param inMemoryConfiguration the in memory configuration to use
      * @param configurations        the collection of configurations to add
      */
-    public CompositeConfiguration(Configuration inMemoryConfiguration, Collection configurations)
+    public CompositeConfiguration(Configuration inMemoryConfiguration, Collection<Configuration> configurations)
     {
         this(inMemoryConfiguration);
 
         if (configurations != null)
         {
-            Iterator it = configurations.iterator();
-            while (it.hasNext())
+            for (Configuration configuration : configurations)
             {
-                addConfiguration((Configuration) it.next());
+                addConfiguration(configuration);
             }
         }
     }
@@ -204,17 +202,15 @@ implements Cloneable
         }
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        List keys = new ArrayList();
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        List<String> keys = new ArrayList<String>();
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
-
-            Iterator j = config.getKeys();
+            Iterator<String> j = config.getKeys();
             while (j.hasNext())
             {
-                String key = (String) j.next();
+                String key = j.next();
                 if (!keys.contains(key))
                 {
                     keys.add(key);
@@ -225,13 +221,11 @@ implements Cloneable
         return keys.iterator();
     }
 
-    public Iterator getKeys(String key)
+    public Iterator<String> getKeys(String key)
     {
-        List keys = new ArrayList();
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        List<String> keys = new ArrayList<String>();
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
-
             Iterator j = config.getKeys(key);
             while (j.hasNext())
             {
@@ -283,15 +277,15 @@ implements Cloneable
         return false;
     }
 
-    public List getList(String key, List defaultValue)
+    public <T> List<T> getList(String key, List<T> defaultValue)
     {
         List list = new ArrayList();
 
         // add all elements from the first configuration containing the requested key
-        Iterator it = configList.iterator();
+        Iterator<Configuration> it = configList.iterator();
         while (it.hasNext() && list.isEmpty())
         {
-            Configuration config = (Configuration) it.next();
+            Configuration config = it.next();
             if (config != inMemoryConfiguration && config.containsKey(key))
             {
                 list.addAll(config.getList(key));
@@ -369,7 +363,7 @@ implements Cloneable
             CompositeConfiguration copy = (CompositeConfiguration) super
                     .clone();
             copy.clearConfigurationListeners();
-            copy.configList = new LinkedList();
+            copy.configList = new LinkedList<Configuration>();
             copy.inMemoryConfiguration = ConfigurationUtils
                     .cloneConfiguration(getInMemoryConfiguration());
             copy.configList.add(copy.inMemoryConfiguration);

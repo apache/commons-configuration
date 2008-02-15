@@ -254,14 +254,12 @@ public final class ConfigurationUtils
         {
             try
             {
-                Method m = obj.getClass().getMethod(METHOD_CLONE, null);
-                return m.invoke(obj, null);
+                Method m = obj.getClass().getMethod(METHOD_CLONE);
+                return m.invoke(obj);
             }
             catch (NoSuchMethodException nmex)
             {
-                throw new CloneNotSupportedException(
-                        "No clone() method found for class"
-                                + obj.getClass().getName());
+                throw new CloneNotSupportedException("No clone() method found for class" + obj.getClass().getName());
             }
             catch (IllegalAccessException iaex)
             {
@@ -274,8 +272,7 @@ public final class ConfigurationUtils
         }
         else
         {
-            throw new CloneNotSupportedException(obj.getClass().getName()
-                    + " does not implement Cloneable");
+            throw new CloneNotSupportedException(obj.getClass().getName() + " does not implement Cloneable");
         }
     }
 
@@ -697,8 +694,7 @@ public final class ConfigurationUtils
     {
         if (!(src instanceof EventSource))
         {
-            throw new IllegalArgumentException(
-                    "Configuration must be derived from EventSource!");
+            throw new IllegalArgumentException("Configuration must be derived from EventSource!");
         }
         ((EventSource) src).addErrorListener(new ConfigurationErrorListener()
         {

@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.beanutils;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
@@ -282,13 +282,12 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public Map getBeanProperties()
     {
-        Map props = new HashMap();
-        for (Iterator it = getNode().getAttributes().iterator(); it.hasNext();)
+        Map<String, Object> props = new HashMap<String, Object>();
+        for (ConfigurationNode attribute : getNode().getAttributes())
         {
-            ConfigurationNode attr = (ConfigurationNode) it.next();
-            if (!isReservedNode(attr))
+            if (!isReservedNode(attribute))
             {
-                props.put(attr.getName(), interpolate(attr .getValue()));
+                props.put(attribute.getName(), interpolate(attribute.getValue()));
             }
         }
 
@@ -304,14 +303,12 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public Map getNestedBeanDeclarations()
     {
-        Map nested = new HashMap();
-        for (Iterator it = getNode().getChildren().iterator(); it.hasNext();)
+        Map<String, XMLBeanDeclaration> nested = new HashMap<String, XMLBeanDeclaration>();
+        for (ConfigurationNode child : getNode().getChildren())
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             if (!isReservedNode(child))
             {
-                nested.put(child.getName(), new XMLBeanDeclaration(
-                        getConfiguration().configurationAt(child.getName()), child));
+                nested.put(child.getName(), new XMLBeanDeclaration(getConfiguration().configurationAt(child.getName()), child));
             }
         }
 

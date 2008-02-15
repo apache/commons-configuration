@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -175,8 +175,7 @@ class ConfigurationNodePointer extends NodePointer
      * @param pointer2 another pointer
      * @return a flag, which pointer should be sorted first
      */
-    public int compareChildNodePointers(NodePointer pointer1,
-            NodePointer pointer2)
+    public int compareChildNodePointers(NodePointer pointer1, NodePointer pointer2)
     {
         ConfigurationNode node1 = (ConfigurationNode) pointer1.getBaseValue();
         ConfigurationNode node2 = (ConfigurationNode) pointer2.getBaseValue();
@@ -194,11 +193,9 @@ class ConfigurationNodePointer extends NodePointer
         else
         {
             // sort based on the occurrence in the sub node list
-            List subNodes = node1.isAttribute() ? node.getAttributes() : node
-                    .getChildren();
-            for (Iterator it = subNodes.iterator(); it.hasNext();)
+            List<ConfigurationNode> subNodes = node1.isAttribute() ? node.getAttributes() : node.getChildren();
+            for (ConfigurationNode child : subNodes)
             {
-                ConfigurationNode child = (ConfigurationNode) it.next();
                 if (child == node1)
                 {
                     return -1;
@@ -231,11 +228,9 @@ class ConfigurationNodePointer extends NodePointer
      * @param reverse the reverse flag
      * @param startWith the start value of the iteration
      */
-    public NodeIterator childIterator(NodeTest test, boolean reverse,
-            NodePointer startWith)
+    public NodeIterator childIterator(NodeTest test, boolean reverse, NodePointer startWith)
     {
-        return new ConfigurationNodeIteratorChildren(this, test, reverse,
-                startWith);
+        return new ConfigurationNodeIteratorChildren(this, test, reverse, startWith);
     }
 
     /**

@@ -230,10 +230,8 @@ public class INIConfiguration extends AbstractFileConfiguration
     public void save(Writer writer) throws ConfigurationException
     {
         PrintWriter out = new PrintWriter(writer);
-        Iterator it = getSections().iterator();
-        while (it.hasNext())
+        for (String section : getSections())
         {
-            String section = (String) it.next();
             out.print("[");
             out.print(section);
             out.print("]");
@@ -247,13 +245,11 @@ public class INIConfiguration extends AbstractFileConfiguration
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {
-                    Iterator values = ((Collection) value).iterator();
-                    while (values.hasNext())
+                    for (Object val : ((Collection) value))
                     {
-                        value = (Object) values.next();
                         out.print(key);
                         out.print(" = ");
-                        out.print(formatValue(value.toString()));
+                        out.print(formatValue(val.toString()));
                         out.println();
                     }
                 }

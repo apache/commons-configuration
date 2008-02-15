@@ -723,7 +723,7 @@ public class ConfigurationFactory
         private CompositeConfiguration config;
 
         /** Stores a collection with the configs from the additional section.*/
-        private Collection additionalConfigs;
+        private Collection<AdditionalConfigurationData> additionalConfigs;
 
         /**
          * Creates a new instance of <code>ConfigurationBuilder</code>.
@@ -731,7 +731,7 @@ public class ConfigurationFactory
         public ConfigurationBuilder()
         {
             config = new CompositeConfiguration();
-            additionalConfigs = new LinkedList();
+            additionalConfigs = new LinkedList<AdditionalConfigurationData>();
         }
 
         /**

@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
 import java.util.Locale;
@@ -59,8 +60,7 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
     {
         if (bean instanceof ConfigurationNode)
         {
-            return new ConfigurationNodePointer((ConfigurationNode) bean,
-                    locale);
+            return new ConfigurationNodePointer((ConfigurationNode) bean, locale);
         }
         return null;
     }
@@ -74,13 +74,11 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @param bean the bean
      * @return a pointer for a configuration node if the bean is such a node
      */
-    public NodePointer createNodePointer(NodePointer parent, QName name,
-            Object bean)
+    public NodePointer createNodePointer(NodePointer parent, QName name, Object bean)
     {
         if (bean instanceof ConfigurationNode)
         {
-            return new ConfigurationNodePointer(parent,
-                    (ConfigurationNode) bean);
+            return new ConfigurationNodePointer(parent, (ConfigurationNode) bean);
         }
         return null;
     }

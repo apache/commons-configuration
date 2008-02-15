@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree;
 
 import java.util.Collections;
@@ -44,23 +45,21 @@ import java.util.Set;
  * can be passed the name of a node, which should be considered a list node.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
 public abstract class NodeCombiner
 {
     /** Stores a list with node names that are known to be list nodes. */
-    protected Set listNodes;
+    protected Set<String> listNodes;
 
     /**
      * Creates a new instance of <code>NodeCombiner</code>.
      */
     public NodeCombiner()
     {
-        listNodes = new HashSet();
+        listNodes = new HashSet<String>();
     }
 
     /**
@@ -79,7 +78,7 @@ public abstract class NodeCombiner
      *
      * @return a set with the names of list nodes
      */
-    public Set getListNodes()
+    public Set<String> getListNodes()
     {
         return Collections.unmodifiableSet(listNodes);
     }
@@ -106,8 +105,7 @@ public abstract class NodeCombiner
      * @param node2 the second root node
      * @return the resulting combined node structure
      */
-    public abstract ConfigurationNode combine(ConfigurationNode node1,
-            ConfigurationNode node2);
+    public abstract ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2);
 
     /**
      * Creates a new view node. This method will be called whenever a new view

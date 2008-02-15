@@ -195,10 +195,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     private ConfigurationNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
-    private List configurations;
+    private List<ConfigData> configurations;
 
     /** Stores a map with the named configurations. */
-    private Map namedConfigurations;
+    private Map<String, Configuration> namedConfigurations;
 
     /** A flag whether an enhanced reload check is to be performed.*/
     private boolean forceReloadCheck;
@@ -513,8 +513,8 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
-        configurations = new ArrayList();
-        namedConfigurations = new HashMap();
+        configurations = new ArrayList<ConfigData>();
+        namedConfigurations = new HashMap<String, Configuration>();
         fireEvent(EVENT_CLEAR, null, null, false);
         invalidate();
     }
@@ -608,23 +608,20 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             throw new IllegalArgumentException("Key must not be null!");
         }
 
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
         if (nodes.isEmpty())
         {
             return null;
         }
 
-        Iterator it = nodes.iterator();
-        Configuration source = findSourceConfiguration((ConfigurationNode) it
-                .next());
+        Iterator<ConfigurationNode> it = nodes.iterator();
+        Configuration source = findSourceConfiguration(it.next());
         while (it.hasNext())
         {
-            Configuration src = findSourceConfiguration((ConfigurationNode) it
-                    .next());
+            Configuration src = findSourceConfiguration(it.next());
             if (src != source)
             {
-                throw new IllegalArgumentException("The key " + key
-                        + " is defined by multiple sources!");
+                throw new IllegalArgumentException("The key " + key + " is defined by multiple sources!");
             }
         }
 
@@ -701,7 +698,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         private String name;
 
         /** Stores the at information as path of nodes. */
-        private Collection atPath;
+        private Collection<String> atPath;
 
         /** Stores the at string.*/
         private String at;
@@ -781,10 +778,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             if (atPath != null)
             {
                 // Build the complete path
-                for (Iterator it = atPath.iterator(); it.hasNext();)
+                for (String name : atPath)
                 {
                     ViewNode node = new ViewNode();
-                    node.setName((String) it.next());
+                    node.setName(name);
                     atParent.addChild(node);
                     atParent = node;
                 }
@@ -806,16 +803,15 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
          * @param at the at string
          * @return a collection with the names of the single components
          */
-        private Collection parseAt(String at)
+        private Collection<String> parseAt(String at)
         {
             if (at == null)
             {
                 return null;
             }
 
-            Collection result = new ArrayList();
-            DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
-                    AT_ENGINE, at).iterator();
+            Collection<String> result = new ArrayList<String>();
+            DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(AT_ENGINE, at).iterator();
             while (it.hasNext())
             {
                 result.add(it.nextKey());

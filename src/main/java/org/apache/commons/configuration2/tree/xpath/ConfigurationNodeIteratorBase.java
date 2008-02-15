@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.tree.xpath;
 
 import java.util.List;
@@ -42,7 +43,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     private NodePointer parent;
 
     /** Stores the list with the sub nodes. */
-    private List subNodes;
+    private List<ConfigurationNode> subNodes;
 
     /** Stores the current position. */
     private int position;
@@ -100,8 +101,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
             return null;
         }
 
-        return createNodePointer((ConfigurationNode) subNodes
-                .get(positionToIndex(getPosition())));
+        return createNodePointer(subNodes.get(positionToIndex(getPosition())));
     }
 
     /**
@@ -149,7 +149,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      *
      * @param nodes the list with the sub nodes
      */
-    protected void initSubNodeList(List nodes)
+    protected void initSubNodeList(List<ConfigurationNode> nodes)
     {
         subNodes = nodes;
         if (reverse)
@@ -165,8 +165,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      */
     protected int getMaxPosition()
     {
-        return reverse ? getStartOffset() + 1 : subNodes.size()
-                - getStartOffset();
+        return reverse ? getStartOffset() + 1 : subNodes.size() - getStartOffset();
     }
 
     /**

@@ -30,6 +30,7 @@ import java.util.List;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 
 /**
  * <p>Base class for implementing file based hierarchical configurations.</p>
@@ -308,7 +309,7 @@ implements FileConfiguration, ConfigurationListener
         return super.containsKey(key);
     }
 
-    public Iterator getKeys(String prefix)
+    public Iterator<String> getKeys(String prefix)
     {
         reload();
         return super.getKeys(prefix);
@@ -334,7 +335,7 @@ implements FileConfiguration, ConfigurationListener
      * @param nodes a collection with the nodes to be added
      * @since 1.5
      */
-    public void addNodes(String key, Collection nodes)
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         super.addNodes(key, nodes);
         delegate.possiblySave();
@@ -347,7 +348,7 @@ implements FileConfiguration, ConfigurationListener
      * @param key the key
      * @return a list with the selected nodes
      */
-    protected List fetchNodeList(String key)
+    protected List<ConfigurationNode> fetchNodeList(String key)
     {
         reload();
         return super.fetchNodeList(key);
