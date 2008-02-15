@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -83,50 +84,16 @@ import org.apache.commons.lang.StringUtils;
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
-    /** Constant for the separator parser for the date part. */
-    private static final DateComponentParser DATE_SEPARATOR_PARSER = new DateSeparatorParser(
-            "-");
+    static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("<*'D'yyyy-MM-dd HH:mm:ss Z>");
 
-    /** Constant for the separator parser for the time part. */
-    private static final DateComponentParser TIME_SEPARATOR_PARSER = new DateSeparatorParser(
-            ":");
-
-    /** Constant for the separator parser for blanks between the parts. */
-    private static final DateComponentParser BLANK_SEPARATOR_PARSER = new DateSeparatorParser(
-            " ");
-
-    /** An array with the component parsers for dealing with dates. */
-    private static final DateComponentParser[] DATE_PARSERS =
-    {new DateSeparatorParser("<*D"), new DateFieldParser(Calendar.YEAR, 4),
-            DATE_SEPARATOR_PARSER, new DateFieldParser(Calendar.MONTH, 2, 1),
-            DATE_SEPARATOR_PARSER, new DateFieldParser(Calendar.DATE, 2),
-            BLANK_SEPARATOR_PARSER,
-            new DateFieldParser(Calendar.HOUR_OF_DAY, 2),
-            TIME_SEPARATOR_PARSER, new DateFieldParser(Calendar.MINUTE, 2),
-            TIME_SEPARATOR_PARSER, new DateFieldParser(Calendar.SECOND, 2),
-            BLANK_SEPARATOR_PARSER, new DateTimeZoneParser(),
-            new DateSeparatorParser(">")};
-
-    /** Constant for the ID prefix for GMT time zones. */
-    private static final String TIME_ZONE_PREFIX = "GMT";
+    /** Instance specific format that can be used to format date in differents time zones */
+    final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT.toPattern());
 
     /** The serial version UID. */
     private static final long serialVersionUID = 3227248503779092127L;
 
-    /** Constant for the milliseconds of a minute.*/
-    private static final int MILLIS_PER_MINUTE = 1000 * 60;
-
-    /** Constant for the minutes per hour.*/
-    private static final int MINUTES_PER_HOUR = 60;
-
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
-
-    /** Constant for the length of a time zone.*/
-    private static final int TIME_ZONE_LENGTH = 5;
-
-    /** Constant for the padding character in the date format.*/
-    private static final char PAD_CHAR = '0';
 
     /**
      * Creates an empty PropertyListConfiguration object which can be
@@ -369,7 +336,19 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
         else if (value instanceof Date)
         {
-            out.print(formatDate((Date) value));
+            out.print(DATE_FORMAT.format((Date) value));
+        }
+        else if (value instanceof Calendar)
+        {
+            // change the time zone of the date format
+            Calendar calendar = (Calendar) value;
+            TimeZone previousZone = DATE_FORMAT.getTimeZone();
+            DATE_FORMAT.setTimeZone(calendar.getTimeZone());
+
+            out.print(DATE_FORMAT.format(calendar.getTime()));
+
+            // restore the previous time zone of the date format
+            DATE_FORMAT.setTimeZone(previousZone);
         }
         else if (value != null)
         {
@@ -431,248 +410,16 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      */
     static Date parseDate(String s) throws ParseException
     {
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        int index = 0;
-
-        for (int i = 0; i < DATE_PARSERS.length; i++)
+        try
         {
-            index += DATE_PARSERS[i].parseComponent(s, index, cal);
-        }
-
-        return cal.getTime();
-    }
-
-    /**
-     * Returns a string representation for the date specified by the given
-     * calendar.
-     *
-     * @param cal the calendar with the initialized date
-     * @return a string for this date
-     */
-    static String formatDate(Calendar cal)
-    {
-        StringBuilder buf = new StringBuilder();
-
-        for (int i = 0; i < DATE_PARSERS.length; i++)
-        {
-            DATE_PARSERS[i].formatComponent(buf, cal);
-        }
-
-        return buf.toString();
-    }
-
-    /**
-     * Returns a string representation for the specified date.
-     *
-     * @param date the date
-     * @return a string for this date
-     */
-    static String formatDate(Date date)
-    {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        return formatDate(cal);
-    }
-
-    /**
-     * A helper class for parsing and formatting date literals. Usually we would
-     * use <code>SimpleDateFormat</code> for this purpose, but in Java 1.3 the
-     * functionality of this class is limited. So we have a hierarchy of parser
-     * classes instead that deal with the different components of a date
-     * literal.
-     */
-    private abstract static class DateComponentParser
-    {
-        /**
-         * Parses a component from the given input string.
-         *
-         * @param s the string to be parsed
-         * @param index the current parsing position
-         * @param cal the calendar where to store the result
-         * @return the length of the processed component
-         * @throws ParseException if the component cannot be extracted
-         */
-        public abstract int parseComponent(String s, int index, Calendar cal)
-                throws ParseException;
-
-        /**
-         * Formats a date component. This method is used for converting a date
-         * in its internal representation into a string literal.
-         *
-         * @param buf the target buffer
-         * @param cal the calendar with the current date
-         */
-        public abstract void formatComponent(StringBuilder buf, Calendar cal);
-
-        /**
-         * Checks whether the given string has at least <code>length</code>
-         * characters starting from the given parsing position. If this is not
-         * the case, an exception will be thrown.
-         *
-         * @param s the string to be tested
-         * @param index the current index
-         * @param length the minimum length after the index
-         * @throws ParseException if the string is too short
-         */
-        protected void checkLength(String s, int index, int length)
-                throws ParseException
-        {
-            int len = (s == null) ? 0 : s.length();
-            if (index + length > len)
+            synchronized (DEFAULT_DATE_FORMAT)
             {
-                throw new ParseException("Input string too short: " + s
-                        + ", index: " + index);
+                return DEFAULT_DATE_FORMAT.parse(s);
             }
         }
-
-        /**
-         * Adds a number to the given string buffer and adds leading '0'
-         * characters until the given length is reached.
-         *
-         * @param buf the target buffer
-         * @param num the number to add
-         * @param length the required length
-         */
-        protected void padNum(StringBuilder buf, int num, int length)
+        catch (Exception e)
         {
-            buf.append(StringUtils.leftPad(String.valueOf(num), length, PAD_CHAR));
-        }
-    }
-
-    /**
-     * A specialized date component parser implementation that deals with
-     * numeric calendar fields. The class is able to extract fields from a
-     * string literal and to format a literal from a calendar.
-     */
-    private static class DateFieldParser extends DateComponentParser
-    {
-        /** Stores the calendar field to be processed. */
-        private int calendarField;
-
-        /** Stores the length of this field. */
-        private int length;
-
-        /** An optional offset to add to the calendar field. */
-        private int offset;
-
-        /**
-         * Creates a new instance of <code>DateFieldParser</code>.
-         *
-         * @param calFld the calendar field code
-         * @param len the length of this field
-         */
-        public DateFieldParser(int calFld, int len)
-        {
-            this(calFld, len, 0);
-        }
-
-        /**
-         * Creates a new instance of <code>DateFieldParser</code> and fully
-         * initializes it.
-         *
-         * @param calFld the calendar field code
-         * @param len the length of this field
-         * @param ofs an offset to add to the calendar field
-         */
-        public DateFieldParser(int calFld, int len, int ofs)
-        {
-            calendarField = calFld;
-            length = len;
-            offset = ofs;
-        }
-
-        public void formatComponent(StringBuilder buf, Calendar cal)
-        {
-            padNum(buf, cal.get(calendarField) + offset, length);
-        }
-
-        public int parseComponent(String s, int index, Calendar cal)
-                throws ParseException
-        {
-            checkLength(s, index, length);
-            try
-            {
-                cal.set(calendarField, Integer.parseInt(s.substring(index, index + length)) - offset);
-                return length;
-            }
-            catch (NumberFormatException nfex)
-            {
-                throw new ParseException("Invalid number: " + s + ", index " + index);
-            }
-        }
-    }
-
-    /**
-     * A specialized date component parser implementation that deals with
-     * separator characters.
-     */
-    private static class DateSeparatorParser extends DateComponentParser
-    {
-        /** Stores the separator. */
-        private String separator;
-
-        /**
-         * Creates a new instance of <code>DateSeparatorParser</code> and sets
-         * the separator string.
-         *
-         * @param sep the separator string
-         */
-        public DateSeparatorParser(String sep)
-        {
-            separator = sep;
-        }
-
-        public void formatComponent(StringBuilder buf, Calendar cal)
-        {
-            buf.append(separator);
-        }
-
-        public int parseComponent(String s, int index, Calendar cal)
-                throws ParseException
-        {
-            checkLength(s, index, separator.length());
-            if (!s.startsWith(separator, index))
-            {
-                throw new ParseException("Invalid input: " + s + ", index " + index + ", expected " + separator);
-            }
-            return separator.length();
-        }
-    }
-
-    /**
-     * A specialized date component parser implementation that deals with the
-     * time zone part of a date component.
-     */
-    private static class DateTimeZoneParser extends DateComponentParser
-    {
-        public void formatComponent(StringBuilder buf, Calendar cal)
-        {
-            TimeZone tz = cal.getTimeZone();
-            int ofs = tz.getRawOffset() / MILLIS_PER_MINUTE;
-            if (ofs < 0)
-            {
-                buf.append('-');
-                ofs = -ofs;
-            }
-            else
-            {
-                buf.append('+');
-            }
-            int hour = ofs / MINUTES_PER_HOUR;
-            int min = ofs % MINUTES_PER_HOUR;
-            padNum(buf, hour, 2);
-            padNum(buf, min, 2);
-        }
-
-        public int parseComponent(String s, int index, Calendar cal)
-                throws ParseException
-        {
-            checkLength(s, index, TIME_ZONE_LENGTH);
-            TimeZone tz = TimeZone.getTimeZone(TIME_ZONE_PREFIX
-                    + s.substring(index, index + TIME_ZONE_LENGTH));
-            cal.setTimeZone(tz);
-            return TIME_ZONE_LENGTH;
+            throw (ParseException) new ParseException("Unable to parse the date").initCause(e);
         }
     }
 }

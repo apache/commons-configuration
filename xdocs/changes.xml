@@ -29,11 +29,14 @@
       </action>
       <action dev="oheger" type="update">
         To avoid incompatibilities with older versions the package structure
-	has been changed. The main package is now
-	org.apache.commons.configuration2.
+	    has been changed. The main package is now
+	    org.apache.commons.configuration2.
       </action>
       <action dev="oheger" type="update">
-        Commons Configuration now requires Java 1.5.
+        Commons Configuration now requires Java 5.
+      </action>
+      <action dev="ebourg" type="update">
+        Calendar objects in PropertyListConfiguration are now saved with their own time zone.
       </action>
     </release>
 

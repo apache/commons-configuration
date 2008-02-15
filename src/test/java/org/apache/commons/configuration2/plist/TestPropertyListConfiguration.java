@@ -17,25 +17,28 @@
 
 package org.apache.commons.configuration2.plist;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Date;
 import java.util.TimeZone;
 
-import junit.framework.TestCase;
-import junitx.framework.ArrayAssert;
-import junitx.framework.ListAssert;
-import junitx.framework.ObjectAssert;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationComparator;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.StrictConfigurationComparator;
-import org.apache.commons.configuration2.plist.ParseException;
-import org.apache.commons.configuration2.plist.PropertyListConfiguration;
+
+import junit.framework.TestCase;
+import junitx.framework.ArrayAssert;
+import junitx.framework.ListAssert;
+import junitx.framework.ObjectAssert;
 
 /**
  * @author Emmanuel Bourg
@@ -191,6 +194,33 @@ public class TestPropertyListConfiguration extends TestCase
         assertEquals("date", date, config.getProperty("date"));
     }
 
+    /**
+     * Test if the calendar objets are saved with their time zone
+     */
+    public void testCalendar() throws Exception
+    {
+        File savedFile = new File("target/testcalendar.plist");
+
+        // remove the file previously saved if necessary
+        if (savedFile.exists())
+        {
+            assertTrue(savedFile.delete());
+        }
+
+        Calendar calendar = new GregorianCalendar(2008, Calendar.JANUARY, 1);
+        calendar.setTimeZone(TimeZone.getTimeZone("GMT-0200"));
+
+        PropertyListConfiguration config = new PropertyListConfiguration();
+        config.setProperty("calendar", calendar);
+        config.save(savedFile);
+
+        BufferedReader in = new BufferedReader(new FileReader(savedFile));
+        in.readLine();
+        assertEquals("calendar output", "calendar = <*D2008-01-01 00:00:00 -0200>;",  in.readLine().trim());
+
+        in.close();
+    }
+
     public void testSave() throws Exception
     {
         File savedFile = new File("target/testsave.plist");
@@ -314,8 +344,7 @@ public class TestPropertyListConfiguration extends TestCase
     {
         try
         {
-            PropertyListConfiguration
-                    .parseDate("<*D2002-03-22 1c:30:00 +0100>");
+            PropertyListConfiguration.parseDate("<*D2002-03-22 1c:30:00 +0100>");
             fail("Could parse date with an invalid number!");
         }
         catch (ParseException pex)
@@ -347,8 +376,7 @@ public class TestPropertyListConfiguration extends TestCase
     {
         try
         {
-            PropertyListConfiguration
-                    .parseDate("<*D2002+03-22 11:30:00 +0100>");
+            PropertyListConfiguration.parseDate("<*D2002+03-22 11:30:00 +0100>");
             fail("Could parse date with an invalid separator!");
         }
         catch (ParseException pex)
@@ -378,16 +406,18 @@ public class TestPropertyListConfiguration extends TestCase
      */
     public void testFormatDate()
     {
-        Calendar cal = Calendar.getInstance();
-        cal.clear();
-        cal.set(2007, 9, 29, 23, 4, 30);
+        SimpleDateFormat format = config.DATE_FORMAT;
+
+        Calendar cal = new GregorianCalendar(2007, Calendar.OCTOBER, 29, 23, 4, 30);
         cal.setTimeZone(TimeZone.getTimeZone("GMT-0230"));
-        assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>",
-                PropertyListConfiguration.formatDate(cal));
-        cal.clear();
-        cal.set(2007, 9, 30, 22, 2, 15);
+        format.setTimeZone(cal.getTimeZone());
+
+        assertEquals("Wrong date literal (1)", "<*D2007-10-29 23:04:30 -0230>", format.format(cal.getTime()));
+
+        cal = new GregorianCalendar(2007, Calendar.OCTOBER, 30, 22, 2, 15);
         cal.setTimeZone(TimeZone.getTimeZone("GMT+1111"));
-        assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>",
-                PropertyListConfiguration.formatDate(cal));
+        format.setTimeZone(cal.getTimeZone());
+
+        assertEquals("Wrong date literal (2)", "<*D2007-10-30 22:02:15 +1111>", format.format(cal.getTime()));
     }
 }
