@@ -136,7 +136,7 @@ public class JNDIConfiguration extends AbstractConfiguration
                 Object object = context.lookup(name);
 
                 // build the key
-                StringBuffer key = new StringBuffer();
+                StringBuilder key = new StringBuilder();
                 key.append(prefix);
                 if (key.length() > 0)
                 {

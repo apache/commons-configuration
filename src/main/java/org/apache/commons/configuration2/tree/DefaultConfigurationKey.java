@@ -51,14 +51,14 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DefaultConfigurationKey
 {
-    /** Constant for the initial StringBuffer size. */
+    /** Constant for the initial StringBuilder size. */
     private static final int INITIAL_SIZE = 32;
 
     /** Stores a reference to the associated expression engine. */
     private DefaultExpressionEngine expressionEngine;
 
     /** Holds a buffer with the so far created key. */
-    private StringBuffer keyBuffer;
+    private StringBuilder keyBuffer;
 
     /**
      * Creates a new instance of <code>DefaultConfigurationKey</code> and sets
@@ -68,7 +68,7 @@ public class DefaultConfigurationKey
      */
     public DefaultConfigurationKey(DefaultExpressionEngine engine)
     {
-        keyBuffer = new StringBuffer(INITIAL_SIZE);
+        keyBuffer = new StringBuilder(INITIAL_SIZE);
         setExpressionEngine(engine);
     }
 
@@ -82,7 +82,7 @@ public class DefaultConfigurationKey
     public DefaultConfigurationKey(DefaultExpressionEngine engine, String key)
     {
         setExpressionEngine(engine);
-        keyBuffer = new StringBuffer(trim(key));
+        keyBuffer = new StringBuilder(trim(key));
     }
 
     /**
@@ -282,7 +282,7 @@ public class DefaultConfigurationKey
         }
         else
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(getExpressionEngine().getAttributeStart()).append(key);
             if (getExpressionEngine().getAttributeEnd() != null)
             {

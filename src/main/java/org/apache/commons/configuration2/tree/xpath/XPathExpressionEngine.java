@@ -172,8 +172,7 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         else
         {
-            StringBuffer buf = new StringBuffer(parentKey.length()
-                    + node.getName().length() + PATH_DELIMITER.length());
+            StringBuilder buf = new StringBuilder(parentKey.length() + node.getName().length() + PATH_DELIMITER.length());
             if (parentKey.length() > 0)
             {
                 buf.append(parentKey);

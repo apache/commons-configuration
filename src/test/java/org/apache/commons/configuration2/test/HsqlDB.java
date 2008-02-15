@@ -1,5 +1,3 @@
-package org.apache.commons.configuration2.test;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +14,8 @@ package org.apache.commons.configuration2.test;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.apache.commons.configuration2.test;
 
 import java.io.FileReader;
 
@@ -40,17 +40,16 @@ public class HsqlDB
     private Connection connection = null;
     private static Log log = LogFactory.getLog(HsqlDB.class);
 
-    public HsqlDB(String uri, String databaseDriver, String loadFile)
-            throws Exception
+    public HsqlDB(String uri, String databaseDriver, String loadFile)throws Exception
     {
         Class.forName(databaseDriver);
 
         this.connection = DriverManager.getConnection(uri, "sa", "");
 
-            if (StringUtils.isNotEmpty(loadFile))
-            {
-                loadSqlFile(loadFile);
-            }
+        if (StringUtils.isNotEmpty(loadFile))
+        {
+            loadSqlFile(loadFile);
+        }
         this.connection.commit();
     }
 
@@ -70,8 +69,7 @@ public class HsqlDB
         }
     }
 
-    private void loadSqlFile(String fileName)
-            throws Exception
+    private void loadSqlFile(String fileName) throws Exception
     {
         Statement statement = null;
         try
@@ -103,13 +101,12 @@ public class HsqlDB
         }
     }
 
-    private String getFileContents(String fileName)
-            throws Exception
+    private String getFileContents(String fileName) throws Exception
     {
         FileReader fr = new FileReader(fileName);
 
         char fileBuf[]  = new char[1024];
-        StringBuffer sb = new StringBuffer(1000);
+        StringBuilder sb = new StringBuilder(1000);
         int res = -1;
 
         while ((res = fr.read(fileBuf, 0, 1024)) > -1)

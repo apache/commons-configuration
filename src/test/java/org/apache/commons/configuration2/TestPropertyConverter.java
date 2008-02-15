@@ -305,7 +305,7 @@ public class TestPropertyConverter extends TestCase
     public void testToNumberFromString()
     {
         assertEquals("Incorrect Integer value", new Integer(42), PropertyConverter.toNumber("42", Integer.class));
-        assertEquals("Incorrect Short value", new Short((short) 10), PropertyConverter.toNumber(new StringBuffer("10"), Short.class));
+        assertEquals("Incorrect Short value", new Short((short) 10), PropertyConverter.toNumber(new StringBuilder("10"), Short.class));
     }
 
     /**

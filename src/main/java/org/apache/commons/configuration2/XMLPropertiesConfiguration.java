@@ -245,7 +245,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         private String key;
 
         /** The value of the current entry being parsed. */
-        private StringBuffer value = new StringBuffer();
+        private StringBuilder value = new StringBuilder();
 
         /** Indicates that a comment is being parsed. */
         private boolean inCommentElement;
@@ -284,7 +284,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
             }
 
             // Clear the element value buffer
-            value = new StringBuffer();
+            value = new StringBuilder();
         }
 
         public void characters(char[] chars, int start, int length)

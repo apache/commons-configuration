@@ -593,7 +593,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public String readProperty() throws IOException
         {
             commentLines.clear();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
             while (true)
             {
@@ -722,8 +722,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             // possible with a regexp when the Java 1.3 requirement is dropped
 
             String[] result = new String[2];
-            StringBuffer key = new StringBuffer();
-            StringBuffer value = new StringBuffer();
+            StringBuilder key = new StringBuilder();
+            StringBuilder value = new StringBuilder();
 
             // state of the automaton:
             // 0: key parsing
@@ -924,7 +924,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         private String escapeKey(String key)
         {
-            StringBuffer newkey = new StringBuffer();
+            StringBuilder newkey = new StringBuilder();
 
             for (int i = 0; i < key.length(); i++)
             {
@@ -1035,8 +1035,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             return null;
         }
         int sz = str.length();
-        StringBuffer out = new StringBuffer(sz);
-        StringBuffer unicode = new StringBuffer(UNICODE_LEN);
+        StringBuilder out = new StringBuilder(sz);
+        StringBuilder unicode = new StringBuilder(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++)

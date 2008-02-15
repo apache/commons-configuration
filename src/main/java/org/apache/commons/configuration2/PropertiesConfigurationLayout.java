@@ -582,7 +582,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     static String trimComment(String s, boolean comment)
     {
-        StringBuffer buf = new StringBuffer(s.length());
+        StringBuilder buf = new StringBuilder(s.length());
         int lastPos = 0;
         int pos;
 
@@ -731,7 +731,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     static class PropertyLayoutData implements Cloneable
     {
         /** Stores the comment for the property. */
-        private StringBuffer comment;
+        private StringBuilder comment;
 
         /** Stores the number of blanc lines before this property. */
         private int blancLines;
@@ -799,7 +799,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             {
                 if (comment == null)
                 {
-                    comment = new StringBuffer(s);
+                    comment = new StringBuilder(s);
                 }
                 else
                 {
@@ -821,7 +821,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             }
             else
             {
-                comment = new StringBuffer(s);
+                comment = new StringBuilder(s);
             }
         }
 
@@ -849,7 +849,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                 if (comment != null)
                 {
                     // must copy string buffer, too
-                    copy.comment = new StringBuffer(getComment());
+                    copy.comment = new StringBuilder(getComment());
                 }
                 return copy;
             }

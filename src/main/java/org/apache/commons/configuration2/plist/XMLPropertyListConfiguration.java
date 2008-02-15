@@ -406,7 +406,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     private class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
-        private StringBuffer buffer = new StringBuffer();
+        private StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
         private List<Node> stack = new ArrayList<Node>();

@@ -439,7 +439,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     private void constructHierarchy(Node node, Element element, boolean elemRefs)
     {
         processAttributes(node, element, elemRefs);
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
         {
@@ -447,8 +447,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Element)
             {
                 Element child = (Element) w3cNode;
-                Node childNode = new XMLNode(child.getTagName(),
-                        elemRefs ? child : null);
+                Node childNode = new XMLNode(child.getTagName(), elemRefs ? child : null);
                 constructHierarchy(childNode, child, elemRefs);
                 node.addChild(childNode);
                 handleDelimiters(node, childNode);
@@ -1211,7 +1210,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (node != null && elem != null)
             {
                 List<ConfigurationNode> attributes = node.getAttributes(name);
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
                 for (ConfigurationNode attribute : attributes)
                 {

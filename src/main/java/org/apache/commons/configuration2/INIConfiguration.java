@@ -350,7 +350,7 @@ public class INIConfiguration extends AbstractFileConfiguration
 
         int i = quoted ? 1 : 0;
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         while (i < value.length() && !stop)
         {
             char c = value.charAt(i);

@@ -281,8 +281,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         if (engine == null)
         {
-            throw new IllegalArgumentException(
-                    "Default expression engine must not be null!");
+            throw new IllegalArgumentException("Default expression engine must not be null!");
         }
         defaultExpressionEngine = engine;
     }
@@ -297,8 +296,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public ExpressionEngine getExpressionEngine()
     {
-        return (expressionEngine != null) ? expressionEngine
-                : getDefaultExpressionEngine();
+        return (expressionEngine != null) ? expressionEngine : getDefaultExpressionEngine();
     }
 
     /**
@@ -406,14 +404,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         else
         {
             // otherwise perform an add operation
-            parent = processNodeAddData(getExpressionEngine().prepareAdd(
-                    getRootNode(), key));
+            parent = processNodeAddData(getExpressionEngine().prepareAdd(getRootNode(), key));
         }
 
         if (parent.isAttribute())
         {
-            throw new IllegalArgumentException(
-                    "Cannot add nodes to an attribute node!");
+            throw new IllegalArgumentException("Cannot add nodes to an attribute node!");
         }
 
         // a visitor to ensure that the nodes' references are cleared; this is
@@ -567,17 +563,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @see SubnodeConfiguration
      * @since 1.5
      */
-    public SubnodeConfiguration configurationAt(String key,
-            boolean supportUpdates)
+    public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
     {
         List<ConfigurationNode> nodes = fetchNodeList(key);
         if (nodes.size() != 1)
         {
-            throw new IllegalArgumentException(
-                    "Passed in key must select exactly one node: " + key);
+            throw new IllegalArgumentException("Passed in key must select exactly one node: " + key);
         }
-        return supportUpdates ? createSubnodeConfiguration(nodes.get(0), key)
-                : createSubnodeConfiguration(nodes.get(0));
+        return supportUpdates ? createSubnodeConfiguration(nodes.get(0), key) : createSubnodeConfiguration(nodes.get(0));
     }
 
     /**
@@ -659,8 +652,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the configuration for the given node
      * @since 1.5
      */
-    protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subnodeKey)
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node, String subnodeKey)
     {
         SubnodeConfiguration result = createSubnodeConfiguration(node);
         result.setSubnodeKey(subnodeKey);
@@ -867,8 +859,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         try
         {
-            HierarchicalConfiguration copy = (HierarchicalConfiguration) super
-                    .clone();
+            HierarchicalConfiguration copy = (HierarchicalConfiguration) super.clone();
 
             // clone the nodes, too
             CloneVisitor v = new CloneVisitor();
@@ -1267,27 +1258,20 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 length = key.length();
                 if (getName() != null)
                 {
-                    key
-                            .append(StringUtils
-                                    .replace(
-                                            isAttribute() ? ConfigurationKey
-                                                    .constructAttributeKey(getName())
-                                                    : getName(),
-                                            String
-                                                    .valueOf(ConfigurationKey.PROPERTY_DELIMITER),
-                                            ConfigurationKey.ESCAPED_DELIMITER));
+                    key.append(StringUtils.replace(
+                        isAttribute() ? ConfigurationKey.constructAttributeKey(getName()) : getName(),
+                        String.valueOf(ConfigurationKey.PROPERTY_DELIMITER),
+                        ConfigurationKey.ESCAPED_DELIMITER));
                 }
             }
 
             visitor.visitBeforeChildren(this, key);
 
-            for (Iterator<ConfigurationNode> it = getChildren().iterator(); it.hasNext()
-                    && !visitor.terminate();)
+            for (Iterator<ConfigurationNode> it = getChildren().iterator(); it.hasNext() && !visitor.terminate();)
             {
                 ((Node) it.next()).visit(visitor, key);
             }
-            for (Iterator<ConfigurationNode> it = getAttributes().iterator(); it.hasNext()
-                    && !visitor.terminate();)
+            for (Iterator<ConfigurationNode> it = getAttributes().iterator(); it.hasNext() && !visitor.terminate();)
             {
                 ((Node) it.next()).visit(visitor, key);
             }
@@ -1455,8 +1439,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public void visitBeforeChildren(ConfigurationNode node)
         {
-            String parentKey = parentKeys.isEmpty() ? null
-                    : (String) parentKeys.peek();
+            String parentKey = parentKeys.isEmpty() ? null : (String) parentKeys.peek();
             String key = getExpressionEngine().nodeKey(node, parentKey);
             parentKeys.push(key);
             if (node.getValue() != null)

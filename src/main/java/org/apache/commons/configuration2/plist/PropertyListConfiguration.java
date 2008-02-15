@@ -452,7 +452,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      */
     static String formatDate(Calendar cal)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         for (int i = 0; i < DATE_PARSERS.length; i++)
         {
@@ -503,7 +503,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
          * @param buf the target buffer
          * @param cal the calendar with the current date
          */
-        public abstract void formatComponent(StringBuffer buf, Calendar cal);
+        public abstract void formatComponent(StringBuilder buf, Calendar cal);
 
         /**
          * Checks whether the given string has at least <code>length</code>
@@ -534,10 +534,9 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
          * @param num the number to add
          * @param length the required length
          */
-        protected void padNum(StringBuffer buf, int num, int length)
+        protected void padNum(StringBuilder buf, int num, int length)
         {
-            buf.append(StringUtils.leftPad(String.valueOf(num), length,
-                    PAD_CHAR));
+            buf.append(StringUtils.leftPad(String.valueOf(num), length, PAD_CHAR));
         }
     }
 
@@ -583,7 +582,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             offset = ofs;
         }
 
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             padNum(buf, cal.get(calendarField) + offset, length);
         }
@@ -594,15 +593,12 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             checkLength(s, index, length);
             try
             {
-                cal.set(calendarField, Integer.parseInt(s.substring(index,
-                        index + length))
-                        - offset);
+                cal.set(calendarField, Integer.parseInt(s.substring(index, index + length)) - offset);
                 return length;
             }
             catch (NumberFormatException nfex)
             {
-                throw new ParseException("Invalid number: " + s + ", index "
-                        + index);
+                throw new ParseException("Invalid number: " + s + ", index " + index);
             }
         }
     }
@@ -627,7 +623,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             separator = sep;
         }
 
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             buf.append(separator);
         }
@@ -638,8 +634,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             checkLength(s, index, separator.length());
             if (!s.startsWith(separator, index))
             {
-                throw new ParseException("Invalid input: " + s + ", index "
-                        + index + ", expected " + separator);
+                throw new ParseException("Invalid input: " + s + ", index " + index + ", expected " + separator);
             }
             return separator.length();
         }
@@ -651,7 +646,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      */
     private static class DateTimeZoneParser extends DateComponentParser
     {
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             TimeZone tz = cal.getTimeZone();
             int ofs = tz.getRawOffset() / MILLIS_PER_MINUTE;

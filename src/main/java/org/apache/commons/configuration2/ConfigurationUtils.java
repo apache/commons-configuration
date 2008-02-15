@@ -337,7 +337,7 @@ public final class ConfigurationUtils
         }
         else
         {
-            StringBuffer fName = new StringBuffer();
+            StringBuilder fName = new StringBuilder();
             fName.append(basePath);
 
             // My best friend. Paranoia.
@@ -393,7 +393,7 @@ public final class ConfigurationUtils
     {
         if (log.isDebugEnabled())
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("ConfigurationUtils.locate(): base is ").append(base);
             buf.append(", name is ").append(name);
             log.debug(buf.toString());

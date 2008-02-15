@@ -59,7 +59,7 @@ public class ConfigurationKey implements Serializable
     /** Constant for an index end marker.*/
     private static final char INDEX_END = ')';
 
-    /** Constant for the initial StringBuffer size.*/
+    /** Constant for the initial StringBuilder size.*/
     private static final int INITIAL_SIZE = 32;
 
     /**
@@ -68,14 +68,14 @@ public class ConfigurationKey implements Serializable
     private static final long serialVersionUID = -4299732083605277656L;
 
     /** Holds a buffer with the so far created key.*/
-    private StringBuffer keyBuffer;
+    private StringBuilder keyBuffer;
 
     /**
      * Creates a new, empty instance of <code>ConfigurationKey</code>.
      */
     public ConfigurationKey()
     {
-        keyBuffer = new StringBuffer(INITIAL_SIZE);
+        keyBuffer = new StringBuilder(INITIAL_SIZE);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ConfigurationKey implements Serializable
      */
     public ConfigurationKey(String key)
     {
-        keyBuffer = new StringBuffer(key);
+        keyBuffer = new StringBuilder(key);
         removeTrailingDelimiter();
     }
 
@@ -168,7 +168,7 @@ public class ConfigurationKey implements Serializable
      */
     public static String constructAttributeKey(String key)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(ATTRIBUTE_START).append(key).append(ATTRIBUTE_END);
         return buf.toString();
     }
@@ -443,10 +443,9 @@ public class ConfigurationKey implements Serializable
          */
         private String nextKeyPart()
         {
-            StringBuffer key = new StringBuffer(INITIAL_SIZE);
+            StringBuilder key = new StringBuilder(INITIAL_SIZE);
             int idx = startIndex;
-            int endIdx = keyBuffer.toString().indexOf(ATTRIBUTE_START,
-                    startIndex);
+            int endIdx = keyBuffer.toString().indexOf(ATTRIBUTE_START, startIndex);
             if (endIdx < 0 || endIdx == startIndex)
             {
                 endIdx = keyBuffer.length();

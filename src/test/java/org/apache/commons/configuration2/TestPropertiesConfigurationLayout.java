@@ -21,11 +21,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.AbstractFileConfiguration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 
 import junit.framework.TestCase;
@@ -654,7 +649,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     static class PropertiesBuilder
     {
         /** A buffer for storing the data. */
-        private StringBuffer buf = new StringBuffer();
+        private StringBuilder buf = new StringBuilder();
 
         /** A counter for varying the comment character. */
         private int commentCounter;
