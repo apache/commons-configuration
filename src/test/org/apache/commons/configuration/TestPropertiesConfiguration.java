@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.lang.SystemUtils;
 
 import junit.framework.TestCase;
 
@@ -736,6 +737,24 @@ public class TestPropertiesConfiguration extends TestCase
         {
             assertTrue("Wrong root cause: " + cex,
                     cex.getCause() instanceof IOException);
+        }
+    }
+
+    /**
+     * Test the creation of a file containing a '#' in its name. This test is
+     * skipped on Java 1.3 as it always fails.
+     */
+    public void testFileWithSharpSymbol() throws Exception
+    {
+        if (SystemUtils.isJavaVersionAtLeast(1.4f))
+        {
+            File file = new File("target/sharp#1.properties");
+            file.createNewFile();
+
+            PropertiesConfiguration conf = new PropertiesConfiguration(file);
+            conf.save();
+
+            assertTrue("Missing file " + file, file.exists());
         }
     }
 

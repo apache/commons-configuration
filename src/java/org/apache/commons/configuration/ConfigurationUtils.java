@@ -34,6 +34,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -294,7 +295,7 @@ public final class ConfigurationUtils
         File f = new File(file);
         if (f.isAbsolute()) // already absolute?
         {
-            return f.toURL();
+            return toURL(f);
         }
 
         try
@@ -311,7 +312,7 @@ public final class ConfigurationUtils
         }
         catch (MalformedURLException uex)
         {
-            return constructFile(basePath, file).toURL();
+            return toURL(constructFile(basePath, file));
         }
     }
 
@@ -452,7 +453,7 @@ public final class ConfigurationUtils
             {
                 try
                 {
-                    url = file.toURL();
+                    url = toURL(file);
                     log.debug("Loading configuration from the absolute path " + name);
                 }
                 catch (MalformedURLException e)
@@ -470,7 +471,7 @@ public final class ConfigurationUtils
                 File file = constructFile(base, name);
                 if (file != null && file.exists())
                 {
-                    url = file.toURL();
+                    url = toURL(file);
                 }
 
                 if (url != null)
@@ -492,7 +493,7 @@ public final class ConfigurationUtils
                 File file = constructFile(System.getProperty("user.home"), name);
                 if (file != null && file.exists())
                 {
-                    url = file.toURL();
+                    url = toURL(file);
                 }
 
                 if (url != null)
@@ -676,6 +677,40 @@ public final class ConfigurationUtils
         else
         {
             return null;
+        }
+    }
+
+    /**
+     * Convert the specified file into an URL. This method is equivalent
+     * to file.toURI().toURL() on Java 1.4 and above, and equivalent to
+     * file.toURL() on Java 1.3. This is to work around a bug in the JDK
+     * preventing the transformation of a file into an URL if the file name
+     * contains a '#' character. See the issue CONFIGURATION-300 for
+     * more details.
+     *
+     * @param file the file to be converted into an URL
+     */
+    static URL toURL(File file) throws MalformedURLException
+    {
+        if (SystemUtils.isJavaVersionAtLeast(1.4f))
+        {
+            try
+            {
+                Method toURI = file.getClass().getMethod("toURI", (Class[]) null);
+                Object uri = toURI.invoke(file, (Class[]) null);
+                Method toURL = uri.getClass().getMethod("toURL", (Class[]) null);
+                URL url = (URL) toURL.invoke(uri, (Class[]) null);
+
+                return url;
+            }
+            catch (Exception e)
+            {
+                throw new MalformedURLException(e.getMessage());
+            }
+        }
+        else
+        {
+            return file.toURL();
         }
     }
 

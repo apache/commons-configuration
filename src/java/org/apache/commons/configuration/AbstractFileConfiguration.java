@@ -238,7 +238,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         try
         {
-            load(file.toURL());
+            load(ConfigurationUtils.toURL(file));
         }
         catch (ConfigurationException e)
         {
