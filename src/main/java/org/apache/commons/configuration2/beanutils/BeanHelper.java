@@ -56,7 +56,7 @@ import org.apache.commons.lang.ClassUtils;
 public class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static Map beanFactories = Collections.synchronizedMap(new HashMap());
+    private static Map<String, BeanFactory> beanFactories = Collections.synchronizedMap(new HashMap<String, BeanFactory>());
 
     /**
      * Stores the default bean factory, which will be used if no other factory
@@ -84,8 +84,7 @@ public class BeanHelper
     {
         if (name == null)
         {
-            throw new IllegalArgumentException(
-                    "Name for bean factory must not be null!");
+            throw new IllegalArgumentException("Name for bean factory must not be null!");
         }
         if (factory == null)
         {
@@ -139,8 +138,7 @@ public class BeanHelper
     {
         if (factory == null)
         {
-            throw new IllegalArgumentException(
-                    "Default bean factory must not be null!");
+            throw new IllegalArgumentException("Default bean factory must not be null!");
         }
         defaultBeanFactory = factory;
     }
@@ -155,8 +153,7 @@ public class BeanHelper
      * @param data the bean declaration
      * @throws ConfigurationRuntimeException if a property cannot be set
      */
-    public static void initBean(Object bean, BeanDeclaration data)
-            throws ConfigurationRuntimeException
+    public static void initBean(Object bean, BeanDeclaration data) throws ConfigurationRuntimeException
     {
         Map properties = data.getBeanProperties();
         if (properties != null)
@@ -174,8 +171,7 @@ public class BeanHelper
             for (Iterator it = nestedBeans.keySet().iterator(); it.hasNext();)
             {
                 String propName = (String) it.next();
-                initProperty(bean, propName, createBean(
-                        (BeanDeclaration) nestedBeans.get(propName), null));
+                initProperty(bean, propName, createBean((BeanDeclaration) nestedBeans.get(propName), null));
             }
         }
     }
@@ -194,8 +190,7 @@ public class BeanHelper
     {
         if (!PropertyUtils.isWriteable(bean, propName))
         {
-            throw new ConfigurationRuntimeException("Property " + propName
-                    + " cannot be set!");
+            throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
         }
 
         try
@@ -235,15 +230,13 @@ public class BeanHelper
     {
         if (data == null)
         {
-            throw new IllegalArgumentException(
-                    "Bean declaration must not be null!");
+            throw new IllegalArgumentException("Bean declaration must not be null!");
         }
 
         BeanFactory factory = fetchBeanFactory(data);
         try
         {
-            return factory.createBean(fetchBeanClass(data, defaultClass,
-                    factory), data, param);
+            return factory.createBean(fetchBeanClass(data, defaultClass, factory), data, param);
         }
         catch (Exception ex)
         {
@@ -292,8 +285,7 @@ public class BeanHelper
      * @return the class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    static Class loadClass(String name, Class callingClass)
-            throws ClassNotFoundException
+    static Class loadClass(String name, Class callingClass) throws ClassNotFoundException
     {
         return ClassUtils.getClass(name);
     }
@@ -311,8 +303,7 @@ public class BeanHelper
      * @return the class of the bean to be created
      * @throws ConfigurationRuntimeException if the class cannot be determined
      */
-    private static Class fetchBeanClass(BeanDeclaration data,
-            Class defaultClass, BeanFactory factory)
+    private static Class fetchBeanClass(BeanDeclaration data, Class defaultClass, BeanFactory factory)
             throws ConfigurationRuntimeException
     {
         String clsName = data.getBeanClassName();
@@ -351,8 +342,7 @@ public class BeanHelper
      * @return the bean factory to use
      * @throws ConfigurationRuntimeException if the factory cannot be determined
      */
-    private static BeanFactory fetchBeanFactory(BeanDeclaration data)
-            throws ConfigurationRuntimeException
+    private static BeanFactory fetchBeanFactory(BeanDeclaration data) throws ConfigurationRuntimeException
     {
         String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
@@ -360,8 +350,7 @@ public class BeanHelper
             BeanFactory factory = (BeanFactory) beanFactories.get(factoryName);
             if (factory == null)
             {
-                throw new ConfigurationRuntimeException(
-                        "Unknown bean factory: " + factoryName);
+                throw new ConfigurationRuntimeException("Unknown bean factory: " + factoryName);
             }
             else
             {

@@ -120,10 +120,10 @@ public class ConfigurationInterpolator extends StrLookup
     private static final char PREFIX_SEPARATOR = ':';
 
     /** A map with the globally registered lookup objects. */
-    private static Map globalLookups;
+    private static Map<String, StrLookup> globalLookups;
 
     /** A map with the locally registered lookup objects. */
-    private Map localLookups;
+    private Map<String, StrLookup> localLookups;
 
     /** Stores the default lookup object. */
     private StrLookup defaultLookup;
@@ -135,7 +135,7 @@ public class ConfigurationInterpolator extends StrLookup
     {
         synchronized (globalLookups)
         {
-            localLookups = new HashMap(globalLookups);
+            localLookups = new HashMap<String, StrLookup>(globalLookups);
         }
     }
 
@@ -155,13 +155,11 @@ public class ConfigurationInterpolator extends StrLookup
     {
         if (prefix == null)
         {
-            throw new IllegalArgumentException(
-                    "Prefix for lookup object must not be null!");
+            throw new IllegalArgumentException("Prefix for lookup object must not be null!");
         }
         if (lookup == null)
         {
-            throw new IllegalArgumentException(
-                    "Lookup object must not be null!");
+            throw new IllegalArgumentException("Lookup object must not be null!");
         }
         synchronized (globalLookups)
         {
@@ -326,7 +324,7 @@ public class ConfigurationInterpolator extends StrLookup
     // static initializer, sets up the map with the standard lookups
     static
     {
-        globalLookups = new HashMap();
+        globalLookups = new HashMap<String, StrLookup>();
         globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
         globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
     }
