@@ -93,6 +93,8 @@
         </include>
         <include name="properties.dtd">
         </include>
+        <include name="PropertyList-1.0.dtd">
+        </include>
       </fileset>
     </copy>
   </target>

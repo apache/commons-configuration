@@ -36,6 +36,10 @@
         circumstances when saving an XMLConfiguration that was created using
         the constructor that takes a HierarchicalConfiguration.
       </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-309">
+        Instantiating an XMLPropertyListConfiguration no longer fails
+        if the DTD is missing from the classpath.
+      </action>
     </release>
 
     <release version="1.5" date="2007-11-24" description="Many smaller bugfixes">
