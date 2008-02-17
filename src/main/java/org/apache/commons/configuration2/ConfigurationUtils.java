@@ -291,7 +291,7 @@ public final class ConfigurationUtils
         File f = new File(file);
         if (f.isAbsolute()) // already absolute?
         {
-            return f.toURL();
+            return f.toURI().toURL();
         }
 
         try
@@ -308,7 +308,7 @@ public final class ConfigurationUtils
         }
         catch (MalformedURLException uex)
         {
-            return constructFile(basePath, file).toURL();
+            return constructFile(basePath, file).toURI().toURL();
         }
     }
 
@@ -449,7 +449,7 @@ public final class ConfigurationUtils
             {
                 try
                 {
-                    url = file.toURL();
+                    url = file.toURI().toURL();
                     log.fine("Loading configuration from the absolute path " + name);
                 }
                 catch (MalformedURLException e)
@@ -467,7 +467,7 @@ public final class ConfigurationUtils
                 File file = constructFile(base, name);
                 if (file != null && file.exists())
                 {
-                    url = file.toURL();
+                    url = file.toURI().toURL();
                 }
 
                 if (url != null)
@@ -489,7 +489,7 @@ public final class ConfigurationUtils
                 File file = constructFile(System.getProperty("user.home"), name);
                 if (file != null && file.exists())
                 {
-                    url = file.toURL();
+                    url = file.toURI().toURL();
                 }
 
                 if (url != null)

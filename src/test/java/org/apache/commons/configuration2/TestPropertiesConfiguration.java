@@ -34,12 +34,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.ConfigurationFactory;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.PropertiesConfigurationLayout;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;
@@ -743,6 +737,20 @@ public class TestPropertiesConfiguration extends TestCase
             assertTrue("Wrong root cause: " + cex,
                     cex.getCause() instanceof IOException);
         }
+    }
+
+    /**
+     * Test the creation of a file containing a '#' in its name.
+     */
+    public void testFileWithSharpSymbol() throws Exception
+    {
+        File file = new File("target/sharp#1.properties");
+        file.createNewFile();
+
+        PropertiesConfiguration conf = new PropertiesConfiguration(file);
+        conf.save();
+
+        assertTrue("Missing file " + file, file.exists());
     }
 
     /**
