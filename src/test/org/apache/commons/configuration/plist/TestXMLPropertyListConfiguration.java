@@ -73,6 +73,21 @@ public class TestXMLPropertyListConfiguration extends TestCase
         assertEquals("3rd element", "value3", config.getProperty("dictionary.key3"));
     }
 
+    public void testDate() throws Exception
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(2005, Calendar.JANUARY, 1, 12, 0, 0);
+
+        assertEquals("'date' property", calendar.getTime(), config.getProperty("date"));
+
+        calendar.setTimeZone(TimeZone.getTimeZone("CET"));
+        calendar.set(2002, Calendar.MARCH, 22, 11, 30, 0);
+
+        assertEquals("'date-gnustep' property", calendar.getTime(), config.getProperty("date-gnustep"));
+    }
+
     public void testSubset()
     {
         Configuration subset = config.subset("dictionary");

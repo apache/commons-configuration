@@ -44,6 +44,9 @@
         It's now possible to read a configuration file containing
         a '#' in its name (requires Java 1.4 or above).
       </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-260">
+        Fixed the date format for XMLPropertyListConfiguration.
+      </action>
     </release>
 
     <release version="1.5" date="2007-11-24" description="Many smaller bugfixes">

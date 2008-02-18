@@ -40,7 +40,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * NeXT / OpenStep style configuration. This configuration can read and write
- * ASCII plist files. It support the GNUStep extension to specify date objects.
+ * ASCII plist files. It supports the GNUStep extension to specify date objects.
  * <p>
  * References:
  * <ul>
