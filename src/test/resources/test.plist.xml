@@ -19,7 +19,10 @@
         <false/>
 
         <key>date</key>
-        <date>2005-01-01T12:00:00-0700</date>
+        <date>2005-01-01T12:00:00Z</date>
+
+        <key>date-gnustep</key>
+        <date>2002-03-22 11:30:00 +0100</date>
 
         <key>data</key>
         <data>RHJhY28gRG9ybWllbnMgTnVucXVhbSBUaXRpbGxhbmR1cw==</data>

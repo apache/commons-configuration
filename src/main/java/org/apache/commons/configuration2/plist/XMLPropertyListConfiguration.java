@@ -28,10 +28,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -73,7 +75,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *         &lt;true/>
  *
  *         &lt;key>date&lt;/key>
- *         &lt;date>2005-01-01T12:00:00-0700&lt;/date>
+ *         &lt;date>2005-01-01T12:00:00Z&lt;/date>
  *
  *         &lt;key>data&lt;/key>
  *         &lt;data>RHJhY28gRG9ybWllbnMgTnVucXVhbSBUaXRpbGxhbmR1cw==&lt;/data>
@@ -556,8 +558,15 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          */
         private static final long serialVersionUID = -7614060264754798317L;
 
-        /** The standard format of dates in plist files. */
-        private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+        /** The MacOS format of dates in plist files. */
+        private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        static
+        {
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+        }
+
+        /** The GNUstep format of dates in plist files. */
+        private static DateFormat gnustepFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
         /**
          * Update the value of the node. If the existing value is null, it's
@@ -573,10 +582,10 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             {
                 setValue(value);
             }
-            else if (getValue() instanceof List)
+            else if (getValue() instanceof Collection)
             {
-                List list = (List) getValue();
-                list.add(value);
+                Collection collection = (Collection) getValue();
+                collection.add(value);
             }
             else
             {
@@ -596,7 +605,22 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         {
             try
             {
-                addValue(format.parse(value));
+                if (value.indexOf(' ') != -1)
+                {
+                    // parse the date using the GNUstep format
+                    synchronized (gnustepFormat)
+                    {
+                        addValue(gnustepFormat.parse(value));
+                    }
+                }
+                else
+                {
+                    // parse the date using the MacOS X format
+                    synchronized (format)
+                    {
+                        addValue(format.parse(value));
+                    }
+                }
             }
             catch (ParseException e)
             {

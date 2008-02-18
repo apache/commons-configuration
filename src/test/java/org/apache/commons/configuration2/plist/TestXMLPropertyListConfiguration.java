@@ -18,12 +18,10 @@
 package org.apache.commons.configuration2.plist;
 
 import java.io.File;
-import java.util.*;
-
-import junit.framework.TestCase;
-import junitx.framework.ObjectAssert;
-import junitx.framework.ArrayAssert;
-import junitx.framework.ListAssert;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
@@ -31,7 +29,11 @@ import org.apache.commons.configuration2.ConfigurationComparator;
 import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.StrictConfigurationComparator;
-import org.apache.commons.configuration2.plist.XMLPropertyListConfiguration;
+
+import junit.framework.TestCase;
+import junitx.framework.ArrayAssert;
+import junitx.framework.ListAssert;
+import junitx.framework.ObjectAssert;
 
 /**
  * @author Emmanuel Bourg
@@ -74,6 +76,21 @@ public class TestXMLPropertyListConfiguration extends TestCase
         assertEquals("1st element", "value1", config.getProperty("dictionary.key1"));
         assertEquals("2nd element", "value2", config.getProperty("dictionary.key2"));
         assertEquals("3rd element", "value3", config.getProperty("dictionary.key3"));
+    }
+
+    public void testDate() throws Exception
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+        calendar.set(2005, Calendar.JANUARY, 1, 12, 0, 0);
+
+        assertEquals("'date' property", calendar.getTime(), config.getProperty("date"));
+
+        calendar.setTimeZone(TimeZone.getTimeZone("CET"));
+        calendar.set(2002, Calendar.MARCH, 22, 11, 30, 0);
+
+        assertEquals("'date-gnustep' property", calendar.getTime(), config.getProperty("date-gnustep"));
     }
 
     public void testSubset()
