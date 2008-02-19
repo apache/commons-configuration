@@ -47,6 +47,9 @@
       <action dev="ebourg" type="update">
         Calendar objects in PropertyListConfiguration are now saved with their own time zone.
       </action>
+      <action dev="ebourg" type="remove">
+        HierarchicalXMLConfiguration has been removed, XMLConfiguration should be used instead.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">
