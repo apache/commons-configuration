@@ -4,6 +4,7 @@
 <configuration>
   <additional>
     <system/>
+    <environment/>
     <xml fileName="test.xml"/>
     <hierarchicalXml fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
     <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>

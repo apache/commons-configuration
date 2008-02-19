@@ -291,12 +291,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider XML_PROVIDER = new XMLConfigurationProvider();
 
     /** Constant for the provider for JNDI sources. */
-    private static final ConfigurationProvider JNDI_PROVIDER = new ConfigurationProvider(
-            JNDIConfiguration.class);
+    private static final ConfigurationProvider JNDI_PROVIDER =
+            new ConfigurationProvider(JNDIConfiguration.class);
 
     /** Constant for the provider for system properties. */
-    private static final ConfigurationProvider SYSTEM_PROVIDER = new ConfigurationProvider(
-            SystemConfiguration.class);
+    private static final ConfigurationProvider SYSTEM_PROVIDER =
+            new ConfigurationProvider(SystemConfiguration.class);
+
+    /** Constant for the provider for environment properties. */
+    private static final ConfigurationProvider ENVIRONMENT_PROVIDER =
+            new ConfigurationProvider(EnvironmentConfiguration.class);
 
     /** Constant for the provider for plist files. */
     private static final ConfigurationProvider PLIST_PROVIDER = new FileExtensionConfigurationProvider(
@@ -309,12 +313,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS =
-    {"properties", "xml", "hierarchicalXml", "jndi", "system", "plist", "configuration"};
+    {"properties", "xml", "hierarchicalXml", "jndi", "system", "environment", "plist", "configuration"};
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
+            SYSTEM_PROVIDER, ENVIRONMENT_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
 
     /**
      * The serial version UID.

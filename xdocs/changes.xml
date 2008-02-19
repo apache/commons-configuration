@@ -50,6 +50,10 @@
       <action dev="ebourg" type="remove">
         HierarchicalXMLConfiguration has been removed, XMLConfiguration should be used instead.
       </action>
+      <action dev="ebourg" type="add">
+        The &lt;environment/> tag can be specified in a configuration descriptor
+        in order to create an EnvironmentConfiguration.          
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">

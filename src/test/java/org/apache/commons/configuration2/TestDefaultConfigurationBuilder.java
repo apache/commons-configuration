@@ -589,8 +589,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         // test SystemConfiguration
         assertNotNull(config.getProperty("java.version"));
-        assertEquals(System.getProperty("java.version"), config
-                .getString("java.version"));
+        assertEquals(System.getProperty("java.version"), config.getString("java.version"));
+
+        // test EnvironmentConfiguration
+        assertNotNull("JAVA_HOME property not found", config.getProperty("JAVA_HOME"));
     }
 
     /**
