@@ -141,7 +141,7 @@ public class TestPropertiesConfiguration extends TestCase
     {
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -178,7 +178,7 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration pc = new PropertiesConfiguration();
         // add an array of strings to the configuration
         pc.addProperty("string", "value1");
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -565,8 +565,8 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testIncludeInSubDir() throws ConfigurationException
     {
-        ConfigurationFactory factory = new ConfigurationFactory("conf/testFactoryPropertiesInclude.xml");
-        Configuration config = factory.getConfiguration();
+        ConfigurationBuilder builder = new DefaultConfigurationBuilder("testFactoryPropertiesInclude.xml");
+        Configuration config = builder.getConfiguration();
         assertEquals(true, config.getBoolean("deeptest"));
         assertEquals(true, config.getBoolean("deepinclude"));
         assertFalse(config.containsKey("deeptestinvalid"));

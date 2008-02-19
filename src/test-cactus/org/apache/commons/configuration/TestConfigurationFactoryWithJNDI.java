@@ -25,7 +25,7 @@ import org.apache.cactus.ServletTestCase;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationFactory;
+import org.apache.commons.configuration2.DefaultConfigurationBuilder;
 import org.apache.commons.configuration2.JNDIConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 
@@ -35,9 +35,9 @@ public class TestConfigurationFactoryWithJNDI extends ServletTestCase
 
     public void testLoadingWithDigester() throws Exception
     {
-        ConfigurationFactory cf = new ConfigurationFactory();
-        cf.setConfigurationFileName(testDigesterFile.toString());
-        CompositeConfiguration compositeConfiguration = (CompositeConfiguration) cf.getConfiguration();
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setFileName(testDigesterFile.toString());
+        CompositeConfiguration compositeConfiguration = (CompositeConfiguration) builder.getConfiguration();
 
         assertEquals("Verify how many configs", 4, compositeConfiguration.getNumberOfConfigurations());
 
@@ -61,10 +61,10 @@ public class TestConfigurationFactoryWithJNDI extends ServletTestCase
      */
     public void testGetKeys() throws Exception
     {
-        ConfigurationFactory cf = new ConfigurationFactory();
-        cf.setConfigurationFileName(testDigesterFile.toString());
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setFileName(testDigesterFile.toString());
 
-        Configuration c = cf.getConfiguration();
+        Configuration c = builder.getConfiguration();
 
         List iteratedList = IteratorUtils.toList(c.getKeys());
         assertTrue(iteratedList.contains("test.jndi"));
@@ -78,10 +78,10 @@ public class TestConfigurationFactoryWithJNDI extends ServletTestCase
     public void testGetKeysWithString() throws Exception
     {
         String KEY = "test";
-        ConfigurationFactory cf = new ConfigurationFactory();
-        cf.setConfigurationFileName(testDigesterFile.toString());
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setFileName(testDigesterFile.toString());
 
-        Configuration c = cf.getConfiguration();
+        Configuration c = builder.getConfiguration();
 
         List iteratedList = IteratorUtils.toList(c.getKeys(KEY));
 
@@ -103,10 +103,10 @@ public class TestConfigurationFactoryWithJNDI extends ServletTestCase
     public void testGetKeysWithString2() throws Exception
     {
         String KEY = "test.deep";
-        ConfigurationFactory cf = new ConfigurationFactory();
-        cf.setConfigurationFileName(testDigesterFile.toString());
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setFileName(testDigesterFile.toString());
 
-        Configuration c = cf.getConfiguration();
+        Configuration c = builder.getConfiguration();
 
         List iteratedList = IteratorUtils.toList(c.getKeys(KEY));
 

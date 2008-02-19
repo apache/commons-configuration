@@ -21,13 +21,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationFactory;
-import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.lang.StringUtils;
+
+import junit.framework.TestCase;
 
 /**
  * Test that the configuration factory returns keys in the same
@@ -45,9 +41,9 @@ public class TestPropertiesSequence extends TestCase
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
+        configurationBuilder.setFileName(compositeConfigurationFile);
+        Configuration compositeConfiguration = configurationBuilder.getConfiguration();
 
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
@@ -71,9 +67,9 @@ public class TestPropertiesSequence extends TestCase
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
+        configurationBuilder.setFileName(compositeConfigurationFile);
+        Configuration compositeConfiguration = configurationBuilder.getConfiguration();
 
         simpleConfiguration.setProperty("prefix.Co.test", Boolean.TRUE);
         simpleConfiguration.setProperty("prefix.Av.test", Boolean.TRUE);
@@ -103,9 +99,9 @@ public class TestPropertiesSequence extends TestCase
 
         Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        DefaultConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder();
+        configurationBuilder.setFileName(compositeConfigurationFile);
+        Configuration compositeConfiguration = configurationBuilder.getConfiguration();
 
         Configuration mapping = new BaseConfiguration();
         Configuration mapping2 = new BaseConfiguration();

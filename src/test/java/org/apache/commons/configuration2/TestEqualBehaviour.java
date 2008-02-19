@@ -20,10 +20,6 @@ package org.apache.commons.configuration2;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationFactory;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-
 import junit.framework.TestCase;
 
 /**
@@ -34,21 +30,18 @@ import junit.framework.TestCase;
  */
 public class TestEqualBehaviour  extends TestCase
 {
-    private Configuration setupSimpleConfiguration()
-            throws Exception
+    private Configuration setupSimpleConfiguration() throws Exception
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
         return new PropertiesConfiguration(simpleConfigurationFile);
     }
 
-    private Configuration setupCompositeConfiguration()
-            throws Exception
+    private Configuration setupCompositeConfiguration() throws Exception
     {
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testEqualDigester.xml").getAbsolutePath();
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        return configurationFactory.getConfiguration();
+        ConfigurationBuilder configurationBuilder = new DefaultConfigurationBuilder(compositeConfigurationFile);
+        return configurationBuilder.getConfiguration();
     }
 
     /**

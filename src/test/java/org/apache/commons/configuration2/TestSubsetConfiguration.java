@@ -25,12 +25,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationFactory;
-import org.apache.commons.configuration2.SubsetConfiguration;
-
 import junit.framework.TestCase;
 
 /**
@@ -199,10 +193,10 @@ public class TestSubsetConfiguration extends TestCase
 
     public void testNested() throws Exception
     {
-        ConfigurationFactory factory = new ConfigurationFactory();
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
         File src = new File(new File(TEST_DIR), TEST_FILE);
-        factory.setConfigurationURL(src.toURI().toURL());
-        Configuration config = factory.getConfiguration();
+        builder.setURL(src.toURI().toURL());
+        Configuration config = builder.getConfiguration();
         Configuration subConf = config.subset("tables.table(0)");
         assertTrue(subConf.getKeys().hasNext());
         Configuration subSubConf = subConf.subset("fields.field(1)");

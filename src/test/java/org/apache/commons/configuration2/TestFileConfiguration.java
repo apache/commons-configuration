@@ -17,25 +17,15 @@
 
 package org.apache.commons.configuration2;
 
-import java.net.URL;
-import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.util.Properties;
 
-import org.apache.commons.configuration2.AbstractFileConfiguration;
-import org.apache.commons.configuration2.CombinedConfiguration;
-import org.apache.commons.configuration2.CompositeConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.ConfigurationFactory;
-import org.apache.commons.configuration2.DefaultConfigurationBuilder;
-import org.apache.commons.configuration2.FileConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.StrictConfigurationComparator;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 
@@ -173,9 +163,9 @@ public class TestFileConfiguration extends TestCase
 
         try
         {
-            ConfigurationFactory factory = new ConfigurationFactory();
-            factory.setConfigurationURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURL());
-            CompositeConfiguration cc = (CompositeConfiguration) factory.getConfiguration();
+            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+            builder.setURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURL());
+            CombinedConfiguration cc = (CombinedConfiguration) builder.getConfiguration();
             PropertiesConfiguration config = null;
             for (int i = 0; config == null; i++)
             {
