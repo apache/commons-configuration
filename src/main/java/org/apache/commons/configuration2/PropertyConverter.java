@@ -90,8 +90,7 @@ public final class PropertyConverter
      * @since 1.5
      */
     @SuppressWarnings("unchecked")
-    static <T> T to(Class<T> cls, Object value, Object[] params)
-            throws ConversionException
+    public static <T> T to(Class<T> cls, Object value, Object... params) throws ConversionException
     {
         Object result = null;
 
@@ -175,7 +174,7 @@ public final class PropertyConverter
                     + cls.getName() + " object");
         }
 
-        return cls.cast(result);
+        return (T) result;
     }
 
     /**

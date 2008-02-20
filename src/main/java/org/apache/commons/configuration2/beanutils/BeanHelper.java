@@ -14,18 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.beanutils;
 
-import java.lang.reflect.InvocationTargetException;
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.PropertyConverter;
 import org.apache.commons.lang.ClassUtils;
 
 /**
@@ -177,7 +179,7 @@ public class BeanHelper
     }
 
     /**
-     * Sets a property on the given bean using Common Beanutils.
+     * Sets a property on the given bean.
      *
      * @param bean the bean
      * @param propName the name of the property
@@ -185,25 +187,41 @@ public class BeanHelper
      * @throws ConfigurationRuntimeException if the property is not writeable or
      * an error occurred
      */
-    private static void initProperty(Object bean, String propName, Object value)
-            throws ConfigurationRuntimeException
+    private static void initProperty(Object bean, String propName, Object value) throws ConfigurationRuntimeException
     {
-        if (!PropertyUtils.isWriteable(bean, propName))
-        {
-            throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
-        }
-
         try
         {
-            BeanUtils.setProperty(bean, propName, value);
+            // find the descriptor for the property requested
+            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
+            PropertyDescriptor[] descriptors = info.getPropertyDescriptors();
+            PropertyDescriptor descriptor =  null;
+            for (PropertyDescriptor d : descriptors)
+            {
+                if (d.getName().equals(propName))
+                {
+                    descriptor = d;
+                    break;
+                }
+            }
+
+            // check if the property is writeable
+            if (descriptor == null || descriptor.getWriteMethod() == null)
+            {
+                throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
+            }
+
+            // set the property
+            Class type = descriptor.getPropertyType();
+            Object convertedValue = type.isAssignableFrom(value.getClass()) ? value : PropertyConverter.to(type, value);
+            descriptor.getWriteMethod().invoke(bean, convertedValue);
         }
-        catch (IllegalAccessException iaex)
+        catch (ConfigurationRuntimeException e)
         {
-            throw new ConfigurationRuntimeException(iaex);
+            throw e;
         }
-        catch (InvocationTargetException itex)
+        catch (Exception e)
         {
-            throw new ConfigurationRuntimeException(itex);
+            throw new ConfigurationRuntimeException("Unable to set the property " + propName + " to '" + value + "'", e);
         }
     }
 
