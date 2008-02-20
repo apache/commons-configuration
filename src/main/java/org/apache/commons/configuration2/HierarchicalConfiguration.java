@@ -358,6 +358,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param key the key of the new property
      * @param obj the value of the new property
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         NodeAddData data = getExpressionEngine().prepareAdd(getRootNode(), key);
@@ -466,6 +467,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param prefix the prefix of the keys for the subset
      * @return a new configuration object representing the selected subset
      */
+    @Override
     @SuppressWarnings("serial")
     public Configuration subset(String prefix)
     {
@@ -699,7 +701,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * value but children (either defined or undefined), this method will still
      * return <b>false </b>.
      *
-     * @param key the key to be chekced
+     * @param key the key to be checked
      * @return a flag if this key is contained in this configuration
      */
     public boolean containsKey(String key)
@@ -713,6 +715,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param key the key of the property to set
      * @param value the new value of this property
      */
+    @Override
     public void setProperty(String key, Object value)
     {
         fireEvent(EVENT_SET_PROPERTY, key, value, true);
@@ -776,6 +779,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *
      * @param key the key of the property to be removed
      */
+    @Override
     public void clearProperty(String key)
     {
         fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
@@ -855,6 +859,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the copy
      * @since 1.2
      */
+    @Override
     public Object clone()
     {
         try
@@ -885,6 +890,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return a configuration with all variables interpolated
      * @since 1.5
      */
+    @Override
     public Configuration interpolatedConfiguration()
     {
         HierarchicalConfiguration c = (HierarchicalConfiguration) clone();
@@ -1351,6 +1357,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @return a flag if iteration should be stopped
          */
+        @Override
         public boolean terminate()
         {
             return isDefined();
@@ -1361,6 +1368,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the actual node
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             defined = node.getValue() != null;
@@ -1426,6 +1434,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitAfterChildren(ConfigurationNode node)
         {
             parentKeys.pop();
@@ -1437,6 +1446,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node to be visited
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             String parentKey = parentKeys.isEmpty() ? null : (String) parentKeys.peek();
@@ -1474,6 +1484,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitAfterChildren(ConfigurationNode node)
         {
             ConfigurationNode copy = copyStack.pop();
@@ -1488,6 +1499,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             ConfigurationNode copy = (ConfigurationNode) node.clone();
