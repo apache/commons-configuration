@@ -223,11 +223,11 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             {
                 if (Date.class.equals(cls) || Calendar.class.equals(cls))
                 {
-                    return PropertyConverter.to(cls, interpolate(value), new String[] {getDefaultDateFormat()});
+                    return PropertyConverter.to(cls, interpolate(value), getDefaultDateFormat());
                 }
                 else
                 {
-                    return PropertyConverter.to(cls, interpolate(value), null);
+                    return PropertyConverter.to(cls, interpolate(value));
                 }
             }
             catch (ConversionException e)
@@ -471,7 +471,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 int i = 0;
                 for (Object o : values)
                 {
-                    Array.set(array, i++, PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(o), null));
+                    Array.set(array, i++, PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(o)));
                 }
             }
             else
@@ -479,7 +479,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 try
                 {
                     // attempt to convert a single value
-                    Object convertedValue = PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(value), null);
+                    Object convertedValue = PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(value));
 
                     // create an array of one element
                     array = Array.newInstance(cls, 1);

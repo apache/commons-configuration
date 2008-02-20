@@ -62,9 +62,6 @@ public final class PropertyConverter
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
-    /** Constant for the argument classes of the Number constructor that takes a String. */
-    private static final Class<?>[] CONSTR_ARGS = {String.class};
-
     /** The fully qualified name of {@link javax.mail.internet.InternetAddress} */
     private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
 
@@ -408,7 +405,7 @@ public final class PropertyConverter
 
             try
             {
-                Constructor<? extends Number> constr = targetClass.getConstructor(CONSTR_ARGS);
+                Constructor<? extends Number> constr = targetClass.getConstructor(String.class);
                 return (Number) constr.newInstance(str);
             }
             catch (InvocationTargetException itex)
@@ -472,14 +469,14 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            List<String> elements = split((String) value, '_');
-            int size = elements.size();
+            String[] elements = ((String) value).split("_");
+            int size = elements.length;
 
-            if (size >= 1 && ((elements.get(0)).length() == 2 || (elements.get(0)).length() == 0))
+            if (size >= 1 && ((elements[0]).length() == 2 || (elements[0]).length() == 0))
             {
-                String language = elements.get(0);
-                String country = (size >= 2) ? elements.get(1) : "";
-                String variant = (size >= 3) ? elements.get(2) : "";
+                String language = elements[0];
+                String country = (size >= 2) ? elements[1] : "";
+                String variant = (size >= 3) ? elements[2] : "";
 
                 return new Locale(language, country, variant);
             }
