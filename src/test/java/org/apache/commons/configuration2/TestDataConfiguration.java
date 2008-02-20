@@ -31,12 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-
-import org.apache.commons.configuration2.BaseConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConversionException;
-import org.apache.commons.configuration2.DataConfiguration;
-import org.apache.commons.lang.SystemUtils;
+import javax.mail.internet.InternetAddress;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
@@ -302,13 +297,10 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("ip.string.interpolated", "${ip.string}");
         conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
 
-        // email address (tested on Java 1.4+)
-        if (SystemUtils.isJavaVersionAtLeast(1.4f))
-        {
-            conf.addProperty("email.string", "ebourg@apache.org");
-            conf.addProperty("email.string.interpolated", "${email.string}");
-            conf.addProperty("email.object", createInternetAddress("ebourg@apache.org"));
-        }
+        // email address
+        conf.addProperty("email.string", "ebourg@apache.org");
+        conf.addProperty("email.string.interpolated", "${email.string}");
+        conf.addProperty("email.object", new InternetAddress("ebourg@apache.org"));
     }
 
     public void testGetConfiguration()
@@ -1700,13 +1692,7 @@ public class TestDataConfiguration extends TestCase
 
     public void testGetInternetAddress() throws Exception
     {
-        if (!SystemUtils.isJavaVersionAtLeast(1.4f))
-        {
-            // skip the test on Java 1.3
-            return;
-        }
-
-        Object expected = createInternetAddress("ebourg@apache.org");
+        InternetAddress expected = new InternetAddress("ebourg@apache.org");
 
         // address as string
         assertEquals(expected, conf.get(expected.getClass(), "email.string"));
@@ -1727,17 +1713,6 @@ public class TestDataConfiguration extends TestCase
         {
             // expected
         }
-    }
-
-    /**
-     * Create an instance of InternetAddress. This trick is necessary to
-     * compile and run the test with Java 1.3 and the javamail-1.4 which
-     * is not compatible with Java 1.3
-     */
-    private Object createInternetAddress(String email) throws Exception
-    {
-        Class<?> cls = Class.forName("javax.mail.internet.InternetAddress");
-        return cls.getConstructor(new Class<?>[]{String.class}).newInstance(new Object[]{email});
     }
 
     public void testConversionException() throws Exception
@@ -2355,18 +2330,14 @@ public class TestDataConfiguration extends TestCase
             // expected
         }
 
-        if (SystemUtils.isJavaVersionAtLeast(1.4f))
+        try
         {
-            // skip the test on Java 1.3
-            try
-            {
-                conf.get(Class.forName("javax.mail.internet.InternetAddress"), "key1");
-                fail("getInternetAddress didn't throw a ConversionException");
-            }
-            catch (ConversionException e)
-            {
-                // expected
-            }
+            conf.get(Class.forName("javax.mail.internet.InternetAddress"), "key1");
+            fail("getInternetAddress didn't throw a ConversionException");
+        }
+        catch (ConversionException e)
+        {
+            // expected
         }
     }
 }
