@@ -31,6 +31,7 @@ import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
@@ -729,7 +730,7 @@ public class TestHierarchicalConfiguration extends TestCase
     public void testNodeVisitor()
     {
         CountVisitor v = new CountVisitor();
-        config.getRoot().visit(v, null);
+        config.getRoot().visit(v);
         assertEquals(28, v.beforeCount);
         assertEquals(v.beforeCount, v.afterCount);
     }
@@ -1040,21 +1041,23 @@ public class TestHierarchicalConfiguration extends TestCase
      * A test visitor implementation for checking whether all visitor methods
      * are correctly called.
      */
-    static class CountVisitor extends HierarchicalConfiguration.NodeVisitor
+    static class CountVisitor extends ConfigurationNodeVisitorAdapter
     {
         public int beforeCount;
 
         public int afterCount;
 
-        public void visitAfterChildren(Node node, ConfigurationKey key)
+        @Override
+        public void visitAfterChildren(ConfigurationNode node)
         {
-            super.visitAfterChildren(node, key);
+            super.visitAfterChildren(node);
             afterCount++;
         }
 
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        @Override
+        public void visitBeforeChildren(ConfigurationNode node)
         {
-            super.visitBeforeChildren(node, key);
+            super.visitBeforeChildren(node);
             beforeCount++;
         }
     }

@@ -37,7 +37,6 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.NodeAddData;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>A specialized configuration class that extends its base class by the
@@ -1244,100 +1243,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             boolean attrsRemoved = removeAttribute(name);
             return childrenRemoved || attrsRemoved;
         }
-
-        /**
-         * A generic method for traversing this node and all of its children.
-         * This method sends the passed in visitor to this node and all of its
-         * children.
-         *
-         * @param visitor the visitor
-         * @param key here a configuration key with the name of the root node of
-         * the iteration can be passed; if this key is not <b>null </b>, the
-         * full pathes to the visited nodes are builded and passed to the
-         * visitor's <code>visit()</code> methods
-         */
-        public void visit(NodeVisitor visitor, ConfigurationKey key)
-        {
-            int length = 0;
-            if (key != null)
-            {
-                length = key.length();
-                if (getName() != null)
-                {
-                    key.append(StringUtils.replace(
-                        isAttribute() ? ConfigurationKey.constructAttributeKey(getName()) : getName(),
-                        String.valueOf(ConfigurationKey.PROPERTY_DELIMITER),
-                        ConfigurationKey.ESCAPED_DELIMITER));
-                }
-            }
-
-            visitor.visitBeforeChildren(this, key);
-
-            for (Iterator<ConfigurationNode> it = getChildren().iterator(); it.hasNext() && !visitor.terminate();)
-            {
-                ((Node) it.next()).visit(visitor, key);
-            }
-            for (Iterator<ConfigurationNode> it = getAttributes().iterator(); it.hasNext() && !visitor.terminate();)
-            {
-                ((Node) it.next()).visit(visitor, key);
-            }
-
-            if (key != null)
-            {
-                key.setLength(length);
-            }
-            visitor.visitAfterChildren(this, key);
-        }
-    }
-
-    /**
-     * <p>Definition of a visitor class for traversing a node and all of its
-     * children.</p><p>This class defines the interface of a visitor for
-     * <code>Node</code> objects and provides a default implementation. The
-     * method <code>visit()</code> of <code>Node</code> implements a generic
-     * iteration algorithm based on the <em>Visitor</em> pattern. By providing
-     * different implementations of visitors it is possible to collect different
-     * data during the iteration process.</p>
-     *
-     */
-    public static class NodeVisitor
-    {
-        /**
-         * Visits the specified node. This method is called during iteration for
-         * each node before its children have been visited.
-         *
-         * @param node the actual node
-         * @param key the key of this node (may be <b>null </b>)
-         */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
-        {
-        }
-
-        /**
-         * Visits the specified node after its children have been processed.
-         * This gives a visitor the opportunity of collecting additional data
-         * after the child nodes have been visited.
-         *
-         * @param node the node to be visited
-         * @param key the key of this node (may be <b>null </b>)
-         */
-        public void visitAfterChildren(Node node, ConfigurationKey key)
-        {
-        }
-
-        /**
-         * Returns a flag that indicates if iteration should be stopped. This
-         * method is called after each visited node. It can be useful for
-         * visitors that search a specific node. If this node is found, the
-         * whole process can be stopped. This base implementation always returns
-         * <b>false </b>.
-         *
-         * @return a flag if iteration should be stopped
-         */
-        public boolean terminate()
-        {
-            return false;
-        }
     }
 
     /**
@@ -1545,17 +1450,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * method is called, which must be defined in concrete sub classes. This
      * method can perform all steps to integrate the new node into the original
      * structure.
-     *
      */
-    protected abstract static class BuilderVisitor extends NodeVisitor
+    protected abstract static class BuilderVisitor extends ConfigurationNodeVisitorAdapter
     {
         /**
          * Visits the specified node before its children have been traversed.
          *
          * @param node the node to visit
-         * @param key the current key
          */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        @Override
+        public void visitBeforeChildren(ConfigurationNode node)
         {
             Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
             subNodes.addAll(node.getAttributes());
@@ -1629,6 +1533,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * node
          * @return the reference object for the node to be inserted
          */
-        protected abstract Object insert(Node newNode, Node parent, Node sibling1, Node sibling2);
+        protected abstract Object insert(ConfigurationNode newNode,
+                ConfigurationNode parent, ConfigurationNode sibling1,
+                ConfigurationNode sibling2);
     }
 }

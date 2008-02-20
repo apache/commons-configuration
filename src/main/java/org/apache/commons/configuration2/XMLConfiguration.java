@@ -1145,7 +1145,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          */
         public void processDocument(Node rootNode)
         {
-            rootNode.visit(this, null);
+            rootNode.visit(this);
         }
 
         /**
@@ -1158,7 +1158,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          * @param sibling2 the second sibling
          * @return the new node
          */
-        protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
+        @Override
+        protected Object insert(ConfigurationNode newNode, ConfigurationNode parent, ConfigurationNode sibling1, ConfigurationNode sibling2)
         {
             if (newNode.isAttribute())
             {
@@ -1203,7 +1204,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          * @param name the name of the affected attribute
          * @param listDelimiter the delimiter for attributes with multiple values
          */
-        private static void updateAttribute(Node node, Element elem, String name, char listDelimiter)
+        private static void updateAttribute(ConfigurationNode node, Element elem, String name, char listDelimiter)
         {
             if (node != null && elem != null)
             {
@@ -1243,7 +1244,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          * @param name the name of the attribute
          * @param listDelimiter the delimiter for attributes with multiple values
          */
-        static void updateAttribute(Node node, String name, char listDelimiter)
+        static void updateAttribute(ConfigurationNode node, String name, char listDelimiter)
         {
             if (node != null)
             {
@@ -1257,7 +1258,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          * @param node the node
          * @return the element of this node
          */
-        private Element getElement(Node node)
+        private Element getElement(ConfigurationNode node)
         {
             // special treatment for root node of the hierarchy
             return (node.getName() != null && node.getReference() != null) ? (Element) node
