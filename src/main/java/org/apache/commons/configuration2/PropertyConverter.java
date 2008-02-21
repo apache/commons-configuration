@@ -95,6 +95,10 @@ public final class PropertyConverter
         {
             result = toBoolean(value);
         }
+        else if (Character.class.equals(cls) || Character.TYPE.equals(cls))
+        {
+            result = toCharacter(value);
+        }
         else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
         {
             if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
@@ -205,6 +209,29 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
+        }
+    }
+
+    /**
+     * Convert the specified object into a Character.
+     *
+     * @param value the value to convert
+     * @return the converted value
+     * @throws ConversionException thrown if the value cannot be converted to a character
+     */
+    static Character toCharacter(Object value) throws ConversionException
+    {
+        if (value instanceof Character)
+        {
+            return (Character) value;
+        }
+        else if (value instanceof CharSequence && ((CharSequence) value).length() == 1)
+        {
+            return ((CharSequence) value).charAt(0);
+        }
+        else
+        {
+            throw new ConversionException("The value " + value + " can't be converted to a Character object");
         }
     }
 
