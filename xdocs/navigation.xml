@@ -38,7 +38,7 @@
 
     <menu name="Development">
       <item name="Building"                     href="/building.html"/>
-      <item name="Roadmap"                      href="/tasks-report.html"/>
+      <item name="Roadmap"                      href="https://issues.apache.org/jira/browse/CONFIGURATION?report=com.atlassian.jira.plugin.system.project:roadmap-panel"/>
       <item name="Issue Tracking"               href="issue-tracking.html"/>
       <item name="SVN"                          href="http://svn.apache.org/repos/asf/commons/proper/configuration/"/>
     </menu>
