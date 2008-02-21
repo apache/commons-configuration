@@ -17,9 +17,6 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.Iterator;
-
-import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.ConfigurationNodeVisitorAdapter;
 import org.xml.sax.Attributes;
@@ -171,9 +168,8 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
         {
             AttributesImpl attrs = new AttributesImpl();
 
-            for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode child : node.getAttributes())
             {
-                Node child = (Node) it.next();
                 if (child.getValue() != null)
                 {
                     String attr = child.getName();
