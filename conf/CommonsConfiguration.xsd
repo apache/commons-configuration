@@ -120,6 +120,7 @@
 	<xs:complexType name="sources">
 		<xs:choice maxOccurs="unbounded">
 			<xs:element name="system" type="xs:string"/>
+			<xs:element name="environment" type="xs:string"/>
 			<xs:element name="properties" type="propertiesConfiguration"/>
 			<xs:element name="xml" type="xmlConfiguration"/>
 			<xs:element name="plist" type="abstractHierarchicalFileConfiguration"/>
