@@ -32,17 +32,14 @@
 	    has been changed. The main package is now
 	    org.apache.commons.configuration2.
       </action>
-      <action dev="oheger" type="update">
-        The dependency to commons-collections is no longer needed.
+      <action dev="oheger,ebourg" type="update">
+        The dependencies on commons-collections, commons-codec and commons-digester are no longer needed.
       </action>
       <action dev="ebourg" type="update">
-        The dependency to commons-logging is no longer needed. The java.util.logging API is used instead.
-        If necessary it's still possible to redirect the log messages to a 3rd party logging API using a
-        bridging mechanism such as the one available for Log4J
+        The java.util.logging API is now used instead og commons-logging. If necessary it's still
+        possible to redirect the log messages to a 3rd party logging API using a bridging mechanism
+        such as the one available for Log4J
         (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
-      </action>
-      <action dev="ebourg" type="update">
-        The dependency to commons-codec is no longer needed.
       </action>
       <action dev="ebourg" type="update">
         Calendar objects in PropertyListConfiguration are now saved with their own time zone.
@@ -50,9 +47,15 @@
       <action dev="ebourg" type="remove">
         HierarchicalXMLConfiguration has been removed, XMLConfiguration should be used instead.
       </action>
+      <action dev="ebourg" type="remove">
+        ConfigurationFactory has been removed, DefaultConfigurationBuilder should be used instead.
+      </action>
       <action dev="ebourg" type="add">
         The &lt;environment/> tag can be specified in a configuration descriptor
         in order to create an EnvironmentConfiguration.          
+      </action>
+      <action dev="ebourg" type="update">
+        DefaultConfigurationBuilder no longer requires commons-beanutils.
       </action>
     </release>
 

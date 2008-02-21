@@ -197,15 +197,10 @@
     </dependency>
 
     <dependency>
-     <groupId>commons-digester</groupId>
-      <artifactId>commons-digester</artifactId>
-      <version>1.8</version>
-    </dependency>
-
-    <dependency>
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.7.0</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -318,7 +313,6 @@
       <resource>
         <directory>src/test/resources</directory>
         <includes>
-          <include>digesterRules.xml</include>
           <include>properties.dtd</include>
           <include>PropertyList-1.0.dtd</include>
         </includes>

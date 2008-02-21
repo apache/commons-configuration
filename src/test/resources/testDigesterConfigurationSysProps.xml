@@ -3,5 +3,6 @@
      system property.
 -->
 <configuration>
+  <system/>
   <properties fileName="${config.file}"/>
 </configuration>

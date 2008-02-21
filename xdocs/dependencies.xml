@@ -28,12 +28,11 @@
         <section name="Runtime dependencies">
 
             <p>
-              In the maven POM a lot of dependencies are declared. These are all
-              needed during compile time. On runtime however you only need to
-              add the dependencies to your classpath that are required by the
-              parts of the Commons Configuration package you are using. The
-              following table helps you to determine which dependencies you
-              have to include based on the components you intend to use:
+              Several dependencies are declared in the maven POM. These are all needed to compile
+              and test Commons Configuration. On runtime however you only need to add the
+              dependencies to your classpath that are required by the parts of the Commons
+              Configuration package you are using. The following table helps you to determine
+              which dependencies you have to include based on the components you intend to use:
             </p>
 
             <table>
@@ -49,13 +48,6 @@
                         <td>
                             Java 5<br/>
                             commons-lang
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>ConfigurationFactory</td>
-                        <td>
-                            commons-digester<br/>
-                            commons-beanutils
                         </td>
                     </tr>
                     <tr>
@@ -91,10 +83,6 @@
                     <tr>
                       <td>commons-lang</td>
                       <td>2.2, 2.3</td>
-                    </tr>
-                    <tr>
-                      <td>commons-digester</td>
-                      <td>1.6, 1.7, 1.8</td>
                     </tr>
                     <tr>
                       <td>commons-beanutils</td>

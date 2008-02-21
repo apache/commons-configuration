@@ -21,16 +21,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.CombinedConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.DefaultConfigurationBuilder;
-import org.apache.commons.configuration2.FileConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.XMLPropertiesConfiguration;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;

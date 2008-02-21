@@ -147,7 +147,7 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
-     * Tests collaboration with ConfigurationFactory: Is the base path set on
+     * Tests collaboration with ConfigurationBuilder: Is the base path set on
      * loading is valid in file based configurations?
      *
      * @throws Exception if an error occurs
