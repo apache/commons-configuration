@@ -26,7 +26,7 @@ import java.util.Map;
 /**
  * Basic configuration classe. Stores the configuration data but does not
  * provide any load or save functions. If you want to load your Configuration
- * from a file use PropertiesConfiguration or XmlConfiguration.
+ * from a file use {@link PropertiesConfiguration} or {@link XMLConfiguration}.
  *
  * This class extends normal Java properties by adding the possibility
  * to use the same key many times concatenating the value strings

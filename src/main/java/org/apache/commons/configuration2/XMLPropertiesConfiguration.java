@@ -38,8 +38,8 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This configuration implements the XML properties format introduced in Java
- * 5.0, see http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html.
- * An XML properties file looks like this:
+ * 5.0 (see {@link java.util.Properties}). An XML properties file looks like
+ * this:
  *
  * <pre>
  * &lt;?xml version="1.0"?>
@@ -52,14 +52,13 @@ import org.xml.sax.helpers.DefaultHandler;
  * &lt;/properties>
  * </pre>
  *
- * The Java 5.0 runtime is not required to use this class. The default encoding
- * for this configuration format is UTF-8. Note that unlike
- * <code>PropertiesConfiguration</code>, <code>XMLPropertiesConfiguration</code>
+ * The default encoding for this configuration format is UTF-8. Note that unlike
+ * {@link PropertiesConfiguration}, <code>XMLPropertiesConfiguration</code>
  * does not support includes.
  *
- * <em>Note:</em>Configuration objects of this type can be read concurrently
+ * <p><em>Note:</em> Configuration objects of this type can be read concurrently
  * by multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.
+ * synchronization has to be performed manually.</p>
  *
  * @author Emmanuel Bourg
  * @author Alistair Young
@@ -69,7 +68,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLPropertiesConfiguration extends PropertiesConfiguration
 {
     /**
-     * The default encoding (UTF-8 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     * The default encoding (UTF-8 as specified by {@link java.util.Properties})
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
 
@@ -172,10 +171,10 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
             writer.println("  <comment>" + StringEscapeUtils.escapeXml(getHeader()) + "</comment>");
         }
 
-        Iterator keys = getKeys();
+        Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = getProperty(key);
 
             if (value instanceof List)
