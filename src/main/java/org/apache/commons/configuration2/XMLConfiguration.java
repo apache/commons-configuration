@@ -505,10 +505,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
     {
         if (child.getValue() != null)
         {
-            List values;
+            List<String> values;
             if (isDelimiterParsingDisabled())
             {
-                values = new ArrayList();
+                values = new ArrayList<String>();
                 values.add(child.getValue().toString());
             }
             else
@@ -518,14 +518,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
 
             if (values.size() > 1)
             {
-                Iterator it = values.iterator();
+                Iterator<String> it = values.iterator();
                 // Create new node for the original child's first value
                 Node c = createNode(child.getName());
                 c.setValue(it.next());
                 // Copy original attributes to the new node
-                for (Iterator itAttrs = child.getAttributes().iterator(); itAttrs.hasNext();)
+                for (ConfigurationNode ndAttr : child.getAttributes())
                 {
-                    Node ndAttr = (Node) itAttrs.next();
                     ndAttr.setReference(null);
                     c.addAttribute(ndAttr);
                 }
@@ -791,24 +790,22 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param nodes the collection with the new nodes
      * @since 1.5
      */
-    public void addNodes(String key, Collection nodes)
+    @Override
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
-        Collection<ConfigurationNode> xmlNodes;
-
         if (nodes != null && !nodes.isEmpty())
         {
-            xmlNodes = new ArrayList<ConfigurationNode>(nodes.size());
-            for (ConfigurationNode node : (Collection<ConfigurationNode>) nodes)
+            Collection<ConfigurationNode> xmlNodes = new ArrayList<ConfigurationNode>(nodes.size());
+            for (ConfigurationNode node : nodes)
             {
                 xmlNodes.add(convertToXMLNode(node));
             }
+            super.addNodes(key, xmlNodes);
         }
         else
         {
-            xmlNodes = nodes;
+            super.addNodes(key, nodes);
         }
-
-        super.addNodes(key, xmlNodes);
     }
 
     /**
@@ -1105,9 +1102,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             }
 
             // Remove all but the first Text node
-            for (Iterator it = textNodes.iterator(); it.hasNext();)
+            for (org.w3c.dom.Node child : textNodes)
             {
-                elem.removeChild((org.w3c.dom.Node) it.next());
+                elem.removeChild(child);
             }
             return result;
         }
