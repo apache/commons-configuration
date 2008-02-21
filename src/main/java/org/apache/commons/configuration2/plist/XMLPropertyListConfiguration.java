@@ -548,10 +548,8 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
     /**
      * Node extension with addXXX methods to parse the typed data passed by the SAX handler.
-     * <b>Do not use this class !</b> It is used internally by XMLPropertyConfiguration
-     * to parse the configuration file, it may be removed at any moment in the future.
      */
-    public static class PListNode extends Node
+    private static class PListNode extends Node
     {
         /**
          * The serial version UID.
@@ -688,11 +686,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     }
 
     /**
-     * Container for array elements. <b>Do not use this class !</b>
-     * It is used internally by XMLPropertyConfiguration to parse the
-     * configuration file, it may be removed at any moment in the future.
+     * Container for array elements.
      */
-    public static class ArrayNode extends PListNode
+    private static class ArrayNode extends PListNode
     {
         /**
          * The serial version UID.
