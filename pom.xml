@@ -359,6 +359,13 @@
             <outputDirectory>src/main/java</outputDirectory>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <configLocation>conf/checkstyle.xml</configLocation>
+          </configuration>
+        </plugin>
       </plugins>
     </build>
 

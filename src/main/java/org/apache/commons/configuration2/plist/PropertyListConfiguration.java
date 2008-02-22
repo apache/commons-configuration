@@ -86,17 +86,17 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     /** The default date format, its use must be synchronized */
     private static final SimpleDateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("<*'D'yyyy-MM-dd HH:mm:ss Z>");
 
-    /**
-     * Instance specific format that can be used to format a date in differents time zones.
-     * Its use must be synchronized
-     */
-    final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT.toPattern());
-
     /** The serial version UID. */
     private static final long serialVersionUID = 3227248503779092127L;
 
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
+
+    /**
+     * Instance specific format that can be used to format a date in differents time zones.
+     * Its use must be synchronized
+     */
+    final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DEFAULT_DATE_FORMAT.toPattern());
 
     /**
      * Creates an empty PropertyListConfiguration object which can be

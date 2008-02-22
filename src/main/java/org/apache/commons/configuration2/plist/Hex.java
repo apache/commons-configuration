@@ -18,14 +18,14 @@
 package org.apache.commons.configuration2.plist;
 
 /**
- * Hex encoder and decoder. This is a modified copy of the Hex class in Commons Codec 
+ * Hex encoder and decoder. This is a modified copy of the Hex class in Commons Codec
  *
- * @since 2.0
  * @author Apache Software Foundation
  * @version $Id$
+ * @since 2.0
  */
-class Hex {
-
+class Hex
+{
     /**
      * Used to build output as Hex
      */
@@ -43,18 +43,21 @@ class Hex {
      *         the supplied char array.
      * @throws Exception Thrown if an odd number or illegal of characters is supplied
      */
-    public static byte[] decodeHex(char[] data) throws Exception {
+    public static byte[] decodeHex(char[] data) throws Exception
+    {
 
         int len = data.length;
 
-        if ((len & 0x01) != 0) {
+        if ((len & 0x01) != 0)
+        {
             throw new Exception("Odd number of characters.");
         }
 
         byte[] out = new byte[len >> 1];
 
         // two characters form the hex value.
-        for (int i = 0, j = 0; j < len; i++) {
+        for (int i = 0, j = 0; j < len; i++)
+        {
             int f = toDigit(data[j], j) << 4;
             j++;
             f = f | toDigit(data[j], j);
@@ -68,14 +71,16 @@ class Hex {
     /**
      * Converts a hexadecimal character to an integer.
      *
-     * @param ch A character to convert to an integer digit
+     * @param ch    A character to convert to an integer digit
      * @param index The index of the character in the source
      * @return An integer
      * @throws Exception Thrown if ch is an illegal hex character
      */
-    protected static int toDigit(char ch, int index) throws Exception {
+    protected static int toDigit(char ch, int index) throws Exception
+    {
         int digit = Character.digit(ch, 16);
-        if (digit == -1) {
+        if (digit == -1)
+        {
             throw new Exception("Illegal hexadecimal charcter " + ch + " at index " + index);
         }
         return digit;
@@ -86,23 +91,23 @@ class Hex {
      * The returned array will be double the length of the passed array, as it takes two characters to represent any
      * given byte.
      *
-     * @param data
-     *                  a byte[] to convert to Hex characters
+     * @param data a byte[] to convert to Hex characters
      * @return A char[] containing hexidecimal characters
      */
-    public static char[] encodeHex(byte[] data) {
+    public static char[] encodeHex(byte[] data)
+    {
 
         int l = data.length;
 
-           char[] out = new char[l << 1];
+        char[] out = new char[l << 1];
 
-           // two characters form the hex value.
-           for (int i = 0, j = 0; i < l; i++) {
-               out[j++] = DIGITS[(0xF0 & data[i]) >>> 4 ];
-               out[j++] = DIGITS[ 0x0F & data[i] ];
-           }
+        // two characters form the hex value.
+        for (int i = 0, j = 0; i < l; i++)
+        {
+            out[j++] = DIGITS[(0xF0 & data[i]) >>> 4];
+            out[j++] = DIGITS[0x0F & data[i]];
+        }
 
-           return out;
+        return out;
     }
 }
-

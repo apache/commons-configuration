@@ -245,7 +245,7 @@ public class INIConfiguration extends AbstractFileConfiguration
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {
-                    for (Object val : ((Collection) value))
+                    for (Object val : (Collection) value)
                     {
                         out.print(key);
                         out.print(" = ");
@@ -397,7 +397,7 @@ public class INIConfiguration extends AbstractFileConfiguration
         }
 
         String v = result.toString();
-        if(!quoted)
+        if (!quoted)
         {
             v = v.trim();
         }

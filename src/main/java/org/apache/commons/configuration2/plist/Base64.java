@@ -34,35 +34,35 @@ class Base64 extends AbstractPreferences
     /** The current value being converted. */
     private String value;
 
-	private Base64()
-	{
-		super(null, "");
-	}
+    private Base64()
+    {
+        super(null, "");
+    }
 
-	public static synchronized String encodeBase64(byte[] array)
-	{
-		instance.putByteArray(null, array);
-		return instance.get(null, null);
-	}
+    public static synchronized String encodeBase64(byte[] array)
+    {
+        instance.putByteArray(null, array);
+        return instance.get(null, null);
+    }
 
-	public static synchronized byte[] decodeBase64(String base64String)
-	{
-		instance.put(null, base64String);
-		return instance.getByteArray(null, null);
-	}
+    public static synchronized byte[] decodeBase64(String base64String)
+    {
+        instance.put(null, base64String);
+        return instance.getByteArray(null, null);
+    }
 
-	public String get(String key, String defaultValue)
-	{
-		return value;
-	}
+    public String get(String key, String defaultValue)
+    {
+        return value;
+    }
 
     /**
      * Overrides the default implementation to avoid the constraint on the length of the value.
      */
     public void put(String key, String value)
-	{
-		this.value = value;
-	}
+    {
+        this.value = value;
+    }
 
     protected void putSpi(String key, String value)
     {

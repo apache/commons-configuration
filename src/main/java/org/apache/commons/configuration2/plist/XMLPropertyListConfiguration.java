@@ -350,7 +350,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else if (value instanceof List)
         {
             out.println(padding + "<array>");
-            for (Object val : ((List) value))
+            for (Object val : (List) value)
             {
                 printValue(out, indentLevel + 1, val);
             }
