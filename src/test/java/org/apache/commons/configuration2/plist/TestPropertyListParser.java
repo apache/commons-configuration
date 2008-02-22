@@ -21,8 +21,6 @@ import java.io.Reader;
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
 
-import org.apache.commons.configuration2.plist.PropertyListParser;
-
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 

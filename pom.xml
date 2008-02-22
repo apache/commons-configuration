@@ -351,7 +351,14 @@
             <tarLongFileMode>gnu</tarLongFileMode>
           </configuration>
         </plugin>
-
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>javacc-maven-plugin</artifactId>
+          <configuration>
+            <sourceDirectory>src/main/java</sourceDirectory>
+            <outputDirectory>src/main/java</outputDirectory>
+          </configuration>
+        </plugin>
       </plugins>
     </build>
 

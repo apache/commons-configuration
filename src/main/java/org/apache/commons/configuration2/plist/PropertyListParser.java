@@ -381,8 +381,8 @@ class PropertyListParser implements PropertyListParserConstants {
   private boolean jj_rescan = false;
   private int jj_gc = 0;
 
-  public PropertyListParser(java.io.InputStream stream) {
-    jj_input_stream = new SimpleCharStream(stream, 1, 1);
+    public PropertyListParser(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source = new PropertyListParserTokenManager(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
@@ -391,8 +391,8 @@ class PropertyListParser implements PropertyListParserConstants {
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
-  public void ReInit(java.io.InputStream stream) {
-    jj_input_stream.ReInit(stream, 1, 1);
+    public void ReInit(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
     token_source.ReInit(jj_input_stream);
     token = new Token();
     jj_ntk = -1;
@@ -589,6 +589,7 @@ class PropertyListParser implements PropertyListParserConstants {
   final private void jj_rescan_token() {
     jj_rescan = true;
     for (int i = 0; i < 1; i++) {
+    try {
       JJCalls p = jj_2_rtns[i];
       do {
         if (p.gen > jj_gen) {
@@ -599,6 +600,7 @@ class PropertyListParser implements PropertyListParserConstants {
         }
         p = p.next;
       } while (p != null);
+      } catch(LookaheadSuccess ls) { }
     }
     jj_rescan = false;
   }
