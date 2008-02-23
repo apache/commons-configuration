@@ -210,12 +210,6 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
     }
 
-    @Override
-    protected String interpolate(String base)
-    {
-        return super.interpolate(base);
-    }
-
     /**
      * {@inheritDoc}
      *

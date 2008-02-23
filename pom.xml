@@ -366,6 +366,17 @@
             <configLocation>conf/checkstyle.xml</configLocation>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-pmd-plugin</artifactId>
+          <configuration>
+            <targetJdk>1.5</targetJdk>
+            <excludes>
+              <exclude>**/*PropertyListParser*</exclude>
+              <exclude>**/*TokenMgrError*</exclude>
+            </excludes>
+          </configuration>
+        </plugin>
       </plugins>
     </build>
 

@@ -82,12 +82,9 @@ class PrefixedKeysIterator implements Iterator<String>
      */
     public String next()
     {
-        if (!nextElementSet)
+        if (!nextElementSet && !setNextElement())
         {
-            if (!setNextElement())
-            {
-                throw new NoSuchElementException();
-            }
+            throw new NoSuchElementException();
         }
         nextElementSet = false;
         return nextElement;

@@ -948,16 +948,13 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     private void createPath(File file)
     {
-        if (file != null)
+        if (file != null && !file.exists())
         {
             // create the path to the file if the file doesn't exist
-            if (!file.exists())
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists())
             {
-                File parent = file.getParentFile();
-                if (parent != null && !parent.exists())
-                {
-                    parent.mkdirs();
-                }
+                parent.mkdirs();
             }
         }
     }
