@@ -301,7 +301,8 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      * @param name the node's name
      * @return the new node
      */
-    protected Node createNode(String name)
+    @Override
+    protected ConfigurationNode createNode(String name)
     {
         return getParent().createNode(name);
     }

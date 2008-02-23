@@ -57,6 +57,12 @@
       <action dev="ebourg" type="update">
         DefaultConfigurationBuilder no longer requires commons-beanutils.
       </action>
+      <action dev="oheger" type="remove">
+        The inner classes Node and NodeVisitor of HierarchicalConfiguration have
+        been removed. They existed only for reasons of backwards compatibility.
+        Their functionality is completely covered by classes in the tree
+        package.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">

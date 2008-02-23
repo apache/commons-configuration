@@ -99,7 +99,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      */
     protected void processKeys()
     {
-        getConfiguration().getRoot().visit(new SAXVisitor());
+        getConfiguration().getRootNode().visit(new SAXVisitor());
     }
 
     /**

@@ -37,6 +37,7 @@ import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -196,7 +197,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         try
         {
             HierarchicalConfiguration config = parser.parse();
-            setRoot(config.getRoot());
+            setRootNode(config.getRootNode());
         }
         catch (ParseException e)
         {
@@ -207,14 +208,14 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     public void save(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
-        printNode(writer, 0, getRoot());
+        printNode(writer, 0, getRootNode());
         writer.flush();
     }
 
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, Node node)
+    private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
     {
         String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
@@ -225,10 +226,10 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
 
         // get all non trivial nodes
         List<ConfigurationNode> children = new ArrayList<ConfigurationNode>(node.getChildren());
-        Iterator it = children.iterator();
+        Iterator<ConfigurationNode> it = children.iterator();
         while (it.hasNext())
         {
-            Node child = (Node) it.next();
+            ConfigurationNode child = it.next();
             if (child.getValue() == null && (child.getChildren() == null || child.getChildren().isEmpty()))
             {
                 it.remove();
@@ -249,7 +250,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             it = children.iterator();
             while (it.hasNext())
             {
-                Node child = (Node) it.next();
+                ConfigurationNode child = it.next();
 
                 printNode(out, indentLevel + 1, child);
 
@@ -270,7 +271,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.print(padding + "}");
 
             // line feed if the dictionary is not in an array
-            if (node.getParent() != null)
+            if (node.getParentNode() != null)
             {
                 out.println();
             }
@@ -306,7 +307,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
         else if (value instanceof HierarchicalConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRoot());
+            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
         }
         else if (value instanceof Configuration)
         {
@@ -319,7 +320,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             while (it.hasNext())
             {
                 String key = (String) it.next();
-                Node node = new Node(key);
+                ConfigurationNode node = new DefaultConfigurationNode(key);
                 node.setValue(config.getProperty(key));
 
                 printNode(out, indentLevel + 1, node);

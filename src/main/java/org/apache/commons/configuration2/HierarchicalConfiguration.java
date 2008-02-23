@@ -153,11 +153,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /** Stores the default expression engine to be used for new objects.*/
     private static ExpressionEngine defaultExpressionEngine;
 
-    /** Stores the root node of this configuration. This field is required for
-     * backwards compatibility only.
-     */
-    private Node root;
-
     /** Stores the root configuration node.*/
     private ConfigurationNode rootNode;
 
@@ -169,7 +164,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public HierarchicalConfiguration()
     {
-        setRootNode(new Node());
+        setRootNode(new DefaultConfigurationNode());
     }
 
     /**
@@ -193,37 +188,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Returns the root node of this hierarchical configuration. This method
-     * exists for backwards compatibility only. New code should use the
-     * <code>{@link #getRootNode()}</code> method instead, which operates on
-     * the preferred data type <code>ConfigurationNode</code>.
-     *
-     * @return the root node
-     */
-    public Node getRoot()
-    {
-        return root;
-    }
-
-    /**
-     * Sets the root node of this hierarchical configuration. This method
-     * exists for backwards compatibility only. New code should use the
-     * <code>{@link #setRootNode(ConfigurationNode)}</code> method instead,
-     * which operates on the preferred data type <code>ConfigurationNode</code>.
-     *
-     * @param node the root node
-     */
-    public void setRoot(Node node)
-    {
-        if (node == null)
-        {
-            throw new IllegalArgumentException("Root node must not be null!");
-        }
-        root = node;
-        rootNode = null;
-    }
-
-    /**
      * Returns the root node of this hierarchical configuration.
      *
      * @return the root node
@@ -231,7 +195,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public ConfigurationNode getRootNode()
     {
-        return (rootNode != null) ? rootNode : root;
+        return rootNode;
     }
 
     /**
@@ -247,9 +211,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             throw new IllegalArgumentException("Root node must not be null!");
         }
         this.rootNode = rootNode;
-
-        // For backward compatibility also set the old root field.
-        root = (rootNode instanceof Node) ? (Node) rootNode : new Node(rootNode);
     }
 
     /**
@@ -934,20 +895,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * removed.
      *
      * @param node the node to be removed
-     * @deprecated Use the method <code>{@link #removeNode(ConfigurationNode)}</code>
-     * instead.
-     */
-    protected void removeNode(Node node)
-    {
-        removeNode((ConfigurationNode) node);
-    }
-
-    /**
-     * Removes the specified node from this configuration. This method ensures
-     * that parent nodes that become undefined by this operation are also
-     * removed.
-     *
-     * @param node the node to be removed
      */
     protected void removeNode(ConfigurationNode node)
     {
@@ -967,19 +914,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * this operation, it is removed from the hierarchy.
      *
      * @param node the node to be cleared
-     * @deprecated Use the method <code>{@link #clearNode(ConfigurationNode)}</code>
-     * instead
-     */
-    protected void clearNode(Node node)
-    {
-        clearNode((ConfigurationNode) node);
-    }
-
-    /**
-     * Clears the value of the specified node. If the node becomes undefined by
-     * this operation, it is removed from the hierarchy.
-     *
-     * @param node the node to be cleared
      */
     protected void clearNode(ConfigurationNode node)
     {
@@ -991,63 +925,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Returns a reference to the parent node of an add operation. Nodes for new
-     * properties can be added as children of this node. If the path for the
-     * specified key does not exist so far, it is created now.
-     *
-     * @param keyIt the iterator for the key of the new property
-     * @param startNode the node to start the search with
-     * @return the parent node for the add operation
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    protected Node fetchAddNode(ConfigurationKey.KeyIterator keyIt, Node startNode)
-    {
-        return null;
-    }
-
-    /**
-     * Finds the last existing node for an add operation. This method traverses
-     * the configuration tree along the specified key. The last existing node on
-     * this path is returned.
-     *
-     * @param keyIt the key iterator
-     * @param node the actual node
-     * @return the last existing node on the given path
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
-    {
-        return null;
-    }
-
-    /**
-     * Creates the missing nodes for adding a new property. This method ensures
-     * that there are corresponding nodes for all components of the specified
-     * configuration key.
-     *
-     * @param keyIt the key iterator
-     * @param root the base node of the path to be created
-     * @return the last node of the path
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    protected Node createAddPath(ConfigurationKey.KeyIterator keyIt, Node root)
-    {
-        return null;
-    }
-
-    /**
      * Creates a new <code>Node</code> object with the specified name. This
      * method can be overloaded in derived classes if a specific node type is
      * needed. This base implementation always returns a new object of the
@@ -1056,9 +933,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param name the name of the new node
      * @return the new node
      */
-    protected Node createNode(String name)
+    protected ConfigurationNode createNode(String name)
     {
-        return new Node(name);
+        return new DefaultConfigurationNode(name);
     }
 
     /**
@@ -1114,135 +991,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 node.setReference(null);
             }
         });
-    }
-
-    /**
-     * A data class for storing (hierarchical) property information. A property
-     * can have a value and an arbitrary number of child properties. From
-     * version 1.3 on this class is only a thin wrapper over the
-     * <code>{@link org.apache.commons.configuration2.tree.DefaultConfigurationNode DefaultconfigurationNode}</code>
-     * class that exists mainly for the purpose of backwards compatibility.
-     */
-    public static class Node extends DefaultConfigurationNode implements Serializable
-    {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = -6357500633536941775L;
-
-        /**
-         * Creates a new instance of <code>Node</code>.
-         */
-        public Node()
-        {
-            super();
-        }
-
-        /**
-         * Creates a new instance of <code>Node</code> and sets the name.
-         *
-         * @param name the node's name
-         */
-        public Node(String name)
-        {
-            super(name);
-        }
-
-        /**
-         * Creates a new instance of <code>Node</code> and sets the name and the value.
-         *
-         * @param name the node's name
-         * @param value the value
-         */
-        public Node(String name, Object value)
-        {
-            super(name, value);
-        }
-
-        /**
-         * Creates a new instance of <code>Node</code> based on the given
-         * source node. All properties of the source node, including its
-         * children and attributes, will be copied.
-         *
-         * @param src the node to be copied
-         */
-        public Node(ConfigurationNode src)
-        {
-            this(src.getName(), src.getValue());
-            setReference(src.getReference());
-            for (ConfigurationNode child : src.getChildren())
-            {
-                addChild(child);
-            }
-            for (ConfigurationNode attr : src.getAttributes())
-            {
-                addAttribute(attr);
-            }
-        }
-
-        /**
-         * Returns the parent of this node.
-         *
-         * @return this node's parent (can be <b>null</b>)
-         */
-        public Node getParent()
-        {
-            return (Node) getParentNode();
-        }
-
-        /**
-         * Sets the parent of this node.
-         *
-         * @param node the parent node
-         */
-        public void setParent(Node node)
-        {
-            setParentNode(node);
-        }
-
-        /**
-         * Adds the given node to the children of this node.
-         *
-         * @param node the child to be added
-         */
-        public void addChild(Node node)
-        {
-            addChild((ConfigurationNode) node);
-        }
-
-        /**
-         * Returns a flag whether this node has child elements.
-         *
-         * @return <b>true</b> if there is a child node, <b>false</b> otherwise
-         */
-        public boolean hasChildren()
-        {
-            return getChildrenCount() > 0 || getAttributeCount() > 0;
-        }
-
-        /**
-         * Removes the specified child from this node.
-         *
-         * @param child the child node to be removed
-         * @return a flag if the child could be found
-         */
-        public boolean remove(Node child)
-        {
-            return child.isAttribute() ? removeAttribute(child) : removeChild(child);
-        }
-
-        /**
-         * Removes all children with the given name.
-         *
-         * @param name the name of the children to be removed
-         * @return a flag if children with this name existed
-         */
-        public boolean remove(String name)
-        {
-            boolean childrenRemoved = removeChild(name);
-            boolean attrsRemoved = removeAttribute(name);
-            return childrenRemoved || attrsRemoved;
-        }
     }
 
     /**
@@ -1464,8 +1212,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
             subNodes.addAll(node.getAttributes());
             Iterator<ConfigurationNode> children = subNodes.iterator();
-            Node sibling1 = null;
-            Node nd = null;
+            ConfigurationNode sibling1 = null;
+            ConfigurationNode nd = null;
 
             while (children.hasNext())
             {
@@ -1473,17 +1221,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 do
                 {
                     sibling1 = nd;
-                    nd = (Node) children.next();
+                    nd = children.next();
                 } while (nd.getReference() != null && children.hasNext());
 
                 if (nd.getReference() == null)
                 {
                     // find all following new nodes
-                    List<Node> newNodes = new LinkedList<Node>();
+                    List<ConfigurationNode> newNodes = new LinkedList<ConfigurationNode>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
-                        nd = (Node) children.next();
+                        nd = children.next();
                         if (nd.getReference() == null)
                         {
                             newNodes.add(nd);
@@ -1495,8 +1243,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     }
 
                     // Insert all new nodes
-                    Node sibling2 = (nd.getReference() == null) ? null : nd;
-                    for (Node insertNode : newNodes)
+                    ConfigurationNode sibling2 = (nd.getReference() == null) ? null : nd;
+                    for (ConfigurationNode insertNode : newNodes)
                     {
                         if (insertNode.getReference() == null)
                         {

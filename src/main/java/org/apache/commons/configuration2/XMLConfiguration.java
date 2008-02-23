@@ -44,6 +44,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -420,10 +421,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             setSystemID(document.getDoctype().getSystemId());
         }
 
-        constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
+        constructHierarchy(getRootNode(), document.getDocumentElement(), elemRefs);
         if (elemRefs)
         {
-            getRoot().setReference(document.getDocumentElement());
+            getRootNode().setReference(document.getDocumentElement());
         }
     }
 
@@ -435,7 +436,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
      */
-    private void constructHierarchy(Node node, Element element, boolean elemRefs)
+    private void constructHierarchy(ConfigurationNode node, Element element, boolean elemRefs)
     {
         processAttributes(node, element, elemRefs);
         StringBuilder buffer = new StringBuilder();
@@ -446,7 +447,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             if (w3cNode instanceof Element)
             {
                 Element child = (Element) w3cNode;
-                Node childNode = new XMLNode(child.getTagName(), elemRefs ? child : null);
+                ConfigurationNode childNode = new XMLNode(child.getTagName(), elemRefs ? child : null);
                 constructHierarchy(childNode, child, elemRefs);
                 node.addChild(childNode);
                 handleDelimiters(node, childNode);
@@ -458,10 +459,21 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             }
         }
         String text = buffer.toString().trim();
-        if (text.length() > 0 || !node.hasChildren())
+        if (text.length() > 0 || !hasChildren(node))
         {
             node.setValue(text);
         }
+    }
+
+    /**
+     * Tests whether the specified node has some child elements.
+     *
+     * @param node the node to check
+     * @return a flag whether there are child elements
+     */
+    private boolean hasChildren(ConfigurationNode node)
+    {
+        return node.getChildrenCount() > 0 || node.getAttributeCount() > 0;
     }
 
     /**
@@ -472,7 +484,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
      */
-    private void processAttributes(Node node, Element element, boolean elemRefs)
+    private void processAttributes(ConfigurationNode node, Element element, boolean elemRefs)
     {
         NamedNodeMap attributes = element.getAttributes();
         for (int i = 0; i < attributes.getLength(); ++i)
@@ -486,7 +498,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
 
                 for (String value : values)
                 {
-                    Node child = new XMLNode(attr.getName(), elemRefs ? element : null);
+                    ConfigurationNode child = new XMLNode(attr.getName(), elemRefs ? element : null);
                     child.setValue(value);
                     node.addAttribute(child);
                 }
@@ -501,7 +513,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param parent the parent element
      * @param child the child element
      */
-    private void handleDelimiters(Node parent, Node child)
+    private void handleDelimiters(ConfigurationNode parent, ConfigurationNode child)
     {
         if (child.getValue() != null)
         {
@@ -520,7 +532,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             {
                 Iterator<String> it = values.iterator();
                 // Create new node for the original child's first value
-                Node c = createNode(child.getName());
+                ConfigurationNode c = createNode(child.getName());
                 c.setValue(it.next());
                 // Copy original attributes to the new node
                 for (ConfigurationNode ndAttr : child.getAttributes())
@@ -528,7 +540,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
                     ndAttr.setReference(null);
                     c.addAttribute(ndAttr);
                 }
-                parent.remove(child);
+                parent.removeChild(child);
                 parent.addChild(c);
 
                 // add multiple new children
@@ -611,7 +623,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
 
             XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
                     isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
-            builder.processDocument(getRoot());
+            builder.processDocument(getRootNode());
             return document;
         } /* try */
         catch (DOMException domEx)
@@ -631,7 +643,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param name the node's name
      * @return the new node
      */
-    protected Node createNode(String name)
+    protected ConfigurationNode createNode(String name)
     {
         return new XMLNode(name, null);
     }
@@ -947,7 +959,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * A specialized <code>Node</code> class that is connected with an XML
      * element. Changes on a node are also performed on the associated element.
      */
-    class XMLNode extends Node
+    class XMLNode extends DefaultConfigurationNode
     {
         /**
          * The serial version UID.
@@ -1060,7 +1072,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          */
         private void updateAttribute()
         {
-            XMLBuilderVisitor.updateAttribute(getParent(), getName(), getListDelimiter());
+            XMLBuilderVisitor.updateAttribute(getParentNode(), getName(), getListDelimiter());
         }
 
         /**
@@ -1140,7 +1152,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          *
          * @param rootNode the root node
          */
-        public void processDocument(Node rootNode)
+        public void processDocument(ConfigurationNode rootNode)
         {
             rootNode.visit(this);
         }

@@ -639,9 +639,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {
         List<ConfigurationNode> children = node.getChildren();
         List<SubnodeConfiguration> result = new ArrayList<SubnodeConfiguration>(children.size());
-        for (Iterator it = children.iterator(); it.hasNext();)
+        for (ConfigurationNode child : children)
         {
-            result.add(createSubnodeConfiguration((Node) it.next()));
+            result.add(createSubnodeConfiguration(child));
         }
         return result;
     }

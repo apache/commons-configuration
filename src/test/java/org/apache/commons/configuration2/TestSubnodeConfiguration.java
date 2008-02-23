@@ -93,7 +93,7 @@ public class TestSubnodeConfiguration extends TestCase
     {
         setUpSubnodeConfig();
         assertSame("Wrong root node in subnode", getSubnodeRoot(parent), config
-                .getRoot());
+                .getRootNode());
         assertSame("Wrong parent config", parent, config.getParent());
     }
 
@@ -482,7 +482,8 @@ public class TestSubnodeConfiguration extends TestCase
         {
             // Provide a special implementation of createNode() to check
             // if it is called by the subnode config
-            protected Node createNode(String name)
+            @Override
+            protected ConfigurationNode createNode(String name)
             {
                 nodeCounter++;
                 return super.createNode(name);
@@ -509,7 +510,7 @@ public class TestSubnodeConfiguration extends TestCase
      */
     protected ConfigurationNode getSubnodeRoot(HierarchicalConfiguration conf)
     {
-        ConfigurationNode root = conf.getRoot();
+        ConfigurationNode root = conf.getRootNode();
         return root.getChild(0).getChild(0);
     }
 

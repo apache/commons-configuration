@@ -45,6 +45,7 @@ import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -1207,9 +1208,9 @@ public class TestXMLConfiguration extends TestCase
     {
         conf.setFile(testSaveConf);
         conf.setAutoSave(true);
-        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
+        ConfigurationNode node = new DefaultConfigurationNode(
                 "addNodesTest", Boolean.TRUE);
-        Collection nodes = new ArrayList(1);
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(node);
         conf.addNodes("test.autosave", nodes);
         XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
@@ -1223,13 +1224,13 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testAddNodesAndSave() throws ConfigurationException
     {
-        ConfigurationNode node = new HierarchicalConfiguration.Node("test");
-        ConfigurationNode child = new HierarchicalConfiguration.Node("child");
+        ConfigurationNode node = new DefaultConfigurationNode("test");
+        ConfigurationNode child = new DefaultConfigurationNode("child");
         node.addChild(child);
-        ConfigurationNode attr = new HierarchicalConfiguration.Node("attr");
+        ConfigurationNode attr = new DefaultConfigurationNode("attr");
         node.addAttribute(attr);
         ConfigurationNode node2 = conf.createNode("test2");
-        Collection nodes = new ArrayList(2);
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
         nodes.add(node);
         nodes.add(node2);
         conf.addNodes("add.nodes", nodes);

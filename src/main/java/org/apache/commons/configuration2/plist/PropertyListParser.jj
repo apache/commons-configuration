@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -157,7 +158,7 @@ PropertyListConfiguration Dictionary() :
 {
     PropertyListConfiguration configuration = new PropertyListConfiguration();
     List children = new ArrayList();
-    Node child = null;
+    ConfigurationNode child = null;
 }
 {
     <DICT_BEGIN>
@@ -168,7 +169,7 @@ PropertyListConfiguration Dictionary() :
             {
                 // prune & graft the nested configuration to the parent configuration
                 HierarchicalConfiguration conf = (HierarchicalConfiguration) child.getValue();
-                Node root = conf.getRoot();
+                ConfigurationNode root = conf.getRootNode();
                 root.setName(child.getName());
                 children.add(root);
             }
@@ -182,19 +183,19 @@ PropertyListConfiguration Dictionary() :
     {
         for (int i = 0; i < children.size(); i++)
         {
-            child = (Node) children.get(i);
-            configuration.getRoot().addChild(child);
+            child = (ConfigurationNode) children.get(i);
+            configuration.getRootNode().addChild(child);
         }
 
         return configuration;
     }
 }
 
-Node Property() :
+ConfigurationNode Property() :
 {
     String key = null;
     Object value = null;
-    Node node = new Node();
+    ConfigurationNode node = new DefaultConfigurationNode();
 }
 {
     key = String()

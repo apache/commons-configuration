@@ -133,7 +133,7 @@ public class TestXMLBeanDeclaration extends TestCase
         try
         {
             decl = new XMLBeanDeclaration(null, new HierarchicalConfiguration()
-                    .getRoot());
+                    .getRootNode());
             fail("Could init declaration with null configuration and node!");
         }
         catch (IllegalArgumentException iex)

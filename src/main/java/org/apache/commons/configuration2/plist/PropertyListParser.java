@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -97,7 +98,7 @@ class PropertyListParser implements PropertyListParserConstants {
   final public PropertyListConfiguration Dictionary() throws ParseException {
     PropertyListConfiguration configuration = new PropertyListConfiguration();
     List children = new ArrayList();
-    Node child = null;
+    ConfigurationNode child = null;
     jj_consume_token(DICT_BEGIN);
     label_1:
     while (true) {
@@ -115,7 +116,7 @@ class PropertyListParser implements PropertyListParserConstants {
             {
                 // prune & graft the nested configuration to the parent configuration
                 HierarchicalConfiguration conf = (HierarchicalConfiguration) child.getValue();
-                Node root = conf.getRoot();
+                ConfigurationNode root = conf.getRootNode();
                 root.setName(child.getName());
                 children.add(root);
             }
@@ -127,18 +128,18 @@ class PropertyListParser implements PropertyListParserConstants {
     jj_consume_token(DICT_END);
         for (int i = 0; i < children.size(); i++)
         {
-            child = (Node) children.get(i);
-            configuration.getRoot().addChild(child);
+            child = (ConfigurationNode) children.get(i);
+            configuration.getRootNode().addChild(child);
         }
 
         {if (true) return configuration;}
     throw new Error("Missing return statement in function");
   }
 
-  final public Node Property() throws ParseException {
+  final public ConfigurationNode Property() throws ParseException {
     String key = null;
     Object value = null;
-    Node node = new Node();
+    ConfigurationNode node = new DefaultConfigurationNode();
     key = String();
       node.setName(key);
     jj_consume_token(EQUAL);

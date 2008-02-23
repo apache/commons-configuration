@@ -26,8 +26,6 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationKey;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
@@ -70,14 +68,14 @@ public class TestHierarchicalConfiguration extends TestCase
          *                 name
          */
         config = new HierarchicalConfiguration();
-        HierarchicalConfiguration.Node nodeTables = createNode("tables", null);
+        ConfigurationNode nodeTables = createNode("tables", null);
         for(int i = 0; i < tables.length; i++)
         {
-            HierarchicalConfiguration.Node nodeTable = createNode("table", null);
+            ConfigurationNode nodeTable = createNode("table", null);
             nodeTables.addChild(nodeTable);
-            HierarchicalConfiguration.Node nodeName = createNode("name", tables[i]);
+            ConfigurationNode nodeName = createNode("name", tables[i]);
             nodeTable.addChild(nodeName);
-            HierarchicalConfiguration.Node nodeFields = createNode("fields", null);
+            ConfigurationNode nodeFields = createNode("fields", null);
             nodeTable.addChild(nodeFields);
 
             for (int j = 0; j < fields[i].length; j++)
@@ -86,33 +84,13 @@ public class TestHierarchicalConfiguration extends TestCase
             }
         }
 
-        config.getRoot().addChild(nodeTables);
-    }
-
-    public void testSetRoot()
-    {
-        try
-        {
-            config.setRoot(null);
-            fail("Could set null root node!");
-        }
-        catch(IllegalArgumentException iex)
-        {
-            //ok
-        }
-
-        config.setRoot(new HierarchicalConfiguration.Node("test"));
-        assertTrue(config.isEmpty());
+        config.getRootNode().addChild(nodeTables);
     }
 
     public void testSetRootNode()
     {
-        config.setRootNode(new DefaultConfigurationNode("testNode"));
-        assertNotSame("Same root node", config.getRootNode(), config.getRoot());
-        assertEquals("Wrong name of root node", "testNode", config.getRoot().getName());
-
-        config.setRootNode(new HierarchicalConfiguration.Node("test"));
-        assertSame("Wrong root node", config.getRootNode(), config.getRoot());
+        config.setRootNode(new DefaultConfigurationNode("test"));
+        assertTrue(config.isEmpty());
     }
 
     public void testSetRootNodeNull()
@@ -133,10 +111,10 @@ public class TestHierarchicalConfiguration extends TestCase
         assertFalse(config.isEmpty());
         HierarchicalConfiguration conf2 = new HierarchicalConfiguration();
         assertTrue(conf2.isEmpty());
-        HierarchicalConfiguration.Node child1 = new HierarchicalConfiguration.Node("child1");
-        HierarchicalConfiguration.Node child2 = new HierarchicalConfiguration.Node("child2");
+        ConfigurationNode child1 = new DefaultConfigurationNode("child1");
+        ConfigurationNode child2 = new DefaultConfigurationNode("child2");
         child1.addChild(child2);
-        conf2.getRoot().addChild(child1);
+        conf2.getRootNode().addChild(child1);
         assertTrue(conf2.isEmpty());
     }
 
@@ -607,7 +585,7 @@ public class TestHierarchicalConfiguration extends TestCase
 
     public void testAddNodes()
     {
-        Collection<HierarchicalConfiguration.Node> nodes = new ArrayList<HierarchicalConfiguration.Node>();
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
         nodes.add(createFieldNode("birthDate"));
         nodes.add(createFieldNode("lastLogin"));
         nodes.add(createFieldNode("language"));
@@ -627,9 +605,9 @@ public class TestHierarchicalConfiguration extends TestCase
      */
     public void testAddNodesForNonExistingKey()
     {
-        Collection<HierarchicalConfiguration.Node> nodes = new ArrayList<HierarchicalConfiguration.Node>();
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
         nodes.add(createNode("usr", "scott"));
-        Node nd = createNode("pwd", "tiger");
+        ConfigurationNode nd = createNode("pwd", "tiger");
         nd.setAttribute(true);
         nodes.add(nd);
         config.addNodes("database.connection.settings", nodes);
@@ -646,7 +624,7 @@ public class TestHierarchicalConfiguration extends TestCase
      */
     public void testAddNodesWithAttributeKey()
     {
-        Collection<HierarchicalConfiguration.Node> nodes = new ArrayList<HierarchicalConfiguration.Node>();
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
         nodes.add(createNode("testNode", "yes"));
         try
         {
@@ -688,40 +666,35 @@ public class TestHierarchicalConfiguration extends TestCase
      */
     public void testNodeRemove()
     {
-        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
+        ConfigurationNode node = new DefaultConfigurationNode(
                 "parent", "test");
-        assertFalse(node.hasChildren());
         node.removeChildren(); // should have no effect
-        assertFalse(node.remove("child"));
+        assertFalse(node.removeChild("child"));
 
         node.addChild(createNode("test", "test"));
-        assertTrue(node.hasChildren());
-        assertTrue(node.remove("test"));
-        assertFalse(node.hasChildren());
+        assertTrue(node.removeChild("test"));
 
         for (int i = 0; i < 10; i++)
         {
             node.addChild(createNode("child" + i, "test" + i));
         }
-        assertTrue(node.hasChildren());
-        assertFalse(node.remove("child"));
-        assertTrue(node.remove("child2"));
+        assertFalse(node.removeChild("child"));
+        assertTrue(node.removeChild("child2"));
         assertTrue(node.getChildren("child2").isEmpty());
 
-        HierarchicalConfiguration.Node child = createNode("child0", "testChild");
-        assertFalse(node.remove(child));
+        ConfigurationNode child = createNode("child0", "testChild");
+        assertFalse(node.removeChild(child));
         node.addChild(child);
-        assertTrue(node.remove(child));
+        assertTrue(node.removeChild(child));
         assertEquals(1, node.getChildren("child0").size());
-        assertEquals("test0", ((HierarchicalConfiguration.Node) node
-                .getChildren("child0").get(0)).getValue());
+        assertEquals("test0", node.getChildren("child0").get(0).getValue());
 
-        assertTrue(node.remove("child0"));
-        assertFalse(node.remove(child));
+        assertTrue(node.removeChild("child0"));
+        assertFalse(node.removeChild(child));
 
         node.removeChildren();
         assertTrue(node.getChildren().isEmpty());
-        assertFalse(node.remove(child));
+        assertFalse(node.removeChild(child));
     }
 
     /**
@@ -730,7 +703,7 @@ public class TestHierarchicalConfiguration extends TestCase
     public void testNodeVisitor()
     {
         CountVisitor v = new CountVisitor();
-        config.getRoot().visit(v);
+        config.getRootNode().visit(v);
         assertEquals(28, v.beforeCount);
         assertEquals(v.beforeCount, v.afterCount);
     }
@@ -1017,9 +990,9 @@ public class TestHierarchicalConfiguration extends TestCase
      * @param name the name of the field
      * @return the field node
      */
-    private static HierarchicalConfiguration.Node createFieldNode(String name)
+    private static ConfigurationNode createFieldNode(String name)
     {
-        HierarchicalConfiguration.Node fld = createNode("field", null);
+        ConfigurationNode fld = createNode("field", null);
         fld.addChild(createNode("name", name));
         return fld;
     }
@@ -1030,9 +1003,9 @@ public class TestHierarchicalConfiguration extends TestCase
      * @param value the node's value
      * @return the new node
      */
-    private static HierarchicalConfiguration.Node createNode(String name, Object value)
+    private static ConfigurationNode createNode(String name, Object value)
     {
-        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(name);
+        ConfigurationNode node = new DefaultConfigurationNode(name);
         node.setValue(value);
         return node;
     }
