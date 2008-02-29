@@ -106,6 +106,14 @@ public interface NodeHandler<T>
     T getChild(T node, int index);
 
     /**
+     * Removes the specified child from the given node.
+     *
+     * @param node the node
+     * @param child the child to be removed
+     */
+    void removeChild(T node, T child);
+
+    /**
      * Returns a list with the names of all attributes of the specified node.
      *
      * @param node the node
@@ -130,4 +138,12 @@ public interface NodeHandler<T>
      * @param value the value of the attribute
      */
     void setAttributeValue(T node, String name, Object value);
+
+    /**
+     * Removes the attribute with the specified name from the given node.
+     *
+     * @param node the node
+     * @param name the name of the attribute to be removed
+     */
+    void removeAttribute(T node, String name);
 }
