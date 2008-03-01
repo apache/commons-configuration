@@ -111,6 +111,21 @@ public class NodeList<T>
     }
 
     /**
+     * Returns the name of the element at the specified index. If the element is
+     * a node, the node name is returned. For an attribute the attribute name is
+     * returned.
+     *
+     * @param index the index
+     * @param handler the node handler
+     * @return the name of the element at this index
+     * @throws IndexOutOfBoundsException if the index is invalid
+     */
+    public String getName(int index, NodeHandler<T> handler)
+    {
+        return element(index).getName(handler);
+    }
+
+    /**
      * Returns the value of the element at the specified index. This method
      * works for both nodes and attributes.
      *
@@ -198,6 +213,14 @@ public class NodeList<T>
         public abstract boolean isNode();
 
         /**
+         * Returns the name of this list element.
+         *
+         * @param handler the node handler
+         * @return the name of this list element
+         */
+        public abstract String getName(NodeHandler<T> handler);
+
+        /**
          * Obtains the value from this list element.
          *
          * @param handler the node handler
@@ -274,6 +297,18 @@ public class NodeList<T>
         {
             handler.setValue(getAssociatedNode(), value);
         }
+
+        /**
+         * Returns the name of the represented node.
+         *
+         * @param handler the node handler
+         * @return the name of this node
+         */
+        @Override
+        public String getName(NodeHandler<T> handler)
+        {
+            return handler.nodeName(getAssociatedNode());
+        }
     }
 
     /**
@@ -330,6 +365,18 @@ public class NodeList<T>
         public void setValue(Object value, NodeHandler<T> handler)
         {
             handler.setAttributeValue(getAssociatedNode(), name, value);
+        }
+
+        /**
+         * Returns the name of the represented attribute.
+         *
+         * @param handler the node handler
+         * @return the name of this attribute
+         */
+        @Override
+        public String getName(NodeHandler<T> handler)
+        {
+            return name;
         }
     }
 }

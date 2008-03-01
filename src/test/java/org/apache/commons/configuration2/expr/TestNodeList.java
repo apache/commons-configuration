@@ -34,6 +34,9 @@ public class TestNodeList extends TestCase
     /** Constant for a test value. */
     private static final String VALUE = "test";
 
+    /** Constant for a test name.*/
+    private static final String NAME = "testName";
+
     /** Constant for the number of test nodes. */
     private static final int COUNT = 10;
 
@@ -169,5 +172,27 @@ public class TestNodeList extends TestCase
         {
             // ok
         }
+    }
+
+    /**
+     * Tests querying the name of a node.
+     */
+    public void testGetNameNode()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode(NAME);
+        list.addNode(node);
+        assertEquals("Wrong node name", NAME, list.getName(0,
+                new ConfigurationNodeHandler()));
+    }
+
+    /**
+     * Tests querying the name of an attribute.
+     */
+    public void testGetNameAttribute()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode();
+        list.addAttribute(parent, NAME);
+        assertEquals("Wrong attribute name", NAME, list.getName(0,
+                new ConfigurationNodeHandler()));
     }
 }
