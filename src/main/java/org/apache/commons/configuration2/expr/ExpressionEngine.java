@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration2.expr;
 
-import java.util.List;
-
 /**
  * <p>
  * Definition of an interface for evaluating keys for hierarchical
@@ -43,6 +41,7 @@ import java.util.List;
  *
  * @since 1.3
  * @author Oliver Heger
+ * @version $Id$
  */
 public interface ExpressionEngine
 {
@@ -79,6 +78,20 @@ public interface ExpressionEngine
      * @return this node's key
      */
     <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler);
+
+    /**
+     * Returns the key of an attribute of the specified node. This method is
+     * analogous to <code>nodeKey()</code>, but deals with attributes.
+     *
+     * @param parentNode the parent node, to which the attribute belongs
+     * @param parentKey the key of the parent node (can be <b>null</b> for the
+     *        root node)
+     * @param attrName the name of the affected attribute
+     * @param handler the node handler
+     * @return the key for the specified attribute
+     */
+    <T> String attributeKey(T parentNode, String parentKey, String attrName,
+            NodeHandler<T> handler);
 
     /**
      * Returns information needed for an add operation. This method gets called
