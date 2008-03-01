@@ -51,10 +51,11 @@ public interface ExpressionEngine
      * main method for interpreting property keys. An implementation must
      * traverse the given root node and its children to find all nodes that are
      * matched by the given key. If the key is not correct in the syntax
-     * provided by that implementation, it is free to throw a (runtime)
+     * provided by this implementation, it is free to throw a (runtime)
      * exception indicating this error condition. The passed in
      * <code>{@link NodeHandler}</code> can be used for accessing the properties
-     * of the node.
+     * of the node. The resulting <code>NodeList</code> object can be used to
+     * browse the results. It can contain nodes and attributes as well.
      *
      * @param root the root node of a hierarchy of configuration nodes
      * @param key the key to be evaluated
@@ -62,7 +63,7 @@ public interface ExpressionEngine
      * @return a list with the nodes that are matched by the key (should never
      * be <b>null</b>)
      */
-    <T> List<T> query(T root, String key, NodeHandler<T> handler);
+    <T> NodeList<T> query(T root, String key, NodeHandler<T> handler);
 
     /**
      * Returns the key for the specified node in the expression language
