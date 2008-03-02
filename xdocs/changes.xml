@@ -66,6 +66,11 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-315">
+        CombinedConfiguration used to send two EVENT_COMBINED_INVALIDATE events
+        for each modified child configuration. Now this event is sent only
+        once after the affected child configuration was updated.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-306">
         INIConfiguration now preserves whitespace in quoted values.
       </action>
