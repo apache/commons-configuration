@@ -319,7 +319,7 @@ public class TestCombinedConfiguration extends TestCase
         c.addProperty("test.otherTest", "yes");
         assertEquals("New property not found", "yes", config
                 .getString("test.otherTest"));
-        listener.checkEvent(3, 0);
+        listener.checkEvent(2, 0);
     }
 
     /**
@@ -567,6 +567,21 @@ public class TestCombinedConfiguration extends TestCase
         sub.addProperty("test.pi", "3\\,1415");
         config.addConfiguration(sub);
         assertEquals("Wrong value", "3,1415", config.getString("test.pi"));
+    }
+
+    /**
+     * Tests whether an invalidate event is fired only after a change. This test
+     * is related to CONFIGURATION-315.
+     */
+    public void testInvalidateAfterChange()
+    {
+        ConfigurationEvent event = new ConfigurationEvent(config, 0, null,
+                null, true);
+        config.configurationChanged(event);
+        assertEquals("Invalidate event fired", 0, listener.invalidateEvents);
+        event = new ConfigurationEvent(config, 0, null, null, false);
+        config.configurationChanged(event);
+        assertEquals("No invalidate event fired", 1, listener.invalidateEvents);
     }
 
     /**

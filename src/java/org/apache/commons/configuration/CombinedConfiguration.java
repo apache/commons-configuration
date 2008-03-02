@@ -485,7 +485,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public void configurationChanged(ConfigurationEvent event)
     {
-        invalidate();
+        if (!event.isBeforeUpdate())
+        {
+            invalidate();
+        }
     }
 
     /**
