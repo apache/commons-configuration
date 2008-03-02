@@ -25,9 +25,10 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <packaging>bundle</packaging>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
   <version>1.6-SNAPSHOT</version>
@@ -370,6 +371,14 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+
+  <properties>
+    <commons.componentid>configuration</commons.componentid>
+    <commons.release.version>1.5</commons.release.version>
+    <commons.binary.suffix></commons.binary.suffix>
+    <commons.jira.id>CONFIGURATION</commons.jira.id>
+    <commons.jira.pid>12310467</commons.jira.pid>
+  </properties> 
 
   <build>
     <sourceDirectory>src/java</sourceDirectory>
