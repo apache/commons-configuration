@@ -25,9 +25,10 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>7</version>
+    <version>8</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
+  <packaging>bundle</packaging>
   <groupId>org.apache.commons</groupId>
   <artifactId>commons-configuration2</artifactId>
   <version>2.0-SNAPSHOT</version>
@@ -384,6 +385,13 @@
             </excludes>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-build-plugin</artifactId>
+          <configuration>
+            <commons.release.name>commons-${commons.componentid}-${commons.release.version}</commons.release.name>
+          </configuration>
+        </plugin>
       </plugins>
     </build>
 
@@ -409,5 +417,11 @@
     <properties>
       <maven.compile.source>1.5</maven.compile.source>
       <maven.compile.target>1.5</maven.compile.target>
+      <commons.componentid>configuration</commons.componentid>
+      <commons.release.version>1.5</commons.release.version>
+      <commons.osgibundle>org.apache.commons.configuration2</commons.osgibundle>
+      <commons.binary.suffix></commons.binary.suffix>
+      <commons.jira.id>CONFIGURATION</commons.jira.id>
+      <commons.jira.pid>12310467</commons.jira.pid>
     </properties>
 </project>
