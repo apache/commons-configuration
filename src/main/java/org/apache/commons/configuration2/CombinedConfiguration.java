@@ -454,7 +454,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      * @return a set with the names of the contained configurations (never
      * <b>null</b>)
      */
-    public Set getConfigurationNames()
+    public Set<String> getConfigurationNames()
     {
         return namedConfigurations.keySet();
     }
@@ -535,9 +535,8 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         CombinedConfiguration copy = (CombinedConfiguration) super.clone();
         copy.clear();
-        for (Iterator it = configurations.iterator(); it.hasNext();)
+        for (ConfigData cd : configurations)
         {
-            ConfigData cd = (ConfigData) it.next();
             copy.addConfiguration((AbstractConfiguration) ConfigurationUtils
                     .cloneConfiguration(cd.getConfiguration()), cd.getName(),
                     cd.getAt());
@@ -561,14 +560,13 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         if (isForceReloadCheck())
         {
-            for (Iterator it = configurations.iterator(); it.hasNext();)
+            for (ConfigData cd : configurations)
             {
                 try
                 {
                     // simply retrieve a property; this is enough for
                     // triggering a reload
-                    ((ConfigData) it.next()).getConfiguration().getProperty(
-                            PROP_RELOAD_CHECK);
+                    cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
                 }
                 catch (Exception ex)
                 {
@@ -645,9 +643,8 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
 
         else
         {
-            Iterator it = configurations.iterator();
-            ConfigurationNode node = ((ConfigData) it.next())
-                    .getTransformedRoot();
+            Iterator<ConfigData> it = configurations.iterator();
+            ConfigurationNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
                 node = getNodeCombiner().combine(node,
@@ -676,9 +673,8 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         }
 
         // Check with the root nodes of the child configurations
-        for (Iterator it = configurations.iterator(); it.hasNext();)
+        for (ConfigData cd : configurations)
         {
-            ConfigData cd = (ConfigData) it.next();
             if (root == cd.getRootNode())
             {
                 return cd.getConfiguration();

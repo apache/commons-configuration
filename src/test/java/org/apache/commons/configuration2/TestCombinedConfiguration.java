@@ -117,7 +117,7 @@ public class TestCombinedConfiguration extends TestCase
         assertSame("Added config not found", c, config.getConfiguration(0));
         assertSame("Added config not found by name", c, config
                 .getConfiguration(TEST_NAME));
-        Set names = config.getConfigurationNames();
+        Set<String> names = config.getConfigurationNames();
         assertEquals("Wrong number of config names", 1, names.size());
         assertTrue("Name not found", names.contains(TEST_NAME));
         assertTrue("Wrong property value", config.getBoolean(TEST_KEY));
@@ -174,7 +174,7 @@ public class TestCombinedConfiguration extends TestCase
      */
     private void checkAddConfig(AbstractConfiguration c)
     {
-        Collection listeners = c.getConfigurationListeners();
+        Collection<?> listeners = c.getConfigurationListeners();
         assertEquals("Wrong number of configuration listeners", 1, listeners
                 .size());
         assertTrue("Combined config is no listener", listeners.contains(config));
