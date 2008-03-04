@@ -27,8 +27,8 @@ import junit.framework.TestCase;
 
 /**
  * Test class for ConfigurationNodeHandler.
- * 
- * @author hacker
+ *
+ * @author Oliver Heger
  * @version $Id$
  */
 public class TestConfigurationNodeHandler extends TestCase
@@ -51,7 +51,7 @@ public class TestConfigurationNodeHandler extends TestCase
 
     /**
      * Creates a mock for a configuration node.
-     * 
+     *
      * @return the mock node
      */
     private static ConfigurationNode mockNode()
@@ -272,6 +272,53 @@ public class TestConfigurationNodeHandler extends TestCase
         EasyMock.expect(node.removeAttribute(NAME)).andReturn(Boolean.TRUE);
         EasyMock.replay(node);
         handler.removeAttribute(node, NAME);
+        EasyMock.verify(node);
+    }
+
+    /**
+     * Tests the isDefined() method when the node in question has a value.
+     */
+    public void testIsDefinedValue()
+    {
+        ConfigurationNode node = mockNode();
+        EasyMock.expect(node.getValue()).andReturn(VALUE);
+        EasyMock.replay(node);
+        assertTrue("Node not defined", handler.isDefined(node));
+        EasyMock.verify(node);
+    }
+
+    /**
+     * Tests the isDefined() method when the node in questions has an attribute.
+     */
+    public void testIsDefinedAttributes()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode(NAME);
+        node.addAttribute(new DefaultConfigurationNode("attr", VALUE));
+        assertTrue("Node not defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests the isDefined() method when the node in question has children.
+     */
+    public void testIsDefinedChildren()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode(NAME);
+        node.addChild(new DefaultConfigurationNode("child", VALUE));
+        assertTrue("Node not defined", handler.isDefined(node));
+    }
+
+    /**
+     * Tests the isDefined() method for an undefined node.
+     */
+    public void testIsDefinedEmpty()
+    {
+        ConfigurationNode node = mockNode();
+        EasyMock.expect(node.getValue()).andReturn(null);
+        List<ConfigurationNode> emptyList = new ArrayList<ConfigurationNode>();
+        EasyMock.expect(node.getAttributes()).andReturn(emptyList);
+        EasyMock.expect(node.getChildren()).andReturn(emptyList);
+        EasyMock.replay(node);
+        assertFalse("Node is defined", handler.isDefined(node));
         EasyMock.verify(node);
     }
 }

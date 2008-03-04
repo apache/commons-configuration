@@ -146,4 +146,14 @@ public interface NodeHandler<T>
      * @param name the name of the attribute to be removed
      */
     void removeAttribute(T node, String name);
+
+    /**
+     * Checks whether the specified node is defined. Nodes are
+     * &quot;defined&quot; if they contain any data, e.g. a value, or
+     * attributes, or defined children.
+     *
+     * @param node the node to test
+     * @return a flag whether the passed in node is defined
+     */
+    boolean isDefined(T node);
 }
