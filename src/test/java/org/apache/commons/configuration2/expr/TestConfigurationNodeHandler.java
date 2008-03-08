@@ -298,16 +298,6 @@ public class TestConfigurationNodeHandler extends TestCase
     }
 
     /**
-     * Tests the isDefined() method when the node in question has children.
-     */
-    public void testIsDefinedChildren()
-    {
-        ConfigurationNode node = new DefaultConfigurationNode(NAME);
-        node.addChild(new DefaultConfigurationNode("child", VALUE));
-        assertTrue("Node not defined", handler.isDefined(node));
-    }
-
-    /**
      * Tests the isDefined() method for an undefined node.
      */
     public void testIsDefinedEmpty()
@@ -316,7 +306,6 @@ public class TestConfigurationNodeHandler extends TestCase
         EasyMock.expect(node.getValue()).andReturn(null);
         List<ConfigurationNode> emptyList = new ArrayList<ConfigurationNode>();
         EasyMock.expect(node.getAttributes()).andReturn(emptyList);
-        EasyMock.expect(node.getChildren()).andReturn(emptyList);
         EasyMock.replay(node);
         assertFalse("Node is defined", handler.isDefined(node));
         EasyMock.verify(node);

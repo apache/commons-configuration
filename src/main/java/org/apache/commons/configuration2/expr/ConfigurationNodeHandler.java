@@ -223,14 +223,13 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
 
     /**
      * Tests whether the passed in node is defined. This implementation checks
-     * whether the node has a value, any attributes or any children.
+     * whether the node has a value or any attributes.
      *
      * @param node the node to test
      * @return a flag whether this node is defined
      */
     public boolean isDefined(ConfigurationNode node)
     {
-        return node.getValue() != null || !node.getAttributes().isEmpty()
-                || !node.getChildren().isEmpty();
+        return node.getValue() != null || !node.getAttributes().isEmpty();
     }
 }
