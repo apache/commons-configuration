@@ -111,6 +111,27 @@ public class NodeList<T>
     }
 
     /**
+     * Returns the parent of the attribute at the specified index. If the
+     * element at this index is not an attribute, an exception will be thrown.
+     *
+     * @param index the index
+     * @return the parent node, to which the attribute at this index belongs
+     * @throws IndexOutOfBoundsException if the index is invalid
+     * @throws IllegalArgumentException if the element at this index is not an
+     *         attribute
+     */
+    public T getAttributeParent(int index)
+    {
+        if (!isAttribute(index))
+        {
+            throw new IllegalArgumentException("Element at " + index
+                    + " is not an attribute!");
+        }
+
+        return element(index).getAssociatedNode();
+    }
+
+    /**
      * Returns the name of the element at the specified index. If the element is
      * a node, the node name is returned. For an attribute the attribute name is
      * returned.

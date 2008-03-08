@@ -195,4 +195,32 @@ public class TestNodeList extends TestCase
         assertEquals("Wrong attribute name", NAME, list.getName(0,
                 new ConfigurationNodeHandler()));
     }
+
+    /**
+     * Tests querying the parent of an attribute.
+     */
+    public void testGetAttributeParent()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode();
+        list.addAttribute(parent, NAME);
+        assertEquals("Wrong parent node", parent, list.getAttributeParent(0));
+    }
+
+    /**
+     * Tests querying the parent of an attribute when the specified element is
+     * not an attribute. This should cause an exception.
+     */
+    public void testGetAttributeParentNoAttribute()
+    {
+        list.addNode(new DefaultConfigurationNode(NAME));
+        try
+        {
+            list.getAttributeParent(0);
+            fail("Invalid element type not detected!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
 }
