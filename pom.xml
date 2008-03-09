@@ -404,7 +404,7 @@
       <commons.componentid>configuration</commons.componentid>
       <commons.release.version>1.5</commons.release.version>
       <commons.release.name>commons-configuration-${commons.release.version}</commons.release.name>
-      <commons.osgibundle>org.apache.commons.configuration2</commons.osgibundle>
+      <commons.osgi.symbolicName>org.apache.commons.configuration2</commons.osgi.symbolicName>
       <commons.binary.suffix></commons.binary.suffix>
       <commons.jira.id>CONFIGURATION</commons.jira.id>
       <commons.jira.pid>12310467</commons.jira.pid>
