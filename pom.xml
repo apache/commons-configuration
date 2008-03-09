@@ -25,10 +25,9 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>8</version>
+    <version>9</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <packaging>bundle</packaging>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
   <version>1.6-SNAPSHOT</version>
