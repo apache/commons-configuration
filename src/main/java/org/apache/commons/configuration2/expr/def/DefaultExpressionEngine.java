@@ -15,10 +15,14 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration2.expr;
+package org.apache.commons.configuration2.expr.def;
 
 import java.util.List;
 
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.expr.NodeAddData;
+import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.lang.StringUtils;
 
 /**

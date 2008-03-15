@@ -14,12 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration2.expr;
+package org.apache.commons.configuration2.expr.def;
 
 import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
+import org.apache.commons.configuration2.expr.NodeAddData;
+import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 

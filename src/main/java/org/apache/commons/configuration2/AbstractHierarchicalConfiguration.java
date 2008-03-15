@@ -26,13 +26,13 @@ import java.util.Stack;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.expr.DefaultExpressionEngine;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.NodeAddData;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.NodeVisitor;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 
 /**
  * <p>A base class for hierarchical configurations.</p>

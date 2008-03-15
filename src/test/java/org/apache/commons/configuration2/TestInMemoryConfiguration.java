@@ -28,10 +28,10 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.expr.DefaultExpressionEngine;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
