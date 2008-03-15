@@ -100,14 +100,14 @@ class ConfigurationAttributePointer<T> extends NodePointer
     }
 
     /**
-     * Returns the immediate node. We return the parent node here.
+     * Returns the immediate node. This is a proxy for an attribute node.
      *
      * @return the immediate node
      */
     @Override
     public Object getImmediateNode()
     {
-        return parentNode;
+        return new AttributeNodeProxy();
     }
 
     /**
@@ -217,5 +217,35 @@ class ConfigurationAttributePointer<T> extends NodePointer
     protected NodeHandler<T> getNodeHandler()
     {
         return getParentPointer().getNodeHandler();
+    }
+
+    /**
+     * A simple class that represents an attribute node. Attributes are not
+     * necessarily modeled as nodes in all object models. So we introduce this
+     * wrapper class for representing an attribute node. This class is detected
+     * by the XPath query engine and handled correspondingly.
+     */
+    class AttributeNodeProxy
+    {
+        /**
+         * Returns the parent node. This is the node to which the represented
+         * attribute belongs.
+         *
+         * @return the parent node
+         */
+        public T getParentNode()
+        {
+            return getParentPointer().getConfigurationNode();
+        }
+
+        /**
+         * Returns the name of this attribute.
+         *
+         * @return the attribute name
+         */
+        public String getAttributeName()
+        {
+            return attributeName;
+        }
     }
 }

@@ -80,12 +80,22 @@ public class TestConfigurationAttributePointer extends TestCase
     }
 
     /**
-     * Tests querying the immediate node.
+     * Tests querying the immediate node. Here a proxy for an attribute node
+     * should be returned.
      */
+    @SuppressWarnings("unchecked")
     public void testGetImmediateNode()
     {
-        assertEquals("Wrong immediate node", parent.getConfigurationNode(),
-                pointer.getImmediateNode());
+        Object node = pointer.getImmediateNode();
+        assertTrue(
+                "Wrong node class",
+                node instanceof ConfigurationAttributePointer.AttributeNodeProxy);
+        ConfigurationAttributePointer<ConfigurationNode>.AttributeNodeProxy proxy =
+            (ConfigurationAttributePointer.AttributeNodeProxy) node;
+        assertEquals("Wrong parent node", parent.getConfigurationNode(), proxy
+                .getParentNode());
+        assertEquals("Wrong attribute name", ATTR_NAME, proxy
+                .getAttributeName());
     }
 
     /**
