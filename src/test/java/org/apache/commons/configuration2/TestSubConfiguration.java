@@ -26,6 +26,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.easymock.EasyMock;
 
@@ -260,28 +261,27 @@ public class TestSubConfiguration extends TestCase
                 .getListDelimiter());
     }
 
-// TODO uncomment when XPathExpressionEngine has been ported
-//    /**
-//     * Tests changing the expression engine.
-//     */
-//    public void testSetExpressionEngine()
-//    {
-//        parent.setExpressionEngine(new XPathExpressionEngine());
-//        setUpSubnodeConfig();
-//        assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
-//                .getString("fields/field[2]/name"));
-//        Set<String> keys = new HashSet<String>();
-//        for (Iterator<?> it = config.getKeys(); it.hasNext();)
-//        {
-//            keys.add(it.next().toString());
-//        }
-//        assertEquals("Wrong number of keys", 2, keys.size());
-//        assertTrue("Key 1 not contained", keys.contains("name"));
-//        assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
-//        config.setExpressionEngine(null);
-//        assertTrue("Expression engine reset on parent", parent
-//                .getExpressionEngine() instanceof XPathExpressionEngine);
-//    }
+    /**
+     * Tests changing the expression engine.
+     */
+    public void testSetExpressionEngine()
+    {
+        parent.setExpressionEngine(new XPathExpressionEngine());
+        setUpSubnodeConfig();
+        assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
+                .getString("fields/field[2]/name"));
+        Set<String> keys = new HashSet<String>();
+        for (Iterator<?> it = config.getKeys(); it.hasNext();)
+        {
+            keys.add(it.next().toString());
+        }
+        assertEquals("Wrong number of keys", 2, keys.size());
+        assertTrue("Key 1 not contained", keys.contains("name"));
+        assertTrue("Key 2 not contained", keys.contains("fields/field/name"));
+        config.setExpressionEngine(null);
+        assertTrue("Expression engine reset on parent", parent
+                .getExpressionEngine() instanceof XPathExpressionEngine);
+    }
 
     /**
      * Tests the configurationAt() method.
