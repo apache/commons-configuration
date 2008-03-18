@@ -49,9 +49,9 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
     }
 
     /**
-     * Returns the value of the attribute with the given name. This
-     * implementation supports only a single attribute value. If the attribute
-     * is present multiple times, only the value of the first occurrence is
+     * Returns the value of the attribute with the given name. If the attribute
+     * has exactly one value, this value is returned. If the attribute
+     * is present multiple times, a collection with all values is
      * returned. If the attribute cannot be found, result is <b>null</b>.
      *
      * @param node the node
@@ -61,7 +61,25 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
     public Object getAttributeValue(ConfigurationNode node, String name)
     {
         List<ConfigurationNode> attrs = node.getAttributes(name);
-        return (attrs.isEmpty()) ? null : attrs.get(0).getValue();
+
+        if (attrs.isEmpty())
+        {
+            return null;
+        }
+        else if (attrs.size() == 1)
+        {
+            return attrs.get(0).getValue();
+        }
+
+        else
+        {
+            List<Object> result = new ArrayList<Object>(attrs.size());
+            for (ConfigurationNode attr : attrs)
+            {
+                result.add(attr.getValue());
+            }
+            return result;
+        }
     }
 
     /**
@@ -153,9 +171,8 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
     }
 
     /**
-     * Sets the value of the specified attribute. This implementation only
-     * supports a single value per attribute. So any existing attributes with
-     * the given name are removed first.
+     * Sets the value of the specified attribute. This implementation removes
+     * any existing attribute values before calling <code>addAttributeValue()</code>.
      *
      * @param node the node
      * @param name the name of the attribute to set
@@ -165,6 +182,19 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
             Object value)
     {
         node.removeAttribute(name);
+        addAttributeValue(node, name, value);
+    }
+
+    /**
+     * Adds another value to an attribute. Using this method it is possible to
+     * create attributes with multiple values.
+     * @param node the parent node
+     * @param name the name of the affected attribute
+     * @param value the value to add
+     */
+    public void addAttributeValue(ConfigurationNode node, String name,
+            Object value)
+    {
         ConfigurationNode attr = createNode(node, name);
         attr.setValue(value);
         node.addAttribute(attr);

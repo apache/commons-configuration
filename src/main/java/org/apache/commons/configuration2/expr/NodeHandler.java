@@ -122,7 +122,9 @@ public interface NodeHandler<T>
     List<String> getAttributes(T node);
 
     /**
-     * Returns the value of the specified attribute from the given node.
+     * Returns the value of the specified attribute from the given node. If a
+     * concrete <code>NodeHandler</code> supports attributes with multiple
+     * values, result might be a collection.
      *
      * @param node the node
      * @param name the name of the attribute
@@ -133,12 +135,25 @@ public interface NodeHandler<T>
     /**
      * Sets the value of an attribute for the specified node.
      *
-     * @param node the node
+     * @param node the parent node
      * @param name the name of the attribute
      * @param value the value of the attribute
      */
     void setAttributeValue(T node, String name, Object value);
 
+    /**
+     * Adds a value to an attribute. This method can be used to create
+     * attributes with multiple values (as far as the specific
+     * <code>NodeHandler</code> implementation supports this). In contrast to
+     * <code>setAttributeValue()</code>, an existing attribute value is not
+     * removed, but the new value is added to the existing values.
+     * 
+     * @param node the parent node
+     * @param name the name of the attribute
+     * @param value the value to be added
+     */
+    void addAttributeValue(T node, String name, Object value);
+    
     /**
      * Removes the attribute with the specified name from the given node.
      *

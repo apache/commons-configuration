@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.expr;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.configuration2.tree.ConfigurationNode;
@@ -222,6 +223,37 @@ public class TestConfigurationNodeHandler extends TestCase
     }
 
     /**
+     * Tests querying an attribute with multiple values.
+     */
+    public void testGetAttributeValueMulti()
+    {
+        final int attrCount = 10;
+        ConfigurationNode node = mockNode();
+        List<ConfigurationNode> attrs = new ArrayList<ConfigurationNode>(
+                attrCount);
+        for (int i = 0; i < attrCount; i++)
+        {
+            ConfigurationNode attr = mockNode();
+            EasyMock.expect(attr.getValue()).andReturn(
+                    String.valueOf(VALUE) + i);
+            EasyMock.replay(attr);
+            attrs.add(attr);
+        }
+        EasyMock.expect(node.getAttributes(NAME)).andReturn(attrs);
+        EasyMock.replay(node);
+        Collection<?> values = (Collection<?>) handler.getAttributeValue(node,
+                NAME);
+        assertEquals("Wrong number of values", attrCount, values.size());
+        int idx = 0;
+        for (Object val : values)
+        {
+            String expected = String.valueOf(VALUE) + idx;
+            assertEquals("Wrong value at " + idx, expected, val);
+            idx++;
+        }
+    }
+
+    /**
      * Tests querying the value of a non-existing attribute. Result should be
      * null.
      */
@@ -248,6 +280,21 @@ public class TestConfigurationNodeHandler extends TestCase
         List<ConfigurationNode> attrs = node.getAttributes(NAME);
         assertEquals("Wrong size of attribute list", 1, attrs.size());
         assertEquals("Wrong attribute value", VALUE, attrs.get(0).getValue());
+    }
+
+    /**
+     * Tests adding multiple values to an attribute.
+     */
+    public void testAddAttributeValue()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode();
+        handler.addAttributeValue(node, NAME, "oldValue");
+        handler.addAttributeValue(node, NAME, VALUE);
+        List<ConfigurationNode> attrs = node.getAttributes(NAME);
+        assertEquals("Wrong size of attribute list", 2, attrs.size());
+        assertEquals("Wrong attribute value 1", "oldValue", attrs.get(0)
+                .getValue());
+        assertEquals("Wrong attribute value 2", VALUE, attrs.get(1).getValue());
     }
 
     /**
