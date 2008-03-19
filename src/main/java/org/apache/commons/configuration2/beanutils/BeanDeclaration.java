@@ -81,20 +81,20 @@ public interface BeanDeclaration
      *
      * @return a map with properties to be initialized
      */
-    Map getBeanProperties();
+    Map<String, Object> getBeanProperties();
 
     /**
      * Returns a map with declarations for beans that should be set as
      * properties of the newly created bean. This allows for complex
-     * initialization szenarios: a bean for a bean that contains complex
+     * initialization scenarios: a bean for a bean that contains complex
      * properties (e.g. other beans) can have nested declarations for defining
      * these complex properties. The returned map's key are the names of the
-     * properties to initialze. The values are <code>BeanDeclaration</code>
+     * properties to initialize. The values are <code>BeanDeclaration</code>
      * implementations. They will be treated like this declaration (in a
      * recursive manner), and the resulting beans are assigned to the
      * corresponding properties.
      *
      * @return a map with nested bean declarations
      */
-    Map getNestedBeanDeclarations();
+    Map<String, BeanDeclaration> getNestedBeanDeclarations();
 }
