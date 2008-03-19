@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -176,7 +177,15 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
                 Object value = nodes.getValue(i, getNodeHandler());
                 if (value != null)
                 {
-                    list.add(value);
+                    if (value instanceof Collection)
+                    {
+                        // there may be multiple values
+                        list.addAll((Collection<?>) value);
+                    }
+                    else
+                    {
+                        list.add(value);
+                    }
                 }
             }
 
@@ -579,7 +588,24 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     public int getMaxIndex(String key)
     {
-        return fetchNodeList(key).size() - 1;
+        NodeList<T> nodes = fetchNodeList(key);
+        int cnt = 0;
+
+        for (int index = 0; index < nodes.size(); index++)
+        {
+            Object value = nodes.getValue(index, getNodeHandler());
+            if (value instanceof Collection)
+            {
+                // if there are multiple values, count them all
+                cnt += ((Collection<?>) value).size();
+            }
+            else
+            {
+                cnt++;
+            }
+        }
+
+        return cnt - 1;
     }
 
     /**
@@ -709,7 +735,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         // Add the new property
         if (data.isAttribute())
         {
-            getNodeHandler().setAttributeValue(node, data.getNewNodeName(),
+            getNodeHandler().addAttributeValue(node, data.getNewNodeName(),
                     value);
             return null;
         }

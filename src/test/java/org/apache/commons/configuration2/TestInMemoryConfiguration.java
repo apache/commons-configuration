@@ -419,6 +419,17 @@ public class TestInMemoryConfiguration extends TestCase
         }
     }
 
+    /**
+     * Tests querying the maximum index for attributes with multiple values.
+     */
+    public void testGetMaxIndexAttributesMultipleValues()
+    {
+        config.addProperty("tables.table(0)[@mode]", "test");
+        config.addProperty("tables.table(0)[@mode]", "production");
+        config.addProperty("tables.table(1)[@mode]", "staging");
+        assertEquals("Wrong max index", 2, config.getMaxIndex("tables.table[@mode]"));
+    }
+
     public void testSubset()
     {
         // test the subset on the first table
@@ -914,6 +925,49 @@ public class TestInMemoryConfiguration extends TestCase
 	    InMemoryConfiguration copy = new InMemoryConfiguration(null);
 		assertTrue("Configuration not empty", copy.isEmpty());
 	}
+
+	/**
+     * Tests adding multiple values to an attribute.
+     */
+    public void testAddMultipleAttributeValues()
+    {
+        final String attrKey = "tables.table(0)[@mode]";
+        config.addProperty(attrKey, "system");
+        config.addProperty(attrKey, "security");
+        assertEquals("Wrong first attribute", "system", config
+                .getString(attrKey));
+        List<?> values = config.getList(attrKey);
+        assertEquals("Wrong number of values", 2, values.size());
+        assertEquals("Wrong value 1", "system", values.get(0));
+        assertEquals("Wrong value 2", "security", values.get(1));
+    }
+
+    /**
+     * Tests overriding an attribute with multiple values.
+     */
+    public void testOverrideMultipleAttributeValues()
+    {
+        final String attrKey = "tables.table(0)[@mode]";
+        testAddMultipleAttributeValues(); // set attribute values
+        config.setProperty(attrKey, "NewValue");
+        List<?> values = config.getList(attrKey);
+        assertEquals("Wrong number of values", 1, values.size());
+        assertEquals("Wrong value 1", "NewValue", values.get(0));
+    }
+
+    /**
+     * Tests querying attributes with multiple values.
+     */
+    public void testQueryMultipleAttributeValues()
+    {
+        testAddMultipleAttributeValues();  // add attribute values
+        config.addProperty("tables.table(1)[@mode]", "test");
+        List<?> values = config.getList("tables.table[@mode]");
+        assertEquals("Wrong number of values", 3, values.size());
+        assertEquals("Wrong value 1", "system", values.get(0));
+        assertEquals("Wrong value 2", "security", values.get(1));
+        assertEquals("Wrong value 3", "test", values.get(2));
+    }
 
 	/**
      * Helper method for testing the getKeys(String) method.

@@ -27,7 +27,6 @@ import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.expr.NodeAddData;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
-import org.apache.commons.configuration2.expr.NodeVisitor;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
@@ -147,7 +146,7 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
      * @param c the configuration that is to be copied (if <b>null</b>, this
      * constructor will behave like the standard constructor)
      */
-    public InMemoryConfiguration(InMemoryConfiguration c)
+    public InMemoryConfiguration(AbstractHierarchicalConfiguration<? extends ConfigurationNode> c)
     {
         this();
         if (c != null)
@@ -233,18 +232,6 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
             parent = processNodeAddData(addData, null);
         }
 
-        // a visitor to ensure that the nodes' references are cleared; this is
-        // necessary if the nodes are moved from another configuration
-        NodeVisitor<ConfigurationNode> clearRefVisitor = new NodeVisitorAdapter<ConfigurationNode>()
-        {
-            @Override
-            public void visitBeforeChildren(ConfigurationNode node,
-                    NodeHandler<ConfigurationNode> handler)
-            {
-                node.setReference(null);
-            }
-        };
-
         for (ConfigurationNode child : nodes)
         {
             if (child.isAttribute())
@@ -255,7 +242,7 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
             {
                 parent.addChild(child);
             }
-            visit(child, clearRefVisitor);
+            clearReferences(child);
         }
         fireEvent(EVENT_ADD_NODES, key, nodes, false);
     }
@@ -414,6 +401,10 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
                     NodeHandler<ConfigurationNode> handler)
             {
                 node.setReference(null);
+                for (ConfigurationNode attr : node.getAttributes())
+                {
+                    attr.setReference(null);
+                }
             }
         });
     }
