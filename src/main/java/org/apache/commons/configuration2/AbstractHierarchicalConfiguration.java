@@ -273,7 +273,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return a hierarchical configuration that contains this sub tree
      * @see SubConfiguration
      */
-    public AbstractHierarchicalConfiguration<T> configurationAt(String key, boolean supportUpdates)
+    public SubConfiguration<T> configurationAt(String key, boolean supportUpdates)
     {
         NodeList<T> nodes = fetchNodeList(key);
         if (nodes.size() != 1 || !nodes.isNode(0))
@@ -292,7 +292,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return a hierarchical configuration that contains this sub tree
      * @see SubConfiguration
      */
-    public AbstractHierarchicalConfiguration<T> configurationAt(String key)
+    public SubConfiguration<T> configurationAt(String key)
     {
         return configurationAt(key, false);
     }
@@ -323,10 +323,10 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @return a list with hierarchical configuration objects; each
      * configuration represents one of the nodes selected by the passed in key
      */
-    public List<AbstractHierarchicalConfiguration<T>> configurationsAt(String key)
+    public List<SubConfiguration<T>> configurationsAt(String key)
     {
         NodeList<T> nodes = fetchNodeList(key);
-        List<AbstractHierarchicalConfiguration<T>> configs = new ArrayList<AbstractHierarchicalConfiguration<T>>(
+        List<SubConfiguration<T>> configs = new ArrayList<SubConfiguration<T>>(
                 nodes.size());
         for (int index = 0; index < nodes.size(); index++)
         {

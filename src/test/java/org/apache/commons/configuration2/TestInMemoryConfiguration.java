@@ -568,7 +568,7 @@ public class TestInMemoryConfiguration extends TestCase
      */
     public void testConfigurationsAt()
     {
-        List<AbstractHierarchicalConfiguration<ConfigurationNode>> lstFlds = config.configurationsAt("tables.table(1).fields.field");
+        List<SubConfiguration<ConfigurationNode>> lstFlds = config.configurationsAt("tables.table(1).fields.field");
         assertEquals("Wrong size of FIELDS", FIELDS[1].length, lstFlds.size());
         for (int i = 0; i < FIELDS[1].length; i++)
         {
