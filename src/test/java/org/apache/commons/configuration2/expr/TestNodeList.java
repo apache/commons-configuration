@@ -223,4 +223,71 @@ public class TestNodeList extends TestCase
             // ok
         }
     }
+
+    /**
+     * Tests selecting specific values of a multi-valued attribute.
+     */
+    public void testAddAttributeIndex()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode("parent");
+        for (int i = 0; i < COUNT; i++)
+        {
+            ConfigurationNode attr = new DefaultConfigurationNode(NAME, VALUE
+                    + i);
+            parent.addAttribute(attr);
+            list.addAttribute(parent, attr.getName(), i);
+        }
+        NodeList<ConfigurationNode> list2 = new NodeList<ConfigurationNode>();
+        list2.addAttribute(parent, NAME);
+
+        assertEquals("Wrong number of nodes", COUNT, list.size());
+        ConfigurationNodeHandler handler = new ConfigurationNodeHandler();
+        List<?> values = (List<?>) list2.getValue(0, handler);
+        assertEquals("Wrong number of list values", COUNT, values.size());
+        for (int i = 0; i < COUNT; i++)
+        {
+            assertFalse("A node", list.isNode(i));
+            assertTrue("Not an attribute", list.isAttribute(i));
+            assertEquals("Wrong node value", VALUE + i, list.getValue(i,
+                    handler));
+            assertEquals("Wrong list value", VALUE + i, values.get(i));
+        }
+    }
+
+    /**
+     * Tests accessing an attribute with an index that does not have multiple
+     * values. In this case the normal value of the attribute should be
+     * returned.
+     */
+    public void testGetAttributeIndexNoCollection()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode("parent");
+        parent.addAttribute(new DefaultConfigurationNode(NAME, VALUE));
+        list.addAttribute(parent, NAME, 1);
+        assertEquals("Wrong attribute value", VALUE, list.getValue(0,
+                new ConfigurationNodeHandler()));
+    }
+
+    /**
+     * Tests accessing an attribute with an invalid index. In this case the
+     * whole value collection should be returned.
+     */
+    public void testGetAttributeIndexInvalid()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode("parent");
+        for (int i = 0; i < COUNT; i++)
+        {
+            ConfigurationNode attr = new DefaultConfigurationNode(NAME, VALUE
+                    + i);
+            parent.addAttribute(attr);
+        }
+        list.addAttribute(parent, NAME, COUNT + 10);
+        List<?> val = (List<?>) list
+                .getValue(0, new ConfigurationNodeHandler());
+        assertEquals("Wrong number of list elements", COUNT, val.size());
+        for (int i = 0; i < COUNT; i++)
+        {
+            assertEquals("Wrong list value " + i, VALUE + i, val.get(i));
+        }
+    }
 }

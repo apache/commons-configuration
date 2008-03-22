@@ -42,6 +42,9 @@ import java.util.List;
  */
 public class NodeList<T>
 {
+    /** Constant for an undefined index.*/
+    private static final int IDX_UNDEF = -1;
+
     /** Stores the entries of this list. */
     private List<ListElement<T>> elements;
 
@@ -192,7 +195,21 @@ public class NodeList<T>
      */
     public void addAttribute(T parent, String name)
     {
-        elements.add(new AttributeListElement<T>(parent, name));
+        addAttribute(parent, name, IDX_UNDEF);
+    }
+
+    /**
+     * Adds a new attribute to this list and selects a specific value. This
+     * method is used for attributes with multiple values if a specific value is
+     * selected.
+     *
+     * @param parent the parent node of the attribute
+     * @param name the name of the attribute
+     * @param index the index of the attribute's value
+     */
+    public void addAttribute(T parent, String name, int index)
+    {
+        elements.add(new AttributeListElement<T>(parent, name, index));
     }
 
     /**
@@ -340,21 +357,28 @@ public class NodeList<T>
         /** Stores the name of the attribute. */
         private String name;
 
+        /** Stores the index of the value.*/
+        private int index;
+
         /**
          * Creates a new instance of <code>AttributeListElement</code> and
          * initializes it.
          *
          * @param nd the parent node
          * @param attrName the name of the attribute
+         * @param idx the index of the value
          */
-        public AttributeListElement(T nd, String attrName)
+        public AttributeListElement(T nd, String attrName, int idx)
         {
             super(nd);
             name = attrName;
+            index = idx;
         }
 
         /**
-         * Returns the value of the represented attribute.
+         * Returns the value of the represented attribute. If an index is
+         * defined, this method checks whether there are multiple values. In
+         * this case the value with the given index is returned.
          *
          * @param handler the node handler
          * @return the value of this attribute
@@ -362,7 +386,18 @@ public class NodeList<T>
         @Override
         public Object getValue(NodeHandler<T> handler)
         {
-            return handler.getAttributeValue(getAssociatedNode(), name);
+            Object value = handler.getAttributeValue(getAssociatedNode(), name);
+
+            if(index != IDX_UNDEF && value instanceof List)
+            {
+                List<?> valList = (List<?>) value;
+                if(index < valList.size())
+                {
+                    value = valList.get(index);
+                }
+            }
+
+            return value;
         }
 
         /**
