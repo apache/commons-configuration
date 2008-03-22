@@ -28,6 +28,7 @@ import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationComparator;
 import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.InMemoryConfiguration;
 import org.apache.commons.configuration2.StrictConfigurationComparator;
 
 import junit.framework.TestCase;
@@ -314,7 +315,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
     public void testInitCopy()
 	{
-		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);
+		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((InMemoryConfiguration) config);
 		StrictConfigurationComparator comp = new StrictConfigurationComparator();
 		assertTrue("Configurations are not equal", comp.compare(config, copy));
 	}

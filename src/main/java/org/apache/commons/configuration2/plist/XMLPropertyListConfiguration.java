@@ -37,6 +37,7 @@ import java.util.TimeZone;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
@@ -145,7 +146,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      * @param configuration the configuration to copy
      * @since 1.4
      */
-    public XMLPropertyListConfiguration(HierarchicalConfiguration configuration)
+    public XMLPropertyListConfiguration(AbstractHierarchicalConfiguration<? extends ConfigurationNode> configuration)
     {
         super(configuration);
     }

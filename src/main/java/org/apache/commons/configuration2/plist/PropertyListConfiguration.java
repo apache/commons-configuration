@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
@@ -115,7 +116,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      * @param c the configuration to copy
      * @since 1.4
      */
-    public PropertyListConfiguration(HierarchicalConfiguration c)
+    public PropertyListConfiguration(AbstractHierarchicalConfiguration<? extends ConfigurationNode> c)
     {
         super(c);
     }
@@ -196,7 +197,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         PropertyListParser parser = new PropertyListParser(in);
         try
         {
-            HierarchicalConfiguration config = parser.parse();
+            AbstractHierarchicalConfiguration<ConfigurationNode> config = parser.parse();
             setRootNode(config.getRootNode());
         }
         catch (ParseException e)
