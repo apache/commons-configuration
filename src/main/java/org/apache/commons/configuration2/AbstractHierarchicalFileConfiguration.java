@@ -17,18 +17,18 @@
 
 package org.apache.commons.configuration2;
 
-import java.io.Reader;
-import java.io.Writer;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 
@@ -45,7 +45,7 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
  * @version $Revision$, $Date$
  */
 public abstract class AbstractHierarchicalFileConfiguration
-extends HierarchicalConfiguration
+extends InMemoryConfiguration
 implements FileConfiguration, ConfigurationListener
 {
     /** Stores the delegate used for implementing functionality related to the
@@ -70,7 +70,7 @@ implements FileConfiguration, ConfigurationListener
      * @param c the configuration to copy
      * @since 1.4
      */
-    protected AbstractHierarchicalFileConfiguration(HierarchicalConfiguration c)
+    protected AbstractHierarchicalFileConfiguration(AbstractHierarchicalConfiguration<? extends ConfigurationNode> c)
     {
         super(c);
         initialize();
@@ -136,24 +136,28 @@ implements FileConfiguration, ConfigurationListener
         initDelegate(delegate);
     }
 
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         super.addPropertyDirect(key, obj);
         delegate.possiblySave();
     }
 
+    @Override
     public void clearProperty(String key)
     {
         super.clearProperty(key);
         delegate.possiblySave();
     }
 
+    @Override
     public void clearTree(String key)
     {
         super.clearTree(key);
         delegate.possiblySave();
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         super.setProperty(key, value);
@@ -303,24 +307,28 @@ implements FileConfiguration, ConfigurationListener
         delegate.setEncoding(encoding);
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         reload();
         return super.containsKey(key);
     }
 
+    @Override
     public Iterator<String> getKeys(String prefix)
     {
         reload();
         return super.getKeys(prefix);
     }
 
+    @Override
     public Object getProperty(String key)
     {
         reload();
         return super.getProperty(key);
     }
 
+    @Override
     public boolean isEmpty()
     {
         reload();
@@ -335,6 +343,7 @@ implements FileConfiguration, ConfigurationListener
      * @param nodes a collection with the nodes to be added
      * @since 1.5
      */
+    @Override
     public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         super.addNodes(key, nodes);
@@ -348,7 +357,8 @@ implements FileConfiguration, ConfigurationListener
      * @param key the key
      * @return a list with the selected nodes
      */
-    protected List<ConfigurationNode> fetchNodeList(String key)
+    @Override
+    protected NodeList<ConfigurationNode> fetchNodeList(String key)
     {
         reload();
         return super.fetchNodeList(key);
@@ -361,6 +371,7 @@ implements FileConfiguration, ConfigurationListener
      * @param event the event describing the change
      * @since 1.5
      */
+    @Override
     protected void subnodeConfigurationChanged(ConfigurationEvent event)
     {
         delegate.possiblySave();
