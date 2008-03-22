@@ -23,7 +23,7 @@
   </properties>
   <!-- Fetch the file name from a variable -->
   <xml fileName="${test_file_xml}" config-name="xml">
-    <expressionEngine config-class="org.apache.commons.configuration2.tree.DefaultExpressionEngine"
+    <expressionEngine config-class="org.apache.commons.configuration2.expr.def.DefaultExpressionEngine"
       propertyDelimiter="/" indexStart="[" indexEnd="]"/>
   </xml>
   <additional>
