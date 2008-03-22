@@ -40,7 +40,7 @@ import org.xml.sax.helpers.AttributesImpl;
 public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
 {
     /** Stores the configuration object to be parsed.*/
-    private HierarchicalConfiguration configuration;
+    private InMemoryConfiguration configuration;
 
     /**
      * Creates a new instance of
@@ -58,7 +58,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param config the configuration object
      */
-    public HierarchicalConfigurationXMLReader(HierarchicalConfiguration config)
+    public HierarchicalConfigurationXMLReader(InMemoryConfiguration config)
     {
         this();
         setConfiguration(config);
@@ -69,7 +69,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @return the configuration object to be parsed
      */
-    public HierarchicalConfiguration getConfiguration()
+    public InMemoryConfiguration getConfiguration()
     {
         return configuration;
     }
@@ -79,7 +79,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @param config the configuration object to be parsed
      */
-    public void setConfiguration(HierarchicalConfiguration config)
+    public void setConfiguration(InMemoryConfiguration config)
     {
         configuration = config;
     }
