@@ -497,7 +497,14 @@ public class DefaultExpressionEngine implements ExpressionEngine
             {
                 if (handler.getAttributeValue(node, key) != null)
                 {
-                    nodes.addAttribute(node, key);
+                    if (keyPart.hasIndex())
+                    {
+                        nodes.addAttribute(node, key, keyPart.getIndex());
+                    }
+                    else
+                    {
+                        nodes.addAttribute(node, key);
+                    }
                 }
             }
         }
