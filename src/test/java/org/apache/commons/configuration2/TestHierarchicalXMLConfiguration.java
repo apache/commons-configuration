@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 
 /**
  * Test class for XMLConfiguration. In addition to TestXMLConfiguration this
@@ -62,6 +63,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     private XMLConfiguration config;
 
     /** Fixture setup. */
+    @Override
     protected void setUp() throws Exception
     {
         config = new XMLConfiguration();
@@ -252,7 +254,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         config.setProperty("clear", "yes");
         config.setProperty("mean", "now it's simple");
         config.addProperty("[@topattr]", "available");
-        config.addProperty("[@topattr]", "successfull");
+        config.addProperty("[@topattr]", "successful");
 
         removeTestSaveFile();
         try
@@ -271,14 +273,14 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             assertEquals("yes", config.getProperty("clear"));
             assertEquals("now it's simple", config.getString("mean"));
             assertEquals("available", config.getString("[@topattr](0)"));
-            assertEquals("successfull", config.getString("[@topattr](1)"));
+            assertEquals("successful", config.getString("[@topattr](1)"));
         }
         finally
         {
             removeTestSaveFile();
         }
     }
-    
+
     /**
      * Tests manipulation of the root element's name.
      *
@@ -288,7 +290,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         assertEquals("configuration", config.getRootElementName());
         config.setRootElementName("newRootName");
         assertEquals("newRootName", config.getRootElementName());
-        
+
         config.setFile(new File(TEST_FILE3));
         config.load();
         assertEquals("testconfig", config.getRootElementName());
@@ -304,8 +306,22 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     }
 
     /**
-     * Helper method that ensures that the test save file has been removed. 
-     *
+     * Tests accessing attributes with multiple values using the XPATH
+     * expression engine.
+     */
+    public void testMultiAttributeValuesXPath()
+    {
+        config.addProperty("[@topattr]", "available");
+        config.addProperty("[@topattr]", "successful");
+        config.setExpressionEngine(new XPathExpressionEngine());
+        assertEquals("Wrong value 1", "available", config
+                .getString("@topattr[1]"));
+        assertEquals("Wrong value 2", "successful", config
+                .getString("@topattr[2]"));
+    }
+
+    /**
+     * Helper method that ensures that the test save file has been removed.
      */
     private void removeTestSaveFile()
     {
