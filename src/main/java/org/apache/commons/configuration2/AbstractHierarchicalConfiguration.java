@@ -177,7 +177,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
                 Object value = nodes.getValue(i, getNodeHandler());
                 if (value != null)
                 {
-                    if (value instanceof Collection)
+                    if (nodes.isAttribute(i) && value instanceof Collection)
                     {
                         // there may be multiple values
                         list.addAll((Collection<?>) value);
