@@ -42,11 +42,11 @@ import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -955,7 +955,7 @@ public class TestXMLConfiguration extends TestCase
     public void testConfigurationAtWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
-        HierarchicalConfiguration sub = c.configurationAt("test(0)");
+        AbstractHierarchicalConfiguration<ConfigurationNode> sub = c.configurationAt("test(0)");
         assertEquals("New value not read", "newValue", sub.getString("entity"));
     }
 
@@ -965,10 +965,10 @@ public class TestXMLConfiguration extends TestCase
     public void testConfigurationsAtWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
-        List configs = c.configurationsAt("test");
+        List<SubConfiguration<ConfigurationNode>> configs =
+            c.configurationsAt("test");
         assertEquals("New value not read", "newValue",
-                ((HierarchicalConfiguration) configs.get(0))
-                        .getString("entity"));
+                (configs.get(0)).getString("entity"));
     }
 
     /**
@@ -1095,8 +1095,8 @@ public class TestXMLConfiguration extends TestCase
         final String newValue = "I am autosaved";
         conf.setFile(testSaveConf);
         conf.setAutoSave(true);
-        SubnodeConfiguration sub1 = conf.configurationAt("element2");
-        SubnodeConfiguration sub2 = sub1.configurationAt("subelement");
+        AbstractHierarchicalConfiguration<ConfigurationNode> sub1 = conf.configurationAt("element2");
+        AbstractHierarchicalConfiguration<ConfigurationNode> sub2 = sub1.configurationAt("subelement");
         sub2.setProperty("subsubelement", newValue);
         assertEquals("Change not visible to parent", newValue, conf
                 .getString("element2.subelement.subsubelement"));
@@ -1229,7 +1229,7 @@ public class TestXMLConfiguration extends TestCase
         node.addChild(child);
         ConfigurationNode attr = new DefaultConfigurationNode("attr");
         node.addAttribute(attr);
-        ConfigurationNode node2 = conf.createNode("test2");
+        ConfigurationNode node2 = conf.createNode(null, "test2");
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
         nodes.add(node);
         nodes.add(node2);
@@ -1293,7 +1293,7 @@ public class TestXMLConfiguration extends TestCase
     public void testSaveAfterCreateWithCopyConstructor()
             throws ConfigurationException
     {
-        HierarchicalConfiguration hc = conf.configurationAt("element2");
+        AbstractHierarchicalConfiguration<ConfigurationNode> hc = conf.configurationAt("element2");
         conf = new XMLConfiguration(hc);
         conf.save(testSaveConf);
         XMLConfiguration checkConfig = new XMLConfiguration();

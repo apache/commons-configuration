@@ -196,7 +196,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param c the configuration to copy
      * @since 1.4
      */
-    public XMLConfiguration(HierarchicalConfiguration c)
+    public XMLConfiguration(AbstractHierarchicalConfiguration<? extends ConfigurationNode> c)
     {
         super(c);
         clearReferences(getRootNode());
@@ -532,7 +532,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             {
                 Iterator<String> it = values.iterator();
                 // Create new node for the original child's first value
-                ConfigurationNode c = createNode(child.getName());
+                ConfigurationNode c = createNode(parent, child.getName());
                 c.setValue(it.next());
                 // Copy original attributes to the new node
                 for (ConfigurationNode ndAttr : child.getAttributes())
@@ -541,7 +541,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
                     c.addAttribute(ndAttr);
                 }
                 parent.removeChild(child);
-                parent.addChild(c);
+                //parent.addChild(c);
 
                 // add multiple new children
                 while (it.hasNext())
@@ -623,9 +623,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
 
             XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
                     isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
-            builder.processDocument(getRootNode());
+            visit(getRootNode(), builder);
             return document;
-        } /* try */
+        }
         catch (DOMException domEx)
         {
             throw new ConfigurationException(domEx);
@@ -640,12 +640,19 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * Creates a new node object. This implementation returns an instance of the
      * <code>XMLNode</code> class.
      *
+     * @param parent the parent node
      * @param name the node's name
      * @return the new node
      */
-    protected ConfigurationNode createNode(String name)
+    @Override
+    protected ConfigurationNode createNode(ConfigurationNode parent, String name)
     {
-        return new XMLNode(name, null);
+        ConfigurationNode node = new XMLNode(name, null);
+        if (parent != null)
+        {
+            parent.addChild(node);
+        }
+        return node;
     }
 
     /**
@@ -838,7 +845,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             return (XMLNode) node;
         }
 
-        XMLNode xmlNode = (XMLNode) createNode(node.getName());
+        XMLNode xmlNode = (XMLNode) createNode(null, node.getName());
         xmlNode.setValue(node.getValue());
         for (ConfigurationNode child : node.getChildren())
         {
@@ -985,6 +992,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
          *
          * @param value the node's new value
          */
+        @Override
         public void setValue(Object value)
         {
             super.setValue(value);
@@ -1005,6 +1013,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
         /**
          * Updates the associated XML elements when a node is removed.
          */
+        @Override
         protected void removeReference()
         {
             if (getReference() != null)
@@ -1145,16 +1154,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
         {
             document = doc;
             this.listDelimiter = listDelimiter;
-        }
-
-        /**
-         * Processes the node hierarchy and adds new nodes to the document.
-         *
-         * @param rootNode the root node
-         */
-        public void processDocument(ConfigurationNode rootNode)
-        {
-            rootNode.visit(this);
         }
 
         /**
