@@ -20,11 +20,10 @@ package org.apache.commons.configuration2.beanutils;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.configuration2.HierarchicalConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.PropertyConverter;
-import org.apache.commons.configuration2.SubnodeConfiguration;
-import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration2.SubConfiguration;
+import org.apache.commons.configuration2.expr.NodeHandler;
 
 /**
  * <p>
@@ -34,10 +33,10 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * <p>
  * This class defines the standard layout of a bean declaration in an XML
  * configuration file. Such a declaration must look like the following example
- * fragement:
+ * fragment:
  * </p>
  * <p>
- *
+ * 
  * <pre>
  *   ...
  *   &lt;personBean config-class=&quot;my.model.PersonBean&quot;
@@ -47,7 +46,7 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  *           city=&quot;TestCity&quot;/&gt;
  *   &lt;/personBean&gt;
  * </pre>
- *
+ * 
  * </p>
  * <p>
  * The bean declaration can be contained in an arbitrary element. Here it is the
@@ -96,17 +95,18 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * class are understood by the configuration, the default expression engine will
  * be set.
  * </p>
- *
+ * 
  * @since 1.3
  * @author Oliver Heger
  * @version $Id$
+ * @param <T> the type of the nodes the declaration deals with
  */
-public class XMLBeanDeclaration implements BeanDeclaration
+public class XMLBeanDeclaration<T> implements BeanDeclaration
 {
     /** Constant for the prefix of reserved attributes. */
     public static final String RESERVED_PREFIX = "config-";
 
-    /** Constant for the prefix for reserved attributes.*/
+    /** Constant for the prefix for reserved attributes. */
     public static final String ATTR_PREFIX = "[@" + RESERVED_PREFIX;
 
     /** Constant for the bean class attribute. */
@@ -120,22 +120,23 @@ public class XMLBeanDeclaration implements BeanDeclaration
             + "factoryParam]";
 
     /** Stores the associated configuration. */
-    private SubnodeConfiguration configuration;
+    private SubConfiguration<T> configuration;
 
     /** Stores the configuration node that contains the bean declaration. */
-    private ConfigurationNode node;
+    private T node;
 
     /**
      * Creates a new instance of <code>XMLBeanDeclaration</code> and
      * initializes it from the given configuration. The passed in key points to
      * the bean declaration.
-     *
+     * 
      * @param config the configuration
      * @param key the key to the bean declaration (this key must point to
-     * exactly one bean declaration or a <code>IllegalArgumentException</code>
-     * exception will be thrown)
+     *        exactly one bean declaration or a
+     *        <code>IllegalArgumentException</code> exception will be thrown)
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config, String key)
+    public XMLBeanDeclaration(AbstractHierarchicalConfiguration<T> config,
+            String key)
     {
         this(config, key, false);
     }
@@ -149,15 +150,15 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * declaration if a default class is provided. If the key on the other hand
      * has multiple values or is undefined and the boolean argument is <b>false</b>,
      * a <code>IllegalArgumentException</code> exception will be thrown.
-     *
+     * 
      * @param config the configuration
      * @param key the key to the bean declaration
      * @param optional a flag whether this declaration is optional; if set to
-     * <b>true</b>, no exception will be thrown if the passed in key is
-     * undefined
+     *        <b>true</b>, no exception will be thrown if the passed in key is
+     *        undefined
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
-            boolean optional)
+    public XMLBeanDeclaration(AbstractHierarchicalConfiguration<T> config,
+            String key, boolean optional)
     {
         if (config == null)
         {
@@ -178,7 +179,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
                 throw iex;
             }
             configuration = config.configurationAt(null);
-            node = new DefaultConfigurationNode();
+            node = null;
         }
         initSubnodeConfiguration(getConfiguration());
     }
@@ -187,10 +188,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * Creates a new instance of <code>XMLBeanDeclaration</code> and
      * initializes it from the given configuration. The configuration's root
      * node must contain the bean declaration.
-     *
+     * 
      * @param config the configuration with the bean declaration
      */
-    public XMLBeanDeclaration(HierarchicalConfiguration config)
+    public XMLBeanDeclaration(AbstractHierarchicalConfiguration<T> config)
     {
         this(config, (String) null);
     }
@@ -199,12 +200,11 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * Creates a new instance of <code>XMLBeanDeclaration</code> and
      * initializes it with the configuration node that contains the bean
      * declaration.
-     *
+     * 
      * @param config the configuration
      * @param node the node with the bean declaration.
      */
-    public XMLBeanDeclaration(SubnodeConfiguration config,
-            ConfigurationNode node)
+    public XMLBeanDeclaration(SubConfiguration<T> config, T node)
     {
         if (config == null)
         {
@@ -223,20 +223,20 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
     /**
      * Returns the configuration object this bean declaration is based on.
-     *
+     * 
      * @return the associated configuration
      */
-    public SubnodeConfiguration getConfiguration()
+    public SubConfiguration<T> getConfiguration()
     {
         return configuration;
     }
 
     /**
      * Returns the node that contains the bean declaration.
-     *
+     * 
      * @return the configuration node this bean declaration is based on
      */
-    public ConfigurationNode getNode()
+    public T getNode()
     {
         return node;
     }
@@ -244,7 +244,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Returns the name of the bean factory. This information is fetched from
      * the <code>config-factory</code> attribute.
-     *
+     * 
      * @return the name of the bean factory
      */
     public String getBeanFactoryName()
@@ -255,7 +255,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Returns a parameter for the bean factory. This information is fetched
      * from the <code>config-factoryParam</code> attribute.
-     *
+     * 
      * @return the parameter for the bean factory
      */
     public Object getBeanFactoryParameter()
@@ -266,7 +266,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Returns the name of the class of the bean to be created. This information
      * is obtained from the <code>config-class</code> attribute.
-     *
+     * 
      * @return the name of the bean's class
      */
     public String getBeanClassName()
@@ -277,17 +277,21 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Returns a map with the bean's (simple) properties. The properties are
      * collected from all attribute nodes, which are not reserved.
-     *
+     * 
      * @return a map with the bean's properties
      */
-    public Map getBeanProperties()
+    public Map<String, Object> getBeanProperties()
     {
         Map<String, Object> props = new HashMap<String, Object>();
-        for (ConfigurationNode attribute : getNode().getAttributes())
+        if (getNode() != null)
         {
-            if (!isReservedNode(attribute))
+            for (String attribute : getNodeHandler().getAttributes(getNode()))
             {
-                props.put(attribute.getName(), interpolate(attribute.getValue()));
+                if (!isReservedAttribute(getNode(), attribute))
+                {
+                    props.put(attribute, interpolate(getNodeHandler()
+                            .getAttributeValue(getNode(), attribute)));
+                }
             }
         }
 
@@ -298,17 +302,23 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * Returns a map with bean declarations for the complex properties of the
      * bean to be created. These declarations are obtained from the child nodes
      * of this declaration's root node.
-     *
+     * 
      * @return a map with bean declarations for complex properties
      */
-    public Map getNestedBeanDeclarations()
+    public Map<String, BeanDeclaration> getNestedBeanDeclarations()
     {
-        Map<String, XMLBeanDeclaration> nested = new HashMap<String, XMLBeanDeclaration>();
-        for (ConfigurationNode child : getNode().getChildren())
+        Map<String, BeanDeclaration> nested = new HashMap<String, BeanDeclaration>();
+        if (getNode() != null)
         {
-            if (!isReservedNode(child))
+            for (T child : getNodeHandler().getChildren(getNode()))
             {
-                nested.put(child.getName(), new XMLBeanDeclaration(getConfiguration().configurationAt(child.getName()), child));
+                if (!isReservedNode(child))
+                {
+                    String nodeName = getNodeHandler().nodeName(child);
+                    nested.put(nodeName,
+                            new XMLBeanDeclaration<T>(getConfiguration()
+                                    .configurationAt(nodeName), child));
+                }
             }
         }
 
@@ -320,7 +330,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      * interpolate against the current subnode configuration's parent. If sub
      * classes need a different interpolation mechanism, they should override
      * this method.
-     *
+     * 
      * @param value the value that is to be interpolated
      * @return the interpolated value
      */
@@ -333,27 +343,55 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Checks if the specified node is reserved and thus should be ignored. This
      * method is called when the maps for the bean's properties and complex
-     * properties are collected. It checks whether the given node is an
-     * attribute node and if its name starts with the reserved prefix.
-     *
+     * properties are collected. Per default there are no reserved nodes, so
+     * this implementation always returns <b>false</b>. Derived classes may
+     * change this.
+     * 
      * @param nd the node to be checked
      * @return a flag whether this node is reserved (and does not point to a
-     * property)
+     *         property)
      */
-    protected boolean isReservedNode(ConfigurationNode nd)
+    protected boolean isReservedNode(T nd)
     {
-        return nd.isAttribute()
-                && (nd.getName() == null || nd.getName().startsWith(
-                        RESERVED_PREFIX));
+        return false;
+    }
+
+    /**
+     * Checks if the specified attribute is reserved and thus should be ignored.
+     * This method is called when the maps for the bean's properties and complex
+     * properties are collected. It checks whether the name of the given
+     * attribute starts with the reserved prefix.
+     * 
+     * @param parent the node to which the attribute belongs
+     * @param name the name of the attribute in question
+     * @return a flag whether this attribute is reserved (and does not point to
+     *         a property)
+     * @since 2.0
+     */
+    protected boolean isReservedAttribute(T parent, String name)
+    {
+        return name == null || name.startsWith(RESERVED_PREFIX);
+    }
+
+    /**
+     * Convenience method for obtaining the node handler.
+     * 
+     * @return the node handler
+     * @since 2.0
+     */
+    protected NodeHandler<T> getNodeHandler()
+    {
+        return getConfiguration().getNodeHandler();
     }
 
     /**
      * Initializes the internally managed subnode configuration. This method
      * will set some default values for some properties.
-     *
+     * 
      * @param conf the configuration to initialize
      */
-    private void initSubnodeConfiguration(SubnodeConfiguration conf)
+    private void initSubnodeConfiguration(
+            AbstractHierarchicalConfiguration<T> conf)
     {
         conf.setThrowExceptionOnMissing(false);
         conf.setExpressionEngine(null);
