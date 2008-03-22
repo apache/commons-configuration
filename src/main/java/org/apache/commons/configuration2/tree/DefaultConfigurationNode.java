@@ -685,11 +685,11 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
          */
         protected void detachNode(ConfigurationNode subNode)
         {
-            subNode.setParentNode(null);
             if (subNode instanceof DefaultConfigurationNode)
             {
                 ((DefaultConfigurationNode) subNode).removeReference();
             }
+            subNode.setParentNode(null);
         }
 
         /**
