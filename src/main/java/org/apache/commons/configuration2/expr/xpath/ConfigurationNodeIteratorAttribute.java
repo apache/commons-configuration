@@ -17,8 +17,12 @@
 package org.apache.commons.configuration2.expr.xpath;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
@@ -38,8 +42,8 @@ class ConfigurationNodeIteratorAttribute<T> extends
     /** Stores the parent node pointer. */
     private ConfigurationNodePointer<T> parentPointer;
 
-    /** A list with the names of the managed attributes. */
-    private List<String> attributeNames;
+    /** A list with the data of the managed attributes. */
+    private List<AttributeData> attributeData;
 
     /**
      * Creates a new instance of <code>ConfigurationNodeIteratorAttribute</code>.
@@ -52,7 +56,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
     {
         super(parent, false);
         parentPointer = parent;
-        attributeNames = createAttributeNameList(parent, name);
+        attributeData = createAttributeDataList(parent, name);
     }
 
     /**
@@ -63,7 +67,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
      * @param name the name of the selected attribute
      * @return a list with the selected attributes
      */
-    protected List<String> createAttributeNameList(
+    protected List<AttributeData> createAttributeDataList(
             ConfigurationNodePointer<T> parent, QName name)
     {
         if (name.getPrefix() != null)
@@ -72,19 +76,18 @@ class ConfigurationNodeIteratorAttribute<T> extends
             return Collections.emptyList();
         }
 
-        List<String> result = new ArrayList<String>();
+        List<AttributeData> result = new ArrayList<AttributeData>();
         if (!WILDCARD.equals(name.getName()))
         {
-            if (parent.getNodeHandler().getAttributeValue(
-                    parent.getConfigurationNode(), name.getName()) != null)
-            {
-                result.add(name.getName());
-            }
+            addAttributeData(parent, result, name.getName());
         }
         else
         {
-            result.addAll(parent.getNodeHandler().getAttributes(
-                    parent.getConfigurationNode()));
+            Set<String> names = new LinkedHashSet<String>(parent.getNodeHandler().getAttributes(parent.getConfigurationNode()));
+            for(String n : names)
+            {
+                addAttributeData(parent, result, n);
+            }
         }
 
         return result;
@@ -99,8 +102,9 @@ class ConfigurationNodeIteratorAttribute<T> extends
     @Override
     protected NodePointer createNodePointer(int position)
     {
+        AttributeData ad = attributeData.get(position);
         return new ConfigurationAttributePointer<T>(parentPointer,
-                attributeNames.get(position));
+                ad.name, ad.valueIndex);
     }
 
     /**
@@ -111,6 +115,66 @@ class ConfigurationNodeIteratorAttribute<T> extends
     @Override
     protected int size()
     {
-        return attributeNames.size();
+        return attributeData.size();
+    }
+
+    /**
+     * Helper method for adding data about an attribute to the data list. If the
+     * attribute has multiple values, correct indices will be set.
+     *
+     * @param parent the parent pointer
+     * @param lst the result list
+     * @param name the name of the attribute
+     */
+    private void addAttributeData(ConfigurationNodePointer<T> parent,
+            List<AttributeData> lst, String name)
+    {
+        Object value = parent.getNodeHandler().getAttributeValue(
+                parent.getConfigurationNode(), name);
+        if (value != null)
+        {
+            if (value instanceof Collection)
+            {
+                // add entries for all values
+                int idx = 0;
+                for (Iterator<?> it = ((Collection<?>) value).iterator(); it
+                        .hasNext(); idx++)
+                {
+                    lst.add(new AttributeData(name, idx));
+                    it.next();
+                }
+            }
+
+            else
+            {
+                lst.add(new AttributeData(name,
+                        ConfigurationAttributePointer.IDX_UNDEF));
+            }
+        }
+    }
+
+    /**
+     * A simple data class for storing the information required to select an
+     * attribute.
+     */
+    private static class AttributeData
+    {
+        /** The name of the attribute. */
+        String name;
+
+        /** The index of the value. */
+        int valueIndex;
+
+        /**
+         * Creates a new instance of <code>AttributeData</code>
+         *
+         * @param n the name
+         * @param idx the value index
+         */
+        public AttributeData(String n, int idx)
+        {
+            name = n;
+            valueIndex = idx;
+        }
     }
 }

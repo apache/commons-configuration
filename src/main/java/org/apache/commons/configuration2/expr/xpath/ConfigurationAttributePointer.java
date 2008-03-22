@@ -38,6 +38,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  */
 class ConfigurationAttributePointer<T> extends NodePointer
 {
+    /** Constant for an undefined attribute index.*/
+    public static final int IDX_UNDEF = -1;
+
     /**
      * The serial version UID.
      */
@@ -49,18 +52,23 @@ class ConfigurationAttributePointer<T> extends NodePointer
     /** Stores the name of the managed attribute. */
     private String attributeName;
 
+    /** Stores the index of the attribute value.*/
+    private int valueIndex;
+
     /**
      * Creates a new instance of <code>ConfigurationAttributePointer</code>.
      *
      * @param parent the parent node pointer
      * @param attrName the name of the managed attribute
+     * @param idx the index of the desired attribute value
      */
     public ConfigurationAttributePointer(ConfigurationNodePointer<T> parent,
-            String attrName)
+            String attrName, int idx)
     {
         super(parent);
         parentNode = parent.getConfigurationNode();
         attributeName = attrName;
+        valueIndex = idx;
     }
 
     /**
@@ -246,6 +254,16 @@ class ConfigurationAttributePointer<T> extends NodePointer
         public String getAttributeName()
         {
             return attributeName;
+        }
+
+        /**
+         * Returns the index of the selected value if there are multiple values.
+         *
+         * @return the index of the selected value
+         */
+        public int getValueIndex()
+        {
+            return valueIndex;
         }
     }
 }

@@ -60,7 +60,7 @@ public class TestConfigurationAttributePointer extends TestCase
         parent = new ConfigurationNodePointer<ConfigurationNode>(nd,
                 new ConfigurationNodeHandler(), Locale.ENGLISH);
         pointer = new ConfigurationAttributePointer<ConfigurationNode>(parent,
-                ATTR_NAME);
+                ATTR_NAME, -1);
     }
 
     /**
@@ -96,6 +96,7 @@ public class TestConfigurationAttributePointer extends TestCase
                 .getParentNode());
         assertEquals("Wrong attribute name", ATTR_NAME, proxy
                 .getAttributeName());
+        assertEquals("Wrong value index", -1, proxy.getValueIndex());
     }
 
     /**

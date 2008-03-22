@@ -144,7 +144,7 @@ public class XPathExpressionEngine implements ExpressionEngine
                         ConfigurationAttributePointer<T>.AttributeNodeProxy anp =
                             (ConfigurationAttributePointer.AttributeNodeProxy) o;
                         result.addAttribute(anp.getParentNode(), anp
-                                .getAttributeName());
+                                .getAttributeName(), anp.getValueIndex());
                     }
                     else
                     {
