@@ -786,12 +786,26 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
                 }
             }
 
+            // Determine root node
+            // TODO This is a workaround as long as there are hierarchical
+            // configurations not derived from AbstractHierarchicalConfiguration.
+            // Remove if refactoring is complete!
+            ConfigurationNode root;
+            if (getConfiguration() instanceof InMemoryConfiguration)
+            {
+                root = ((InMemoryConfiguration) getConfiguration()).getRootNode();
+            }
+            else
+            {
+                HierarchicalConfiguration hc = ConfigurationUtils
+                .convertToHierarchical(getConfiguration());
+                root = hc.getRootNode();
+            }
+            
             // Copy data of the root node to the new path
-            HierarchicalConfiguration hc = ConfigurationUtils
-                    .convertToHierarchical(getConfiguration());
-            atParent.appendChildren(hc.getRootNode());
-            atParent.appendAttributes(hc.getRootNode());
-            rootNode = hc.getRootNode();
+            atParent.appendChildren(root);
+            atParent.appendAttributes(root);
+            rootNode = root;
 
             return result;
         }

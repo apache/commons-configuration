@@ -32,6 +32,7 @@ import org.apache.commons.configuration2.beanutils.BeanFactory;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
+import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.OverrideCombiner;
@@ -500,11 +501,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
 
-        List<SubnodeConfiguration> overrides = fetchTopLevelOverrideConfigs();
+        List<SubConfiguration<ConfigurationNode>> overrides = fetchTopLevelOverrideConfigs();
         overrides.addAll(fetchChildConfigs(KEY_OVERRIDE));
         initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
 
-        List<SubnodeConfiguration> additionals = fetchChildConfigs(KEY_UNION);
+        List<SubConfiguration<ConfigurationNode>> additionals = fetchChildConfigs(KEY_UNION);
         if (!additionals.isEmpty())
         {
             CombinedConfiguration addConfig = new CombinedConfiguration(new UnionCombiner());
@@ -548,27 +549,30 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * section (if it exists).
      *
      * @param config the configuration to be initialized
-     * @param containedConfigs the list with the declaratinos of the contained
+     * @param containedConfigs the list with the declarations of the contained
      * configurations
      * @param keyListNodes a list with the declaration of list nodes
      * @throws ConfigurationException if an error occurs
      */
-    protected void initCombinedConfiguration(CombinedConfiguration config,
-            List<? extends HierarchicalConfiguration> containedConfigs, String keyListNodes) throws ConfigurationException
+    protected void initCombinedConfiguration(
+            CombinedConfiguration config,
+            List<? extends AbstractHierarchicalConfiguration<ConfigurationNode>> containedConfigs,
+            String keyListNodes) throws ConfigurationException
     {
-        List listNodes = getList(keyListNodes);
-        for (Iterator it = listNodes.iterator(); it.hasNext();)
+        List<?> listNodes = getList(keyListNodes);
+        for (Iterator<?> it = listNodes.iterator(); it.hasNext();)
         {
             config.getNodeCombiner().addListNode((String) it.next());
         }
 
-        for (HierarchicalConfiguration conf : containedConfigs)
+        for (AbstractHierarchicalConfiguration<ConfigurationNode> conf : containedConfigs)
         {
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this, conf);
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
-                config.addConfiguration(newConf, decl.getConfiguration().getString(ATTR_NAME), decl.getAt());
+                config.addConfiguration(newConf, decl.getConfiguration()
+                        .getString(ATTR_NAME), decl.getAt());
             }
         }
     }
@@ -629,16 +633,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * Returns a list with <code>SubConfiguration</code> objects for the
      * child nodes of the specified configuration node.
      *
      * @param node the start node
      * @return a list with subnode configurations for the node's children
      */
-    private List<SubnodeConfiguration> fetchChildConfigs(ConfigurationNode node)
+    private List<SubConfiguration<ConfigurationNode>> fetchChildConfigs(ConfigurationNode node)
     {
         List<ConfigurationNode> children = node.getChildren();
-        List<SubnodeConfiguration> result = new ArrayList<SubnodeConfiguration>(children.size());
+        List<SubConfiguration<ConfigurationNode>> result = 
+            new ArrayList<SubConfiguration<ConfigurationNode>>(children.size());
         for (ConfigurationNode child : children)
         {
             result.add(createSubnodeConfiguration(child));
@@ -647,18 +652,18 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * Returns a list with <code>SubConfiguration</code> objects for the
      * child nodes of the node specified by the given key.
      *
      * @param key the key (must define exactly one node)
      * @return a list with subnode configurations for the node's children
      */
-    private List<SubnodeConfiguration> fetchChildConfigs(String key)
+    private List<SubConfiguration<ConfigurationNode>> fetchChildConfigs(String key)
     {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-        if (!nodes.isEmpty())
+        NodeList<ConfigurationNode> nodes = fetchNodeList(key);
+        if (nodes.size() > 0)
         {
-            return fetchChildConfigs(nodes.get(0));
+            return fetchChildConfigs(nodes.getNode(0));
         }
         else
         {
@@ -673,16 +678,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * configuration sections. The remaining nodes are treated as definitions
      * for override configurations.
      *
-     * @return a list with subnode configurations for the top level override
+     * @return a list with sub configurations for the top level override
      * configurations
      */
-    private List<SubnodeConfiguration> fetchTopLevelOverrideConfigs()
+    private List<SubConfiguration<ConfigurationNode>> fetchTopLevelOverrideConfigs()
     {
-        List<SubnodeConfiguration> configs = fetchChildConfigs(getRootNode());
-        Iterator<SubnodeConfiguration> it = configs.iterator();
+        List<SubConfiguration<ConfigurationNode>> configs = fetchChildConfigs(getRootNode());
+        Iterator<SubConfiguration<ConfigurationNode>> it = configs.iterator();
         while (it.hasNext())
         {
-            String nodeName = (it.next()).getRootNode().getName();
+            String nodeName = it.next().getRootNode().getName();
             for (int i = 0; i < CONFIG_SECTIONS.length; i++)
             {
                 if (CONFIG_SECTIONS[i].equals(nodeName))
@@ -906,7 +911,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * factory is never needed.
      * </p>
      */
-    public static class ConfigurationDeclaration extends XMLBeanDeclaration
+    public static class ConfigurationDeclaration extends XMLBeanDeclaration<ConfigurationNode>
     {
         /** Stores a reference to the associated configuration builder. */
         private DefaultConfigurationBuilder configurationBuilder;
@@ -919,7 +924,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param config the configuration this declaration is based onto
          */
         public ConfigurationDeclaration(DefaultConfigurationBuilder builder,
-                HierarchicalConfiguration config)
+                AbstractHierarchicalConfiguration<ConfigurationNode> config)
         {
             super(config);
             configurationBuilder = builder;
@@ -1006,24 +1011,23 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
-         * Checks whether the given node is reserved. This method will take
-         * further reserved attributes into account
-         *
-         * @param nd the node
-         * @return a flag whether this node is reserved
+         * Checks whether the given attribute is reserved. This method will take
+         * further reserved attributes into account.
+         * @param parent the parent node
+         * @param name the name of the affected attribute
          */
-        protected boolean isReservedNode(ConfigurationNode nd)
+        @Override
+        protected boolean isReservedAttribute(ConfigurationNode parent, String name)
         {
-            if (super.isReservedNode(nd))
+            if (super.isReservedAttribute(parent, name))
             {
                 return true;
             }
 
-            return nd.isAttribute()
-                    && ((ATTR_ATNAME.equals(nd.getName()) && nd.getParentNode()
-                            .getAttributeCount(RESERVED_PREFIX + ATTR_ATNAME) == 0) || (ATTR_OPTIONALNAME
-                            .equals(nd.getName()) && nd.getParentNode()
-                            .getAttributeCount(RESERVED_PREFIX + ATTR_OPTIONALNAME) == 0));
+            return ((ATTR_ATNAME.equals(name) && getNodeHandler()
+                    .getAttributeValue(parent, RESERVED_PREFIX + ATTR_ATNAME) == null) || (ATTR_OPTIONALNAME
+                    .equals(name) && getNodeHandler().getAttributeValue(parent,
+                    RESERVED_PREFIX + ATTR_OPTIONALNAME) == null));
         }
 
         /**

@@ -59,8 +59,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final String OPTIONAL_NAME = "optionalConfig";
 
     /** Stores the object to be tested. */
-    DefaultConfigurationBuilder factory;
+    private DefaultConfigurationBuilder factory;
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -83,20 +84,19 @@ public class TestDefaultConfigurationBuilder extends TestCase
         DefaultConfigurationNode parent = new DefaultConfigurationNode();
         DefaultConfigurationNode nd = new DefaultConfigurationNode("at");
         parent.addAttribute(nd);
-        assertTrue("Attribute at not recognized", decl.isReservedNode(nd));
+        assertTrue("Attribute at not recognized", decl.isReservedAttribute(parent, nd.getName()));
         nd = new DefaultConfigurationNode("optional");
         parent.addAttribute(nd);
-        assertTrue("Attribute optional not recognized", decl.isReservedNode(nd));
+        assertTrue("Attribute optional not recognized", decl.isReservedAttribute(parent, nd.getName()));
         nd = new DefaultConfigurationNode("config-class");
         parent.addAttribute(nd);
         assertTrue("Inherited attribute not recognized", decl
-                .isReservedNode(nd));
+                .isReservedAttribute(parent, nd.getName()));
         nd = new DefaultConfigurationNode("different");
         parent.addAttribute(nd);
-        assertFalse("Wrong reserved attribute", decl.isReservedNode(nd));
+        assertFalse("Wrong reserved attribute", decl.isReservedAttribute(parent, nd.getName()));
         nd = new DefaultConfigurationNode("at");
         parent.addChild(nd);
-        assertFalse("Node type not evaluated", decl.isReservedNode(nd));
     }
 
     /**
@@ -130,16 +130,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 factory, factory);
         DefaultConfigurationNode parent = new DefaultConfigurationNode();
         DefaultConfigurationNode nd = new DefaultConfigurationNode("config-"
-                + name);
+                + name, "test");
         parent.addAttribute(nd);
         assertTrue("config-" + name + " attribute not recognized", decl
-                .isReservedNode(nd));
-        DefaultConfigurationNode nd2 = new DefaultConfigurationNode(name);
+                .isReservedAttribute(parent, nd.getName()));
+        DefaultConfigurationNode nd2 = new DefaultConfigurationNode(name, "test");
         parent.addAttribute(nd2);
         assertFalse(name + " is reserved though config- exists", decl
-                .isReservedNode(nd2));
+                .isReservedAttribute(parent, nd2.getName()));
         assertTrue("config- attribute not recognized when " + name + " exists",
-                decl.isReservedNode(nd));
+                decl.isReservedAttribute(parent, nd.getName()));
     }
 
     /**
