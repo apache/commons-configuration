@@ -530,7 +530,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             removeListElement(nodes, index, clear);
         }
 
-        fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
+        fireEvent(event, key, null, false);
     }
 
     /**
