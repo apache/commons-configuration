@@ -27,6 +27,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.easymock.EasyMock;
 
@@ -51,8 +52,8 @@ public class TestSubConfiguration extends TestCase
     /** Constant for a test output file.*/
     private static final File TEST_FILE = new File("target/test.xml");
 
-//    /** Constant for an updated table name.*/
-//    private static final String NEW_TABLE_NAME = "newTable";
+    /** Constant for an updated table name.*/
+    private static final String NEW_TABLE_NAME = "newTable";
 
     /** The parent configuration. */
     private InMemoryConfiguration parent;
@@ -335,102 +336,101 @@ public class TestSubConfiguration extends TestCase
         }
     }
 
-//TODO uncomment when reloading features are available
-//    /**
-//     * Tests a reload operation for the parent configuration when the subnode
-//     * configuration does not support reloads. Then the new value should not be
-//     * detected.
-//     */
-//    public void testParentReloadNotSupported() throws ConfigurationException
-//    {
-//        Configuration c = setUpReloadTest(false);
-//        assertEquals("Name changed in sub config", TABLE_NAMES[1], config
-//                .getString("name"));
-//        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-//                .getString("tables.table(1).name"));
-//    }
-//
-//    /**
-//     * Tests a reload operation for the parent configuration when the subnode
-//     * configuration does support reloads. The new value should be returned.
-//     */
-//    public void testParentReloadSupported() throws ConfigurationException
-//    {
-//        Configuration c = setUpReloadTest(true);
-//        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
-//                .getString("name"));
-//        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-//                .getString("tables.table(1).name"));
-//    }
-//
-//    /**
-//     * Tests a reload operation for the parent configuration when the subnode
-//     * configuration is aware of reloads, and the parent configuration is
-//     * accessed first. The new value should be returned.
-//     */
-//    public void testParentReloadSupportAccessParent()
-//            throws ConfigurationException
-//    {
-//        Configuration c = setUpReloadTest(true);
-//        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
-//                .getString("tables.table(1).name"));
-//        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
-//                .getString("name"));
-//    }
-//
-//    /**
-//     * Tests whether reloads work with sub subnode configurations.
-//     */
-//    public void testParentReloadSubSubnode() throws ConfigurationException
-//    {
-//        setUpReloadTest(true);
-//        SubnodeConfiguration sub = config.configurationAt("fields", true);
-//        assertEquals("Wrong subnode key", "tables.table(1).fields", sub
-//                .getSubnodeKey());
-//        assertEquals("Changed field not detected", "newField", sub
-//                .getString("field(0).name"));
-//    }
-//
-//    /**
-//     * Tests creating a sub sub config when the sub config is not aware of
-//     * changes. Then the sub sub config shouldn't be either.
-//     */
-//    public void testParentReloadSubSubnodeNoChangeSupport()
-//            throws ConfigurationException
-//    {
-//        setUpReloadTest(false);
-//        SubnodeConfiguration sub = config.configurationAt("fields", true);
-//        assertNull("Sub sub config is attached to parent", sub.getSubnodeKey());
-//        assertEquals("Changed field name returned", TABLE_FIELDS[1][0], sub
-//                .getString("field(0).name"));
-//    }
-//
-//    /**
-//     * Prepares a test for a reload operation.
-//     *
-//     * @param supportReload a flag whether the subnode configuration should
-//     * support reload operations
-//     * @return the parent configuration that can be used for testing
-//     * @throws ConfigurationException if an error occurs
-//     */
-//    private XMLConfiguration setUpReloadTest(boolean supportReload)
-//            throws ConfigurationException
-//    {
-//        XMLConfiguration xmlConf = new XMLConfiguration(parent);
-//        xmlConf.setFile(TEST_FILE);
-//        xmlConf.save();
-//        config = xmlConf.configurationAt("tables.table(1)", supportReload);
-//        assertEquals("Wrong table name", TABLE_NAMES[1], config
-//                .getString("name"));
-//        xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-//        // Now change the configuration file
-//        XMLConfiguration confUpdate = new XMLConfiguration(TEST_FILE);
-//        confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
-//        confUpdate.setProperty("tables.table(1).fields.field(0).name",
-//                "newField");
-//        confUpdate.save();
-//        return xmlConf;
-//    }
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration does not support reloads. Then the new value should not be
+     * detected.
+     */
+    public void testParentReloadNotSupported() throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(false);
+        assertEquals("Name changed in sub config", TABLE_NAMES[1], config
+                .getString("name"));
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+    }
+
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration does support reloads. The new value should be returned.
+     */
+    public void testParentReloadSupported() throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(true);
+        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
+                .getString("name"));
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+    }
+
+    /**
+     * Tests a reload operation for the parent configuration when the subnode
+     * configuration is aware of reloads, and the parent configuration is
+     * accessed first. The new value should be returned.
+     */
+    public void testParentReloadSupportAccessParent()
+            throws ConfigurationException
+    {
+        Configuration c = setUpReloadTest(true);
+        assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
+                .getString("tables.table(1).name"));
+        assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
+                .getString("name"));
+    }
+
+    /**
+     * Tests whether reloads work with sub subnode configurations.
+     */
+    public void testParentReloadSubSubnode() throws ConfigurationException
+    {
+        setUpReloadTest(true);
+        SubConfiguration<ConfigurationNode> sub = config.configurationAt("fields", true);
+        assertEquals("Wrong subnode key", "tables.table(1).fields", sub
+                .getSubnodeKey());
+        assertEquals("Changed field not detected", "newField", sub
+                .getString("field(0).name"));
+    }
+
+    /**
+     * Tests creating a sub sub config when the sub config is not aware of
+     * changes. Then the sub sub config shouldn't be either.
+     */
+    public void testParentReloadSubSubnodeNoChangeSupport()
+            throws ConfigurationException
+    {
+        setUpReloadTest(false);
+        SubConfiguration<ConfigurationNode> sub = config.configurationAt("fields", true);
+        assertNull("Sub sub config is attached to parent", sub.getSubnodeKey());
+        assertEquals("Changed field name returned", TABLE_FIELDS[1][0], sub
+                .getString("field(0).name"));
+    }
+
+    /**
+     * Prepares a test for a reload operation.
+     *
+     * @param supportReload a flag whether the subnode configuration should
+     * support reload operations
+     * @return the parent configuration that can be used for testing
+     * @throws ConfigurationException if an error occurs
+     */
+    private XMLConfiguration setUpReloadTest(boolean supportReload)
+            throws ConfigurationException
+    {
+        XMLConfiguration xmlConf = new XMLConfiguration(parent);
+        xmlConf.setFile(TEST_FILE);
+        xmlConf.save();
+        config = xmlConf.configurationAt("tables.table(1)", supportReload);
+        assertEquals("Wrong table name", TABLE_NAMES[1], config
+                .getString("name"));
+        xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        // Now change the configuration file
+        XMLConfiguration confUpdate = new XMLConfiguration(TEST_FILE);
+        confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
+        confUpdate.setProperty("tables.table(1).fields.field(0).name",
+                "newField");
+        confUpdate.save();
+        return xmlConf;
+    }
 
     /**
      * Tests a manipulation of the parent configuration that causes the subnode
