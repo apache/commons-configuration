@@ -1006,6 +1006,36 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests setting text of the root element.
+     */
+    public void testSetTextRootElement() throws ConfigurationException
+    {
+        conf.setProperty("", "Root text");
+        conf.save(testSaveConf);
+        XMLConfiguration copy = new XMLConfiguration();
+        copy.setFile(testSaveConf);
+        checkSavedConfig(copy);
+    }
+
+    /**
+     * Tests removing the text of the root element.
+     */
+    public void testClearTextRootElement() throws ConfigurationException
+    {
+        final String xml = "<e a=\"v\">text</e>";
+        conf.clear();
+        StringReader in = new StringReader(xml);
+        conf.load(in);
+        assertEquals("Wrong text of root", "text", conf.getString(""));
+
+        conf.clearProperty("");
+        conf.save(testSaveConf);
+        XMLConfiguration copy = new XMLConfiguration();
+        copy.setFile(testSaveConf);
+        checkSavedConfig(copy);
+    }
+
+    /**
      * Tests list nodes with multiple values and attributes.
      */
     public void testListWithAttributes()

@@ -624,6 +624,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
                     isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
             visit(getRootNode(), builder);
+            initRootElementText(document, getRootNode().getValue());
             return document;
         }
         catch (DOMException domEx)
@@ -633,6 +634,34 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
         catch (ParserConfigurationException pex)
         {
             throw new ConfigurationException(pex);
+        }
+    }
+
+    /**
+     * Sets the text of the root element of a newly created XML Document.
+     *
+     * @param doc the document
+     * @param value the new text to be set
+     */
+    private void initRootElementText(Document doc, Object value)
+    {
+        Element elem = doc.getDocumentElement();
+        NodeList children = elem.getChildNodes();
+
+        // Remove all existing text nodes
+        for (int i = 0; i < children.getLength(); i++)
+        {
+            org.w3c.dom.Node nd = children.item(i);
+            if (nd.getNodeType() == org.w3c.dom.Node.TEXT_NODE)
+            {
+                elem.removeChild(nd);
+            }
+        }
+
+        if (value != null)
+        {
+            // Add a new text node
+            elem.appendChild(doc.createTextNode(String.valueOf(value)));
         }
     }
 
