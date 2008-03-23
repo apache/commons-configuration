@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-316">
+        Changing the text of the root element of an XMLConfiguration had no
+        effect when the configuration was saved. This has been fixed.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-315">
         CombinedConfiguration used to send two EVENT_COMBINED_INVALIDATE events
         for each modified child configuration. Now this event is sent only
