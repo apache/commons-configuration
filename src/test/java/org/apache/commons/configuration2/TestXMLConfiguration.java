@@ -28,7 +28,6 @@ import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -36,12 +35,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.TestCase;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.FileConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
@@ -203,7 +196,7 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.sublist.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        List list = (List)property;
+        List<?> list = (List<?>)property;
         assertEquals(2, list.size());
         assertEquals("five", list.get(0));
         assertEquals("six", list.get(1));
@@ -212,7 +205,7 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        list = (List)property;
+        list = (List<?>)property;
         assertEquals(4, list.size());
         assertEquals("one", list.get(0));
         assertEquals("two", list.get(1));
@@ -223,7 +216,7 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.item[@name]");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        list = (List)property;
+        list = (List<?>)property;
         assertEquals(2, list.size());
         assertEquals("one", list.get(0));
         assertEquals("three", list.get(1));
@@ -281,7 +274,7 @@ public class TestXMLConfiguration extends TestCase
     {
         conf.addProperty("element3[@name]", "bar");
 
-        List list = conf.getList("element3[@name]");
+        List<?> list = conf.getList("element3[@name]");
         assertNotNull("null list", list);
         assertTrue("'foo' element missing", list.contains("foo"));
         assertTrue("'bar' element missing", list.contains("bar"));
@@ -333,7 +326,7 @@ public class TestXMLConfiguration extends TestCase
         conf.addProperty("test.array", "value1");
         conf.addProperty("test.array", "value2");
 
-        List list = conf.getList("test.array");
+        List<?> list = conf.getList("test.array");
         assertNotNull("null list", list);
         assertTrue("'value1' element missing", list.contains("value1"));
         assertTrue("'value2' element missing", list.contains("value2"));
@@ -992,9 +985,8 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
         ConfigurationNode root = copy.getRootNode();
-        for(Iterator it = root.getChildren().iterator(); it.hasNext();)
+        for(ConfigurationNode node : root.getChildren())
         {
-        	ConfigurationNode node = (ConfigurationNode) it.next();
         	assertNull("Reference was not cleared", node.getReference());
         }
 
@@ -1081,7 +1073,7 @@ public class TestXMLConfiguration extends TestCase
             assertEquals("Wrong value of multi-valued node", "value" + i, conf
                     .getString("attrList.a(" + (i + 3) + ")"));
         }
-        List attrs = conf.getList("attrList.a(4)[@name]");
+        List<?> attrs = conf.getList("attrList.a(4)[@name]");
         final String attrVal = "uvw";
         assertEquals("Wrong number of name attributes", attrVal.length(), attrs
                 .size());
@@ -1185,7 +1177,7 @@ public class TestXMLConfiguration extends TestCase
         conf.clear();
         conf.setDelimiterParsingDisabled(true);
         conf.load();
-        List expr = conf.getList("expressions[@value]");
+        List<?> expr = conf.getList("expressions[@value]");
         assertEquals("Wrong list size", 2, expr.size());
         assertEquals("Wrong element 1", "a || (b && c)", expr.get(0));
         assertEquals("Wrong element 2", "!d", expr.get(1));
