@@ -279,6 +279,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     + "cannot be changed when loaded from an XML document!");
         }
         rootElementName = name;
+        getRootNode().setName(name);
     }
 
     /**
@@ -422,6 +423,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
 
         constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
+        getRootNode().setName(document.getDocumentElement().getNodeName());
         if (elemRefs)
         {
             getRoot().setReference(document.getDocumentElement());

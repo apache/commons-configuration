@@ -67,7 +67,7 @@ public class TestHierarchicalConfigurationXMLReader extends TestCase
         Node root = ((Document) result.getNode()).getDocumentElement();
         JXPathContext ctx = JXPathContext.newContext(root);
 
-        assertEquals("Wrong name of root element", "config", root.getNodeName());
+        assertEquals("Wrong name of root element", "database", root.getNodeName());
         assertEquals("Wrong number of children of root", 1, ctx.selectNodes(
                 "/*").size());
         assertEquals("Wrong number of tables", 2, ctx.selectNodes(
