@@ -66,6 +66,10 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-318">
+        When an XMLConfiguration is created using the copy constructor, the name
+        of the root element is now preserved.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-316">
         Changing the text of the root element of an XMLConfiguration had no
         effect when the configuration was saved. This has been fixed.

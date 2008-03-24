@@ -1334,6 +1334,45 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether the name of the root element is copied when a configuration
+     * is created using the copy constructor.
+     */
+    public void testCopyRootName() throws ConfigurationException
+    {
+        final String rootName = "rootElement";
+        final String xml = "<" + rootName + "><test>true</test></" + rootName
+                + ">";
+        conf.clear();
+        conf.load(new StringReader(xml));
+        XMLConfiguration copy = new XMLConfiguration(conf);
+        assertEquals("Wrong name of root element", rootName, copy
+                .getRootElementName());
+        copy.save(testSaveConf);
+        copy = new XMLConfiguration(testSaveConf);
+        assertEquals("Wrong name of root element after save", rootName, copy
+                .getRootElementName());
+    }
+
+    /**
+     * Tests whether the name of the root element is copied for a configuration
+     * for which not yet a document exists.
+     */
+    public void testCopyRootNameNoDocument() throws ConfigurationException
+    {
+        final String rootName = "rootElement";
+        conf = new XMLConfiguration();
+        conf.setRootElementName(rootName);
+        conf.setProperty("test", Boolean.TRUE);
+        XMLConfiguration copy = new XMLConfiguration(conf);
+        assertEquals("Wrong name of root element", rootName, copy
+                .getRootElementName());
+        copy.save(testSaveConf);
+        copy = new XMLConfiguration(testSaveConf);
+        assertEquals("Wrong name of root element after save", rootName, copy
+                .getRootElementName());
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
