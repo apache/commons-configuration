@@ -262,4 +262,16 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
     {
         return node.getValue() != null || !node.getAttributes().isEmpty();
     }
+
+    /**
+     * Returns the number of children of the specified node.
+     *
+     * @param node the node
+     * @param name the name of the children to take into account or <b>null</b>
+     * @return the number of children
+     */
+    public int getChildrenCount(ConfigurationNode node, String name)
+    {
+        return node.getChildrenCount(name);
+    }
 }

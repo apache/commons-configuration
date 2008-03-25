@@ -357,4 +357,18 @@ public class TestConfigurationNodeHandler extends TestCase
         assertFalse("Node is defined", handler.isDefined(node));
         EasyMock.verify(node);
     }
+
+    /**
+     * Tests querying the number of children.
+     */
+    public void testGetChildrenCount()
+    {
+        ConfigurationNode node = mockNode();
+        final Integer count = 42;
+        EasyMock.expect(node.getChildrenCount(NAME)).andReturn(count);
+        EasyMock.replay(node);
+        assertEquals("Wrong number of children", count.intValue(), handler
+                .getChildrenCount(node, NAME));
+        EasyMock.verify(node);
+    }
 }

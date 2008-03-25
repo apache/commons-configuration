@@ -106,6 +106,23 @@ public interface NodeHandler<T>
     T getChild(T node, int index);
 
     /**
+     * Returns the number of children of the specified node with the given name.
+     * This method exists for performance reasons: for some node implementations
+     * it may be by far more efficient to count the children than to query a
+     * list of all children and determine its size. A concrete implementation
+     * can choose the most efficient way to determine the number of children. If
+     * a child name is passed in, only the children with this name are taken
+     * into account. If the name <b>null</b> is passed, the total number of
+     * children must be returned.
+     *
+     * @param node the node
+     * @param name the name of the children in question (can be <b>null</b> for
+     *        all children)
+     * @return the number of the selected children
+     */
+    int getChildrenCount(T node, String name);
+
+    /**
      * Removes the specified child from the given node.
      *
      * @param node the node
@@ -147,13 +164,13 @@ public interface NodeHandler<T>
      * <code>NodeHandler</code> implementation supports this). In contrast to
      * <code>setAttributeValue()</code>, an existing attribute value is not
      * removed, but the new value is added to the existing values.
-     * 
+     *
      * @param node the parent node
      * @param name the name of the attribute
      * @param value the value to be added
      */
     void addAttributeValue(T node, String name, Object value);
-    
+
     /**
      * Removes the attribute with the specified name from the given node.
      *
