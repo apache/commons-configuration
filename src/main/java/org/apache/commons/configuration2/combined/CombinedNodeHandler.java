@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.combined;
 
 import java.util.List;
 
+import org.apache.commons.configuration2.expr.AbstractNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
 
 /**
@@ -47,7 +48,8 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * @version $Id$
  * @since 2.0
  */
-public class CombinedNodeHandler implements NodeHandler<Object>
+public class CombinedNodeHandler extends AbstractNodeHandler<Object>
+implements NodeHandler<Object>
 {
     /**
      * Adds another value to an attribute of the specified combined node.
@@ -171,16 +173,15 @@ public class CombinedNodeHandler implements NodeHandler<Object>
     }
 
     /**
-     * Tests whether the passed in node is defined. This implementation checks
-     * whether the node has a value or any attributes.
+     * Returns a flag whether the passed in combined node has any attributes.
      *
-     * @param node the node to test
-     * @return a flag whether this node is defined
+     * @param node the combined node
+     * @return a flag whether this node has any attributes
      */
-    public boolean isDefined(Object node)
+    @Override
+    public boolean hasAttributes(Object node)
     {
-        CombinedNode vn = node(node);
-        return vn.getValue() != null || vn.hasAttributes();
+        return node(node).hasAttributes();
     }
 
     /**

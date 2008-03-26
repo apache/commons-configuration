@@ -139,6 +139,14 @@ public interface NodeHandler<T>
     List<String> getAttributes(T node);
 
     /**
+     * Returns a flag whether the passed in node has any attributes.
+     *
+     * @param node the node
+     * @return a flag whether this node has any attributes
+     */
+    boolean hasAttributes(T node);
+
+    /**
      * Returns the value of the specified attribute from the given node. If a
      * concrete <code>NodeHandler</code> supports attributes with multiple
      * values, result might be a collection.
@@ -188,4 +196,16 @@ public interface NodeHandler<T>
      * @return a flag whether the passed in node is defined
      */
     boolean isDefined(T node);
+
+    /**
+     * Initializes this <code>NodeHandler</code> with a reference to a
+     * <code>{@link NodeHandlerRegistry}</code>. This method is called when
+     * multiple types of configuration nodes are involved. It is especially
+     * useful for complex implementations that have to deal with arbitrary
+     * configuration nodes. <code>NodeHandler</code> implementations that only
+     * handle a specific node type can simply ignore this method.
+     *
+     * @param registry a reference to a <code>NodeHandlerRegistry</code>
+     */
+    void initNodeHandlerRegistry(NodeHandlerRegistry registry);
 }

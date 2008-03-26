@@ -31,7 +31,8 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * @author Oliver Heger
  * @version $Id$
  */
-public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
+public class ConfigurationNodeHandler extends AbstractNodeHandler<ConfigurationNode>
+implements NodeHandler<ConfigurationNode>
 {
     /**
      * Creates a new child node with the given name and adds it to the specified
@@ -98,6 +99,19 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
             names.add(n.getName());
         }
         return names;
+    }
+
+    /**
+     * Checks whether the passed in node has any attributes. This implementation
+     * is slightly more efficient than the default one.
+     *
+     * @param node the node
+     * @return a flag whether this node has any attributes
+     */
+    @Override
+    public boolean hasAttributes(ConfigurationNode node)
+    {
+        return !node.getAttributes().isEmpty();
     }
 
     /**
@@ -249,18 +263,6 @@ public class ConfigurationNodeHandler implements NodeHandler<ConfigurationNode>
     public void removeChild(ConfigurationNode node, ConfigurationNode child)
     {
         node.removeChild(child);
-    }
-
-    /**
-     * Tests whether the passed in node is defined. This implementation checks
-     * whether the node has a value or any attributes.
-     *
-     * @param node the node to test
-     * @return a flag whether this node is defined
-     */
-    public boolean isDefined(ConfigurationNode node)
-    {
-        return node.getValue() != null || !node.getAttributes().isEmpty();
     }
 
     /**
