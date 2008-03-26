@@ -111,14 +111,14 @@ public abstract class NodeCombiner
             U node2, NodeHandler<U> handler2);
 
     /**
-     * Creates a new view node. This method will be called whenever a new view
-     * node is to be created. It can be overridden to create special view nodes.
+     * Creates a new combined node. This method will be called whenever a new combined
+     * node is to be created. It can be overridden to create special combined nodes.
      * This base implementation returns a new instance of
      * <code>{@link CombinedNode}</code>.
      *
-     * @return the new view node
+     * @return the new combined node
      */
-    protected CombinedNode createViewNode()
+    protected CombinedNode createCombinedNode()
     {
         return new CombinedNode();
     }

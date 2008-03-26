@@ -68,7 +68,7 @@ public class OverrideCombiner extends NodeCombiner
     public <T, U> CombinedNode combine(T node1, NodeHandler<T> handler1,
             U node2, NodeHandler<U> handler2)
     {
-        CombinedNode result = createViewNode();
+        CombinedNode result = createCombinedNode();
         result.setName(handler1.nodeName(node1));
 
         // Process nodes from the first structure, which override the second
