@@ -107,6 +107,7 @@ public abstract class AbstractCombinerTest extends TestCase
         CombinedNode cn = (CombinedNode) node;
         ConfigurationNode result = new DefaultConfigurationNode(cn.getName(),
                 cn.getValue());
+        result.setReference(node);
 
         for (String n : cn.getAttributes())
         {
