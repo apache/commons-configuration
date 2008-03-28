@@ -68,10 +68,16 @@ public interface NodeHandlerRegistry
      * method is intended for internal processing.
      *
      * @param node the node in question
+     * @param subClasses a flag whether an implementation should try an exact
+     * match with the node class (<b>false</b>) or also take sub classes into
+     * account (<b>true</b>); (Per default a registry will first check whether
+     * a specific node handler is registered for the concrete node class. If
+     * this is not the case, it checks whether the node is derived from a class,
+     * for which a node handler is registered.)
      * @return a <code>NodeHandler</code> that can deal with the passed in
      *         node (can be <b>null</b>)
      */
-    NodeHandler<?> lookupHandler(Object node);
+    NodeHandler<?> lookupHandler(Object node, boolean subClasses);
 
     /**
      * Adds a sub registry to this object. When resolving a
