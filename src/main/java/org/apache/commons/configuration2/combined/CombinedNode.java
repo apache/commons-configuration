@@ -22,6 +22,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration2.expr.NodeHandler;
+
 /**
  * <p>
  * A specialized node implementation to be used in combined configurations.
@@ -331,6 +333,37 @@ public class CombinedNode
     public void removeAttribute(String name)
     {
         attributes.remove(name);
+    }
+
+    /**
+     * Appends all attributes of the specified node to this combined node.
+     *
+     * @param <T> the type of the affected node
+     * @param node the source node
+     * @param handler the handler for the source node
+     */
+    public <T> void appendAttributes(T node, NodeHandler<T> handler)
+    {
+        for (String attrName : handler.getAttributes(node))
+        {
+            addAttributeValue(attrName, handler.getAttributeValue(node,
+                    attrName));
+        }
+    }
+
+    /**
+     * Appends all children of the specified node to this combined node.
+     *
+     * @param <T> the type of the affected node
+     * @param node the source node
+     * @param handler the handler for the source node
+     */
+    public <T> void appendChildren(T node, NodeHandler<T> handler)
+    {
+        for (T child : handler.getChildren(node))
+        {
+            addChild(handler.nodeName(child), child);
+        }
     }
 
     /**

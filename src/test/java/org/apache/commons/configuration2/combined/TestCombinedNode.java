@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.configuration2.expr.NodeHandler;
+import org.easymock.EasyMock;
+
 import junit.framework.TestCase;
 
 /**
@@ -301,5 +304,63 @@ public class TestCombinedNode extends TestCase
         node.removeAttribute(ATTR_NAME);
         assertNull("Attribute still found", node.getAttribute(ATTR_NAME));
         assertTrue("Attribute name still found", node.getAttributes().isEmpty());
+    }
+
+    /**
+     * Tests appending the attributes of a source node.
+     */
+    @SuppressWarnings("unchecked")
+    public void testAppendAttributes()
+    {
+        NodeHandler<Object> handler = EasyMock.createMock(NodeHandler.class);
+        final Object mockNode = new Object();
+        List<String> attrs = new ArrayList<String>(CHILD_COUNT);
+        for (int i = 0; i < CHILD_COUNT; i++)
+        {
+            String attrName = ATTR_NAME + i;
+            attrs.add(attrName);
+            EasyMock.expect(handler.getAttributeValue(mockNode, attrName))
+                    .andReturn(i);
+        }
+        EasyMock.expect(handler.getAttributes(mockNode)).andReturn(attrs);
+        EasyMock.replay(handler);
+        node.appendAttributes(mockNode, handler);
+        List<String> attrs2 = node.getAttributes();
+        assertEquals("Wrong number of attributes", CHILD_COUNT, attrs2.size());
+        for (int i = 0; i < CHILD_COUNT; i++)
+        {
+            assertEquals("Wrong attribute at " + i, attrs.get(i), attrs2.get(i));
+            assertEquals("Wrong attribute value at " + i, Integer.valueOf(i),
+                    node.getAttribute(attrs2.get(i)));
+        }
+        EasyMock.verify(handler);
+    }
+
+    /**
+     * Tests appending the children of a source node.
+     */
+    @SuppressWarnings("unchecked")
+    public void testAppendChildren()
+    {
+        NodeHandler<Object> handler = EasyMock.createMock(NodeHandler.class);
+        final Object mockNode = new Object();
+        List<Object> children = new ArrayList<Object>(CHILD_COUNT);
+        for (int i = 0; i < CHILD_COUNT; i++)
+        {
+            String childName = CHILD_NAME + i;
+            children.add(i);
+            EasyMock.expect(handler.nodeName(i)).andReturn(childName);
+        }
+        EasyMock.expect(handler.getChildren(mockNode)).andReturn(children);
+        EasyMock.replay(handler);
+        node.appendChildren(mockNode, handler);
+        List<Object> children2 = node.getChildren();
+        assertEquals("Wrong number of children", CHILD_COUNT, children2.size());
+        for (int i = 0; i < CHILD_COUNT; i++)
+        {
+            assertEquals("Wrong child at " + i, Integer.valueOf(i), children2
+                    .get(i));
+        }
+        EasyMock.verify(handler);
     }
 }

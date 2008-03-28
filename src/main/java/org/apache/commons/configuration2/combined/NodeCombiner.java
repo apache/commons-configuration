@@ -135,10 +135,6 @@ public abstract class NodeCombiner
     protected <T> void appendAttributes(CombinedNode vn, T node,
             NodeHandler<T> handler)
     {
-        for (String attrName : handler.getAttributes(node))
-        {
-            vn.addAttributeValue(attrName, handler.getAttributeValue(node,
-                    attrName));
-        }
+        vn.appendAttributes(node, handler);
     }
 }
