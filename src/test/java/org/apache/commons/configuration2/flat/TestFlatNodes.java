@@ -35,10 +35,10 @@ import junit.framework.TestCase;
 public class TestFlatNodes extends TestCase
 {
     /** Constant for the name of the test node. */
-    private static final String NAME = "testFlatNode";
+    static final String NAME = "testFlatNode";
 
     /** Constant for a test value. */
-    private static final Object VALUE = 42;
+    static final Object VALUE = 42;
 
     /** The parent node. */
     private FlatRootNode parent;
@@ -472,7 +472,7 @@ public class TestFlatNodes extends TestCase
      * for testing whether properties are correctly accessed. Most methods are
      * simply dummy implementations.
      */
-    private static class FlatConfigurationMockImpl extends
+    static class FlatConfigurationMockImpl extends
             AbstractFlatConfiguration
     {
         /** Stores the value of the test property. */
@@ -497,7 +497,7 @@ public class TestFlatNodes extends TestCase
         }
 
         @Override
-        public void clearProperty(String key)
+        public void clearPropertyDirect(String key)
         {
             clearPropertyValue(key, FlatNode.INDEX_UNDEFINED);
         }
