@@ -42,7 +42,7 @@ public class TestFlatNodeHandler extends TestCase
     private FlatNodeHandler handler;
 
     /** The mock configuration associated with the node handler. */
-    private TestFlatNodes.FlatConfigurationMockImpl config;
+    private FlatConfigurationMockImpl config;
 
     /** Stores the internal update flag of the node handler. */
     private Boolean internalUpdate;
@@ -51,7 +51,7 @@ public class TestFlatNodeHandler extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        config = new TestFlatNodes.FlatConfigurationMockImpl();
+        config = new FlatConfigurationMockImpl();
         config.clearConfigurationListeners();
         config.addConfigurationListener(new ConfigurationListener()
         {
@@ -191,7 +191,7 @@ public class TestFlatNodeHandler extends TestCase
     public void testAddChild()
     {
         FlatNode node = setUpTestNode();
-        final String childName = TestFlatNodes.NAME;
+        final String childName = FlatConfigurationMockImpl.NAME;
         FlatNode child = handler.addChild(node, childName);
         assertEquals("Wrong name of child", childName, child.getName());
         config.expectAdd = true;
@@ -206,7 +206,7 @@ public class TestFlatNodeHandler extends TestCase
     public void testRemoveChild()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(TestFlatNodes.NAME);
+        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
         handler.removeChild(node, child);
         List<FlatNode> children = node.getChildren();
         assertEquals("No child removed", CHILD_NAMES.length, children.size());
@@ -221,7 +221,7 @@ public class TestFlatNodeHandler extends TestCase
     public void testSetValue()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(TestFlatNodes.NAME);
+        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
         config.expectAdd = true;
         handler.setValue(child, TestFlatNodes.VALUE);
         assertEquals("Property not added to config", TestFlatNodes.VALUE,
@@ -235,7 +235,7 @@ public class TestFlatNodeHandler extends TestCase
     public void testGetValue()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(TestFlatNodes.NAME);
+        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
         config.property = TestFlatNodes.VALUE;
         assertEquals("Wrong value of node", TestFlatNodes.VALUE, handler
                 .getValue(child));

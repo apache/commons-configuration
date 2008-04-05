@@ -58,29 +58,72 @@ import org.apache.commons.configuration2.AbstractConfiguration;
 public abstract class AbstractFlatConfiguration extends AbstractConfiguration
 {
     /**
+     * Constant for the property change event. This event is triggered by
+     * <code>setPropertyValue()</code> and <code>clearPropertyValue()</code>,
+     * which manipulate a value of a property with multiple values.
+     */
+    public static final int EVENT_PROPERTY_CHANGED = 9;
+    
+    /**
      * Modifies a specific value of a property with multiple values. If a
      * property has multiple values, this method can be used to alter a specific
      * value (identified by its 0-based index) without affecting the other
      * values. If the index is invalid (i.e. less than 0 or greater than the
      * number of existing values), the value will be added to the existing
-     * values of this property.
+     * values of this property. This method takes care of firing the appropriate
+     * events and delegates to <code>setPropertyValueDirect()</code>. It generates
+     * a <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
+     * affected property.
      *
      * @param key the key of the property
      * @param index the index of the value to change
      * @param value the new value; this should be a simple object; arrays or
      *        collections won't be treated specially, but directly added
      */
-    public abstract void setPropertyValue(String key, int index, Object value);
+    public void setPropertyValue(String key, int index, Object value)
+    {
+        fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
+        setPropertyValueDirect(key, index, value);
+        fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
+    }
 
     /**
      * Removes a specific value of a property with multiple values. If a
      * property has multiple values, this method can be used for removing a
      * single value (identified by its 0-based index). If the index is out of
      * range, no action is performed; in this case <b>false</b> is returned.
+     * This method takes care of firing the appropriate
+     * events and delegates to <code>clearPropertyValueDirect()</code>. It generates
+     * a <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
+     * affected property.
      *
      * @param key the key of the property
      * @param index the index of the value to delete
      * @return a flag whether the value could be removed
      */
-    public abstract boolean clearPropertyValue(String key, int index);
+    public boolean clearPropertyValue(String key, int index)
+    {
+        fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
+        boolean result = clearPropertyValueDirect(key, index);
+        fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
+        return result;
+    }
+    
+    /**
+     * Performs the actual modification of the specified property value. This
+     * method is called by <code>setPropertyValue()</code>.
+     * @param key the key of the property
+     * @param index the index of the value to change
+     * @param value the new value
+     */
+    protected abstract void setPropertyValueDirect(String key, int index, Object value);
+    
+    /**
+     * Performs the actual remove property value operation. This method is called
+     * by <code>clearPropertyValue()</code>.
+     * @param key the key of the property
+     * @param index the index of the value to delete
+     * @return a flag whether the value could be removed
+     */
+    protected abstract boolean clearPropertyValueDirect(String key, int index);
 }

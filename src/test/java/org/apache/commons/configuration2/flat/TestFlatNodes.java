@@ -18,7 +18,6 @@ package org.apache.commons.configuration2.flat;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
@@ -35,7 +34,7 @@ import junit.framework.TestCase;
 public class TestFlatNodes extends TestCase
 {
     /** Constant for the name of the test node. */
-    static final String NAME = "testFlatNode";
+    private static final String NAME = FlatConfigurationMockImpl.NAME;
 
     /** Constant for a test value. */
     static final Object VALUE = 42;
@@ -464,86 +463,6 @@ public class TestFlatNodes extends TestCase
         catch (ConfigurationRuntimeException crex)
         {
             // ok
-        }
-    }
-
-    /**
-     * A mock implementation of a flat configuration. This mock class is used
-     * for testing whether properties are correctly accessed. Most methods are
-     * simply dummy implementations.
-     */
-    static class FlatConfigurationMockImpl extends
-            AbstractFlatConfiguration
-    {
-        /** Stores the value of the test property. */
-        Object property;
-
-        /** Stores the expected index. */
-        int expectedIndex;
-
-        /** A flag whether an add property operation is expected. */
-        boolean expectAdd;
-
-        /** A flag whether clearProperty() was called. */
-        boolean clearProperty;
-
-        @Override
-        public boolean clearPropertyValue(String key, int index)
-        {
-            assertEquals("Wrong property key", NAME, key);
-            clearProperty = true;
-            expectedIndex = index;
-            return true;
-        }
-
-        @Override
-        public void clearPropertyDirect(String key)
-        {
-            clearPropertyValue(key, FlatNode.INDEX_UNDEFINED);
-        }
-
-        @Override
-        public void setPropertyValue(String key, int index, Object value)
-        {
-            assertFalse("Add operation expected", expectAdd);
-            assertEquals("Wrong property key", NAME, key);
-            assertEquals("Wrong index", expectedIndex, index);
-            property = value;
-        }
-
-        @Override
-        public void setProperty(String key, Object value)
-        {
-            setPropertyValue(key, FlatNode.INDEX_UNDEFINED, value);
-        }
-
-        @Override
-        protected void addPropertyDirect(String key, Object value)
-        {
-            assertTrue("Set operation expected", expectAdd);
-            assertEquals("Wrong property key", NAME, key);
-            property = value;
-        }
-
-        public boolean containsKey(String key)
-        {
-            return false;
-        }
-
-        public Iterator<String> getKeys()
-        {
-            return null;
-        }
-
-        public Object getProperty(String key)
-        {
-            assertEquals("Wrong property key", NAME, key);
-            return property;
-        }
-
-        public boolean isEmpty()
-        {
-            return false;
         }
     }
 }
