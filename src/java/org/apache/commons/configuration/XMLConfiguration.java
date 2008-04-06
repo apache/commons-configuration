@@ -725,7 +725,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
 
@@ -746,11 +746,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (TransformerException e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to save the configuration", e);
         }
-        catch (TransformerFactoryConfigurationError err)
+        catch (TransformerFactoryConfigurationError e)
         {
-            throw new ConfigurationException(err.getMessage(), err);
+            throw new ConfigurationException("Unable to save the configuration", e);
         }
     }
 

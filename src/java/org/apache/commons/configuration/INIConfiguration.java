@@ -326,9 +326,9 @@ public class INIConfiguration extends AbstractFileConfiguration
                 line = bufferedReader.readLine();
             }
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            throw new ConfigurationException(ioe.getMessage());
+            throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
 

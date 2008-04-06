@@ -222,7 +222,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to load the configuration file " + fileName, e);
         }
     }
 
@@ -246,7 +246,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to load the configuration file " + file, e);
         }
     }
 
@@ -290,7 +290,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to load the configuration from the URL " + url, e);
         }
         finally
         {
@@ -406,7 +406,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to save the configuration to the file " + fileName, e);
         }
     }
 
@@ -490,7 +490,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
         catch (IOException e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to save the configuration to the file " + file, e);
         }
         finally
         {
