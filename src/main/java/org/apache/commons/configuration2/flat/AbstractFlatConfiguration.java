@@ -16,7 +16,13 @@
  */
 package org.apache.commons.configuration2.flat;
 
+import java.util.Iterator;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationListener;
 
 /**
  * <p>
@@ -63,7 +69,56 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * which manipulate a value of a property with multiple values.
      */
     public static final int EVENT_PROPERTY_CHANGED = 9;
-    
+
+    /** Stores the <code>NodeHandler</code> used by this configuration. */
+    private FlatNodeHandler nodeHandler;
+
+    /** Stores the root node of this configuration. */
+    private FlatNode rootNode;
+
+    /** A lock for protecting the root node. */
+    private Lock lockRoot;
+
+    /**
+     * Creates a new instance of <code>AbstractFlatConfiguration</code>.
+     */
+    protected AbstractFlatConfiguration()
+    {
+        lockRoot = new ReentrantLock();
+        nodeHandler = new FlatNodeHandler(this);
+
+        // Add event handler that invalidates the node structure if required
+        addConfigurationListener(new ConfigurationListener()
+        {
+            /**
+             * Reacts on change events. Asks the node handler whether the
+             * received event was caused by an update of the node structure. If
+             * not, the structure has to be invalidated.
+             */
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                if (!event.isBeforeUpdate())
+                {
+                    if (!getNodeHandler().isInternalUpdate())
+                    {
+                        invalidateRootNode();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Returns the <code>NodeHandler</code> used by this configuration. This
+     * is a handler that can deal with flat nodes.
+     *
+     * @return the <code>NodeHandler</code> used
+     */
+    public FlatNodeHandler getNodeHandler()
+    {
+        return nodeHandler;
+    }
+
     /**
      * Modifies a specific value of a property with multiple values. If a
      * property has multiple values, this method can be used to alter a specific
@@ -71,9 +126,9 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * values. If the index is invalid (i.e. less than 0 or greater than the
      * number of existing values), the value will be added to the existing
      * values of this property. This method takes care of firing the appropriate
-     * events and delegates to <code>setPropertyValueDirect()</code>. It generates
-     * a <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
-     * affected property.
+     * events and delegates to <code>setPropertyValueDirect()</code>. It
+     * generates a <code>EVENT_PROPERTY_CHANGED</code> event that contains the
+     * key of the affected property.
      *
      * @param key the key of the property
      * @param index the index of the value to change
@@ -92,9 +147,9 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * property has multiple values, this method can be used for removing a
      * single value (identified by its 0-based index). If the index is out of
      * range, no action is performed; in this case <b>false</b> is returned.
-     * This method takes care of firing the appropriate
-     * events and delegates to <code>clearPropertyValueDirect()</code>. It generates
-     * a <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
+     * This method takes care of firing the appropriate events and delegates to
+     * <code>clearPropertyValueDirect()</code>. It generates a
+     * <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
      * affected property.
      *
      * @param key the key of the property
@@ -108,19 +163,109 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
         fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
         return result;
     }
-    
+
+    /**
+     * Returns the root node of this configuration. A node hierarchy for this
+     * configuration (consisting of <code>FlatNode</code> objects) is created
+     * on demand. This method returns the root node of this hierarchy. It checks
+     * whether a valid root node exists. If this is not the case,
+     * <code>constructNodeHierarchy()</code> is called to setup the node
+     * structure. Modifications on this configuration that cause the node
+     * hierarchy to get out of sync with the data stored in this configuration
+     * cause the root node to be invalidated. It will then be re-created on next
+     * access. <em>Implementation note:</em> This method is thread-safe; it
+     * can be invoked concurrently by multiple threads.
+     *
+     * @return the root node of this configuration
+     */
+    public FlatNode getRootNode()
+    {
+        lockRoot.lock();
+        try
+        {
+            if (rootNode == null)
+            {
+                rootNode = constructNodeHierarchy();
+            }
+            return rootNode;
+        }
+        finally
+        {
+            lockRoot.unlock();
+        }
+    }
+
+    /**
+     * Returns the maximum index of the property with the given key. This method
+     * can be used to find out how many values are stored for a given property.
+     * A return value of -1 means that this property is unknown. A value of 0
+     * indicates that there is a single value, 1 means there are two values,
+     * etc.
+     *
+     * @param key the key of the property
+     * @return the maximum index of a value of this property
+     */
+    public abstract int getMaxIndex(String key);
+
+    /**
+     * Creates a hierarchy of <code>FlatNode</code> objects that corresponds
+     * to the data stored in this configuration. This implementation relies on
+     * the methods <code>getKeys()</code> and <code>getMaxIndex()</code> to
+     * obtain the data required for constructing the node hierarchy.
+     *
+     * @return the root node of this hierarchy
+     */
+    protected FlatNode constructNodeHierarchy()
+    {
+        FlatRootNode root = new FlatRootNode();
+        for (Iterator<String> it = getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            int maxIndex = getMaxIndex(key);
+            for (int i = 0; i <= maxIndex; i++)
+            {
+                root.addChild(key, true);
+            }
+        }
+
+        return root;
+    }
+
+    /**
+     * Invalidates the root node of this configuration's node structure. This
+     * method is called when this configuration instance is updated, so that its
+     * data is out of sync with the node structure. It causes the root node and
+     * the whole hierarchy to be re-created when it is accessed for the next
+     * time.
+     */
+    protected void invalidateRootNode()
+    {
+        lockRoot.lock();
+        try
+        {
+            rootNode = null;
+        }
+        finally
+        {
+            lockRoot.unlock();
+        }
+    }
+
     /**
      * Performs the actual modification of the specified property value. This
      * method is called by <code>setPropertyValue()</code>.
+     *
      * @param key the key of the property
      * @param index the index of the value to change
      * @param value the new value
      */
-    protected abstract void setPropertyValueDirect(String key, int index, Object value);
-    
+    protected abstract void setPropertyValueDirect(String key, int index,
+            Object value);
+
     /**
-     * Performs the actual remove property value operation. This method is called
-     * by <code>clearPropertyValue()</code>.
+     * Performs the actual remove property value operation. This method is
+     * called by <code>clearPropertyValue()</code>.
+     *
      * @param key the key of the property
      * @param index the index of the value to delete
      * @return a flag whether the value could be removed
