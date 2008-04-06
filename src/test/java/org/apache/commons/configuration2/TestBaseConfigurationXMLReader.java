@@ -26,8 +26,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.BaseConfigurationXMLReader;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.jxpath.JXPathContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;

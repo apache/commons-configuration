@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Collection;
 
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.CompositeConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
@@ -38,6 +37,7 @@ import org.apache.commons.configuration2.StrictConfigurationComparator;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 
 import junit.framework.TestCase;

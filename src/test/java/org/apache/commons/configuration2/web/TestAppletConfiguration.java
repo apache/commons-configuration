@@ -18,9 +18,9 @@
 package org.apache.commons.configuration2.web;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.web.AppletConfiguration;
 
 import java.applet.Applet;

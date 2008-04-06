@@ -248,7 +248,7 @@ public final class ConfigurationUtils
      * @return the cloned object
      * @throws CloneNotSupportedException if the object cannot be cloned
      */
-    static Object clone(Object obj) throws CloneNotSupportedException
+    public static Object clone(Object obj) throws CloneNotSupportedException
     {
         if (obj instanceof Cloneable)
         {

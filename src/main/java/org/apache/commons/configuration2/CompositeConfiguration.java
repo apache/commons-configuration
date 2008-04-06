@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.apache.commons.configuration2.flat.BaseConfiguration;
+
 /**
  * This Configuration class allows you to add multiple different types of Configuration
  * to this CompositeConfiguration.  If you add Configuration1, and then Configuration2,

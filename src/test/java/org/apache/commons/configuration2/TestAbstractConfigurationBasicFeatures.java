@@ -21,15 +21,17 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 import junit.framework.TestCase;
 
@@ -257,6 +259,54 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
         AbstractConfiguration config = setUpDestConfig();
         config.append(null);
         ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+    }
+
+    public void testResolveContainerStore()
+    {
+        AbstractConfiguration config = new BaseConfiguration();
+
+        // array of objects
+        config.addPropertyDirect("array", new String[] { "foo", "bar" });
+
+        assertEquals("first element of the 'array' property", "foo", config.resolveContainerStore("array"));
+
+        // list of objects
+        List<String> list = new ArrayList<String>();
+        list.add("foo");
+        list.add("bar");
+        config.addPropertyDirect("list", list);
+
+        assertEquals("first element of the 'list' property", "foo", config.resolveContainerStore("list"));
+
+        // set of objects
+        Set<String> set = new LinkedHashSet<String>();
+        set.add("foo");
+        set.add("bar");
+        config.addPropertyDirect("set", set);
+
+        assertEquals("first element of the 'set' property", "foo", config.resolveContainerStore("set"));
+
+        // arrays of primitives
+        config.addPropertyDirect("array.boolean", new boolean[] { true, false });
+        assertEquals("first element of the 'array.boolean' property", true, config.getBoolean("array.boolean"));
+
+        config.addPropertyDirect("array.byte", new byte[] { 1, 2 });
+        assertEquals("first element of the 'array.byte' property", 1, config.getByte("array.byte"));
+
+        config.addPropertyDirect("array.short", new short[] { 1, 2 });
+        assertEquals("first element of the 'array.short' property", 1, config.getShort("array.short"));
+
+        config.addPropertyDirect("array.int", new int[] { 1, 2 });
+        assertEquals("first element of the 'array.int' property", 1, config.getInt("array.int"));
+
+        config.addPropertyDirect("array.long", new long[] { 1, 2 });
+        assertEquals("first element of the 'array.long' property", 1, config.getLong("array.long"));
+
+        config.addPropertyDirect("array.float", new float[] { 1, 2 });
+        assertEquals("first element of the 'array.float' property", 1, config.getFloat("array.float"), 0);
+
+        config.addPropertyDirect("array.double", new double[] { 1, 2 });
+        assertEquals("first element of the 'array.double' property", 1, config.getDouble("array.double"), 0);
     }
 
     /**

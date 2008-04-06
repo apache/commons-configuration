@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 
 import junit.framework.TestCase;

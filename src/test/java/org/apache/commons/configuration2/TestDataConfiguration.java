@@ -33,6 +33,8 @@ import java.util.Locale;
 import java.util.NoSuchElementException;
 import javax.mail.internet.InternetAddress;
 
+import org.apache.commons.configuration2.flat.BaseConfiguration;
+
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;

@@ -15,13 +15,19 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.flat;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.XMLConfiguration;
 
 /**
  * Basic configuration classe. Stores the configuration data but does not

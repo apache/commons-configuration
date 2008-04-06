@@ -24,9 +24,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConversionException;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;

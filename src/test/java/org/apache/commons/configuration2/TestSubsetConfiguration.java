@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.apache.commons.configuration2.flat.BaseConfiguration;
+
 import junit.framework.TestCase;
 
 /**

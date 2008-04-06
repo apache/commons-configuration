@@ -19,8 +19,8 @@ package org.apache.commons.configuration2;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.ConfigurationMap;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

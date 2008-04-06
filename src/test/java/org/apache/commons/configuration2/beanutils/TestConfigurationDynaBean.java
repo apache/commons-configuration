@@ -24,9 +24,9 @@ import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.beanutils.ConfigurationDynaBean;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.

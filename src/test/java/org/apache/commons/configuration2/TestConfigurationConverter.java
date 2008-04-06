@@ -22,9 +22,9 @@ import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * Tests the ConfigurationConverter class.

@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.lang.StringUtils;

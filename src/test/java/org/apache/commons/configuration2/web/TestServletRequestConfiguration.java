@@ -23,10 +23,10 @@ import java.util.Map;
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.BaseConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.lang.StringUtils;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
