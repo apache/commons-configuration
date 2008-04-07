@@ -17,16 +17,11 @@
 
 package org.apache.commons.configuration2;
 
-import java.lang.annotation.ElementType;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.configuration2.converter.Converter;
-import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
 
 import junit.framework.TestCase;
 
@@ -40,14 +35,6 @@ public class TestPropertyConverter extends TestCase
 {
     /** An array with test values for the flatten test.*/
     private static final Integer[] FLATTEN_VALUES = { 1, 2, 3, 4, 5, 6, 28 };
-
-    /** The enum class we use in tests for enum conversions.*/
-    private static Class<ElementType> ENUM_CLASS = ElementType.class;
-
-    /** An enumeration object used for testing conversions with enums.*/
-    private static ElementType ENUM_OBJECT = ElementType.METHOD;
-
-    private static Converter converter = new DefaultPropertyConverter();
 
     public void testSplit()
     {
@@ -291,110 +278,4 @@ public class TestPropertyConverter extends TestCase
                 PropertyConverter.interpolate("The ${animal} jumps over ${target}.", config));
     }
 
-    /**
-     * Tests conversion to numbers when the passed in objects are already
-     * numbers.
-     */
-    public void testToNumberDirect()
-    {
-        Integer i = new Integer(42);
-        assertSame("Wrong integer", i, converter.convert(Integer.class, i));
-        BigDecimal d = new BigDecimal("3.1415");
-        assertSame("Wrong BigDecimal", d, converter.convert(Number.class, d));
-    }
-
-    /**
-     * Tests conversion to numbers when the passed in objects have a compatible
-     * string representation.
-     */
-    public void testToNumberFromString()
-    {
-        assertEquals("Incorrect Integer value", new Integer(42), converter.convert(Integer.class, "42"));
-        assertEquals("Incorrect Short value", new Short((short) 10), converter.convert(Short.class, new StringBuilder("10")));
-    }
-
-    /**
-     * Tests conversion to numbers when the passed in objects are strings with
-     * prefixes for special radices.
-     */
-    public void testToNumberFromHexString()
-    {
-        Number n = converter.convert(Integer.class, "0x10");
-        assertEquals("Incorrect Integer value", 16, n.intValue());
-    }
-
-    /**
-     * Tests conversion to numbers when an invalid Hex value is passed in. This
-     * should cause an exception.
-     */
-    public void testToNumberFromInvalidHexString()
-    {
-        try
-        {
-            converter.convert(Integer.class, "0xNotAHexValue");
-            fail("Could convert invalid hex value!");
-        }
-        catch (ConversionException cex)
-        {
-            // ok
-        }
-    }
-
-    /**
-     * Tests conversion to numbers when the passed in objects have no numeric
-     * String representation. This should cause an exception.
-     */
-    public void testToNumberFromInvalidString()
-    {
-        try
-        {
-            converter.convert(Byte.class, "Not a number");
-            fail("Could convert invalid String!");
-        }
-        catch (ConversionException cex)
-        {
-            // ok
-        }
-    }
-
-    public void testToEnumFromEnum()
-    {
-        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, ENUM_OBJECT));
-    }
-
-    public void testToEnumFromString()
-    {
-        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, "METHOD"));
-    }
-
-    public void testToEnumFromInvalidString()
-    {
-        try
-        {
-            converter.convert(ENUM_CLASS, "FOO");
-            fail("Could convert invalid String!");
-        }
-        catch (ConversionException e)
-        {
-            // expected
-        }
-    }
-
-    public void testToEnumFromNumber()
-    {
-        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, new Integer(2)));
-    }
-
-    public void testToEnumFromInvalidNumber()
-    {
-        try
-        {
-            converter.convert(ENUM_CLASS, new Integer(-1));
-            fail("Could convert invalid number!");
-        }
-        catch (ConversionException e)
-        {
-            // expected
-        }
-    }
 }
