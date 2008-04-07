@@ -204,6 +204,13 @@
     </dependency>
 
     <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mail</artifactId>
+      <version>1.4</version>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
       <groupId>commons-jxpath</groupId>
       <artifactId>commons-jxpath</artifactId>
       <version>1.2</version>
@@ -289,13 +296,6 @@
       <groupId>mockobjects</groupId>
       <artifactId>mockobjects-jdk1.4-j2ee1.3</artifactId>
       <version>0.09</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>1.4</version>
       <scope>test</scope>
     </dependency>
 
