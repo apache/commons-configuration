@@ -25,6 +25,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration2.converter.Converter;
+import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
+
 import junit.framework.TestCase;
 
 /**
@@ -43,6 +46,8 @@ public class TestPropertyConverter extends TestCase
 
     /** An enumeration object used for testing conversions with enums.*/
     private static ElementType ENUM_OBJECT = ElementType.METHOD;
+
+    private static Converter converter = new DefaultPropertyConverter();
 
     public void testSplit()
     {
@@ -293,9 +298,9 @@ public class TestPropertyConverter extends TestCase
     public void testToNumberDirect()
     {
         Integer i = new Integer(42);
-        assertSame("Wrong integer", i, PropertyConverter.toNumber(i, Integer.class));
+        assertSame("Wrong integer", i, converter.convert(Integer.class, i));
         BigDecimal d = new BigDecimal("3.1415");
-        assertSame("Wrong BigDecimal", d, PropertyConverter.toNumber(d, Integer.class));
+        assertSame("Wrong BigDecimal", d, converter.convert(Number.class, d));
     }
 
     /**
@@ -304,8 +309,8 @@ public class TestPropertyConverter extends TestCase
      */
     public void testToNumberFromString()
     {
-        assertEquals("Incorrect Integer value", new Integer(42), PropertyConverter.toNumber("42", Integer.class));
-        assertEquals("Incorrect Short value", new Short((short) 10), PropertyConverter.toNumber(new StringBuilder("10"), Short.class));
+        assertEquals("Incorrect Integer value", new Integer(42), converter.convert(Integer.class, "42"));
+        assertEquals("Incorrect Short value", new Short((short) 10), converter.convert(Short.class, new StringBuilder("10")));
     }
 
     /**
@@ -314,7 +319,7 @@ public class TestPropertyConverter extends TestCase
      */
     public void testToNumberFromHexString()
     {
-        Number n = PropertyConverter.toNumber("0x10", Integer.class);
+        Number n = converter.convert(Integer.class, "0x10");
         assertEquals("Incorrect Integer value", 16, n.intValue());
     }
 
@@ -326,7 +331,7 @@ public class TestPropertyConverter extends TestCase
     {
         try
         {
-            PropertyConverter.toNumber("0xNotAHexValue", Integer.class);
+            converter.convert(Integer.class, "0xNotAHexValue");
             fail("Could convert invalid hex value!");
         }
         catch (ConversionException cex)
@@ -343,7 +348,7 @@ public class TestPropertyConverter extends TestCase
     {
         try
         {
-            PropertyConverter.toNumber("Not a number", Byte.class);
+            converter.convert(Byte.class, "Not a number");
             fail("Could convert invalid String!");
         }
         catch (ConversionException cex)
@@ -354,19 +359,19 @@ public class TestPropertyConverter extends TestCase
 
     public void testToEnumFromEnum()
     {
-        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum(ENUM_OBJECT, ENUM_CLASS));
+        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, ENUM_OBJECT));
     }
 
     public void testToEnumFromString()
     {
-        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum("METHOD", ENUM_CLASS));
+        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, "METHOD"));
     }
 
     public void testToEnumFromInvalidString()
     {
         try
         {
-            PropertyConverter.toEnum("FOO", ENUM_CLASS);
+            converter.convert(ENUM_CLASS, "FOO");
             fail("Could convert invalid String!");
         }
         catch (ConversionException e)
@@ -377,14 +382,14 @@ public class TestPropertyConverter extends TestCase
 
     public void testToEnumFromNumber()
     {
-        assertEquals(ENUM_OBJECT, PropertyConverter.toEnum(new Integer(2), ENUM_CLASS));
+        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, new Integer(2)));
     }
 
     public void testToEnumFromInvalidNumber()
     {
         try
         {
-            PropertyConverter.toEnum(new Integer(-1), ENUM_CLASS);
+            converter.convert(ENUM_CLASS, new Integer(-1));
             fail("Could convert invalid number!");
         }
         catch (ConversionException e)

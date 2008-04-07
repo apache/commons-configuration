@@ -223,11 +223,11 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             {
                 if (Date.class.equals(cls) || Calendar.class.equals(cls))
                 {
-                    return PropertyConverter.to(cls, interpolate(value), getDefaultDateFormat());
+                    return converter.convert(cls, interpolate(value), getDefaultDateFormat());
                 }
                 else
                 {
-                    return PropertyConverter.to(cls, interpolate(value));
+                    return converter.convert(cls, interpolate(value));
                 }
             }
             catch (ConversionException e)
@@ -315,7 +315,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                         // attempt to convert the elements of the array
                         for (int i = 0; i < length; i++)
                         {
-                            list.add(PropertyConverter.to(cls, interpolate(Array.get(value, i)), params));
+                            list.add(converter.convert(cls, interpolate(Array.get(value, i)), params));
                         }
                     }
                 }
@@ -325,13 +325,13 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
                     for (Object o : values)
                     {
-                        list.add(PropertyConverter.to(cls, interpolate(o), params));
+                        list.add(converter.convert(cls, interpolate(o), params));
                     }
                 }
                 else
                 {
                     // attempt to convert a single value
-                    list.add(PropertyConverter.to(cls, interpolate(value), params));
+                    list.add(converter.convert(cls, interpolate(value), params));
                 }
             }
             catch (ConversionException e)
@@ -471,7 +471,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 int i = 0;
                 for (Object o : values)
                 {
-                    Array.set(array, i++, PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(o)));
+                    Array.set(array, i++, converter.convert(ClassUtils.primitiveToWrapper(cls), interpolate(o)));
                 }
             }
             else
@@ -479,7 +479,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 try
                 {
                     // attempt to convert a single value
-                    Object convertedValue = PropertyConverter.to(ClassUtils.primitiveToWrapper(cls), interpolate(value));
+                    Object convertedValue = converter.convert(ClassUtils.primitiveToWrapper(cls), interpolate(value));
 
                     // create an array of one element
                     array = Array.newInstance(cls, 1);
@@ -1267,7 +1267,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         {
             try
             {
-                return PropertyConverter.toDate(interpolate(value), format);
+                return converter.convert(Date.class, interpolate(value), format);
             }
             catch (ConversionException e)
             {
@@ -1362,7 +1362,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(PropertyConverter.toDate(interpolate(Array.get(value, i)), format));
+                list.add(converter.convert(Date.class, interpolate(Array.get(value, i)), format));
             }
         }
         else if (value instanceof Collection)
@@ -1372,7 +1372,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
             for (Object o : values)
             {
-                list.add(PropertyConverter.toDate(interpolate(o), format));
+                list.add(converter.convert(Date.class, interpolate(o), format));
             }
         }
         else
@@ -1381,7 +1381,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             {
                 // attempt to convert a single value
                 list = new ArrayList<Date>();
-                list.add(PropertyConverter.toDate(interpolate(value), format));
+                list.add(converter.convert(Date.class, interpolate(value), format));
             }
             catch (ConversionException e)
             {
@@ -1565,7 +1565,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         {
             try
             {
-                return PropertyConverter.toCalendar(interpolate(value), format);
+                return converter.convert(Calendar.class, interpolate(value), format);
             }
             catch (ConversionException e)
             {
@@ -1660,7 +1660,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(PropertyConverter.toCalendar(interpolate(Array.get(value, i)), format));
+                list.add(converter.convert(Calendar.class, interpolate(Array.get(value, i)), format));
             }
         }
         else if (value instanceof Collection)
@@ -1670,7 +1670,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
             for (Object o : values)
             {
-                list.add(PropertyConverter.toCalendar(interpolate(o), format));
+                list.add(converter.convert(Calendar.class, interpolate(o), format));
             }
         }
         else
@@ -1679,7 +1679,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             {
                 // attempt to convert a single value
                 list = new ArrayList<Calendar>();
-                list.add(PropertyConverter.toCalendar(interpolate(value), format));
+                list.add(converter.convert(Calendar.class, interpolate(value), format));
             }
             catch (ConversionException e)
             {

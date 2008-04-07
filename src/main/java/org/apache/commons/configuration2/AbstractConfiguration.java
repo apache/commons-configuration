@@ -29,6 +29,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.commons.configuration2.converter.Converter;
+import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
@@ -141,6 +143,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /** Stores a reference to the object that handles variable interpolation.*/
     private StrSubstitutor substitutor;
+
+    /** Converter used for the transformation of the properties. */
+    protected Converter converter = new DefaultPropertyConverter();
 
     /** Stores the logger.*/
     private Logger log;
@@ -332,6 +337,29 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             }
         });
         return interpol;
+    }
+
+    /**
+     * Returns the Converter used for the transformation of the properties.
+     * By default the {@link DefaultPropertyConverter} is used.
+     *
+     * @return
+     * @since 2.0
+     */
+    public Converter getConverter()
+    {
+        return converter;
+    }
+
+    /**
+     * Sets the Converter used for the transformation of the properties.
+     *
+     * @param converter
+     * @since 2.0
+     */
+    public void setConverter(Converter converter)
+    {
+        this.converter = converter;
     }
 
     /**
@@ -620,10 +648,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         return props;
     }
 
-    /**
-     * {@inheritDoc}
-     * @see PropertyConverter#toBoolean(Object)
-     */
     public boolean getBoolean(String key)
     {
         Boolean b = getBoolean(key, null);
@@ -637,10 +661,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * @see PropertyConverter#toBoolean(Object)
-     */
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return getBoolean(key, BooleanUtils.toBooleanObject(defaultValue)).booleanValue();
@@ -656,7 +676,6 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @return the value of this key converted to a <code>Boolean</code>
      * @throws ConversionException if the value cannot be converted to a
      * <code>Boolean</code>
-     * @see PropertyConverter#toBoolean(Object)
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
@@ -670,7 +689,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toBoolean(interpolate(value));
+                return converter.convert(Boolean.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -709,7 +728,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toByte(interpolate(value));
+                return converter.convert(Byte.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -748,7 +767,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toDouble(interpolate(value));
+                return converter.convert(Double.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -787,7 +806,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toFloat(interpolate(value));
+                return converter.convert(Float.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -833,7 +852,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toInteger(interpolate(value));
+                return converter.convert(Integer.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -872,7 +891,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toLong(interpolate(value));
+                return converter.convert(Long.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -911,7 +930,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toShort(interpolate(value));
+                return converter.convert(Short.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -953,7 +972,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toBigDecimal(interpolate(value));
+                return converter.convert(BigDecimal.class, interpolate(value));
             }
             catch (ConversionException e)
             {
@@ -995,7 +1014,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             try
             {
-                return PropertyConverter.toBigInteger(interpolate(value));
+                return converter.convert(BigInteger.class, interpolate(value));
             }
             catch (ConversionException e)
             {

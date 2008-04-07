@@ -27,7 +27,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.PropertyConverter;
+import org.apache.commons.configuration2.converter.Converter;
+import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
 import org.apache.commons.lang.ClassUtils;
 
 /**
@@ -59,6 +60,9 @@ public class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
     private static Map<String, BeanFactory> beanFactories = Collections.synchronizedMap(new HashMap<String, BeanFactory>());
+
+    /** Converter to set the bean properties */
+    private static Converter converter = new DefaultPropertyConverter();
 
     /**
      * Stores the default bean factory, which will be used if no other factory
@@ -212,7 +216,7 @@ public class BeanHelper
 
             // set the property
             Class type = descriptor.getPropertyType();
-            Object convertedValue = type.isAssignableFrom(value.getClass()) ? value : PropertyConverter.to(type, value);
+            Object convertedValue = type.isAssignableFrom(value.getClass()) ? value : converter.convert(type, value);
             descriptor.getWriteMethod().invoke(bean, convertedValue);
         }
         catch (ConfigurationRuntimeException e)
