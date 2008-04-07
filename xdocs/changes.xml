@@ -23,6 +23,9 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-320">
+        XMLPropertyListConfiguration is no longer limited to 32 bits integers.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-318">
         When an XMLConfiguration is created using the copy constructor, the name
         of the root element is now preserved.

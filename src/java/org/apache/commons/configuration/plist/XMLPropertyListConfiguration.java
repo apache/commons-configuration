@@ -22,6 +22,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -651,7 +652,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          */
         public void addIntegerValue(String value)
         {
-            addValue(new Integer(value));
+            addValue(new BigInteger(value));
         }
 
         /**
@@ -661,7 +662,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          */
         public void addRealValue(String value)
         {
-            addValue(new Double(value));
+            addValue(new BigDecimal(value));
         }
 
         /**

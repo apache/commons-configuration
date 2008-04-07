@@ -52,7 +52,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
     public void testInteger() throws Exception
     {
-        assertEquals("'integer' property", 12345, config.getInt("integer"));
+        assertEquals("'integer' property", 12345678900L, config.getLong("integer"));
     }
 
     public void testReal() throws Exception
