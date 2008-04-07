@@ -66,6 +66,9 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-320">
+        XMLPropertyListConfiguration is no longer limited to 32 bits integers.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-318">
         When an XMLConfiguration is created using the copy constructor, the name
         of the root element is now preserved.
@@ -91,6 +94,17 @@
         Fixed a NullPointerException that could be thrown under certain
         circumstances when saving an XMLConfiguration that was created using
         the constructor that takes a HierarchicalConfiguration.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-309">
+        Instantiating an XMLPropertyListConfiguration no longer fails
+        if the DTD is missing from the classpath.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-300">
+        It's now possible to read a configuration file containing
+        a '#' in its name (requires Java 1.4 or above).
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-260">
+        Fixed the date format for XMLPropertyListConfiguration.
       </action>
     </release>
 

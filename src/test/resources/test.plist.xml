@@ -7,7 +7,7 @@
         <string>value1</string>
 
         <key>integer</key>
-        <integer>12345</integer>
+        <integer>12345678900</integer>
 
         <key>real</key>
         <real>-123.45E-1</real>
