@@ -60,7 +60,7 @@ public class TestAbstractFlatConfiguration extends TestCase
     }
 
     /**
-     * Prepares the mock configuration to expect initialization steps for a
+     * Prepares the test configuration to expect initialization steps for a
      * number of getRootNode() invocations. This method adds the corresponding
      * expectations for method calls.
      *
@@ -68,6 +68,20 @@ public class TestAbstractFlatConfiguration extends TestCase
      *        require a re-creation of the node structure)
      */
     private void prepareGetRootNode(int count)
+    {
+        prepareGetRootNode(config, count);
+    }
+
+    /**
+     * Prepares the specified mock configuration to expect initialization steps for a
+     * number of getRootNode() invocations. This method adds the corresponding
+     * expectations for method calls.
+     *
+     * @param config the configuration to initialize
+     * @param count the number of expected getRootNode() invocations (that
+     *        require a re-creation of the node structure)
+     */
+    private void prepareGetRootNode(FlatConfigurationMockImpl config, int count)
     {
         config.keyList = Arrays.asList(KEYS);
         for (int cnt = 0; cnt < count; cnt++)
@@ -209,6 +223,22 @@ public class TestAbstractFlatConfiguration extends TestCase
         config.addConfigurationListener(l);
         config.clearPropertyValue(FlatConfigurationMockImpl.NAME, 0);
         l.verify();
+    }
+
+    /**
+     * Tests cloning a flat configuration. We have to check whether the event
+     * listeners are correctly registered.
+     */
+    public void testClone() throws CloneNotSupportedException
+    {
+        prepareGetRootNode(1);
+        checkNodeStructure(config.getRootNode());
+        FlatConfigurationMockImpl copy = (FlatConfigurationMockImpl) config.clone();
+        prepareGetRootNode(copy, 2);
+        FlatNode root = copy.getRootNode();
+        checkNodeStructure(root);
+        copy.clearPropertyValue(FlatConfigurationMockImpl.NAME, 0);
+        assertNotSame("Structure was not re-created", root, copy.getRootNode());
     }
 
     /**

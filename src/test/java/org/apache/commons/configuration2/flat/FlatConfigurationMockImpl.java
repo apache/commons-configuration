@@ -31,7 +31,7 @@ import junit.framework.Assert;
  *         Configuration team</a>
  * @version $Id$
  */
-class FlatConfigurationMockImpl extends AbstractFlatConfiguration
+class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Cloneable
 {
     /** Constant for the name of the test property. */
     public static final String NAME = "testFlatNode";

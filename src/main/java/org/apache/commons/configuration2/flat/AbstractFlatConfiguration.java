@@ -86,26 +86,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     {
         lockRoot = new ReentrantLock();
         nodeHandler = new FlatNodeHandler(this);
-
-        // Add event handler that invalidates the node structure if required
-        addConfigurationListener(new ConfigurationListener()
-        {
-            /**
-             * Reacts on change events. Asks the node handler whether the
-             * received event was caused by an update of the node structure. If
-             * not, the structure has to be invalidated.
-             */
-            public void configurationChanged(ConfigurationEvent event)
-            {
-                if (!event.isBeforeUpdate())
-                {
-                    if (!getNodeHandler().isInternalUpdate())
-                    {
-                        invalidateRootNode();
-                    }
-                }
-            }
-        });
+        registerChangeListener();
     }
 
     /**
@@ -196,6 +177,24 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     }
 
     /**
+     * Creates a copy of this instance. This implementation ensures that a
+     * change listener for invalidating the node structure is registered at the
+     * copy.
+     *
+     * @return a copy of this object
+     * @throws CloneNotSupportedException if cloning is not supported
+     */
+    @Override
+    protected Object clone() throws CloneNotSupportedException
+    {
+        AbstractFlatConfiguration copy = (AbstractFlatConfiguration) super
+                .clone();
+        copy.clearConfigurationListeners();
+        copy.registerChangeListener();
+        return copy;
+    }
+
+    /**
      * Returns the maximum index of the property with the given key. This method
      * can be used to find out how many values are stored for a given property.
      * A return value of -1 means that this property is unknown. A value of 0
@@ -271,4 +270,30 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * @return a flag whether the value could be removed
      */
     protected abstract boolean clearPropertyValueDirect(String key, int index);
+
+    /**
+     * Registers a change listener at this configuration that causes the node
+     * structure to be invalidated whenever the content is changed.
+     */
+    private void registerChangeListener()
+    {
+        addConfigurationListener(new ConfigurationListener()
+        {
+            /**
+             * Reacts on change events. Asks the node handler whether the
+             * received event was caused by an update of the node structure. If
+             * not, the structure has to be invalidated.
+             */
+            public void configurationChanged(ConfigurationEvent event)
+            {
+                if (!event.isBeforeUpdate())
+                {
+                    if (!getNodeHandler().isInternalUpdate())
+                    {
+                        invalidateRootNode();
+                    }
+                }
+            }
+        });
+    }
 }
