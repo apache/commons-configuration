@@ -18,19 +18,19 @@
 package org.apache.commons.configuration2.flat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 
 /**
- * Basic configuration classe. Stores the configuration data but does not
+ * Basic configuration class. Stores the configuration data but does not
  * provide any load or save functions. If you want to load your Configuration
  * from a file use {@link PropertiesConfiguration} or {@link XMLConfiguration}.
  *
@@ -53,7 +53,7 @@ import org.apache.commons.configuration2.XMLConfiguration;
  * @author Oliver Heger
  * @version $Id$
  */
-public class BaseConfiguration extends AbstractConfiguration implements Cloneable
+public class BaseConfiguration extends AbstractFlatConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
     private Map<String, Object> store = new LinkedHashMap<String, Object>();
@@ -178,6 +178,104 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         {
             // should not happen
             throw new ConfigurationRuntimeException(cex);
+        }
+    }
+
+    /**
+     * Returns the maximum index for the property with the given index. If the
+     * property has multiple values, the maximum index is the number of values
+     * minus 1 (indices are 0-based). If the property has a single value, the
+     * maximum index is 0. If the passed in key cannot be resolved, result is
+     * -1.
+     *
+     * @param key the key of the property in question
+     * @return the maximum index for this property
+     */
+    @Override
+    public int getMaxIndex(String key)
+    {
+        Object value = getProperty(key);
+
+        if (value == null)
+        {
+            return -1;
+        }
+        else if (value instanceof Collection)
+        {
+            return ((Collection<?>) value).size() - 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * Removes a value of a property with multiple values. The value to remove
+     * is specified using its (0-based) index. If the index is invalid or if the
+     * property does not have multiple values, this method has no effect.
+     *
+     * @param key the key of the property
+     * @param index the index of the value to be removed
+     * @return a flag whether the value could be removed
+     */
+    @Override
+    protected boolean clearPropertyValueDirect(String key, int index)
+    {
+        Object value = getProperty(key);
+
+        if (value instanceof List && index >= 0)
+        {
+            List<?> col = (List<?>) value;
+            if (index < col.size())
+            {
+                col.remove(index);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Modifies a value of a property with multiple values. The value to be
+     * changed is specified using its (0-based) index. If the property does not
+     * exist or the index is invalid, the value is added as if
+     * <code>addProperty()</code> was called. If the property has a single
+     * value, the passed in index determines what happens: if it is 0, the
+     * single value is replaced by the new one; all other indices cause the new
+     * value to be added to the old one.
+     *
+     * @param key the key of the property
+     * @param index the index of the value to be manipulated
+     * @param value the new value
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void setPropertyValueDirect(String key, int index, Object value)
+    {
+        Object oldValue = getProperty(key);
+
+        if (oldValue instanceof List)
+        {
+            List<Object> col = (List<Object>) oldValue;
+            if (index >= 0 && index < col.size())
+            {
+                col.set(index, value);
+            }
+            else
+            {
+                addPropertyDirect(key, value);
+            }
+        }
+
+        else if (oldValue == null || index != 0)
+        {
+            addPropertyDirect(key, value);
+        }
+        else
+        {
+            store.put(key, value);
         }
     }
 }

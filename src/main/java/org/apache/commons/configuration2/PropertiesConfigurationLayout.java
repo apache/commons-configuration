@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -518,6 +519,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                 clear();
                 break;
             case AbstractConfiguration.EVENT_SET_PROPERTY:
+            case AbstractFlatConfiguration.EVENT_PROPERTY_CHANGED:
                 fetchLayoutData(event.getPropertyName());
                 break;
             }

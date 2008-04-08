@@ -19,11 +19,11 @@ package org.apache.commons.configuration2;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Iterator;
-
-import org.apache.commons.configuration2.event.ConfigurationEvent;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
 
 /**
  * Test class for PropertiesConfigurationLayout.
@@ -73,10 +73,15 @@ public class TestPropertiesConfigurationLayout extends TestCase
     {
         assertTrue("Object contains keys", layout.getKeys().isEmpty());
         assertNull("Header comment not null", layout.getHeaderComment());
-        Iterator<?> it = config.getConfigurationListeners().iterator();
-        assertTrue("No event listener registered", it.hasNext());
-        assertSame("Layout not registered as event listener", layout, it.next());
-        assertFalse("Multiple event listeners registered", it.hasNext());
+        boolean foundListener = false;
+        for (Object l : config.getConfigurationListeners())
+        {
+            if (layout == l)
+            {
+                foundListener = true;
+            }
+        }
+        assertTrue("Layout not registered as event listener", foundListener);
         assertSame("Configuration not stored", config, layout
                 .getConfiguration());
         assertFalse("Force single line flag set", layout.isForceSingleLine());
@@ -301,6 +306,20 @@ public class TestPropertiesConfigurationLayout extends TestCase
         ConfigurationEvent event = new ConfigurationEvent(this,
                 AbstractConfiguration.EVENT_SET_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
+        layout.configurationChanged(event);
+        assertTrue("New property was not found", layout.getKeys().contains(
+                TEST_KEY));
+    }
+
+    /**
+     * Tests if a change property event for a non existing property is correctly
+     * handled.
+     */
+    public void testEventChangeNonExisting()
+    {
+        ConfigurationEvent event = new ConfigurationEvent(this,
+                AbstractFlatConfiguration.EVENT_PROPERTY_CHANGED, TEST_KEY,
+                TEST_VALUE, false);
         layout.configurationChanged(event);
         assertTrue("New property was not found", layout.getKeys().contains(
                 TEST_KEY));

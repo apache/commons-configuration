@@ -680,10 +680,8 @@ public class TestPropertiesConfiguration extends TestCase
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
         assertNotSame("Copy has same layout object", conf.getLayout(), copy.getLayout());
-        assertEquals("Wrong number of event listeners for original", 1, conf.getConfigurationListeners().size());
-        assertEquals("Wrong number of event listeners for clone", 1, copy.getConfigurationListeners().size());
-        assertSame("Wrong event listener for original", conf.getLayout(), conf.getConfigurationListeners().iterator().next());
-        assertSame("Wrong event listener for clone", copy.getLayout(), copy.getConfigurationListeners().iterator().next());
+        assertTrue("Wrong event listener for original", conf.getConfigurationListeners().contains(conf.getLayout()));
+        assertTrue("Wrong event listener for clone", copy.getConfigurationListeners().contains(copy.getLayout()));
         StringWriter outConf = new StringWriter();
         conf.save(outConf);
         StringWriter outCopy = new StringWriter();

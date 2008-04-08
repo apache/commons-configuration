@@ -48,6 +48,9 @@ public class TestBaseConfiguration extends TestCase
     /** Constant for the number key.*/
     static final String KEY_NUMBER = "number";
 
+    /** Constant for the key of a test property.*/
+    private static final String TEST_KEY = "testKey";
+
     protected BaseConfiguration config = null;
 
     protected static Class<?> missingElementException = NoSuchElementException.class;
@@ -755,7 +758,165 @@ public class TestBaseConfiguration extends TestCase
         assertTrue("Wrong value of original property", config
                 .getBoolean("original"));
 
-        assertEquals("Event listener was copied", 0, config2
+        assertEquals("Event listener was copied", config
+                .getConfigurationListeners().size() - 1, config2
                 .getConfigurationListeners().size());
+    }
+
+    /**
+     * Tests the getMaxIndex() method for a non existing property.
+     */
+    public void testGetMaxIndexNonExisting()
+    {
+        assertEquals("Wrong max index for non-existing property", -1, config
+                .getMaxIndex("nonExistingProperty"));
+    }
+
+    /**
+     * Tests querying the maximum index for a property with a single value.
+     */
+    public void testGetMaxIndexSingleValue()
+    {
+        config.addProperty(TEST_KEY, "A value");
+        assertEquals("Wrong max index for single value", 0, config
+                .getMaxIndex(TEST_KEY));
+    }
+
+    /**
+     * Tests querying the maximum index for a property with multiple values.
+     */
+    public void testGetMaxIndexMulti()
+    {
+        final int count = 10;
+        for (int i = 0; i < count; i++)
+        {
+            config.addProperty(TEST_KEY, i);
+        }
+        assertEquals("Wrong max index for multiple values", count - 1, config
+                .getMaxIndex(TEST_KEY));
+    }
+
+    /**
+     * Tests removing a value of a property with multiple values.
+     */
+    public void testClearPropertyValue()
+    {
+        config.addProperty(TEST_KEY, new Integer[] {
+                1, 2, 3
+        });
+        assertTrue("Value not removed", config.clearPropertyValue(TEST_KEY, 1));
+        List<?> lst = config.getList(TEST_KEY);
+        assertEquals("Wrong number of values", 2, lst.size());
+        assertEquals("Wrong value 1", Integer.valueOf(1), lst.get(0));
+        assertEquals("Wrong value 2", Integer.valueOf(3), lst.get(1));
+    }
+
+    /**
+     * Tries to remove a property value with an invalid index. This should be a
+     * no-op.
+     */
+    public void testClearPropertyValueInvalidIndex()
+    {
+        config.addProperty(TEST_KEY, new Integer[] {
+                1, 2, 3
+        });
+        assertFalse("Can remove value with negative index", config
+                .clearPropertyValue(TEST_KEY, -1));
+        assertFalse("Can remove value with index too big", config
+                .clearPropertyValue(TEST_KEY, 1000));
+        assertEquals("Wrong number of values", 3, config.getList(TEST_KEY)
+                .size());
+    }
+
+    /**
+     * Tries to remove a single property value with an index. This should not
+     * work.
+     */
+    public void testClearPropertyValueSingle()
+    {
+        config.addProperty(TEST_KEY, "A value");
+        assertFalse("Can removing single value", config.clearPropertyValue(
+                TEST_KEY, 0));
+        assertEquals("Wrong value", "A value", config.getString(TEST_KEY));
+    }
+
+    /**
+     * Tries to remove a value of a non existing property.
+     */
+    public void testClearPropertyValueNonExisting()
+    {
+        assertFalse("Can remove non existing value", config.clearPropertyValue(
+                TEST_KEY, 0));
+    }
+
+    /**
+     * Tests setting the value of a property.
+     */
+    public void testSetPropertyValue()
+    {
+        config.addProperty(TEST_KEY, new Integer[] {
+                1, 2, 3
+        });
+        config.setPropertyValue(TEST_KEY, 1, 4);
+        List<?> lst = config.getList(TEST_KEY);
+        assertEquals("Wrong number of values", 3, lst.size());
+        assertEquals("Wrong value 1", Integer.valueOf(1), lst.get(0));
+        assertEquals("Wrong value 2", Integer.valueOf(4), lst.get(1));
+        assertEquals("Wrong value 3", Integer.valueOf(3), lst.get(2));
+    }
+
+    /**
+     * Tests setting the value of a non existing property. This should be a
+     * normal add operation.
+     */
+    public void testSetPropertyValueNonExisting()
+    {
+        config.setPropertyValue(TEST_KEY, 0, "test");
+        assertEquals("Value was not set", "test", config.getString(TEST_KEY));
+    }
+
+    /**
+     * Tests setting the value of a property using an invalid index. Then the
+     * value should simply be added.
+     */
+    public void testSetPropertyValueInvalid()
+    {
+        config.addProperty(TEST_KEY, new Integer[] {
+                1, 2, 3
+        });
+        config.setPropertyValue(TEST_KEY, -1, 4);
+        config.setPropertyValue(TEST_KEY, 1111, 5);
+        List<?> lst = config.getList(TEST_KEY);
+        assertEquals("Wrong number of values", 5, lst.size());
+        for (int i = 1; i <= 5; i++)
+        {
+            assertEquals("Wrong value at " + i, Integer.valueOf(i), lst
+                    .get(i - 1));
+        }
+    }
+
+    /**
+     * Tests setting the value of a property with a single value. If the index
+     * is 0, the value must be replaced.
+     */
+    public void testSetPropertyValueSingle0()
+    {
+        config.addProperty(TEST_KEY, 1);
+        config.setPropertyValue(TEST_KEY, 0, 2);
+        assertEquals("Wrong value", 2, config.getInt(TEST_KEY));
+    }
+
+    /**
+     * Tests setting the value of a property with a single value using an
+     * invalid index. In this case, the new value must be added to the property.
+     */
+    public void testSetPropertyValueSingle1()
+    {
+        config.addProperty(TEST_KEY, 1);
+        config.setPropertyValue(TEST_KEY, 1, 2);
+        List<?> lst = config.getList(TEST_KEY);
+        assertEquals("Wrong number of values", 2, lst.size());
+        assertEquals("Wrong value 1", Integer.valueOf(1), lst.get(0));
+        assertEquals("Wrong value 2", Integer.valueOf(2), lst.get(1));
     }
 }
