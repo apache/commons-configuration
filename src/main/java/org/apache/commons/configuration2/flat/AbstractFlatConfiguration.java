@@ -23,6 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.NodeHandler;
 
 /**
  * <p>
@@ -85,7 +86,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     protected AbstractFlatConfiguration()
     {
         lockRoot = new ReentrantLock();
-        nodeHandler = new FlatNodeHandler(this);
+        initNodeHandler();
         registerChangeListener();
     }
 
@@ -95,7 +96,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      *
      * @return the <code>NodeHandler</code> used
      */
-    public FlatNodeHandler getNodeHandler()
+    public NodeHandler<FlatNode> getNodeHandler()
     {
         return nodeHandler;
     }
@@ -189,6 +190,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     {
         AbstractFlatConfiguration copy = (AbstractFlatConfiguration) super
                 .clone();
+        copy.initNodeHandler();
         copy.clearConfigurationListeners();
         copy.registerChangeListener();
         return copy;
@@ -262,6 +264,14 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
             Object value);
 
     /**
+     * Initializes the node handler of this configuration.
+     */
+    private void initNodeHandler()
+    {
+        nodeHandler = new FlatNodeHandler(this);
+    }
+
+    /**
      * Performs the actual remove property value operation. This method is
      * called by <code>clearPropertyValue()</code>.
      *
@@ -288,7 +298,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
             {
                 if (!event.isBeforeUpdate())
                 {
-                    if (!getNodeHandler().isInternalUpdate())
+                    if (!((FlatNodeHandler) getNodeHandler()).isInternalUpdate())
                     {
                         invalidateRootNode();
                     }

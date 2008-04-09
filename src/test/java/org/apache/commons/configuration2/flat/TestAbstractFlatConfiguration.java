@@ -234,6 +234,9 @@ public class TestAbstractFlatConfiguration extends TestCase
         prepareGetRootNode(1);
         checkNodeStructure(config.getRootNode());
         FlatConfigurationMockImpl copy = (FlatConfigurationMockImpl) config.clone();
+        FlatNodeHandler handler = (FlatNodeHandler) copy.getNodeHandler();
+        assertSame("Wrong config for node handler", copy, handler.getConfiguration());
+        assertNotSame("Node handler not copied", handler, config.getNodeHandler());
         prepareGetRootNode(copy, 2);
         FlatNode root = copy.getRootNode();
         checkNodeStructure(root);
