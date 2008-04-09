@@ -133,7 +133,7 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testList() throws Exception
     {
-        List packages = conf.getList("packages");
+        List<?> packages = conf.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
@@ -159,7 +159,7 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
         ConfigurationAssert.assertEquals(conf, checkConfig);
 
-        // Save it again, verifing a save with a filename works.
+        // Save it again, verifying a save with a filename works.
         checkConfig.save();
     }
 
@@ -253,7 +253,7 @@ public class TestPropertiesConfiguration extends TestCase
             throws ConfigurationException
     {
         conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
-        List dirs = conf.getList("test.dirs");
+        List<?> dirs = conf.getList("test.dirs");
         assertEquals("Wrong number of list elements", 3, dirs.size());
         conf.save(testSavePropertiesFile);
 
@@ -417,9 +417,9 @@ public class TestPropertiesConfiguration extends TestCase
             throws ConfigurationException
     {
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile);
-        for (Iterator i = conf.getKeys(); i.hasNext();)
+        for (Iterator<String> i = conf.getKeys(); i.hasNext();)
         {
-            String key = (String) i.next();
+            String key = i.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
             assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
         }
@@ -513,7 +513,7 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testNewLineEscaping()
     {
-        List list = conf.getList("test.path");
+        List<?> list = conf.getList("test.path");
         assertEquals(3, list.size());
         assertEquals("C:\\path1\\", list.get(0));
         assertEquals("C:\\path2\\", list.get(1));
@@ -821,9 +821,9 @@ public class TestPropertiesConfiguration extends TestCase
         conf.save(testSavePropertiesFile);
         PropertiesConfiguration checkConf = new PropertiesConfiguration(
                 testSavePropertiesFile);
-        for (Iterator it = copyConf.getKeys(); it.hasNext();)
+        for (Iterator<String> it = copyConf.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertEquals("Wrong value for property " + key, checkConf
                     .getProperty(key), copyConf.getProperty(key));
         }
