@@ -56,7 +56,45 @@ import org.apache.commons.configuration2.XMLConfiguration;
 public class BaseConfiguration extends AbstractFlatConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
-    private Map<String, Object> store = new LinkedHashMap<String, Object>();
+    private Map<String, Object> store;
+
+    /**
+     * Creates a new, empty instance of <code>BaseConfiguration</code>.
+     */
+    public BaseConfiguration()
+    {
+        this(new LinkedHashMap<String, Object>());
+    }
+
+    /**
+     * Creates a new instance of <code>BaseConfiguration</code> and
+     * initializes it with the given map. This map will be used for storing the
+     * data of this configuration.
+     *
+     * @param map the map with the data (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the passed in map is <b>null</b>
+     * @since 2.0
+     */
+    public BaseConfiguration(Map<String, Object> map)
+    {
+        if (map == null)
+        {
+            throw new IllegalArgumentException("Map must not be null!");
+        }
+        store = map;
+    }
+
+    /**
+     * Returns the underlying map, in which the data of this configuration is
+     * stored.
+     *
+     * @return the map with the data
+     * @since 2.0
+     */
+    protected Map<String, Object> getStore()
+    {
+        return store;
+    }
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.

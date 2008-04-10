@@ -36,7 +36,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
 {
     protected AbstractConfiguration getConfiguration()
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put("key1", "value1");
         map.put("key2", "value2");
         map.put("list", "value1, value2");
@@ -47,12 +47,12 @@ public class TestMapConfiguration extends TestAbstractConfiguration
 
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        return new MapConfiguration(new HashMap());
+        return new MapConfiguration(new HashMap<String, Object>());
     }
 
     public void testGetMap()
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         MapConfiguration conf = new MapConfiguration(map);
         assertEquals(map, conf.getMap());
@@ -72,21 +72,39 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     public void testCloneModify()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
-        config.addConfigurationListener(new ConfigurationListener()
+        ConfigurationListener cl = new ConfigurationListener()
         {
             public void configurationChanged(ConfigurationEvent event)
             {
                 // Just a dummy
             }
-        });
+        };
+        config.addConfigurationListener(cl);
         MapConfiguration copy = (MapConfiguration) config.clone();
-        assertTrue("Event listeners were copied", copy
-                .getConfigurationListeners().isEmpty());
+        assertFalse("Event listeners were copied", copy
+                .getConfigurationListeners().contains(cl));
 
         config.addProperty("cloneTest", Boolean.TRUE);
         assertFalse("Map not decoupled", copy.containsKey("cloneTest"));
         copy.clearProperty("key1");
         assertEquals("Map not decoupled (2)", "value1", config
                 .getString("key1"));
+    }
+
+    /**
+     * Tries creating an instance with a null map. This should cause an
+     * exception.
+     */
+    public void testInitNullMap()
+    {
+        try
+        {
+            new MapConfiguration(null);
+            fail("Could create instance with null map!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
     }
 }

@@ -17,10 +17,10 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * <p>A Map based Configuration.</p>
@@ -32,21 +32,20 @@ import java.util.Map;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class MapConfiguration extends AbstractConfiguration implements Cloneable
+public class MapConfiguration extends BaseConfiguration
 {
-    /** The Map decorated by this configuration. */
-    protected Map map;
-
     /**
      * Create a Configuration decorator around the specified Map. The map is
      * used to store the configuration properties, any change will also affect
      * the Map.
      *
-     * @param map the map
+     * @param map the map (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the map is <b>null</b>
      */
+    @SuppressWarnings("unchecked")
     public MapConfiguration(Map map)
     {
-        this.map = map;
+        super(map);
     }
 
     /**
@@ -54,89 +53,33 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *
      * @return the map this configuration is based onto
      */
-    public Map getMap()
+    public Map<String, Object> getMap()
     {
-        return map;
+        return getStore();
     }
 
+    /**
+     * Returns the value of the specified property. This implementation checks
+     * for list delimiters in string. (Because the map was created externally,
+     * we cannot be sure that string splitting was performed when the properties
+     * were added.)
+     *
+     * @param key the key of the property
+     * @return the value of this property
+     */
+    @Override
     public Object getProperty(String key)
     {
-        Object value = map.get(key);
+        Object value = super.getProperty(key);
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
-            List<String> list = PropertyConverter.split((String) value, getListDelimiter());
+            List<String> list = PropertyConverter.split((String) value,
+                    getListDelimiter());
             return list.size() > 1 ? list : list.get(0);
         }
         else
         {
             return value;
-        }
-    }
-
-    protected void addPropertyDirect(String key, Object value)
-    {
-        Object previousValue = getProperty(key);
-
-        if (previousValue == null)
-        {
-            map.put(key, value);
-        }
-        else if (previousValue instanceof List)
-        {
-            // the value is added to the existing list
-            ((List) previousValue).add(value);
-        }
-        else
-        {
-            // the previous value is replaced by a list containing the previous value and the new value
-            List list = new ArrayList();
-            list.add(previousValue);
-            list.add(value);
-
-            map.put(key, list);
-        }
-    }
-
-    public boolean isEmpty()
-    {
-        return map.isEmpty();
-    }
-
-    public boolean containsKey(String key)
-    {
-        return map.containsKey(key);
-    }
-
-    protected void clearPropertyDirect(String key)
-    {
-        map.remove(key);
-    }
-
-    public Iterator<String> getKeys()
-    {
-        return map.keySet().iterator();
-    }
-
-    /**
-     * Returns a copy of this object. The returned configuration will contain
-     * the same properties as the original. Event listeners are not cloned.
-     *
-     * @return the copy
-     * @since 1.3
-     */
-    public Object clone()
-    {
-        try
-        {
-            MapConfiguration copy = (MapConfiguration) super.clone();
-            copy.clearConfigurationListeners();
-            copy.map = (Map) ConfigurationUtils.clone(map);
-            return copy;
-        }
-        catch (CloneNotSupportedException cex)
-        {
-            // cannot happen
-            throw new ConfigurationRuntimeException(cex);
         }
     }
 }
