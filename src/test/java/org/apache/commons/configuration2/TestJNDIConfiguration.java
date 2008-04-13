@@ -18,24 +18,20 @@
 package org.apache.commons.configuration2;
 
 import java.util.Hashtable;
-
-import javax.naming.Context;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.JNDIConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 
 /**
  * Test to see if the JNDIConfiguration works properly.
  *
  * @version $Id$
  */
-public class TestJNDIConfiguration extends TestCase {
-
+public class TestJNDIConfiguration extends TestCase
+{
     public static final String CONTEXT_FACTORY = MockInitialContextFactory.class.getName();
 
     private JNDIConfiguration conf;
@@ -44,11 +40,11 @@ public class TestJNDIConfiguration extends TestCase {
     /** A test error listener for counting internal errors.*/
     private ConfigurationErrorListenerImpl listener;
 
-    public void setUp() throws Exception {
-
+    public void setUp() throws Exception
+    {
         System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
 
-        conf = new PotentialErrorJNDIConfiguration();
+        conf = new JNDIConfiguration();
 
         nonStringTestHolder = new NonStringTestHolder();
         nonStringTestHolder.setConfiguration(conf);
@@ -70,67 +66,175 @@ public class TestJNDIConfiguration extends TestCase {
         super.tearDown();
     }
 
-    public void testBoolean() throws Exception {
+    public void testBoolean() throws Exception
+    {
         nonStringTestHolder.testBoolean();
     }
 
-    public void testBooleanDefaultValue() throws Exception {
+    public void testBooleanDefaultValue() throws Exception
+    {
         nonStringTestHolder.testBooleanDefaultValue();
     }
 
-    public void testByte() throws Exception {
+    public void testByte() throws Exception
+    {
         nonStringTestHolder.testByte();
     }
 
-    public void testDouble() throws Exception {
+    public void testDouble() throws Exception
+    {
         nonStringTestHolder.testDouble();
     }
 
-    public void testDoubleDefaultValue() throws Exception {
+    public void testDoubleDefaultValue() throws Exception
+    {
         nonStringTestHolder.testDoubleDefaultValue();
     }
 
-    public void testFloat() throws Exception {
+    public void testFloat() throws Exception
+    {
         nonStringTestHolder.testFloat();
     }
 
-    public void testFloatDefaultValue() throws Exception {
+    public void testFloatDefaultValue() throws Exception
+    {
         nonStringTestHolder.testFloatDefaultValue();
     }
 
-    public void testInteger() throws Exception {
+    public void testInteger() throws Exception
+    {
         nonStringTestHolder.testInteger();
     }
 
-    public void testIntegerDefaultValue() throws Exception {
+    public void testIntegerDefaultValue() throws Exception
+    {
         nonStringTestHolder.testIntegerDefaultValue();
     }
 
-    public void testLong() throws Exception {
+    public void testLong() throws Exception
+    {
         nonStringTestHolder.testLong();
     }
 
-    public void testLongDefaultValue() throws Exception {
+    public void testLongDefaultValue() throws Exception
+    {
         nonStringTestHolder.testLongDefaultValue();
     }
 
-    public void testShort() throws Exception {
+    public void testShort() throws Exception
+    {
         nonStringTestHolder.testShort();
     }
 
-    public void testShortDefaultValue() throws Exception {
+    public void testShortDefaultValue() throws Exception
+    {
         nonStringTestHolder.testShortDefaultValue();
     }
 
-    public void testListMissing() throws Exception {
+    public void testListMissing() throws Exception
+    {
         nonStringTestHolder.testListMissing();
     }
 
-    public void testSubset() throws Exception {
+    public void testSubset() throws Exception
+    {
         nonStringTestHolder.testSubset();
     }
 
-    public void testProperties() throws Exception {
+    public void testSimpleGet() throws Exception
+    {
+        String s = conf.getString("test.key");
+        assertEquals("jndivalue", s);
+    }
+
+    public void testMoreGets() throws Exception
+    {
+        assertEquals("jndivalue", conf.getString("test.key"));
+        assertEquals("jndivalue2", conf.getString("test.key2"));
+    }
+
+    public void testGetMissingKey() throws Exception
+    {
+        try
+        {
+            conf.setThrowExceptionOnMissing(true);
+            conf.getString("test.imaginarykey");
+            fail("Should have thrown NoSuchElementException");
+        }
+        catch (NoSuchElementException e)
+        {
+            assertTrue(e.getMessage(), e.getMessage().indexOf("test.imaginarykey") != -1);
+        }
+    }
+
+    public void testClearProperty()
+    {
+        assertNotNull("null short for the 'test.short' key", conf.getShort("test.short", null));
+        conf.clearProperty("test.short");
+        assertNull("'test.short' property not cleared", conf.getShort("test.short", null));
+    }
+
+    public void testIsEmpty()
+    {
+        assertFalse("the configuration shouldn't be empty", conf.isEmpty());
+
+        conf.clearProperty("test");
+
+        assertTrue("the configuration should be empty", conf.isEmpty());
+    }
+
+    public void testGetKeys() throws Exception
+    {
+        boolean found = false;
+        Iterator it = conf.getKeys();
+
+        assertTrue("no key found", it.hasNext());
+
+        while (it.hasNext() && !found)
+        {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
+    }
+
+    public void testGetKeysWithUnknownPrefix()
+    {
+        // test for a unknown prefix
+        Iterator it = conf.getKeys("foo.bar");
+        assertFalse("no key should be found", it.hasNext());
+    }
+
+    public void testGetKeysWithExistingPrefix()
+    {
+        // test for an existing prefix
+        Iterator it = conf.getKeys("test");
+        boolean found = false;
+        while (it.hasNext() && !found)
+        {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
+    }
+
+    public void testGetKeysWithKeyAsPrefix()
+    {
+        // test for a prefix matching exactly the key of a property
+        // todo fails due to CONFIGURATION-321
+        /*
+        Iterator it = conf.getKeys("test.boolean");
+        boolean found = false;
+        while (it.hasNext() && !found)
+        {
+            found = "test.boolean".equals(it.next());
+        }
+
+        assertTrue("'test.boolean' key not found", found);
+        */
+    }
+
+    public void testGetProperty() throws Exception {
         Object o = conf.getProperty("test.boolean");
         assertNotNull(o);
         assertEquals("true", o.toString());
@@ -143,6 +247,39 @@ public class TestJNDIConfiguration extends TestCase {
 
         conf.clearProperty(key);
         assertFalse("'" + key + "' still found", conf.containsKey(key));
+
+        assertTrue(conf.containsKey("test.key"));
+        assertFalse(conf.containsKey("test.imaginarykey"));
+    }
+
+    public void testSetProperty()
+    {
+        conf.setProperty("test.new.value", "foo");
+
+        assertEquals("test.new.value", "foo", conf.getProperty("test.new.value"));
+    }
+
+    public void testReplaceProperty()
+    {
+        conf.setProperty("test.foo", "bar");
+        assertEquals("test.foo", "bar", conf.getProperty("test.foo"));
+
+        conf.setProperty("test.foo", "baz");
+        assertEquals("test.foo", "baz", conf.getProperty("test.foo"));
+    }
+
+    public void testOverwriteProperty()
+    {
+        conf.setProperty("test.foo", "value1");
+        assertEquals("test.foo", "value1", conf.getProperty("test.foo"));
+
+        conf.setProperty("test.foo.bar", "value2");
+        assertEquals("test.foo.bar", "value2", conf.getProperty("test.foo.bar"));
+        assertEquals("test.foo", null, conf.getProperty("test.foo"));
+
+        conf.setProperty("test.foo", "value1");
+        assertEquals("test.foo.bar", null, conf.getProperty("test.foo.bar"));
+        assertEquals("test.foo", "value1", conf.getProperty("test.foo"));
     }
 
     public void testChangePrefix()
@@ -185,82 +322,12 @@ public class TestJNDIConfiguration extends TestCase {
     }
 
     /**
-     * Configures the test config to throw an exception.
-     */
-    private PotentialErrorJNDIConfiguration setUpErrorConfig()
-    {
-        ((PotentialErrorJNDIConfiguration) conf).failOnGetCtx = true;
-        conf.removeErrorListener((ConfigurationErrorListener) conf
-                .getErrorListeners().iterator().next());
-        return (PotentialErrorJNDIConfiguration) conf;
-    }
-
-    /**
-     * Tests whether the expected error events have been received.
-     *
-     * @param type the expected event type
-     * @param propName the name of the property
-     * @param propValue the property value
-     */
-    private void checkErrorListener(int type, String propName, Object propValue)
-    {
-        listener.verify(type, propName, propValue);
-        assertTrue("Wrong exception class",
-                listener.getLastEvent().getCause() instanceof NamingException);
-        listener = null;
-    }
-
-    /**
      * Tests whether a JNDI configuration registers an error log listener.
      */
     public void testLogListener() throws NamingException
     {
         conf = new JNDIConfiguration();
-        assertEquals("No error log listener registered", 1, conf
-                .getErrorListeners().size());
-    }
-
-    /**
-     * Tests handling of errors in getKeys().
-     */
-    public void testGetKeysError()
-    {
-        assertFalse("Iteration not empty", setUpErrorConfig().getKeys()
-                .hasNext());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
-    }
-
-    /**
-     * Tests handling of errors in isEmpty().
-     */
-    public void testIsEmptyError() throws NamingException
-    {
-        assertTrue("Error config not empty", setUpErrorConfig().isEmpty());
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,
-                null);
-    }
-
-    /**
-     * Tests handling of errors in the containsKey() method.
-     */
-    public void testContainsKeyError()
-    {
-        assertFalse("Key contained after error", setUpErrorConfig()
-                .containsKey("key"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key",
-                null);
-    }
-
-    /**
-     * Tests handling of errors in getProperty().
-     */
-    public void testGetPropertyError()
-    {
-        assertNull("Wrong property value after error", setUpErrorConfig()
-                .getProperty("key"));
-        checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, "key",
-                null);
+        assertEquals("No error log listener registered", 1, conf.getErrorListeners().size());
     }
 
     /**
@@ -275,33 +342,12 @@ public class TestJNDIConfiguration extends TestCase {
         conf.getKeys("cycle");
     }
 
-    /**
-     * A special JNDI configuration implementation that can be configured to
-     * throw an exception when accessing the base context. Used for testing the
-     * exception handling.
-     */
-    static class PotentialErrorJNDIConfiguration extends JNDIConfiguration
+    public void testSetMaxDepth()
     {
-        /** A flag whether an exception should be thrown. */
-        boolean failOnGetCtx;
+        conf.setMaxDepth(0);
+        assertFalse("Key found with depth set to 0", conf.getKeys().hasNext());
 
-        public PotentialErrorJNDIConfiguration() throws NamingException
-        {
-            super();
-        }
-
-        public PotentialErrorJNDIConfiguration(Context ctx) throws NamingException
-        {
-            super(ctx);
-        }
-
-        public Context getBaseContext() throws NamingException
-        {
-            if (failOnGetCtx)
-            {
-                throw new NamingException("Simulated JNDI exception!");
-            }
-            return super.getBaseContext();
-        }
+        conf.setMaxDepth(1);
+        assertTrue("No key found with depth set to 1", conf.getKeys().hasNext());
     }
 }

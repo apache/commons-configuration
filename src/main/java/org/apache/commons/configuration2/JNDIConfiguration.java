@@ -18,11 +18,7 @@
 package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -30,32 +26,38 @@ import javax.naming.NameClassPair;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
-import javax.naming.NotContextException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.configuration2.expr.AbstractNodeHandler;
 
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
- * A JNDIConfiguration is read-only, write operations will throw an
- * UnsupportedOperationException. The clear operations are supported but the
- * underlying JNDI data source is not changed.
+ * Unlike other configurations it's not possible to set a property to a path
+ * that's the prefix of another property. For example the following properties
+ * couldn't be stored simultaneously in a JNDIConfiguration:
+ *
+ * <pre>
+ * test.foo = value1
+ * test.foo.bar = value2
+ * </pre>
+ * 
+ * <p>In this case setting the <tt>test.foo.bar</tt> property will overwrite
+ * <tt>test.foo</tt>, and reciprocally.</p>
+ *
+ * <p>A maximum depth is assigned to the configuration, it is set to 20
+ * by default. Since JNDI directories can have cyclic paths, this depth
+ * prevents infinite loops when searching through the tree.</p>
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
+ * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */
-public class JNDIConfiguration extends AbstractConfiguration
+public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDIConfiguration.JNDINode>
 {
-    /** The prefix of the context. */
-    private String prefix;
+    /** The root node of the configuration. */
+    private JNDINode root;
 
-    /** The initial JNDI context. */
-    private Context context;
-
-    /** The base JNDI context. */
-    private Context baseContext;
-
-    /** The Set of keys that have been virtually cleared. */
-    private Set<String> clearedProperties = new HashSet<String>();
+    /** The maximum depth for fetching the child nodes in the JNDI tree. */
+    private int maxDepth = 20;
 
     /**
      * Creates a JNDIConfiguration using the default initial context as the
@@ -65,7 +67,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public JNDIConfiguration() throws NamingException
     {
-        this((String) null);
+        this("");
     }
 
     /**
@@ -89,7 +91,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public JNDIConfiguration(Context context)
     {
-        this(context, null);
+        this(context, "");
     }
 
     /**
@@ -101,268 +103,46 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public JNDIConfiguration(Context context, String prefix)
     {
-        this.context = context;
-        this.prefix = prefix;
+        super(new JNDINodeHandler());
+        ((JNDINodeHandler) getNodeHandler()).setConfiguration(this);
+
+        root = new JNDINode(context, prefix, 0);
+
         setLogger(Logger.getLogger(getClass().getName()));
         addErrorLogListener();
     }
 
-    /**
-     * This method recursive traverse the JNDI tree, looking for Context objects.
-     * When it finds them, it traverses them as well.  Otherwise it just adds the
-     * values to the list of keys found.
-     *
-     * @param keys All the keys that have been found.
-     * @param context The parent context
-     * @param prefix What prefix we are building on.
-     * @param processedCtx a set with the so far processed objects
-     * @throws NamingException If JNDI has an issue.
-     */
-    private void recursiveGetKeys(Set<String> keys, Context context, String prefix, Set<Context> processedCtx) throws NamingException
+    public JNDINode getRootNode()
     {
-        processedCtx.add(context);
-        NamingEnumeration elements = null;
-
-        try
-        {
-            elements = context.list("");
-
-            // iterates through the context's elements
-            while (elements.hasMore())
-            {
-                NameClassPair nameClassPair = (NameClassPair) elements.next();
-                String name = nameClassPair.getName();
-                Object object = context.lookup(name);
-
-                // build the key
-                StringBuilder key = new StringBuilder();
-                key.append(prefix);
-                if (key.length() > 0)
-                {
-                    key.append(".");
-                }
-                key.append(name);
-
-                if (object instanceof Context)
-                {
-                    // add the keys of the sub context
-                    Context subcontext = (Context) object;
-                    if (!processedCtx.contains(subcontext))
-                    {
-                        recursiveGetKeys(keys, subcontext, key.toString(),
-                                processedCtx);
-                    }
-                }
-                else
-                {
-                    // add the key
-                    keys.add(key.toString());
-                }
-            }
-        }
-        finally
-        {
-            // close the enumeration
-            if (elements != null)
-            {
-                elements.close();
-            }
-        }
+        return root;
     }
 
     /**
-     * Returns an iterator with all property keys stored in this configuration.
-     *
-     * @return an iterator with all keys
+     * Returns the maximum depth for searching in the JNDI tree.
      */
-    public Iterator<String> getKeys()
+    public int getMaxDepth()
     {
-        return getKeys("");
+        return maxDepth;
     }
 
     /**
-     * Returns an iterator with all property keys starting with the given
-     * prefix.
-     *
-     * @param prefix the prefix
-     * @return an iterator with the selected keys
+     * Sets the maximum depth for searching in the JNDI tree.
+     * 
+     * @param maxDepth the maximum depth
      */
-    public Iterator<String> getKeys(String prefix)
+    public void setMaxDepth(int maxDepth)
     {
-        // build the path
-        List<String> path = Arrays.asList(StringUtils.split(prefix, "."));
-
-        try
-        {
-            // find the context matching the specified path
-            Context context = getContext(path, getBaseContext());
-
-            // return all the keys under the context found
-            Set<String> keys = new HashSet<String>();
-            if (context != null)
-            {
-                recursiveGetKeys(keys, context, prefix, new HashSet<Context>());
-            }
-            else if (containsKey(prefix))
-            {
-                // add the prefix if it matches exactly a property key
-                keys.add(prefix);
-            }
-
-            return keys.iterator();
-        }
-        catch (NamingException e)
-        {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
-            return new ArrayList<String>().iterator();
-        }
-    }
-
-    /**
-     * Because JNDI is based on a tree configuration, we need to filter down the
-     * tree, till we find the Context specified by the key to start from.
-     * Otherwise return null.
-     *
-     * @param path     the path of keys to traverse in order to find the context
-     * @param context  the context to start from
-     * @return The context at that key's location in the JNDI tree, or null if not found
-     * @throws NamingException if JNDI has an issue
-     */
-    private Context getContext(List path, Context context) throws NamingException
-    {
-        // return the current context if the path is empty
-        if (path == null || path.isEmpty())
-        {
-            return context;
-        }
-
-        String key = (String) path.get(0);
-
-        // search a context matching the key in the context's elements
-        NamingEnumeration elements = null;
-
-        try
-        {
-            elements = context.list("");
-            while (elements.hasMore())
-            {
-                NameClassPair nameClassPair = (NameClassPair) elements.next();
-                String name = nameClassPair.getName();
-                Object object = context.lookup(name);
-
-                if (object instanceof Context && name.equals(key))
-                {
-                    Context subcontext = (Context) object;
-
-                    // recursive search in the sub context
-                    return getContext(path.subList(1, path.size()), subcontext);
-                }
-            }
-        }
-        finally
-        {
-            if (elements != null)
-            {
-                elements.close();
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Returns a flag whether this configuration is empty.
-     *
-     * @return the empty flag
-     */
-    public boolean isEmpty()
-    {
-        try
-        {
-            NamingEnumeration enumeration = null;
-
-            try
-            {
-                enumeration = getBaseContext().list("");
-                return !enumeration.hasMore();
-            }
-            finally
-            {
-                // close the enumeration
-                if (enumeration != null)
-                {
-                    enumeration.close();
-                }
-            }
-        }
-        catch (NamingException e)
-        {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
-            return true;
-        }
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @param key the key
-     * @param value the value
-     * @throws UnsupportedOperationException
-     */
-    public void setProperty(String key, Object value)
-    {
-        throw new UnsupportedOperationException("This operation is not supported");
-    }
-
-    /**
-     * Removes the specified property.
-     *
-     * @param key the key of the property to remove
-     */
-    public void clearProperty(String key)
-    {
-        clearedProperties.add(key);
-    }
-
-    /**
-     * Checks whether the specified key is contained in this configuration.
-     *
-     * @param key the key to check
-     * @return a flag whether this key is stored in this configuration
-     */
-    public boolean containsKey(String key)
-    {
-        if (clearedProperties.contains(key))
-        {
-            return false;
-        }
-        key = StringUtils.replace(key, ".", "/");
-        try
-        {
-            // throws a NamingException if JNDI doesn't contain the key.
-            getBaseContext().lookup(key);
-            return true;
-        }
-        catch (NameNotFoundException e)
-        {
-            // expected exception, no need to log it
-            return false;
-        }
-        catch (NamingException e)
-        {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
-            return false;
-        }
+        this.maxDepth = maxDepth;
     }
 
     /**
      * Returns the prefix.
+     *
      * @return the prefix
      */
     public String getPrefix()
     {
-        return prefix;
+        return root.name;
     }
 
     /**
@@ -372,58 +152,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public void setPrefix(String prefix)
     {
-        this.prefix = prefix;
-
-        // clear the previous baseContext
-        baseContext = null;
-    }
-
-    /**
-     * Returns the value of the specified property.
-     *
-     * @param key the key of the property
-     * @return the value of this property
-     */
-    public Object getProperty(String key)
-    {
-        if (clearedProperties.contains(key))
-        {
-            return null;
-        }
-
-        try
-        {
-            key = StringUtils.replace(key, ".", "/");
-            return getBaseContext().lookup(key);
-        }
-        catch (NameNotFoundException e)
-        {
-            // expected exception, no need to log it
-            return null;
-        }
-        catch (NotContextException nctxex)
-        {
-            // expected exception, no need to log it
-            return null;
-        }
-        catch (NamingException e)
-        {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
-            return null;
-        }
-    }
-
-    /**
-     * <p><strong>This operation is not supported and will throw an
-     * UnsupportedOperationException.</strong></p>
-     *
-     * @param key the key
-     * @param obj the value
-     * @throws UnsupportedOperationException
-     */
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        throw new UnsupportedOperationException("This operation is not supported");
+        root = new JNDINode(root.context, prefix, 0);
     }
 
     /**
@@ -434,12 +163,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public Context getBaseContext() throws NamingException
     {
-        if (baseContext == null)
-        {
-            baseContext = (Context) getContext().lookup(prefix == null ? "" : prefix);
-        }
-
-        return baseContext;
+        return (Context) root.context.lookup(root.name);
     }
 
     /**
@@ -450,7 +174,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public Context getContext()
     {
-        return context;
+        return root.context;
     }
 
     /**
@@ -460,10 +184,228 @@ public class JNDIConfiguration extends AbstractConfiguration
      */
     public void setContext(Context context)
     {
-        // forget the removed properties
-        clearedProperties.clear();
+        root = new JNDINode(context, root.name, 0);
+    }
 
-        // change the context
-        this.context = context;
+    /**
+     * Node of a JNDI directory. A node consists in a base context and a name
+     * of a property bound. An empty name refers to the context itself.
+     */
+    static class JNDINode {
+        private Context context;
+        private String name;
+        private int depth;
+
+        private JNDINode(Context context, String name, int depth)
+        {
+            this.context = context;
+            this.name = name;
+            this.depth = depth;
+        }
+
+        public Object getValue() throws NamingException
+        {
+            try
+            {
+                return context.lookup(name);
+            }
+            catch (NameNotFoundException e)
+            {
+                return null;
+            }
+        }
+    }
+
+    /**
+     * Implementation of NodeHandler that operates on JNDI trees.
+     */
+    private static class JNDINodeHandler extends AbstractNodeHandler<JNDINode>
+    {
+        private JNDIConfiguration config;
+
+        public void setConfiguration(JNDIConfiguration config)
+        {
+            this.config = config;
+        }
+
+        public boolean hasAttributes(JNDINode node)
+        {
+            return false;
+        }
+
+        public String nodeName(JNDINode node)
+        {
+            return node.name;
+        }
+
+        public Object getValue(JNDINode node)
+        {
+            try
+            {
+                Object value = node.getValue();
+                if (value instanceof Context)
+                {
+                    // contexts have no direct value bound
+                    return null;
+                }
+                else
+                {
+                    return value;
+                }
+            }
+            catch (NamingException e)
+            {
+                throw new ConfigurationRuntimeException("Unable to get the value of the JNDI node", e);
+            }
+        }
+
+        public void setValue(JNDINode node, Object value)
+        {
+            try
+            {
+                if (value == null)
+                {
+                    node.context.unbind(node.name);
+                }
+                else
+                {
+                    node.context.rebind(node.name, value);
+                }
+            }
+            catch (NamingException e)
+            {
+                throw new ConfigurationRuntimeException("Unable to set the value of the JNDI node", e);
+            }
+        }
+
+        public JNDINode getParent(JNDINode node)
+        {
+            return null;  // todo
+        }
+
+        public JNDINode addChild(JNDINode node, String name)
+        {
+            try
+            {
+                Object value = node.getValue();
+
+                if (!(value instanceof Context))
+                {
+                    // overwrite the existing property at this path
+                    node.context.unbind(node.name);
+
+                    value = node.context.createSubcontext(node.name);
+                }
+
+                Context context = (Context) value;
+                context.createSubcontext(name);
+
+                return new JNDINode(context, name, node.depth + 1);                
+            }
+            catch (NamingException e)
+            {
+                throw new ConfigurationRuntimeException("Unable to add the child node '" + name + "'", e);
+            }
+        }
+
+        public List<JNDINode> getChildren(JNDINode node)
+        {
+            List<JNDINode> children = new ArrayList<JNDINode>();
+
+            try
+            {
+                Object value = node.getValue();
+                if (value instanceof Context && node.depth <= config.getMaxDepth())
+                {
+                    Context context = (Context) value;
+
+                    NamingEnumeration elements = null;
+
+                    try
+                    {
+                        elements = context.list("");
+                        while (elements.hasMore())
+                        {
+                            NameClassPair nameClassPair = (NameClassPair) elements.next();
+                            String name = nameClassPair.getName();
+
+                            children.add(new JNDINode(context, name, node.depth + 1));
+                        }
+                    }
+                    finally
+                    {
+                        if (elements != null)
+                        {
+                            elements.close();
+                        }
+                    }
+                }
+            }
+            catch (NamingException e)
+            {
+                config.fireError(EVENT_READ_PROPERTY, null, null, e);
+            }
+            
+            return children;
+        }
+
+        public List<JNDINode> getChildren(JNDINode node, String name)
+        {
+            List<JNDINode> nodes = new ArrayList<JNDINode>(1);
+
+            for (JNDINode n : getChildren(node))
+            {
+                if (name.equals(n.name)) {
+                    nodes.add(n);
+                    break;
+                }
+            }
+
+            return nodes;
+        }
+
+        public JNDINode getChild(JNDINode node, int index)
+        {
+            return getChildren(node).get(index);
+        }
+
+        public int getChildrenCount(JNDINode node, String name)
+        {
+            return 1;
+        }
+
+        public void removeChild(JNDINode node, JNDINode child)
+        {
+            try
+            {
+                child.context.unbind(child.name);
+            }
+            catch (NamingException e)
+            {
+                throw new ConfigurationRuntimeException("Unable to remove the child JNDI node", e);
+            }
+        }
+
+        public List<String> getAttributes(JNDINode node)
+        {
+            return null;
+        }
+
+        public Object getAttributeValue(JNDINode node, String name)
+        {
+            return null;
+        }
+
+        public void setAttributeValue(JNDINode node, String name, Object value)
+        {
+        }
+
+        public void addAttributeValue(JNDINode node, String name, Object value)
+        {
+        }
+
+        public void removeAttribute(JNDINode node, String name)
+        {
+        }
     }
 }

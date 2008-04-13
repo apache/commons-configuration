@@ -305,6 +305,13 @@
       <version>2.2</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>spice</groupId>
+      <artifactId>spice-jndikit</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

@@ -633,9 +633,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         {
             visitor.visitBeforeChildren(node, getNodeHandler());
 
-            for (Iterator<T> it = getNodeHandler().getChildren(node).iterator(); it
-                    .hasNext()
-                    && !visitor.terminate();)
+            for (Iterator<T> it = getNodeHandler().getChildren(node).iterator(); it.hasNext() && !visitor.terminate();)
             {
                 visit(it.next(), visitor);
             }
@@ -876,13 +874,15 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
          * @param parentKey the key of the parent node
          * @param handler the node handler
          */
-        public void appendAttributes(T node, String parentKey,
-                NodeHandler<T> handler)
+        public void appendAttributes(T node, String parentKey, NodeHandler<T> handler)
         {
-            for (String attr : handler.getAttributes(node))
+            List<String> attributes = handler.getAttributes(node);
+            if (attributes != null)
             {
-                keyList.add(getExpressionEngine().attributeKey(node, parentKey,
-                        attr, handler));
+                for (String attr : attributes)
+                {
+                    keyList.add(getExpressionEngine().attributeKey(node, parentKey, attr, handler));
+                }
             }
         }
     }

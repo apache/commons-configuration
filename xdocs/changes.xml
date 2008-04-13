@@ -63,6 +63,9 @@
         Their functionality is completely covered by classes in the tree
         package.
       </action>
+      <action dev="ebourg" type="update">
+        JNDIConfiguration is now a hierarchical configuration and supports write operations.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">
