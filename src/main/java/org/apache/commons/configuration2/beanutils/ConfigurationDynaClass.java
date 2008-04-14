@@ -125,11 +125,11 @@ public class ConfigurationDynaClass implements DynaClass
             log.finest("getDynaProperties()");
         }
 
-        Iterator keys = configuration.getKeys();
+        Iterator<String> keys = configuration.getKeys();
         List<DynaProperty> properties = new ArrayList<DynaProperty>();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             DynaProperty property = getDynaProperty(key);
             properties.add(property);
         }

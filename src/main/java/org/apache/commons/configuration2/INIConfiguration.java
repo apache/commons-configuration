@@ -238,10 +238,10 @@ public class INIConfiguration extends AbstractFileConfiguration
             out.println();
 
             Configuration subset = subset(section);
-            Iterator keys = subset.getKeys();
+            Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {

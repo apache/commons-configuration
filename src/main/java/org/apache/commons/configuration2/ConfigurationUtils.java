@@ -88,10 +88,10 @@ public final class ConfigurationUtils
      */
     public static void dump(Configuration configuration, PrintWriter out)
     {
-        Iterator keys = configuration.getKeys();
+        Iterator<String> keys = configuration.getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = configuration.getProperty(key);
             out.print(key);
             out.print("=");
@@ -136,10 +136,10 @@ public final class ConfigurationUtils
      */
     public static void copy(Configuration source, Configuration target)
     {
-        Iterator keys = source.getKeys();
+        Iterator<String> keys = source.getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             target.setProperty(key, source.getProperty(key));
         }
     }
@@ -160,10 +160,10 @@ public final class ConfigurationUtils
      */
     public static void append(Configuration source, Configuration target)
     {
-        Iterator keys = source.getKeys();
+        Iterator<String> keys = source.getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             target.addProperty(key, source.getProperty(key));
         }
     }

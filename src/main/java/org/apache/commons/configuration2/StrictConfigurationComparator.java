@@ -57,9 +57,9 @@ public class StrictConfigurationComparator implements ConfigurationComparator
             return false;
         }
 
-        for (Iterator keys = a.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = a.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = a.getProperty(key);
             if (!value.equals(b.getProperty(key)))
             {
@@ -67,9 +67,9 @@ public class StrictConfigurationComparator implements ConfigurationComparator
             }
         }
 
-        for (Iterator keys = b.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = b.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = b.getProperty(key);
             if (!value.equals(a.getProperty(key)))
             {
