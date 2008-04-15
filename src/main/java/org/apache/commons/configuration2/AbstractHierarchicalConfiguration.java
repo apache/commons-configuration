@@ -731,15 +731,33 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         }
 
         // Add the new property
-        if (data.isAttribute())
+        return addNodeValue(node, data.getNewNodeName(), value, data.isAttribute());
+    }
+
+    /**
+     * Adds a new value to a node, which can either be a child node or an
+     * attribute. This method is called by <code>processNodeAddData()</code>
+     * for the final node to be added. It can be overridden by concrete sub
+     * classes with specific requirements for adding values. This base
+     * implementation uses the <code>NodeHandler</code> of this configuration
+     * for either adding a new child node or an attribute value.
+     *
+     * @param parent the parent node (to which a value should be added)
+     * @param name the name of the property to be added
+     * @param value the value itself
+     * @param attr a flag whether a child node or an attribute should be added
+     * @return the newly created child node or <b>null</b> for an attribute
+     */
+    protected T addNodeValue(T parent, String name, Object value, boolean attr)
+    {
+        if (attr)
         {
-            getNodeHandler().addAttributeValue(node, data.getNewNodeName(),
-                    value);
+            getNodeHandler().addAttributeValue(parent, name, value);
             return null;
         }
         else
         {
-            T child = createNode(node, data.getNewNodeName());
+            T child = createNode(parent, name);
             getNodeHandler().setValue(child, value);
             return child;
         }
