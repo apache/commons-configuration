@@ -66,6 +66,9 @@
       <action dev="ebourg" type="update">
         JNDIConfiguration is now a hierarchical configuration and supports write operations.
       </action>
+      <action dev="ebourg" type="remove">
+        ConfigurationComparator and its implementation have been removed.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">
