@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.naming.Context;
@@ -388,7 +389,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
 
         public List<String> getAttributes(JNDINode node)
         {
-            return null;
+            return Collections.emptyList();
         }
 
         public Object getAttributeValue(JNDINode node, String name)

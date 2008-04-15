@@ -877,12 +877,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         public void appendAttributes(T node, String parentKey, NodeHandler<T> handler)
         {
             List<String> attributes = handler.getAttributes(node);
-            if (attributes != null)
+            for (String attr : attributes)
             {
-                for (String attr : attributes)
-                {
-                    keyList.add(getExpressionEngine().attributeKey(node, parentKey, attr, handler));
-                }
+                keyList.add(getExpressionEngine().attributeKey(node, parentKey, attr, handler));
             }
         }
     }
