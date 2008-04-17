@@ -711,6 +711,21 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
+     * Creates a new node object with the specified name and value. This base
+     * implementation delegates to the <code>NodeHandler</code> for creating a
+     * new node.
+     * 
+     * @param parent the parent of the new node
+     * @param name the name of the new node
+     * @param value the value of the new node
+     * @return the new node
+     */
+    protected T createNode(T parent, String name, Object value)
+    {
+        return getNodeHandler().addChild(parent, name, value);
+    }
+    
+    /**
      * Helper method for processing a <code>NodeAddData</code> object obtained from the
      * expression engine. This method will create all new nodes and set the value
      * of the last node, which represents the newly added property.
@@ -757,8 +772,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         }
         else
         {
-            T child = createNode(parent, name);
-            getNodeHandler().setValue(child, value);
+            T child = createNode(parent, name, value);
             return child;
         }
     }
