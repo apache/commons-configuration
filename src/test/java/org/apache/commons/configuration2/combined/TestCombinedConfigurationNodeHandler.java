@@ -264,6 +264,19 @@ public class TestCombinedConfigurationNodeHandler extends TestCase
     }
 
     /**
+     * Tests the addChild() implementation that sets a value.
+     */
+    public void testAddChildValue()
+    {
+        subHandler.addChild(this, SUB_NAME, VALUE);
+        EasyMock.expectLastCall().andReturn(NODE);
+        EasyMock.replay(subHandler);
+        assertEquals("Wrong child node", NODE, handler.addChild(this, SUB_NAME,
+                VALUE));
+        EasyMock.verify(subHandler);
+    }
+
+    /**
      * Tests the getAttributeValue() implementation.
      */
     public void testGetAttributeValue()

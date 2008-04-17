@@ -71,4 +71,21 @@ public abstract class AbstractNodeHandler<T> implements NodeHandler<T>
     {
         return getValue(node) != null || hasAttributes(node);
     }
+
+    /**
+     * Adds a child node with a value. This implementation delegates to the
+     * overloaded <code>addChild()</code> method and then sets the value on
+     * the resulting node.
+     *
+     * @param node the parent node
+     * @param name the name of the new child
+     * @param value the value
+     * @return the newly created child node
+     */
+    public T addChild(T node, String name, Object value)
+    {
+        T child = addChild(node, name);
+        setValue(child, value);
+        return child;
+    }
 }

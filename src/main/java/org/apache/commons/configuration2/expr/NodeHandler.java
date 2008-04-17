@@ -80,6 +80,22 @@ public interface NodeHandler<T>
     T addChild(T node, String name);
 
     /**
+     * Adds a child with the given node name and value to the specified parent
+     * node. This method is used for creating nodes with a value while the other
+     * <code>addChild()</code> method creates structure nodes (i.e. nodes that
+     * may contain child nodes and attributes, but do not have a value). Some
+     * concrete implementations of node handler have to distinguish between
+     * these node types.
+     *
+     * @param node the parent node
+     * @param name the name of the new child
+     * @param value the value of the new child
+     * @return the newly added child (this can be <b>null</b> if an
+     *         implementation decides to create an attribute for the value node)
+     */
+    T addChild(T node, String name, Object value);
+
+    /**
      * Returns a list with all children of the specified node.
      *
      * @param node the node

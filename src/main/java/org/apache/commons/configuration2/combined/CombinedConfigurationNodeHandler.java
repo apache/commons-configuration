@@ -142,6 +142,20 @@ class CombinedConfigurationNodeHandler implements NodeHandler<Object>,
     }
 
     /**
+     * Adds a new child with a value to a parent node. This implementation
+     * delegates to the node handler responsible for the passed in node.
+     *
+     * @param node the node
+     * @param name the name of the new child node
+     * @param value the value
+     * @return the newly created child node
+     */
+    public Object addChild(Object node, String name, Object value)
+    {
+        return fetchHandler(node).addChild(node, name, value);
+    }
+
+    /**
      * Returns the value of the specified attribute of the given node. This
      * implementation delegates to the node handler responsible for the passed
      * in node.
