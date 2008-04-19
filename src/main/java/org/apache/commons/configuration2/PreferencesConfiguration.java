@@ -45,6 +45,8 @@ import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
  * <li>the user root node</li>
  * <li>a system node corresponding to a specific package</li>
  * <li>a user node corresponding to a specific package</li>
+ * <li>alternatively a specific <code>Preferences</code> node can be passed to
+ * a constructor, which will become the new root node.</li>
  * </ul>
  * This corresponds to the static factory methods provided by the
  * <code>Preferences</code> class. It is also possible to change this node
@@ -56,8 +58,22 @@ import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
  * interface can be used for interacting with <code>Preferences</code> nodes.
  * Note however that some features provided by the <code>Configuration</code>
  * interface are not supported by the <code>Preferences</code> API. One
- * example of such a feature is the support for multiple values for a property.
+ * example of such a feature is the support for multiple values for a property:
+ * If you call <code>addProperty()</code> multiple times with the same key, only
+ * the last value will be stored.
  * </p>
+ * <p>
+ * The values stored in the underlying <code>Preferences</code> nodes can be
+ * accessed per default using the dot notation that is also used by other
+ * <code>Configuration</code> implementations (e.g.
+ * <code>config.getString("path.to.property.name");</code>). Internally the
+ * property values are mapped to <em>attribute</em> nodes in this hierarchical
+ * configuration. The {@link ExpressionEngine} used by this class hides this
+ * fact by defining the dot as both property delimiter and attribute marker. If
+ * another expression engine is set or if this configuration is added to a
+ * combined configuration, the keys have to be adapted, for instance - when
+ * using the default expression engine:
+ * <code>config.getString("path.to.property[@name]");</code></p>
  *
  * @author Oliver Heger
  * @version $Id$
@@ -126,6 +142,24 @@ public class PreferencesConfiguration extends
         setExpressionEngine(setUpExpressionEngine());
         setAssociatedClass(c);
         setSystem(system);
+    }
+
+    /**
+     * Creates a new instance of <code>PreferencesConfiguration</code> and
+     * initializes it with the given node. This node will become the new root
+     * node.
+     *
+     * @param rootNode the root node (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the passed in node is <b>null</b>
+     */
+    public PreferencesConfiguration(Preferences rootNode)
+    {
+        this(false, null);
+        if (rootNode == null)
+        {
+            throw new IllegalArgumentException("Root node must be null!");
+        }
+        root = rootNode;
     }
 
     /**

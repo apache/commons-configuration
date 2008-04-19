@@ -123,9 +123,9 @@ public class TestPreferencesConfiguration extends TestCase
      */
     private PreferencesConfiguration setUpTestConfig()
     {
-        node = Preferences.systemNodeForPackage(getClass());
+        node = Preferences.userNodeForPackage(getClass());
         setUpTestData();
-        return new PreferencesConfiguration(true, getClass());
+        return new PreferencesConfiguration(false, getClass());
     }
 
     /**
@@ -169,6 +169,34 @@ public class TestPreferencesConfiguration extends TestCase
     {
         PreferencesConfiguration config = setUpTestConfig();
         checkProperties(config);
+    }
+
+    /**
+     * Tests setting a specific node as root node.
+     */
+    public void testGetPropertiesSpecificNode()
+    {
+        node = Preferences.userNodeForPackage(getClass());
+        setUpTestData();
+        PreferencesConfiguration config = new PreferencesConfiguration(node);
+        checkProperties(config);
+    }
+
+    /**
+     * Tests creating a configuration with a null node. This should cause an
+     * exception.
+     */
+    public void testInitNullNode()
+    {
+        try
+        {
+            new PreferencesConfiguration((Preferences) null);
+            fail("Could create instance with null node!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
     }
 
     /**
