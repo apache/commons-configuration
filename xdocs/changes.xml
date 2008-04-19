@@ -69,6 +69,10 @@
       <action dev="ebourg" type="remove">
         ConfigurationComparator and its implementation have been removed.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-276">
+        A new PreferencesConfiguration class was added that wraps the
+        java.util.prefs API.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">
