@@ -19,14 +19,16 @@ package org.apache.commons.configuration2.beanutils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
-import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.beanutils.ConfigurationDynaBean;
-import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -134,6 +136,10 @@ public class TestConfigurationDynaBean extends TestCase
         bean.set("doubleArray", doubleArray);
         bean.set("byteArray", byteArray);
         bean.set("stringArray", stringArray);
+
+        // enable the finest logging
+        Logger.getLogger(ConfigurationDynaClass.class.getName()).setLevel(Level.ALL);
+        Logger.getLogger(ConfigurationDynaBean.class.getName()).setLevel(Level.ALL);
     }
 
     /**
