@@ -19,7 +19,6 @@ package org.apache.commons.configuration2.web;
 
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.ServletRequest;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
@@ -41,8 +40,8 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 {
     protected AbstractConfiguration getConfiguration()
     {
-        final Configuration configuration = new BaseConfiguration();
-        ((BaseConfiguration) configuration).setListDelimiter('\0');
+        BaseConfiguration configuration = new BaseConfiguration();
+        configuration.setListDelimiter('\0');
         configuration.setProperty("key1", "value1");
         configuration.setProperty("key2", "value2");
         configuration.addProperty("list", "value1");
@@ -54,24 +53,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
 
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        final Configuration configuration = new BaseConfiguration();
-
-        ServletRequest request = new MockHttpServletRequest()
-        {
-            @Override
-            public String getParameter(String key)
-            {
-                return null;
-            }
-
-            @Override
-            public Map<?, ?> getParameterMap()
-            {
-                return ConfigurationConverter.getMap(configuration);
-            }
-        };
-
-        return new ServletRequestConfiguration(request);
+        return createConfiguration(new BaseConfiguration());
     }
 
     /**
@@ -81,8 +63,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      * @param base the configuration with the underlying values
      * @return the servlet request configuration
      */
-    private ServletRequestConfiguration createConfiguration(
-            final Configuration base)
+    private ServletRequestConfiguration createConfiguration(final Configuration base)
     {
         ServletRequest request = new MockHttpServletRequest()
         {
@@ -133,22 +114,59 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      */
     public void testListWithEscapedElements()
     {
-        String[] values =
-        { "test1", "test2\\,test3", "test4\\,test5" };
-        final String listKey = "test.list";
+        String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
+        String listKey = "test.list";
+
         BaseConfiguration config = new BaseConfiguration();
         config.setListDelimiter('\0');
         config.addProperty(listKey, values);
-        assertEquals("Wrong number of list elements", values.length, config
-                .getList(listKey).size());
+
+        assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
+
         Configuration c = createConfiguration(config);
         List<?> v = c.getList(listKey);
-        assertEquals("Wrong number of elements in list", values.length, v
-                .size());
+        assertEquals("Wrong number of elements in list", values.length, v.size());
         for (int i = 0; i < values.length; i++)
         {
-            assertEquals("Wrong value at index " + i, StringUtils.replace(
-                    values[i], "\\", StringUtils.EMPTY), v.get(i));
+            assertEquals("Wrong value at index " + i, StringUtils.replace(values[i], "\\", StringUtils.EMPTY), v.get(i));
         }
     }
+
+    public void testMixedList()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiter('\0');
+
+        config.addProperty("mixedlist", "value1");
+        config.addProperty("mixedlist", "value2,value3");
+        config.addProperty("mixedlist", "value4");
+
+        assertEquals("Wrong number of list elements", 3, config.getList("mixedlist").size());
+
+        Configuration c = createConfiguration(config);
+
+        List<?> v = c.getList("mixedlist");
+        assertEquals("Wrong number of elements in list", 4, v.size());
+        for (int i = 0; i < v.size(); i++)
+        {
+            assertEquals("Wrong value at index " + i, "value" + (i + 1), v.get(i));
+        }
+    }
+
+    public void testNonExistingParameter()
+    {
+        MockHttpServletRequest request = new MockHttpServletRequest()
+        {
+            @Override
+            public String[] getParameterValues(String key)
+            {
+                return null;
+            }
+        };
+
+        Configuration config = new ServletRequestConfiguration(request);
+
+        assertEquals("value of a non existing parameter", null, config.getProperty("key"));
+    }
+
 }
