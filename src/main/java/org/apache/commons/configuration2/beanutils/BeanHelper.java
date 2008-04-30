@@ -18,11 +18,11 @@
 package org.apache.commons.configuration2.beanutils;
 
 import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -161,22 +161,20 @@ public class BeanHelper
      */
     public static void initBean(Object bean, BeanDeclaration data) throws ConfigurationRuntimeException
     {
-        Map properties = data.getBeanProperties();
+        Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
-            for (Iterator it = properties.keySet().iterator(); it.hasNext();)
+            for (String propName : properties.keySet())
             {
-                String propName = (String) it.next();
                 initProperty(bean, propName, properties.get(propName));
             }
         }
 
-        Map nestedBeans = data.getNestedBeanDeclarations();
+        Map<String, BeanDeclaration> nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
-            for (Iterator it = nestedBeans.keySet().iterator(); it.hasNext();)
+            for (String propName : nestedBeans.keySet())
             {
-                String propName = (String) it.next();
                 initProperty(bean, propName, createBean((BeanDeclaration) nestedBeans.get(propName), null));
             }
         }
@@ -196,17 +194,7 @@ public class BeanHelper
         try
         {
             // find the descriptor for the property requested
-            BeanInfo info = Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] descriptors = info.getPropertyDescriptors();
-            PropertyDescriptor descriptor =  null;
-            for (PropertyDescriptor d : descriptors)
-            {
-                if (d.getName().equals(propName))
-                {
-                    descriptor = d;
-                    break;
-                }
-            }
+            PropertyDescriptor descriptor =  getPropertyDescriptor(bean.getClass(), propName);
 
             // check if the property is writeable
             if (descriptor == null || descriptor.getWriteMethod() == null)
@@ -227,6 +215,32 @@ public class BeanHelper
         {
             throw new ConfigurationRuntimeException("Unable to set the property " + propName + " to '" + value + "'", e);
         }
+    }
+
+    /**
+     * Returns the PropertyDescriptor of the class for the specified property name.
+     *
+     * @param cls          the class to be introspected
+     * @param propertyName the name of the property
+     * @return the descriptor, or null if no property matches the name specified
+     * @throws IntrospectionException
+     */
+    private static PropertyDescriptor getPropertyDescriptor(Class cls, String propertyName) throws IntrospectionException
+    {
+        // find the descriptor for the property requested
+        BeanInfo info = Introspector.getBeanInfo(cls);
+        PropertyDescriptor[] descriptors = info.getPropertyDescriptors();
+        PropertyDescriptor descriptor = null;
+        for (PropertyDescriptor d : descriptors)
+        {
+            if (d.getName().equals(propertyName))
+            {
+                descriptor = d;
+                break;
+            }
+        }
+
+        return descriptor;
     }
 
     /**
