@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-322">
+        ConfigurationDynaBean now works properly with indexed properties
+        stored internally in the underlying configuration as arrays.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-320">
         XMLPropertyListConfiguration is no longer limited to 32 bits integers.
       </action>

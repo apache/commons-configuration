@@ -169,7 +169,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
         catch (ConversionException e)
         {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.", e);
         }
     }
 
@@ -213,7 +213,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
             else if (property.getClass().isArray())
             {
-                Array.set(value, index, value);
+                Array.set(property, index, value);
             }
             else if (index == 0)
             {
@@ -226,7 +226,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
         catch (ConversionException e)
         {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.", e);
         }
     }
 

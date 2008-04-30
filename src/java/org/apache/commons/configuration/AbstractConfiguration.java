@@ -21,6 +21,7 @@ import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -1133,6 +1134,10 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         else if (value == null)
         {
             list = defaultValue;
+        }
+        else if (value.getClass().isArray())
+        {
+            return Arrays.asList((Object[]) value);
         }
         else
         {

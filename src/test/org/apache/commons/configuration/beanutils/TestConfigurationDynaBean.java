@@ -18,14 +18,17 @@
 package org.apache.commons.configuration.beanutils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.MapConfiguration;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
-import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.configuration.BaseConfiguration;
-import org.apache.commons.configuration.Configuration;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -547,6 +550,24 @@ public class TestConfigurationDynaBean extends TestCase
         assertNotNull("Returned new value 4", value);
         ObjectAssert.assertInstanceOf("Returned String new value 4", String.class,  value);
         assertEquals("Returned correct new value 4", "New Value 4", (String) value);
+    }
+
+    /**
+     * Test the modification of a configuration property stored internally as an array.
+     */
+    public void testSetArrayValue()
+    {
+        MapConfiguration configuration = new MapConfiguration(new HashMap());
+        configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
+
+        ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
+
+        bean.set("objectArray", 1, "New Value 1");
+        Object value = bean.get("objectArray", 1);
+
+        assertNotNull("Returned new value 1", value);
+        ObjectAssert.assertInstanceOf("Returned String new value 1", String.class,  value);
+        assertEquals("Returned correct new value 1", "New Value 1", (String) value);
     }
 
     /**
