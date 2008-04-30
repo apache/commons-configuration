@@ -18,12 +18,14 @@
 package org.apache.commons.configuration2.beanutils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 import junit.framework.AssertionFailedError;
@@ -50,7 +52,7 @@ public class TestConfigurationDynaBean extends TestCase
      * <code>getDynaProperties()</code>.  You should update this list
      * when new properties are added to TestBean.
      */
-    String[] properties = {
+    private String[] properties = {
             "booleanProperty",
             "booleanSecond",
             "doubleProperty",
@@ -67,7 +69,7 @@ public class TestConfigurationDynaBean extends TestCase
             "charProperty"
     };
 
-    Object[] values = {
+    private Object[] values = {
             Boolean.TRUE,
             Boolean.TRUE,
             new Double(Double.MAX_VALUE),
@@ -84,15 +86,15 @@ public class TestConfigurationDynaBean extends TestCase
             new Character(Character.MAX_VALUE)
     };
 
-    int[] intArray = {0, 10, 20, 30, 40};
-    boolean[] booleanArray = {true, false, true, false, true};
-    char[] charArray = {'a', 'b', 'c', 'd', 'e'};
-    byte[] byteArray = {0, 10, 20, 30, 40};
-    long[] longArray = {0, 10, 20, 30, 40};
-    short[] shortArray = {0, 10, 20, 30, 40};
-    float[] floatArray = {0, 10, 20, 30, 40};
-    double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
-    String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
+    private int[] intArray = {0, 10, 20, 30, 40};
+    private boolean[] booleanArray = {true, false, true, false, true};
+    private char[] charArray = {'a', 'b', 'c', 'd', 'e'};
+    private byte[] byteArray = {0, 10, 20, 30, 40};
+    private long[] longArray = {0, 10, 20, 30, 40};
+    private short[] shortArray = {0, 10, 20, 30, 40};
+    private float[] floatArray = {0, 10, 20, 30, 40};
+    private double[] doubleArray = {0.0, 10.0, 20.0, 30.0, 40.0};
+    private String[] stringArray = {"String 0", "String 1", "String 2", "String 3", "String 4"};
 
 
     /**
@@ -554,6 +556,24 @@ public class TestConfigurationDynaBean extends TestCase
         assertNotNull("Returned new value 4", value);
         ObjectAssert.assertInstanceOf("Returned String new value 4", String.class,  value);
         assertEquals("Returned correct new value 4", "New Value 4", (String) value);
+    }
+
+    /**
+     * Test the modification of a configuration property stored internally as an array.
+     */
+    public void testSetArrayValue()
+    {
+        MapConfiguration configuration = new MapConfiguration(new HashMap());
+        configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
+
+        ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
+
+        bean.set("objectArray", 1, "New Value 1");
+        Object value = bean.get("objectArray", 1);
+
+        assertNotNull("Returned new value 1", value);
+        ObjectAssert.assertInstanceOf("Returned String new value 1", String.class,  value);
+        assertEquals("Returned correct new value 1", "New Value 1", (String) value);
     }
 
     /**
