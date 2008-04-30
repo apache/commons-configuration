@@ -22,25 +22,25 @@
 <FindBugsFilter>
   <!-- Disable the warnings for the generated classes -->
   <Match>
-    <Class name="org.apache.commons.configuration.plist.ParseException"/>
+    <Class name="org.apache.commons.configuration2.plist.ParseException"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.PropertyListParser"/>
+    <Class name="org.apache.commons.configuration2.plist.PropertyListParser"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.PropertyListParserConstants"/>
+    <Class name="org.apache.commons.configuration2.plist.PropertyListParserConstants"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.PropertyListParserTokenManager"/>
+    <Class name="org.apache.commons.configuration2.plist.PropertyListParserTokenManager"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.SimpleCharStream"/>
+    <Class name="org.apache.commons.configuration2.plist.SimpleCharStream"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.Token"/>
+    <Class name="org.apache.commons.configuration2.plist.Token"/>
   </Match>
   <Match>
-    <Class name="org.apache.commons.configuration.plist.TokenMgrError"/>
+    <Class name="org.apache.commons.configuration2.plist.TokenMgrError"/>
   </Match>
 
   <!-- Enable only high priority warnings -->
