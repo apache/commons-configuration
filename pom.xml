@@ -332,6 +332,9 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <forkMode>once</forkMode>
+            <additionalClasspathElements>
+              <additionalClasspathElement>src/test/resources/resources.jar</additionalClasspathElement>
+            </additionalClasspathElements>
             <systemProperties>
               <property>
                 <name>java.awt.headless</name>

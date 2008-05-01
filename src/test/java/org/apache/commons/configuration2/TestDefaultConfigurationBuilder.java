@@ -18,6 +18,7 @@ package org.apache.commons.configuration2;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
@@ -314,6 +315,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
     {
         factory = new DefaultConfigurationBuilder(TEST_FILE.toURL());
         checkConfiguration();
+    }
+
+    public void testLoadConfigurationFromJAR() throws Exception
+    {
+        URL url = Thread.currentThread().getContextClassLoader().getResource("config-jar.xml");
+        assertNotNull("config-jar.xml not found on the classpath", url);
+        factory.load(url);
+
+        Configuration conf = factory.getConfiguration();
+        assertFalse("The configuration is empty", conf.isEmpty());
     }
 
     /**
