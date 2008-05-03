@@ -161,12 +161,29 @@ public class BeanHelper
      */
     public static void initBean(Object bean, BeanDeclaration data) throws ConfigurationRuntimeException
     {
+        initBean(bean, data, false);
+    }
+
+    /**
+     * Initializes the passed in bean. This method will obtain all the bean's
+     * properties that are defined in the passed in bean declaration. These
+     * properties will be set on the bean. If necessary, further beans will be
+     * created recursively.
+     *
+     * @param bean    the bean to be initialized
+     * @param data    the bean declaration
+     * @param lenient ignore missing and read only properties found in the BeanDeclaration,
+     *                throws an exception otherwise
+     * @throws ConfigurationRuntimeException if a property cannot be set
+     */
+    public static void initBean(Object bean, BeanDeclaration data, boolean lenient) throws ConfigurationRuntimeException
+    {
         Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
             for (String propName : properties.keySet())
             {
-                initProperty(bean, propName, properties.get(propName));
+                initProperty(bean, propName, properties.get(propName), lenient);
             }
         }
 
@@ -175,7 +192,7 @@ public class BeanHelper
         {
             for (String propName : nestedBeans.keySet())
             {
-                initProperty(bean, propName, createBean((BeanDeclaration) nestedBeans.get(propName), null));
+                initProperty(bean, propName, createBean((BeanDeclaration) nestedBeans.get(propName), null), lenient);
             }
         }
     }
@@ -183,23 +200,30 @@ public class BeanHelper
     /**
      * Sets a property on the given bean.
      *
-     * @param bean the bean
+     * @param bean     the bean
      * @param propName the name of the property
-     * @param value the property's value
-     * @throws ConfigurationRuntimeException if the property is not writeable or
-     * an error occurred
+     * @param value    the property's value
+     * @param lenient  ignore a missing or read only property, throws an exception otherwise
+     * @throws ConfigurationRuntimeException if the property is not writeable or an error occurred
      */
-    private static void initProperty(Object bean, String propName, Object value) throws ConfigurationRuntimeException
+    private static void initProperty(Object bean, String propName, Object value, boolean lenient) throws ConfigurationRuntimeException
     {
         try
         {
             // find the descriptor for the property requested
-            PropertyDescriptor descriptor =  getPropertyDescriptor(bean.getClass(), propName);
+            PropertyDescriptor descriptor = getPropertyDescriptor(bean.getClass(), propName);
 
             // check if the property is writeable
             if (descriptor == null || descriptor.getWriteMethod() == null)
             {
-                throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
+                if (lenient)
+                {
+                    return;
+                }
+                else
+                {
+                    throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
+                }
             }
 
             // set the property

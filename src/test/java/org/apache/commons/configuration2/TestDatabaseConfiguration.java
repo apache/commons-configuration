@@ -17,22 +17,26 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.spi.InitialContextFactory;
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.DatabaseConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
+
+import junit.framework.TestCase;
+import org.codehaus.spice.jndikit.DefaultNameParser;
+import org.codehaus.spice.jndikit.DefaultNamespace;
+import org.codehaus.spice.jndikit.memory.MemoryContext;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.database.IDatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -90,9 +94,8 @@ public class TestDatabaseConfiguration extends TestCase
 
         if (hsqlDB == null)
         {
-            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER,
-                    ConfigurationAssert.getTestFile("testdb.script")
-                            .getAbsolutePath());
+            File script = ConfigurationAssert.getTestFile("testdb.script");
+            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script.getAbsolutePath());
         }
 
         BasicDataSource datasource = new BasicDataSource();
@@ -104,10 +107,8 @@ public class TestDatabaseConfiguration extends TestCase
         this.datasource = datasource;
 
         // prepare the database
-        IDatabaseConnection connection = new DatabaseConnection(datasource
-                .getConnection());
-        IDataSet dataSet = new XmlDataSet(new FileInputStream(
-                ConfigurationAssert.getTestFile("dataset.xml")));
+        IDatabaseConnection connection = new DatabaseConnection(datasource.getConnection());
+        IDataSet dataSet = new XmlDataSet(new FileInputStream(ConfigurationAssert.getTestFile("dataset.xml")));
 
         try
         {
@@ -190,11 +191,8 @@ public class TestDatabaseConfiguration extends TestCase
     private void checkErrorListener(int type, String key, Object value)
     {
         listener.verify(type, key, value);
-        assertTrue(
-                "Wrong event source",
-                listener.getLastEvent().getSource() instanceof DatabaseConfiguration);
-        assertTrue("Wrong exception",
-                listener.getLastEvent().getCause() instanceof SQLException);
+        assertTrue("Wrong event source", listener.getLastEvent().getSource() instanceof DatabaseConfiguration);
+        assertTrue("Wrong exception", listener.getLastEvent().getCause() instanceof SQLException);
         listener = null; // mark as checked
     }
 
@@ -459,6 +457,48 @@ public class TestDatabaseConfiguration extends TestCase
         String[] values = config.getStringArray("keyList");
         assertEquals("Wrong number of property values", 3, values.length);
         assertEquals("Wrong value at index 1", "2", values[1]);
+    }
+
+    /**
+     * Test instanciating a DatabaseConfiguration from a configuration descriptor.
+     */
+    public void testConfigurationBuilder() throws Exception
+    {
+        // bind the datasource in the JNDI context
+        TestInitialContextFactory.datasource = datasource;
+        System.setProperty("java.naming.factory.initial", TestInitialContextFactory.class.getName());
+
+        File testFile = ConfigurationAssert.getTestFile("testDatabaseConfiguration.xml");
+        ConfigurationBuilder builder = new DefaultConfigurationBuilder(testFile);
+        Configuration config = builder.getConfiguration();
+
+        assertNotNull("null configuration", config);
+
+        assertEquals("property1", "value1", config.getProperty("conf1.key1"));
+        assertEquals("property2", "value2", config.getProperty("conf1.key2"));
+        assertEquals("unknown property", null, config.getProperty("conf1.key3"));
+        assertEquals("list property", 3, config.getList("conf1.keyMulti").size());
+
+        assertEquals("property1", "value1", config.getProperty("conf2.key1"));
+        assertEquals("property2", "value2", config.getProperty("conf2.key2"));
+        assertEquals("unknown property", null, config.getProperty("conf2.key3"));
+    }
+
+    /**
+     * JNDI Context factory that returns the test datasource bound on the java:comp/env/jdbc/configuration key.
+     */
+    public static class TestInitialContextFactory implements InitialContextFactory
+    {
+        public static DataSource datasource;
+
+        public Context getInitialContext(Hashtable environment) throws NamingException
+        {
+            DefaultNamespace namespace = new DefaultNamespace(new DefaultNameParser());
+            MemoryContext context = new MemoryContext(namespace, new Hashtable(), null);
+            context.createSubcontext("java:comp").createSubcontext("env").createSubcontext("jdbc").bind("configuration", datasource);
+
+            return context;
+        }
     }
 
     /**

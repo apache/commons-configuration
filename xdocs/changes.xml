@@ -51,8 +51,12 @@
         ConfigurationFactory has been removed, DefaultConfigurationBuilder should be used instead.
       </action>
       <action dev="ebourg" type="add">
-        The &lt;environment/> tag can be specified in a configuration descriptor
-        in order to create an EnvironmentConfiguration.          
+        The &lt;environment/> element can be specified in a configuration descriptor to create
+        an EnvironmentConfiguration.
+      </action>
+      <action dev="ebourg" type="add">
+        The &lt;database/> element can be specified in a configuration descriptor to create
+        a DatabaseConfiguration. The datasource is specified as a JNDI property.
       </action>
       <action dev="ebourg" type="update">
         DefaultConfigurationBuilder no longer requires commons-beanutils.
@@ -76,6 +80,10 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-322">
+        ConfigurationDynaBean now works properly with indexed properties
+        stored internally in the underlying configuration as arrays.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-320">
         XMLPropertyListConfiguration is no longer limited to 32 bits integers.
       </action>

@@ -26,6 +26,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 import org.apache.commons.configuration2.beanutils.BeanDeclaration;
 import org.apache.commons.configuration2.beanutils.BeanFactory;
@@ -299,9 +301,13 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider SYSTEM_PROVIDER =
             new ConfigurationProvider(SystemConfiguration.class);
 
-    /** Constant for the provider for environment properties. */
+    /** Constant for the provider for environment variables. */
     private static final ConfigurationProvider ENVIRONMENT_PROVIDER =
             new ConfigurationProvider(EnvironmentConfiguration.class);
+
+    /** Constant for the provider for environment variables. */
+    private static final ConfigurationProvider DATABASE_PROVIDER =
+            new DatabaseConfigurationProvider();
 
     /** Constant for the provider for plist files. */
     private static final ConfigurationProvider PLIST_PROVIDER = new FileExtensionConfigurationProvider(
@@ -314,12 +320,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS =
-    {"properties", "xml", "hierarchicalXml", "jndi", "system", "environment", "plist", "configuration"};
+    {"properties", "xml", "hierarchicalXml", "jndi", "system", "environment", "plist", "configuration", "database"};
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, ENVIRONMENT_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
+            SYSTEM_PROVIDER, ENVIRONMENT_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER, DATABASE_PROVIDER};
 
     /**
      * The serial version UID.
@@ -1442,6 +1448,38 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 ConfigurationDeclaration decl) throws Exception
         {
             return new CombinedConfiguration();
+        }
+    }
+
+    /**
+     * A specialized configuration provider for database configuration.
+     * The datasource is specified as a JNDI key for the default context.
+     */
+    static class DatabaseConfigurationProvider extends ConfigurationProvider
+    {
+        public AbstractConfiguration getConfiguration(ConfigurationDeclaration decl) throws Exception
+        {
+            Map attributes = decl.getBeanProperties();
+            String jndi = (String) attributes.get("jndi");
+            DataSource datasource = (DataSource) new InitialContext().lookup(jndi);
+
+            String table = (String) attributes.get("table");
+            String nameColumn = (String) attributes.get("nameColumn");
+            String name = (String) attributes.get("name");
+            String keyColumn = (String) attributes.get("keyColumn");
+            String valueColumn = (String) attributes.get("valueColumn");
+
+            DatabaseConfiguration config;
+            if (name == null) {
+                config = new DatabaseConfiguration(datasource, table, keyColumn, valueColumn);
+            } else {
+                config = new DatabaseConfiguration(datasource, table, nameColumn, keyColumn, valueColumn, name);
+            }
+
+            // initialize the other properties
+            BeanHelper.initBean(config, decl, true);
+
+            return config;
         }
     }
 }
