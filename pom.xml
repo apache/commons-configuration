@@ -335,12 +335,6 @@
             <additionalClasspathElements>
               <additionalClasspathElement>src/test/resources/resources.jar</additionalClasspathElement>
             </additionalClasspathElements>
-            <systemProperties>
-              <property>
-                <name>java.awt.headless</name>
-                <value>true</value>
-              </property>
-            </systemProperties>
           </configuration>
         </plugin>
         <plugin>

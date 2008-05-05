@@ -55,10 +55,13 @@ public class AppletConfiguration extends BaseWebConfiguration
     public Iterator<String> getKeys()
     {
         String[][] paramsInfo = applet.getParameterInfo();
-        List<String> keyList = new ArrayList<String>(paramsInfo.length);
-        for (int i = 0; i < paramsInfo.length; i++)
+        List<String> keyList = new ArrayList<String>(paramsInfo != null ? paramsInfo.length : 0);
+        if (paramsInfo != null)
         {
-            keyList.add(paramsInfo[i][0]);
+            for (int i = 0; i < paramsInfo.length; i++)
+            {
+                keyList.add(paramsInfo[i][0]);
+            }
         }
 
         return keyList.iterator();

@@ -17,21 +17,19 @@
 
 package org.apache.commons.configuration2.web;
 
+import java.applet.Applet;
+import java.util.Properties;
+
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
-import org.apache.commons.configuration2.web.AppletConfiguration;
-
-import java.applet.Applet;
-import java.util.Properties;
 
 /**
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date: 2005-02-26 13:56:39 +0100 (Sa, 26 Feb
- * 2005) $
+ * @version $Revision$, $Date$
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {
