@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
- * An initialization or ini file is a configuration file tpically found on
+ * An initialization or ini file is a configuration file typically found on
  * Microsoft's Windows operating system and contains data for Windows based
  * applications.
  * </p>
@@ -158,7 +158,7 @@ import org.apache.commons.lang.StringUtils;
  * <code>getSections</code> method.
  * </p>
  * <p>
- * <em>Note:</em>Configuration objects of this type can be read concurrently
+ * <em>Note:</em> Configuration objects of this type can be read concurrently
  * by multiple threads. However if one of these threads modifies the object,
  * synchronization has to be performed manually.
  * </p>
@@ -322,9 +322,9 @@ public class INIConfiguration extends AbstractFileConfiguration
                 line = bufferedReader.readLine();
             }
         }
-        catch (IOException ioe)
+        catch (IOException e)
         {
-            throw new ConfigurationException(ioe.getMessage());
+            throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
 
