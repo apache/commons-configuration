@@ -33,7 +33,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
- * An initialization or ini file is a configuration file tipically found on
+ * An initialization or ini file is a configuration file typically found on
  * Microsoft's Windows operating system and contains data for Windows based
  * applications.
  * </p>
