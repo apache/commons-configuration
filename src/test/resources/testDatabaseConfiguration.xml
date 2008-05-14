@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <database at="conf1" jndi="java:comp/env/jdbc/configuration" table="configuration" keyColumn="key" valueColumn="value" listDelimiter=";"/>
+  <database at="conf2" jndi="java:comp/env/jdbc/configuration" table="configurations" keyColumn="key" valueColumn="value" nameColumn="name" name="test"/>
+
+  <database at="conf3" jndi="java:comp/env/jdbc/missingdatasource" optional="true"/>
+</configuration>
