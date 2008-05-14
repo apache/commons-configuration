@@ -97,6 +97,21 @@ import org.apache.commons.lang.StringUtils;
  * <code>name</code> will be added.
  * </p>
  *
+ * <p>
+ * <pre>
+ * &quot;/tables table/fields/field@type&quot;
+ * </pre>
+ * </p>
+ * <p>
+ * This is similar to the last example, but in this case a complex path ending
+ * with an attribute is defined.
+ * </p>
+ * <p>
+ * <strong>Note:</strong> This extended syntax for adding properties only works
+ * with the <code>addProperty()</code> method. <code>setProperty()</code> does
+ * not support creating new nodes this way.
+ * </p>
+ *
  * @since 2.0
  * @author Oliver Heger
  * @version $Id$
