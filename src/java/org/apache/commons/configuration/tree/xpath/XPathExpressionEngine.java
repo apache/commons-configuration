@@ -36,7 +36,7 @@ import org.apache.commons.lang.StringUtils;
  * <p>
  * This class makes use of <a href="http://commons.apache.org/jxpath/">
  * Commons JXPath</a> for handling XPath expressions and mapping them to the
- * nodes of a hierarchical configuration. This makes the rich and powerfull
+ * nodes of a hierarchical configuration. This makes the rich and powerful
  * XPATH syntax available for accessing properties from a configuration object.
  * </p>
  * <p>
@@ -56,7 +56,7 @@ import org.apache.commons.lang.StringUtils;
  * select exactly one node, otherwise an exception will be thrown.</li>
  * <li>The name of the new element(s) to be added below this parent node. Here
  * either a single node name or a complete path of nodes (separated by the
- * &quot;/&quot; character) can be specified.</li>
+ * &quot;/&quot; character or &quot;@&quot; for an attribute) can be specified.</li>
  * </ol>
  * Some examples for valid keys that can be passed into the configuration's
  * <code>addProperty()</code> method follow:
@@ -95,6 +95,21 @@ import org.apache.commons.lang.StringUtils;
  * <code>tables</code> element. Here a new branch consisting of the nodes
  * <code>table</code>, <code>fields</code>, <code>field</code>, and
  * <code>name</code> will be added.
+ * </p>
+ *
+ * <p>
+ * <pre>
+ * &quot;/tables table/fields/field@type&quot;
+ * </pre>
+ * </p>
+ * <p>
+ * This is similar to the last example, but in this case a complex path ending
+ * with an attribute is defined.
+ * </p>
+ * <p>
+ * <strong>Note:</strong> This extended syntax for adding properties only works
+ * with the <code>addProperty()</code> method. <code>setProperty()</code> does
+ * not support creating new nodes this way.
  * </p>
  *
  * @since 1.3
@@ -241,7 +256,7 @@ public class XPathExpressionEngine implements ExpressionEngine
     /**
      * Initializes most properties of a <code>NodeAddData</code> object. This
      * method is called by <code>prepareAdd()</code> after the parent node has
-     * been found. Its task is to interprete the passed in path of the new node.
+     * been found. Its task is to interpret the passed in path of the new node.
      *
      * @param data the data object to initialize
      * @param path the path of the new node
