@@ -117,7 +117,19 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="sources">
+	<xs:complexType name="databaseConfiguration">
+		<xs:complexContent>
+			<xs:extension base="abstractConfiguration">
+				<xs:attribute name="jndi" type="xs:string" use="required"/>
+				<xs:attribute name="table" type="xs:string" use="required"/>
+				<xs:attribute name="keyColumn" type="xs:string" use="required"/>
+				<xs:attribute name="valueColumn" type="xs:string" use="required"/>
+				<xs:attribute name="nameColumn" type="xs:string" use="optional"/>
+				<xs:attribute name="name" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+    <xs:complexType name="sources">
 		<xs:choice maxOccurs="unbounded">
 			<xs:element name="system" type="xs:string"/>
 			<xs:element name="environment" type="xs:string"/>
@@ -125,6 +137,7 @@
 			<xs:element name="xml" type="xmlConfiguration"/>
 			<xs:element name="plist" type="abstractHierarchicalFileConfiguration"/>
 			<xs:element name="jndi" type="jndiConfiguration"/>
+			<xs:element name="database" type="databaseConfiguration"/>
 		</xs:choice>
 	</xs:complexType>
 </xs:schema>
