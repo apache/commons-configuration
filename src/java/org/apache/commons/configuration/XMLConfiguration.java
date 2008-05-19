@@ -869,6 +869,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
         XMLNode nd = (XMLNode) createNode(node.getName());
         nd.setValue(node.getValue());
+        nd.setAttribute(node.isAttribute());
         for (Iterator it = node.getChildren().iterator(); it.hasNext();)
         {
             nd.addChild(convertToXMLNode((ConfigurationNode) it.next()));

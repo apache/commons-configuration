@@ -1365,6 +1365,28 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests adding an attribute node using the addNodes() method.
+     */
+    public void testAddNodesAttributeNode()
+    {
+        conf.addProperty("testAddNodes.property[@name]", "prop1");
+        conf.addProperty("testAddNodes.property(0).value", "value1");
+        conf.addProperty("testAddNodes.property(-1)[@name]", "prop2");
+        conf.addProperty("testAddNodes.property(1).value", "value2");
+        Collection nodes = new ArrayList();
+        nodes.add(new HierarchicalConfiguration.Node("property"));
+        conf.addNodes("testAddNodes", nodes);
+        nodes.clear();
+        ConfigurationNode nd = new HierarchicalConfiguration.Node("name",
+                "prop3");
+        nd.setAttribute(true);
+        nodes.add(nd);
+        conf.addNodes("testAddNodes.property(2)", nodes);
+        assertEquals("Attribute not added", "prop3", conf
+                .getString("testAddNodes.property(2)[@name]"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
