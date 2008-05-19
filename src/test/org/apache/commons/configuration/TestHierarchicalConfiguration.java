@@ -28,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -672,6 +673,20 @@ public class TestHierarchicalConfiguration extends TestCase
                                 + "fields.field(" + j + ").name"));
             }
         }
+    }
+
+    /**
+     * Tests adding an attribute node with the addNodes() method.
+     */
+    public void testAddNodesAttributeNode()
+    {
+        Collection nodes = new ArrayList();
+        ConfigurationNode nd = createNode("length", "10");
+        nd.setAttribute(true);
+        nodes.add(nd);
+        config.addNodes("tables.table(0).fields.field(1)", nodes);
+        assertEquals("Attribute was not added", "10", config
+                .getString("tables.table(0).fields.field(1)[@length]"));
     }
 
     /**
