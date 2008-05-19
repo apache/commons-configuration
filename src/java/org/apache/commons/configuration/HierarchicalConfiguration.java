@@ -417,16 +417,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     "Cannot add nodes to an attribute node!");
         }
 
-        // a visitor to ensure that the nodes' references are cleared; this is
-        // necessary if the nodes are moved from another configuration
-        ConfigurationNodeVisitor clearRefVisitor = new ConfigurationNodeVisitorAdapter()
-        {
-            public void visitBeforeChildren(ConfigurationNode node)
-            {
-                node.setReference(null);
-            }
-        };
-
         for (Iterator it = nodes.iterator(); it.hasNext();)
         {
             ConfigurationNode child = (ConfigurationNode) it.next();
@@ -438,7 +428,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             {
                 parent.addChild(child);
             }
-            child.visit(clearRefVisitor);
+            clearReferences(child);
         }
         fireEvent(EVENT_ADD_NODES, key, nodes, false);
     }
