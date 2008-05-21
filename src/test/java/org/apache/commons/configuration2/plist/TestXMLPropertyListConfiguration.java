@@ -313,9 +313,9 @@ public class TestXMLPropertyListConfiguration extends TestCase
     }
 
     public void testInitCopy()
-	{
-		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((InMemoryConfiguration) config);
-		StrictConfigurationComparator comp = new StrictConfigurationComparator();
-		assertTrue("Configurations are not equal", comp.compare(config, copy));
-	}
+    {
+        XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((InMemoryConfiguration) config);
+        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        assertTrue("Configurations are not equal", comp.compare(config, copy));
+    }
 }

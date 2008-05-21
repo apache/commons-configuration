@@ -29,8 +29,7 @@
       </action>
       <action dev="oheger" type="update">
         To avoid incompatibilities with older versions the package structure
-	    has been changed. The main package is now
-	    org.apache.commons.configuration2.
+        has been changed. The main package is now org.apache.commons.configuration2.
       </action>
       <action dev="oheger,ebourg" type="update">
         The dependencies on commons-collections, commons-codec and commons-digester are no longer needed.

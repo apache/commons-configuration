@@ -792,25 +792,25 @@ public class TestInMemoryConfiguration extends TestCase
         }
     }
 
-	/**
+    /**
      * Tests the copy constructor.
      */
-	public void testInitCopy()
-	{
-		InMemoryConfiguration copy = new InMemoryConfiguration(config);
-		checkContent(copy);
-	}
+    public void testInitCopy()
+    {
+        InMemoryConfiguration copy = new InMemoryConfiguration(config);
+        checkContent(copy);
+    }
 
-	/**
+    /**
      * Tests whether the nodes of a copied configuration are independent from
      * the source configuration.
      */
-	public void testInitCopyUpdate()
-	{
-	    InMemoryConfiguration copy = new InMemoryConfiguration(config);
-		config.setProperty("tables.table(0).name", "NewTable");
-		checkContent(copy);
-	}
+    public void testInitCopyUpdate()
+    {
+        InMemoryConfiguration copy = new InMemoryConfiguration(config);
+        config.setProperty("tables.table(0).name", "NewTable");
+        checkContent(copy);
+    }
 
     /**
      * Tests interpolation facilities.
@@ -917,16 +917,16 @@ public class TestInMemoryConfiguration extends TestCase
         testGetProperty();
     }
 
-	/**
+    /**
      * Tests the copy constructor when a null reference is passed.
      */
-	public void testInitCopyNull()
-	{
-	    InMemoryConfiguration copy = new InMemoryConfiguration(null);
-		assertTrue("Configuration not empty", copy.isEmpty());
-	}
+    public void testInitCopyNull()
+    {
+        InMemoryConfiguration copy = new InMemoryConfiguration(null);
+        assertTrue("Configuration not empty", copy.isEmpty());
+    }
 
-	/**
+    /**
      * Tests adding multiple values to an attribute.
      */
     public void testAddMultipleAttributeValues()
@@ -969,7 +969,7 @@ public class TestInMemoryConfiguration extends TestCase
         assertEquals("Wrong value 3", "test", values.get(2));
     }
 
-	/**
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()
@@ -1039,31 +1039,27 @@ public class TestInMemoryConfiguration extends TestCase
         assertTrue("Attr key not found", keys.contains("tables/table[@sysTab]"));
     }
 
-	/**
+    /**
      * Checks the content of the passed in configuration object. Used by some
      * tests that copy a configuration.
      *
      * @param c the configuration to check
      */
-	private void checkContent(Configuration c)
-	{
-		for (int i = 0; i < TABLES.length; i++)
+    private void checkContent(Configuration c)
+    {
+        for (int i = 0; i < TABLES.length; i++)
         {
-            assertEquals("Wrong table name", TABLES[i], c
-                    .getString("tables.table(" + i + ").name"));
-            assertEquals("Wrong system flag", SYS_TABLES[i].booleanValue(), c
-                    .getBoolean("tables.table(" + i + ")[@sysTab]"));
+            assertEquals("Wrong table name", TABLES[i], c.getString("tables.table(" + i + ").name"));
+            assertEquals("Wrong system flag", SYS_TABLES[i].booleanValue(), c.getBoolean("tables.table(" + i + ")[@sysTab]"));
             for (int j = 0; j < FIELDS[i].length; j++)
             {
-                assertEquals("Wrong field", FIELDS[i][j], c
-                        .getString("tables.table(" + i + ").fields.field(" + j
-                                + ").name"));
+                assertEquals("Wrong field", FIELDS[i][j], c.getString("tables.table(" + i + ").fields.field(" + j+ ").name"));
             }
         }
-	}
+    }
 
-	private ExpressionEngine createAlternativeExpressionEngine()
-	{
+    private ExpressionEngine createAlternativeExpressionEngine()
+    {
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setPropertyDelimiter("/");
         engine.setIndexStart("[");

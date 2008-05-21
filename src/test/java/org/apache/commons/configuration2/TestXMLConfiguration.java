@@ -981,13 +981,13 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testInitCopy() throws ConfigurationException
     {
-    	XMLConfiguration copy = new XMLConfiguration(conf);
+        XMLConfiguration copy = new XMLConfiguration(conf);
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
         ConfigurationNode root = copy.getRootNode();
-        for(ConfigurationNode node : root.getChildren())
+        for (ConfigurationNode node : root.getChildren())
         {
-        	assertNull("Reference was not cleared", node.getReference());
+            assertNull("Reference was not cleared", node.getReference());
         }
 
         removeTestFile();

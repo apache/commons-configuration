@@ -41,7 +41,7 @@ public class TestINIConfiguration extends TestCase
     private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
     /** Constant for the content of an ini file. */
-	private static final String INI_DATA =
+    private static final String INI_DATA =
             "[section1]" + LINE_SEPARATOR
             + "var1 = foo" + LINE_SEPARATOR
             + "var2 = 451" + LINE_SEPARATOR
@@ -57,7 +57,7 @@ public class TestINIConfiguration extends TestCase
             + "multi = bar" + LINE_SEPARATOR
             + LINE_SEPARATOR;
 
-	private static final String INI_DATA2 =
+    private static final String INI_DATA2 =
             "[section4]" + LINE_SEPARATOR
             + "var1 = \"quoted value\"" + LINE_SEPARATOR
             + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"" + LINE_SEPARATOR
@@ -68,97 +68,97 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of save method, of class {@link INIConfiguration}.
      */
-	public void testSave() throws Exception
-	{
-		Writer writer = new StringWriter();
-		INIConfiguration instance = new INIConfiguration();
-		instance.addProperty("section1.var1", "foo");
-		instance.addProperty("section1.var2", "451");
-		instance.addProperty("section2.var1", "123.45");
-		instance.addProperty("section2.var2", "bar");
-		instance.addProperty("section3.var1", "true");
-		instance.addProperty("section3.interpolated", "${section3.var1}");
-		instance.addProperty("section3.multi", "foo");
-		instance.addProperty("section3.multi", "bar");
-		instance.save(writer);
-        
-        assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
-	}
+    public void testSave() throws Exception
+    {
+        Writer writer = new StringWriter();
+        INIConfiguration instance = new INIConfiguration();
+        instance.addProperty("section1.var1", "foo");
+        instance.addProperty("section1.var2", "451");
+        instance.addProperty("section2.var1", "123.45");
+        instance.addProperty("section2.var2", "bar");
+        instance.addProperty("section3.var1", "true");
+        instance.addProperty("section3.interpolated", "${section3.var1}");
+        instance.addProperty("section3.multi", "foo");
+        instance.addProperty("section3.multi", "bar");
+        instance.save(writer);
 
-	/**
+        assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
+    }
+
+    /**
      * Test of load method, of class {@link INIConfiguration}.
      */
-	public void testLoad() throws Exception
-	{
-		checkLoad(INI_DATA);
-	}
+    public void testLoad() throws Exception
+    {
+        checkLoad(INI_DATA);
+    }
 
-	/**
+    /**
      * Tests the load() method when the alternative value separator is used (a
      * ':' for '=').
      */
-	public void testLoadAlternativeSeparator() throws Exception
-	{
-		checkLoad(INI_DATA.replace('=', ':'));
-	}
+    public void testLoadAlternativeSeparator() throws Exception
+    {
+        checkLoad(INI_DATA.replace('=', ':'));
+    }
 
-	/**
+    /**
      * Helper method for testing the load operation. Loads the specified content
      * into a configuration and then checks some properties.
      *
      * @param data the data to load
      */
-	private void checkLoad(String data) throws ConfigurationException, IOException
-	{
-		Reader reader = new StringReader(data);
-		INIConfiguration instance = new INIConfiguration();
-		instance.load(reader);
-		reader.close();
-		assertTrue(instance.getString("section1.var1").equals("foo"));
-		assertTrue(instance.getInt("section1.var2") == 451);
-		assertTrue(instance.getDouble("section2.var1") == 123.45);
-		assertTrue(instance.getString("section2.var2").equals("bar"));
-		assertTrue(instance.getBoolean("section3.var1"));
-		assertTrue(instance.getSections().size() == 3);
-	}
+    private void checkLoad(String data) throws ConfigurationException, IOException
+    {
+        Reader reader = new StringReader(data);
+        INIConfiguration instance = new INIConfiguration();
+        instance.load(reader);
+        reader.close();
+        assertTrue(instance.getString("section1.var1").equals("foo"));
+        assertTrue(instance.getInt("section1.var2") == 451);
+        assertTrue(instance.getDouble("section2.var1") == 123.45);
+        assertTrue(instance.getString("section2.var2").equals("bar"));
+        assertTrue(instance.getBoolean("section3.var1"));
+        assertTrue(instance.getSections().size() == 3);
+    }
 
-	/**
+    /**
      * Test of isCommentLine method, of class {@link INIConfiguration}.
      */
-	public void testIsCommentLine()
-	{
-		INIConfiguration instance = new INIConfiguration();
-		assertTrue(instance.isCommentLine("#comment1"));
-		assertTrue(instance.isCommentLine(";comment1"));
-		assertFalse(instance.isCommentLine("nocomment=true"));
-		assertFalse(instance.isCommentLine(null));
-	}
+    public void testIsCommentLine()
+    {
+        INIConfiguration instance = new INIConfiguration();
+        assertTrue(instance.isCommentLine("#comment1"));
+        assertTrue(instance.isCommentLine(";comment1"));
+        assertFalse(instance.isCommentLine("nocomment=true"));
+        assertFalse(instance.isCommentLine(null));
+    }
 
-	/**
+    /**
      * Test of isSectionLine method, of class {@link INIConfiguration}.
      */
-	public void testIsSectionLine()
-	{
-		INIConfiguration instance = new INIConfiguration();
-		assertTrue(instance.isSectionLine("[section]"));
-		assertFalse(instance.isSectionLine("nosection=true"));
-		assertFalse(instance.isSectionLine(null));
-	}
+    public void testIsSectionLine()
+    {
+        INIConfiguration instance = new INIConfiguration();
+        assertTrue(instance.isSectionLine("[section]"));
+        assertFalse(instance.isSectionLine("nosection=true"));
+        assertFalse(instance.isSectionLine(null));
+    }
 
-	/**
+    /**
      * Test of getSections method, of class {@link INIConfiguration}.
      */
-	public void testGetSections()
-	{
-		INIConfiguration instance = new INIConfiguration();
-		instance.addProperty("test1.foo", "bar");
-		instance.addProperty("test2.foo", "abc");
-		Set<String> expResult = new HashSet<String>();
-		expResult.add("test1");
-		expResult.add("test2");
-		Set<String> result = instance.getSections();
-		assertEquals(expResult, result);
-	}
+    public void testGetSections()
+    {
+        INIConfiguration instance = new INIConfiguration();
+        instance.addProperty("test1.foo", "bar");
+        instance.addProperty("test2.foo", "abc");
+        Set<String> expResult = new HashSet<String>();
+        expResult.add("test1");
+        expResult.add("test2");
+        Set<String> result = instance.getSections();
+        assertEquals(expResult, result);
+    }
 
     public void testQuotedValue() throws Exception
     {

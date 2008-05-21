@@ -333,8 +333,8 @@ public class TestPropertyListConfiguration extends TestCase
 
     public void testInitCopy()
     {
-    	PropertyListConfiguration copy = new PropertyListConfiguration(config);
-    	assertFalse("Nothing was copied", copy.isEmpty());
+        PropertyListConfiguration copy = new PropertyListConfiguration(config);
+        assertFalse("Nothing was copied", copy.isEmpty());
     }
 
     /**
