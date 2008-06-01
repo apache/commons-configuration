@@ -128,6 +128,24 @@ import org.xml.sax.helpers.DefaultHandler;
  * property is always consistent when you load and save a configuration file.
  * Otherwise the values of properties can become corrupted.</p>
  *
+ * <p>Whitespace in the content of XML documents is trimmed per default. In most
+ * cases this is desired. However, sometimes whitespace is indeed important and
+ * should be treated as part of the value of a property as in the following
+ * example:
+ * <pre>
+ *   &lt;indent&gt;    &lt;/indent&gt;
+ * </pre></p>
+ *
+ * <p>Per default the spaces in the <code>indent</code> element will be trimmed
+ * resulting in an empty element. To tell <code>XMLConfiguration</code> that
+ * spaces are relevant the <code>xml:space</code> attribute can be used, which is
+ * defined in the <a href="http://www.w3.org/TR/REC-xml/#sec-white-space">XML
+ * specification</a>. This will look as follows:
+ * <pre>
+ *   &lt;indent <strong>xml:space=&quot;preserve&quot;</strong>&gt;    &lt;/indent&gt;
+ * </pre>
+ * The value of the <code>indent</code> property will now contain the spaces.</p>
+ *
  * <p><code>XMLConfiguration</code> implements the <code>{@link FileConfiguration}</code>
  * interface and thus provides full support for loading XML documents from
  * different sources like files, URLs, or streams. A full description of these
