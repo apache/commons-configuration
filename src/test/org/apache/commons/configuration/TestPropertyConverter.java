@@ -45,6 +45,17 @@ public class TestPropertyConverter extends TestCase
         assertEquals("3rd token for '" + s + "'", "123", list.get(2));
     }
 
+    public void testSplitNoTrim()
+    {
+        String s = "abc, xyz , 123";
+        List list = PropertyConverter.split(s, ',', false);
+
+        assertEquals("size", 3, list.size());
+        assertEquals("1st token for '" + s + "'", "abc", list.get(0));
+        assertEquals("2nd token for '" + s + "'", " xyz ", list.get(1));
+        assertEquals("3rd token for '" + s + "'", " 123", list.get(2));
+    }
+
     public void testSplitWithEscapedSeparator()
     {
         String s = "abc\\,xyz, 123";
