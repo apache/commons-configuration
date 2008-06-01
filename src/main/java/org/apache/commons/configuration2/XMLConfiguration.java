@@ -154,6 +154,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
 
+    /** Constant for the name of the space attribute.*/
+    private static final String ATTR_SPACE = "xml:space";
+
+    /** Constant for the xml:space value for preserving whitespace.*/
+    private static final String VALUE_PRESERVE = "preserve";
+
     /** Constant for the delimiter for multiple attribute values.*/
     private static final char ATTR_VALUE_DELIMITER = '|';
 
@@ -422,7 +428,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             setSystemID(document.getDoctype().getSystemId());
         }
 
-        constructHierarchy(getRootNode(), document.getDocumentElement(), elemRefs);
+        constructHierarchy(getRootNode(), document.getDocumentElement(), elemRefs, true);
         getRootNode().setName(document.getDocumentElement().getNodeName());
         if (elemRefs)
         {
@@ -437,9 +443,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      * @param node the actual node
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
+     * @param trim a flag whether the text content of elements should be trimmed;
+     * this controls the whitespace handling
      */
-    private void constructHierarchy(ConfigurationNode node, Element element, boolean elemRefs)
+    private void constructHierarchy(ConfigurationNode node, Element element, boolean elemRefs, boolean trim)
     {
+        boolean trimFlag = shouldTrim(element, trim);
         processAttributes(node, element, elemRefs);
         StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
@@ -450,9 +459,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             {
                 Element child = (Element) w3cNode;
                 ConfigurationNode childNode = new XMLNode(child.getTagName(), elemRefs ? child : null);
-                constructHierarchy(childNode, child, elemRefs);
+                constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
-                handleDelimiters(node, childNode);
+                handleDelimiters(node, childNode, trimFlag);
             }
             else if (w3cNode instanceof Text)
             {
@@ -460,7 +469,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
                 buffer.append(data.getData());
             }
         }
-        String text = buffer.toString().trim();
+
+        String text = buffer.toString();
+        if (trimFlag)
+        {
+            text = text.trim();
+        }
         if (text.length() > 0 || !hasChildren(node))
         {
             node.setValue(text);
@@ -514,8 +528,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
      *
      * @param parent the parent element
      * @param child the child element
+     * @param trim flag whether texts of elements should be trimmed
      */
-    private void handleDelimiters(ConfigurationNode parent, ConfigurationNode child)
+    private void handleDelimiters(ConfigurationNode parent, ConfigurationNode child, boolean trim)
     {
         if (child.getValue() != null)
         {
@@ -527,7 +542,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
             }
             else
             {
-                values = PropertyConverter.split(child.getValue().toString(), getListDelimiter());
+                values = PropertyConverter.split(child.getValue().toString(), getListDelimiter(), trim);
             }
 
             if (values.size() > 1)
@@ -559,6 +574,31 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration impl
                 // contain escaped delimiters
                 child.setValue(values.get(0));
             }
+        }
+    }
+
+    /**
+     * Checks whether the content of the current XML element should be trimmed.
+     * This method checks whether a <code>xml:space</code> attribute is
+     * present and evaluates its value. See <a
+     * href="http://www.w3.org/TR/REC-xml/#sec-white-space">
+     * http://www.w3.org/TR/REC-xml/#sec-white-space</a> for more details.
+     *
+     * @param element the current XML element
+     * @param currentTrim the current trim flag
+     * @return a flag whether the content of this element should be trimmed
+     */
+    private boolean shouldTrim(Element element, boolean currentTrim)
+    {
+        Attr attr = element.getAttributeNode(ATTR_SPACE);
+
+        if (attr == null)
+        {
+            return currentTrim;
+        }
+        else
+        {
+            return !VALUE_PRESERVE.equals(attr.getValue());
         }
     }
 

@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-307">
+        XMLConfiguration now supports the xml:space attribute. This attribute
+        can be used to preserve whitespace in the content of XML elements.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-328">
         A bug in XMLConfiguration.addNodes() made it impossible to add
         attribute nodes using this method. This has been fixed.
