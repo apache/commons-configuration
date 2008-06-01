@@ -57,9 +57,10 @@ public final class PropertyConverter
      *
      * @param s          the string to split
      * @param delimiter  the delimiter
+     * @param trim       a flag whether the single elements should be trimmed
      * @return a list with the single tokens
      */
-    public static List<String> split(String s, char delimiter)
+    public static List<String> split(String s, char delimiter, boolean trim)
     {
         if (s == null)
         {
@@ -93,7 +94,12 @@ public final class PropertyConverter
                 if (c == delimiter)
                 {
                     // found a list delimiter -> add token and reset buffer
-                    list.add(token.toString().trim());
+                    String t = token.toString();
+                    if (trim)
+                    {
+                        t = t.trim();
+                    }
+                    list.add(t);
                     token = new StringBuilder();
                 }
                 else if (c == LIST_ESC_CHAR)
@@ -116,9 +122,27 @@ public final class PropertyConverter
             token.append(LIST_ESC_CHAR);
         }
         // Add last token
-        list.add(token.toString().trim());
+        String t = token.toString();
+        if (trim)
+        {
+            t = t.trim();
+        }
+        list.add(t);
 
         return list;
+    }
+
+    /**
+     * Split a string on the specified delimiter always trimming the elements.
+     * This is a shortcut for <code>split(s, delimiter, true)</code>.
+     *
+     * @param s          the string to split
+     * @param delimiter  the delimiter
+     * @return a list with the single tokens
+     */
+    public static List<String> split(String s, char delimiter)
+    {
+        return split(s, delimiter, true);
     }
 
     /**
