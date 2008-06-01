@@ -90,4 +90,12 @@ And even longer.
          splitting when delimiter parsing is disabled.
     -->
     <expressions value="a \|\| (b &amp;&amp; c)|!d"/>
+
+    <!-- Tests for handling of spaces -->
+    <space xml:space="preserve">
+      <blanc> </blanc>
+      <stars> * * </stars>
+      <description xml:space="default">     Some text      </description>
+      <testInvalid xml:space="invalid">     Some other text </testInvalid>
+    </space>
 </testconfig>

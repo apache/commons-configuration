@@ -127,6 +127,24 @@ import org.xml.sax.helpers.DefaultHandler;
  * property is always consistent when you load and save a configuration file.
  * Otherwise the values of properties can become corrupted.</p>
  *
+ * <p>Whitespace in the content of XML documents is trimmed per default. In most
+ * cases this is desired. However, sometimes whitespace is indeed important and
+ * should be treated as part of the value of a property as in the following
+ * example:
+ * <pre>
+ *   &lt;indent&gt;    &lt;/indent&gt;
+ * </pre></p>
+ *
+ * <p>Per default the spaces in the <code>indent</code> element will be trimmed
+ * resulting in an empty element. To tell <code>XMLConfiguration</code> that
+ * spaces are relevant the <code>xml:space</code> attribute can be used, which is
+ * defined in the <a href="http://www.w3.org/TR/REC-xml/#sec-white-space">XML
+ * specification</a>. This will look as follows:
+ * <pre>
+ *   &lt;indent <strong>xml:space=&quot;preserve&quot;</strong>&gt;    &lt;/indent&gt;
+ * </pre>
+ * The value of the <code>indent</code> property will now contain the spaces.</p>
+ *
  * <p><code>XMLConfiguration</code> implements the <code>{@link FileConfiguration}</code>
  * interface and thus provides full support for loading XML documents from
  * different sources like files, URLs, or streams. A full description of these
@@ -153,6 +171,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /** Constant for the default root element name. */
     private static final String DEFAULT_ROOT_NAME = "configuration";
+
+    /** Constant for the name of the space attribute.*/
+    private static final String ATTR_SPACE = "xml:space";
+
+    /** Constant for the xml:space value for preserving whitespace.*/
+    private static final String VALUE_PRESERVE = "preserve";
 
     /** Constant for the delimiter for multiple attribute values.*/
     private static final char ATTR_VALUE_DELIMITER = '|';
@@ -422,7 +446,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             setSystemID(document.getDoctype().getSystemId());
         }
 
-        constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs);
+        constructHierarchy(getRoot(), document.getDocumentElement(), elemRefs, true);
         getRootNode().setName(document.getDocumentElement().getNodeName());
         if (elemRefs)
         {
@@ -437,9 +461,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param node the actual node
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
+     * @param trim a flag whether the text content of elements should be trimmed;
+     * this controls the whitespace handling
      */
-    private void constructHierarchy(Node node, Element element, boolean elemRefs)
+    private void constructHierarchy(Node node, Element element, boolean elemRefs, boolean trim)
     {
+        boolean trimFlag = shouldTrim(element, trim);
         processAttributes(node, element, elemRefs);
         StringBuffer buffer = new StringBuffer();
         NodeList list = element.getChildNodes();
@@ -451,9 +478,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Element child = (Element) w3cNode;
                 Node childNode = new XMLNode(child.getTagName(),
                         elemRefs ? child : null);
-                constructHierarchy(childNode, child, elemRefs);
+                constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
-                handleDelimiters(node, childNode);
+                handleDelimiters(node, childNode, trimFlag);
             }
             else if (w3cNode instanceof Text)
             {
@@ -461,7 +488,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 buffer.append(data.getData());
             }
         }
-        String text = buffer.toString().trim();
+
+        String text = buffer.toString();
+        if (trimFlag)
+        {
+            text = text.trim();
+        }
         if (text.length() > 0 || !node.hasChildren())
         {
             node.setValue(text);
@@ -506,8 +538,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @param parent the parent element
      * @param child the child element
+     * @param trim flag whether texts of elements should be trimmed
      */
-    private void handleDelimiters(Node parent, Node child)
+    private void handleDelimiters(Node parent, Node child, boolean trim)
     {
         if (child.getValue() != null)
         {
@@ -520,7 +553,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             else
             {
                 values = PropertyConverter.split(child.getValue().toString(),
-                    getListDelimiter());
+                    getListDelimiter(), trim);
             }
 
             if (values.size() > 1)
@@ -554,6 +587,31 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 // contain escaped delimiters
                 child.setValue(values.get(0));
             }
+        }
+    }
+
+    /**
+     * Checks whether the content of the current XML element should be trimmed.
+     * This method checks whether a <code>xml:space</code> attribute is
+     * present and evaluates its value. See <a
+     * href="http://www.w3.org/TR/REC-xml/#sec-white-space">
+     * http://www.w3.org/TR/REC-xml/#sec-white-space</a> for more details.
+     *
+     * @param element the current XML element
+     * @param currentTrim the current trim flag
+     * @return a flag whether the content of this element should be trimmed
+     */
+    private boolean shouldTrim(Element element, boolean currentTrim)
+    {
+        Attr attr = element.getAttributeNode(ATTR_SPACE);
+
+        if (attr == null)
+        {
+            return currentTrim;
+        }
+        else
+        {
+            return !VALUE_PRESERVE.equals(attr.getValue());
         }
     }
 

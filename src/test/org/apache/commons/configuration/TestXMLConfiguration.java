@@ -1387,6 +1387,36 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether spaces are preserved when the xml:space attribute is set.
+     */
+    public void testPreserveSpace()
+    {
+        assertEquals("Wrong value of blanc", " ", conf.getString("space.blanc"));
+        assertEquals("Wrong value of stars", " * * ", conf
+                .getString("space.stars"));
+    }
+
+    /**
+     * Tests whether the xml:space attribute can be overridden in nested
+     * elements.
+     */
+    public void testPreserveSpaceOverride()
+    {
+        assertEquals("Not trimmed", "Some text", conf
+                .getString("space.description"));
+    }
+
+    /**
+     * Tests an xml:space attribute with an invalid value. This will be
+     * interpreted as default.
+     */
+    public void testPreserveSpaceInvalid()
+    {
+        assertEquals("Invalid not trimmed", "Some other text", conf
+                .getString("space.testInvalid"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
