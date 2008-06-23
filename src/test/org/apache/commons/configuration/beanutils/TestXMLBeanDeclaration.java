@@ -19,6 +19,7 @@ package org.apache.commons.configuration.beanutils;
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 
 import junit.framework.TestCase;
@@ -242,9 +243,10 @@ public class TestXMLBeanDeclaration extends TestCase
     }
 
     /**
-     * Tests fetching nested bean declarations.
+     * Creates a configuration with data for testing nested bean declarations.
+     * @return the initialized test configuration
      */
-    public void testGetNestedBeanDeclarations()
+    private HierarchicalConfiguration prepareNestedBeanDeclarations()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
         setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
@@ -256,7 +258,15 @@ public class TestXMLBeanDeclaration extends TestCase
                     KEY + '.' + COMPLEX_PROPS[i] + "[@config-class]",
                     COMPLEX_CLASSES[i]);
         }
+        return config;
+    }
 
+    /**
+     * Tests fetching nested bean declarations.
+     */
+    public void testGetNestedBeanDeclarations()
+    {
+        HierarchicalConfiguration config = prepareNestedBeanDeclarations();
         decl = new XMLBeanDeclaration(config, KEY);
         checkProperties(decl, TEST_PROPS, TEST_VALUES);
 
@@ -271,6 +281,31 @@ public class TestXMLBeanDeclaration extends TestCase
             checkProperties(d, COMPLEX_ATTRIBUTES[i], COMPLEX_VALUES[i]);
             assertEquals("Wrong bean class", COMPLEX_CLASSES[i], d
                     .getBeanClassName());
+        }
+    }
+
+    /**
+     * Tests whether the factory method for creating nested bean declarations
+     * gets called.
+     */
+    public void testGetNestedBeanDeclarationsFactoryMethod()
+    {
+        HierarchicalConfiguration config = prepareNestedBeanDeclarations();
+        decl = new XMLBeanDeclaration(config, KEY)
+        {
+            protected BeanDeclaration createBeanDeclaration(
+                    ConfigurationNode node)
+            {
+                return new XMLBeanDeclarationTestImpl(getConfiguration()
+                        .configurationAt(node.getName()), node);
+            }
+        };
+        Map nested = decl.getNestedBeanDeclarations();
+        for (int i = 0; i < COMPLEX_PROPS.length; i++)
+        {
+            Object d = nested.get(COMPLEX_PROPS[i]);
+            assertTrue("Wrong class for bean declaration: " + d,
+                    d instanceof XMLBeanDeclarationTestImpl);
         }
     }
 
@@ -393,6 +428,19 @@ public class TestXMLBeanDeclaration extends TestCase
                     .containsKey(names[i]));
             assertEquals("Wrong value for property " + names[i], values[i],
                     props.get(names[i]));
+        }
+    }
+
+    /**
+     * A helper class used for testing the createBeanDeclaration() factory
+     * method.
+     */
+    private static class XMLBeanDeclarationTestImpl extends XMLBeanDeclaration
+    {
+        public XMLBeanDeclarationTestImpl(SubnodeConfiguration config,
+                ConfigurationNode node)
+        {
+            super(config, node);
         }
     }
 }

@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-331">
+        XMLBeanDeclaration now defines a factory method createBeanDeclaration()
+        for creating the declarations for complex nested properties. This
+        method can be overridden by derived classes for injecting custom
+        BeanDeclaration implementations.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-307">
         XMLConfiguration now supports the xml:space attribute. This attribute
         can be used to preserve whitespace in the content of XML elements.

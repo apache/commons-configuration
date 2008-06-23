@@ -310,8 +310,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
             ConfigurationNode child = (ConfigurationNode) it.next();
             if (!isReservedNode(child))
             {
-                nested.put(child.getName(), new XMLBeanDeclaration(
-                        getConfiguration().configurationAt(child.getName()), child));
+                nested.put(child.getName(), createBeanDeclaration(child));
             }
         }
 
@@ -348,6 +347,26 @@ public class XMLBeanDeclaration implements BeanDeclaration
         return nd.isAttribute()
                 && (nd.getName() == null || nd.getName().startsWith(
                         RESERVED_PREFIX));
+    }
+
+    /**
+     * Creates a new <code>BeanDeclaration</code> for a child node of the
+     * current configuration node. This method is called by
+     * <code>getNestedBeanDeclarations()</code> for all complex sub properties
+     * detected by this method. Derived classes can hook in if they need a
+     * specific initialization. This base implementation creates a
+     * <code>XMLBeanDeclaration</code> that is properly initialized from the
+     * passed in node.
+     *
+     * @param node the child node, for which a <code>BeanDeclaration</code> is
+     *        to be created
+     * @return the <code>BeanDeclaration</code> for this child node
+     * @since 1.6
+     */
+    protected BeanDeclaration createBeanDeclaration(ConfigurationNode node)
+    {
+        return new XMLBeanDeclaration(getConfiguration().configurationAt(
+                node.getName()), node);
     }
 
     /**
