@@ -34,6 +34,7 @@ import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.NodeVisitor;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
 import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>A base class for hierarchical configurations.</p>
@@ -398,6 +399,30 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
+     * Determines the path from the given node to the root node. The return
+     * value is the key that uniquely identifies the given node. The associated
+     * expression engine is used for constructing and combining the parts the
+     * key is composed of.
+     *
+     * @param node the node in question (must not be <b>null</b>)
+     * @return a unique key for this node
+     */
+    protected String constructPath(T node)
+    {
+        if (node == null)
+        {
+            return StringUtils.EMPTY;
+        }
+        else
+        {
+            // recursively navigate to the root and construct all paths
+            return getExpressionEngine().uniqueNodeKey(node,
+                    constructPath(getNodeHandler().getParent(node)),
+                    getNodeHandler());
+        }
+    }
+
+    /**
      * Checks if the specified key is contained in this configuration. Note that
      * for this configuration the term &quot;contained&quot; means that the key
      * has an associated value. If there is a node for this key that has no
@@ -714,7 +739,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * Creates a new node object with the specified name and value. This base
      * implementation delegates to the <code>NodeHandler</code> for creating a
      * new node.
-     * 
+     *
      * @param parent the parent of the new node
      * @param name the name of the new node
      * @param value the value of the new node
@@ -724,7 +749,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     {
         return getNodeHandler().addChild(parent, name, value);
     }
-    
+
     /**
      * Helper method for processing a <code>NodeAddData</code> object obtained from the
      * expression engine. This method will create all new nodes and set the value

@@ -970,6 +970,41 @@ public class TestInMemoryConfiguration extends TestCase
     }
 
     /**
+     * Tests the constructPath() method for child nodes.
+     */
+    public void testConstructPathChildNodes()
+    {
+        ConfigurationNode nodTables = config.getRootNode().getChild(0);
+        int tabIdx = 0;
+        for (ConfigurationNode nodTab : nodTables.getChildren())
+        {
+            String path = config.constructPath(nodTab);
+            String tabPath = "tables(0).table(" + tabIdx + ")";
+            assertEquals("Wrong path for table", tabPath, path);
+            ConfigurationNode nodFields = nodTab.getChild(1);
+            int fieldIdx = 0;
+            for (ConfigurationNode nodField : nodFields.getChildren())
+            {
+                ConfigurationNode nodName = nodField.getChild(0);
+                String fldPath = config.constructPath(nodName);
+                assertEquals("Wrong path for field", tabPath
+                        + ".fields(0).field(" + fieldIdx + ").name(0)", fldPath);
+                fieldIdx++;
+            }
+            tabIdx++;
+        }
+    }
+
+    /**
+     * Tests the constructPath() method for the root node.
+     */
+    public void testConstructPathRoot()
+    {
+        assertEquals("Wrong path for root node", "", config
+                .constructPath(config.getRootNode()));
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()
