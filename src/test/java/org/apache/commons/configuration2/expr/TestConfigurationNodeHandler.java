@@ -20,11 +20,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.easymock.EasyMock;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for ConfigurationNodeHandler.
@@ -370,5 +370,55 @@ public class TestConfigurationNodeHandler extends TestCase
         assertEquals("Wrong number of children", count.intValue(), handler
                 .getChildrenCount(node, NAME));
         EasyMock.verify(node);
+    }
+
+    /**
+     * Tests determining the index of a child node when this is the first and
+     * only child.
+     */
+    public void testIndexOfChildOnlyChild()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode();
+        ConfigurationNode child = new DefaultConfigurationNode(NAME);
+        node.addChild(child);
+        assertEquals("Wrong index for child", 0, handler.indexOfChild(child));
+    }
+
+    /**
+     * Tests querying the index of a child node if there are multiple children.
+     */
+    public void testIndexOfChildMultipleChildren()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode();
+        node.addChild(new DefaultConfigurationNode(NAME));
+        node.addChild(new DefaultConfigurationNode("AnotherName"));
+        node.addChild(new DefaultConfigurationNode(NAME));
+        node.addChild(new DefaultConfigurationNode("DifferentName"));
+        ConfigurationNode child = new DefaultConfigurationNode(NAME);
+        node.addChild(child);
+        node.addChild(new DefaultConfigurationNode(NAME));
+        assertEquals("Wrong index for child", 2, handler.indexOfChild(child));
+    }
+
+    /**
+     * Tests the indexOfChild() implementation when no parent node exists.
+     */
+    public void testIndexOfChildNoParent()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode(NAME);
+        assertEquals("Wrong index for node without parent", -1, handler
+                .indexOfChild(node));
+    }
+
+    /**
+     * Tests querying the index of an attribute node. Result should be -1.
+     */
+    public void testIndexOfChildAttribute()
+    {
+        ConfigurationNode node = new DefaultConfigurationNode();
+        ConfigurationNode attr = new DefaultConfigurationNode(NAME);
+        node.addAttribute(attr);
+        assertEquals("Wrong index for attribute", -1, handler
+                .indexOfChild(attr));
     }
 }

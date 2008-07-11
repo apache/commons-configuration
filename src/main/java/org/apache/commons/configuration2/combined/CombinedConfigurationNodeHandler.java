@@ -364,6 +364,18 @@ class CombinedConfigurationNodeHandler implements NodeHandler<Object>,
     }
 
     /**
+     * Determines the index of the specified child node. This implementation
+     * delegates to the node handler responsible for the passed in node.
+     *
+     * @param node the node
+     * @return the index of this node relative to its parent
+     */
+    public int indexOfChild(Object node)
+    {
+        return fetchHandler(node).indexOfChild(node);
+    }
+
+    /**
      * Adds a new sub registry to this node handler registry.
      *
      * @param subreg the registry to add

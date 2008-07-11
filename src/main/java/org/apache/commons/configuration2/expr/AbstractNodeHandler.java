@@ -88,4 +88,33 @@ public abstract class AbstractNodeHandler<T> implements NodeHandler<T>
         setValue(child, value);
         return child;
     }
+
+    /**
+     * Determines the index of the given child node. This implementation
+     * retrieves the parent of this node and then iterates over all children
+     * with the same name.
+     *
+     * @param node the node
+     * @return the index of this child node
+     */
+    public int indexOfChild(T node)
+    {
+        T parent = getParent(node);
+        if (parent == null)
+        {
+            return -1;
+        }
+
+        int index = 0;
+        for (T child : getChildren(parent, nodeName(node)))
+        {
+            if (child == node)
+            {
+                return index;
+            }
+            index++;
+        }
+
+        return -1;
+    }
 }

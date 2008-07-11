@@ -21,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
@@ -28,8 +30,6 @@ import org.apache.commons.configuration2.expr.NodeHandlerRegistry;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.easymock.EasyMock;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for CombinedConfigurationNodeHandler.
@@ -451,6 +451,18 @@ public class TestCombinedConfigurationNodeHandler extends TestCase
         subHandler.setValue(this, VALUE);
         EasyMock.replay(subHandler);
         handler.setValue(this, VALUE);
+        EasyMock.verify(subHandler);
+    }
+
+    /**
+     * Tests the indexOfChild() implementation.
+     */
+    public void testIndexOfChild()
+    {
+        final int index = 11;
+        EasyMock.expect(subHandler.indexOfChild(this)).andReturn(index);
+        EasyMock.replay(subHandler);
+        assertEquals("Wrong index", index, handler.indexOfChild(this));
         EasyMock.verify(subHandler);
     }
 }

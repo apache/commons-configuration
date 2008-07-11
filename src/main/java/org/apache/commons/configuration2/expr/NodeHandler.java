@@ -122,6 +122,20 @@ public interface NodeHandler<T>
     T getChild(T node, int index);
 
     /**
+     * Returns the index of the given child node relative to its name. This
+     * method will be called when a unique identifier for a specific node is
+     * needed. The node name alone might not be sufficient because there may be
+     * multiple child nodes with the same name. This method returns 0 if the
+     * given node is the first child node with this name, 1 for the second child
+     * node and so on. If the node has no parent node or if it is an attribute,
+     * -1 will be returned.
+     *
+     * @param node a child node whose index is to be retrieved
+     * @return the index of this child node
+     */
+    int indexOfChild(T node);
+
+    /**
      * Returns the number of children of the specified node with the given name.
      * This method exists for performance reasons: for some node implementations
      * it may be by far more efficient to count the children than to query a
