@@ -179,6 +179,24 @@ public class TestDefaultExpressionEngine extends TestCase
     }
 
     /**
+     * Tests obtaining unique keys for nodes.
+     */
+    public void testUniqueNodeKey()
+    {
+        ConfigurationNode node = root.getChild(0);
+        assertEquals("Invalid name for descendant of root", "tables(0)", engine
+                .uniqueNodeKey(node, "", handler));
+        assertEquals("Parent key not respected", "test.tables(0)", engine
+                .uniqueNodeKey(node, "test", handler));
+        assertEquals("Full parent key not taken into account",
+                "a.full.parent.key.tables(0)", engine.uniqueNodeKey(node,
+                        "a.full.parent.key", handler));
+        node = node.getChild(1);
+        assertEquals("Wrong key for child 1", "tables.table(1)", engine
+                .uniqueNodeKey(node, "tables", handler));
+    }
+
+    /**
      * Tests obtaining keys when the root node is involved.
      */
     public void testNodeKeyWithRoot()
@@ -186,6 +204,17 @@ public class TestDefaultExpressionEngine extends TestCase
         assertEquals("Wrong name for root node", "", engine.nodeKey(root, null,
                 handler));
         assertEquals("Null name not detected", "test", engine.nodeKey(root,
+                "test", handler));
+    }
+
+    /**
+     * Tests obtaining unique keys when the root node is involved.
+     */
+    public void testUniqueNodeKeyWithRoot()
+    {
+        assertEquals("Wrong name for root node", "", engine.uniqueNodeKey(root, null,
+                handler));
+        assertEquals("Null name not detected", "test", engine.uniqueNodeKey(root,
                 "test", handler));
     }
 
@@ -219,6 +248,20 @@ public class TestDefaultExpressionEngine extends TestCase
     }
 
     /**
+     * Tests obtaining unique keys for nodes that contain the delimiter character.
+     */
+    public void testUniqueNodeKeyWithEscapedDelimiters()
+    {
+        ConfigurationNode node = root.getChild(1);
+        assertEquals("Wrong escaped key", "connection..settings(0)", engine
+                .uniqueNodeKey(node, "", handler));
+        assertEquals("Wrong complex escaped key",
+                "connection..settings(0).usr..name(0)", engine.uniqueNodeKey(node
+                        .getChild(0), engine.uniqueNodeKey(node, "", handler),
+                        handler));
+    }
+
+    /**
      * Tests obtaining node keys when a different syntax is set.
      */
     public void testNodeKeyWithAlternativeSyntax()
@@ -232,6 +275,16 @@ public class TestDefaultExpressionEngine extends TestCase
         engine.setAttributeStart(engine.getPropertyDelimiter());
         assertEquals("Wrong attribute key", "/test", engine.attributeKey(root,
                 null, root.getAttribute(0).getName(), handler));
+    }
+
+    /**
+     * Tests obtaining unique node keys when a different syntax is set.
+     */
+    public void testUniqueNodeKeyWithAlternativeSyntax()
+    {
+        setUpAlternativeSyntax();
+        assertEquals("Wrong child key", "tables/table[0]", engine.uniqueNodeKey(root
+                .getChild(0).getChild(0), "tables", handler));
     }
 
     /**

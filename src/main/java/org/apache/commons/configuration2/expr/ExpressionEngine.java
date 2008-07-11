@@ -80,6 +80,24 @@ public interface ExpressionEngine
     <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler);
 
     /**
+     * Constructs a unique key for the specified node in the expression language
+     * supported by an implementation. This method is similar to
+     * <code>nodeKey()</code>, but indices are used to identify the specified
+     * node exactly. So if a parent has multiple child nodes with the same name,
+     * this method will return a different key for each child (
+     * <code>nodeKey()</code> would return the same key for all).
+     *
+     * @param <T> the type of the nodes involved
+     * @param node the node, for which the key is to be constructed
+     * @param parentKey the key of this node's parent (can be <b>null</b> for
+     *        the root node)
+     * @param handler the node handler
+     * @return a unique key for this node
+     * @since 2.0
+     */
+    <T> String uniqueNodeKey(T node, String parentKey, NodeHandler<T> handler);
+
+    /**
      * Returns the key of an attribute of the specified node. This method is
      * analogous to <code>nodeKey()</code>, but deals with attributes.
      *

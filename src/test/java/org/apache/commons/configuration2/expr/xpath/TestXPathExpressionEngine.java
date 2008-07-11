@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.expr.NodeAddData;
 import org.apache.commons.configuration2.expr.NodeHandler;
@@ -29,8 +31,6 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for XPathExpressionEngine.
@@ -166,6 +166,18 @@ public class TestXPathExpressionEngine extends TestCase
     }
 
     /**
+     * Tests a normal call of uniqueNodeKey().
+     */
+    public void testUniqueNodeKeyNormal()
+    {
+        ConfigurationNode parent = new DefaultConfigurationNode();
+        ConfigurationNode child = new DefaultConfigurationNode("child");
+        parent.addChild(child);
+        assertEquals("Wrong node key", "parent/child[1]", engine.uniqueNodeKey(
+                child, "parent", handler));
+    }
+
+    /**
      * Tests querying the key of an attribute node.
      */
     public void testAttributeKey()
@@ -188,12 +200,34 @@ public class TestXPathExpressionEngine extends TestCase
     }
 
     /**
+     * Tests uniqueNodeKey() for the root node.
+     */
+    public void testUniqueNodeKeyForRootNode()
+    {
+        assertEquals("Wrong key for root node", "", engine.uniqueNodeKey(root, null, handler));
+        assertEquals("Null name not detected", "test", engine.uniqueNodeKey(
+                new DefaultConfigurationNode(), "test", handler));
+    }
+
+    /**
      * Tests nodeKey() for direct children of the root node.
      */
     public void testNodeKeyForRootChild()
     {
         ConfigurationNode node = new DefaultConfigurationNode("child");
         assertEquals("Wrong key for root child node", "child", engine.nodeKey(
+                node, "", handler));
+    }
+
+    /**
+     * Tests uniqueNodeKey() for direct children of the root node.
+     */
+    public void testUniqueNodeKeyForRootChild()
+    {
+        ConfigurationNode root = new DefaultConfigurationNode();
+        ConfigurationNode node = new DefaultConfigurationNode("child");
+        root.addChild(node);
+        assertEquals("Wrong key for root child node", "child[1]", engine.uniqueNodeKey(
                 node, "", handler));
     }
 

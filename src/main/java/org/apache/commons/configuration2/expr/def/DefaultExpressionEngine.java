@@ -299,6 +299,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      *
      * @param node the node whose key is to be determined
      * @param parentKey the key of this node's parent
+     * @param handler the node handler
      * @return the key for the given node
      */
     public <T> String nodeKey(T node, String parentKey, NodeHandler<T> handler)
@@ -316,6 +317,35 @@ public class DefaultExpressionEngine implements ExpressionEngine
             key.append(handler.nodeName(node), true);
             return key.toString();
         }
+    }
+
+    /**
+     * Determines a unique key of the passed in node. This implementation first
+     * fetches the default key using <code>nodeKey()</code>. Then it obtains the
+     * index of the node relative to its parent. If an index is defined, it is
+     * added.
+     *
+     * @param node the node whose key is to be determined
+     * @param parentKey the key of this node's parent
+     * @param handler the node handler
+     * @return the key for the given node
+     * @since 2.0
+     */
+    public <T> String uniqueNodeKey(T node, String parentKey,
+            NodeHandler<T> handler)
+    {
+        String key = nodeKey(node, parentKey, handler);
+
+        int index = handler.indexOfChild(node);
+        if (index >= 0)
+        {
+            DefaultConfigurationKey ckey = new DefaultConfigurationKey(this,
+                    key);
+            ckey.appendIndex(index);
+            key = ckey.toString();
+        }
+
+        return key;
     }
 
     /**

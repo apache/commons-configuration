@@ -127,6 +127,12 @@ public class XPathExpressionEngine implements ExpressionEngine
     /** Constant for the delimiters for splitting node paths. */
     private static final String NODE_PATH_DELIMITERS = PATH_DELIMITER + ATTR_DELIMITER;
 
+    /** Constant for the index start character.*/
+    private static final char INDEX_START = '[';
+
+    /** Constant for the index end character.*/
+    private static final char INDEX_END = ']';
+
     /**
      * Executes a query. The passed in property key is directly passed to a
      * JXPath context.
@@ -212,6 +218,34 @@ public class XPathExpressionEngine implements ExpressionEngine
             buf.append(nodeName);
             return buf.toString();
         }
+    }
+
+    /**
+     * Returns a unique key for the given node based on the parent's key. This
+     * implementation first creates a default key for the passed in node using
+     * <code>nodeKey()</code>. Then it checks whether an index is defined for
+     * this node. If this is the case, the index is added. (Note that indices
+     * for XPATH are 1-based.)
+     *
+     * @param node the node for which a key is to be constructed
+     * @param parentKey the key of the parent node
+     * @param handler the node handler
+     * @return the key for the given node
+     */
+    public <T> String uniqueNodeKey(T node, String parentKey,
+            NodeHandler<T> handler)
+    {
+        String key = nodeKey(node, parentKey, handler);
+
+        int index = handler.indexOfChild(node);
+        if (index >= 0)
+        {
+            StringBuilder buf = new StringBuilder(key);
+            buf.append(INDEX_START).append(index + 1).append(INDEX_END);
+            key = buf.toString();
+        }
+
+        return key;
     }
 
     /**
