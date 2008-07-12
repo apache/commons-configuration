@@ -76,6 +76,12 @@
         A new PreferencesConfiguration class was added that wraps the
         java.util.prefs API.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-333">
+        The configurationsAt() method of hierarchical configurations, like
+        configurationAt(), now supports an "supportsUpdate" parameter that
+        makes the sub configurations returned aware of structural updates of
+        their parent.
+      </action>
     </release>
 
     <release version="1.6" date="in SVN" description="">

@@ -301,39 +301,73 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     /**
      * Returns a list of sub configurations for all configuration nodes selected
      * by the given key. This method will evaluate the passed in key (using the
-     * current <code>ExpressionEngine</code>) and then create a subnode
-     * configuration for each returned node (like
+     * current <code>ExpressionEngine</code>) and then create a
+     * <code>{@link SubConfiguration}</code> for each returned node (like
      * <code>{@link #configurationAt(String)}</code>}). This is especially
      * useful when dealing with list-like structures. As an example consider the
      * configuration that contains data about database tables and their fields.
      * If you need access to all fields of a certain table, you can simply do
      *
      * <pre>
-     * List fields = config.configurationsAt("tables.table(0).fields.field");
-     * for(Iterator it = fields.iterator(); it.hasNext();)
+     * List<SubConfiguration<T>> fields = config.configurationsAt("tables.table(0).fields.field");
+     * for(SubConfiguration sub : fields)
      * {
-     *     HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
      *     // now the children and attributes of the field node can be
      *     // directly accessed
      *     String fieldName = sub.getString("name");
      *     String fieldType = sub.getString("type");
      *     ...
      * </pre>
+     * This method also supports a <code>supportUpdates</code> parameter for
+     * making the sub configurations returned aware of structural changes in
+     * the parent configuration. Refer to the documentation of
+     * <code>{@link #configurationAt(String, boolean)}</code> for more details
+     * about the effect of this flag.
      *
      * @param key the key for selecting the desired nodes
+     * @param supportUpdates a flag whether the returned sub configurations
+     * should be able to handle updates of its parent
      * @return a list with hierarchical configuration objects; each
      * configuration represents one of the nodes selected by the passed in key
      */
-    public List<SubConfiguration<T>> configurationsAt(String key)
+    public List<SubConfiguration<T>> configurationsAt(String key, boolean supportUpdates)
     {
         NodeList<T> nodes = fetchNodeList(key);
         List<SubConfiguration<T>> configs = new ArrayList<SubConfiguration<T>>(
                 nodes.size());
+
         for (int index = 0; index < nodes.size(); index++)
         {
-            configs.add(createSubnodeConfiguration(nodes.getNode(index)));
+            SubConfiguration<T> subConfig;
+            if(supportUpdates)
+            {
+                String subnodeKey = constructPath(nodes.getNode(index));
+                subConfig = createSubnodeConfiguration(nodes.getNode(index), subnodeKey);
+            }
+            else
+            {
+                subConfig = createSubnodeConfiguration(nodes.getNode(index));
+            }
+            configs.add(subConfig);
         }
+
         return configs;
+    }
+
+    /**
+     * Returns a list of sub configurations for all configuration nodes selected
+     * by the given key that are not aware of structural updates of their
+     * parent. This is a short form for
+     * <code>configurationsAt(key, <b>false</b>)</code>.
+     *
+     * @param key the key for selecting the desired nodes
+     * @return a list with hierarchical configuration objects; each
+     *         configuration represents one of the nodes selected by the passed
+     *         in key
+     */
+    public List<SubConfiguration<T>> configurationsAt(String key)
+    {
+        return configurationsAt(key, false);
     }
 
     /**

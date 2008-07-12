@@ -476,7 +476,6 @@ public class TestSubConfiguration extends TestCase
      */
     protected InMemoryConfiguration setUpParentConfig()
     {
-        @SuppressWarnings("serial")
         InMemoryConfiguration conf = new InMemoryConfiguration()
         {
             // Provide a special implementation of createNode() to check

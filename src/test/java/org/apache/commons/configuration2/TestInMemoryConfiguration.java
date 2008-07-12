@@ -30,6 +30,7 @@ import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
 import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
@@ -572,9 +573,10 @@ public class TestInMemoryConfiguration extends TestCase
         assertEquals("Wrong size of FIELDS", FIELDS[1].length, lstFlds.size());
         for (int i = 0; i < FIELDS[1].length; i++)
         {
-            AbstractHierarchicalConfiguration<ConfigurationNode> sub = lstFlds.get(i);
+            SubConfiguration<ConfigurationNode> sub = lstFlds.get(i);
             assertEquals("Wrong field at position " + i, FIELDS[1][i], sub
                     .getString("name"));
+            assertNull("Sub configuration detects changes", sub.getSubnodeKey());
         }
     }
 
@@ -586,6 +588,24 @@ public class TestInMemoryConfiguration extends TestCase
     {
         assertTrue("List is not empty", config.configurationsAt("unknown.key")
                 .isEmpty());
+    }
+
+    /**
+     * Tests the configurationsAt() method when the sub configurations should be
+     * aware of updates.
+     */
+    public void testConfigurationsAtSupportUpdates()
+    {
+        List<SubConfiguration<ConfigurationNode>> lstFlds = config
+                .configurationsAt("tables.table(1).fields.field", true);
+        for (SubConfiguration<ConfigurationNode> sub : lstFlds)
+        {
+            assertNotNull("No subnode key set", sub.getSubnodeKey());
+            NodeList<ConfigurationNode> nodes = config.fetchNodeList(sub
+                    .getSubnodeKey());
+            assertEquals("Wrong elements in node list", 1, nodes.size());
+            assertEquals("Wrong root node", nodes.getNode(0), sub.getRootNode());
+        }
     }
 
     public void testClone()
