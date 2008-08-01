@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.lang.SystemUtils;
-
-import junit.framework.TestCase;
 
 /**
  * Test for loading and saving properties files.
@@ -796,6 +796,23 @@ public class TestPropertiesConfiguration extends TestCase
         Configuration copyConf = setUpCopyConfig();
         conf.append(copyConf);
         checkCopiedConfig(copyConf);
+    }
+
+    /**
+     * Tests adding properties through a DataConfiguration. This is related to
+     * CONFIGURATION-332.
+     */
+    public void testSaveWithDataConfig() throws ConfigurationException
+    {
+        conf = new PropertiesConfiguration(testSavePropertiesFile);
+        DataConfiguration dataConfig = new DataConfiguration(conf);
+        dataConfig.setProperty("foo", "bar");
+        assertEquals("Property not set", "bar", conf.getString("foo"));
+
+        conf.save();
+        PropertiesConfiguration config2 = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        assertEquals("Property not saved", "bar", config2.getString("foo"));
     }
 
     /**
