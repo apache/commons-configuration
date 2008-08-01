@@ -169,7 +169,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
         catch (ConversionException e)
         {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.", e);
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
     }
 
@@ -226,7 +226,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
         }
         catch (ConversionException e)
         {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.", e);
+            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
         }
     }
 
