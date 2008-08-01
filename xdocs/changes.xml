@@ -85,6 +85,11 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-332">
+        Properties written through a DataConfiguration to a wrapped
+        PropertiesConfiguration got lost when the PropertiesConfiguration was
+        saved. This has been fixed.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-331">
         XMLBeanDeclaration now defines a factory method createBeanDeclaration()
         for creating the declarations for complex nested properties. This

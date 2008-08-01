@@ -128,6 +128,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration.getProperty(key);
     }
 
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         if (configuration instanceof AbstractConfiguration)
@@ -140,6 +141,12 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
     }
 
+    @Override
+    public void addProperty(String key, Object value)
+    {
+        getConfiguration().addProperty(key, value);
+    }
+
     public boolean isEmpty()
     {
         return configuration.isEmpty();
@@ -150,9 +157,16 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration.containsKey(key);
     }
 
+    @Override
     public void clearProperty(String key)
     {
         configuration.clearProperty(key);
+    }
+
+    @Override
+    public void setProperty(String key, Object value)
+    {
+        configuration.setProperty(key, value);
     }
 
     public Iterator<String> getKeys()

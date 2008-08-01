@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-
-import junit.framework.TestCase;
 
 /**
  * Test for loading and saving properties files.
@@ -55,6 +55,7 @@ public class TestPropertiesConfiguration extends TestCase
     private String testBasePath2 = ConfigurationAssert.TEST_DIR.getAbsoluteFile().getParentFile().getAbsolutePath();
     private File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
 
+    @Override
     protected void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
@@ -239,7 +240,7 @@ public class TestPropertiesConfiguration extends TestCase
     public void testSaveWithBasePath() throws Exception
     {
         conf.setProperty("test", "true");
-        conf.setBasePath(testSavePropertiesFile.getParentFile().toURL().toString());
+        conf.setBasePath(testSavePropertiesFile.getParentFile().toURI().toString());
         conf.setFileName(testSavePropertiesFile.getName());
         conf.save();
         assertTrue(testSavePropertiesFile.exists());
@@ -600,6 +601,7 @@ public class TestPropertiesConfiguration extends TestCase
         conf.setProperty("shouldReload", Boolean.FALSE);
         conf.setReloadingStrategy(new FileChangedReloadingStrategy()
         {
+            @Override
             public boolean reloadingRequired()
             {
                 return configuration.getBoolean("shouldReload");
@@ -793,6 +795,23 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests adding properties through a DataConfiguration. This is related to
+     * CONFIGURATION-332.
+     */
+    public void testSaveWithDataConfig() throws ConfigurationException
+    {
+        conf = new PropertiesConfiguration(testSavePropertiesFile);
+        DataConfiguration dataConfig = new DataConfiguration(conf);
+        dataConfig.setProperty("foo", "bar");
+        assertEquals("Property not set", "bar", conf.getString("foo"));
+
+        conf.save();
+        PropertiesConfiguration config2 = new PropertiesConfiguration(
+                testSavePropertiesFile);
+        assertEquals("Property not saved", "bar", config2.getString("foo"));
+    }
+
+    /**
      * Creates a configuration that can be used for testing copy operations.
      *
      * @return the configuration to be copied
@@ -843,6 +862,7 @@ public class TestPropertiesConfiguration extends TestCase
             super(config);
         }
 
+        @Override
         public void load(Reader in) throws ConfigurationException
         {
             loadCalls++;
@@ -868,24 +888,29 @@ public class TestPropertiesConfiguration extends TestCase
             outputFile = outFile;
         }
 
+        @Override
         public void disconnect()
         {
         }
 
+        @Override
         public boolean usingProxy()
         {
             return false;
         }
 
+        @Override
         public void connect() throws IOException
         {
         }
 
+        @Override
         public int getResponseCode() throws IOException
         {
             return responseCode;
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException
         {
             return new FileOutputStream(outputFile);
@@ -917,6 +942,7 @@ public class TestPropertiesConfiguration extends TestCase
             return connection;
         }
 
+        @Override
         protected URLConnection openConnection(URL u) throws IOException
         {
             connection = new MockHttpURLConnection(u, responseCode, outputFile);

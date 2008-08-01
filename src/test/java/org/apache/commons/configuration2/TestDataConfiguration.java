@@ -31,13 +31,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
-import javax.mail.internet.InternetAddress;
 
-import org.apache.commons.configuration2.flat.BaseConfiguration;
+import javax.mail.internet.InternetAddress;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
+
+import org.apache.commons.configuration2.flat.BaseConfiguration;
+import org.easymock.EasyMock;
 
 /**
  * @author Emmanuel Bourg
@@ -45,8 +47,15 @@ import junitx.framework.ListAssert;
  */
 public class TestDataConfiguration extends TestCase
 {
+    /** Constant for a test key.*/
+    private static final String KEY = "test.key";
+
+    /** Constant for a test value.*/
+    private static final Object VALUE = 42;
+
     private DataConfiguration conf;
 
+    @Override
     protected void setUp() throws Exception
     {
         conf = new DataConfiguration(new BaseConfiguration());
@@ -2341,5 +2350,25 @@ public class TestDataConfiguration extends TestCase
         {
             // expected
         }
+    }
+
+    public void testAddProperty()
+    {
+        Configuration mock = EasyMock.createMock(Configuration.class);
+        mock.addProperty(KEY, VALUE);
+        EasyMock.replay(mock);
+        conf = new DataConfiguration(mock);
+        conf.addProperty(KEY, VALUE);
+        EasyMock.verify(mock);
+    }
+
+    public void testSetProperty()
+    {
+        Configuration mock = EasyMock.createMock(Configuration.class);
+        mock.setProperty(KEY, VALUE);
+        EasyMock.replay(mock);
+        conf = new DataConfiguration(mock);
+        conf.setProperty(KEY, VALUE);
+        EasyMock.verify(mock);
     }
 }
