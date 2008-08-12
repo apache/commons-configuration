@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-334">
+        Made handling of parent nodes more consistent when setRoot() or
+        setRootNode() of HierarchicalConfiguration are involved.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-332">
         Properties written through a DataConfiguration to a wrapped
         PropertiesConfiguration got lost when the PropertiesConfiguration was

@@ -26,12 +26,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.collections.iterators.SingletonIterator;
+import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.ConfigurationNodeVisitor;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
@@ -203,6 +202,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public Node getRoot()
     {
+        if (root == null && rootNode != null)
+        {
+            // Dynamically create a snapshot of the root node
+            return new Node(rootNode);
+        }
+
         return root;
     }
 
@@ -250,7 +255,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         this.rootNode = rootNode;
 
         // For backward compatibility also set the old root field.
-        root = (rootNode instanceof Node) ? (Node) rootNode : new Node(rootNode);
+        root = (rootNode instanceof Node) ? (Node) rootNode : null;
     }
 
     /**
@@ -1203,11 +1208,20 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             setReference(src.getReference());
             for (Iterator it = src.getChildren().iterator(); it.hasNext();)
             {
-                addChild((ConfigurationNode) it.next());
+                ConfigurationNode nd = (ConfigurationNode) it.next();
+                // Don't change the parent node
+                ConfigurationNode parent = nd.getParentNode();
+                addChild(nd);
+                nd.setParentNode(parent);
             }
+
             for (Iterator it = src.getAttributes().iterator(); it.hasNext();)
             {
-                addAttribute((ConfigurationNode) it.next());
+                ConfigurationNode nd = (ConfigurationNode) it.next();
+                // Don't change the parent node
+                ConfigurationNode parent = nd.getParentNode();
+                addAttribute(nd);
+                nd.setParentNode(parent);
             }
         }
 

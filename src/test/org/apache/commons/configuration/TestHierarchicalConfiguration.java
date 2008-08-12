@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -32,8 +34,6 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for HierarchicalConfiguration.
@@ -919,6 +919,43 @@ public class TestHierarchicalConfiguration extends TestCase
 		HierarchicalConfiguration copy = new HierarchicalConfiguration(null);
 		assertTrue("Configuration not empty", copy.isEmpty());
 	}
+
+	/**
+     * Tests the parents of nodes when setRootNode() is involved. This is
+     * related to CONFIGURATION-334.
+     */
+    public void testNodeParentsAfterSetRootNode()
+    {
+        DefaultConfigurationNode root = new DefaultConfigurationNode();
+        DefaultConfigurationNode child1 = new DefaultConfigurationNode(
+                "child1", "test1");
+        root.addChild(child1);
+        config.setRootNode(root);
+        config.addProperty("child2", "test2");
+        List nodes = config.getExpressionEngine().query(config.getRootNode(),
+                "child2");
+        assertEquals("Wrong number of result nodes", 1, nodes.size());
+        ConfigurationNode child2 = (ConfigurationNode) nodes.get(0);
+        assertEquals("Different parent nodes", child1.getParentNode(), child2
+                .getParentNode());
+    }
+
+    /**
+     * Tests calling getRoot() after a root node was set using setRootNode() and
+     * further child nodes have been added. The newly add child nodes should be
+     * present in the root node returned.
+     */
+    public void testGetRootAfterSetRootNode()
+    {
+        DefaultConfigurationNode root = new DefaultConfigurationNode();
+        DefaultConfigurationNode child1 = new DefaultConfigurationNode(
+                "child1", "test1");
+        root.addChild(child1);
+        config.setRootNode(root);
+        config.addProperty("child2", "test2");
+        ConfigurationNode oldRoot = config.getRoot();
+        assertEquals("Wrong number of children", 2, oldRoot.getChildrenCount());
+    }
 
 	/**
      * Helper method for testing the getKeys(String) method.
