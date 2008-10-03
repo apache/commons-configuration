@@ -336,9 +336,9 @@ public class BeanHelper
 
     /**
      * Returns a <code>java.lang.Class</code> object for the specified name.
-     * This method and the helper method it invokes are very similar to code
-     * extracted from the <code>ClassLoaderUtils</code> class of Commons
-     * Jelly. It should be replaced if Commons Lang provides a generic version.
+     * Because class loading can be tricky in some environments the code for
+     * retrieving a class by its name was extracted into this helper method. So
+     * if changes are necessary, they can be made at a single place.
      *
      * @param name the name of the class to be loaded
      * @param callingClass the calling class
