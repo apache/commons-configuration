@@ -142,7 +142,7 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * the resulting configuration.
  * </p>
  * <p>
- * The configuration object returned by this builder is an instance of the
+ * The default configuration object returned by this builder is an instance of the
  * <code>{@link CombinedConfiguration}</code> class. The return value of the
  * <code>getConfiguration()</code> method can be casted to this type, and the
  * <code>getConfiguration(boolean)</code> method directly declares
@@ -152,6 +152,15 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * the advantage that the properties stored in all declared configuration
  * objects are collected and transformed into a single hierarchical structure,
  * which can be accessed using different expression engines.
+ * </p>
+ * <p>
+ * Additional ConfigurationProviders can be added by configuring them in the <em>header</em>
+ * section.
+ * <pre>
+ * &lt;providers&gt;
+ *   &lt;provider config-tag="tag name" config-class="provider fully qualified class name"/&gt;
+ * &lt;/providers&gt;
+ * </pre>
  * </p>
  * <p>
  * All declared override configurations are directly added to the resulting
@@ -272,6 +281,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static final String KEY_ADDITIONAL_LIST = SEC_HEADER
             + ".combiner.additional.list-nodes.node";
+
+    /**
+     * Constant for the key for defining providers in the configuration file.
+     */
+    static final String KEY_CONFIGURATION_PROVIDERS = SEC_HEADER
+            + ".providers.provider";
+
+    /**
+     * Constant for the tag attribute for providers.
+     */
+    static final String KEY_PROVIDER_KEY = XMLBeanDeclaration.ATTR_PREFIX + "tag]";
 
     /**
      * Constant for the key of the result declaration. This key can point to a
@@ -412,9 +432,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     /**
      * Sets the base path for the configuration sources to load. Normally a base
      * path need not to be set because it is determined by the location of the
-     * configuration definition file to load. All relative pathes in this file
+     * configuration definition file to load. All relative paths in this file
      * are resolved relative to this file. Setting a base path makes sense if
-     * such relative pathes should be otherwise resolved, e.g. if the
+     * such relative paths should be otherwise resolved, e.g. if the
      * configuration file is loaded from the class path and all sub
      * configurations it refers to are stored in a special config directory.
      *
@@ -504,6 +524,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             load();
         }
+
+        registerConfiguredProviders();
 
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
@@ -595,6 +617,23 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         for (int i = 0; i < DEFAULT_TAGS.length; i++)
         {
             addConfigurationProvider(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
+        }
+    }
+
+    /**
+     * Registers providers defined in the configuration.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    protected void registerConfiguredProviders() throws ConfigurationException
+    {
+        List<SubConfiguration<ConfigurationNode>> nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
+        for (SubConfiguration<ConfigurationNode> config : nodes)
+        {
+            XMLBeanDeclaration<ConfigurationNode> decl = new XMLBeanDeclaration<ConfigurationNode>(config);
+            String key = config.getString(KEY_PROVIDER_KEY);
+            addConfigurationProvider(key, (ConfigurationProvider) BeanHelper
+                    .createBean(decl));
         }
     }
 

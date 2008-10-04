@@ -56,6 +56,12 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File INIT_FILE = ConfigurationAssert
             .getTestFile("testComplexInitialization.xml");
 
+    private static final File CLASS_FILE = ConfigurationAssert
+            .getTestFile("testExtendedClass.xml");
+
+    private static final File PROVIDER_FILE = ConfigurationAssert
+            .getTestFile("testConfigurationProvider.xml");
+
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
@@ -756,5 +762,53 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         testSavedXML.delete();
         testSavedFactory.delete();
+    }
+
+    /**
+     * Tests loading a configuration definition file that defines a custom
+     * result class.
+     */
+    public void testExtendedClass() throws ConfigurationException
+    {
+        factory.setFile(CLASS_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        assertEquals("Extended", cc.getProperty("test"));
+        assertTrue("Wrong result class: " + cc.getClass(),
+                cc instanceof ExtendedCombinedConfiguration);
+    }
+
+    /**
+     * Tests loading a configuration definition file that defines new providers.
+     */
+    public void testConfigurationProvider() throws ConfigurationException
+    {
+        factory.setFile(PROVIDER_FILE);
+        factory.getConfiguration(true);
+        DefaultConfigurationBuilder.ConfigurationProvider provider = factory
+                .providerForTag("test");
+        assertNotNull("Provider 'test' not registered", provider);
+    }
+
+    /**
+     * A specialized combined configuration implementation used for testing
+     * custom result classes.
+     */
+    public static class ExtendedCombinedConfiguration extends
+            CombinedConfiguration
+    {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = 4678031745085083392L;
+
+        @Override
+        public Object getProperty(String key)
+        {
+            if (key.equals("test"))
+            {
+                return "Extended";
+            }
+            return super.getProperty(key);
+        }
     }
 }
