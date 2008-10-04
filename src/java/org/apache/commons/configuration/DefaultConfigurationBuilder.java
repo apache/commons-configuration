@@ -421,9 +421,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     /**
      * Sets the base path for the configuration sources to load. Normally a base
      * path need not to be set because it is determined by the location of the
-     * configuration definition file to load. All relative pathes in this file
+     * configuration definition file to load. All relative paths in this file
      * are resolved relative to this file. Setting a base path makes sense if
-     * such relative pathes should be otherwise resolved, e.g. if the
+     * such relative paths should be otherwise resolved, e.g. if the
      * configuration file is loaded from the class path and all sub
      * configurations it refers to are stored in a special config directory.
      *

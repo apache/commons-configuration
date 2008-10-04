@@ -756,9 +756,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testExtendedClass() throws ConfigurationException
     {
-        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-        builder.setFile(CLASS_FILE);
-        CombinedConfiguration cc = builder.getConfiguration(true);
+        factory.setFile(CLASS_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
         assertEquals("Extended", cc.getProperty("test"));
         assertTrue("Wrong result class: " + cc.getClass(),
                 cc instanceof ExtendedCombinedConfiguration);
