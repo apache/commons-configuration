@@ -60,7 +60,7 @@ public interface BeanFactory
      * beans will catch this unspecific exception and wrap it in a configuration
      * exception)
      */
-    Object createBean(Class beanClass, BeanDeclaration data, Object param)
+    Object createBean(Class<?> beanClass, BeanDeclaration data, Object param)
             throws Exception;
 
     /**
@@ -72,5 +72,5 @@ public interface BeanFactory
      * @return the default class of this factory or <b>null</b> if there is
      * none
      */
-    Class getDefaultBeanClass();
+    Class<?> getDefaultBeanClass();
 }

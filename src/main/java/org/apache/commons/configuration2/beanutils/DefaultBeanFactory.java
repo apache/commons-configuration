@@ -55,7 +55,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    public Object createBean(Class beanClass, BeanDeclaration data,
+    public Object createBean(Class<?> beanClass, BeanDeclaration data,
             Object parameter) throws Exception
     {
         Object result = createBeanInstance(beanClass, data);
@@ -69,7 +69,7 @@ public class DefaultBeanFactory implements BeanFactory
      *
      * @return the default bean class
      */
-    public Class getDefaultBeanClass()
+    public Class<?> getDefaultBeanClass()
     {
         return null;
     }
@@ -84,7 +84,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    protected Object createBeanInstance(Class beanClass, BeanDeclaration data)
+    protected Object createBeanInstance(Class<?> beanClass, BeanDeclaration data)
             throws Exception
     {
         return beanClass.newInstance();

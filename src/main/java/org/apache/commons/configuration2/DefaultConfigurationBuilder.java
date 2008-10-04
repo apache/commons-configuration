@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
@@ -536,7 +537,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     protected CombinedConfiguration createResultConfiguration()
             throws ConfigurationException
     {
-        XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_RESULT, true);
+        XMLBeanDeclaration<ConfigurationNode> decl =
+            new XMLBeanDeclaration<ConfigurationNode>(this, KEY_RESULT, true);
         CombinedConfiguration result = (CombinedConfiguration) BeanHelper
                 .createBean(decl, CombinedConfiguration.class);
 
@@ -606,6 +608,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param value the value to be interpolated
      * @return the interpolated value
      */
+    @Override
     protected Object interpolate(Object value)
     {
         Object result = super.interpolate(value);
@@ -648,7 +651,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private List<SubConfiguration<ConfigurationNode>> fetchChildConfigs(ConfigurationNode node)
     {
         List<ConfigurationNode> children = node.getChildren();
-        List<SubConfiguration<ConfigurationNode>> result = 
+        List<SubConfiguration<ConfigurationNode>> result =
             new ArrayList<SubConfiguration<ConfigurationNode>>(children.size());
         for (ConfigurationNode child : children)
         {
@@ -746,7 +749,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     public static class ConfigurationProvider extends DefaultBeanFactory
     {
         /** Stores the class of the configuration to be created. */
-        private Class configurationClass;
+        private Class<?> configurationClass;
 
         /** Stores the name of the configuration class to be created.*/
         private String configurationClassName;
@@ -757,7 +760,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public ConfigurationProvider()
         {
-            this((Class) null);
+            this((Class<?>) null);
         }
 
         /**
@@ -766,7 +769,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @param configClass the configuration class
          */
-        public ConfigurationProvider(Class configClass)
+        public ConfigurationProvider(Class<?> configClass)
         {
             setConfigurationClass(configClass);
         }
@@ -789,7 +792,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the class of the provided configuration
          */
-        public Class getConfigurationClass()
+        public Class<?> getConfigurationClass()
         {
             return configurationClass;
         }
@@ -799,7 +802,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @param configurationClass the configuration class
          */
-        public void setConfigurationClass(Class configurationClass)
+        public void setConfigurationClass(Class<?> configurationClass)
         {
             this.configurationClass = configurationClass;
         }
@@ -876,7 +879,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the class of the configuration to be created
          * @since 1.4
          */
-        protected synchronized Class fetchConfigurationClass() throws Exception
+        protected synchronized Class<?> fetchConfigurationClass() throws Exception
         {
             if (getConfigurationClass() == null)
             {
@@ -894,7 +897,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws ClassNotFoundException if class loading fails
          * @since 1.4
          */
-        protected Class loadClass(String className)
+        protected Class<?> loadClass(String className)
                 throws ClassNotFoundException
         {
             return (className != null) ? Class.forName(className, true,
@@ -1000,6 +1003,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the name of the bean factory
          */
+        @Override
         public String getBeanFactoryName()
         {
             return CONFIG_BEAN_FACTORY_NAME;
@@ -1011,6 +1015,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the name of the bean's class
          */
+        @Override
         public String getBeanClassName()
         {
             return null;
@@ -1044,6 +1049,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param value the value to be interpolated
          * @return the interpolated value
          */
+        @Override
         protected Object interpolate(Object value)
         {
             return getConfigurationBuilder().interpolate(value);
@@ -1074,7 +1080,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the newly created configuration
          * @throws Exception if an error occurs
          */
-        public Object createBean(Class beanClass, BeanDeclaration data,
+        public Object createBean(Class<?> beanClass, BeanDeclaration data,
                 Object param) throws Exception
         {
             ConfigurationDeclaration decl = (ConfigurationDeclaration) data;
@@ -1129,7 +1135,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the default class
          */
-        public Class getDefaultBeanClass()
+        public Class<?> getDefaultBeanClass()
         {
             // Here some valid class must be returned, otherwise BeanHelper
             // will complain that the bean's class cannot be determined
@@ -1158,7 +1164,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @param configClass the class for the configurations to be created
          */
-        public FileConfigurationProvider(Class configClass)
+        public FileConfigurationProvider(Class<?> configClass)
         {
             super(configClass);
         }
@@ -1184,6 +1190,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration
          * @throws Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1209,6 +1216,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1224,6 +1232,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param data the declaration
          * @throws Exception if an error occurs
          */
+        @Override
         protected void initBeanInstance(Object bean, BeanDeclaration data)
                 throws Exception
         {
@@ -1259,6 +1268,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration
          * @throws Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(ConfigurationDeclaration decl) throws Exception
         {
             XMLConfiguration config = (XMLConfiguration) super.getEmptyConfiguration(decl);
@@ -1283,7 +1293,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Stores the class to be created when the file extension matches.
          */
-        private Class matchingClass;
+        private Class<?> matchingClass;
 
         /**
          * Stores the name of the class to be created when the file extension
@@ -1295,7 +1305,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * Stores the class to be created when the file extension does not
          * match.
          */
-        private Class defaultClass;
+        private Class<?> defaultClass;
 
         /**
          * Stores the name of the class to be created when the file extension
@@ -1316,8 +1326,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * does not match
          * @param extension the file extension to be checked agains
          */
-        public FileExtensionConfigurationProvider(Class matchingClass,
-                Class defaultClass, String extension)
+        public FileExtensionConfigurationProvider(Class<?> matchingClass,
+                Class<?> defaultClass, String extension)
         {
             this.matchingClass = matchingClass;
             this.defaultClass = defaultClass;
@@ -1352,7 +1362,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
-        protected synchronized Class fetchMatchingClass() throws Exception
+        protected synchronized Class<?> fetchMatchingClass() throws Exception
         {
             if (matchingClass == null)
             {
@@ -1369,7 +1379,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
-        protected synchronized Class fetchDefaultClass() throws Exception
+        protected synchronized Class<?> fetchDefaultClass() throws Exception
         {
             if (defaultClass == null)
             {
@@ -1387,7 +1397,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new bean
          * @throws Exception if an error occurs
          */
-        protected Object createBeanInstance(Class beanClass,
+        @Override
+        protected Object createBeanInstance(Class<?> beanClass,
                 BeanDeclaration data) throws Exception
         {
             String fileName = ((ConfigurationDeclaration) data)
@@ -1426,6 +1437,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the configuration
          * @exception Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1444,6 +1456,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @exception Exception if an error occurs
          * @since 1.4
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1457,9 +1470,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static class DatabaseConfigurationProvider extends ConfigurationProvider
     {
+        @Override
         public AbstractConfiguration getConfiguration(ConfigurationDeclaration decl) throws Exception
         {
-            Map attributes = decl.getBeanProperties();
+            Map<?, ?> attributes = decl.getBeanProperties();
             String jndi = (String) attributes.get("jndi");
             DataSource datasource = (DataSource) new InitialContext().lookup(jndi);
 
