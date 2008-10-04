@@ -21,12 +21,12 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -54,6 +54,12 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     private static final File INIT_FILE = new File(
             "conf/testComplexInitialization.xml");
+
+    private static final File CLASS_FILE = new File(
+            "conf/testExtendedClass.xml");
+
+    private static final File PROVIDER_FILE = new File(
+            "conf/testConfigurationProvider.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -743,4 +749,53 @@ public class TestDefaultConfigurationBuilder extends TestCase
         testSavedXML.delete();
         testSavedFactory.delete();
     }
+
+    /**
+     * Tests loading a configuration definition file that defines a custom
+     * result class.
+     */
+    public void testExtendedClass() throws ConfigurationException
+    {
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setFile(CLASS_FILE);
+        CombinedConfiguration cc = builder.getConfiguration(true);
+        assertEquals("Extended", cc.getProperty("test"));
+        assertTrue("Wrong result class: " + cc.getClass(),
+                cc instanceof ExtendedCombinedConfiguration);
+    }
+
+    /**
+     * Tests loading a configuration definition file that defines new providers.
+     */
+    public void testConfigurationProvider() throws ConfigurationException
+    {
+        factory.setFile(PROVIDER_FILE);
+        factory.getConfiguration(true);
+        DefaultConfigurationBuilder.ConfigurationProvider provider = factory
+                .providerForTag("test");
+        assertNotNull("Provider 'test' not registered", provider);
+    }
+
+    /**
+     * A specialized combined configuration implementation used for testing
+     * custom result classes.
+     */
+    public static class ExtendedCombinedConfiguration extends
+            CombinedConfiguration
+    {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = 4678031745085083392L;
+
+        public Object getProperty(String key)
+        {
+            if (key.equals("test"))
+            {
+                return "Extended";
+            }
+            return super.getProperty(key);
+        }
+    }
 }
+

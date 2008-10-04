@@ -51,7 +51,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>beanutils</code> package (namely
  * <code>{@link org.apache.commons.configuration.beanutils.XMLBeanDeclaration XMLBeanDeclaration}</code>
  * will be used to extract the configuration's initialization parameters, which
- * allows for complex initialization szenarios).
+ * allows for complex initialization scenarios).
  * </p>
  * <p>
  * It is also possible to add custom tags to the configuration definition file.
@@ -137,7 +137,7 @@ import org.apache.commons.logging.LogFactory;
  * the resulting configuration.
  * </p>
  * <p>
- * The configuration object returned by this builder is an instance of the
+ * The default configuration object returned by this builder is an instance of the
  * <code>{@link CombinedConfiguration}</code> class. The return value of the
  * <code>getConfiguration()</code> method can be casted to this type, and the
  * <code>getConfiguration(boolean)</code> method directly declares
@@ -146,7 +146,18 @@ import org.apache.commons.logging.LogFactory;
  * configuration (e.g. for updates of single configuration objects). It has also
  * the advantage that the properties stored in all declared configuration
  * objects are collected and transformed into a single hierarchical structure,
- * which can be accessed using different expression engines.
+ * which can be accessed using different expression engines. The actual CombinedConfiguration
+ * implementation can be overridden by specifying the class in the <em>config-class</em>
+ * attribute of the result element.
+ * </p>
+ * <p>
+ * Additional ConfigurationProviders can be added by configuring them in the <em>header</em>
+ * section.
+ * <pre>
+ * &lt;providers&gt;
+ *   &lt;provider config-tag="tag name" config-class="provider fully qualified class name"/&gt;
+ * &lt;/providers&gt;
+ * </pre>
  * </p>
  * <p>
  * All declared override configurations are directly added to the resulting
@@ -154,7 +165,7 @@ import org.apache.commons.logging.LogFactory;
  * <code>config-name</code> attribute), they can directly be accessed using
  * the <code>getConfiguration(String)</code> method of
  * <code>CombinedConfiguration</code>. The additional configurations are
- * alltogether added to another combined configuration, which uses a union
+ * altogether added to another combined configuration, which uses a union
  * combiner. Then this union configuration is added to the resulting combined
  * configuration under the name defined by the <code>ADDITIONAL_NAME</code>
  * constant.
@@ -267,6 +278,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static final String KEY_ADDITIONAL_LIST = SEC_HEADER
             + ".combiner.additional.list-nodes.node";
+
+    /**
+     * Constant for the key for defining providers in the configuration file.
+     */
+    static final String KEY_CONFIGURATION_PROVIDERS = SEC_HEADER
+            + ".providers.provider";
+
+    /**
+     * Constant for the tag attribute for providers.
+     */
+    static final String KEY_PROVIDER_KEY = XMLBeanDeclaration.ATTR_PREFIX + "tag]";
 
     /**
      * Constant for the key of the result declaration. This key can point to a
@@ -493,6 +515,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             load();
         }
 
+        registerConfiguredProviders();
+
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
 
@@ -585,6 +609,24 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         for (int i = 0; i < DEFAULT_TAGS.length; i++)
         {
             addConfigurationProvider(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
+        }
+    }
+
+    /**
+     * Registers providers defined in the configuration.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    protected void registerConfiguredProviders() throws ConfigurationException
+    {
+        List nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
+        for (Iterator it = nodes.iterator(); it.hasNext();)
+        {
+            HierarchicalConfiguration config = (HierarchicalConfiguration) it.next();
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            String key = config.getString(KEY_PROVIDER_KEY);
+            addConfigurationProvider(key, (ConfigurationProvider) BeanHelper
+                    .createBean(decl));
         }
     }
 
