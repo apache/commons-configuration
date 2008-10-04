@@ -22,12 +22,12 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -313,7 +313,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadConfigurationFromURL() throws Exception
     {
-        factory = new DefaultConfigurationBuilder(TEST_FILE.toURL());
+        factory = new DefaultConfigurationBuilder(TEST_FILE.toURI().toURL());
         checkConfiguration();
     }
 
@@ -383,7 +383,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(3, ((Collection) prop).size());
+        assertEquals(3, ((Collection<?>) prop).size());
         assertEquals("users", compositeConfiguration
                 .getProperty("tables.table(0).name"));
         assertEquals("documents", compositeConfiguration
@@ -394,20 +394,20 @@ public class TestDefaultConfigurationBuilder extends TestCase
         prop = compositeConfiguration
                 .getProperty("tables.table.fields.field.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(17, ((Collection) prop).size());
+        assertEquals(17, ((Collection<?>) prop).size());
 
         assertEquals("smtp.mydomain.org", compositeConfiguration
                 .getString("mail.host.smtp"));
         assertEquals("pop3.mydomain.org", compositeConfiguration
                 .getString("mail.host.pop"));
 
-        // This was overriden
+        // This was overridden
         assertEquals("masterOfPost", compositeConfiguration
                 .getString("mail.account.user"));
         assertEquals("topsecret", compositeConfiguration
                 .getString("mail.account.psswd"));
 
-        // This was overriden, too, but not in additional section
+        // This was overridden, too, but not in additional section
         assertEquals("enhanced factory", compositeConfiguration
                 .getString("test.configuration"));
     }
@@ -427,7 +427,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptional() throws Exception
     {
-        factory.setURL(OPTIONAL_FILE.toURL());
+        factory.setURL(OPTIONAL_FILE.toURI().toURL());
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
@@ -526,6 +526,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 new DefaultConfigurationBuilder.ConfigurationBuilderProvider()
                 {
                     // Throw an exception here, too
+                    @Override
                     public AbstractConfiguration getEmptyConfiguration(
                             DefaultConfigurationBuilder.ConfigurationDeclaration decl) throws Exception
                     {
@@ -662,7 +663,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         CombinedConfiguration cc2 = (CombinedConfiguration) cc
                 .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
         assertNotNull("No additional configuration found", cc2);
-        Set names = cc2.getConfigurationNames();
+        Set<?> names = cc2.getConfigurationNames();
         assertEquals("Wrong number of contained additional configs", 2, names
                 .size());
         assertTrue("Config 1 not contained", names.contains("combiner1"));
@@ -690,7 +691,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     {
         factory.setFile(INIT_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        Set listNodes = cc.getNodeCombiner().getListNodes();
+        Set<?> listNodes = cc.getNodeCombiner().getListNodes();
         assertEquals("Wrong number of list nodes", 2, listNodes.size());
         assertTrue("table node not a list node", listNodes.contains("table"));
         assertTrue("list node not a list node", listNodes.contains("list"));
@@ -746,7 +747,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         factory = new DefaultConfigurationBuilder();
         factory.setFile(testSavedFactory);
-        factory.registerEntityId(publicId, dtdFile.toURL());
+        factory.registerEntityId(publicId, dtdFile.toURI().toURL());
         factory.clearErrorListeners();
         Configuration c = factory.getConfiguration();
         assertEquals("Wrong property value", "value1", c.getString("entry(0)"));
