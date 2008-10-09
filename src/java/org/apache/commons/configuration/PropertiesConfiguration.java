@@ -504,7 +504,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 }
                 for (int i = 0; i < files.length; i++)
                 {
-                    loadIncludeFile(files[i].trim());
+                    loadIncludeFile(interpolate(files[i].trim()));
                 }
             }
             result = false;
