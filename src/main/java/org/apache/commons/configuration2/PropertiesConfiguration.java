@@ -448,6 +448,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @param basePath The new basePath to set.
      */
+    @Override
     public void setBasePath(String basePath)
     {
         super.setBasePath(basePath);
@@ -459,6 +460,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @return the copy
      */
+    @Override
     public Object clone()
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
@@ -504,9 +506,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 {
                     files = new String[]{value};
                 }
-                for (int i = 0; i < files.length; i++)
+                for (String file : files)
                 {
-                    loadIncludeFile(files[i].trim());
+                    loadIncludeFile(interpolate(file.trim()));
                 }
             }
             result = false;

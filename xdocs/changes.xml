@@ -85,6 +85,11 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-338" due-to="David Donn">
+        PropertiesConfiguration now also performs interpolation when searching
+        for include files. This means that the name of a file to include can be
+        determined by another property.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-337" due-to="Ralph Goers">
         DefaultConfigurationBuilder now supports defining new configuration
         providers in the configuration definition file.

@@ -114,6 +114,16 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("true", loaded);
     }
 
+    /**
+     * test if includes properties from interpolated file
+     * name get loaded
+     */
+    public void testLoadIncludeInterpol() throws Exception
+    {
+        String loaded = conf.getString("include.interpol.loaded");
+        assertEquals("true", loaded);
+    }
+
     public void testSetInclude() throws Exception
     {
         // change the include key
