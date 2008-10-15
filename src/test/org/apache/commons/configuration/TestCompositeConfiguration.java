@@ -22,16 +22,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Collection;
+
+import junit.framework.TestCase;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
-
-import junit.framework.TestCase;
 
 /**
  * Test loading multiple configurations.
@@ -763,6 +763,46 @@ public class TestCompositeConfiguration extends TestCase
         {
             // ok
         }
+    }
+
+    /**
+     * Prepares a test for interpolation with multiple configurations and
+     * similar properties.
+     */
+    private void prepareInterpolationTest()
+    {
+        PropertiesConfiguration p = new PropertiesConfiguration();
+        p.addProperty("foo", "initial");
+        p.addProperty("bar", "${foo}");
+        p.addProperty("prefix.foo", "override");
+
+        cc.addConfiguration(p.subset("prefix"));
+        cc.addConfiguration(p);
+        assertEquals("Wrong value on direct access", "override", cc
+                .getString("bar"));
+    }
+
+    /**
+     * Tests querying a list when a tricky interpolation is involved. This is
+     * related to CONFIGURATION-339.
+     */
+    public void testGetListWithInterpolation()
+    {
+        prepareInterpolationTest();
+        List lst = cc.getList("bar");
+        assertEquals("Wrong number of values", 1, lst.size());
+        assertEquals("Wrong value in list", "override", lst.get(0));
+    }
+
+    /**
+     * Tests querying a string array when a tricky interpolation is involved.
+     */
+    public void testGetStringArrayWithInterpolation()
+    {
+        prepareInterpolationTest();
+        String[] values = cc.getStringArray("bar");
+        assertEquals("Wrong number of values", 1, values.length);
+        assertEquals("Wrong value in array", "override", values[0]);
     }
 
     /**

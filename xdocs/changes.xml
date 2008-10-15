@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-339">
+        When performing interpolation the methods getList() and getStringArray()
+        of CompositeConfiguration did not take the order of child configurations
+        into account. This could lead to wrong interpolated values when the key
+        was contained in multiple child configuration. Interpolation is now
+        always done in the correct order.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-338" due-to="David Donn">
         PropertiesConfiguration now also performs interpolation when searching
         for include files. This means that the name of a file to include can be

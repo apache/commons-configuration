@@ -294,12 +294,12 @@ implements Cloneable
             Configuration config = (Configuration) it.next();
             if (config != inMemoryConfiguration && config.containsKey(key))
             {
-                list.addAll(config.getList(key));
+                appendListProperty(list, config, key);
             }
         }
 
         // add all elements from the in memory configuration
-        list.addAll(inMemoryConfiguration.getList(key));
+        appendListProperty(list, inMemoryConfiguration, key);
 
         if (list.isEmpty())
         {
@@ -319,12 +319,12 @@ implements Cloneable
     {
         List list = getList(key);
 
-        // interpolate the strings
+        // transform property values into strings
         String[] tokens = new String[list.size()];
 
         for (int i = 0; i < tokens.length; i++)
         {
-            tokens[i] = interpolate(String.valueOf(list.get(i)));
+            tokens[i] = String.valueOf(list.get(i));
         }
 
         return tokens;
@@ -468,5 +468,31 @@ implements Cloneable
         }
 
         return source;
+    }
+
+    /**
+     * Adds the value of a property to the given list. This method is used by
+     * <code>getList()</code> for gathering property values from the child
+     * configurations.
+     *
+     * @param dest the list for collecting the data
+     * @param config the configuration to query
+     * @param key the key of the property
+     */
+    private static void appendListProperty(List dest, Configuration config,
+            String key)
+    {
+        Object value = config.getProperty(key);
+        if (value != null)
+        {
+            if (value instanceof Collection)
+            {
+                dest.addAll((Collection) value);
+            }
+            else
+            {
+                dest.add(value);
+            }
+        }
     }
 }
