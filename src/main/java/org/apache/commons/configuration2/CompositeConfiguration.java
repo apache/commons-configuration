@@ -278,9 +278,9 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     }
 
     @Override
-    public <T> List<T> getList(String key, List<T> defaultValue)
+    public <E> List<E> getList(String key, List<E> defaultValue)
     {
-        List list = new ArrayList();
+        List<E> list = new ArrayList<E>();
 
         // add all elements from the first configuration containing the requested key
         Iterator<Configuration> it = configList.iterator();
@@ -289,22 +289,22 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
             Configuration config = it.next();
             if (config != inMemoryConfiguration && config.containsKey(key))
             {
-                list.addAll(config.getList(key));
+                appendListProperty(list, config, key);
             }
         }
 
         // add all elements from the in memory configuration
-        list.addAll(inMemoryConfiguration.getList(key));
+        appendListProperty(list, inMemoryConfiguration, key);
 
         if (list.isEmpty())
         {
             return defaultValue;
         }
 
-        ListIterator lit = list.listIterator();
+        ListIterator<E> lit = list.listIterator();
         while (lit.hasNext())
         {
-            lit.set(interpolate(lit.next()));
+            lit.set((E) interpolate(lit.next()));
         }
 
         return list;
@@ -466,5 +466,32 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         }
 
         return source;
+    }
+
+    /**
+     * Adds the value of a property to the given list. This method is used by
+     * <code>getList()</code> for gathering property values from the child
+     * configurations.
+     *
+     * @param dest the list for collecting the data
+     * @param config the configuration to query
+     * @param key the key of the property
+     * @param <E> the type of the elements in the list
+     */
+    private static <E> void appendListProperty(List<E> dest, Configuration config,
+            String key)
+    {
+        Object value = config.getProperty(key);
+        if (value != null)
+        {
+            if (value instanceof Collection)
+            {
+                dest.addAll((Collection<E>) value);
+            }
+            else
+            {
+                dest.add((E) value);
+            }
+        }
     }
 }

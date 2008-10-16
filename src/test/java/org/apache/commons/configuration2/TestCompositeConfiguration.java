@@ -768,6 +768,46 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
+     * Prepares a test for interpolation with multiple configurations and
+     * similar properties.
+     */
+    private void prepareInterpolationTest()
+    {
+        PropertiesConfiguration p = new PropertiesConfiguration();
+        p.addProperty("foo", "initial");
+        p.addProperty("bar", "${foo}");
+        p.addProperty("prefix.foo", "override");
+
+        cc.addConfiguration(p.subset("prefix"));
+        cc.addConfiguration(p);
+        assertEquals("Wrong value on direct access", "override", cc
+                .getString("bar"));
+    }
+
+    /**
+     * Tests querying a list when a tricky interpolation is involved. This is
+     * related to CONFIGURATION-339.
+     */
+    public void testGetListWithInterpolation()
+    {
+        prepareInterpolationTest();
+        List<?> lst = cc.getList("bar");
+        assertEquals("Wrong number of values", 1, lst.size());
+        assertEquals("Wrong value in list", "override", lst.get(0));
+    }
+
+    /**
+     * Tests querying a string array when a tricky interpolation is involved.
+     */
+    public void testGetStringArrayWithInterpolation()
+    {
+        prepareInterpolationTest();
+        String[] values = cc.getStringArray("bar");
+        assertEquals("Wrong number of values", 1, values.length);
+        assertEquals("Wrong value in array", "override", values[0]);
+    }
+
+    /**
      * A test configuration event listener that counts the number of received
      * events. Used for testing the event facilities.
      */
