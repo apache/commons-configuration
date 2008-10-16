@@ -179,6 +179,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @deprecated Use AbstractConfiguration.setDefaultListDelimiter(char)
      * instead
      */
+    @Deprecated
     public static void setDelimiter(char delimiter)
     {
         setDefaultListDelimiter(delimiter);
@@ -200,6 +201,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @return the default list delimiter
      * @deprecated Use AbstractConfiguration.getDefaultListDelimiter() instead
      */
+    @Deprecated
     public static char getDelimiter()
     {
         return getDefaultListDelimiter();
@@ -331,6 +333,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         ConfigurationInterpolator interpol = new ConfigurationInterpolator();
         interpol.setDefaultLookup(new StrLookup()
         {
+            @Override
             public String lookup(String var)
             {
                 Object prop = resolveContainerStore(var);
@@ -493,6 +496,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * <code>{@link PropertyConverter}</code>; this method will no longer be
      * called
      */
+    @Deprecated
     protected String interpolateHelper(String base, List<?> priorVariables)
     {
         return base; // just a dummy implementation
@@ -1119,9 +1123,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * {@inheritDoc}
      * @see #getStringArray(String)
      */
-    public List<?> getList(String key)
+    public <T> List<T> getList(String key)
     {
-        return getList(key, new ArrayList<Object>());
+        return getList(key, new ArrayList<T>());
     }
 
     @SuppressWarnings("unchecked")

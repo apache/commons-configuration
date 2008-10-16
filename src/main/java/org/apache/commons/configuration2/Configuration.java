@@ -567,12 +567,13 @@ public interface Configuration
      * If the key doesn't map to an existing object an empty List is returned.
      *
      * @param key The configuration key.
+     * @param <E> the type of the elements in the list
      * @return The associated List.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List<?> getList(String key);
+    <E> List<E> getList(String key);
 
     /**
      * Get a List of strings associated with the given configuration key.
@@ -581,10 +582,11 @@ public interface Configuration
      *
      * @param key The configuration key.
      * @param defaultValue The default value.
+     * @param <E> the type of the elements in the list
      * @return The associated List of strings.
      *
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    <T> List<T> getList(String key, List<T> defaultValue);
+    <E> List<E> getList(String key, List<E> defaultValue);
 }
