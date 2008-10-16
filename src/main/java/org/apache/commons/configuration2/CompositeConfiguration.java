@@ -152,6 +152,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     /**
      * Remove all configuration reinitialize the in memory configuration.
      */
+    @Override
     public void clear()
     {
         configList.clear();
@@ -169,6 +170,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param key The Key to add the property to.
      * @param token The Value to add.
      */
+    @Override
     protected void addPropertyDirect(String key, Object token)
     {
         inMemoryConfiguration.addProperty(key, token);
@@ -184,9 +186,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     public Object getProperty(String key)
     {
         Configuration firstMatchingConfiguration = null;
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
             {
                 firstMatchingConfiguration = config;
@@ -209,8 +210,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         List<String> keys = new ArrayList<String>();
         for (Configuration config : configList)
         {
-            Iterator<String> j = config.getKeys();
-            while (j.hasNext())
+            for (Iterator<String> j = config.getKeys(); j.hasNext();)
             {
                 String key = j.next();
                 if (!keys.contains(key))
@@ -223,15 +223,15 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return keys.iterator();
     }
 
+    @Override
     public Iterator<String> getKeys(String key)
     {
         List<String> keys = new ArrayList<String>();
         for (Configuration config : configList)
         {
-            Iterator j = config.getKeys(key);
-            while (j.hasNext())
+            for (Iterator<String> j = config.getKeys(key); j.hasNext();)
             {
-                String newKey = (String) j.next();
+                String newKey = j.next();
                 if (!keys.contains(newKey))
                 {
                     keys.add(newKey);
@@ -245,9 +245,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
     public boolean isEmpty()
     {
         boolean isEmpty = true;
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (!config.isEmpty())
             {
                 return false;
@@ -257,20 +256,19 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return isEmpty;
     }
 
+    @Override
     protected void clearPropertyDirect(String key)
     {
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             config.clearProperty(key);
         }
     }
 
     public boolean containsKey(String key)
     {
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
             {
                 return true;
@@ -279,6 +277,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return false;
     }
 
+    @Override
     public <T> List<T> getList(String key, List<T> defaultValue)
     {
         List list = new ArrayList();
@@ -311,9 +310,10 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         return list;
     }
 
+    @Override
     public String[] getStringArray(String key)
     {
-        List list = getList(key);
+        List<?> list = getList(key);
 
         // interpolate the strings
         String[] tokens = new String[list.size()];
@@ -358,6 +358,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @return the copy
      * @since 1.3
      */
+    @Override
     public Object clone()
     {
         try
@@ -397,6 +398,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param delimiterParsingDisabled the new value of the flag
      * @since 1.4
      */
+    @Override
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {
         ((BaseConfiguration) getInMemoryConfiguration())
@@ -411,6 +413,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param listDelimiter the new list delimiter character
      * @since 1.4
      */
+    @Override
     public void setListDelimiter(char listDelimiter)
     {
         ((BaseConfiguration) getInMemoryConfiguration())
@@ -449,9 +452,8 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
         }
 
         Configuration source = null;
-        for (Iterator it = configList.iterator(); it.hasNext();)
+        for (Configuration conf : configList)
         {
-            Configuration conf = (Configuration) it.next();
             if (conf.containsKey(key))
             {
                 if (source != null)

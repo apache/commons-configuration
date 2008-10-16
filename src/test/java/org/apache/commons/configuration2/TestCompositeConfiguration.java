@@ -22,25 +22,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Collection;
 
-import org.apache.commons.configuration2.CompositeConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationConverter;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.StrictConfigurationComparator;
-import org.apache.commons.configuration2.XMLConfiguration;
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
-
-import junit.framework.TestCase;
 
 /**
  * Test loading multiple configurations.
@@ -64,6 +56,7 @@ public class TestCompositeConfiguration extends TestCase
     private String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
     private String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
+    @Override
     protected void setUp() throws Exception
     {
         cc = new CompositeConfiguration();
@@ -97,7 +90,7 @@ public class TestCompositeConfiguration extends TestCase
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        List l = cc.getList("packages");
+        List<?> l = cc.getList("packages");
         assertTrue(l.contains("packagea"));
     }
 
@@ -276,11 +269,11 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
-        List packages = cc.getList("packages");
+        List<?> packages = cc.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
 
-        List defaultList = new ArrayList();
+        List<String> defaultList = new ArrayList<String>();
         defaultList.add("1");
         defaultList.add("2");
 
@@ -321,7 +314,7 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf2);
 
         // check the composite 'array' property
-        List list = cc.getList("array");
+        List<?> list = cc.getList("array");
         assertNotNull("null list", list);
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' not found in the list", list.contains("value1"));
@@ -345,13 +338,13 @@ public class TestCompositeConfiguration extends TestCase
     public void testGetKeysPreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys(); keys.hasNext();)
+        List<String> orderedList = new ArrayList<String>();
+        for (Iterator<String> keys = conf1.getKeys(); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys(); keys.hasNext();)
+        List<String> iteratedList = new ArrayList<String>();
+        for (Iterator<String> keys = cc.getKeys(); keys.hasNext();)
         {
             iteratedList.add(keys.next());
         }
@@ -368,13 +361,13 @@ public class TestCompositeConfiguration extends TestCase
     public void testGetKeys2PreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys("test"); keys.hasNext();)
+        List<String> orderedList = new ArrayList<String>();
+        for (Iterator<String> keys = conf1.getKeys("test"); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys("test"); keys.hasNext();)
+        List<String> iteratedList = new ArrayList<String>();
+        for (Iterator<String> keys = cc.getKeys("test"); keys.hasNext();)
         {
             iteratedList.add(keys.next());
         }
@@ -425,13 +418,13 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue(testConfiguration.containsKey(TEST_KEY));
         assertFalse(testConfiguration.isEmpty());
         boolean foundTestKey = false;
-        Iterator i = testConfiguration.getKeys();
+        Iterator<String> i = testConfiguration.getKeys();
         //assertTrue(i instanceof IteratorChain);
         //IteratorChain ic = (IteratorChain)i;
         //assertEquals(2,i.size());
         for (; i.hasNext();)
         {
-            String key = (String) i.next();
+            String key = i.next();
             if (key.equals(TEST_KEY))
             {
                 foundTestKey = true;
@@ -469,7 +462,7 @@ public class TestCompositeConfiguration extends TestCase
         PropertiesConfiguration c2 = new PropertiesConfiguration();
         c2.addProperty("c2.value", "test2");
         cc.addConfiguration(c2);
-        List lst = cc.getList("c1.value");
+        List<?> lst = cc.getList("c1.value");
         assertEquals("Wrong list size", 2, lst.size());
         assertEquals("Wrong first element", "test1", lst.get(0));
         assertEquals("Wrong second element", "test2", lst.get(1));
@@ -534,7 +527,7 @@ public class TestCompositeConfiguration extends TestCase
 
     public void testInstanciateWithCollection()
     {
-        Collection configs = new ArrayList();
+        Collection<Configuration> configs = new ArrayList<Configuration>();
         configs.add(xmlConf);
         configs.add(conf1);
         configs.add(conf2);
