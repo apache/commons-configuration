@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-341">
+        The "force reload check" mechanism of CombinedConfiguration now also
+        works with sub configurations created by configurationAt().
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-339">
         When performing interpolation the methods getList() and getStringArray()
         of CompositeConfiguration did not take the order of child configurations
