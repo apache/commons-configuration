@@ -20,8 +20,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationAssert;
@@ -29,13 +33,11 @@ import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.InMemoryConfiguration;
 import org.apache.commons.configuration2.StrictConfigurationComparator;
+import org.apache.commons.configuration2.SubConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test class for CombinedConfiguration.
@@ -56,6 +58,21 @@ public class TestCombinedConfiguration extends TestCase
     /** Constant for the name of the second child configuration.*/
     private static final String CHILD2 = TEST_NAME + "2";
 
+    /** Constant for the name of the XML reload test file.*/
+    private static final String RELOAD_NAME1 = "reload.xml";
+
+    /** Constant for the content of a XML reload test file.*/
+    private static final String RELOAD_CONTENT = "<xml><xmlReload>%d</xmlReload></xml>";
+
+    /** Constant for the name of the properties reload test file.*/
+    private static final String RELOAD_NAME2 = "reload2.xml";
+
+    /** Constant for the directory for writing test files.*/
+    private static final File TEST_DIR = new File("target");
+
+    /** A list with files created during a test.*/
+    private Collection<File> testFiles;
+
     /** The configuration to be tested. */
     private CombinedConfiguration config;
 
@@ -69,6 +86,25 @@ public class TestCombinedConfiguration extends TestCase
         config = new CombinedConfiguration();
         listener = new CombinedListener();
         config.addConfigurationListener(listener);
+    }
+
+    /**
+     * Performs clean-up after a test run. If test files have been created, they
+     * are removed now.
+     */
+    @Override
+    protected void tearDown() throws Exception
+    {
+        if (testFiles != null)
+        {
+            for (File f : testFiles)
+            {
+                if (f.exists())
+                {
+                    assertTrue("Cannot delete test file: " + f, f.delete());
+                }
+            }
+        }
     }
 
     /**
@@ -426,31 +462,48 @@ public class TestCombinedConfiguration extends TestCase
      */
     public void testReloading() throws Exception
     {
+        final String prefix1 = "reload1";
+        final String prefix2 = "reload2";
         config.setForceReloadCheck(true);
-        File testDir = new File("target");
-        File testXmlFile = new File(testDir, "reload.xml");
-        File testXmlFile2 = new File(testDir, "reload2.xml");
-        writeFile(testXmlFile, "<xml><xmlReload>0</xmlReload></xml>");
-        writeFile(testXmlFile2, "<xml><xmlReload2>0</xmlReload2></xml>");
+        File testXmlFile = writeReloadFile(RELOAD_NAME1, 0);
+        File testXmlFile2 = writeReloadFile(RELOAD_NAME2, 0);
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
         c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         XMLConfiguration c2 = new XMLConfiguration(testXmlFile2);
         c2.setThrowExceptionOnMissing(true);
         c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        config.addConfiguration(c1);
-        config.addConfiguration(c2);
-        assertEquals("Wrong xml 1 reload value", 0, config.getInt("xmlReload"));
-        assertEquals("Wrong xml 2 reload value", 0, config.getInt("xmlReload2"));
+        config.addConfiguration(c1, CHILD1, prefix1);
+        config.addConfiguration(c2, CHILD2, prefix2);
+        assertEquals("Wrong xml 1 reload value", 0, config.getInt(prefix1
+                + ".xmlReload"));
+        assertEquals("Wrong xml 2 reload value", 0, config.getInt(prefix2
+                + ".xmlReload"));
 
-        writeFile(testXmlFile, "<xml><xmlReload>1</xmlReload></xml>");
-        assertEquals("XML reload 1 not detected", 1, config.getInt("xmlReload"));
+        writeReloadFile(RELOAD_NAME1, 1);
+        assertEquals("XML reload 1 not detected", 1, config.getInt(prefix1
+                + ".xmlReload"));
         config.setForceReloadCheck(false);
-        writeFile(testXmlFile2, "<xml><xmlReload2>1</xmlReload2></xml>");
-        assertEquals("XML 2 reload detected though check flag is false", 0, config
-                .getInt("xmlReload2"));
+        writeReloadFile(RELOAD_NAME2, 1);
+        assertEquals("XML 2 reload detected though check flag is false", 0,
+                config.getInt(prefix2 + ".xmlReload"));
+    }
 
-        assertTrue("XML file cannot be removed", testXmlFile.delete());
-        assertTrue("Props file cannot be removed", testXmlFile2.delete());
+    /**
+     * Tests whether the reload check works with a subnode configuration. This
+     * test is related to CONFIGURATION-341.
+     */
+    public void testReloadingSubnodeConfig() throws IOException,
+            ConfigurationException
+    {
+        config.setForceReloadCheck(true);
+        File testXmlFile = writeReloadFile(RELOAD_NAME1, 0);
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        final String prefix = "reloadCheck";
+        config.addConfiguration(c1, CHILD1, prefix);
+        SubConfiguration<?> sub = config.configurationAt(prefix, true);
+        writeReloadFile(RELOAD_NAME1, 1);
+        assertEquals("Reload not detected", 1, sub.getInt("xmlReload"));
     }
 
     /**
@@ -596,19 +649,26 @@ public class TestCombinedConfiguration extends TestCase
     }
 
     /**
-     * Helper method for writing a file.
+     * Helper method for writing a file. The file is also added to a list and
+     * will be deleted in teadDown() automatically.
      *
      * @param file the file to be written
      * @param content the file's content
      * @throws IOException if an error occurs
      */
-    private static void writeFile(File file, String content) throws IOException
+    private void writeFile(File file, String content) throws IOException
     {
         PrintWriter out = null;
         try
         {
             out = new PrintWriter(new FileWriter(file));
             out.print(content);
+
+            if (testFiles == null)
+            {
+                testFiles = new ArrayList<File>();
+            }
+            testFiles.add(file);
         }
         finally
         {
@@ -617,6 +677,38 @@ public class TestCombinedConfiguration extends TestCase
                 out.close();
             }
         }
+    }
+
+    /**
+     * Helper method for writing a test file. The file will be created in the
+     * test directory. It is also scheduled for automatic deletion after the
+     * test.
+     *
+     * @param fileName the name of the test file
+     * @param content the content of the file
+     * @return the <code>File</code> object for the test file
+     * @throws IOException if an error occurs
+     */
+    private File writeFile(String fileName, String content) throws IOException
+    {
+        File file = new File(TEST_DIR, fileName);
+        writeFile(file, content);
+        return file;
+    }
+
+    /**
+     * Writes a file for testing reload operations.
+     *
+     * @param name the name of the reload test file
+     * @param content the content of the file
+     * @param value the value of the reload test property
+     * @return the file that was written
+     * @throws IOException if an error occurs
+     */
+    private File writeReloadFile(String name, int value)
+            throws IOException
+    {
+        return writeFile(name, String.format(RELOAD_CONTENT, value));
     }
 
     /**

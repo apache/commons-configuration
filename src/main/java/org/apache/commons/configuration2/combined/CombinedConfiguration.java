@@ -521,6 +521,7 @@ public class CombinedConfiguration extends
     /**
      * Clears this configuration. All contained configurations will be removed.
      */
+    @Override
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
@@ -539,6 +540,7 @@ public class CombinedConfiguration extends
      *
      * @return the copied object
      */
+    @Override
     public Object clone()
     {
         try
@@ -562,39 +564,6 @@ public class CombinedConfiguration extends
             // cannot happen
             throw new ConfigurationRuntimeException(cnsex);
         }
-    }
-
-    /**
-     * Returns the value of the specified property. This implementation
-     * evaluates the <em>force reload check</em> flag. If it is set, all
-     * contained configurations will be triggered before the value of the
-     * requested property is retrieved.
-     *
-     * @param key the key of the desired property
-     * @return the value of this property
-     * @since 1.4
-     */
-    public Object getProperty(String key)
-    {
-        if (isForceReloadCheck())
-        {
-            for (ConfigData<?> cd : configurations)
-            {
-                try
-                {
-                    // simply retrieve a property; this is enough for
-                    // triggering a reload
-                    cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
-                }
-                catch (Exception ex)
-                {
-                    // ignore all exceptions, e.g. missing property exceptions
-                    ;
-                }
-            }
-        }
-
-        return super.getProperty(key);
     }
 
     /**
@@ -666,6 +635,52 @@ public class CombinedConfiguration extends
         }
 
         return result;
+    }
+
+    /**
+     * Evaluates the passed in property key and returns a list with the matching
+     * configuration nodes. This implementation also evaluates the
+     * <em>force reload check</em> flag. If it is set,
+     * <code>performReloadCheck()</code> is invoked.
+     *
+     * @param key the property key
+     * @return a list with the matching configuration nodes
+     */
+    @Override
+    protected NodeList<Object> fetchNodeList(String key)
+    {
+        if (isForceReloadCheck())
+        {
+            performReloadCheck();
+        }
+
+        return super.fetchNodeList(key);
+    }
+
+    /**
+     * Triggers the contained configurations to perform a reload check if
+     * necessary. This method is called when a property of this combined
+     * configuration is accessed and the <code>forceReloadCheck</code> property
+     * is set to <b>true</b>.
+     *
+     * @see #setForceReloadCheck(boolean)
+     */
+    protected void performReloadCheck()
+    {
+        for (ConfigData<?> cd : configurations)
+        {
+            try
+            {
+                // simply retrieve a property; this is enough for
+                // triggering a reload
+                cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
+            }
+            catch (Exception ex)
+            {
+                // ignore all exceptions, e.g. missing property exceptions
+                ;
+            }
+        }
     }
 
     /**
