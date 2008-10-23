@@ -24,16 +24,17 @@ import java.sql.SQLException;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 import javax.sql.DataSource;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
-
-import junit.framework.TestCase;
 import org.codehaus.spice.jndikit.DefaultNameParser;
 import org.codehaus.spice.jndikit.DefaultNamespace;
 import org.codehaus.spice.jndikit.memory.MemoryContext;
@@ -53,7 +54,7 @@ import org.dbunit.operation.DatabaseOperation;
 public class TestDatabaseConfiguration extends TestCase
 {
     public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
-    public final String DATABASE_URL = "jdbc:hsqldb:target/test-classes/testdb";
+    public final String DATABASE_URL = "jdbc:hsqldb:mem:testdb";
     public final String DATABASE_USERNAME = "sa";
     public final String DATABASE_PASSWORD = "";
 
@@ -77,11 +78,12 @@ public class TestDatabaseConfiguration extends TestCase
 
     private static HsqlDB hsqlDB = null;
 
-    private DataSource datasource;
+    private PotentialErrorDataSource datasource;
 
     /** An error listener for testing whether internal errors occurred.*/
     private ConfigurationErrorListenerImpl listener;
 
+    @Override
     protected void setUp() throws Exception
     {
         /*
@@ -98,7 +100,7 @@ public class TestDatabaseConfiguration extends TestCase
             hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script.getAbsolutePath());
         }
 
-        BasicDataSource datasource = new BasicDataSource();
+        PotentialErrorDataSource datasource = new PotentialErrorDataSource();
         datasource.setDriverClassName(DATABASE_DRIVER);
         datasource.setUrl(DATABASE_URL);
         datasource.setUsername(DATABASE_USERNAME);
@@ -120,6 +122,7 @@ public class TestDatabaseConfiguration extends TestCase
         }
     }
 
+    @Override
     protected void tearDown() throws Exception{
         datasource.getConnection().commit();
         datasource.getConnection().close();
@@ -137,9 +140,9 @@ public class TestDatabaseConfiguration extends TestCase
      *
      * @return the configuration
      */
-    private PotentialErrorDatabaseConfiguration setUpConfig()
+    private DatabaseConfiguration setUpConfig()
     {
-        return new PotentialErrorDatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
+        return new DatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
     }
 
     /**
@@ -158,13 +161,13 @@ public class TestDatabaseConfiguration extends TestCase
      *
      * @param config the configuration
      */
-    private void setUpErrorListener(PotentialErrorDatabaseConfiguration config)
+    private void setUpErrorListener(DatabaseConfiguration config)
     {
         // remove log listener to avoid exception longs
         config.removeErrorListener((ConfigurationErrorListener) config.getErrorListeners().iterator().next());
         listener = new ConfigurationErrorListenerImpl();
         config.addErrorListener(listener);
-        config.failOnConnect = true;
+        datasource.failOnConnect = true;
     }
 
     /**
@@ -173,9 +176,9 @@ public class TestDatabaseConfiguration extends TestCase
      *
      * @return the initialized configuration
      */
-    private PotentialErrorDatabaseConfiguration setUpErrorConfig()
+    private DatabaseConfiguration setUpErrorConfig()
     {
-        PotentialErrorDatabaseConfiguration config = setUpConfig();
+        DatabaseConfiguration config = setUpConfig();
         setUpErrorListener(config);
         return config;
     }
@@ -491,10 +494,10 @@ public class TestDatabaseConfiguration extends TestCase
     {
         public static DataSource datasource;
 
-        public Context getInitialContext(Hashtable environment) throws NamingException
+        public Context getInitialContext(Hashtable<?, ?> environment) throws NamingException
         {
             DefaultNamespace namespace = new DefaultNamespace(new DefaultNameParser());
-            MemoryContext context = new MemoryContext(namespace, new Hashtable(), null);
+            MemoryContext context = new MemoryContext(namespace, new Hashtable<Object, Object>(), null);
             context.createSubcontext("java:comp").createSubcontext("env").createSubcontext("jdbc").bind("configuration", datasource);
 
             return context;
@@ -502,25 +505,21 @@ public class TestDatabaseConfiguration extends TestCase
     }
 
     /**
-     * A specialized database configuration implementation that can be
-     * configured to throw an exception when obtaining a connection. This way
-     * database exceptions can be simulated.
+     * A specialized DataSource implementation that can be configured to throw
+     * an exception when obtaining a connection. This way database exceptions
+     * can be simulated.
      */
-    static class PotentialErrorDatabaseConfiguration extends DatabaseConfiguration
+    private static class PotentialErrorDataSource extends BasicDataSource
     {
         /** A flag whether a getConnection() call should fail. */
         boolean failOnConnect;
 
-        public PotentialErrorDatabaseConfiguration(DataSource datasource,
-                String table, String keyColumn, String valueColumn)
-        {
-            super(datasource, table, keyColumn, valueColumn);
-        }
-
-        protected Connection getConnection() throws SQLException
+        @Override
+        public Connection getConnection() throws SQLException
         {
             if (failOnConnect)
             {
+                failOnConnect = false; // fail only once
                 throw new SQLException("Simulated DB error");
             }
             return super.getConnection();
