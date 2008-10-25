@@ -16,7 +16,9 @@
  */
 package org.apache.commons.configuration2.flat;
 
+import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -107,10 +109,13 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * value (identified by its 0-based index) without affecting the other
      * values. If the index is invalid (i.e. less than 0 or greater than the
      * number of existing values), the value will be added to the existing
-     * values of this property. This method takes care of firing the appropriate
-     * events and delegates to <code>setPropertyValueDirect()</code>. It
-     * generates a <code>EVENT_PROPERTY_CHANGED</code> event that contains the
-     * key of the affected property.
+     * values of this property. Note that this method expects a scalar value
+     * rather than an array or a collection. In the latter case the behavior is
+     * undefined and may vary for different derived classes. This method takes
+     * care of firing the appropriate events and delegates to
+     * <code>setPropertyValueDirect()</code>. It generates a
+     * <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
+     * affected property.
      *
      * @param key the key of the property
      * @param index the index of the value to change
@@ -120,7 +125,15 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     public void setPropertyValue(String key, int index, Object value)
     {
         fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
-        setPropertyValueDirect(key, index, value);
+        setDetailEvents(true);
+        try
+        {
+            setPropertyValueDirect(key, index, value);
+        }
+        finally
+        {
+            setDetailEvents(false);
+        }
         fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
     }
 
@@ -141,7 +154,18 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     public boolean clearPropertyValue(String key, int index)
     {
         fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
-        boolean result = clearPropertyValueDirect(key, index);
+
+        boolean result = false;
+        setDetailEvents(true);
+        try
+        {
+            result = clearPropertyValueDirect(key, index);
+        }
+        finally
+        {
+            setDetailEvents(false);
+        }
+
         fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
         return result;
     }
@@ -201,12 +225,30 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * can be used to find out how many values are stored for a given property.
      * A return value of -1 means that this property is unknown. A value of 0
      * indicates that there is a single value, 1 means there are two values,
-     * etc.
+     * etc. This base implementation uses {@code getProperty()} to obtain the
+     * property value(s). Derived classes should override this method if they
+     * can provide a more efficient implementation.
      *
      * @param key the key of the property
      * @return the maximum index of a value of this property
      */
-    public abstract int getMaxIndex(String key);
+    public int getMaxIndex(String key)
+    {
+        Object value = getProperty(key);
+
+        if (value == null)
+        {
+            return -1;
+        }
+        else if (value instanceof Collection)
+        {
+            return ((Collection<?>) value).size() - 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
 
     /**
      * Creates a hierarchy of <code>FlatNode</code> objects that corresponds
@@ -254,14 +296,50 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
 
     /**
      * Performs the actual modification of the specified property value. This
-     * method is called by <code>setPropertyValue()</code>.
+     * method is called by <code>setPropertyValue()</code>. The base
+     * implementation provided by this class uses {@code getProperty()} for
+     * obtaining the current value(s) of the specified property. If the property
+     * does not exist or the index is invalid, the value is added as if
+     * <code>addProperty()</code> was called. If the property has a single
+     * value, the passed in index determines what happens: if it is 0, the
+     * single value is replaced by the new one; all other indices cause the new
+     * value to be added to the old one. The method delegates to {@code
+     * setProperty()} or {@code addPropertyDirect()} for storing the new
+     * property value. Derived classes should override it if they can provide a
+     * more efficient implementation.
      *
      * @param key the key of the property
      * @param index the index of the value to change
      * @param value the new value
      */
-    protected abstract void setPropertyValueDirect(String key, int index,
-            Object value);
+    protected void setPropertyValueDirect(String key, int index, Object value)
+    {
+        Object oldValue = getProperty(key);
+
+        if (oldValue instanceof List)
+        {
+            @SuppressWarnings("unchecked")
+            List<Object> col = (List<Object>) oldValue;
+            if (index >= 0 && index < col.size())
+            {
+                col.set(index, value);
+                setProperty(key, col);
+            }
+            else
+            {
+                addPropertyDirect(key, value);
+            }
+        }
+
+        else if (oldValue == null || index != 0)
+        {
+            addPropertyDirect(key, value);
+        }
+        else
+        {
+            setProperty(key, value);
+        }
+    }
 
     /**
      * Initializes the node handler of this configuration.
@@ -273,13 +351,34 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
 
     /**
      * Performs the actual remove property value operation. This method is
-     * called by <code>clearPropertyValue()</code>.
+     * called by <code>clearPropertyValue()</code>. The base implementation
+     * provided by this class uses {@code getProperty()} for obtaining the
+     * value(s) of the property. If there are multiple values and the index is
+     * in the allowed range, the value with the given index is removed, and the
+     * new values are stored using {@code setProperty()}. Derived classes should
+     * override this method if they can provide a more efficient implementation.
      *
      * @param key the key of the property
      * @param index the index of the value to delete
      * @return a flag whether the value could be removed
      */
-    protected abstract boolean clearPropertyValueDirect(String key, int index);
+    protected boolean clearPropertyValueDirect(String key, int index)
+    {
+        Object value = getProperty(key);
+
+        if (value instanceof List && index >= 0)
+        {
+            List<?> col = (List<?>) value;
+            if (index < col.size())
+            {
+                col.remove(index);
+                setProperty(key, col);
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Registers a change listener at this configuration that causes the node
