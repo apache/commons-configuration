@@ -31,6 +31,8 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
+
 /**
  * Configuration stored in a database. The properties are retrieved from a
  * table containing at least one column for the keys, and one column for the
@@ -80,7 +82,7 @@ import javax.sql.DataSource;
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Revision$, $Date$
  */
-public class DatabaseConfiguration extends AbstractConfiguration
+public class DatabaseConfiguration extends AbstractFlatConfiguration
 {
     /** Constant for the statement used by getProperty.*/
     private static final String SQL_GET_PROPERTY = "SELECT * FROM %s WHERE %s =?";
