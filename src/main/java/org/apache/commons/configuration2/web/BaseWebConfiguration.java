@@ -19,8 +19,8 @@ package org.apache.commons.configuration2.web;
 
 import java.util.List;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.PropertyConverter;
+import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
 
 /**
  * <p>
@@ -36,7 +36,7 @@ import org.apache.commons.configuration2.PropertyConverter;
  * @version $Id$
  * @since 1.2
  */
-abstract class BaseWebConfiguration extends AbstractConfiguration
+abstract class BaseWebConfiguration extends AbstractFlatConfiguration
 {
     /**
      * Checks if this configuration is empty. This implementation makes use of
@@ -69,6 +69,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException because this operation is not
      * allowed
      */
+    @Override
     public void clearProperty(String key)
     {
         throw new UnsupportedOperationException("Read only configuration");
@@ -83,6 +84,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException because this operation is not
      * allowed
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("Read only configuration");
