@@ -33,6 +33,7 @@ import java.util.Iterator;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.Log;
@@ -67,7 +68,7 @@ public final class ConfigurationUtils
      */
     private ConfigurationUtils()
     {
-        // to prevent instanciation...
+        // to prevent instantiation...
     }
 
     /**
@@ -182,6 +183,35 @@ public final class ConfigurationUtils
     public static HierarchicalConfiguration convertToHierarchical(
             Configuration conf)
     {
+        return convertToHierarchical(conf, null);
+    }
+
+    /**
+     * Converts the passed in <code>Configuration</code> object to a
+     * hierarchical one using the specified <code>ExpressionEngine</code>. This
+     * conversion works by adding the keys found in the configuration to a newly
+     * created hierarchical configuration. When adding new keys to a
+     * hierarchical configuration the keys are interpreted by its
+     * <code>ExpressionEngine</code>. If they contain special characters (e.g.
+     * brackets) that are treated in a special way by the default expression
+     * engine, it may be necessary using a specific engine that can deal with
+     * such characters. Otherwise <b>null</b> can be passed in for the
+     * <code>ExpressionEngine</code>; then the default expression engine is
+     * used. If the passed in configuration is already hierarchical, it is
+     * directly returned. (However, the <code>ExpressionEngine</code> is set if
+     * it is not <b>null</b>.) Otherwise all properties are copied into a new
+     * hierarchical configuration.
+     *
+     * @param conf the configuration to convert
+     * @param engine the <code>ExpressionEngine</code> for the hierarchical
+     *        configuration or <b>null</b> for the default
+     * @return the new hierarchical configuration (the result is <b>null</b> if
+     *         and only if the passed in configuration is <b>null</b>)
+     * @since 1.6
+     */
+    public static HierarchicalConfiguration convertToHierarchical(
+            Configuration conf, ExpressionEngine engine)
+    {
         if (conf == null)
         {
             return null;
@@ -189,11 +219,22 @@ public final class ConfigurationUtils
 
         if (conf instanceof HierarchicalConfiguration)
         {
-            return (HierarchicalConfiguration) conf;
+            HierarchicalConfiguration hc = (HierarchicalConfiguration) conf;
+            if (engine != null)
+            {
+                hc.setExpressionEngine(engine);
+            }
+
+            return hc;
         }
         else
         {
             HierarchicalConfiguration hc = new HierarchicalConfiguration();
+            if (engine != null)
+            {
+                hc.setExpressionEngine(engine);
+            }
+
             // Workaround for problem with copy()
             boolean delimiterParsingStatus = hc.isDelimiterParsingDisabled();
             hc.setDelimiterParsingDisabled(true);

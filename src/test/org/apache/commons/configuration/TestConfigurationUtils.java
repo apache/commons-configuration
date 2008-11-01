@@ -23,10 +23,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mockobjects.dynamic.Mock;
-
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
+
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.ExpressionEngine;
+
+import com.mockobjects.dynamic.Mock;
 
 /**
  * Tests the ConfigurationUtils class
@@ -265,6 +268,53 @@ public class TestConfigurationUtils extends TestCase
                 .convertToHierarchical(conf);
         assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
                 hc.getString("test.key"));
+    }
+
+    /**
+     * Tests converting a configuration to a hierarchical one using a specific
+     * expression engine.
+     */
+    public void testConvertToHierarchicalEngine()
+    {
+        Configuration conf = new BaseConfiguration();
+        conf.addProperty("test(a)", Boolean.TRUE);
+        conf.addProperty("test(b)", Boolean.FALSE);
+        DefaultExpressionEngine engine = new DefaultExpressionEngine();
+        engine.setIndexStart("[");
+        engine.setIndexEnd("]");
+        HierarchicalConfiguration hc = ConfigurationUtils
+                .convertToHierarchical(conf, engine);
+        assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
+        assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using an
+     * expression engine. The new engine should be set.
+     */
+    public void testConvertHierarchicalToHierarchicalEngine()
+    {
+        HierarchicalConfiguration hc = new HierarchicalConfiguration();
+        ExpressionEngine engine = new DefaultExpressionEngine();
+        assertSame("Created new configuration", hc, ConfigurationUtils
+                .convertToHierarchical(hc, engine));
+        assertSame("Engine was not set", engine, hc.getExpressionEngine());
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using a null
+     * expression engine. In this case the expression engine of the
+     * configuration should not be touched.
+     */
+    public void testConvertHierarchicalToHierarchicalNullEngine()
+    {
+        HierarchicalConfiguration hc = new HierarchicalConfiguration();
+        ExpressionEngine engine = new DefaultExpressionEngine();
+        hc.setExpressionEngine(engine);
+        assertSame("Created new configuration", hc, ConfigurationUtils
+                .convertToHierarchical(hc, null));
+        assertSame("Expression engine was changed", engine, hc
+                .getExpressionEngine());
     }
 
     /**
