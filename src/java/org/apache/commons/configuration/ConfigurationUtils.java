@@ -238,7 +238,7 @@ public final class ConfigurationUtils
             // Workaround for problem with copy()
             boolean delimiterParsingStatus = hc.isDelimiterParsingDisabled();
             hc.setDelimiterParsingDisabled(true);
-            ConfigurationUtils.copy(conf, hc);
+            hc.append(conf);
             hc.setDelimiterParsingDisabled(delimiterParsingStatus);
             return hc;
         }

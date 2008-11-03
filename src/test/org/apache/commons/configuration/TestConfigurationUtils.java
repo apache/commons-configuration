@@ -318,6 +318,21 @@ public class TestConfigurationUtils extends TestCase
     }
 
     /**
+     * Tests converting a configuration to a hierarchical one that contains a
+     * property with multiple values. This test is related to CONFIGURATION-346.
+     */
+    public void testConvertToHierarchicalMultiValues()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty("test", "1,2,3");
+        HierarchicalConfiguration hc = ConfigurationUtils
+                .convertToHierarchical(config);
+        assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
+        assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
+        assertEquals("Wrong value 3", 3, hc.getInt("test(2)"));
+    }
+
+    /**
      * Tests cloning a configuration that supports this operation.
      */
     public void testCloneConfiguration()

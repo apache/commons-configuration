@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-346">
+        ConfigurationUtils.convertToHierarchical() now creates multiple
+        configuration nodes for properties with multiple values. This
+        improves compatibility with queries.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-341">
         The "force reload check" mechanism of CombinedConfiguration now also
         works with sub configurations created by configurationAt().
