@@ -48,6 +48,15 @@
         DefaultConfigurationBuilder now supports defining new configuration
         providers in the configuration definition file.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-336">
+        When converting a flat configuration to a hierarchical one it is now
+        possible to specify the expression engine to be used for this purpose.
+        This may be necessary if the flat configuration contains keys with
+        special characters interpreted by the expression engine.
+        CombinedConfiguration defines the new setConversionExpressionEngine()
+        method. The expression engine passed to this method will be used when
+        converting flat child configurations to hierarchical ones.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-334">
         Made handling of parent nodes more consistent when setRoot() or
         setRootNode() of HierarchicalConfiguration are involved.
