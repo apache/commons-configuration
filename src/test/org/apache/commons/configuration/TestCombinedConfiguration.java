@@ -32,6 +32,7 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 
@@ -635,6 +636,28 @@ public class TestCombinedConfiguration extends TestCase
         event = new ConfigurationEvent(config, 0, null, null, false);
         config.configurationChanged(event);
         assertEquals("No invalidate event fired", 1, listener.invalidateEvents);
+    }
+
+    /**
+     * Tests using a conversion expression engine for child configurations with
+     * strange keys. This test is related to CONFIGURATION-336.
+     */
+    public void testConversionExpressionEngine()
+    {
+        PropertiesConfiguration child = new PropertiesConfiguration();
+        child.addProperty("test(a)", "1,2,3");
+        config.addConfiguration(child);
+        DefaultExpressionEngine engineQuery = new DefaultExpressionEngine();
+        engineQuery.setIndexStart("<");
+        engineQuery.setIndexEnd(">");
+        config.setExpressionEngine(engineQuery);
+        DefaultExpressionEngine engineConvert = new DefaultExpressionEngine();
+        engineConvert.setIndexStart("[");
+        engineConvert.setIndexEnd("]");
+        config.setConversionExpressionEngine(engineConvert);
+        assertEquals("Wrong property 1", "1", config.getString("test(a)<0>"));
+        assertEquals("Wrong property 2", "2", config.getString("test(a)<1>"));
+        assertEquals("Wrong property 3", "3", config.getString("test(a)<2>"));
     }
 
     /**

@@ -30,6 +30,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.ViewNode;
@@ -200,6 +201,12 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     /** Stores a map with the named configurations. */
     private Map namedConfigurations;
 
+    /**
+     * An expression engine used for converting child configurations to
+     * hierarchical ones.
+     */
+    private ExpressionEngine conversionExpressionEngine;
+
     /** A flag whether an enhanced reload check is to be performed.*/
     private boolean forceReloadCheck;
 
@@ -284,6 +291,39 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     public void setForceReloadCheck(boolean forceReloadCheck)
     {
         this.forceReloadCheck = forceReloadCheck;
+    }
+
+    /**
+     * Returns the <code>ExpressionEngine</code> for converting flat child
+     * configurations to hierarchical ones.
+     *
+     * @return the conversion expression engine
+     * @since 1.6
+     */
+    public ExpressionEngine getConversionExpressionEngine()
+    {
+        return conversionExpressionEngine;
+    }
+
+    /**
+     * Sets the <code>ExpressionEngine</code> for converting flat child
+     * configurations to hierarchical ones. When constructing the root node for
+     * this combined configuration the properties of all child configurations
+     * must be combined to a single hierarchical node structure. In this
+     * process, non hierarchical configurations are converted to hierarchical
+     * ones first. This can be problematic if a child configuration contains
+     * keys that are no compatible with the default expression engine used by
+     * hierarchical configurations. Therefore it is possible to specify a
+     * specific expression engine to be used for this purpose.
+     *
+     * @param conversionExpressionEngine the conversion expression engine
+     * @see ConfigurationUtils#convertToHierarchical(Configuration, ExpressionEngine)
+     * @since 1.6
+     */
+    public void setConversionExpressionEngine(
+            ExpressionEngine conversionExpressionEngine)
+    {
+        this.conversionExpressionEngine = conversionExpressionEngine;
     }
 
     /**
@@ -708,7 +748,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      * An internal helper class for storing information about contained
      * configurations.
      */
-    static class ConfigData
+    class ConfigData
     {
         /** Stores a reference to the configuration. */
         private AbstractConfiguration configuration;
@@ -808,7 +848,8 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
 
             // Copy data of the root node to the new path
             HierarchicalConfiguration hc = ConfigurationUtils
-                    .convertToHierarchical(getConfiguration());
+                    .convertToHierarchical(getConfiguration(),
+                            getConversionExpressionEngine());
             atParent.appendChildren(hc.getRootNode());
             atParent.appendAttributes(hc.getRootNode());
             rootNode = hc.getRootNode();
