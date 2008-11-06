@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-347">
+        AbstractFileConfiguration.getKeys() now returns an iterator that points
+        to a snapshot of the keys of the configuration. This prevents
+        ConcurrentModificationExceptions during iteration when a reload is
+        performed.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-346">
         ConfigurationUtils.convertToHierarchical() now creates multiple
         configuration nodes for properties with multiple values. This

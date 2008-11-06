@@ -17,19 +17,20 @@
 
 package org.apache.commons.configuration;
 
-import java.net.URL;
-import java.util.Properties;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Properties;
+
+import junit.framework.TestCase;
 
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
-
-import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg
@@ -426,7 +427,7 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
-     * Tests to invoke save() without explicitely setting a file name. This
+     * Tests to invoke save() without explicitly setting a file name. This
      * will cause an exception.
      */
     public void testSaveWithoutFileName() throws Exception
@@ -587,6 +588,44 @@ public class TestFileConfiguration extends TestCase
         config.getString("test");
         l.verify(AbstractFileConfiguration.EVENT_RELOAD, null, null);
         assertNotNull("Exception is not set", l.getLastEvent().getCause());
+    }
+
+    /**
+     * Tests iterating over the keys of a non hierarchical file-based
+     * configuration while a reload happens. This test is related to
+     * CONFIGURATION-347.
+     */
+    public void testIterationWithReloadFlat() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        checkIterationWithReload(config);
+    }
+
+    /**
+     * Tests iterating over the keys of a hierarchical file-based configuration
+     * while a reload happens. This test is related to CONFIGURATION-347.
+     */
+    public void testIterationWithReloadHierarchical()
+            throws ConfigurationException
+    {
+        XMLConfiguration config = new XMLConfiguration("test.xml");
+        checkIterationWithReload(config);
+    }
+
+    /**
+     * Helper method for testing an iteration over the keys of a file-based
+     * configuration while a reload happens.
+     *
+     * @param config the configuration to test
+     */
+    private void checkIterationWithReload(FileConfiguration config)
+    {
+        config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        for (Iterator it = config.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertNotNull("No value for key " + key, config.getProperty(key));
+        }
     }
 
     /**

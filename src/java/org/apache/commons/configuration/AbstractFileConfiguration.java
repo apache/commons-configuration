@@ -32,6 +32,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
@@ -40,7 +42,7 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.
- * Developpers of file based configuration may want to extend this class,
+ * Developers of file based configuration may want to extend this class,
  * the two methods left to implement are <code>{@link FileConfiguration#load(Reader)}</code>
  * and <code>{@link FileConfiguration#save(Writer)}</code>.</p>
  * <p>This base class already implements a couple of ways to specify the location
@@ -934,10 +936,39 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         return super.containsKey(key);
     }
 
+    /**
+     * Returns an <code>Iterator</code> with the keys contained in this
+     * configuration. This implementation performs a reload if necessary before
+     * obtaining the keys. The <code>Iterator</code> returned by this method
+     * points to a snapshot taken when this method was called. Later changes at
+     * the set of keys (including those caused by a reload) won't be visible.
+     * This is because a reload can happen at any time during iteration, and it
+     * is impossible to determine how this reload affects the current iteration.
+     * When using the iterator a client has to be aware that changes of the
+     * configuration are possible at any time. For instance, if after a reload
+     * operation some keys are no longer present, the iterator will still return
+     * those keys because they were found when it was created.
+     *
+     * @return an <code>Iterator</code> with the keys of this configuration
+     */
     public Iterator getKeys()
     {
         reload();
-        return super.getKeys();
+        List keyList = new LinkedList();
+        enterNoReload();
+        try
+        {
+            for (Iterator it = super.getKeys(); it.hasNext();)
+            {
+                keyList.add(it.next());
+            }
+
+            return keyList.iterator();
+        }
+        finally
+        {
+            exitNoReload();
+        }
     }
 
     /**
