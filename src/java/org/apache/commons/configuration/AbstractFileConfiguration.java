@@ -920,8 +920,11 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     public Object getProperty(String key)
     {
-        reload();
-        return super.getProperty(key);
+        synchronized (reloadLock)
+        {
+            reload();
+            return super.getProperty(key);
+        }
     }
 
     public boolean isEmpty()

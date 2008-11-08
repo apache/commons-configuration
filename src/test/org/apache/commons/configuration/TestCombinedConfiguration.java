@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -658,6 +659,54 @@ public class TestCombinedConfiguration extends TestCase
         assertEquals("Wrong property 1", "1", config.getString("test(a)<0>"));
         assertEquals("Wrong property 2", "2", config.getString("test(a)<1>"));
         assertEquals("Wrong property 3", "3", config.getString("test(a)<2>"));
+    }
+
+    /**
+     * Tests whether reload operations can cause a deadlock when the combined
+     * configuration is accessed concurrently. This test is related to
+     * CONFIGURATION-344.
+     */
+    public void testDeadlockWithReload() throws ConfigurationException,
+            InterruptedException
+    {
+        final PropertiesConfiguration child = new PropertiesConfiguration(
+                "test.properties");
+        child.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        config.addConfiguration(child);
+        final int count = 1000;
+
+        class ReloadThread extends Thread
+        {
+            boolean error = false;
+
+            public void run()
+            {
+                for (int i = 0; i < count && !error; i++)
+                {
+                    try
+                    {
+                        if (!child.getBoolean("configuration.loaded"))
+                        {
+                            error = true;
+                        }
+                    }
+                    catch (NoSuchElementException nsex)
+                    {
+                        error = true;
+                    }
+                }
+            }
+        }
+
+        ReloadThread reloadThread = new ReloadThread();
+        reloadThread.start();
+        for (int i = 0; i < count; i++)
+        {
+            assertEquals("Wrong value of combined property", 10, config
+                    .getInt("test.integer"));
+        }
+        reloadThread.join();
+        assertFalse("Failure in thread", reloadThread.error);
     }
 
     /**

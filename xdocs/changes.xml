@@ -34,6 +34,12 @@
         configuration nodes for properties with multiple values. This
         improves compatibility with queries.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-344">
+        CombinedConfiguration could cause a deadlock when it was accessed while
+        concurrently a reload of one of its child configuration happened. This
+        was fixed by reducing synchronization where it is not strictly
+        necessary.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-341">
         The "force reload check" mechanism of CombinedConfiguration now also
         works with sub configurations created by configurationAt().

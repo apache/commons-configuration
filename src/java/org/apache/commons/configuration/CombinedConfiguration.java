@@ -193,7 +193,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     private NodeCombiner nodeCombiner;
 
     /** Stores the combined root node. */
-    private ConfigurationNode combinedRoot;
+    private volatile ConfigurationNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
     private List configurations;
@@ -509,10 +509,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public void invalidate()
     {
-        synchronized (getNodeCombiner()) // use combiner as lock
-        {
-            combinedRoot = null;
-        }
+        combinedRoot = null;
         fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
     }
 
@@ -540,14 +537,11 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public ConfigurationNode getRootNode()
     {
-        synchronized (getNodeCombiner())
+        if (combinedRoot == null)
         {
-            if (combinedRoot == null)
-            {
-                combinedRoot = constructCombinedNode();
-            }
-            return combinedRoot;
+            combinedRoot = constructCombinedNode();
         }
+        return combinedRoot;
     }
 
     /**
