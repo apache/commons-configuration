@@ -17,11 +17,11 @@
 
 package org.apache.commons.configuration;
 
-import java.io.Reader;
-import java.io.Writer;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
@@ -306,6 +306,12 @@ implements FileConfiguration, ConfigurationListener
     {
         reload();
         return super.containsKey(key);
+    }
+
+    public Iterator getKeys()
+    {
+        reload();
+        return super.getKeys();
     }
 
     public Iterator getKeys(String prefix)

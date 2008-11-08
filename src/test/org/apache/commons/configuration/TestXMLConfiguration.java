@@ -964,6 +964,26 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether reloads are recognized when querying the configuration's
+     * keys.
+     */
+    public void testGetKeysWithReload() throws ConfigurationException
+    {
+        XMLConfiguration c = setUpReloadTest();
+        conf.addProperty("aNewKey", "aNewValue");
+        conf.save(testSaveConf);
+        boolean found = false;
+        for (Iterator it = c.getKeys(); it.hasNext();)
+        {
+            if ("aNewKey".equals(it.next()))
+            {
+                found = true;
+            }
+        }
+        assertTrue("Reload not performed", found);
+    }
+
+    /**
      * Tests accessing properties when the XPATH expression engine is set.
      */
     public void testXPathExpressionEngine()

@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-348">
+        AbstractHierarchicalFileConfiguration.getKeys() now also checks whether
+        a reload is required.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-347">
         AbstractFileConfiguration.getKeys() now returns an iterator that points
         to a snapshot of the keys of the configuration. This prevents
