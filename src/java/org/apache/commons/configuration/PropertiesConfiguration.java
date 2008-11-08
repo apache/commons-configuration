@@ -213,11 +213,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /** Allow file inclusion or not */
     private boolean includesAllowed;
 
-    // initialization block to set the encoding before loading the file in the constructors
-    {
-        setEncoding(DEFAULT_ENCODING);
-    }
-
     /**
      * Creates an empty PropertyConfiguration object which can be
      * used to synthesize a new Properties file by adding values and
@@ -341,6 +336,19 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public void setHeader(String header)
     {
         getLayout().setHeaderComment(header);
+    }
+
+    /**
+     * Returns the encoding to be used when loading or storing configuration
+     * data. This implementation ensures that the default encoding will be used
+     * if none has been set explicitly.
+     *
+     * @return the encoding
+     */
+    public String getEncoding()
+    {
+        String enc = super.getEncoding();
+        return (enc != null) ? enc : DEFAULT_ENCODING;
     }
 
     /**

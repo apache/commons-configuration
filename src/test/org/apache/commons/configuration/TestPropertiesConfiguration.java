@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Reader;
@@ -823,6 +824,36 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration config2 = new PropertiesConfiguration(
                 testSavePropertiesFile);
         assertEquals("Property not saved", "bar", config2.getString("foo"));
+    }
+
+    /**
+     * Tests whether the correct default encoding is used when loading a
+     * properties file. This test is related to CONFIGURATION-345.
+     */
+    public void testLoadWithDefaultEncoding() throws ConfigurationException
+    {
+        class PropertiesConfigurationTestImpl extends PropertiesConfiguration
+        {
+            String loadEncoding;
+
+            public PropertiesConfigurationTestImpl(String fileName)
+                    throws ConfigurationException
+            {
+                super(fileName);
+            }
+
+            public void load(InputStream in, String encoding)
+                    throws ConfigurationException
+            {
+                loadEncoding = encoding;
+                super.load(in, encoding);
+            }
+        }
+
+        PropertiesConfigurationTestImpl testConf = new PropertiesConfigurationTestImpl(
+                testProperties);
+        assertEquals("Default encoding not used", "ISO-8859-1",
+                testConf.loadEncoding);
     }
 
     /**

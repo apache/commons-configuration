@@ -38,6 +38,10 @@
         configuration nodes for properties with multiple values. This
         improves compatibility with queries.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-345">
+        PropertiesConfiguration now per default uses the encoding "ISO-8859-1"
+        for loading properties files.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-344">
         CombinedConfiguration could cause a deadlock when it was accessed while
         concurrently a reload of one of its child configuration happened. This
