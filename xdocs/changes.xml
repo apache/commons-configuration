@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-349" due-to="Ralph Goers">
+        The visibility of DefaultConfigurationBuilder.XMLConfigurationProvider
+        was changed from package local to public. This makes it easier to
+        implement providers that create configuration classes derived from
+        XMLConfiguration.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-348">
         AbstractHierarchicalFileConfiguration.getKeys() now also checks whether
         a reload is required.

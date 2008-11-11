@@ -61,6 +61,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File PROVIDER_FILE = new File(
             "conf/testConfigurationProvider.xml");
 
+    private static final File EXTENDED_PROVIDER_FILE = new File(
+            "conf/testExtendedXMLConfigurationProvider.xml");
+
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
@@ -775,6 +778,22 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertNotNull("Provider 'test' not registered", provider);
     }
 
+        /**
+     * Tests loading a configuration definition file that defines new providers.
+     */
+    public void testExtendedXMLConfigurationProvider() throws ConfigurationException
+    {
+        factory.setFile(EXTENDED_PROVIDER_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        DefaultConfigurationBuilder.ConfigurationProvider provider = factory
+                .providerForTag("test");
+        assertNotNull("Provider 'test' not registered", provider);
+        Configuration config = cc.getConfiguration("xml");
+        assertNotNull("Test configuration not present", config);
+        assertTrue("Configuration is not ExtendedXMLConfiguration, is " +
+                config.getClass().getName(), config instanceof ExtendedXMLConfiguration);
+    }
+
     /**
      * A specialized combined configuration implementation used for testing
      * custom result classes.
@@ -795,6 +814,14 @@ public class TestDefaultConfigurationBuilder extends TestCase
             }
             return super.getProperty(key);
         }
+    }
+
+    public static class ExtendedXMLConfiguration extends XMLConfiguration
+    {
+        public ExtendedXMLConfiguration()
+        {
+        }
+
     }
 }
 

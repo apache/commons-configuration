@@ -1281,8 +1281,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * implementation acts like a <code>FileConfigurationProvider</code>, but
      * it will copy all entity IDs that have been registered for the
      * configuration builder to the new XML configuration before it is loaded.
+     *
+     * @since 1.6
      */
-    static class XMLConfigurationProvider extends FileConfigurationProvider
+    public static class XMLConfigurationProvider extends FileConfigurationProvider
     {
         /**
          * Creates a new instance of <code>XMLConfigurationProvider</code>.
