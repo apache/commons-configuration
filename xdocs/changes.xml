@@ -98,6 +98,13 @@
         method can be overridden by derived classes for injecting custom
         BeanDeclaration implementations.
       </action>
+      <action dev="oheger" type="add">
+        With HierarchicalINIConfiguration a complete new Configuration
+        implementation for parsing Windows INI files is available. This new
+        class is a full replacement of INIConfiguration and addresses some of its
+        shortcomings. Being derived from HierarchicalConfiguration it offers
+        the enhanced functionality of hierarchical configurations.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-307">
         XMLConfiguration now supports the xml:space attribute. This attribute
         can be used to preserve whitespace in the content of XML elements.
