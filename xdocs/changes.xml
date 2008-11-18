@@ -98,20 +98,35 @@
         method can be overridden by derived classes for injecting custom
         BeanDeclaration implementations.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-328">
+        A bug in XMLConfiguration.addNodes() made it impossible to add
+        attribute nodes using this method. This has been fixed.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-327">
+        INIConfiguration misinterpreted variables in the global section with
+        a dot in their name as section names. HierarchicalINIConfiguration fixes
+        this problem.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-326">
+        INIConfiguration does not support obtaining a subset for the global
+        section. HierarchicalINIConfiguration provides the getSection() method
+        that returns the content of the global section if null is passed in as
+        section name.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-325">
+        INIConfiguration does not return the global section in its getSections()
+        method. HierarchicalINIConfiguration fixes this problem.
+      </action>
+      <action dev="oheger" type="update">
+        INIConfiguration has been deprecated. Its functionality is now available
+        through the new HierarchicalINIConfiguration class.
+      </action>
       <action dev="oheger" type="add">
         With HierarchicalINIConfiguration a complete new Configuration
         implementation for parsing Windows INI files is available. This new
         class is a full replacement of INIConfiguration and addresses some of its
         shortcomings. Being derived from HierarchicalConfiguration it offers
         the enhanced functionality of hierarchical configurations.
-      </action>
-      <action dev="oheger" type="fix" issue="CONFIGURATION-307">
-        XMLConfiguration now supports the xml:space attribute. This attribute
-        can be used to preserve whitespace in the content of XML elements.
-      </action>
-      <action dev="oheger" type="fix" issue="CONFIGURATION-328">
-        A bug in XMLConfiguration.addNodes() made it impossible to add
-        attribute nodes using this method. This has been fixed.
       </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-322">
         ConfigurationDynaBean now works properly with indexed properties
@@ -132,6 +147,10 @@
         CombinedConfiguration used to send two EVENT_COMBINED_INVALIDATE events
         for each modified child configuration. Now this event is sent only
         once after the affected child configuration was updated.
+      </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-307">
+        XMLConfiguration now supports the xml:space attribute. This attribute
+        can be used to preserve whitespace in the content of XML elements.
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-306">
         INIConfiguration now preserves whitespace in quoted values.
