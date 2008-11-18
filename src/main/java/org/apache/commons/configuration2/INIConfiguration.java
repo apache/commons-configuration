@@ -14,7 +14,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package org.apache.commons.configuration2;
 
 import java.io.BufferedReader;
@@ -26,24 +25,31 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration2.tree.ViewNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * <p>
+ * A specialized hierarchical configuration implementation for parsing ini
+ * files.
+ * </p>
  * <p>
  * An initialization or ini file is a configuration file typically found on
  * Microsoft's Windows operating system and contains data for Windows based
  * applications.
  * </p>
- *
  * <p>
  * Although popularized by Windows, ini files can be used on any system or
  * platform due to the fact that they are merely text files that can easily be
  * parsed and modified by both humans and computers.
  * </p>
- *
  * <p>
  * A typcial ini file could look something like:
  * </p>
@@ -52,46 +58,42 @@ import org.apache.commons.lang.StringUtils;
  * ; this is a comment!<br>
  * var1 = foo<br>
  * var2 = bar<br>
- *<br>
+ * <br>
  * [section2]<br>
  * var1 = doo<br>
  * </code>
- *
  * <p>
  * The format of ini files is fairly straight forward and is composed of three
  * components:<br>
  * <ul>
- * <li><b>Sections:</b> Ini files are split into sections, each section
- * starting with a section declaration. A section declaration starts with a '['
- * and ends with a ']'. Sections occur on one line only.</li>
- * <li><b>Parameters:</b> Items in a section are known as parameters.
- * Parameters have a typical <code>key = value</code> format.</li>
- * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.
- * </li>
+ * <li><b>Sections:</b> Ini files are split into sections, each section starting
+ * with a section declaration. A section declaration starts with a '[' and ends
+ * with a ']'. Sections occur on one line only.</li>
+ * <li><b>Parameters:</b> Items in a section are known as parameters. Parameters
+ * have a typical <code>key = value</code> format.</li>
+ * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.</li>
  * </ul>
  * </p>
- *
  * <p>
  * There are various implementations of the ini file format by various vendors
  * which has caused a number of differences to appear. As far as possible this
  * configuration tries to be lenient and support most of the differences.
  * </p>
- *
  * <p>
  * Some of the differences supported are as follows:
  * <ul>
  * <li><b>Comments:</b> The '#' character is also accepted as a comment
  * signifier.</li>
- * <li><b>Key value separtor:</b> The ':' character is also accepted in place
- * of '=' to separate keys and values in parameters, for example
+ * <li><b>Key value separtor:</b> The ':' character is also accepted in place of
+ * '=' to separate keys and values in parameters, for example
  * <code>var1 : foo</code>.</li>
- * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed ,
+ * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed,
  * this configuration does however support it. In the event of a duplicate
  * section, the two section's values are merged.</li>
  * <li><b>Duplicate parameters:</b> Typically duplicate parameters are only
  * allowed if they are in two different sections, thus they are local to
  * sections; this configuration simply merges duplicates; if a section has a
- * duplicate parameter the values are then added to the key as a list. </li>
+ * duplicate parameter the values are then added to the key as a list.</li>
  * </ul>
  * </p>
  * <p>
@@ -102,13 +104,12 @@ import org.apache.commons.lang.StringUtils;
  * <p>
  * In all instances, a parameter's key is prepended with its section name and a
  * '.' (period). Thus a parameter named "var1" in "section1" will have the key
- * <code>section1.var1</code> in this configuration. Thus, a section's
- * parameters can easily be retrieved using the <code>subset</code> method
- * using the section name as the prefix.
+ * <code>section1.var1</code> in this configuration. (This is the default
+ * behavior. Because this is a hierarchical configuration you can change this by
+ * setting a different {@link ExpressionEngine}.)
  * </p>
  * <p>
- * <h3>Implementation Details:</h3>
- * Consider the following ini file:<br>
+ * <h3>Implementation Details:</h3> Consider the following ini file:<br>
  * <code>
  *  default = ok<br>
  *  <br>
@@ -142,32 +143,47 @@ import org.apache.commons.lang.StringUtils;
  * is accessed simply using <code>getProperty("default")</code>.</li>
  * <li>Section 1's parameters can be accessed using
  * <code>getProperty("section1.var1")</code>.</li>
- * <li>The parameter named "bad" simply adds the parameter with an empty value.
- * </li>
- * <li>The empty key with value "= worse" is added using an empty key. This key
- * is still added to section 2 and the value can be accessed using
- * <code>getProperty("section2.")</code>, notice the period '.' following the
- * section name.</li>
+ * <li>The parameter named "bad" simply adds the parameter with an empty value.</li>
+ * <li>The empty key with value "= worse" is added using a key consisting of a
+ * single space character. This key is still added to section 2 and the value
+ * can be accessed using <code>getProperty("section2. ")</code>, notice the
+ * period '.' and the space following the section name.</li>
  * <li>Section three uses both '=' and ':' to separate keys and values.</li>
  * <li>Section 3 has a duplicate key named "var5". The value for this key is
  * [test1, test2], and is represented as a List.</li>
  * </ul>
  * </p>
  * <p>
- * The set of sections in this configuration can be retrieved using the
- * <code>getSections</code> method.
+ * Internally, this configuration maps the content of the represented ini file
+ * to its node structure in the following way:
+ * <ul>
+ * <li>Sections are represented by direct child nodes of the root node.</li>
+ * <li>For the content of a section, corresponding nodes are created as children
+ * of the section node.</li>
+ * </ul>
+ * This explains how the keys for the properties can be constructed. You can
+ * also use other methods of {@link InMemoryConfiguration} for querying or
+ * manipulating the hierarchy of configuration nodes, for instance the
+ * {@code configurationAt()} method for obtaining the data of a specific
+ * section.
  * </p>
  * <p>
- * <em>Note:</em> Configuration objects of this type can be read concurrently
- * by multiple threads. However if one of these threads modifies the object,
+ * The set of sections in this configuration can be retrieved using the
+ * {@code getSections()} method. For obtaining a {@link SubConfiguration}
+ * with the content of a specific section the {@code getSection()} method can be used.
+ * </p>
+ * <p>
+ * <em>Note:</em> Configuration objects of this type can be read concurrently by
+ * multiple threads. However if one of these threads modifies the object,
  * synchronization has to be performed manually.
  * </p>
  *
- * @author Trevor Miller
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
- * @since 1.4
  */
-public class INIConfiguration extends AbstractFileConfiguration
+public class INIConfiguration extends AbstractHierarchicalFileConfiguration
 {
     /**
      * The characters that signal the start of a comment line.
@@ -225,19 +241,22 @@ public class INIConfiguration extends AbstractFileConfiguration
      *
      * @param writer - The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the
-     * configuration
+     *         configuration
      */
     public void save(Writer writer) throws ConfigurationException
     {
         PrintWriter out = new PrintWriter(writer);
         for (String section : getSections())
         {
-            out.print("[");
-            out.print(section);
-            out.print("]");
-            out.println();
+            if (section != null)
+            {
+                out.print("[");
+                out.print(section);
+                out.print("]");
+                out.println();
+            }
 
-            Configuration subset = subset(section);
+            Configuration subset = getSection(section);
             Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
             {
@@ -245,11 +264,11 @@ public class INIConfiguration extends AbstractFileConfiguration
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {
-                    for (Object val : (Collection) value)
+                    for (Object v : (Collection<?>) value)
                     {
                         out.print(key);
                         out.print(" = ");
-                        out.print(formatValue(val.toString()));
+                        out.print(formatValue(String.valueOf(v)));
                         out.println();
                     }
                 }
@@ -270,20 +289,21 @@ public class INIConfiguration extends AbstractFileConfiguration
 
     /**
      * Load the configuration from the given reader. Note that the
-     * <code>clear</code> method is not called so the configuration read in
-     * will be merged with the current configuration.
+     * <code>clear</code> method is not called so the configuration read in will
+     * be merged with the current configuration.
      *
      * @param reader The reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the
-     * configuration
+     *         configuration
      */
     public void load(Reader reader) throws ConfigurationException
     {
         try
         {
             BufferedReader bufferedReader = new BufferedReader(reader);
+            ConfigurationNode sectionNode = getRootNode();
+
             String line = bufferedReader.readLine();
-            String section = "";
             while (line != null)
             {
                 line = line.trim();
@@ -291,8 +311,10 @@ public class INIConfiguration extends AbstractFileConfiguration
                 {
                     if (isSectionLine(line))
                     {
-                        section = line.substring(1, line.length() - 1) + ".";
+                        String section = line.substring(1, line.length() - 1);
+                        sectionNode = getSectionNode(section);
                     }
+
                     else
                     {
                         String key = "";
@@ -300,7 +322,7 @@ public class INIConfiguration extends AbstractFileConfiguration
                         int index = line.indexOf("=");
                         if (index >= 0)
                         {
-                            key = section + line.substring(0, index);
+                            key = line.substring(0, index);
                             value = parseValue(line.substring(index + 1));
                         }
                         else
@@ -308,33 +330,44 @@ public class INIConfiguration extends AbstractFileConfiguration
                             index = line.indexOf(":");
                             if (index >= 0)
                             {
-                                key = section + line.substring(0, index);
+                                key = line.substring(0, index);
                                 value = parseValue(line.substring(index + 1));
                             }
                             else
                             {
-                                key = section + line;
+                                key = line;
                             }
                         }
-                        addProperty(key.trim(), value);
+                        key = key.trim();
+                        if (key.length() < 1)
+                        {
+                            // use space for properties with no key
+                            key = " ";
+                        }
+                        createNode(sectionNode, key, value);
                     }
                 }
+
                 line = bufferedReader.readLine();
             }
         }
         catch (IOException e)
         {
-            throw new ConfigurationException("Unable to load the configuration", e);
+            throw new ConfigurationException(
+                    "Unable to load the configuration", e);
         }
     }
 
     /**
-     * Parse the value to remove the quotes and ignoring the comment.
-     * Example:
+     * Parse the value to remove the quotes and ignoring the comment. Example:
      *
-     * <pre>"value" ; comment -> value</pre>
+     * <pre>
+     * &quot;value&quot; ; comment -&gt; value
+     * </pre>
      *
-     * <pre>'value' ; comment -> value</pre>
+     * <pre>
+     * 'value' ; comment -&gt; value
+     * </pre>
      *
      * @param value
      */
@@ -435,7 +468,7 @@ public class INIConfiguration extends AbstractFileConfiguration
      *
      * @param line The line to check.
      * @return true if the line is empty or starts with one of the comment
-     * characters
+     *         characters
      */
     protected boolean isCommentLine(String line)
     {
@@ -470,19 +503,135 @@ public class INIConfiguration extends AbstractFileConfiguration
      */
     public Set<String> getSections()
     {
-        Set<String> sections = new TreeSet<String>();
+        Set<String> sections = new LinkedHashSet<String>();
+        boolean globalSection = false;
 
-        Iterator<String> keys = getKeys();
-        while (keys.hasNext())
+        for (ConfigurationNode node : getRootNode().getChildren())
         {
-            String key = (String) keys.next();
-            int index = key.indexOf(".");
-            if (index >= 0)
+            if (isSectionNode(node))
             {
-                sections.add(key.substring(0, index));
+                if (globalSection)
+                {
+                    sections.add(null);
+                    globalSection = false;
+                }
+                sections.add(node.getName());
+            }
+            else
+            {
+                globalSection = true;
             }
         }
 
         return sections;
+    }
+
+    /**
+     * Returns a configuration with the content of the specified section. This
+     * provides an easy way of working with a single section only. The way this
+     * configuration is structured internally, this method is very similar to
+     * calling
+     * <code>{@link HierarchicalConfiguration#configurationAt(String)}</code>
+     * with the name of the section in question. There are the following
+     * differences however:
+     * <ul>
+     * <li>This method never throws an exception. If the section does not exist,
+     * an empty configuration is returned.</li>
+     * <li>There is special support for the global section: Passing in
+     * <b>null</b> as section name returns a configuration with the content of
+     * the global section (which may also be empty).</li>
+     * </ul>
+     *
+     * @param name the name of the section in question; <b>null</b> represents
+     *        the global section
+     * @return a configuration containing only the properties of the specified
+     *         section
+     */
+    public SubConfiguration<ConfigurationNode> getSection(String name)
+    {
+        if (name == null)
+        {
+            return getGlobalSection();
+        }
+
+        else
+        {
+            try
+            {
+                return configurationAt(name);
+            }
+            catch (IllegalArgumentException iex)
+            {
+                // the passed in key does not map to exactly one node
+                // return an empty configuration
+                return new SubConfiguration<ConfigurationNode>(this,
+                        new DefaultConfigurationNode());
+            }
+        }
+    }
+
+    /**
+     * Obtains the node representing the specified section. This method is
+     * called while the configuration is loaded. If a node for this section
+     * already exists, it is returned. Otherwise a new node is created.
+     *
+     * @param sectionName the name of the section
+     * @return the node for this section
+     */
+    private ConfigurationNode getSectionNode(String sectionName)
+    {
+        List<ConfigurationNode> nodes = getRootNode().getChildren(sectionName);
+        if (!nodes.isEmpty())
+        {
+            return nodes.get(0);
+        }
+
+        ConfigurationNode node = createNode(getRootNode(), sectionName);
+        markSectionNode(node);
+        return node;
+    }
+
+    /**
+     * Creates a sub configuration for the global section of the represented INI
+     * configuration.
+     *
+     * @return the sub configuration for the global section
+     */
+    private SubConfiguration<ConfigurationNode> getGlobalSection()
+    {
+        ViewNode parent = new ViewNode();
+
+        for (ConfigurationNode node : getRootNode().getChildren())
+        {
+            if (!isSectionNode(node))
+            {
+                parent.addChild(node);
+            }
+        }
+
+        return createSubnodeConfiguration(parent);
+    }
+
+    /**
+     * Marks a configuration node as a section node. This means that this node
+     * represents a section header. This implementation uses the node's
+     * reference property to store a flag.
+     *
+     * @param node the node to be marked
+     */
+    private static void markSectionNode(ConfigurationNode node)
+    {
+        node.setReference(Boolean.TRUE);
+    }
+
+    /**
+     * Checks whether the specified configuration node represents a section.
+     *
+     * @param node the node in question
+     * @return a flag whether this node represents a section
+     */
+    private static boolean isSectionNode(ConfigurationNode node)
+    {
+        return node.getReference() != null || node.getChildrenCount() > 0;
     }
 }
