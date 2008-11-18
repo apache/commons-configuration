@@ -166,6 +166,8 @@ import org.apache.commons.lang.StringUtils;
  * @author Trevor Miller
  * @version $Id$
  * @since 1.4
+ * @deprecated This class has been replaced by HierarchicalINIConfiguration,
+ * which provides a superset of the functionality offered by this class.
  */
 public class INIConfiguration extends AbstractFileConfiguration
 {
