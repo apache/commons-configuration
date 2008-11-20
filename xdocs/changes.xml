@@ -23,6 +23,14 @@
 
   <body>
     <release version="1.6" date="in SVN" description="">
+      <action dev="rgoers" type="add" issue="CONFIGURATION-351">
+        Allow variable resolvers to be defined configured in 
+        DefaultConfigurationBuilder.
+      </action>
+      <action dev="rgoers" type="add" issue="CONFIGURATION-350">
+        Added MultiFileHierarchicalConfiguration, DynamicCombinedConfiguration
+        and PatternSubtreeConfigurationWrapper. 
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-349" due-to="Ralph Goers">
         The visibility of DefaultConfigurationBuilder.XMLConfigurationProvider
         was changed from package local to public. This makes it easier to

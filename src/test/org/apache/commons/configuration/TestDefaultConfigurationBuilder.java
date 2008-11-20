@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
@@ -27,6 +29,7 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.lang.text.StrLookup;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -63,6 +66,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     private static final File EXTENDED_PROVIDER_FILE = new File(
             "conf/testExtendedXMLConfigurationProvider.xml");
+
+    private static final File GLOBAL_LOOKUP_FILE = new File(
+            "conf/testGlobalLookup.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -794,6 +800,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 config.getClass().getName(), config instanceof ExtendedXMLConfiguration);
     }
 
+    public void testGlobalLookup() throws Exception
+    {
+        factory.setFile(GLOBAL_LOOKUP_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        String value = cc.getInterpolator().lookup("test:test_key");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","test.value",value);       
+    }
+
+
     /**
      * A specialized combined configuration implementation used for testing
      * custom result classes.
@@ -822,6 +838,28 @@ public class TestDefaultConfigurationBuilder extends TestCase
         {
         }
 
+    }
+
+    public static class TestLookup extends StrLookup
+    {
+        Map map = new HashMap();
+
+        public TestLookup()
+        {
+            map.put("test_file_xml", "test.xml");
+            map.put("test_file_combine", "testcombine1.xml");
+            map.put("test_key", "test.value");
+        }
+
+        public String lookup(String key)
+        {
+            if (key == null)
+            {
+                return null;
+            }
+            return (String)map.get(key);
+
+        }
     }
 }
 
