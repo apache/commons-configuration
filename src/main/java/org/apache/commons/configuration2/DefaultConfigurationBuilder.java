@@ -36,10 +36,12 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration2.expr.NodeList;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.OverrideCombiner;
 import org.apache.commons.configuration2.tree.UnionCombiner;
+import org.apache.commons.lang.text.StrLookup;
 
 /**
  * <p>
@@ -160,6 +162,15 @@ import org.apache.commons.configuration2.tree.UnionCombiner;
  * &lt;providers&gt;
  *   &lt;provider config-tag="tag name" config-class="provider fully qualified class name"/&gt;
  * &lt;/providers&gt;
+ * </pre>
+ * </p>
+ * <p>
+ * Additional variable resolvers can be added by configuring them in the <em>header</em>
+ * section.
+ * <pre>
+ * &lt;lookups&gt;
+ *   &lt;lookup config-prefix="prefix" config-class="StrLookup fully qualified class name"/&gt;
+ * &lt;/lookups&gt;
  * </pre>
  * </p>
  * <p>
@@ -292,6 +303,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * Constant for the tag attribute for providers.
      */
     static final String KEY_PROVIDER_KEY = XMLBeanDeclaration.ATTR_PREFIX + "tag]";
+
+    /**
+     * Constant for the key for defining variable resolvers
+     */
+    static final String KEY_CONFIGURATION_LOOKUPS = SEC_HEADER
+            + ".lookups.lookup";
+
+    /**
+     * Constant for the prefix attribute for lookups.
+     */
+    static final String KEY_LOOKUP_KEY = XMLBeanDeclaration.ATTR_PREFIX + "prefix]";
 
     /**
      * Constant for the key of the result declaration. This key can point to a
@@ -526,6 +548,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         registerConfiguredProviders();
+        registerConfiguredLookups();
 
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
@@ -634,6 +657,21 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             String key = config.getString(KEY_PROVIDER_KEY);
             addConfigurationProvider(key, (ConfigurationProvider) BeanHelper
                     .createBean(decl));
+        }
+    }
+
+    /**
+     * Registers StrLookups defined in the configuration.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    protected void registerConfiguredLookups() throws ConfigurationException
+    {
+        for (SubConfiguration<ConfigurationNode> config : configurationsAt(KEY_CONFIGURATION_LOOKUPS))
+        {
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            String key = config.getString(KEY_LOOKUP_KEY);
+            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup)BeanHelper.createBean(decl));
         }
     }
 

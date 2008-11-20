@@ -85,6 +85,14 @@
     </release>
 
     <release version="1.6" date="in SVN" description="">
+      <action dev="rgoers" type="add" issue="CONFIGURATION-351">
+        Allow variable resolvers to be defined configured in
+        DefaultConfigurationBuilder.
+      </action>
+      <action dev="rgoers" type="add" issue="CONFIGURATION-350">
+        Added MultiFileHierarchicalConfiguration, DynamicCombinedConfiguration
+        and PatternSubtreeConfigurationWrapper.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-345">
         PropertiesConfiguration now per default uses the encoding "ISO-8859-1"
         for loading properties files.

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration>
+  <colors>
+    <background>#333333</background>
+    <text>#FFFFFF</text>
+    <header>#333333</header>
+    <link normal="#030303" visited="#303030"/>
+    <default>${colors.header3}</default>
+  </colors>
+  <rowsPerPage>35</rowsPerPage>
+  <buttons>
+    <name>OK-3,Cancel-3,Help-3</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+</configuration>

@@ -155,6 +155,17 @@
             <role>Java Developer</role>
           </roles>
         </developer>
+
+        <developer>
+          <name>Ralph Goers</name>
+          <id>rgoers</id>
+          <email>rgoers@apache.org</email>
+          <timezone>-8</timezone>
+          <roles>
+            <role>Java Developer</role>
+          </roles>
+        </developer>
+
     </developers>
 
     <contributors>

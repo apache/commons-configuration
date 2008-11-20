@@ -132,6 +132,13 @@
         <li><a href="howto_configurationbuilder.html#An_example">An example</a></li>
         <li><a href="howto_configurationbuilder.html#Extending_the_configuration_definition_file_format">Extending the configuration definition file format</a></li>
       </ul>
+      <li><a href="howto_multitenant.html#Multi-tenant Configurations">Multi-tenant Configurations</a></li>
+      <ul>
+        <li><a href="howto_multitenant.html#MultiFileHierarchicalConfiguration">MultiFileHierarchicalConfiguration</a></li>
+        <li><a href="howto_multitenant.html#DynamicCombinedConfiguration">DynamicCombinedConfiguration</a></li>
+        <li><a href="howto_multitenant.html#Sample Configuration">Sample Configuration</a></li>
+        <li><a href="howto_multitenant.html#PatternSubtreeConfigurationWrapper">PatternSubtreeConfigurationWrapper</a></li>
+      </ul>
       <li><a href="howto_events.html#Configuration_Events">Configuration Events</a></li>
       <ul>
         <li><a href="howto_events.html#Configuration_listeners">Configuration listeners</a></li>
