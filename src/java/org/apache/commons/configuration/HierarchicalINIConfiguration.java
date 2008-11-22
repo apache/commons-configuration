@@ -204,6 +204,16 @@ public class HierarchicalINIConfiguration extends
     protected static final String SEPARATOR_CHARS = "=:";
 
     /**
+     * Constant for the line separator.
+     */
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /**
+     * The line continuation character.
+     */
+    private static final String LINE_CONT = "\\";
+
+    /**
      * Create a new empty INI Configuration.
      */
     public HierarchicalINIConfiguration()
@@ -337,7 +347,7 @@ public class HierarchicalINIConfiguration extends
                         if (index >= 0)
                         {
                             key = line.substring(0, index);
-                            value = parseValue(line.substring(index + 1));
+                            value = parseValue(line.substring(index + 1), bufferedReader);
                         }
                         else
                         {
@@ -345,7 +355,7 @@ public class HierarchicalINIConfiguration extends
                             if (index >= 0)
                             {
                                 key = line.substring(0, index);
-                                value = parseValue(line.substring(index + 1));
+                                value = parseValue(line.substring(index + 1), bufferedReader);
                             }
                             else
                             {
@@ -385,72 +395,153 @@ public class HierarchicalINIConfiguration extends
      * 'value' ; comment -&gt; value
      * </pre>
      *
-     * @param value
+     * @param val the value to be parsed
+     * @param reader the reader (needed if multiple lines have to be read)
+     * @throws IOException if an IO error occurs
      */
-    private String parseValue(String value)
+    private static String parseValue(String val, BufferedReader reader) throws IOException
     {
-        value = value.trim();
+        StringBuffer propertyValue = new StringBuffer();
+        boolean lineContinues;
+        String value = val.trim();
 
-        boolean quoted = value.startsWith("\"") || value.startsWith("'");
-        boolean stop = false;
-        boolean escape = false;
-
-        char quote = quoted ? value.charAt(0) : 0;
-
-        int i = quoted ? 1 : 0;
-
-        StringBuffer result = new StringBuffer();
-        while (i < value.length() && !stop)
+        do
         {
-            char c = value.charAt(i);
+            boolean quoted = value.startsWith("\"") || value.startsWith("'");
+            boolean stop = false;
+            boolean escape = false;
 
-            if (quoted)
+            char quote = quoted ? value.charAt(0) : 0;
+
+            int i = quoted ? 1 : 0;
+
+            StringBuffer result = new StringBuffer();
+            while (i < value.length() && !stop)
             {
-                if ('\\' == c && !escape)
+                char c = value.charAt(i);
+
+                if (quoted)
                 {
-                    escape = true;
-                }
-                else if (!escape && quote == c)
-                {
-                    stop = true;
-                }
-                else if (escape && quote == c)
-                {
-                    escape = false;
-                    result.append(c);
+                    if ('\\' == c && !escape)
+                    {
+                        escape = true;
+                    }
+                    else if (!escape && quote == c)
+                    {
+                        stop = true;
+                    }
+                    else if (escape && quote == c)
+                    {
+                        escape = false;
+                        result.append(c);
+                    }
+                    else
+                    {
+                        if (escape)
+                        {
+                            escape = false;
+                            result.append('\\');
+                        }
+
+                        result.append(c);
+                    }
                 }
                 else
                 {
-                    if (escape)
+                    if (!isCommentChar(c))
                     {
-                        escape = false;
-                        result.append('\\');
+                        result.append(c);
                     }
+                    else
+                    {
+                        stop = true;
+                    }
+                }
 
-                    result.append(c);
+                i++;
+            }
+
+            String v = result.toString();
+            if (!quoted)
+            {
+                v = v.trim();
+                lineContinues = lineContinues(v);
+                if (lineContinues)
+                {
+                    // remove trailing "\"
+                    v = v.substring(0, v.length() - 1).trim();
                 }
             }
             else
             {
-                if (COMMENT_CHARS.indexOf(c) == -1)
-                {
-                    result.append(c);
-                }
-                else
-                {
-                    stop = true;
-                }
+                lineContinues = lineContinues(value, i);
             }
+            propertyValue.append(v);
 
-            i++;
-        }
+            if (lineContinues)
+            {
+                propertyValue.append(LINE_SEPARATOR);
+                value = reader.readLine();
+            }
+        } while (lineContinues && value != null);
 
-        String v = result.toString();
-        if (!quoted)
+        return propertyValue.toString();
+    }
+
+    /**
+     * Tests whether the specified string contains a line continuation marker.
+     *
+     * @param line the string to check
+     * @return a flag whether this line continues
+     */
+    private static boolean lineContinues(String line)
+    {
+        String s = line.trim();
+        return s.equals(LINE_CONT)
+                || (s.length() > 2 && s.endsWith(LINE_CONT) && Character
+                        .isWhitespace(s.charAt(s.length() - 2)));
+    }
+
+    /**
+     * Tests whether the specified string contains a line continuation marker
+     * after the specified position. This method parses the string to remove a
+     * comment that might be present. Then it checks whether a line continuation
+     * marker can be found at the end.
+     *
+     * @param line the line to check
+     * @param pos the start position
+     * @return a flag whether this line continues
+     */
+    private static boolean lineContinues(String line, int pos)
+    {
+        String s;
+
+        if (pos >= line.length())
         {
-            v = v.trim();
+            s = line;
         }
-        return v;
+        else
+        {
+            int end = pos;
+            while (end < line.length() && !isCommentChar(line.charAt(end)))
+            {
+                end++;
+            }
+            s = line.substring(pos, end);
+        }
+
+        return lineContinues(s);
+    }
+
+    /**
+     * Tests whether the specified character is a comment character.
+     *
+     * @param c the character
+     * @return a flag whether this character starts a comment
+     */
+    private static boolean isCommentChar(char c)
+    {
+        return COMMENT_CHARS.indexOf(c) >= 0;
     }
 
     /**
