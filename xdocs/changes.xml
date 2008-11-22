@@ -151,6 +151,9 @@
         INIConfiguration does not return the global section in its getSections()
         method. HierarchicalINIConfiguration fixes this problem.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-324">
+        HierarchicalINIConfiguration adds support for line continuation.
+      </action>
       <action dev="oheger" type="update">
         INIConfiguration has been deprecated. Its functionality is now available
         through the new HierarchicalINIConfiguration class.

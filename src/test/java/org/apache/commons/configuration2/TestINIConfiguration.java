@@ -59,7 +59,24 @@ public class TestINIConfiguration extends TestCase
             + "var2 = \"quoted value\\nwith \\\"quotes\\\"\"" + LINE_SEPARATOR
             + "var3 = 123 ; comment" + LINE_SEPARATOR
             + "var4 = \"1;2;3\" ; comment" + LINE_SEPARATOR
-            + "var5 = '\\'quoted\\' \"value\"' ; comment";
+            + "var5 = '\\'quoted\\' \"value\"' ; comment" + LINE_SEPARATOR
+            + "var6 = \"\"" + LINE_SEPARATOR;
+
+    private static final String INI_DATA3 = "[section5]" + LINE_SEPARATOR
+            + "multiLine = one \\" + LINE_SEPARATOR
+            + "    two      \\" + LINE_SEPARATOR
+            + " three" + LINE_SEPARATOR
+            + "singleLine = C:\\Temp\\" + LINE_SEPARATOR
+            + "multiQuoted = one \\" + LINE_SEPARATOR
+            + "\"  two  \" \\" + LINE_SEPARATOR
+            + "  three" + LINE_SEPARATOR
+            + "multiComment = one \\ ; a comment" + LINE_SEPARATOR
+            + "two" + LINE_SEPARATOR
+            + "multiQuotedComment = \" one \" \\ ; comment" + LINE_SEPARATOR
+            + "two" + LINE_SEPARATOR
+            + "noFirstLine = \\" + LINE_SEPARATOR
+            + "  line 2" + LINE_SEPARATOR
+            + "continueNoLine = one \\" + LINE_SEPARATOR;
 
     /** An ini file with a global section. */
     private static final String INI_DATA_GLOBAL = "globalVar = testGlobal"
@@ -320,8 +337,7 @@ public class TestINIConfiguration extends TestCase
     public void testQuotedValueWithWhitespace() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
-        INIConfiguration config = new INIConfiguration();
-        config.load(new StringReader(content));
+        INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
     }
@@ -332,10 +348,19 @@ public class TestINIConfiguration extends TestCase
     public void testQuotedValueWithWhitespaceAndComment() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
-        INIConfiguration config = new INIConfiguration();
-        config.load(new StringReader(content));
+        INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
+    }
+
+    /**
+     * Tests an empty quoted value.
+     */
+    public void testQuotedValueEmpty() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA2);
+        assertEquals("Wrong value for empty property", "", config
+                .getString("section4.var6"));
     }
 
     /**
@@ -509,5 +534,81 @@ public class TestINIConfiguration extends TestCase
         SubConfiguration<ConfigurationNode> section = config
                 .getSection("Non existing section");
         assertTrue("Sub config not empty", section.isEmpty());
+    }
+
+    /**
+     * Tests a property whose value spans multiple lines.
+     */
+    public void testLineContinuation() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two"
+                + LINE_SEPARATOR + "three", config
+                .getString("section5.multiLine"));
+    }
+
+    /**
+     * Tests a property value that ends on a backslash, which is no line
+     * continuation character.
+     */
+    public void testLineContinuationNone() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", "C:\\Temp\\", config
+                .getString("section5.singleLine"));
+    }
+
+    /**
+     * Tests a property whose value spans multiple lines when quoting is
+     * involved. In this case whitespace must not be trimmed.
+     */
+    public void testLineContinuationQuoted() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", "one" + LINE_SEPARATOR + "  two  "
+                + LINE_SEPARATOR + "three", config
+                .getString("section5.multiQuoted"));
+    }
+
+    /**
+     * Tests a property whose value spans multiple lines with a comment.
+     */
+    public void testLineContinuationComment() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two", config
+                .getString("section5.multiComment"));
+    }
+
+    /**
+     * Tests a property with a quoted value spanning multiple lines and a
+     * comment.
+     */
+    public void testLineContinuationQuotedComment()
+            throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", " one " + LINE_SEPARATOR + "two", config
+                .getString("section5.multiQuotedComment"));
+    }
+
+    /**
+     * Tests a multi-line property value with an empty line.
+     */
+    public void testLineContinuationEmptyLine() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", LINE_SEPARATOR + "line 2", config
+                .getString("section5.noFirstLine"));
+    }
+
+    /**
+     * Tests a line continuation at the end of the file.
+     */
+    public void testLineContinuationAtEnd() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA3);
+        assertEquals("Wrong value", "one" + LINE_SEPARATOR, config
+                .getString("section5.continueNoLine"));
     }
 }
