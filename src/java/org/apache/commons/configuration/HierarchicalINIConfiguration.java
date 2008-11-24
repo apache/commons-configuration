@@ -31,7 +31,6 @@ import java.util.Set;
 import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.ViewNode;
 import org.apache.commons.lang.StringUtils;
 
@@ -106,7 +105,7 @@ import org.apache.commons.lang.StringUtils;
  * '.' (period). Thus a parameter named "var1" in "section1" will have the key
  * <code>section1.var1</code> in this configuration. (This is the default
  * behavior. Because this is a hierarchical configuration you can change this by
- * setting a different {@link ExpressionEngine}.)
+ * setting a different {@link org.apache.commons.configuration.tree.ExpressionEngine}.)
  * </p>
  * <p>
  * <h3>Implementation Details:</h3> Consider the following ini file:<br>
@@ -189,11 +188,6 @@ public class HierarchicalINIConfiguration extends
         AbstractHierarchicalFileConfiguration
 {
     /**
-     * The serial version UID.
-     */
-    private static final long serialVersionUID = 2548006161386850670L;
-
-    /**
      * The characters that signal the start of a comment line.
      */
     protected static final String COMMENT_CHARS = "#;";
@@ -202,6 +196,11 @@ public class HierarchicalINIConfiguration extends
      * The characters used to separate keys from values.
      */
     protected static final String SEPARATOR_CHARS = "=:";
+
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 2548006161386850670L;
 
     /**
      * Constant for the line separator.
