@@ -403,7 +403,7 @@ public class INIConfiguration extends AbstractFileConfiguration
         }
 
         String v = result.toString();
-        if(!quoted)
+        if (!quoted)
         {
             v = v.trim();
         }

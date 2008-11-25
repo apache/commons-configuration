@@ -30,13 +30,13 @@ import org.apache.commons.configuration.beanutils.BeanFactory;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>
@@ -666,7 +666,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             HierarchicalConfiguration config = (HierarchicalConfiguration) it.next();
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup)BeanHelper.createBean(decl));
+            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
         }
     }
 

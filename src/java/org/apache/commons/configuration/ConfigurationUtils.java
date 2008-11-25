@@ -60,6 +60,9 @@ public final class ConfigurationUtils
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
 
+    /** Constant for Java version 1.4.*/
+    private static final float JAVA_1_4 = 1.4f;
+
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
 
@@ -733,7 +736,7 @@ public final class ConfigurationUtils
      */
     static URL toURL(File file) throws MalformedURLException
     {
-        if (SystemUtils.isJavaVersionAtLeast(1.4f))
+        if (SystemUtils.isJavaVersionAtLeast(JAVA_1_4))
         {
             try
             {
