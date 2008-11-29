@@ -45,6 +45,7 @@
   <property name="javadocdir" value="dist/docs/api">
   </property>
   <property name="targetconfdir" value="${testclassesdir}"/>
+  <property name="repository" value="http://repo1.maven.org/maven2"/>
 
   <path id="build.classpath">
     <fileset dir="${libdir}">
@@ -235,51 +236,51 @@
 
     <setproxy>
     </setproxy>
-    <get dest="${libdir}/commons-collections-3.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-collections/jars/commons-collections-3.2.jar">
+    <get dest="${libdir}/commons-collections-3.2.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-collections/commons-collections/3.2/commons-collections-3.2.jar">
     </get>
-    <get dest="${libdir}/commons-lang-2.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-lang/jars/commons-lang-2.3.jar">
+    <get dest="${libdir}/commons-lang-2.3.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-lang/commons-lang/2.3/commons-lang-2.3.jar">
     </get>
-    <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-logging/jars/commons-logging-1.1.jar">
+    <get dest="${libdir}/commons-logging-1.1.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-logging/commons-logging/1.1/commons-logging-1.1.jar">
     </get>
-    <get dest="${libdir}/commons-digester-1.8.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-digester/jars/commons-digester-1.8.jar">
+    <get dest="${libdir}/commons-digester-1.8.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-digester/commons-digester/1.8/commons-digester-1.8.jar">
     </get>
-    <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-beanutils/jars/commons-beanutils-core-1.7.0.jar">
+    <get dest="${libdir}/commons-beanutils-core-1.7.0.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-beanutils/commons-beanutils-core/1.7.0/commons-beanutils-core-1.7.0.jar">
     </get>
-    <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-codec/jars/commons-codec-1.3.jar">
+    <get dest="${libdir}/commons-codec-1.3.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-codec/commons-codec/1.3/commons-codec-1.3.jar">
     </get>
-    <get dest="${libdir}/commons-jxpath-1.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-jxpath/jars/commons-jxpath-1.2.jar">
+    <get dest="${libdir}/commons-jxpath-1.2.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-jxpath/commons-jxpath/1.2/commons-jxpath-1.2.jar">
     </get>
-    <get dest="${libdir}/xercesImpl-2.3.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xerces/jars/xercesImpl-2.3.0.jar">
+    <get dest="${libdir}/xercesImpl-2.3.0.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/xerces/xercesImpl/2.3.0/xercesImpl-2.3.0.jar">
     </get>
-    <get dest="${libdir}/xalan-2.7.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xalan/jars/xalan-2.7.0.jar">
+    <get dest="${libdir}/xalan-2.7.0.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/xalan/xalan/2.7.0/xalan-2.7.0.jar">
     </get>
-    <get dest="${libdir}/xml-apis-1.0.b2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/xml-apis/jars/xml-apis-1.0.b2.jar">
+    <get dest="${libdir}/xml-apis-1.0.b2.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/xml-apis/xml-apis/1.0.b2/xml-apis-1.0.b2.jar">
     </get>
-    <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/servletapi/jars/servletapi-2.4.jar">
+    <get dest="${libdir}/servletapi-2.4.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/servletapi/servletapi/2.4/servletapi-2.4.jar">
     </get>
-    <get dest="${libdir}/commons-dbcp-1.2.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-dbcp/jars/commons-dbcp-1.2.2.jar">
+    <get dest="${libdir}/commons-dbcp-1.2.2.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-dbcp/commons-dbcp/1.2.2/commons-dbcp-1.2.2.jar">
     </get>
-    <get dest="${libdir}/commons-pool-1.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/commons-pool/jars/commons-pool-1.1.jar">
+    <get dest="${libdir}/commons-pool-1.1.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/commons-pool/commons-pool/1.1/commons-pool-1.1.jar">
     </get>
-    <get dest="${libdir}/hsqldb-1.7.2.2.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/hsqldb/jars/hsqldb-1.7.2.2.jar">
+    <get dest="${libdir}/hsqldb-1.7.2.2.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/hsqldb/hsqldb/1.7.2.2/hsqldb-1.7.2.2.jar">
     </get>
-    <get dest="${libdir}/dbunit-2.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/dbunit/jars/dbunit-2.1.jar">
+    <get dest="${libdir}/dbunit-2.1.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/dbunit/dbunit/2.1/dbunit-2.1.jar">
     </get>
-    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/junit/jars/junit-3.8.1.jar">
+    <get dest="${libdir}/junit-3.8.1.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/junit/junit/3.8.1/junit-3.8.1.jar">
     </get>
-    <get dest="${libdir}/junit-addons-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/junit-addons/jars/junit-addons-1.4.jar">
+    <get dest="${libdir}/junit-addons-1.4.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/junit-addons/junit-addons/1.4/junit-addons-1.4.jar">
     </get>
-    <get dest="${libdir}/mockobjects-core-0.09.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/mockobjects/jars/mockobjects-core-0.09.jar">
+    <get dest="${libdir}/mockobjects-core-0.09.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar">
     </get>
-    <get dest="${libdir}/mockobjects-jdk1.4-j2ee1.3-0.09.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/mockobjects/jars/mockobjects-jdk1.4-j2ee1.3-0.09.jar">
+    <get dest="${libdir}/mockobjects-jdk1.4-j2ee1.3-0.09.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/mockobjects/mockobjects-jdk1.4-j2ee1.3/0.09/mockobjects-jdk1.4-j2ee1.3-0.09.jar">
     </get>
-    <get dest="${libdir}/maven-tasks-plugin-1.1.0.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-tasks-plugin-1.1.0.jar">
+    <get dest="${libdir}/maven-tasks-plugin-1.1.0.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/maven-plugins/maven-tasks-plugin/1.1.0/maven-tasks-plugin-1.1.0.jar">
     </get>
-    <get dest="${libdir}/maven-findbugs-plugin-0.8.4.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/maven-plugins/plugins/maven-findbugs-plugin-0.8.4.jar">
+    <get dest="${libdir}/maven-findbugs-plugin-0.8.4.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/maven-plugins/maven-findbugs-plugin/0.8.4/maven-findbugs-plugin-0.8.4.jar">
     </get>
-    <get dest="${libdir}/mail-1.4.jar" usetimestamp="true" ignoreerrors="true" src="http://repo1.maven.org/maven2/javax/mail/mail/1.4/mail-1.4.jar">
+    <get dest="${libdir}/mail-1.4.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/javax/mail/mail/1.4/mail-1.4.jar">
     </get>
-    <get dest="${libdir}/ant-1.6.5.jar" usetimestamp="true" ignoreerrors="true" src="http://www.ibiblio.org/maven/ant/jars/ant-1.6.5.jar">
+    <get dest="${libdir}/ant-1.6.5.jar" usetimestamp="true" ignoreerrors="true" src="${repository}/ant/ant/1.6.5/ant-1.6.5.jar">
     </get>
   </target>
   <target name="install-maven">
