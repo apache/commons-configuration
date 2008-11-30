@@ -97,6 +97,14 @@
         method. The expression engine passed to this method will be used when
         converting flat child configurations to hierarchical ones.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-335">
+        XMLConfiguration now allows disabling the attribute splitting mechanism
+        introduced in the 1.5 release (as part of the fix for CONFIGURATION-268).
+        This may be necessary for correctly processing attributes containing
+        both the list delimiter and the attribute delimiter character. The new
+        property &quot;disableAttributeSplitting&quot; was added for this
+        purpose.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-334">
         Made handling of parent nodes more consistent when setRoot() or
         setRootNode() of HierarchicalConfiguration are involved.

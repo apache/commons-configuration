@@ -1437,6 +1437,45 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether attribute splitting can be disabled.
+     */
+    public void testAttributeSplittingDisabled() throws ConfigurationException
+    {
+        List values = conf.getList("expressions[@value2]");
+        assertEquals("Wrong number of attribute values", 2, values.size());
+        assertEquals("Wrong value 1", "a", values.get(0));
+        assertEquals("Wrong value 2", "b|c", values.get(1));
+        XMLConfiguration conf2 = new XMLConfiguration();
+        conf2.setAttributeSplittingDisabled(true);
+        conf2.setFile(conf.getFile());
+        conf2.load();
+        assertEquals("Attribute was split", "a,b|c", conf2
+                .getString("expressions[@value2]"));
+    }
+
+    /**
+     * Tests disabling both delimiter parsing and attribute splitting.
+     */
+    public void testAttributeSplittingAndDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        conf.clear();
+        conf.setDelimiterParsingDisabled(true);
+        conf.load();
+        List values = conf.getList("expressions[@value2]");
+        assertEquals("Wrong number of attribute values", 2, values.size());
+        assertEquals("Wrong value 1", "a,b", values.get(0));
+        assertEquals("Wrong value 2", "c", values.get(1));
+        XMLConfiguration conf2 = new XMLConfiguration();
+        conf2.setAttributeSplittingDisabled(true);
+        conf2.setDelimiterParsingDisabled(true);
+        conf2.setFile(conf.getFile());
+        conf2.load();
+        assertEquals("Attribute was split", "a,b|c", conf2
+                .getString("expressions[@value2]"));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration

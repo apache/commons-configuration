@@ -89,7 +89,8 @@ And even longer.
     <!-- An attribute with multiple values and escape characters for testing
          splitting when delimiter parsing is disabled.
     -->
-    <expressions value="a \|\| (b &amp;&amp; c)|!d"/>
+    <expressions value="a \|\| (b &amp;&amp; c)|!d"
+      value2="a,b|c"/>
 
     <!-- Tests for handling of spaces -->
     <space xml:space="preserve">
