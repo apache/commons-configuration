@@ -127,15 +127,15 @@
                   <tbody>
                     <tr>
                       <td>commons-lang</td>
-                      <td>2.2, 2.3</td>
+                      <td>2.2, 2.3, 2.4</td>
                     </tr>
                     <tr>
                       <td>commons-collections</td>
-                      <td>3.1, 3.2</td>
+                      <td>3.1, 3.2, 3.2.1</td>
                     </tr>
                     <tr>
                       <td>commons-logging</td>
-                      <td>1.0.4, 1.1</td>
+                      <td>1.0.4, 1.1, 1.1.1</td>
                     </tr>
                     <tr>
                       <td>commons-digester</td>
@@ -143,7 +143,7 @@
                     </tr>
                     <tr>
                       <td>commons-beanutils</td>
-                      <td>1.7.0</td>
+                      <td>1.7.0, 1.8.0</td>
                     </tr>
                     <tr>
                       <td>commons-codec</td>
@@ -151,7 +151,7 @@
                     </tr>
                     <tr>
                       <td>commons-jxpath</td>
-                      <td>1.2</td>
+                      <td>1.2, 1.3</td>
                     </tr>
                   </tbody>
                 </table>
