@@ -157,6 +157,11 @@
         ConfigurationDynaBean now works properly with indexed properties
         stored internally in the underlying configuration as arrays.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-321">
+        The iterator returned by HierarchicalConfiguration.getKeys(String prefix)
+        now also contains the prefix if this key is contained in the
+        configuration.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-320">
         XMLPropertyListConfiguration is no longer limited to 32 bits integers.
       </action>

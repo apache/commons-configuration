@@ -824,6 +824,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     public Iterator getKeys(String prefix)
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
+        if (containsKey(prefix))
+        {
+            // explicitly add the prefix
+            visitor.getKeyList().add(prefix);
+        }
+
         List nodes = fetchNodeList(prefix);
 
         for (Iterator itNodes = nodes.iterator(); itNodes.hasNext();)

@@ -357,6 +357,35 @@ public class TestHierarchicalConfiguration extends TestCase
                 new String[] {"url", "user" });
     }
 
+    /**
+     * Tests getKeys() with a prefix when the prefix matches exactly a key.
+     */
+    public void testGetKeysWithKeyAsPrefix()
+    {
+        config.addProperty("order.key1", "value1");
+        config.addProperty("order.key2", "value2");
+        Iterator it = config.getKeys("order.key1");
+        assertTrue("no key found", it.hasNext());
+        assertEquals("1st key", "order.key1", it.next());
+        assertFalse("more keys than expected", it.hasNext());
+    }
+
+    /**
+     * Tests getKeys() with a prefix when the prefix matches exactly a key, and
+     * there are multiple keys starting with this prefix.
+     */
+    public void testGetKeysWithKeyAsPrefixMultiple()
+    {
+        config.addProperty("order.key1", "value1");
+        config.addProperty("order.key1.test", "value2");
+        config.addProperty("order.key1.test.complex", "value2");
+        Iterator it = config.getKeys("order.key1");
+        assertEquals("Wrong key 1", "order.key1", it.next());
+        assertEquals("Wrong key 2", "order.key1.test", it.next());
+        assertEquals("Wrong key 3", "order.key1.test.complex", it.next());
+        assertFalse("More keys than expected", it.hasNext());
+    }
+
     public void testAddProperty()
     {
         config.addProperty("tables.table(0).fields.field(-1).name", "phone");
