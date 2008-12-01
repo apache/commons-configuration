@@ -619,6 +619,12 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     public Iterator<String> getKeys(String prefix)
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
+        if (containsKey(prefix))
+        {
+            // explicitly add the prefix
+            visitor.getKeyList().add(prefix);
+        }
+
         NodeList<T> nodes = fetchNodeList(prefix);
 
         for (int i = 0; i < nodes.size(); i++)
