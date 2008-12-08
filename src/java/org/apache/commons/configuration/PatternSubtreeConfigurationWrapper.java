@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.commons.configuration;
 
 import java.math.BigDecimal;
@@ -18,22 +34,36 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * Wraps a HierarchicalConfiguration and allows subtrees to be access via a configured path with
  * replaceable tokens derived from the ConfigurationInterpolator. When used with injection frameworks
  * such as Spring it allows components to be injected with subtrees of the configuration.
+ * @since 1.6
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id:  $
  */
 public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFileConfiguration
 {
-    private final AbstractHierarchicalFileConfiguration config;
-    private final String path;
-    private final boolean trailing;
-    private boolean init = false;
-
-    /*
+    /**
      * Prevent recursion while resolving unprefixed properties.
      */
-    private static ThreadLocal recursive = new ThreadLocal() {
-        protected synchronized Object initialValue() {
+    private static ThreadLocal recursive = new ThreadLocal()
+    {
+        protected synchronized Object initialValue()
+        {
             return Boolean.FALSE;
         }
     };
+
+    /** The wrapped configuration */
+    private final AbstractHierarchicalFileConfiguration config;
+
+    /** The path to the subtree */
+    private final String path;
+
+    /** True if the path ends with '/', false otherwise */
+    private final boolean trailing;
+
+    /** True if the constructor has finished */
+    private boolean init;
 
     /**
      * Constructor
@@ -391,7 +421,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
 
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean)recursive.get()).booleanValue())
+        if (((Boolean) recursive.get()).booleanValue())
         {
             return null;
         }
@@ -413,7 +443,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
 
     private String makePath()
     {
-        String pathPattern = (trailing) ? path.substring(0, path.length() - 1) : path;
+        String pathPattern = trailing ? path.substring(0, path.length() - 1) : path;
         return getSubstitutor().replace(pathPattern);
     }
 

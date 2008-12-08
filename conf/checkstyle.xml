@@ -58,7 +58,7 @@
         <!-- Checks for Headers                              -->
         <!-- See http://checkstyle.sf.net/config_header.html -->
         <module name="Header">
-            <property name="headerFile" value="${basedir}/conf/HEADER.txt"/>
+            <property name="headerFile" value="conf/HEADER.txt"/>
             <property name="ignoreLines" value="2"/>
         </module>
 

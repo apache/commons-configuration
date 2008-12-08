@@ -46,22 +46,37 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * providing a pattern of "file:///opt/config/${product}/${client}/config.xml" will result in
  * "product" and "client" being resolved on every call. The configuration resulting from the
  * resolved pattern will be saved for future access.
+ * @since 1.6
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id:  $
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
     implements ConfigurationListener, ConfigurationErrorListener
 {
-    private final Map configurationsMap = new HashMap();
-    private String pattern;
-    private boolean init = false;
+    /** FILE URL prefix */
     private static final String FILE_URL_PREFIX = "file:";
-    /*
+
+    /**
      * Prevent recursion while resolving unprefixed properties.
      */
-    private static ThreadLocal recursive = new ThreadLocal() {
-        protected synchronized Object initialValue() {
+    private static ThreadLocal recursive = new ThreadLocal()
+    {
+        protected synchronized Object initialValue()
+        {
             return Boolean.FALSE;
         }
     };
+
+    /** Map of configurations */
+    private final Map configurationsMap = new HashMap();
+
+    /** key pattern for configurationsMap */
+    private String pattern;
+
+    /** True if the constructor has finished */
+    private boolean init;
 
     /**
      * Default Constructor.
@@ -516,7 +531,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             Iterator iter = getConfigurationListeners().iterator();
             while (iter.hasNext())
             {
-                ConfigurationListener listener = (ConfigurationListener)iter.next();
+                ConfigurationListener listener = (ConfigurationListener) iter.next();
                 listener.configurationChanged(event);
             }
         }
@@ -529,7 +544,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             Iterator iter = getErrorListeners().iterator();
             while (iter.hasNext())
             {
-                ConfigurationErrorListener listener = (ConfigurationErrorListener)iter.next();
+                ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                 listener.configurationError(event);
             }
         }
@@ -542,7 +557,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      */
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean)recursive.get()).booleanValue())
+        if (((Boolean) recursive.get()).booleanValue())
         {
             return null;
         }
@@ -563,7 +578,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void removeConfiguration()
     {
         String path = getSubstitutor().replace(pattern);
-        synchronized(configurationsMap)
+        synchronized (configurationsMap)
         {
             configurationsMap.remove(path);
         }
@@ -582,11 +597,11 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             throw new ConfigurationRuntimeException("File pattern must be defined");
         }
         String path = getSubstitutor().replace(pattern);
-        synchronized(configurationsMap)
+        synchronized (configurationsMap)
         {
             if (configurationsMap.containsKey(path))
             {
-                return (AbstractHierarchicalFileConfiguration)configurationsMap.get(path);
+                return (AbstractHierarchicalFileConfiguration) configurationsMap.get(path);
             }
         }
 
@@ -601,7 +616,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 {
                 }
             };
-            synchronized(configurationsMap)
+            synchronized (configurationsMap)
             {
                 configurationsMap.put(pattern, configuration);
             }
@@ -618,7 +633,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             configuration.setReloadingStrategy(getReloadingStrategy());
             configuration.addConfigurationListener(this);
             configuration.addErrorListener(this);
-            synchronized(configurationsMap)
+            synchronized (configurationsMap)
             {
                 if (!configurationsMap.containsKey(path))
                 {
@@ -658,8 +673,8 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             }
             catch (MalformedURLException ex2)
             {
-                throw new FileNotFoundException("Resource location [" + resourceLocation +
-                        "] is not a URL or a well-formed file path");
+                throw new FileNotFoundException("Resource location [" + resourceLocation
+                        + "] is not a URL or a well-formed file path");
             }
         }
     }

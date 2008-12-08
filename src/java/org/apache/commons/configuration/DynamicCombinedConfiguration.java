@@ -34,10 +34,29 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- *
+ * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
+ * is referenced by a key that is dynamically constructed from a key pattern on each call. The key pattern
+ * will be resolved using the configured ConfigurationInterpolator.
+ * @since 1.6
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id:  $
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
+    /**
+     * Prevent recursion while resolving unprefixed properties.
+     */
+    private static ThreadLocal recursive = new ThreadLocal()
+    {
+        protected synchronized Object initialValue()
+        {
+            return Boolean.FALSE;
+        }
+    };
+
+    /** The CombinedConfigurations */
     private Map configs = new HashMap();
 
     /** Stores a list with the contained configurations. */
@@ -46,19 +65,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /** Stores a map with the named configurations. */
     private Map namedConfigurations = new HashMap();
 
+    /** The key pattern for the CombinedConfiguration map */
     private String keyPattern;
 
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
-
-    /*
-     * Prevent recursion while resolving unprefixed properties.
-     */
-    private static ThreadLocal recursive = new ThreadLocal() {
-        protected synchronized Object initialValue() {
-            return Boolean.FALSE;
-        }
-    };
 
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
@@ -171,7 +182,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = (ConfigData)configurations.get(index);
+        ConfigData cd = (ConfigData) configurations.get(index);
         return cd.getConfiguration();
     }
 
@@ -184,7 +195,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     public Configuration getConfiguration(String name)
     {
-        return (Configuration)namedConfigurations.get(name);
+        return (Configuration) namedConfigurations.get(name);
     }
 
     /**
@@ -227,7 +238,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if ((((ConfigData)configurations.get(index)).getConfiguration() == config))
+            if (((ConfigData) configurations.get(index)).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
 
@@ -245,7 +256,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData cd = (ConfigData)configurations.remove(index);
+        ConfigData cd = (ConfigData) configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -588,7 +599,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.addConfigurationListener(l);
         }
     }
@@ -598,7 +609,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.removeConfigurationListener(l);
         }
         return super.removeConfigurationListener(l);
@@ -614,7 +625,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.clearConfigurationListeners();
         }
         super.clearConfigurationListeners();
@@ -625,7 +636,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.addErrorListener(l);
         }
         super.addErrorListener(l);
@@ -636,7 +647,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.removeErrorListener(l);
         }
         return super.removeErrorListener(l);
@@ -647,7 +658,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-            CombinedConfiguration config = (CombinedConfiguration)iter.next();
+            CombinedConfiguration config = (CombinedConfiguration) iter.next();
             config.clearErrorListeners();
         }
         super.clearErrorListeners();
@@ -698,7 +709,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         Iterator iter = configs.values().iterator();
         while (iter.hasNext())
         {
-           CombinedConfiguration config = (CombinedConfiguration)iter.next();
+           CombinedConfiguration config = (CombinedConfiguration) iter.next();
            config.invalidate();
         }
     }
@@ -710,7 +721,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean)recursive.get()).booleanValue())
+        if (((Boolean) recursive.get()).booleanValue())
         {
             return null;
         }
@@ -729,9 +740,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         String key = getSubstitutor().replace(keyPattern);
         CombinedConfiguration config;
-        synchronized(getNodeCombiner())
+        synchronized (getNodeCombiner())
         {
-            config = (CombinedConfiguration)configs.get(key);
+            config = (CombinedConfiguration) configs.get(key);
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
@@ -739,20 +750,20 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 Iterator iter = config.getErrorListeners().iterator();
                 while (iter.hasNext())
                 {
-                    ConfigurationErrorListener listener = (ConfigurationErrorListener)iter.next();
+                    ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                     config.addErrorListener(listener);
                 }
                 iter = config.getConfigurationListeners().iterator();
                 while (iter.hasNext())
                 {
-                    ConfigurationListener listener = (ConfigurationListener)iter.next();
+                    ConfigurationListener listener = (ConfigurationListener) iter.next();
                     config.addConfigurationListener(listener);
                 }
                 config.setForceReloadCheck(isForceReloadCheck());
                 iter = configurations.iterator();
                 while (iter.hasNext())
                 {
-                    ConfigData data = (ConfigData)iter.next();
+                    ConfigData data = (ConfigData) iter.next();
                     config.addConfiguration(data.getConfiguration(), data.getName(),
                             data.getAt());
                 }
@@ -762,7 +773,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return config;
     }
 
-
+    /**
+     * Internal class that identifies each Configuration.
+     */
     class ConfigData
     {
         /** Stores a reference to the configuration. */
