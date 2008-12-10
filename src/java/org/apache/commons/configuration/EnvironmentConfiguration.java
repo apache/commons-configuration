@@ -30,7 +30,7 @@ import org.apache.tools.ant.taskdefs.Execute;
  * A Configuration implementation that reads the platform specific environment
  * variables. On pre java5 JRE it uses Ant Execute task to read the environment.
  * (in this case ant must be present in classpath). On java >= 5 JRE it uses
- * {@link java.lang.System#getenv()} and ant is not required.
+ * <code>java.lang.System#getenv()</code> and ant is not required.
  * </p>
  * <p>
  * This configuration implementation is read-only. It allows read access to the
