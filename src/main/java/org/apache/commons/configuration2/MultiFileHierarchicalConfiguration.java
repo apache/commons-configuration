@@ -1,5 +1,18 @@
-/**
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.commons.configuration2;
 
@@ -28,15 +41,32 @@ import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 
 /**
+ * This class provides access to multiple configuration files that reside in a location that
+ * can be specified by a pattern allowing applications to be multi-tenant.  For example,
+ * providing a pattern of "file:///opt/config/${product}/${client}/config.xml" will result in
+ * "product" and "client" being resolved on every call. The configuration resulting from the
+ * @since 1.6
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id:  $resolved pattern will be saved for future access.
  *
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
     implements ConfigurationListener, ConfigurationErrorListener
 {
-    private ConcurrentMap<String, XMLConfiguration> configurationsMap = new ConcurrentHashMap<String, XMLConfiguration>();
-    private String pattern;
-    private boolean init = false;
+    /** FILE URL prefix */
     private static final String FILE_URL_PREFIX = "file:";
+
+    /** Map of configurations */
+    private ConcurrentMap<String, XMLConfiguration> configurationsMap =
+            new ConcurrentHashMap<String, XMLConfiguration>();
+
+    /** key pattern for configurationsMap */
+    private String pattern;
+
+    /** True if the constructor has finished */
+    private boolean init;
 
     /**
      * Default Constructor
@@ -597,8 +627,8 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             }
             catch (MalformedURLException ex2)
             {
-                throw new FileNotFoundException("Resource location [" + resourceLocation +
-                        "] is not a URL or a well-formed file path");
+                throw new FileNotFoundException("Resource location [" + resourceLocation
+                        + "] is not a URL or a well-formed file path");
             }
         }
     }

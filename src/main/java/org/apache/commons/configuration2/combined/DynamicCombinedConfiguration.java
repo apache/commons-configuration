@@ -37,10 +37,18 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.SubConfiguration;
 
 /**
- *
+ * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
+ * is referenced by a key that is dynamically constructed from a key pattern on each call. The key pattern
+ * will be resolved using the configured ConfigurationInterpolator.
+ * @since 1.6
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id:  $
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
+    /** The CombinedConfigurations */
     private ConcurrentMap<String, CombinedConfiguration> configs =
             new ConcurrentHashMap<String, CombinedConfiguration>();
 
@@ -51,6 +59,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private ConcurrentMap<String, AbstractConfiguration> namedConfigurations =
             new ConcurrentHashMap<String, AbstractConfiguration>();
 
+    /** The key pattern for the CombinedConfiguration map */
     private String keyPattern;
 
     /** Stores the combiner. */
@@ -231,7 +240,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (((configurations.get(index)).getConfiguration() == config))
+            if ((configurations.get(index)).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
 
@@ -725,20 +734,20 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         String key = getSubstitutor().replace(keyPattern);
         CombinedConfiguration config;
-        synchronized(getNodeCombiner())
+        synchronized (getNodeCombiner())
         {
             config = configs.get(key);
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
                 config.setExpressionEngine(this.getExpressionEngine());
-                for (ConfigurationErrorListener listener :
-                        (Collection<ConfigurationErrorListener>)config.getErrorListeners())
+                for (ConfigurationErrorListener listener
+                        : (Collection<ConfigurationErrorListener>) config.getErrorListeners())
                 {
                     config.addErrorListener(listener);
                 }
-                for (ConfigurationListener listener :
-                        (Collection<ConfigurationListener>)config.getConfigurationListeners())
+                for (ConfigurationListener listener
+                        : (Collection<ConfigurationListener>) config.getConfigurationListeners())
                 {
                     config.addConfigurationListener(listener);
                 }
@@ -755,9 +764,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
 
+    /**
+     * Internal class that identifies each Configuration.
+     */
     class ConfigData
     {
-                /** Stores a reference to the configuration. */
+        /** Stores a reference to the configuration. */
         private AbstractHierarchicalConfiguration configuration;
 
         /** Stores the name under which the configuration is stored. */
@@ -766,7 +778,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         /** Stores the at string.*/
         private String at;
 
-                /**
+        /**
          * Creates a new instance of <code>ConfigData</code> and initializes
          * it.
          *

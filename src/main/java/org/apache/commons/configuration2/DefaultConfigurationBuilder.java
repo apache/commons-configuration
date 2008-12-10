@@ -671,7 +671,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup)BeanHelper.createBean(decl));
+            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
         }
     }
 
@@ -1112,10 +1112,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 return true;
             }
 
-            return ((ATTR_ATNAME.equals(name) && getNodeHandler()
+            return (ATTR_ATNAME.equals(name) && getNodeHandler()
                     .getAttributeValue(parent, RESERVED_PREFIX + ATTR_ATNAME) == null) || (ATTR_OPTIONALNAME
                     .equals(name) && getNodeHandler().getAttributeValue(parent,
-                    RESERVED_PREFIX + ATTR_OPTIONALNAME) == null));
+                    RESERVED_PREFIX + ATTR_OPTIONALNAME) == null);
         }
 
         /**
@@ -1561,9 +1561,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             String valueColumn = (String) attributes.get("valueColumn");
 
             DatabaseConfiguration config;
-            if (name == null) {
+            if (name == null)
+            {
                 config = new DatabaseConfiguration(datasource, table, keyColumn, valueColumn);
-            } else {
+            }
+            else 
+            {
                 config = new DatabaseConfiguration(datasource, table, nameColumn, keyColumn, valueColumn, name);
             }
 
