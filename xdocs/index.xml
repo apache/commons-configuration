@@ -67,8 +67,9 @@ Integer integer = config.getInteger("number");
     
     <section name="Latest Release">
       <p>
-        The latest release of Apache Commons Configuration is available from <a href="downloads.html">here</a>. 
-        It is also available from the <a href="http://repo1.maven.org/maven/commons-configuration/jars/">Maven repository</a>.
+        The latest release of Apache Commons Configuration is available from the
+        <a href="http://commons.apache.org/downloads/download_configuration.cgi">Apache download area</a>. 
+        It is also available from the <a href="http://repo1.maven.org/maven2/commons-configuration/commons-configuration/">Maven repository</a>.
         The <a href="changes-report.html">Changes Report</a> explains all of the changes and bug fixes that have been made.
       </p>
     </section>
