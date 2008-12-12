@@ -401,6 +401,14 @@
             <include>LICENSE.txt</include>
           </includes>
         </resource>
+        <resource>
+          <directory>conf</directory>
+          <includes>
+            <include>digesterRules.xml</include>
+            <include>properties.dtd</include>
+            <include>PropertyList-1.0.dtd</include>
+          </includes>
+        </resource>
       </resources>
       <testResources>
         <testResource>
