@@ -22,7 +22,8 @@
   </properties>
 
   <body>
-    <release version="1.6" date="in SVN" description="">
+    <release version="1.6" date="Dec 2008"
+      description="Another set of smaller bug fixes">
       <action dev="oheger" type="update">
         Some dependencies to other Commons components have been updated to the
         recent versions. Affected are Commons Lang, Commons Collections,
