@@ -500,6 +500,25 @@
           <comparisonVersion>1.5</comparisonVersion>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rat-maven-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>conf/**/*</exclude>
+            <exclude>src/java/org/apache/commons/configuration/plist/*.java</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>findbugs-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <threshold>Normal</threshold>
+          <effort>Default</effort>
+       </configuration>
+      </plugin>
     </plugins>
   </reporting>
 
