@@ -211,7 +211,7 @@ public class ConfigurationKey implements Serializable
         {
             count++;
         }
-        return count % 2 == 1;
+        return count % 2 != 0;
     }
 
     /**
@@ -231,6 +231,7 @@ public class ConfigurationKey implements Serializable
      *
      * @return a string for this object
      */
+    @Override
     public String toString()
     {
         return keyBuffer.toString();
@@ -277,6 +278,7 @@ public class ConfigurationKey implements Serializable
      * @param c the object to compare
      * @return a flag if both objects are equal
      */
+    @Override
     public boolean equals(Object c)
     {
         if (c == null)
@@ -292,6 +294,7 @@ public class ConfigurationKey implements Serializable
      *
      * @return the hash code
      */
+    @Override
     public int hashCode()
     {
         return String.valueOf(keyBuffer).hashCode();
@@ -660,6 +663,7 @@ public class ConfigurationKey implements Serializable
          *
          * @return a clone of this object
          */
+        @Override
         public Object clone()
         {
             try
