@@ -211,7 +211,7 @@ public class ConfigurationKey implements Serializable
         {
             count++;
         }
-        return count % 2 == 1;
+        return count % 2 != 0;
     }
 
     /**
