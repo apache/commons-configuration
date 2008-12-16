@@ -161,21 +161,23 @@ public class BeanHelper
         Map properties = data.getBeanProperties();
         if (properties != null)
         {
-            for (Iterator it = properties.keySet().iterator(); it.hasNext();)
+            for (Iterator it = properties.entrySet().iterator(); it.hasNext();)
             {
-                String propName = (String) it.next();
-                initProperty(bean, propName, properties.get(propName));
+                Map.Entry e = (Map.Entry) it.next();
+                String propName = (String) e.getKey();
+                initProperty(bean, propName, e.getValue());
             }
         }
 
         Map nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
-            for (Iterator it = nestedBeans.keySet().iterator(); it.hasNext();)
+            for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
             {
-                String propName = (String) it.next();
+                Map.Entry e = (Map.Entry) it.next();
+                String propName = (String) e.getKey();
                 initProperty(bean, propName, createBean(
-                        (BeanDeclaration) nestedBeans.get(propName), null));
+                        (BeanDeclaration) e.getValue(), null));
             }
         }
     }

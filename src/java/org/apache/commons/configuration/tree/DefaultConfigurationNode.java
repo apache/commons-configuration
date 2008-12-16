@@ -25,6 +25,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationRuntimeException;
+
 /**
  * <p>
  * A default implementation of the <code>ConfigurationNode</code> interface.
@@ -435,7 +437,8 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         }
         catch (CloneNotSupportedException cex)
         {
-            return null; // should not happen
+            // should not happen
+            throw new ConfigurationRuntimeException("Cannot clone " + getClass());
         }
     }
 
@@ -450,7 +453,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         {
             throw new IllegalStateException(
                     "Node cannot be modified when added to a parent!");
-        } /* if */
+        }
     }
 
     /**
