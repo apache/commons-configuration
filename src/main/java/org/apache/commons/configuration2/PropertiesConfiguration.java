@@ -255,10 +255,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         // If the file does not exist, no layout object was created. We have to
         // do this manually in this case.
-        if (layout == null)
-        {
-            layout = createLayout();
-        }
+        getLayout();
     }
 
     /**
@@ -723,7 +720,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 bsCount++;
             }
 
-            return bsCount % 2 == 1;
+            return bsCount % 2 != 0;
         }
 
         /**

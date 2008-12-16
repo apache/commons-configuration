@@ -181,18 +181,18 @@ public class BeanHelper
         Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
-            for (String propName : properties.keySet())
+            for (Map.Entry<String, Object> e : properties.entrySet())
             {
-                initProperty(bean, propName, properties.get(propName), lenient);
+                initProperty(bean, e.getKey(), e.getValue(), lenient);
             }
         }
 
         Map<String, BeanDeclaration> nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
-            for (String propName : nestedBeans.keySet())
+            for (Map.Entry<String, BeanDeclaration> e : nestedBeans.entrySet())
             {
-                initProperty(bean, propName, createBean((BeanDeclaration) nestedBeans.get(propName), null), lenient);
+                initProperty(bean, e.getKey(), createBean(e.getValue(), null), lenient);
             }
         }
     }

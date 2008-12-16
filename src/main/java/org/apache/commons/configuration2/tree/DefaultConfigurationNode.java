@@ -424,6 +424,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a copy of this object
      */
+    @Override
     public Object clone()
     {
         try
@@ -435,7 +436,8 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         }
         catch (CloneNotSupportedException cex)
         {
-            return null; // should not happen
+            // should not happen
+            throw new AssertionError("Cannot clone " + getClass());
         }
     }
 
