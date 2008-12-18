@@ -30,6 +30,9 @@
         Commons Logging, Commons BeanUtils, and Commons JXPath. The older
         versions should still work.
       </action>
+      <action dev="rgoers" type="add" issue="CONFIGURATION-353">
+        Allow system properties to be set from a configuration file.
+      </action>
       <action dev="rgoers" type="add" issue="CONFIGURATION-351">
         Allow variable resolvers to be defined configured in 
         DefaultConfigurationBuilder.

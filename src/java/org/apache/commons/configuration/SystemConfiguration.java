@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration;
 
+import java.util.Iterator;
+
 /**
  * A configuration based on the system properties.
  *
@@ -34,5 +36,32 @@ public class SystemConfiguration extends MapConfiguration
     public SystemConfiguration()
     {
         super(System.getProperties());
+    }
+
+    /**
+     * The method allows system properties to be set from a property file.
+     * @param fileName The name of the property file.
+     * @throws Exception if an error occurs.
+     */
+    public static void setSystemProperties(String fileName) throws Exception
+    {
+        PropertiesConfiguration config = fileName.endsWith(".xml")
+            ? new XMLPropertiesConfiguration(fileName) : new PropertiesConfiguration(fileName);
+        setSystemProperties(config);
+    }
+
+    /**
+     * Set System properties from a configuration file.
+     * @param systemConfig The configuration containing the properties to be set.
+     */
+    public static void setSystemProperties(PropertiesConfiguration systemConfig)
+    {
+        Iterator iter = systemConfig.getKeys();
+        while (iter.hasNext())
+        {
+            String key = (String) iter.next();
+            String value = (String) systemConfig.getProperty(key);
+            System.setProperty(key, value);
+        }
     }
 }

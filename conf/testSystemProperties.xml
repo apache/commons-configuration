@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that sets system properties from an XML file -->
+<configuration systemProperties="test.properties.xml">
+  <header>
+    <result delimiterParsingDisabled="true">
+      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </result>
+  </header>
+  <system/>
+  <properties fileName="test2.properties" throwExceptionOnMissing="true"
+    config-name="properties">
+    <reloadingStrategy config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"
+      refreshDelay="10000"/>
+  </properties>
+</configuration>
