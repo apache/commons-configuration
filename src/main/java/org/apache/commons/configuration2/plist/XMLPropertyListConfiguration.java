@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -48,7 +49,6 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -186,6 +186,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         super(url);
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
@@ -210,6 +211,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         if (value instanceof byte[])
@@ -407,7 +409,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     /**
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
-    private class XMLPropertyListHandler extends DefaultHandler
+    private static class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
         private StringBuilder buffer = new StringBuilder();
@@ -458,6 +460,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             stack.add(node);
         }
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
         {
             if ("array".equals(qName))
@@ -481,6 +484,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
         }
 
+        @Override
         public void endElement(String uri, String localName, String qName) throws SAXException
         {
             if ("key".equals(qName))
@@ -543,6 +547,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             buffer.setLength(0);
         }
 
+        @Override
         public void characters(char[] ch, int start, int length) throws SAXException
         {
             buffer.append(ch, start, length);
@@ -706,6 +711,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          *
          * @param value the value to be added
          */
+        @Override
         public void addValue(Object value)
         {
             list.add(value);
@@ -716,6 +722,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          *
          * @return the {@link List} of values
          */
+        @Override
         public Object getValue()
         {
             return list;

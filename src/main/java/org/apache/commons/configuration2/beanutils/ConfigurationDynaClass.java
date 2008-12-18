@@ -69,7 +69,7 @@ public class ConfigurationDynaClass implements DynaClass
 
         if (name == null)
         {
-            throw new IllegalArgumentException("No such property name=[" + name + "]");
+            throw new IllegalArgumentException("Property name must not be null!");
         }
 
         Object value = configuration.getProperty(name);
@@ -79,7 +79,7 @@ public class ConfigurationDynaClass implements DynaClass
         }
         else
         {
-            Class type = value.getClass();
+            Class<?> type = value.getClass();
 
             if (type == Byte.class)
             {

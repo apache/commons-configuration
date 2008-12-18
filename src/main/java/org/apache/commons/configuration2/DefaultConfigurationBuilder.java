@@ -669,7 +669,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {
         for (SubConfiguration<ConfigurationNode> config : configurationsAt(KEY_CONFIGURATION_LOOKUPS))
         {
-            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            XMLBeanDeclaration<ConfigurationNode> decl = new XMLBeanDeclaration<ConfigurationNode>(config);
             String key = config.getString(KEY_LOOKUP_KEY);
             ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
         }
@@ -793,7 +793,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     private void registerBeanFactory()
     {
-        synchronized (getClass())
+        synchronized (DefaultConfigurationBuilder.class)
         {
             if (!BeanHelper.registeredFactoryNames().contains(
                     CONFIG_BEAN_FACTORY_NAME))
@@ -1565,7 +1565,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             {
                 config = new DatabaseConfiguration(datasource, table, keyColumn, valueColumn);
             }
-            else 
+            else
             {
                 config = new DatabaseConfiguration(datasource, table, nameColumn, keyColumn, valueColumn, name);
             }
