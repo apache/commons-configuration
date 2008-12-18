@@ -507,6 +507,7 @@
           <excludes>
             <exclude>conf/**/*</exclude>
             <exclude>src/java/org/apache/commons/configuration/plist/*.java</exclude>
+            <exclude>velocity.log</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -517,6 +518,7 @@
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
+          <excludeFilterFile>conf/findbugs-exclude-filter.xml</excludeFilterFile>
        </configuration>
       </plugin>
     </plugins>
