@@ -17,8 +17,8 @@
 
 package org.apache.commons.configuration.beanutils;
 
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.DynaBean;
@@ -69,7 +69,7 @@ public class ConfigurationDynaClass implements DynaClass
 
         if (name == null)
         {
-            throw new IllegalArgumentException("No such property name=[" + name + "]");
+            throw new IllegalArgumentException("Property name must not be null!");
         }
 
         Object value = configuration.getProperty(name);

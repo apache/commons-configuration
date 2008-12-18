@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -46,7 +47,6 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -409,7 +409,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     /**
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
-    private class XMLPropertyListHandler extends DefaultHandler
+    private static class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
         private StringBuffer buffer = new StringBuffer();

@@ -794,7 +794,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     private void registerBeanFactory()
     {
-        synchronized (getClass())
+        synchronized (DefaultConfigurationBuilder.class)
         {
             if (!BeanHelper.registeredFactoryNames().contains(
                     CONFIG_BEAN_FACTORY_NAME))

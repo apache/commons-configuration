@@ -16,22 +16,22 @@
  */
 package org.apache.commons.configuration;
 
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.tree.NodeCombiner;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.ExpressionEngine;
-
-import java.util.List;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Properties;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.ArrayList;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.tree.NodeCombiner;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -776,7 +776,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /**
      * Internal class that identifies each Configuration.
      */
-    class ConfigData
+    static class ConfigData
     {
         /** Stores a reference to the configuration. */
         private AbstractConfiguration configuration;
