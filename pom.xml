@@ -160,6 +160,7 @@
           <name>Ralph Goers</name>
           <id>rgoers</id>
           <email>rgoers@apache.org</email>
+          <organization>Intuit</organization>
           <timezone>-8</timezone>
           <roles>
             <role>Java Developer</role>

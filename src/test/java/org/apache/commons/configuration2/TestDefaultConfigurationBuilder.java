@@ -65,8 +65,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File PROVIDER_FILE = ConfigurationAssert
             .getTestFile("testConfigurationProvider.xml");
 
-    private static final File GLOBAL_LOOKUP_FILE = new File(
-            "conf/testGlobalLookup.xml");
+    private static final File GLOBAL_LOOKUP_FILE = ConfigurationAssert
+            .getTestFile("testGlobalLookup.xml");
+
+    private static final File SYSTEM_PROPS_FILE = ConfigurationAssert
+            .getTestFile("testSystemProperties.xml");
 
 
     /** Constant for the name of an optional configuration.*/
@@ -803,6 +806,15 @@ public class TestDefaultConfigurationBuilder extends TestCase
         String value = cc.getInterpolator().lookup("test:test_key");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","test.value",value);
+    }
+
+    public void testSystemProperties() throws Exception
+    {
+        factory.setFile(SYSTEM_PROPS_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        String value = System.getProperty("key1");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","value1",value);
     }
 
     /**

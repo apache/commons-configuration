@@ -29,7 +29,7 @@
       The <code>ConfigurationFactory</code> class that was introduced in the
       <a href="howto_configurationfactory.html#Using_a_Configuration_Factory">last
       section</a> is a powerful tool for dealing with multiple different
-      configuration sources, but it also has some shortcommings:
+      configuration sources, but it also has some shortcomings:
       <ul>
         <li>The format for configuration definition files is not extensible.</li>
         <li>Complex initializations of the declared configuration sources (e.g.
@@ -48,13 +48,13 @@
       DefaultConfigurationBuilder</a></code> was introduced.
     </p>
 
-    <subsection name="Differences to ConfigurationFactory">
+    <subsection name="ConfigurationFactory Differences">
 	<p>
       From its basic usage scenarios <code>DefaultConfigurationBuilder</code> is
       very similar to <code>ConfigurationFactory</code>. It is able to process
       the same configuration definition files as can be read by
-      <code>ConfigurationFactory</code>, but supports some more options. It
-      follows a list with the main differences between these classes:
+      <code>ConfigurationFactory</code>, but supports more options. The following
+      list identifies the main differences between these classes:
 	</p>
     <p>
       <ul>
@@ -79,15 +79,15 @@
     </p>
     </subsection>
 
-    <subsection name="Enhancements of the configuration definition file">
+    <subsection name="Enhancements to the configuration definition file">
     <p>
       As was already pointed out, <code>DefaultConfigurationBuilder</code>
-      maintains compatibility to <code>ConfigurationFactory</code> in that it
+      maintains compatibility with <code>ConfigurationFactory</code> in that it
       understands the same configuration definition files. In addition to the
       elements that are allowed in a configuration definition file for
       <code>ConfigurationFactory</code> the data files for
       <code>DefaultConfigurationBuilder</code> support some additional options
-      providing a greater flexibility. This section explains these enhanced
+      providing greater flexibility. This section explains these enhanced
       features.
     </p>
     <p>
@@ -101,7 +101,7 @@
     <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 
-<configuration>
+<configuration systemProperties="path to property file">
   <header>
     <!-- Meta data about the resulting combined configuration -->
   </header>
@@ -139,13 +139,13 @@
     <p>
       <dl>
         <dt>configuration</dt>
-        <dd>The <code>configuration</code> tag allows to include other
-        configuration definition files. This makes it possible to nest these
+        <dd>The <code>configuration</code> tag allows other configuration
+        definition files to be included. This makes it possible to nest these
         definition files up to an arbitrary depth. In fact, this tag will
         create another <code>DefaultConfigurationBuilder</code> object,
         initialize it, and obtain the <code>CombinedConfiguation</code> from it.
         This combined configuration will then be added to the resulting
-        combined configuration. Like for other file-based configurations the
+        combined configuration. Like all file-based configurations the
         <code>fileName</code> attribute can be used to specify the configuration
         definition file to be loaded. This file must be an XML document that
         conforms to the format described here.</dd>
@@ -186,7 +186,7 @@
     </p>
     <p>
       In addition to the attributes that correspond to properties of the
-      configuration object to be created a configuration declaration can have a
+      configuration object to be created, a configuration declaration can have a
       set of special attributes that are evaluated by
       <code>DefaultConfigurationBuilder</code> when it creates the objects.
       These attributes are listed in the following table:
@@ -199,9 +199,9 @@
     </tr>
     <tr>
       <td valign="top"><code>config-name</code></td>
-      <td>Allows to specify a name for this configuration. This name can be used
-      to obtain a reference to the configuration from the resulting combined
-      configuration (see below).</td>
+      <td>Allows a name to be specified for this configuration. This name can
+      be used to obtain a reference to the configuration from the resulting
+      combined configuration (see below).</td>
     </tr>
     <tr>
       <td valign="top"><code>config-at</code></td>
@@ -211,13 +211,13 @@
     <tr>
       <td valign="top"><code>config-optional</code></td>
       <td>Declares a configuration as optional. This means that errors that
-      occur when creating the configuration are silently ignored. Note that in
-      case of an error per default no configuration is added to the resulting combined
-      configuration. This fact can be used to find out whether an optional
-      configuration could be successfully created or not: If you specify a name
-      for the optional configuration (using the <code>config-name</code>
-      attribute), you can later check the combined configuration whether it
-      contains a configuration with this name. With the
+      occur when creating the configuration are silently ignored. The default
+      behavior when an error occurs is that no configuration is added to
+      the resulting combined configuration. This behavior can be used to find
+      out whether an optional configuration could be successfully created or
+      not. If you specify a name for the optional configuration (using the
+      <code>config-name</code> attribute), you can later check whether the
+      combined configuration contains a configuration with this name. With the
       <code>config-forceCreate</code> attribute (see below) this default
       behavior can be changed.</td>
     </tr>
@@ -280,6 +280,19 @@
       will occur because the <code>${CONFIG_FILE}</code> variable will then be
       undefined at the moment it is evaluated.
     </p>
+     <source><![CDATA[
+<configuration systemProperties="systemProperties.xml">
+  <!-- Load the system properties -->
+  <system/>
+  <!-- Now load the config file, using a system property as file name -->
+  <properties fileName="${CONFIG_FILE}"/>
+</configuration>
+]]></source>
+    <p>
+      This example differs from the previous one by allowing CONFIG_FILE, and other
+      properties, to be defined in a properties file and added to the system
+      properties before the configuration is constructed.
+    </p>
     <p>
       <strong>The header section</strong>
     </p>
@@ -323,7 +336,7 @@
       node combiner.
     </p>
     <p>
-      The <code>combiner</code> section allows to define nodes as list nodes.
+      The <code>combiner</code> section allows nodes to be defined as list nodes.
       This can be necessary for certain node combiner implementations to work
       correctly. More information can be found in the section about
       <a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a>.

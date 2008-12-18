@@ -74,7 +74,7 @@ import org.apache.commons.lang.text.StrLookup;
  * <p>
  *
  * <pre>
- * &lt;configuration&gt;
+ * &lt;configuration systemProperties="properties file name"&gt;
  *   &lt;header&gt;
  *     &lt;!-- Optional meta information about the composite configuration --&gt;
  *   &lt;/header&gt;
@@ -90,7 +90,13 @@ import org.apache.commons.lang.text.StrLookup;
  * </p>
  * <p>
  * The name of the root element (here <code>configuration</code>) is
- * arbitrary. There are two sections (both of them are optional) for declaring
+ * arbitrary. The optional systemProperties attribute identifies the path to
+ * a property file containing properties that should be added to the system
+ * properties. If specified on the root element, the system properties are
+ * set before the rest of the configuration is processed.
+ * </p>
+ * <p>
+ * There are two sections (both of them are optional) for declaring
  * <em>override</em> and <em>additional</em> configurations. Configurations
  * in the former section are evaluated in the order of their declaration, and
  * properties of configurations declared earlier hide those of configurations
@@ -261,6 +267,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             + XMLBeanDeclaration.RESERVED_PREFIX
             + "forceCreate"
             + DefaultExpressionEngine.DEFAULT_ATTRIBUTE_END;
+
+    /**
+     * Constant for the tag attribute for providers.
+     */
+    static final String KEY_SYSTEM_PROPS = "[@systemProperties]";
+
 
     /** Constant for the name of the header section. */
     static final String SEC_HEADER = "header";
@@ -547,6 +559,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             load();
         }
 
+        initSystemProperties();
         registerConfiguredProviders();
         registerConfiguredLookups();
 
@@ -672,6 +685,27 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             XMLBeanDeclaration<ConfigurationNode> decl = new XMLBeanDeclaration<ConfigurationNode>(config);
             String key = config.getString(KEY_LOOKUP_KEY);
             ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
+        }
+    }
+
+    /**
+     * If a property file is configured add the properties to the System properties.
+     * @throws ConfigurationException if an error occurs.
+     */
+    protected void initSystemProperties() throws ConfigurationException
+    {
+        String fileName = getString(KEY_SYSTEM_PROPS);
+        if (fileName != null)
+        {
+            try
+            {
+               SystemConfiguration.setSystemProperties(fileName);
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationException("Error setting system properties from " + fileName, ex);
+            }
+
         }
     }
 

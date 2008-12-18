@@ -40,4 +40,13 @@ public class TestSystemConfiguration extends TestCase
         Configuration conf = new SystemConfiguration();
         assertEquals("number", 123, conf.getInt("test.number"));
     }
+
+    public void testSetSystemProperties()
+    {
+        PropertiesConfiguration props = new PropertiesConfiguration();
+        props.addProperty("test.name", "Apache");
+        SystemConfiguration conf = new SystemConfiguration();
+        conf.setSystemProperties(props);
+        assertEquals("System Properties", "Apache", System.getProperty("test.name"));
+    }
 }
