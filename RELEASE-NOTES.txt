@@ -131,6 +131,9 @@ BUG FIXES IN 1.6
 
 IMPROVEMENTS IN 1.6
 ===================
+* [CONFIGURATION-353]
+  Allow system properties to be set from a configuration file.
+
 * [CONFIGURATION-351]
   Allow variable resolvers to be defined and configured in
   DefaultConfigurationBuilder.
