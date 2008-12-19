@@ -16,17 +16,17 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Collection;
-import java.io.Writer;
-import java.io.Reader;
 
-import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
@@ -38,7 +38,7 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id:  $
+ * @version $Id$
  */
 public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFileConfiguration
 {

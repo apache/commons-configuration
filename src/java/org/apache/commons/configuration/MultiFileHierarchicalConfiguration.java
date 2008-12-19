@@ -16,27 +16,27 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Collection;
-import java.util.HashMap;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.FileNotFoundException;
-import java.io.Writer;
-import java.io.Reader;
-import java.io.File;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
@@ -50,7 +50,7 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id:  $
+ * @version $Id$
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
     implements ConfigurationListener, ConfigurationErrorListener
