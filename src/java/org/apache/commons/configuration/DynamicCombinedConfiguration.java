@@ -41,7 +41,7 @@ import org.apache.commons.configuration.tree.NodeCombiner;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id:  $
+ * @version $Id$
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
