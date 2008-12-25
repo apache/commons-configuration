@@ -22,7 +22,10 @@
   </properties>
 
   <body>
-    <release version="1.6" date="Dec 2008"
+    <release version="1.7" date="in SVN" description="">
+    </release>
+
+    <release version="1.6" date="2008-12-25"
       description="Another set of smaller bug fixes">
       <action dev="oheger" type="update">
         Some dependencies to other Commons components have been updated to the
