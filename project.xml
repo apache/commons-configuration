@@ -337,6 +337,16 @@
     </dependency>
 
     <dependency>
+      <groupId>xml-resolver</groupId>
+      <artifactId>xml-resolver</artifactId>
+      <version>1.2</version>
+      <properties>
+        <war.bundle>true</war.bundle>
+        <optional>true</optional>
+      </properties>
+    </dependency>
+
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <version>2.4</version>
