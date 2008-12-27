@@ -40,6 +40,7 @@ import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -51,6 +52,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class TestXMLConfiguration extends TestCase
 {
+    private static final String CATALOG_FILES = "conf/catalog.xml";
     /** Constant for the used encoding.*/
     static final String ENCODING = "ISO-8859-1";
 
@@ -74,6 +76,7 @@ public class TestXMLConfiguration extends TestCase
     private String testProperties2 = new File("conf/testDigesterConfigurationInclude1.xml").getAbsolutePath();
     private String testBasePath = new File("conf").getAbsolutePath();
     private File testSaveConf = new File("target/testsave.xml");
+    private String testFile2 = new File("conf/sample.xml").getAbsolutePath();
 
     private XMLConfiguration conf;
 
@@ -1473,6 +1476,50 @@ public class TestXMLConfiguration extends TestCase
         conf2.load();
         assertEquals("Attribute was split", "a,b|c", conf2
                 .getString("expressions[@value2]"));
+    }
+
+    /**
+     * Tests modifying an XML document and saving it with schema validation enabled.
+     */
+    public void testSaveWithValidation() throws Exception
+    {
+        CatalogResolver resolver = new CatalogResolver();
+        resolver.setCatalogFiles(CATALOG_FILES);
+        conf = new XMLConfiguration();
+        conf.setEntityResolver(resolver);
+        conf.setFileName(testFile2);
+        conf.setSchemaValidation(true);
+        conf.load();
+        conf.setProperty("Employee.SSN", "123456789");
+        conf.save(testSaveConf);
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("123456789", conf.getString("Employee.SSN"));
+    }
+
+    /**
+     * Tests modifying an XML document and saving it with schema validation enabled.
+     */
+    public void testSaveWithValidationFailure() throws Exception
+    {
+        CatalogResolver resolver = new CatalogResolver();
+        resolver.setCatalogFiles(CATALOG_FILES);
+        conf = new XMLConfiguration();
+        conf.setEntityResolver(resolver);
+        conf.setFileName(testFile2);
+        conf.setSchemaValidation(true);
+        conf.load();
+        conf.setProperty("Employee.Email", "JohnDoe@apache.org");
+        try
+        {
+            conf.save(testSaveConf);
+            fail("No validation failure on save");
+        }
+        catch (Exception e)
+        {
+            Throwable cause = e.getCause();
+            assertNotNull("No cause for exception on save", cause);
+            assertTrue("Incorrect exception on save", cause instanceof SAXParseException);
+        }
     }
 
     /**

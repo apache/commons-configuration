@@ -17,11 +17,7 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.Writer;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -952,8 +948,38 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             Transformer transformer = createTransformer();
             Source source = new DOMSource(createDocument());
-            Result result = new StreamResult(writer);
+            Result result;
+            StringWriter buffer = null;
+            if (isSchemaValidation())
+            {
+                buffer = new StringWriter();
+                result = new StreamResult(buffer);
+            }
+            else
+            {
+                result = new StreamResult(writer);
+            }
             transformer.transform(source, result);
+            if (isSchemaValidation())
+            {
+                DocumentBuilder builder = createDocumentBuilder();
+                Reader reader = new StringReader(buffer.getBuffer().toString());
+                builder.parse(new InputSource(reader));
+                writer.write(buffer.getBuffer().toString());
+                writer.close();
+            }
+        }
+        catch (SAXException e)
+        {
+            throw new ConfigurationException("Unable to save the configuration", e);
+        }
+        catch (ParserConfigurationException e)
+        {
+            throw new ConfigurationException("Unable to save the configuration", e);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException("Unable to save the configuration", e);
         }
         catch (TransformerException e)
         {
