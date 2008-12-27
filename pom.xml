@@ -287,6 +287,13 @@
       <artifactId>xml-apis</artifactId>
       <version>1.0.b2</version>
       <scope>provided</scope>
+    </dependency>    
+
+    <dependency>
+      <groupId>xml-resolver</groupId>
+      <artifactId>xml-resolver</artifactId>
+      <version>1.2</version>
+      <optional>true</optional>
     </dependency>
 
     <dependency>
@@ -461,7 +468,25 @@
             <tarLongFileMode>gnu</tarLongFileMode>
           </configuration>
         </plugin>
+        <!-- Uncomment to instrument with Clover
+        <plugin>
+          <groupId>com.atlassian.maven.plugins</groupId>
+          <artifactId>maven-clover2-plugin</artifactId>
+          <version>2.4.2</version>
+          <configuration>
+            <jdk>1.4</jdk>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>pre-site</phase>
+              <goals>
+                <goal>instrument</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>  -->
       </plugins>
+
     </build>
 
   <reporting>
@@ -522,6 +547,12 @@
           <excludeFilterFile>conf/findbugs-exclude-filter.xml</excludeFilterFile>
        </configuration>
       </plugin>
+      <!-- Uncomment to generate clover report
+      <plugin>
+        <groupId>com.atlassian.maven.plugins</groupId>
+        <artifactId>maven-clover2-plugin</artifactId>
+        <version>2.4.2</version>
+      </plugin> -->
     </plugins>
   </reporting>
 

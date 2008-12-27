@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +45,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.resolver.EntityRegistry;
+import org.apache.commons.configuration.resolver.DefaultEntityResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -163,7 +164,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Revision$, $Date$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
-    implements EntityResolver
+    implements EntityResolver, EntityRegistry
 {
     /**
      * The serial version UID.
@@ -182,11 +183,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /** Constant for the delimiter for multiple attribute values.*/
     private static final char ATTR_VALUE_DELIMITER = '|';
 
+    /** Schema Langauge key for the parser */
+    private static final String JAXP_SCHEMA_LANGUAGE =
+        "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
+
+    /** Schema Language for the parser */
+    private static final String W3C_XML_SCHEMA =
+        "http://www.w3.org/2001/XMLSchema";
+
     /** The document from this configuration's data source. */
     private Document document;
-
-    /** Stores a map with the registered public IDs.*/
-    private Map registeredEntities = new HashMap();
 
     /** Stores the name of the root element. */
     private String rootElementName;
@@ -200,11 +206,17 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /** Stores the document builder that should be used for loading.*/
     private DocumentBuilder documentBuilder;
 
-    /** Stores a flag whether DTD validation should be performed.*/
+    /** Stores a flag whether DTD or Schema validation should be performed.*/
     private boolean validating;
+
+    /** Stores a flag whether DTD or Schema validation is used */
+    private boolean schemaValidation;
 
     /** A flag whether attribute splitting is disabled.*/
     private boolean attributeSplittingDisabled;
+
+    /** The EntityResolver to use */
+    private EntityResolver entityResolver = new DefaultEntityResolver();
 
     /**
      * Creates a new instance of <code>XMLConfiguration</code>.
@@ -403,7 +415,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Sets the value of the validating flag. This flag determines whether
-     * DTD validation should be performed when loading XML documents. This
+     * DTD/Schema validation should be performed when loading XML documents. This
      * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
      *
      * @param validating the validating flag
@@ -411,7 +423,62 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public void setValidating(boolean validating)
     {
-        this.validating = validating;
+        if (!schemaValidation)
+        {
+            this.validating = validating;
+        }
+    }
+
+
+    /**
+     * Returns the value of the schemaValidation flag.
+     *
+     * @return the schemaValidation flag
+     * @since 1.7
+     */
+    public boolean isSchemaValidation()
+    {
+        return schemaValidation;
+    }
+
+    /**
+     * Sets the value of the schemaValidation flag. This flag determines whether
+     * DTD or Schema validation should be used. This
+     * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
+     * If set to true the XML document must contain a schemaLocation definition
+     * that provides resolvable hints to the required schemas.
+     *
+     * @param schemaValidation the validating flag
+     * @since 1.7
+     */
+    public void setSchemaValidation(boolean schemaValidation)
+    {
+        this.schemaValidation = schemaValidation;
+        if (schemaValidation)
+        {
+            this.validating = true;
+        }
+    }
+
+    /**
+     * Sets a new EntityResolver. Setting this will cause RegisterEntityId to have no
+     * effect.
+     * @param resolver The EntityResolver to use.
+     * @since 1.7
+     */
+    public void setEntityResolver(EntityResolver resolver)
+    {
+        this.entityResolver = resolver;
+    }
+
+    /**
+     * Returns the EntityResolver.
+     * @return The EntityResolver.
+     * @since 1.7
+     */
+    public EntityResolver getEntityResolver()
+    {
+        return this.entityResolver;
     }
 
     /**
@@ -716,9 +783,18 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             DocumentBuilderFactory factory = DocumentBuilderFactory
                     .newInstance();
-            factory.setValidating(isValidating());
+            if (isValidating())
+            {
+                factory.setValidating(true);
+                if (isSchemaValidation())
+                {
+                    factory.setNamespaceAware(true);
+                    factory.setAttribute(JAXP_SCHEMA_LANGUAGE, W3C_XML_SCHEMA);
+                }
+            }
+
             DocumentBuilder result = factory.newDocumentBuilder();
-            result.setEntityResolver(this);
+            result.setEntityResolver(this.entityResolver);
 
             if (isValidating())
             {
@@ -1054,11 +1130,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      */
     public void registerEntityId(String publicId, URL entityURL)
     {
-        if (publicId == null)
+        if (entityResolver instanceof EntityRegistry)
         {
-            throw new IllegalArgumentException("Public ID must not be null!");
+            ((EntityRegistry) entityResolver).registerEntityId(publicId, entityURL);
         }
-        getRegisteredEntities().put(publicId, entityURL);
     }
 
     /**
@@ -1072,39 +1147,18 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @return an input source for the specified entity
      * @throws SAXException if a parsing exception occurs
      * @since 1.5
+     * @deprecated Use getEntityResolver().resolveEntity()
      */
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
     {
-        // Has this system identifier been registered?
-        URL entityURL = null;
-        if (publicId != null)
+        try
         {
-            entityURL = (URL) getRegisteredEntities().get(publicId);
+            return entityResolver.resolveEntity(publicId, systemId);
         }
-
-        if (entityURL != null)
+        catch (IOException e)
         {
-            // Obtain an InputSource for this URL. This code is based on the
-            // createInputSourceFromURL() method of Commons Digester.
-            try
-            {
-                URLConnection connection = entityURL.openConnection();
-                connection.setUseCaches(false);
-                InputStream stream = connection.getInputStream();
-                InputSource source = new InputSource(stream);
-                source.setSystemId(entityURL.toExternalForm());
-                return source;
-            }
-            catch (IOException e)
-            {
-                throw new SAXException(e);
-            }
-        }
-        else
-        {
-            // default processing behavior
-            return null;
+            throw new SAXException(e);
         }
     }
 
@@ -1114,9 +1168,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @return a map with the registered entity IDs
      */
-    Map getRegisteredEntities()
+    public Map getRegisteredEntities()
     {
-        return registeredEntities;
+        if (entityResolver instanceof EntityRegistry)
+        {
+            return ((EntityRegistry) entityResolver).getRegisteredEntities();
+        }
+        return new HashMap();
     }
 
     /**

@@ -80,6 +80,7 @@
                         <td>XMLPropertiesConfiguration</td>
                         <td>Java 1.4 or (xml-apis + xerces)</td>
                     </tr>
+
                     <tr>
                         <td>PropertyListConfiguration</td>
                         <td>commons-codec</td>
@@ -96,12 +97,16 @@
                         <td>commons-beanutils</td>
                     </tr>
                     <tr>
+                        <td>EnvironmentConfiguration</td>
+                        <td>Java 1.5 or ant 1.6.5</td>
+                    </tr>
+                    <tr>
                         <td>XPathExpressionEngine</td>
                         <td>commons-jxpath</td>
                     </tr>
                     <tr>
-                        <td>EnvironmentConfiguration</td>
-                        <td>Java 1.5 or ant 1.6.5</td>
+                        <td>CatalogResolver</td>
+                        <td>xml-resolver</td>
                     </tr>
                 </tbody>
             </table>
@@ -152,6 +157,10 @@
                     <tr>
                       <td>commons-jxpath</td>
                       <td>1.2, 1.3</td>
+                    </tr>
+                    <tr>
+                      <td>xml-resolver</td>
+                      <td>1.2</td>
                     </tr>
                   </tbody>
                 </table>

@@ -859,10 +859,11 @@ config.addProperty("tables/table[last()]/fields field/name", "startDate");
     <section name="Validation of XML configuration files">
         <p>
             XML parsers provide support for validation of XML documents to ensure that they
-            conform to a certain DTD. This feature can be useful for
-            configuration files, too. <code>XMLConfiguration</code> allows to enable
-            validation for the files to load.
+            conform to a certain DTD or XML Schema. This feature can be useful for
+            configuration files, too. <code>XMLConfiguration</code> allows this feature
+            to be enabled when files are loaded.
         </p>
+        <subsection name="Validation using a DTD">
         <p>
             The easiest way to turn on validation is to simply set the
             <code>validating</code> property to true as shown in the
@@ -883,6 +884,30 @@ config.load();
             a custom <code>ErrorHandler</code> will be registered, which throws
             exceptions on simple and fatal parsing errors.
         </p>
+        </subsection>
+        <subsection name="Validation using a Schema">
+        <p>
+            XML Parsers also provide support for validating XML documents using an
+            XML Schema. XMLConfiguration provides a simple mechanism for enabling
+            this by setting the <code>schemaValidation</code> flag to true. This
+            will also set the <code>validating</code> flag to true so both do not
+            need to be set. The XML Parser will then use the schema defined in the
+            XML document to validate it. Enabling schema validation will also
+            enable the parser's namespace support.
+        </p>
+        <p>
+        <source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+config.setFileName("myconfig.xml");
+config.setSchemaValidation(true);
+
+// This will throw a ConfigurationException if the XML document does not
+// conform to its Schema.
+config.load();
+]]></source>
+        </p>
+        </subsection>
+        <subsection name="Default Entity Resolution">
         <p>
             There is also some support for dealing with DTD files. Often the
             DTD of an XML document is stored locally so that it can be quickly
@@ -931,13 +956,71 @@ config.load();
             configuration is loaded. So you cannot use one of the constructors
             that directly load the configuration.
         </p>
+        </subsection>
+        <subsection name="Enhanced Entity Resolution">
         <p>
-            While using the <code>validating</code> flag is a simple means of
-            enabling validation it cannot fullfil more complex requirements,
-            e.g. schema validation. To be able to deal with such requirements
-            XMLConfiguration provides a generic way of setting up the XML
-            parser to use: A preconfigured <code>DocumentBuilder</code> object
-            can be passed to the <code>setDocumentBuilder()</code> method.
+            While the default entity resolver can be used under certain circumstances,
+            it does not work well when using the DefaultConfigurationBuilder.
+            Furthermore, in many circumstances the programmatic nature of
+            registering entities will tie the application tightly to the
+            XML content. In addition, because it only works with the public id it
+            cannot support XML documents using an XML Schema.
+        </p>
+        <p>
+            <a href="http://xml.apache.org/commons/components/resolver/resolver-article.html#s.whats.wrong">XML
+            Entity and URI Resolvers</a> describes using a set of catalog files to
+            resolve enitities. Commons Configuration provides support for
+            this Catalog Resolver through its own CatalogResolver class.
+        </p>
+         <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<Employees xmlns="http://commons.apache.org/employee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://commons.apache.org/employee http://commons.apache.org/sample.xsd">
+  <Employee>
+    <SSN>555121211</SSN>
+    <Name>John Doe</Name>
+    <DateOfBirth>1975-05-15</DateOfBirth>
+    <EmployeeType>Exempt</EmployeeType>
+    <Salary>100000</Salary>
+  </Employee>
+</Employees>]]></source>
+        <p>
+            The XML sample above is an XML document using a default namespace of
+            http://commons.apache.org/employee. The schemaLocation allows a set
+            of namespaces and hints to the location of their corresponding
+            schemas. When processing the document the parser will pass the hint,
+            in this case http://commons.apache.org/sample.xsd, to the entity resolver
+            as the system id. More information on using schema locations can be found
+            at <a href="http://www.w3.org/TR/xmlschema-0/#schemaLocation">schemaLocation</a>.
+        </p>
+        <p>
+            The example that follows shows how to use the CatalogResolver when
+            processing an XMLConfiguration. It should be noted that by using the
+            setEntityResolver method any EntityResolver may be used, not just those
+            provided by Commons Configuration.
+        </p>
+        <source><![CDATA[
+CatalogResolver resolver = new CatalogResolver();
+resolver.setCatalogFiles("local/catalog.xml","http://test.org/catalogs/catalog1.xml");
+XMLConfiguration config = new XMLConfiguration();
+config.setEntityResolver(resolver);
+config.setSchemaValidation(true);  // enable schema validation
+config.setFileName("config.xml");
+config.load();
+]]></source>
+        </subsection>
+        <subsection name="Extending Validation and Entity Resolution">
+        <p>
+            The mechanisms provided with Commons Configuration will hopefully be
+            sufficient in most cases, however there will certainly be circumstances
+            where they are not. XMLConfiguration provides two extension mechanisms
+            that should provide applications with all the flexibility they may
+            need. The first, registering a custom Entity Resolver has already been
+            discussed in the preceeding section. The second is that XMLConfiguration
+            provides a generic way of setting up the XML parser to use: A preconfigured
+            <code>DocumentBuilder</code> object can be passed to the
+            <code>setDocumentBuilder()</code> method.
         </p>
         <p>
             So an application can create a <code>DocumentBuilder</code> object
@@ -951,6 +1034,7 @@ config.load();
             that the <code>registerEntityId()</code> method has no effect in
             this mode.
         </p>
+        </subsection>
     </section>
 </body>
 

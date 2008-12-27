@@ -73,6 +73,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File SYSTEM_PROPS_FILE = new File(
             "conf/testSystemProperties.xml");
 
+    private static final File VALIDATION_FILE = new File(
+            "conf/testValidation.xml");
+
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
@@ -815,6 +818,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testSystemProperties() throws Exception
     {
         factory.setFile(SYSTEM_PROPS_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        String value = System.getProperty("key1");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","value1",value);
+    }
+
+
+    public void testValidation() throws Exception
+    {
+        factory.setFile(VALIDATION_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);

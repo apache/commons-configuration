@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="rgoers" type="add" issue="CONFIGURATION-257">
+        Allow configurations to be validated using XML Schemas.
+      </action>
+      <action dev="rgoers" type="add" issue="CONFIGURATION-355">
+        Allow configurations to be validated using XML Schemas.
+      </action>
     </release>
 
     <release version="1.6" date="2008-12-25"
