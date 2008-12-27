@@ -40,6 +40,7 @@ import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -51,6 +52,8 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class TestXMLConfiguration extends TestCase
 {
+    /** XML Catalog */
+    private static final String CATALOG_FILES = ConfigurationAssert.getTestFile("catalog.xml").getAbsolutePath();
     /** Constant for the used encoding.*/
     static final String ENCODING = "ISO-8859-1";
 
@@ -74,6 +77,7 @@ public class TestXMLConfiguration extends TestCase
     private String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
     private String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
     private File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
+    private String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
 
     private XMLConfiguration conf;
 
@@ -1413,6 +1417,49 @@ public class TestXMLConfiguration extends TestCase
     {
         assertEquals("Invalid not trimmed", "Some other text", conf
                 .getString("space.testInvalid"));
+    }
+    /**
+     * Tests modifying an XML document and saving it with schema validation enabled.
+     */
+    public void testSaveWithValidation() throws Exception
+    {
+        CatalogResolver resolver = new CatalogResolver();
+        resolver.setCatalogFiles(CATALOG_FILES);
+        conf = new XMLConfiguration();
+        conf.setEntityResolver(resolver);
+        conf.setFileName(testFile2);
+        conf.setSchemaValidation(true);
+        conf.load();
+        conf.setProperty("Employee.SSN", "123456789");
+        conf.save(testSaveConf);
+        conf = new XMLConfiguration(testSaveConf);
+        assertEquals("123456789", conf.getString("Employee.SSN"));
+    }
+
+    /**
+     * Tests modifying an XML document and saving it with schema validation enabled.
+     */
+    public void testSaveWithValidationFailure() throws Exception
+    {
+        CatalogResolver resolver = new CatalogResolver();
+        resolver.setCatalogFiles(CATALOG_FILES);
+        conf = new XMLConfiguration();
+        conf.setEntityResolver(resolver);
+        conf.setFileName(testFile2);
+        conf.setSchemaValidation(true);
+        conf.load();
+        conf.setProperty("Employee.Email", "JohnDoe@apache.org");
+        try
+        {
+            conf.save(testSaveConf);
+            fail("No validation failure on save");
+        }
+        catch (Exception e)
+        {
+            Throwable cause = e.getCause();
+            assertNotNull("No cause for exception on save", cause);
+            assertTrue("Incorrect exception on save", cause instanceof SAXParseException);
+        }
     }
 
     /**
