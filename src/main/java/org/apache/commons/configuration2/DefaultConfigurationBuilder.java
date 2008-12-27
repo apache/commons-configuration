@@ -41,7 +41,10 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration2.tree.OverrideCombiner;
 import org.apache.commons.configuration2.tree.UnionCombiner;
+import org.apache.commons.configuration2.resolver.CatalogResolver;
+import org.apache.commons.configuration2.resolver.EntityRegistry;
 import org.apache.commons.lang.text.StrLookup;
+import org.xml.sax.EntityResolver;
 
 /**
  * <p>
@@ -58,7 +61,7 @@ import org.apache.commons.lang.text.StrLookup;
  * <code>beanutils</code> package (namely
  * <code>{@link org.apache.commons.configuration2.beanutils.XMLBeanDeclaration XMLBeanDeclaration}</code>
  * will be used to extract the configuration's initialization parameters, which
- * allows for complex initialization szenarios).
+ * allows for complex initialization scenarios).
  * </p>
  * <p>
  * It is also possible to add custom tags to the configuration definition file.
@@ -159,7 +162,19 @@ import org.apache.commons.lang.text.StrLookup;
  * configuration (e.g. for updates of single configuration objects). It has also
  * the advantage that the properties stored in all declared configuration
  * objects are collected and transformed into a single hierarchical structure,
- * which can be accessed using different expression engines.
+ * which can be accessed using different expression engines. The actual CombinedConfiguration
+ * implementation can be overridden by specifying the class in the <em>config-class</em>
+ * attribute of the result element.
+ * </p>
+ * <p>
+ * A custom EntityResolver can be used for all XMLConfigurations by adding
+ * <pre>
+ * &lt;entity-resolver config-class="EntityResolver fully qualified class name"&gt;
+ * </pre>
+ * The CatalogResolver can be used for all XMLConfiguration by adding
+ * <pre>
+ * &lt;entity-resolver catalogFiles="comma separated list of catalog files"&gt;
+ * </pre>
  * </p>
  * <p>
  * Additional ConfigurationProviders can be added by configuring them in the <em>header</em>
@@ -185,7 +200,7 @@ import org.apache.commons.lang.text.StrLookup;
  * <code>config-name</code> attribute), they can directly be accessed using
  * the <code>getConfiguration(String)</code> method of
  * <code>CombinedConfiguration</code>. The additional configurations are
- * alltogether added to another combined configuration, which uses a union
+ * altogether added to another combined configuration, which uses a union
  * combiner. Then this union configuration is added to the resulting combined
  * configuration under the name defined by the <code>ADDITIONAL_NAME</code>
  * constant.
@@ -273,7 +288,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static final String KEY_SYSTEM_PROPS = "[@systemProperties]";
 
-
     /** Constant for the name of the header section. */
     static final String SEC_HEADER = "header";
 
@@ -321,6 +335,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static final String KEY_CONFIGURATION_LOOKUPS = SEC_HEADER
             + ".lookups.lookup";
+
+    /**
+     * Constant for the key for defining entity resolvers
+     */
+    static final String KEY_ENTITY_RESOLVER = SEC_HEADER + ".entity-resolver";
 
     /**
      * Constant for the prefix attribute for lookups.
@@ -560,6 +579,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         initSystemProperties();
+        configureEntityResolver();
         registerConfiguredProviders();
         registerConfiguredLookups();
 
@@ -706,6 +726,15 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 throw new ConfigurationException("Error setting system properties from " + fileName, ex);
             }
 
+        }
+    }
+
+    protected void configureEntityResolver() throws ConfigurationException
+    {
+        if (getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
+        {
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_ENTITY_RESOLVER, true);
+            setEntityResolver((EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class));
         }
     }
 
@@ -1384,9 +1413,19 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             XMLConfiguration config = (XMLConfiguration) super.getEmptyConfiguration(decl);
 
-            // copy the registered entities
-            DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
-            config.getRegisteredEntities().putAll(builder.getRegisteredEntities());
+            DefaultConfigurationBuilder builder = decl
+                    .getConfigurationBuilder();
+            EntityResolver resolver = builder.getEntityResolver();
+            if (resolver instanceof EntityRegistry)
+            {
+                // copy the registered entities
+                config.getRegisteredEntities().putAll(
+                    builder.getRegisteredEntities());
+            }
+            else
+            {
+                config.setEntityResolver(resolver);
+            }
             return config;
         }
     }

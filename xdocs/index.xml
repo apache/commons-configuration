@@ -23,6 +23,7 @@
     <author email="jason@zenplex.com">Jason van Zyl</author>
     <author email="epugh@upstate.com">Eric Pugh</author>
     <author email="tobrien@discursive.com">Tim O'Brien</author>
+    <author email="rgoers@apache.org">Ralph Goers</author>
     <title>Java Configuration API</title>
   </properties>
 
