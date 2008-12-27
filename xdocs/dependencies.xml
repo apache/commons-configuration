@@ -58,6 +58,10 @@
                         <td>XPathExpressionEngine</td>
                         <td>commons-jxpath</td>
                     </tr>
+                    <tr>
+                        <td>CatalogResolver</td>
+                        <td>xml-resolver</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -90,6 +94,10 @@
                     </tr>
                     <tr>
                       <td>commons-jxpath</td>
+                      <td>1.2</td>
+                    </tr>
+                    <tr>
+                      <td>xml-resolver</td>
                       <td>1.2</td>
                     </tr>
                   </tbody>
