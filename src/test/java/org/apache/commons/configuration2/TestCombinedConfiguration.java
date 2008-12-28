@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Set;
+import java.util.List;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.CombinedConfiguration;
@@ -589,6 +590,34 @@ public class TestCombinedConfiguration extends TestCase
         event = new ConfigurationEvent(config, 0, null, null, false);
         config.configurationChanged(event);
         assertEquals("No invalidate event fired", 1, listener.invalidateEvents);
+    }
+
+    public void testGetConfigurations() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractConfiguration pc = new PropertiesConfiguration();
+        config.addConfiguration(pc, "props");
+        List<AbstractConfiguration> list = config.getConfigurations();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        AbstractConfiguration c = list.get(2);
+        assertTrue("Incorrect configuration", c == pc);
+    }
+
+
+    public void testGetConfigurationNameList() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractConfiguration pc = new PropertiesConfiguration();
+        config.addConfiguration(pc, "props");
+        List<String> list = config.getConfigurationNameList();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        String name = (list.get(1));
+        assertNotNull("No name returned", name);
+        assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
     }
 
     /**
