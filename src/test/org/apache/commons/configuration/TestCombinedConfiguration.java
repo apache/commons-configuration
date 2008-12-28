@@ -21,11 +21,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -707,6 +703,34 @@ public class TestCombinedConfiguration extends TestCase
         }
         reloadThread.join();
         assertFalse("Failure in thread", reloadThread.error);
+    }
+
+    public void testGetConfigurations() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractConfiguration pc = new PropertiesConfiguration();
+        config.addConfiguration(pc, "props");
+        List list = config.getConfigurations();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        AbstractConfiguration c = ((AbstractConfiguration)list.get(2));
+        assertTrue("Incorrect configuration", c == pc);
+    }
+
+
+    public void testGetConfigurationNameList() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractConfiguration pc = new PropertiesConfiguration();
+        config.addConfiguration(pc, "props");
+        List list = config.getConfigurationNameList();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        String name = ((String)list.get(1));
+        assertNotNull("No name returned", name);
+        assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
     }
 
     /**

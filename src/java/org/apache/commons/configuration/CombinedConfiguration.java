@@ -432,6 +432,40 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     }
 
     /**
+     * Returns a List of all the configurations that have been added.
+     * @return A List of all the configurations.
+     * @since 1.7
+     */
+    public List getConfigurations()
+    {
+        List list = new ArrayList();
+        Iterator iter = configurations.iterator();
+        while (iter.hasNext())
+        {
+            list.add(((ConfigData) iter.next()).getConfiguration());
+        }
+        return list;
+    }
+
+    /**
+     * Returns a List of the names of all the configurations that have been
+     * added in the order they were added. A NULL value will be present in
+     * the list for each configuration that was added without a name.
+     * @return A List of all the configuration names.
+     * @since 1.7
+     */
+    public List getConfigurationNameList()
+    {
+        List list = new ArrayList();
+        Iterator iter = configurations.iterator();
+        while (iter.hasNext())
+        {
+            list.add(((ConfigData) iter.next()).getName());
+        }
+        return list;
+    }
+
+    /**
      * Removes the specified configuration from this combined configuration.
      *
      * @param config the configuration to be removed
