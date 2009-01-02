@@ -1004,7 +1004,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             }
             catch (ConversionException e)
             {
-                throw new ConversionException('\'' + key + "' doesn't map to a BigDecimal object", e);
+                throw new ConversionException('\'' + key + "' doesn't map to a BigInteger object", e);
             }
         }
     }

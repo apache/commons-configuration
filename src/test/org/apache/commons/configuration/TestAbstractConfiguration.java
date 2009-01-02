@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
@@ -153,5 +153,25 @@ public abstract class TestAbstractConfiguration extends TestCase
         Log log = LogFactory.getLog(config.getClass());
         config.setLogger(log);
         assertSame("Logger was not set", log, config.getLogger());
+    }
+
+    /**
+     * Tests the exception message triggered by the conversion to BigInteger.
+     * This test is related to CONFIGURATION-357.
+     */
+    public void testGetBigIntegerConversion()
+    {
+        Configuration config = getConfiguration();
+        try
+        {
+            config.getBigInteger("key1");
+            fail("No conversion exception thrown!");
+        }
+        catch (ConversionException cex)
+        {
+            assertEquals("Wrong exception message",
+                    "'key1' doesn't map to a BigInteger object", cex
+                            .getMessage());
+        }
     }
 }
