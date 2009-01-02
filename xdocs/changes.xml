@@ -85,6 +85,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-357">
+        The message of the ConversionException thrown by
+        AbstractConfiguration.getBigInteger() is now correct.
+      </action>
       <action dev="rgoers" type="add" issue="CONFIGURATION-356">
         Added getConfigurations and getConfigurationNameList.
       </action>

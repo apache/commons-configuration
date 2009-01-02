@@ -61,7 +61,7 @@ public abstract class TestAbstractConfiguration extends TestCase
     {
         Configuration config = getConfiguration();
 
-        List list = config.getList("list");
+        List<?> list = config.getList("list");
         assertNotNull("list not found", config.getProperty("list"));
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' is not in the list", list.contains("value1"));
@@ -69,7 +69,7 @@ public abstract class TestAbstractConfiguration extends TestCase
     }
 
     /**
-     * Tests whether the escape character for list delimiters is recocknized and
+     * Tests whether the escape character for list delimiters is recognized and
      * removed.
      */
     public void testListEscaped()
@@ -86,10 +86,10 @@ public abstract class TestAbstractConfiguration extends TestCase
 
         config.addPropertyDirect("key3", "value4");
         config.addPropertyDirect("key3", "value5");
-        List list = config.getList("key3");
+        List<?> list = config.getList("key3");
         assertNotNull("no list found for the 'key3' property", list);
 
-        List expected = new ArrayList();
+        List<Object> expected = new ArrayList<Object>();
         expected.add("value3");
         expected.add("value4");
         expected.add("value5");
@@ -121,9 +121,9 @@ public abstract class TestAbstractConfiguration extends TestCase
     public void testGetKeys()
     {
         Configuration config = getConfiguration();
-        Iterator keys = config.getKeys();
+        Iterator<String> keys = config.getKeys();
 
-        List expectedKeys = new ArrayList();
+        List<String> expectedKeys = new ArrayList<String>();
         expectedKeys.add("key1");
         expectedKeys.add("key2");
         expectedKeys.add("list");
@@ -132,7 +132,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertNotNull("null iterator", keys);
         assertTrue("empty iterator", keys.hasNext());
 
-        List actualKeys = new ArrayList();
+        List<String> actualKeys = new ArrayList<String>();
         while (keys.hasNext())
         {
             actualKeys.add(keys.next());
@@ -151,5 +151,25 @@ public abstract class TestAbstractConfiguration extends TestCase
         Logger log = Logger.getLogger(config.getClass().getName());
         config.setLogger(log);
         assertSame("Logger was not set", log, config.getLogger());
+    }
+
+    /**
+     * Tests the exception message triggered by the conversion to BigInteger.
+     * This test is related to CONFIGURATION-357.
+     */
+    public void testGetBigIntegerConversion()
+    {
+        Configuration config = getConfiguration();
+        try
+        {
+            config.getBigInteger("key1");
+            fail("No conversion exception thrown!");
+        }
+        catch (ConversionException cex)
+        {
+            assertEquals("Wrong exception message",
+                    "'key1' doesn't map to a BigInteger object", cex
+                            .getMessage());
+        }
     }
 }
