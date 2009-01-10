@@ -78,11 +78,11 @@
       </ul>
       <li><a href="howto_xml.html#Hierarchical_properties">Hierarchical properties</a></li>
       <ul>
-        <li><a href="howto_xml.html#Accessing_properties_defined_in_XML_documents">Accessing properties defined in XML documents</a></li>
-        <li><a href="howto_xml.html#Structured_XML">Structured XML</a></li>
+        <li><a href="howto_xml.html#Accessing_properties_in_hierarchical_configurations">Accessing properties in hierarchical configurations</a></li>
+        <li><a href="howto_xml.html#Complex_hierarchical_structures">Complex hierarchical structures</a></li>
         <li><a href="howto_xml.html#Accessing_structured_properties">Accessing structured properties</a></li>
         <li><a href="howto_xml.html#Adding_new_properties">Adding new properties</a></li>
-        <li><a href="howto_xml.html#Escaping_dot_characters_in_XML_tags">Escaping dot characters in XML tags</a></li>
+        <li><a href="howto_xml.html#Escaping_dot_characters_in_property_names">Escaping dot characters in property names</a></li>
       </ul>
       <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
       <ul>
