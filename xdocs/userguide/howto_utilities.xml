@@ -37,7 +37,7 @@
 	<p>
       Often it is required to copy the data of one <code>Configuration</code>
       object into another one. For this purpose the
-      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">
       AbstractConfiguration</a></code> class (which serves as the base class for
       most of the configuration implementations shipped with this library)
       provides two methods implementing a basic copy operation:
@@ -64,7 +64,7 @@
         configurations. Most of the configuration implementations provided by
         <em>Commons Configurations</em> support cloning. The
         <code>cloneConfiguration()</code> method of
-        <code><a href="apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationUtils.html">
         ConfigurationUtils</a></code> can be used for creating a copy of an
         arbitrary <code>Configuration</code> object. This method checks whether
         the passed in configuration implements the <code>Cloneable</code>
@@ -95,7 +95,7 @@ HierarchicalConfiguration hc =
 ]]></source>
     <p>
       The <code>convertToHierarchical()</code> method of
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationUtils.html">
       ConfigurationUtils</a></code> checks whether the passed in object
       is already a hierarchical configuration. If this is the case, it is
       returned unchanged. Otherwise a new <code>HierarchicalConfiguration</code>
@@ -112,7 +112,7 @@ HierarchicalConfiguration hc =
       be the requirement of converting from <code>Properties</code> objects to
       <code>Configuration</code> objects and vice versa. For this purpose an
       utility class can be used:
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationConverter.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationConverter.html">
       ConfigurationConverter</a></code>.
     </p>
     <p>
@@ -145,7 +145,7 @@ Properties processConfiguration(Properties props)
 ]]></source>
     <p>
       Please refer to the Javadocs of
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationConverter.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationConverter.html">
       ConfigurationConverter</a></code> to learn more about the available
       conversion methods and their limitations.
     </p>
@@ -164,7 +164,7 @@ Properties processConfiguration(Properties props)
       written by <em>Commons Configuration</em>.
     </p>
     <p>
-      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">
       AbstractConfiguration</a></code> provides the method
       <code>interpolatedConfiguration()</code>. This method creates a clone of
       the current configuration and then performs interpolation on all of its
@@ -172,7 +172,7 @@ Properties processConfiguration(Properties props)
       basically the same content as the original configuration, but with all
       variables replaced by their actual values (as far as this was possible).
       The following code fragment shows how a
-      <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfiguration.html">
       PropertiesConfiguration</a></code> object can be saved in a way that the
       resulting properties file does not contain any variables:
     </p>
@@ -197,11 +197,11 @@ extConfig.save("external_config.properties");
       you do not want to provide a special error handler, but only need to
       propagate the exception that caused the error event, you can make use of
       a convenience method of the
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationUtils.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationUtils.html">
       ConfigurationUtils</a></code> class: <code>enableRuntimeExceptions()</code>
       registers a special error listener at the passed in configuration that
       will throw a
-      <code><a href="apidocs/org/apache/commons/configuration/ConfigurationRuntimeException.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/ConfigurationRuntimeException.html">
       ConfigurationRuntimeException</a></code> exception for each received
       error event. The following code fragment shows an example of using this
       method:
@@ -216,7 +216,7 @@ String value = config.getString("myKey");
     <p>
       <code>enableRuntimeExceptions()</code> can be called for all
       <code>Configuration</code> implementations that are derived from
-      <code><a href="apidocs/org/apache/commons/configuration/event/EventSource.html">
+      <code><a href="../apidocs/org/apache/commons/configuration2/event/EventSource.html">
       EventSource</a></code> (which is the case for almost all configuration
       classes provided by this library). Of course the affected implementation
       must support the mechanism of error events, otherwise the registered

@@ -29,7 +29,7 @@
         Commons Configuration allows you to access configuration properties from
         a variety of different sources. No matter if they are stored in a properties file,
         a XML document, or a JNDI tree, they can all be accessed in the same way
-        through the generic <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>
+        through the generic <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">Configuration</a></code>
         interface.
       </p>
       <p>
@@ -139,7 +139,7 @@ Configuration config = factory.getConfiguration();
       <p>
         All the classes in this package that represent different kinds of configuration
         sources share a single interface:
-        <code><a href="../apidocs/org/apache/commons/configuration/Configuration.html">Configuration</a></code>.
+        <code><a href="../apidocs/org/apache/commons/configuration2/Configuration.html">Configuration</a></code>.
         This interface allows you to access and manipulate configuration properties
         in a generic way.
       </p>

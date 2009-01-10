@@ -30,14 +30,14 @@
         Properties files are a popular mean of configuring applications. Of course Commons Configuration
         supports this format and enhances significantly the basic <code>java.util.Properties</code> class.
         This section introduces the features of the 
-        <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
+        <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfiguration.html">PropertiesConfiguration</a></code> class.
         Note that <code>PropertiesConfiguration</code> is a very typical example
         for an implementation of the <code>Configuration</code> interface and
         many of the features described in this section (e.g. list handling or
         interpolation) are supported by other configuration classes as well.
         This is because most configuration implementations that ship with
         Commons Configuration are derived from the common base class
-        <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">AbstractConfiguration</a></code>,
+        <code><a href="../apidocs/org/apache/commons/configuration2/AbstractConfiguration.html">AbstractConfiguration</a></code>,
         which implementes this features.
       </p>
 
@@ -187,7 +187,7 @@ key = This \n string \t contains \, escaped \\ characters \u0020
       <p>
         Each <code>PropertiesConfiguration</code> object is associated with a
         <em>Layout object</em>, an instance of the class
-        <code><a href="apidocs/org/apache/commons/configuration/PropertiesConfigurationLayout.html">
+        <code><a href="../apidocs/org/apache/commons/configuration2/PropertiesConfigurationLayout.html">
         PropertiesConfigurationLayout</a></code>. This layout object is
         responsible for preserving most of the structure of loaded configuration
         files. This means that things like comments or blanc lines in a saved
