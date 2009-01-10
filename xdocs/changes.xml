@@ -85,6 +85,9 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-358">
+        Improvements of the user's guide for hierarchical configurations.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-357">
         The message of the ConversionException thrown by
         AbstractConfiguration.getBigInteger() is now correct.

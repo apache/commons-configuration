@@ -19,12 +19,12 @@
 <document>
 
  <properties>
-  <title>XML Howto</title>
+  <title>Hierarchical configurations and XML Howto</title>
   <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
 <body>
-	<section name="Using XML based Configurations">
+	<section name="Using Hierarchical Configurations">
 		<p>
  	 		This section explains how to use hierarchical
     		and structured XML datasets.
@@ -33,14 +33,33 @@
 
 	<section name="Hierarchical properties">
 		<p>
-			Because of its
-			tree-like nature XML documents can represent data that is
-			structured in many ways. This section explains how to deal with
-			such structured documents and demonstrates the enhanced query
-            facilities supported by the <a href="apidocs/org/apache/commons/configuration/XMLConfiguration.html">
-            <code>XMLConfiguration</code></a> class.
+            Many sources of configuration data have a hierarchical or tree-like
+            nature. They can represent data that is structured in many ways.
+            Such configuration sources are represented by classes derived from
+            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <code>HierarchicalConfiguration</code></a>.
+        </p>
+        <p>
+            Prominent examples of hierarchical configuration sources are XML
+            documents. They can be read and written using the
+            <a href="../apidocs/org/apache/commons/configuration/XMLConfiguration.html">
+            <code>XMLConfiguration</code></a> class. This section explains how
+            to deal with such structured data and demonstrates the enhanced query
+            facilities supported by <code>HierarchicalConfiguration</code>. We
+            use XML documents as examples for structured configuration sources,
+            but the information provided here (especially the rules for accessing
+            properties) applies to other hierarchical configurations as well.
+            Examples for other hierarchical configuration classes are
+            <ul>
+            <li><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+            <code>CombinedConfiguration</code></a></li>
+            <li><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
+            <code>HierarchicalINIConfiguration</code></a></li>
+            <li><a href="../apidocs/org/apache/commons/configuration/plist/PropertyListConfiguration.html">
+            <code>PropertyListConfiguration</code></a></li>
+            </ul>
 		</p>
-        <subsection name="Accessing properties defined in XML documents">
+        <subsection name="Accessing properties in hierarchical configurations">
             <p>
                 We will start with a simple XML document to show some basics
                 about accessing properties. The following file named
@@ -89,6 +108,8 @@ catch(ConfigurationException cex)
 			<p>
 				If no exception was thrown, the properties defined in the
                 XML document are now available in the configuration object.
+                Other hierarchical configuration classes that operate on files
+                have corresponding constructors and methods for loading their data.
                 The following fragment shows how the properties can be accessed:
 			</p>
    			<source><![CDATA[
@@ -101,8 +122,8 @@ List buttons = config.getList("buttons.name");
 ]]></source>
 			<p>
 				This listing demonstrates some important points about constructing
-				keys for accessing properties load from XML documents and about
-                features of <code>XMLConfiguration</code> in general:
+				keys for accessing properties in hierarchical configuration sources and about
+                features of <code>HierarchicalConfiguration</code> in general:
 				<ul>
 					<li>
 						Nested elements are accessed using a dot notation. In
@@ -149,7 +170,7 @@ List buttons = config.getList("buttons.name");
                 document can be processed.
             </p>
         </subsection>
-		<subsection name="Structured XML">
+		<subsection name="Complex hierarchical structures">
 			<p>
 				Consider the following scenario: An application operates on
 				database tables and wants to load a definition of the database
@@ -333,7 +354,7 @@ if(prop instanceof Collection)
 				These examples should make the usage of indices quite clear.
 				Because each configuration key can contain an arbitrary number
 				of indices it is possible to navigate through complex structures of
-				XML documents; each XML element can be uniquely identified.
+				hierarchical configurations; each property can be uniquely identified.
 			</p>
             <p>
                 Sometimes dealing with long property keys may become inconvenient,
@@ -388,7 +409,7 @@ List fields = config.configurationsAt("tables.table(0).fields.field");
 for(Iterator it = fields.iterator(); it.hasNext();)
 {
     HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
-    // sub contains now all data about a single field
+    // sub contains all data about a single field
     String fieldName = sub.getString("name");
     String fieldType = sub.getString("type");
     ...
@@ -396,7 +417,7 @@ for(Iterator it = fields.iterator(); it.hasNext();)
         <p>
           The configurations returned by the <code>configurationAt()</code> and
           <code>configurationsAt()</code> method are in fact instances of the
-          <a href="apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+          <a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
           <code>SubnodeConfiguration</code></a> class. The API documentation of
           this class contains more information about its features and
           limitations.
@@ -477,7 +498,7 @@ config.addProperty("tables.table.fields.field.name", "size");
         </field>
         <field>
           <name>version</name>
-		  <name>size</name>    <== Newly added property
+          <name>size</name>    <== Newly added property
           <type>int</type>
         </field>
       </fields>
@@ -542,11 +563,16 @@ config.addProperty("tables.table.fields.field.type", "java.sql.Date");
 				<code>HierarchicalConfiguration</code>.
 			</p>
 		</subsection>
-		<subsection name="Escaping dot characters in XML tags">
+		<subsection name="Escaping dot characters in property names">
 			<p>
-                In XML the dot character used as delimiter by most configuration
-                classes is a legal character that can occur in any tag. So the
-                following XML document is completely valid:
+                Per default the dot character is used as delimiter by most
+                configuration classes (we will learn how to change this for
+                hierarchical configurations in a later section). In some
+                configuration formats however, dots can be contained in the
+                names of properties. For instance, in XML the dot is a legal
+                character that can occur in any tag. The same is true for the names
+                of properties in windows ini files. So the following XML
+                document is completely valid:
 			</p>
    			<source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
@@ -587,11 +613,11 @@ String complex = config.getString("test..complex.test..sub..element");
                 dots in arbitrary combination. However, as you can see, the
                 escaping can be confusing sometimes. So if you have a choice,
                 you should avoid dots in the tag names of your XML configuration
-                files.
+                files or other configuration sources.
             </p>
         </subsection>
 	</section>
-    
+
     <section name="Expression engines">
         <p>
             In the previous chapters we saw many examples about how properties
@@ -610,7 +636,7 @@ String complex = config.getString("test..complex.test..sub..element");
             becomes possible to plug in different expression engines into a
             <code>HierarchicalConfiguration</code> object. So by providing
             different implementations of the
-            <a href="apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+            <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
             <code>ExpressionEngine</code></a>
             interface hierarchical configurations can support alternative
             expression languages for accessing their data.
@@ -619,7 +645,7 @@ String complex = config.getString("test..complex.test..sub..element");
             Before we discuss the available expression engines that ship
             with Commons Configuration, it should be explained how an
             expression engine can be associated with a configuration object.
-            <a href="apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
+            <a href="../apidocs/org/apache/commons/configuration/HierarchicalConfiguration.html">
             <code>HierarchicalConfiguration</code></a> and all derived classes
             provide a <code>setExpressionEngine()</code> method, which expects
             an implementation of the <code>ExpressionEngine</code> interface as
@@ -647,9 +673,9 @@ String complex = config.getString("test..complex.test..sub..element");
             <p>
                 The syntax described so far for property keys of hierarchical
                 configurations is implemented by a specific implementation of the
-                <a href="apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
+                <a href="../apidocs/org/apache/commons/configuration/tree/ExpressionEngine.html">
                 <code>ExpressionEngine</code></a> interface called
-                <a href="apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
+                <a href="../apidocs/org/apache/commons/configuration/tree/DefaultExpressionEngine.html">
                 <code>DefaultExpressionEngine</code></a>. An instance of this class
                 is installed as the global expression engine in
                 <code>HierarchicalConfiguration</code>. So all newly created
@@ -753,7 +779,7 @@ Object value = config.getProperty("tables.table(0).name");
             </p>
             <p>
                 For enabling XPATH syntax for property keys you need the
-                <a href="apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
+                <a href="../apidocs/org/apache/commons/configuration/tree/xpath/XPathExpressionEngine.html">
                 <code>XPathExpressionEngine</code></a> class. This class
                 implements the <code>ExpressionEngine</code> interface and can
                 be plugged into a <code>HierarchicalConfiguration</code> object
