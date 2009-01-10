@@ -27,7 +27,7 @@
 	<section name="Configuration Events">
     <p>
       All configuration classes derived from
-      <code><a href="apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
       AbstractConfiguration</a></code> allow to register event listeners, which
       are notified whenever the configuration's data is changed. This provides
       an easy means for tracking updates on a configuration.
@@ -37,10 +37,10 @@
 	<p>
       Objects that are interested in update events triggered by configurations
       must implement the
-      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationListener.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationListener.html">
       ConfigurationListener</a></code> interface. This interface defines a
       single method <code>configurationChanged()</code>, which is passed a
-      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationEvent.html">
       ConfigurationEvent</a></code> object. The event object contains all
       information available about the modification, including:
       <ul>
@@ -143,7 +143,7 @@ config.addProperty("newProperty", "newValue"); // will fire an event
       Some implementations of the <code>Configuration</code> interface operate
       on underlying storages that can throw exceptions on each property access.
       As an example consider <code>
-      <a href="apidocs/org/apache/commons/configuration/DatabaseConfiguration.html">
+      <a href="../apidocs/org/apache/commons/configuration/DatabaseConfiguration.html">
       DatabaseConfiguration</a></code>: this configuration class issues an SQL
       statement for each accessed property, which can potentially cause a
       <code>SQLException</code>.
@@ -159,11 +159,11 @@ config.addProperty("newProperty", "newValue"); // will fire an event
       A configuration error listener is very similar to a regular configuration
       event listener. Instead of the <code>ConfigurationListener</code>
       interface it has to implement the
-      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationErrorListener.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationErrorListener.html">
       ConfigurationErrorListener</a></code> interface, which defines a single method
       <code>configurationError()</code>. In case of an internal error this
       method is invoked, and a
-      <code><a href="apidocs/org/apache/commons/configuration/event/ConfigurationErrorEvent.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/event/ConfigurationErrorEvent.html">
       ConfigurationErrorEvent</a></code> with information about that error is
       passed. By inheriting from <code>ConfigurationEvent</code>
       <code>ConfigurationErrorEvent</code> supports all information that is

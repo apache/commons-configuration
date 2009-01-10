@@ -26,7 +26,7 @@
 <body>
     <section name="Combined Configuration">
     <p>
-      The <code><a href="apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      The <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
       CombinedConfiguration</a></code> class provides an alternative for handling
       multiple configuration sources. Its API is very similar to the
       <code>CompositeConfiguration</code> class, which was discussed in the
@@ -80,14 +80,14 @@
     <subsection name="Node combiners">
     <p>
       A <em>node combiner</em> is an object of a class that inherits from the
-      abstract <code><a href="apidocs/org/apache/commons/configuration/tree/NodeCombiner.html">NodeCombiner</a></code>
+      abstract <code><a href="../apidocs/org/apache/commons/configuration/tree/NodeCombiner.html">NodeCombiner</a></code>
       class. This class defines an abstract <code>combine()</code> method, which
       takes the root nodes of two hierarchical configurations and returns the
       root node of the combined node structure. It is up to a concrete
       implementation how this combined structure will look like. Commons
       Configuration ships with the two concrete implementations
-      <code><a href="apidocs/org/apache/commons/configuration/tree/OverrideCombiner.html">OverrideCombiner</a></code>
-      and <code><a href="apidocs/org/apache/commons/configuration/tree/UnionCombiner.html">UnionCombiner</a></code>,
+      <code><a href="../apidocs/org/apache/commons/configuration/tree/OverrideCombiner.html">OverrideCombiner</a></code>
+      and <code><a href="../apidocs/org/apache/commons/configuration/tree/UnionCombiner.html">UnionCombiner</a></code>,
       which implement an override and a union semantics respective.
     </p>
     <p>

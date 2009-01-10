@@ -35,7 +35,7 @@
         </p>
         <p>
           To provide a consistent way of dealing with configuration files in
-          Commons Configuration the <code><a href="apidocs/org/apache/commons/configuration/FileConfiguration.html">FileConfiguration</a></code>
+          Commons Configuration the <code><a href="../apidocs/org/apache/commons/configuration/FileConfiguration.html">FileConfiguration</a></code>
           interface exists. <code>FileConfiguration</code> defines a standard
           API for accessing files and is implemented by many configuration
           implementations, including <code>PropertiesConfiguration</code> and
@@ -178,7 +178,7 @@ config.setProperty("colors.background", "#000000); // the configuration is saved
           concept of so called <em>reloading strategies</em> that can be
           associated with a file-based configuration. Such a strategy monitors
           a configuration file and is able to detect changes. A default reloading
-          strategy is <code><a href="apidocs/org/apache/commons/configuration/reloading/FileChangedReloadingStrategy.html">FileChangedReloadingStrategy</a></code>.
+          strategy is <code><a href="../apidocs/org/apache/commons/configuration/reloading/FileChangedReloadingStrategy.html">FileChangedReloadingStrategy</a></code>.
           It can be set on a file-based configuration as follows:
         </p>
 <source>

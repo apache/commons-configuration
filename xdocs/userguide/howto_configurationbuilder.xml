@@ -44,7 +44,7 @@
     </p>
     <p>
       To work around these limitations the class
-      <code><a href="apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
       DefaultConfigurationBuilder</a></code> was introduced.
     </p>
 
@@ -389,7 +389,7 @@
       configuration sources we have to set this flag so that this reloading
       strategy can function properly. More details about this topic can be
       found in the Javadocs for
-      <code><a href="apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+      <code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
       CombinedConfiguration</a></code>. We also set some properties for the
       configurations to be loaded; for instance we declare that one of the XML
       configurations should be validated.

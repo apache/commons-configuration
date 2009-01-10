@@ -23,6 +23,9 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-359">
+        Fixed broken links to the API documentation in the user's guide.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-358">
         Improvements of the user's guide for hierarchical configurations.
       </action>
