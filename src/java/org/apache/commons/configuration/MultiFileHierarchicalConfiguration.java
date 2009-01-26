@@ -78,6 +78,9 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /** True if the constructor has finished */
     private boolean init;
 
+    /** Return an empty configuration if loading fails */
+    private boolean ignoreException = true;
+
     /**
      * Default Constructor.
      */
@@ -105,6 +108,16 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setFilePattern(String pathPattern)
     {
         this.pattern = pathPattern;
+    }
+
+    /**
+     * Set to true if an empty Configuration should be returned when loading fails. If
+     * false an exception will be thrown.
+     * @param ignoreException The ignore value.
+     */
+    public void setIgnoreException(boolean ignoreException)
+    {
+        this.ignoreException = ignoreException;
     }
 
     /**
@@ -628,11 +641,11 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         {
             URL url = getURL(path);
             configuration.setURL(url);
-            configuration.load();
             configuration.setExpressionEngine(getExpressionEngine());
             configuration.setReloadingStrategy(getReloadingStrategy());
             configuration.addConfigurationListener(this);
             configuration.addErrorListener(this);
+            configuration.load();
             synchronized (configurationsMap)
             {
                 if (!configurationsMap.containsKey(path))
@@ -643,11 +656,17 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
         catch (ConfigurationException ce)
         {
-            throw new ConfigurationRuntimeException(ce);
+            if (!ignoreException)
+            {
+                throw new ConfigurationRuntimeException(ce);
+            }
         }
         catch (FileNotFoundException fnfe)
         {
-            throw new ConfigurationRuntimeException(fnfe);
+            if (!ignoreException)
+            {
+                 throw new ConfigurationRuntimeException(fnfe);
+            }
         }
 
         return configuration;
@@ -662,7 +681,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         try
         {
             // try URL
-            return new URL(resourceLocation);
+            return ConfigurationUtils.getURL(getBasePath(), resourceLocation);
         }
         catch (MalformedURLException ex)
         {
