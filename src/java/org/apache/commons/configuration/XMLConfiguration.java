@@ -954,38 +954,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             Transformer transformer = createTransformer();
             Source source = new DOMSource(createDocument());
-            Result result;
-            StringWriter buffer = null;
-            if (isSchemaValidation())
-            {
-                buffer = new StringWriter();
-                result = new StreamResult(buffer);
-            }
-            else
-            {
-                result = new StreamResult(writer);
-            }
+            Result result = new StreamResult(writer);
             transformer.transform(source, result);
-            if (isSchemaValidation())
-            {
-                DocumentBuilder builder = createDocumentBuilder();
-                Reader reader = new StringReader(buffer.getBuffer().toString());
-                builder.parse(new InputSource(reader));
-                writer.write(buffer.getBuffer().toString());
-                writer.close();
-            }
-        }
-        catch (SAXException e)
-        {
-            throw new ConfigurationException("Unable to save the configuration", e);
-        }
-        catch (ParserConfigurationException e)
-        {
-            throw new ConfigurationException("Unable to save the configuration", e);
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException("Unable to save the configuration", e);
         }
         catch (TransformerException e)
         {
@@ -994,6 +964,41 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         catch (TransformerFactoryConfigurationError e)
         {
             throw new ConfigurationException("Unable to save the configuration", e);
+        }
+    }
+
+    /**
+     * Validate the document against the Schema.
+     * @throws ConfigurationException if the validation fails.
+     */
+    public void validate() throws ConfigurationException
+    {
+        try
+        {
+            Transformer transformer = createTransformer();
+            Source source = new DOMSource(createDocument());
+            StringWriter writer = new StringWriter();
+            Result result = new StreamResult(writer);
+            transformer.transform(source, result);
+            Reader reader = new StringReader(writer.getBuffer().toString());
+            DocumentBuilder builder = createDocumentBuilder();
+            builder.parse(new InputSource(reader));
+        }
+        catch (SAXException e)
+        {
+            throw new ConfigurationException("Validation failed", e);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException("Validation failed", e);
+        }
+        catch (TransformerException e)
+        {
+            throw new ConfigurationException("Validation failed", e);
+        }
+        catch (ParserConfigurationException pce)
+        {
+            throw new ConfigurationException("Validation failed", pce);
         }
     }
 
