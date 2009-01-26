@@ -482,7 +482,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
 
     public void load() throws ConfigurationException
     {
-        this.getConfiguration().load();
+        this.getConfiguration();
     }
 
     public void load(String fileName) throws ConfigurationException
