@@ -1431,6 +1431,7 @@ public class TestXMLConfiguration extends TestCase
         conf.setSchemaValidation(true);
         conf.load();
         conf.setProperty("Employee.SSN", "123456789");
+        conf.validate();
         conf.save(testSaveConf);
         conf = new XMLConfiguration(testSaveConf);
         assertEquals("123456789", conf.getString("Employee.SSN"));
@@ -1451,7 +1452,7 @@ public class TestXMLConfiguration extends TestCase
         conf.setProperty("Employee.Email", "JohnDoe@apache.org");
         try
         {
-            conf.save(testSaveConf);
+            conf.validate();
             fail("No validation failure on save");
         }
         catch (Exception e)
