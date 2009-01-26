@@ -43,6 +43,17 @@ import java.io.Reader;
  */
 public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFileConfiguration
 {
+    /**
+     * Prevent recursion while resolving unprefixed properties.
+     */
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
+    {
+        protected synchronized Boolean initialValue()
+        {
+            return Boolean.FALSE;
+        }
+    };
+
     /** The wrapped configuration */
     private final AbstractHierarchicalFileConfiguration config;
 
@@ -408,6 +419,32 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     public Collection getErrorListeners()
     {
         return getConfig().getErrorListeners();
+    }
+
+    /*
+     * Don't allow resolveContainerStore to be called recursively. This happens
+     * when the path pattern does not resolve and the ConfigurationInterpolator
+     * calls resolveContainerStore, which in turn calls getProperty, which then
+     * calls getConfiguration. GetConfiguration then calls the interpoloator
+     * which starts it all over again.
+     * @param key The key to resolve.
+     * @return The value of the key.
+     */
+    protected Object resolveContainerStore(String key)
+    {
+        if (recursive.get())
+        {
+            return null;
+        }
+        recursive.set(Boolean.TRUE);
+        try
+        {
+            return super.resolveContainerStore(key);
+        }
+        finally
+        {
+            recursive.set(Boolean.FALSE);
+        }
     }
 
     private SubConfiguration<ConfigurationNode> getConfig()

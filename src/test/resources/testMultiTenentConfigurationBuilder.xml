@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
+            keyPattern="$${sys:Id}">
+      <expressionEngine
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <providers>
+      <provider config-tag="multifile"
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClassName="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
+    </providers>
+  </header>
+  <override>
+    <multifile filePattern="testMultiConfiguration_$$${sys:Id}.xml"
+               config-name="clientConfig"/>
+    <xml fileName="testMultiConfiguration_default.xml"
+         config-name="defaultConfig"/>
+  </override>
+</configuration>

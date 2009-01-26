@@ -58,6 +58,17 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /** FILE URL prefix */
     private static final String FILE_URL_PREFIX = "file:";
 
+    /**
+     * Prevent recursion while resolving unprefixed properties.
+     */
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
+    {
+        protected synchronized Boolean initialValue()
+        {
+            return Boolean.FALSE;
+        }
+    };
+
     /** Map of configurations */
     private ConcurrentMap<String, XMLConfiguration> configurationsMap =
             new ConcurrentHashMap<String, XMLConfiguration>();
@@ -67,6 +78,9 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
 
     /** True if the constructor has finished */
     private boolean init;
+
+    /** Return an empty configuration if loading fails */
+    private boolean ignoreException = true;
 
     /**
      * Default Constructor
@@ -97,6 +111,29 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.pattern = pathPattern;
     }
 
+    /**
+     * Set to true if an empty Configuration should be returned when loading fails. If
+     * false an exception will be thrown.
+     * @param ignoreException The ignore value.
+     */
+    public void setIgnoreException(boolean ignoreException)
+    {
+        this.ignoreException = ignoreException;
+    }
+
+    /**
+     * Creates the file configuration delegate, i.e. the object that implements
+     * functionality required by the <code>FileConfiguration</code> interface.
+     * This base implementation will return an instance of the
+     * <code>FileConfigurationDelegate</code> class. Derived classes may
+     * override it to create a different delegate object.
+     *
+     * @return the file configuration delegate
+     */
+    protected FileConfigurationDelegate createDelegate()
+    {
+        return new FileConfigurationDelegate();
+    }
 
     public void addProperty(String key, Object value)
     {
@@ -546,6 +583,42 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    /*
+     * Don't allow resolveContainerStore to be called recursively. This happens
+     * when the file pattern does not resolve and the ConfigurationInterpolator
+     * calls resolveContainerStore, which in turn calls getProperty, which then
+     * calls getConfiguration. GetConfiguration then calls the interpoloator
+     * which starts it all over again.
+     * @param key The key to resolve.
+     * @return The value of the key.
+     */
+    protected Object resolveContainerStore(String key)
+    {
+        if (recursive.get())
+        {
+            return null;
+        }
+        recursive.set(Boolean.TRUE);
+        try
+        {
+            return super.resolveContainerStore(key);
+        }
+        finally
+        {
+            recursive.set(Boolean.FALSE);
+        }
+    }
+
+    /**
+     * Remove the current Configuration.
+     */
+    public void removeConfiguration()
+    {
+        String path = getSubstitutor().replace(pattern);
+        configurationsMap.remove(path);
+    }
+
+
     /**
      * First checks to see if the cache exists, if it does, get the associated Configuration.
      * If not it will load a new Configuration and save it in the cache.
@@ -597,11 +670,17 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
         catch (ConfigurationException ce)
         {
-            throw new ConfigurationRuntimeException(ce);
+            if (!ignoreException)
+            {
+                throw new ConfigurationRuntimeException(ce);
+            }
         }
         catch (FileNotFoundException fnfe)
         {
-            throw new ConfigurationRuntimeException(fnfe);
+            if (!ignoreException)
+            {
+                 throw new ConfigurationRuntimeException(fnfe);
+            }                
         }
 
         return configuration;
@@ -616,7 +695,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         try
         {
             // try URL
-            return new URL(resourceLocation);
+            return ConfigurationUtils.getURL(getBasePath(), resourceLocation);
         }
         catch (MalformedURLException ex)
         {

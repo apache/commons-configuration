@@ -77,7 +77,7 @@
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true"
             config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
-            keyPattern="${sys:Id}">
+            keyPattern="$${sys:Id}">
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
@@ -88,11 +88,26 @@
     </providers>
   </header>
   <override>
-    <multifile filePattern="/opt/configs/${sys:Id}/config.xml" config-name="clientConfig"/>
+    <multifile filePattern="/opt/configs/$$${sys:Id}/config.xml" config-name="clientConfig"/>
     <xml fileName="/opt/configs/default/config.xml" config-name="defaultConfig"/>
   </override>
 </configuration>
 ]]></source>
+        <p>
+          Note how the variables have multiple '$'. This is how variables are escaped and
+          is necessary because the variables will be interpolated multiple times. Each
+          attempt will remove the leading '$'. When there is only a single '$' in front
+          of the '{' the interpolator will then resolve the variable. The first extra '$'
+          is necessary because DefaultConfigurationBuilder will interpolate any variables
+          in the configuration. In the case of the multifile configuration item two
+          leading '$' characters are necessary before the variable because it will be
+          interpolated by both DefaultConfigurationBuilder and DynamicCombinedConfiguration
+          before MultiFileHierarchicalConfiguration gets the chance to evaluate it.
+          Although in this example one would not expect system properties to change
+          at runtime, other types of lookups such as the MDCStrLookup provided with
+          SLF4J require that the variables be evaluated as the configuration is being
+          accessed instead of when the configuration file is processed to behave as desired.
+        </p>
       </subsection>
       <subsection name="PatternSubtreeConfigurationWrapper">
         <p>

@@ -74,6 +74,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File VALIDATION_FILE = ConfigurationAssert
             .getTestFile("testValidation.xml");
 
+    private static final File MULTI_TENENT_FILE = ConfigurationAssert
+            .getTestFile("testMultiTenentConfigurationBuilder.xml");
+
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
@@ -827,6 +830,43 @@ public class TestDefaultConfigurationBuilder extends TestCase
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
+    }
+
+    public void testMultiTenentConfiguration() throws Exception
+    {
+        factory.setFile(MULTI_TENENT_FILE);
+        System.clearProperty("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+
+        verify("1001", config, 15);
+        verify("1002", config, 25);
+        verify("1003", config, 35);
+        verify("1004", config, 50);
+        verify("1005", config, 50);
+    }
+
+    public void testMultiTenentConfiguration2() throws Exception
+    {
+        factory.setFile(MULTI_TENENT_FILE);
+        System.setProperty("Id", "1004");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+
+        verify("1001", config, 15);
+        verify("1002", config, 25);
+        verify("1003", config, 35);
+        verify("1004", config, 50);
+        verify("1005", config, 50);
+    }
+
+    private void verify(String key, CombinedConfiguration config, int rows)
+    {
+        System.setProperty("Id", key);
+        int actual = config.getInt("rowsPerPage");
+        assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }
 
 

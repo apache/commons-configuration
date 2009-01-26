@@ -85,6 +85,12 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="rgoers" type="fix" issue="CONFIGURATION-361">
+        MultiFileHierarchicalConfiguration was not using basepath to
+        construct the file url. It also threw an exception if the
+        file pattern resolved to a non-existant file. This is now
+        configurable.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-359">
         Fixed broken links to the API documentation in the user's guide.
       </action>
