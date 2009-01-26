@@ -867,6 +867,21 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    public void testMultiTenentConfiguration3() throws Exception
+    {
+        factory.setFile(MULTI_TENENT_FILE);
+        System.setProperty("Id", "1005");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+
+        verify("1001", config, 15);
+        verify("1002", config, 25);
+        verify("1003", config, 35);
+        verify("1004", config, 50);
+        verify("1005", config, 50);
+    }
+
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
