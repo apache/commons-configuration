@@ -68,6 +68,7 @@ public class CatalogResolver implements EntityResolver
     public CatalogResolver()
     {
         manager.setIgnoreMissingProperties(true);
+        manager.setUseStaticCatalog(false);
         setLogger(null);
     }
 
