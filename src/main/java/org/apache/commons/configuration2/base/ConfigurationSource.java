@@ -64,10 +64,13 @@ import java.util.Iterator;
 public interface ConfigurationSource
 {
     /**
-     * Checks if the configuration is empty.
+     * Checks if the configuration is empty. This is an optional operation. It
+     * may be implemented by querying the keys contained in this configuration
+     * source and checking whether this iterator is empty.
      *
      * @return <code>true</code> if the configuration contains no property,
      *         <code>false</code> otherwise.
+     * @throws UnsupportedOperationException if this operation is not implemented
      */
     boolean isEmpty();
 
@@ -81,7 +84,7 @@ public interface ConfigurationSource
     boolean containsKey(String key);
 
     /**
-     * Adds a property to the configuration. If it already exists then the value
+     * Adds a property to the configuration. If it already exists, then the value
      * stated here will be added to the configuration entry. For example, if the
      * property:
      *
