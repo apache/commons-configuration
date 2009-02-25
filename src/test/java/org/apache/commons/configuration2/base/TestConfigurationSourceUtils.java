@@ -231,4 +231,69 @@ public class TestConfigurationSourceUtils extends TestCase
             // ok
         }
     }
+
+    /**
+     * Tests the getKeys() implementation if this method is implemented by the
+     * source.
+     */
+    public void testGetKeysImplemented()
+    {
+        ConfigurationSource source = EasyMock
+                .createMock(ConfigurationSource.class);
+        @SuppressWarnings("unchecked")
+        Iterator<String> it = EasyMock.createMock(Iterator.class);
+        EasyMock.expect(source.getKeys(KEY)).andReturn(it);
+        EasyMock.replay(it, source);
+        assertEquals("Wrong iterator", it, ConfigurationSourceUtils.getKeys(
+                source, KEY));
+        EasyMock.verify(it, source);
+    }
+
+    /**
+     * Tests the getKeys() implementation if this method is not implemented by
+     * the source.
+     */
+    public void testGetKeysNotImplemented()
+    {
+        ConfigurationSource source = EasyMock
+                .createMock(ConfigurationSource.class);
+        EasyMock.expect(source.getKeys(KEY)).andThrow(
+                new UnsupportedOperationException());
+        Collection<String> keys = new ArrayList<String>();
+        keys.add(KEY);
+        final int count = 12;
+        final String key2 = "anotherKey";
+        for (int i = 0; i < count; i++)
+        {
+            keys.add(KEY + "." + i);
+            keys.add(key2 + i);
+        }
+        EasyMock.expect(source.getKeys()).andReturn(keys.iterator());
+        EasyMock.replay(source);
+        Iterator<String> it = ConfigurationSourceUtils.getKeys(source, KEY);
+        assertEquals("Wrong prefix", KEY, it.next());
+        for (int i = 0; i < count; i++)
+        {
+            assertEquals("Wrong key at " + i, KEY + "." + i, it.next());
+        }
+        assertFalse("Too many keys", it.hasNext());
+        EasyMock.verify(source);
+    }
+
+    /**
+     * Tests the getKeys() implementation if a null source is passed in. This
+     * should cause an exception.
+     */
+    public void testGetKeysNull()
+    {
+        try
+        {
+            ConfigurationSourceUtils.getKeys(null, KEY);
+            fail("No exception for null source!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
 }

@@ -134,6 +134,34 @@ public final class ConfigurationSourceUtils
     }
 
     /**
+     * Calls the {@code getKeys(String prefix)} method on the specified {@code
+     * ConfigurationSource}. If the source does not implement this method, a
+     * default algorithm is used to obtain an iteration over all keys starting
+     * with the specified prefix.
+     *
+     * @param source the {@code ConfigurationSource} (must not be <b>null</b>)
+     * @param prefix the prefix of the desired keys
+     * @return an {@code Iterator} over all keys contained in this {@code
+     *         ConfigurationSource} starting with the given prefix
+     * @throws IllegalArgumentException if the source is <b>null</b>
+     * @see ConfigurationSource#getKeys(String)
+     */
+    public static Iterator<String> getKeys(ConfigurationSource source,
+            String prefix)
+    {
+        checkNullSource(source);
+
+        try
+        {
+            return source.getKeys(prefix);
+        }
+        catch (UnsupportedOperationException uoex)
+        {
+            return new PrefixedKeysIterator(source.getKeys(), prefix);
+        }
+    }
+
+    /**
      * Helper method for checking for a <b>null</b> parameter. If the specified
      * source is <b>null</b>, an exception is thrown.
      *
