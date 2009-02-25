@@ -18,6 +18,8 @@ package org.apache.commons.configuration2.base;
 
 import java.util.Iterator;
 
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+
 /**
  * <p>
  * An interface defining a source for configuration settings.
@@ -209,4 +211,26 @@ public interface ConfigurationSource
      * @see #getProperty(String)
      */
     int valueCount(String key);
+
+    /**
+     * Returns the {@code ExpressionEngine} used by this {@code
+     * ConfigurationSource}.
+     *
+     * @return the {@code ExpressionEngine}
+     */
+    ExpressionEngine getExpressionEngine();
+
+    /**
+     * Sets the {@code ExpressionEngine} to be used by this {@code
+     * ConfigurationSource}. This {@code ExpressionEngine} should be used for
+     * interpreting configuration keys passed to the methods of this interface.
+     * If an implementation does not support an {@code ExpressionEngine} (e.g.
+     * non-hierarchical implementations), it should at least store the reference
+     * passed to this method so that it can be returned by
+     * {@link #getExpressionEngine()}.
+     *
+     * @param engine the {@code ExpressionEngine} to be used for interpreting
+     *        property keys
+     */
+    void setExpressionEngine(ExpressionEngine engine);
 }
