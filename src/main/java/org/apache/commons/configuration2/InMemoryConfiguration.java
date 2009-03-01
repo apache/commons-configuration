@@ -266,7 +266,6 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
      * @return a new configuration object representing the selected subset
      */
     @Override
-    @SuppressWarnings("serial")
     public Configuration subset(String prefix)
     {
         NodeList<ConfigurationNode> nodes = fetchNodeList(prefix);
