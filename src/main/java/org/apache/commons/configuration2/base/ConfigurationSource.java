@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration2.base;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.configuration2.expr.ExpressionEngine;
@@ -113,12 +114,22 @@ public interface ConfigurationSource
 
     /**
      * Sets the value of a property. The new value will replace any previously
-     * set values.
+     * set values. It is treated as a single value.
      *
      * @param key The key of the property to change
      * @param value The new value
      */
     void setProperty(String key, Object value);
+
+    /**
+     * Sets multiple values for a property. Any previously set values will be
+     * replaced. The new value of this property will be constructed from all
+     * values stored in the given collection.
+     *
+     * @param key the key of the property to change
+     * @param values a collection with the new values of this property
+     */
+    void setProperty(String key, Collection<?> values);
 
     /**
      * Removes a property from the configuration.
