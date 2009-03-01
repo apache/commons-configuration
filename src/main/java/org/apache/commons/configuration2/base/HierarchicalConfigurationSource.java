@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.base;
 
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
+import org.apache.commons.configuration2.expr.NodeVisitor;
 
 /**
  * <p>
@@ -80,4 +81,26 @@ public interface HierarchicalConfigurationSource<T> extends ConfigurationSource
      * @return a {@code NodeList} with the results
      */
     NodeList<T> find(String expr);
+
+    /**
+     * Visits the specified configuration node. This method implements the
+     * traversal of the node hierarchy starting with the specified node. The
+     * passed in node can be <b>null</b>; in this case the root node is used as
+     * start node.
+     *
+     * @param node the node to be visited
+     * @param visitor the visitor (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the visitor is <b>null</b>
+     */
+    void visit(T node, NodeVisitor<T> visitor);
+
+    /**
+     * Removes all values of the property with the given name and of keys that
+     * start with this name. So if there is a property with the key
+     * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
+     * of {@code clearTree("foo")} would remove both properties.
+     *
+     * @param key the key of the property to be removed
+     */
+    void clearTree(String key);
 }
