@@ -117,7 +117,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Return the parent configuation for this subset.
+     * Return the parent configuration for this subset.
      *
      * @return the parent configuration
      */
