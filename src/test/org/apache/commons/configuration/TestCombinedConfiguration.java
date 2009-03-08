@@ -21,7 +21,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -31,6 +36,7 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 
 /**
@@ -718,7 +724,6 @@ public class TestCombinedConfiguration extends TestCase
         assertTrue("Incorrect configuration", c == pc);
     }
 
-
     public void testGetConfigurationNameList() throws Exception
     {
         config.addConfiguration(setUpTestConfiguration());
@@ -731,6 +736,32 @@ public class TestCombinedConfiguration extends TestCase
         String name = ((String)list.get(1));
         assertNotNull("No name returned", name);
         assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
+    }
+
+    /**
+     * Tests whether changes on a sub node configuration that is part of a
+     * combined configuration are detected. This test is related to
+     * CONFIGURATION-368.
+     */
+    public void testReloadWithSubNodeConfig() throws Exception
+    {
+        final String reloadContent = "<config><default><xmlReload1>{0}</xmlReload1></default></config>";
+        config.setForceReloadCheck(true);
+        config.setNodeCombiner(new OverrideCombiner());
+        File testXmlFile1 = writeReloadFile(RELOAD_XML_NAME, reloadContent, 0);
+        final String prefix1 = "default";
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile1);
+        SubnodeConfiguration sub1 = c1.configurationAt(prefix1, true);
+        assertEquals("Inital test for sub config 1 failed", 0, sub1
+                .getInt("xmlReload1"));
+        config.addConfiguration(sub1);
+        assertEquals(
+                "Could not get value for sub config 1 from combined config", 0,
+                config.getInt("xmlReload1"));
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        writeReloadFile(RELOAD_XML_NAME, reloadContent, 1);
+        assertEquals("Reload of sub config 1 not detected", 1, config
+                .getInt("xmlReload1"));
     }
 
     /**

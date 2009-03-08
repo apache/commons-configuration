@@ -23,6 +23,12 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-368">
+        SubnodeConfiguration now fires an event of type EVENT_SUBNODE_CHANGED
+        if a structural change of the parent configuration was detected. If the
+        SubnodeConfiguration is contained in a CombinedConfiguration, the
+        CombinedConfiguration receives this event and can update itself.
+      </action>
       <action dev="rgoers" type="fix" issue="CONFIGURATION-361">
         MultiFileHierarchicalConfiguration was not using basepath to
         construct the file url. It also threw an exception if the

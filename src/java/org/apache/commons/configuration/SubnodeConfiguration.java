@@ -217,7 +217,9 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
                     {
                         // the root node was changed due to a change of the
                         // parent
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, true);
                         setRootNode(currentRoot);
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, false);
                     }
                     return currentRoot;
                 }

@@ -875,12 +875,11 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             }
 
             // Copy data of the root node to the new path
-            HierarchicalConfiguration hc = ConfigurationUtils
+            rootNode = ConfigurationUtils
                     .convertToHierarchical(getConfiguration(),
-                            getConversionExpressionEngine());
-            atParent.appendChildren(hc.getRootNode());
-            atParent.appendAttributes(hc.getRootNode());
-            rootNode = hc.getRootNode();
+                            getConversionExpressionEngine()).getRootNode();
+            atParent.appendChildren(rootNode);
+            atParent.appendAttributes(rootNode);
 
             return result;
         }

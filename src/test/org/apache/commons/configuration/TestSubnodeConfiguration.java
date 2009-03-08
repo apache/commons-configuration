@@ -17,7 +17,9 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -25,6 +27,8 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -355,6 +359,31 @@ public class TestSubnodeConfiguration extends TestCase
     }
 
     /**
+     * Tests whether events are fired if a change of the parent is detected.
+     */
+    public void testParentReloadEvents() throws ConfigurationException
+    {
+        setUpReloadTest(true);
+        ConfigurationListenerTestImpl l = new ConfigurationListenerTestImpl();
+        config.addConfigurationListener(l);
+        config.getString("name");
+        assertEquals("Wrong number of events", 2, l.events.size());
+        boolean before = true;
+        for (Iterator it = l.events.iterator(); it.hasNext();)
+        {
+            ConfigurationEvent e = (ConfigurationEvent) it.next();
+            assertEquals("Wrong configuration", config, e.getSource());
+            assertEquals("Wrong event type",
+                    HierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
+                            .getType());
+            assertNull("Got a property name", e.getPropertyName());
+            assertNull("Got a property value", e.getPropertyValue());
+            assertEquals("Wrong before flag", before, e.isBeforeUpdate());
+            before = !before;
+        }
+    }
+
+    /**
      * Tests a reload operation for the parent configuration when the subnode
      * configuration is aware of reloads, and the parent configuration is
      * accessed first. The new value should be returned.
@@ -504,5 +533,20 @@ public class TestSubnodeConfiguration extends TestCase
     protected void setUpSubnodeConfig()
     {
         config = new SubnodeConfiguration(parent, getSubnodeRoot(parent));
+    }
+
+    /**
+     * A specialized configuration listener for testing whether the expected
+     * events are fired.
+     */
+    private static class ConfigurationListenerTestImpl implements ConfigurationListener
+    {
+        /** Stores the events received.*/
+        final List events = new ArrayList();
+
+        public void configurationChanged(ConfigurationEvent event)
+        {
+            events.add(event);
+        }
     }
 }
