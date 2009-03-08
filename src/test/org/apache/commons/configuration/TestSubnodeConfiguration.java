@@ -22,12 +22,12 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for SubnodeConfiguration.
@@ -59,9 +59,6 @@ public class TestSubnodeConfiguration extends TestCase
     /** The subnode configuration to be tested. */
     SubnodeConfiguration config;
 
-    /** Stores the root node of the subnode config. */
-    ConfigurationNode subnode;
-
     /** Stores a counter for the created nodes. */
     int nodeCounter;
 
@@ -77,7 +74,7 @@ public class TestSubnodeConfiguration extends TestCase
         // remove the test output file if necessary
         if (TEST_FILE.exists())
         {
-            TEST_FILE.delete();
+            assertTrue("Could not remove test file", TEST_FILE.delete());
         }
     }
 
