@@ -133,10 +133,23 @@ public class TestPreferencesConfiguration extends TestCase
      */
     public void testGetPropertiesSystem()
     {
+        boolean administrator = true;
         node = Preferences.systemRoot();
-        setUpTestData();
+        try {
+            setUpTestData();
+        } catch (final ConfigurationRuntimeException e) {
+            if (e.getCause() instanceof BackingStoreException) {
+                administrator = false;
+            } else {
+                throw e;
+            }
+        }
         PreferencesConfiguration config = new PreferencesConfiguration(true);
         checkProperties(config);
+        if (!administrator) {
+            // Changes are not persistent without administrator rights
+            node = null;
+        }
     }
 
     /**
@@ -155,11 +168,24 @@ public class TestPreferencesConfiguration extends TestCase
      */
     public void testGetPropertiesSystemPackage()
     {
+        boolean administrator = true;
         node = Preferences.systemNodeForPackage(getClass());
-        setUpTestData();
+        try {
+            setUpTestData();
+        } catch (final ConfigurationRuntimeException e) {
+            if (e.getCause() instanceof BackingStoreException) {
+                administrator = false;
+            } else {
+                throw e;
+            }
+        }
         PreferencesConfiguration config = new PreferencesConfiguration(true,
                 getClass());
         checkProperties(config);
+        if (!administrator) {
+            // Changes are not persistent without administrator rights
+            node = null;
+        }
     }
 
     /**
