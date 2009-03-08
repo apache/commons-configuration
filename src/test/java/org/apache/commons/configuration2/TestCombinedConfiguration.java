@@ -21,24 +21,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Set;
 import java.util.List;
+import java.util.Set;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.CombinedConfiguration;
-import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.StrictConfigurationComparator;
-import org.apache.commons.configuration2.XMLConfiguration;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.tree.NodeCombiner;
 import org.apache.commons.configuration2.tree.UnionCombiner;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
 
 /**
  * Test class for CombinedConfiguration.
@@ -65,6 +58,7 @@ public class TestCombinedConfiguration extends TestCase
     /** The test event listener. */
     CombinedListener listener;
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -605,7 +599,6 @@ public class TestCombinedConfiguration extends TestCase
         assertTrue("Incorrect configuration", c == pc);
     }
 
-
     public void testGetConfigurationNameList() throws Exception
     {
         config.addConfiguration(setUpTestConfiguration());
@@ -618,6 +611,34 @@ public class TestCombinedConfiguration extends TestCase
         String name = (list.get(1));
         assertNotNull("No name returned", name);
         assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
+    }
+
+    /**
+     * Tests whether changes on a sub node configuration that is part of a
+     * combined configuration are detected. This test is related to
+     * CONFIGURATION-368.
+     */
+    public void testReloadWithSubNodeConfig() throws Exception
+    {
+        final String reloadContent = "<config><default><xmlReload1>%d</xmlReload1></default></config>";
+        File testDir = new File("target");
+        File testXmlFile = new File(testDir, "reload.xml");
+        config.setForceReloadCheck(true);
+        writeFile(testXmlFile, String.format(reloadContent, 0));
+        final String prefix1 = "default";
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
+        SubConfiguration<?> sub1 = c1.configurationAt(prefix1, true);
+        assertEquals("Inital test for sub config 1 failed", 0, sub1
+                .getInt("xmlReload1"));
+        config.addConfiguration(sub1);
+        assertEquals(
+                "Could not get value for sub config 1 from combined config", 0,
+                config.getInt("xmlReload1"));
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        writeFile(testXmlFile, String.format(reloadContent, 1));
+        assertEquals("Reload of sub config 1 not detected", 1, config
+                .getInt("xmlReload1"));
+        assertTrue("XML file cannot be removed", testXmlFile.delete());
     }
 
     /**

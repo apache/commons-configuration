@@ -213,7 +213,9 @@ public class SubConfiguration<T> extends AbstractHierarchicalConfiguration<T>
                     if (currentRoot != rootNode)
                     {
                         // the root node was changed due to a change of the parent
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, true);
                         rootNode = currentRoot;
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, false);
                     }
                     return currentRoot;
                 }
@@ -329,6 +331,7 @@ public class SubConfiguration<T> extends AbstractHierarchicalConfiguration<T>
      *
      * @param value the value to be interpolated
      */
+    @Override
     protected Object interpolate(Object value)
     {
         return getParent().interpolate(value);
