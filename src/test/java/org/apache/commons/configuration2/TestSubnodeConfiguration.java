@@ -23,16 +23,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
-import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-
-import junit.framework.TestCase;
 
 /**
  * Test case for SubnodeConfiguration.
@@ -55,21 +49,16 @@ public class TestSubnodeConfiguration extends TestCase
     /** Constant for a test output file.*/
     private static final File TEST_FILE = new File("target/test.xml");
 
-    /** Constant for an updated table name.*/
-    private static final String NEW_TABLE_NAME = "newTable";
-
     /** The parent configuration. */
     HierarchicalConfiguration parent;
 
     /** The subnode configuration to be tested. */
     SubnodeConfiguration config;
 
-    /** Stores the root node of the subnode config. */
-    ConfigurationNode subnode;
-
     /** Stores a counter for the created nodes. */
     int nodeCounter;
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -77,12 +66,13 @@ public class TestSubnodeConfiguration extends TestCase
         nodeCounter = 0;
     }
 
+    @Override
     protected void tearDown() throws Exception
     {
         // remove the test output file if necessary
         if (TEST_FILE.exists())
         {
-            TEST_FILE.delete();
+            assertTrue("Could not remove test file", TEST_FILE.delete());
         }
     }
 
