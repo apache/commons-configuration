@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
