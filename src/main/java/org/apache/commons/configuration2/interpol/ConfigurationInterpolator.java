@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration2.interpol;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -229,7 +230,7 @@ public class ConfigurationInterpolator extends StrLookup
      *
      * @return a set with the registered variable prefixes
      */
-    public Set prefixSet()
+    public Set<String> prefixSet()
     {
         return localLookups.keySet();
     }
@@ -313,12 +314,22 @@ public class ConfigurationInterpolator extends StrLookup
      */
     protected StrLookup fetchLookupForPrefix(String prefix)
     {
-        StrLookup lookup = (StrLookup) localLookups.get(prefix);
+        StrLookup lookup = localLookups.get(prefix);
         if (lookup == null)
         {
             lookup = StrLookup.noneLookup();
         }
         return lookup;
+    }
+    
+    /**
+     * Registers the local lookup instances for the given interpolator.
+     * 
+     * @param interpolator the instance receiving the local lookups
+     * @since upcoming
+     */
+    public void registerLocalLookups(ConfigurationInterpolator interpolator) {
+        interpolator.localLookups.putAll(localLookups);
     }
 
     // static initializer, sets up the map with the standard lookups

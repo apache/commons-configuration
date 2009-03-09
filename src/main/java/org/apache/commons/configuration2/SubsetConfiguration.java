@@ -17,7 +17,12 @@
 
 package org.apache.commons.configuration2;
 
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
+import org.apache.commons.lang.text.StrLookup;
+
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * <p>A subset of another configuration. The new Configuration object contains
@@ -195,7 +200,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     {
         return new SubsetIterator(parent.getKeys(prefix));
     }
-
+    
     @Override
     protected Object interpolate(Object base)
     {
@@ -206,6 +211,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
+            getInterpolator().registerLocalLookups(config.getInterpolator());
             return config.interpolate(base);
         }
     }
@@ -323,7 +329,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     /**
      * A specialized iterator to be returned by the <code>getKeys()</code>
      * methods. This implementation wraps an iterator from the parent
-     * configuration. The keys returned by this iterator are correspondigly
+     * configuration. The keys returned by this iterator are correspondingly
      * transformed.
      */
     private class SubsetIterator implements Iterator<String>

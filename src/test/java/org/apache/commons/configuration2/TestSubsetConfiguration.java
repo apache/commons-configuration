@@ -26,6 +26,8 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.configuration2.flat.BaseConfiguration;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
+import org.apache.commons.lang.text.StrLookup;
 
 import junit.framework.TestCase;
 
@@ -160,7 +162,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("prefix", "prefix", subset.getPrefix());
     }
 
-    public void testThrowtExceptionOnMissing()
+    public void testThrowExceptionOnMissing()
     {
         BaseConfiguration config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
@@ -208,7 +210,7 @@ public class TestSubsetConfiguration extends TestCase
         keys.add("type");
         while(itKeys.hasNext())
         {
-            String k = (String) itKeys.next();
+            String k = itKeys.next();
             assertTrue(keys.contains(k));
             keys.remove(k);
         }
@@ -282,5 +284,34 @@ public class TestSubsetConfiguration extends TestCase
         subset.setDelimiterParsingDisabled(false);
         assertFalse("Wrong value of list parsing flag in parent", config
                 .isDelimiterParsingDisabled());
+    }
+
+    /**
+     * Tests manipulating the interpolator.
+     */
+    public void testInterpolator()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        AbstractConfiguration subset = (AbstractConfiguration) config
+                .subset("prefix");
+        InterpolationTestHelper.testGetInterpolator(subset);
+    }
+    
+    // TODO: Next step
+    public void todoTestLocalLookupsInInterpolorAreInherited() {
+        BaseConfiguration config = new BaseConfiguration();
+        ConfigurationInterpolator interpolator = config.getInterpolator();
+        interpolator.registerLookup("brackets", new StrLookup(){
+
+            @Override
+            public String lookup(String key) {
+                return "(" + key +")";
+            }
+            
+        });
+        config.setProperty("prefix.var", "${brackets:x}");
+        AbstractConfiguration subset = (AbstractConfiguration) config
+                .subset("prefix");
+        assertEquals("Local lookup was not inherited", "(x)", subset.getString("var", ""));
     }
 }
