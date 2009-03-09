@@ -17,12 +17,7 @@
 
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrLookup;
-
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * <p>A subset of another configuration. The new Configuration object contains
