@@ -322,6 +322,16 @@ public class ConfigurationInterpolator extends StrLookup
         }
         return lookup;
     }
+    
+    /**
+     * Registers the local lookup instances for the given interpolator.
+     * 
+     * @param interpolator the instance receiving the local lookups
+     * @since upcoming
+     */
+    public void registerLocalLookups(ConfigurationInterpolator interpolator) {
+        interpolator.localLookups.putAll(localLookups);
+    }
 
     // static initializer, sets up the map with the standard lookups
     static

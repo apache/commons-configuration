@@ -120,7 +120,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Return the parent configuation for this subset.
+     * Return the parent configuration for this subset.
      *
      * @return the parent configuration
      */
@@ -205,7 +205,7 @@ public class SubsetConfiguration extends AbstractConfiguration
             }
         });
     }
-
+    
     protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
@@ -215,6 +215,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
+            getInterpolator().registerLocalLookups(config.getInterpolator());
             return config.interpolate(base);
         }
     }
