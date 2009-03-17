@@ -178,6 +178,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     static final String COMMENT_CHARS = "#!";
 
     /**
+     * Constant for the default <code>IOFactory</code>. This instance is used
+     * when no specific factory was set.
+     */
+    private static final IOFactory DEFAULT_IO_FACTORY = new DefaultIOFactory();
+
+    /**
      * This is the name of the property that can point to other
      * properties file for including other properties files.
      */
@@ -209,6 +215,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** Stores the layout object.*/
     private PropertiesConfigurationLayout layout;
+
+    /** The IOFactory for creating readers and writers.*/
+    private volatile IOFactory ioFactory;
 
     /** Allow file inclusion or not */
     private boolean includesAllowed;
@@ -402,6 +411,43 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
+     * Returns the <code>IOFactory</code> to be used for creating readers and
+     * writers when loading or saving this configuration.
+     *
+     * @return the <code>IOFactory</code>
+     * @since 1.7
+     */
+    public IOFactory getIOFactory()
+    {
+        return (ioFactory != null) ? ioFactory : DEFAULT_IO_FACTORY;
+    }
+
+    /**
+     * Sets the <code>IOFactory</code> to be used for creating readers and
+     * writers when loading or saving this configuration. Using this method a
+     * client can customize the reader and writer classes used by the load and
+     * save operations. Note that this method must be called before invoking
+     * one of the <code>load()</code> and <code>save()</code> methods.
+     * Especially, if you want to use a custom <code>IOFactory</code> for
+     * changing the <code>PropertiesReader</code>, you cannot load the
+     * configuration data in the constructor.
+     *
+     * @param ioFactory the new <code>IOFactory</code> (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the <code>IOFactory</code> is
+     *         <b>null</b>
+     * @since 1.7
+     */
+    public void setIOFactory(IOFactory ioFactory)
+    {
+        if (ioFactory == null)
+        {
+            throw new IllegalArgumentException("IOFactory must not be null!");
+        }
+
+        this.ioFactory = ioFactory;
+    }
+
+    /**
      * Load the properties from the given reader.
      * Note that the <code>clear()</code> method is not called, so
      * the properties contained in the loaded file will be added to the
@@ -571,7 +617,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Creates a new instance of <code>PropertiesReader</code> and sets
-         * the underlaying reader and the list delimiter.
+         * the underlying reader and the list delimiter.
          *
          * @param reader the reader
          * @param listDelimiter the list delimiter character
@@ -1021,6 +1067,82 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
     } // class PropertiesWriter
+
+    /**
+     * <p>
+     * Definition of an interface that allows customization of read and write
+     * operations.
+     * </p>
+     * <p>
+     * For reading and writing properties files the inner classes
+     * <code>PropertiesReader</code> and <code>PropertiesWriter</code> are used.
+     * This interface defines factory methods for creating both a
+     * <code>PropertiesReader</code> and a <code>PropertiesWriter</code>. An
+     * object implementing this interface can be passed to the
+     * <code>setIOFactory()</code> method of
+     * <code>PropertiesConfiguration</code>. Every time the configuration is
+     * read or written the <code>IOFactory</code> is asked to create the
+     * appropriate reader or writer object. This provides an opportunity to
+     * inject custom reader or writer implementations.
+     * </p>
+     *
+     * @since 1.7
+     */
+    public static interface IOFactory
+    {
+        /**
+         * Creates a <code>PropertiesReader</code> for reading a properties
+         * file. This method is called whenever the
+         * <code>PropertiesConfiguration</code> is loaded. The reader returned
+         * by this method is then used for parsing the properties file.
+         *
+         * @param in the underlying reader (of the properties file)
+         * @param delimiter the delimiter character for list parsing
+         * @return the <code>PropertiesReader</code> for loading the
+         *         configuration
+         */
+        PropertiesReader createPropertiesReader(Reader in, char delimiter);
+
+        /**
+         * Creates a <code>PropertiesWriter</code> for writing a properties
+         * file. This method is called before the
+         * <code>PropertiesConfiguration</code> is saved. The writer returned by
+         * this method is then used for writing the properties file.
+         *
+         * @param out the underlying writer (to the properties file)
+         * @param delimiter the delimiter character for list parsing
+         * @return the <code>PropertiesWriter</code> for saving the
+         *         configuration
+         */
+        PropertiesWriter createPropertiesWriter(Writer out, char delimiter);
+    }
+
+    /**
+     * <p>
+     * A default implementation of the <code>IOFactory</code> interface.
+     * </p>
+     * <p>
+     * This class implements the <code>createXXXX()</code> methods defined by
+     * the <code>IOFactory</code> interface in a way that the default objects
+     * (i.e. <code>PropertiesReader</code> and <code>PropertiesWriter</code> are
+     * returned. Customizing either the reader or the writer (or both) can be
+     * done by extending this class and overriding the corresponding
+     * <code>createXXXX()</code> method.
+     * </p>
+     */
+    public static class DefaultIOFactory implements IOFactory
+    {
+        public PropertiesReader createPropertiesReader(Reader in, char delimiter)
+        {
+            return new PropertiesReader(in, delimiter);
+        }
+
+        public PropertiesWriter createPropertiesWriter(Writer out,
+                char delimiter)
+        {
+            return new PropertiesWriter(out, delimiter);
+        }
+    }
 
     /**
      * <p>Unescapes any Java literals found in the <code>String</code> to a
