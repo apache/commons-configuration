@@ -29,9 +29,11 @@ import junit.framework.TestCase;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.lang.text.StrLookup;
 
 /**
  * Test case for SubnodeConfiguration.
@@ -329,6 +331,35 @@ public class TestSubnodeConfiguration extends TestCase
             assertEquals("Wrong interpolation in subnode",
                     "/home/foo/path" + i, sub.getString("dir" + i));
         }
+    }
+
+    /**
+     * Tests manipulating the interpolator.
+     */
+    public void todoTestInterpolator()
+    {
+        parent.addProperty("tablespaces.tablespace.name", "default");
+        parent.addProperty("tablespaces.tablespace(-1).name", "test");
+
+        setUpSubnodeConfig();
+        InterpolationTestHelper.testGetInterpolator(config);
+    }
+
+    public void testLocalLookupsInInterpolatorAreInherited() {
+        parent.addProperty("tablespaces.tablespace.name", "default");
+        parent.addProperty("tablespaces.tablespace(-1).name", "test");
+        parent.addProperty("tables.table(0).var", "${brackets:x}");
+        
+        ConfigurationInterpolator interpolator = parent.getInterpolator();
+        interpolator.registerLookup("brackets", new StrLookup(){
+
+            public String lookup(String key) {
+                return "(" + key +")";
+            }
+            
+        });
+        setUpSubnodeConfig();
+        assertEquals("Local lookup was not inherited", "(x)", config.getString("var", ""));
     }
 
     /**

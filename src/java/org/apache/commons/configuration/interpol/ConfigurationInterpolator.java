@@ -127,6 +127,9 @@ public class ConfigurationInterpolator extends StrLookup
 
     /** Stores the default lookup object. */
     private StrLookup defaultLookup;
+    
+    /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
+    private ConfigurationInterpolator parentInterpolator;
 
     /**
      * Creates a new instance of <code>ConfigurationInterpolator</code>.
@@ -295,20 +298,30 @@ public class ConfigurationInterpolator extends StrLookup
      * Returns the lookup object to be used for variables without a prefix. This
      * implementation will check whether a default lookup object was set. If
      * this is the case, it will be returned. Otherwise a <b>null</b> lookup
-     * object will be returned.
+     * object will be returned (never <code>null</code>).
      *
      * @return the lookup object to be used for variables without a prefix
      */
     protected StrLookup fetchNoPrefixLookup()
     {
-        return (getDefaultLookup() != null) ? getDefaultLookup() : StrLookup.noneLookup();
+        StrLookup lookup = null;
+        if (getDefaultLookup() != null) { 
+            lookup = getDefaultLookup();
+        }
+        if (lookup == null) { 
+            ConfigurationInterpolator parent = getParentInterpolator();
+            lookup = (parent == null) 
+                ? StrLookup.noneLookup() 
+                : parent.fetchNoPrefixLookup();
+        }
+        return lookup;
     }
 
     /**
      * Obtains the lookup object for the specified prefix. This method is called
      * by the <code>lookup()</code> method. This implementation will check
      * whether a lookup object is registered for the given prefix. If not, a
-     * <b>null</b> lookup object will be returned.
+     * <b>null</b> lookup object will be returned (never <code>null</code>).
      *
      * @param prefix the prefix
      * @return the lookup object to be used for this prefix
@@ -318,7 +331,10 @@ public class ConfigurationInterpolator extends StrLookup
         StrLookup lookup = (StrLookup) localLookups.get(prefix);
         if (lookup == null)
         {
-            lookup = StrLookup.noneLookup();
+            ConfigurationInterpolator parent = getParentInterpolator();
+            lookup = (parent == null) 
+                ? StrLookup.noneLookup() 
+                : parent.fetchLookupForPrefix(prefix);
         }
         return lookup;
     }
@@ -331,6 +347,28 @@ public class ConfigurationInterpolator extends StrLookup
      */
     public void registerLocalLookups(ConfigurationInterpolator interpolator) {
         interpolator.localLookups.putAll(localLookups);
+    }
+
+    /**
+     * Sets the parent interpolator. This object is used if the interpolation is nested hierarchically
+     * and the current interpolation object cannot resolve a variable. 
+     * 
+     * @param parentInterpolator the parent interpolator object or <code>null</code>
+     * @since upcoming
+     */
+    public void setParentInterpolator(ConfigurationInterpolator parentInterpolator) {
+        this.parentInterpolator = parentInterpolator;
+    }
+
+    /**
+     * Requests the parent interpolator. This object is used if the interpolation is nested hierarchically
+     * and the current interpolation
+     * 
+     * @return the parent interpolator or <code>null</code>
+     * @since upcoming
+     */
+    public ConfigurationInterpolator getParentInterpolator() {
+        return this.parentInterpolator;
     }
 
     // static initializer, sets up the map with the standard lookups

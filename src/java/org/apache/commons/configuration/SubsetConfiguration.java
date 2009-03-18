@@ -21,6 +21,7 @@ import java.util.Iterator;
 
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.iterators.TransformIterator;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 
 /**
  * <p>A subset of another configuration. The new Configuration object contains
@@ -215,7 +216,11 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
-            getInterpolator().registerLocalLookups(config.getInterpolator());
+            ConfigurationInterpolator interpolator = config.getInterpolator();
+            getInterpolator().registerLocalLookups(interpolator);
+            if (parent instanceof AbstractConfiguration) {
+                interpolator.setParentInterpolator(((AbstractConfiguration)parent).getInterpolator());
+            }
             return config.interpolate(base);
         }
     }

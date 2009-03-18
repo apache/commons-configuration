@@ -295,8 +295,7 @@ public class TestSubsetConfiguration extends TestCase
         InterpolationTestHelper.testGetInterpolator(subset);
     }
     
-    // TODO: Next step
-    public void todoTestLocalLookupsInInterpolorAreInherited() {
+    public void testLocalLookupsInInterpolatorAreInherited() {
         BaseConfiguration config = new BaseConfiguration();
         ConfigurationInterpolator interpolator = config.getInterpolator();
         interpolator.registerLookup("brackets", new StrLookup(){
@@ -309,6 +308,17 @@ public class TestSubsetConfiguration extends TestCase
         config.setProperty("prefix.var", "${brackets:x}");
         AbstractConfiguration subset = (AbstractConfiguration) config
                 .subset("prefix");
-        assertEquals("Local lookup was not inherited", "(x)", subset.getString("var", ""));
+        assertEquals("Local lookup was not inherited", "(x)", subset
+                .getString("var", ""));
+    }
+    
+    public void testInterpolationForKeysOfTheParent() {
+        BaseConfiguration config = new BaseConfiguration();
+        config.setProperty("test", "junit");
+        config.setProperty("prefix.key", "${test}");
+        AbstractConfiguration subset = (AbstractConfiguration) config
+                .subset("prefix");
+        assertEquals("Interpolation does not resolve parent keys", "junit",
+                subset.getString("key", ""));
     }
 }
