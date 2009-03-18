@@ -698,9 +698,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
 
             // parse the line
-            String[] property = parseProperty(line);
-            propertyName = StringEscapeUtils.unescapeJava(property[0]);
-            propertyValue = unescapeJava(property[1], delimiter);
+            parseProperty(line);
             return true;
         }
 
@@ -743,6 +741,51 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
+         * Parses a line read from the properties file. This method is called
+         * for each non-comment line read from the source file. Its task is to
+         * split the passed in line into the property key and its value. The
+         * results of the parse operation can be stored by calling the
+         * <code>initPropertyXXX()</code> methods.
+         *
+         * @param line the line read from the properties file
+         * @since 1.7
+         */
+        protected void parseProperty(String line)
+        {
+            String[] property = doParseProperty(line);
+            initPropertyName(property[0]);
+            initPropertyValue(property[1]);
+        }
+
+        /**
+         * Sets the name of the current property. This method can be called by
+         * <code>parseProperty()</code> for storing the results of the parse
+         * operation. It also ensures that the property key is correctly
+         * escaped.
+         *
+         * @param name the name of the current property
+         * @since 1.7
+         */
+        protected void initPropertyName(String name)
+        {
+            propertyName = StringEscapeUtils.unescapeJava(name);
+        }
+
+        /**
+         * Sets the value of the current property. This method can be called by
+         * <code>parseProperty()</code> for storing the results of the parse
+         * operation. It also ensures that the property value is correctly
+         * escaped.
+         *
+         * @param value the value of the current property
+         * @since 1.7
+         */
+        protected void initPropertyValue(String value)
+        {
+            propertyValue = unescapeJava(value, delimiter);
+        }
+
+        /**
          * Checks if the passed in line should be combined with the following.
          * This is true, if the line ends with an odd number of backslashes.
          *
@@ -765,9 +808,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @param line the line to parse
          * @return an array with the property's key and value
-         * @since 1.2
          */
-        private static String[] parseProperty(String line)
+        private static String[] doParseProperty(String line)
         {
             // sorry for this spaghetti code, please replace it as soon as
             // possible with a regexp when the Java 1.3 requirement is dropped
