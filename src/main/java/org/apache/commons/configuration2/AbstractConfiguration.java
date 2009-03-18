@@ -347,7 +347,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * Returns the Converter used for the transformation of the properties.
      * By default the {@link DefaultPropertyConverter} is used.
      *
-     * @return
+     * @return the converter
      * @since 2.0
      */
     public Converter getConverter()

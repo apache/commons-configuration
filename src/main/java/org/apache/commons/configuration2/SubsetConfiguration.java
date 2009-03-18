@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration2;
 
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
+
 import java.util.Iterator;
 
 /**
@@ -206,7 +208,11 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
-            getInterpolator().registerLocalLookups(config.getInterpolator());
+            ConfigurationInterpolator interpolator = config.getInterpolator();
+            getInterpolator().registerLocalLookups(interpolator);
+            if (parent instanceof AbstractConfiguration) {
+                interpolator.setParentInterpolator(((AbstractConfiguration)parent).getInterpolator());
+            }
             return config.interpolate(base);
         }
     }
