@@ -35,7 +35,7 @@
         The dependencies on commons-collections, commons-codec and commons-digester are no longer needed.
       </action>
       <action dev="ebourg" type="update">
-        The java.util.logging API is now used instead og commons-logging. If necessary it's still
+        The java.util.logging API is now used instead of commons-logging. If necessary it's still
         possible to redirect the log messages to a 3rd party logging API using a bridging mechanism
         such as the one available for Log4J
         (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
@@ -99,7 +99,7 @@
       <action dev="rgoers" type="fix" issue="CONFIGURATION-361">
         MultiFileHierarchicalConfiguration was not using basepath to
         construct the file url. It also threw an exception if the
-        file pattern resolved to a non-existant file. This is now
+        file pattern resolved to a non-existent file. This is now
         configurable.
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-359">
