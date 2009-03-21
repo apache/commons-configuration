@@ -27,6 +27,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -47,14 +48,21 @@ import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
  */
 public class TestPropertiesConfiguration extends TestCase
 {
+    /** Constant for a test property name.*/
+    private static final String PROP_NAME = "testProperty";
+
+    /** Constant for a test property value.*/
+    private static final String PROP_VALUE = "value";
+
+    /** The configuration to be tested.*/
     private PropertiesConfiguration conf;
 
     /** The File that we test with */
-    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private static String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
-    private String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
-    private String testBasePath2 = ConfigurationAssert.TEST_DIR.getAbsoluteFile().getParentFile().getAbsolutePath();
-    private File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
+    private static String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+    private static String testBasePath2 = ConfigurationAssert.TEST_DIR.getAbsoluteFile().getParentFile().getAbsolutePath();
+    private static File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
 
     @Override
     protected void setUp() throws Exception
@@ -429,12 +437,7 @@ public class TestPropertiesConfiguration extends TestCase
             throws ConfigurationException
     {
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile);
-        for (Iterator<String> i = conf.getKeys(); i.hasNext();)
-        {
-            String key = i.next();
-            assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
-            assertEquals("Value of the '" + key + "' property", conf.getProperty(key), checkConfig.getProperty(key));
-        }
+        ConfigurationAssert.assertEquals(conf, checkConfig);
         return checkConfig;
     }
 
@@ -854,6 +857,91 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a default IOFactory is set.
+     */
+    public void testGetIOFactoryDefault()
+    {
+        assertNotNull("No default IO factory", conf.getIOFactory());
+    }
+
+    /**
+     * Tests setting the IOFactory to null. This should cause an exception.
+     */
+    public void testSetIOFactoryNull()
+    {
+        try
+        {
+            conf.setIOFactory(null);
+            fail("Could set IO factory to null!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests setting an IOFactory that uses a specialized reader.
+     */
+    public void testSetIOFactoryReader() throws ConfigurationException
+    {
+        final int propertyCount = 10;
+        conf.clear();
+        conf.setIOFactory(new PropertiesConfiguration.IOFactory()
+        {
+            public PropertiesConfiguration.PropertiesReader createPropertiesReader(
+                    Reader in, char delimiter)
+            {
+                return new PropertiesReaderTestImpl(in, delimiter,
+                        propertyCount);
+            }
+
+            public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
+                    Writer out, char delimiter)
+            {
+                throw new UnsupportedOperationException("Unexpected call!");
+            }
+        });
+        conf.load();
+        for (int i = 1; i <= propertyCount; i++)
+        {
+            assertEquals("Wrong property value at " + i, PROP_VALUE + i, conf
+                    .getString(PROP_NAME + i));
+        }
+    }
+
+    /**
+     * Tests setting an IOFactory that uses a specialized writer.
+     */
+    public void testSetIOFactoryWriter() throws ConfigurationException
+    {
+        conf.setIOFactory(new PropertiesConfiguration.IOFactory()
+        {
+            public PropertiesConfiguration.PropertiesReader createPropertiesReader(
+                    Reader in, char delimiter)
+            {
+                throw new UnsupportedOperationException("Unexpected call!");
+            }
+
+            public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
+                    Writer out, char delimiter)
+            {
+                try
+                {
+                    return new PropertiesWriterTestImpl(out, delimiter);
+                }
+                catch (IOException ioex)
+                {
+                    fail("Unexpected exception: " + ioex);
+                    return null;
+                }
+            }
+        });
+        conf.save(new StringWriter());
+        checkSavedConfig();
+    }
+
+    /**
      * Creates a configuration that can be used for testing copy operations.
      *
      * @return the configuration to be copied
@@ -989,6 +1077,63 @@ public class TestPropertiesConfiguration extends TestCase
         {
             connection = new MockHttpURLConnection(u, responseCode, outputFile);
             return connection;
+        }
+    }
+
+    /**
+     * A test PropertiesReader for testing whether a custom reader can be
+     * injected. This implementation creates a configurable number of synthetic
+     * test properties.
+     */
+    private static class PropertiesReaderTestImpl extends
+            PropertiesConfiguration.PropertiesReader
+    {
+        /** The number of test properties to be created. */
+        private final int maxProperties;
+
+        /** The current number of properties. */
+        private int propertyCount;
+
+        public PropertiesReaderTestImpl(Reader reader, char listDelimiter,
+                int maxProps)
+        {
+            super(reader, listDelimiter);
+            assertEquals("Wrong list delimiter", ',', listDelimiter);
+            maxProperties = maxProps;
+        }
+
+        @Override
+        public String getPropertyName()
+        {
+            return PROP_NAME + propertyCount;
+        }
+
+        @Override
+        public String getPropertyValue()
+        {
+            return PROP_VALUE + propertyCount;
+        }
+
+        @Override
+        public boolean nextProperty() throws IOException
+        {
+            propertyCount++;
+            return propertyCount <= maxProperties;
+        }
+    }
+
+    /**
+     * A test PropertiesWriter for testing whether a custom writer can be
+     * injected. This implementation simply redirects all output into a test
+     * file.
+     */
+    private static class PropertiesWriterTestImpl extends
+            PropertiesConfiguration.PropertiesWriter
+    {
+        public PropertiesWriterTestImpl(Writer writer, char delimiter)
+                throws IOException
+        {
+            super(new FileWriter(testSavePropertiesFile), delimiter);
         }
     }
 }

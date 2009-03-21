@@ -67,6 +67,7 @@
         <li><a href="howto_properties.html#Saving">Saving</a></li>
         <li><a href="howto_properties.html#Special_Characters">Special Characters</a></li>
         <li><a href="howto_properties.html#Layout_Objects">Layout Objects</a></li>
+        <li><a href="howto_properties.html#Custom_properties_readers_and_writers">Custom properties readers and writers</a></li>
       </ul>
       <li><a href="howto_filebased.html#File-based_Configurations">File-based Configurations</a></li>
       <ul>

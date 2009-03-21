@@ -207,6 +207,124 @@ key = This \n string \t contains \, escaped \\ characters \u0020
         the <code>setForceSingleLine()</code> method can be used.
       </p>
       </subsection>
+
+      <subsection name="Custom properties readers and writers">
+      <p>
+        There are situations when more control over the process of reading and
+        writing properties file is needed. For instance, an application might
+        have to deal with some legacy properties file in a specific format,
+        which is not supported out of the box by
+        <code>PropertiesConfiguration</code>, but must not be modified. In these
+        cases it is possible to inject a custom reader and writer for
+        properties files.
+      </p>
+      <p>
+        Per default properties files are read and written by the nested classes
+        <code>PropertiesReader</code> and <code>PropertiesWriter</code>
+        (defined within <code>PropertiesConfiguration</code>). These classes are
+        regular reader and writer classes (both are derived from typical base
+        classes of the <code>java.io</code> package) that provide some
+        additional methods making dealing with properties files more
+        convenient. Custom implementations of properties readers and writers
+        must extend these base classes.
+      </p>
+      <p>
+        For installing a custom properties reader or writer
+        <code>PropertiesConfiguration</code> provides the <code>IOFactory</code>
+        interface (which is also defined as a nested class). An object
+        implementing this interface is stored in each
+        <code>PropertiesConfiguration</code> instance. Whenever a properties
+        file is to be read or written (i.e. when one of the <code>load()</code>
+        or <code>save()</code> methods is called), the <code>IOFactory</code>
+        object is asked for creating the properties reader or writer to be
+        used.
+      </p>
+      <p>
+        The <code>IOFactory</code> interface is pretty simple; it defines one
+        method for creating a properties reader and another one for creating a
+        properties writer. A default implementation called
+        <code>DefaultIOFactory</code> is also available and is used by
+        <code>PropertiesConfiguration</code> when no specific
+        <code>IOFactory</code> is set. To make this discussion more concrete
+        we provide an example of how to inject a custom properties reader. The
+        use case is that we have to load a properties file that contains keys
+        with whitespace, which is not supported by
+        <code>PropertiesConfiguration</code> per default. A fragment from such
+        a properties file could look as follows:
+      </p>
+        <source><![CDATA[
+Background Color = #800080
+Foreground Color = #000080
+]]></source>
+      <p>
+        The first step is to create a custom properties reader implementation
+        that can deal with such properties. The class is derived from
+        <code>PropertiesConfiguration.PropertiesReader</code> and overrides the
+        <code>parseProperty()</code> method:
+      </p>
+        <source><![CDATA[
+public class WhitespacePropertiesReader extends PropertiesConfiguration.PropertiesReader
+{
+    public WhitespacePropertiesReader(Reader in, char delimiter)
+    {
+        super(in, delimiter);
+    }
+    
+    /**
+     * Special algorithm for parsing properties keys with whitespace. This
+     * method is called for each non-comment line read from the properties
+     * file.
+     */
+    protected void parseProperty(String line)
+    {
+        // simply split the line at the first '=' character
+        // (this should be more robust in production code)
+        int pos = line.indexOf('=');
+        String key = line.substring(0, pos).trim();
+        String value = line.substring(pos + 1).trim();
+
+        // now store the key and the value of the property
+        initPropertyName(key);
+        initPropertyValue(value);
+    }
+}
+]]></source>
+      <p>
+        Notice the calls to the methods <code>initPropertyName()</code> and
+        <code>initPropertyValue()</code>. Here the results of the parsing
+        operation are stored. The next step is to provide a specialized
+        implementation of the <code>IOFactory</code> interface that returns
+        the new properties reader class. As we only want to replace the
+        properties reader (and use the standard writer), we can derive our
+        implementation from <code>DefaultIOFactory</code> and thus only have
+        to override the <code>createPropertiesReader()</code> method.
+      </p>
+        <source><![CDATA[
+public class WhitespaceIOFactory extends PropertiesConfiguration.DefaultIOFactory
+{
+    /**
+     * Return our special properties reader.
+     */
+    public PropertiesReader createPropertiesReader(Reader in, char delimiter)
+    {
+        return new WhitespacePropertiesReader(in, delimiter);
+    }
+}
+]]></source>
+      <p>
+        Finally an instance of our new <code>IOFactory</code> implementation
+        has to be created and passed to the <code>PropertiesConfiguration</code>
+        object. This must be done before the <code>load()</code> method is
+        called. So we cannot use one of the constructors that load the data.
+        The code for setting up the configuration object could look as follows:
+      </p>
+        <source><![CDATA[
+PropertiesConfiguration config = new PropertiesConfiguration();
+config.setIOFactory(new WhitespaceIOFactory());
+config.setFile(...);  // set the file to be loaded
+config.load();
+]]></source>
+      </subsection>
     </section>
 
   </body>
