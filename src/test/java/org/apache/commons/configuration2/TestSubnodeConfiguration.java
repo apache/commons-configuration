@@ -335,9 +335,26 @@ public class TestSubnodeConfiguration extends TestCase
     }
 
     /**
+     * An additional test for interpolation when the configurationAt() method is
+     * involved for a local interpolation.
+     */
+    public void testLocalInterpolationFromConfigurationAt()
+    {
+        parent.addProperty("base.dir", "/home/foo");
+        parent.addProperty("test.absolute.dir.dir1", "${base.dir}/path1");
+        parent.addProperty("test.absolute.dir.dir2", "${dir1}");
+
+        Configuration sub = parent.configurationAt("test.absolute.dir");
+        assertEquals("Wrong interpolation in subnode",
+            "/home/foo/path1", sub.getString("dir1"));
+        assertEquals("Wrong local interpolation in subnode",
+            "/home/foo/path1", sub.getString("dir2"));
+    }
+
+    /**
      * Tests manipulating the interpolator.
      */
-    public void todoTestInterpolator()
+    public void testInterpolator()
     {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");

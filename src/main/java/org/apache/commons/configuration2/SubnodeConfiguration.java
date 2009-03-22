@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 
 /**
@@ -323,14 +324,16 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
     }
 
     /**
-     * Performs interpolation. This implementation will ask the parent
-     * configuration to perform the interpolation so that variables can be
-     * evaluated in the global context.
+     * Creates a ConfigurationInterpolator with a chain to the parent's
+     * interpolator. 
      *
-     * @param value the value to be interpolated
+     * @return the new interpolator
      */
-    protected Object interpolate(Object value)
-    {
-        return getParent().interpolate(value);
+    @Override
+    protected ConfigurationInterpolator createInterpolator() {
+        ConfigurationInterpolator interpolator = super.createInterpolator();
+        interpolator.setParentInterpolator(getParent().getInterpolator());
+        return interpolator;
     }
+    
 }
