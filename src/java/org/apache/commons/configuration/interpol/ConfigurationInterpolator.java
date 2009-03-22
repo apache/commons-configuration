@@ -286,12 +286,19 @@ public class ConfigurationInterpolator extends StrLookup
             String prefix = var.substring(0, prefixPos);
             String name = var.substring(prefixPos + 1);
             String value = fetchLookupForPrefix(prefix).lookup(name);
+            if (value == null && getParentInterpolator() != null) {
+                value = getParentInterpolator().fetchLookupForPrefix(prefix).lookup(name);
+            }
             if (value != null)
             {
                 return value;
-            }
+            } 
         }
-        return fetchNoPrefixLookup().lookup(var);
+        String value = fetchNoPrefixLookup().lookup(var);
+        if (value == null && getParentInterpolator() != null) {
+            value = getParentInterpolator().fetchNoPrefixLookup().lookup(var);
+        }
+        return value;
     }
 
     /**
@@ -304,17 +311,7 @@ public class ConfigurationInterpolator extends StrLookup
      */
     protected StrLookup fetchNoPrefixLookup()
     {
-        StrLookup lookup = null;
-        if (getDefaultLookup() != null) { 
-            lookup = getDefaultLookup();
-        }
-        if (lookup == null) { 
-            ConfigurationInterpolator parent = getParentInterpolator();
-            lookup = (parent == null) 
-                ? StrLookup.noneLookup() 
-                : parent.fetchNoPrefixLookup();
-        }
-        return lookup;
+        return (getDefaultLookup() != null) ? getDefaultLookup() : StrLookup.noneLookup();
     }
 
     /**
@@ -331,10 +328,7 @@ public class ConfigurationInterpolator extends StrLookup
         StrLookup lookup = (StrLookup) localLookups.get(prefix);
         if (lookup == null)
         {
-            ConfigurationInterpolator parent = getParentInterpolator();
-            lookup = (parent == null) 
-                ? StrLookup.noneLookup() 
-                : parent.fetchLookupForPrefix(prefix);
+            lookup = StrLookup.noneLookup();
         }
         return lookup;
     }
