@@ -332,7 +332,6 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      *
      * @return the new interpolator
      */
-    @Override
     protected ConfigurationInterpolator createInterpolator() {
         ConfigurationInterpolator interpolator = super.createInterpolator();
         interpolator.setParentInterpolator(getParent().getInterpolator());
