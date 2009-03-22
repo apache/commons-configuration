@@ -102,6 +102,20 @@
         file pattern resolved to a non-existent file. This is now
         configurable.
       </action>
+      <action dev="joehni" type="update">
+        <fixes issue="CONFIGURATION-375" />
+        <fixes issue="CONFIGURATION-376" />
+        <fixes issue="CONFIGURATION-377" />
+        Align interpolation functionality of SubnodeConfiguration and
+        SubsetConfiguration. SubsetConfiguration will now also interpolate
+        keys of the parent configuration or use the local lookups of its
+        parent. SubnodeConfiguration is in turn now able to lookup local
+        keys as well.
+      </action>
+      <action dev="joehni" type="fix" issue="CONFIGURATION-369">
+        SubsetConfiguration did not use locally registered lookups of its
+        interpolator.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-359">
         Fixed broken links to the API documentation in the user's guide.
       </action>
