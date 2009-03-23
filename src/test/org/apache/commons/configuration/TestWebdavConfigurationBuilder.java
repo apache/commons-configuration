@@ -35,7 +35,7 @@ import org.apache.commons.lang.text.StrLookup;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id: TestDefaultConfigurationBuilder.java 737642 2009-01-26 07:27:11Z rgoers $
+ * @version $Id$
  */
 public class TestWebdavConfigurationBuilder extends TestCase implements FileOptionsProvider
 {

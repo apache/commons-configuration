@@ -32,7 +32,7 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id: TestDefaultConfigurationBuilder.java 737642 2009-01-26 07:27:11Z rgoers $
+ * @version $Id$
  */
 public class TestVFSConfigurationBuilder extends TestCase
 {
