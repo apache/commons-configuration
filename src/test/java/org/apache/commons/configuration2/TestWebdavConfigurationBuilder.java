@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id: TestDefaultConfigurationBuilder.java 737643 2009-01-26 07:29:31Z rgoers $
+ * @version $Id$
  */
 public class TestWebdavConfigurationBuilder extends TestCase implements FileOptionsProvider
 {
