@@ -315,6 +315,13 @@ implements FileConfiguration, ConfigurationListener
     }
 
     @Override
+    public Iterator getKeys()
+    {
+        reload();
+        return super.getKeys();
+    }
+
+    @Override
     public Iterator<String> getKeys(String prefix)
     {
         reload();
@@ -441,6 +448,32 @@ implements FileConfiguration, ConfigurationListener
     protected void setDelegate(FileConfigurationDelegate delegate)
     {
         this.delegate = delegate;
+    }
+
+    /**
+     * Set the FileSystem to be used for this Configuration.
+     * @param fileSystem The FileSystem to use.
+     */
+    public void setFileSystem(FileSystem fileSystem)
+    {
+        delegate.setFileSystem(fileSystem);
+    }
+
+    /**
+     * Reset the FileSystem to the default;
+     */
+    public void resetFileSystem()
+    {
+        delegate.resetFileSystem();
+    }
+
+    /**
+     * Retrieve the FileSystem being used.
+     * @return The FileSystem.
+     */
+    public FileSystem getFileSystem()
+    {
+        return delegate.getFileSystem();
     }
 
     /**

@@ -239,7 +239,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (( configurations.get(index)).getConfiguration() == config)
+            if ((configurations.get(index)).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
 

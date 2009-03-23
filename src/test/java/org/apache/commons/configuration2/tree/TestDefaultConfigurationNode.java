@@ -473,7 +473,7 @@ public class TestDefaultConfigurationNode extends TestCase
      * It also supports a maximum number of visits to be set; if this number is
      * reached, the <code>terminate()</code> method returns <b>true</b>.
      */
-    static class CountNodeVisitor implements ConfigurationNodeVisitor
+    public static class CountNodeVisitor implements ConfigurationNodeVisitor
     {
         public int beforeCalls;
 

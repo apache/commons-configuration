@@ -12,4 +12,21 @@
     <name>OK-4,Cancel-4,Help-4</name>
   </buttons>
   <numberFormat pattern="###\,###.##"/>
+  <!-- Comma delimited lists -->
+  <split>
+    <list1>a,b,c</list1>
+    <list2>a\,b\,c</list2>
+    <list3 values="a,b,c"/>
+    <list4 values="a\,b\,c"/>
+  </split>
+  <Channels>
+    <Channel id="1">
+      <Name>Channel 1</Name>
+      <ChannelData>test 1 data</ChannelData>
+    </Channel>
+    <Channel id="2">
+      <Name>Channel 2</Name>
+      <ChannelData>test 2 data</ChannelData>
+    </Channel>
+  </Channels>
 </configuration>

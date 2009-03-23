@@ -12,4 +12,12 @@
     <name>OK,Cancel,Help</name>
   </buttons>
   <numberFormat pattern="###\,###.##"/>
+  <Channels>
+    <Channel id="1">
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id="2">
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+  </Channels>
 </configuration>

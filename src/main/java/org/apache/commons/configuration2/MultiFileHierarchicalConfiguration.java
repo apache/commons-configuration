@@ -25,8 +25,6 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.net.URL;
-import java.net.MalformedURLException;
-import java.io.FileNotFoundException;
 import java.io.Writer;
 import java.io.Reader;
 import java.io.File;
@@ -55,9 +53,6 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
     implements ConfigurationListener, ConfigurationErrorListener
 {
-    /** FILE URL prefix */
-    private static final String FILE_URL_PREFIX = "file:";
-
     /**
      * Prevent recursion while resolving unprefixed properties.
      */
@@ -119,20 +114,6 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setIgnoreException(boolean ignoreException)
     {
         this.ignoreException = ignoreException;
-    }
-
-    /**
-     * Creates the file configuration delegate, i.e. the object that implements
-     * functionality required by the <code>FileConfiguration</code> interface.
-     * This base implementation will return an instance of the
-     * <code>FileConfigurationDelegate</code> class. Derived classes may
-     * override it to create a different delegate object.
-     *
-     * @return the file configuration delegate
-     */
-    protected FileConfigurationDelegate createDelegate()
-    {
-        return new FileConfigurationDelegate();
     }
 
     public void addProperty(String key, Object value)
@@ -658,13 +639,15 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         XMLConfiguration configuration = new XMLConfiguration();
         try
         {
-            URL url = getURL(path);
-            configuration.setURL(url);
-            configuration.load();
+            configuration.setFileName(path);
             configuration.setExpressionEngine(getExpressionEngine());
             configuration.setReloadingStrategy(getReloadingStrategy());
+            configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+            configuration.setDetailEvents(this.isDetailEvents());
+            configuration.setListDelimiter(getListDelimiter());
             configuration.addConfigurationListener(this);
             configuration.addErrorListener(this);
+            configuration.load();
             configurationsMap.putIfAbsent(path, configuration);
             configuration = configurationsMap.get(path);
         }
@@ -675,40 +658,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 throw new ConfigurationRuntimeException(ce);
             }
         }
-        catch (FileNotFoundException fnfe)
-        {
-            if (!ignoreException)
-            {
-                 throw new ConfigurationRuntimeException(fnfe);
-            }                
-        }
 
         return configuration;
-    }
-
-    private URL getURL(String resourceLocation) throws FileNotFoundException
-    {
-        if (resourceLocation == null)
-        {
-            throw new IllegalArgumentException("A path pattern must be configured");
-        }
-        try
-        {
-            // try URL
-            return ConfigurationUtils.getURL(getBasePath(), resourceLocation);
-        }
-        catch (MalformedURLException ex)
-        {
-            // no URL -> treat as file path
-            try
-            {
-                return new URL(FILE_URL_PREFIX + resourceLocation);
-            }
-            catch (MalformedURLException ex2)
-            {
-                throw new FileNotFoundException("Resource location [" + resourceLocation
-                        + "] is not a URL or a well-formed file path");
-            }
-        }
     }
 }
