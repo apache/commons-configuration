@@ -486,6 +486,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
+     * Sets the FileSystem to use for the created CombinedConfiguration and
+     * @param fileSystem The FileSystem
+     */
+    public void setFileSystem(FileSystem fileSystem)
+    {
+        FileSystem.setDefaultFileSystem(fileSystem);
+    }
+
+
+
+    /**
      * Adds a configuration provider for the specified tag. Whenever this tag is
      * encountered in the configuration definition file this provider will be
      * called to create the configuration object.

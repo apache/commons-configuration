@@ -535,7 +535,7 @@ public final class PropertyConverter
             {
                 if (c == delimiter)
                 {
-                    // found a list delimiter -> add token and reset buffer
+                    // found a list delimiter -> add token and resetDefaultFileSystem buffer
                     String t = token.toString();
                     if (trim)
                     {

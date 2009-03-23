@@ -1320,13 +1320,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     private void loadIncludeFile(String fileName) throws ConfigurationException
     {
-        URL url = ConfigurationUtils.locate(getBasePath(), fileName);
+        URL url = ConfigurationUtils.locate(getFileSystem(), getBasePath(), fileName);
         if (url == null)
         {
             URL baseURL = getURL();
             if (baseURL != null)
             {
-                url = ConfigurationUtils.locate(baseURL.toString(), fileName);
+                url = ConfigurationUtils.locate(getFileSystem(), baseURL.toString(), fileName);
             }
         }
 

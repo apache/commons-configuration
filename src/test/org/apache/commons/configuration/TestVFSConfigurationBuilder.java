@@ -19,28 +19,22 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.lang.text.StrLookup;
 
 /**
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id$
+ * @version $Id: TestDefaultConfigurationBuilder.java 737642 2009-01-26 07:27:11Z rgoers $
  */
-public class TestDefaultConfigurationBuilder extends TestCase
+public class TestVFSConfigurationBuilder extends TestCase
 {
     /** Test configuration definition file. */
     private static final File TEST_FILE = new File(
@@ -96,8 +90,15 @@ public class TestDefaultConfigurationBuilder extends TestCase
                         "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", "test.xml");
         System.setProperty("test_file_combine", "testcombine1.xml");
+        FileSystem.setDefaultFileSystem(new VFSFileSystem());
         factory = new DefaultConfigurationBuilder();
         factory.clearErrorListeners();  // avoid exception messages
+    }
+
+    protected void tearDown() throws Exception
+    {
+        FileSystem.resetDefaultFileSystem();
+        super.tearDown();
     }
 
     /**
@@ -560,7 +561,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * @param tag the tag name with the optional configuration
      * @param force the forceCreate attribute
      * @return the combined configuration obtained from the builder
-     * @throws ConfigurationException if an error occurs
+     * @throws org.apache.commons.configuration.ConfigurationException if an error occurs
      */
     private CombinedConfiguration prepareOptionalTest(String tag, boolean force)
             throws ConfigurationException
@@ -779,9 +780,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
     {
         factory.setFile(CLASS_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        assertEquals("Extended", cc.getProperty("test"));
+        String prop = (String)cc.getProperty("test");
+        assertEquals("Expected 'Extended', actual '" + prop + "'", "Extended", prop);
         assertTrue("Wrong result class: " + cc.getClass(),
-                cc instanceof ExtendedCombinedConfiguration);
+                cc instanceof TestDefaultConfigurationBuilder.ExtendedCombinedConfiguration);
     }
 
     /**
@@ -809,7 +811,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
         Configuration config = cc.getConfiguration("xml");
         assertNotNull("Test configuration not present", config);
         assertTrue("Configuration is not ExtendedXMLConfiguration, is " +
-                config.getClass().getName(), config instanceof ExtendedXMLConfiguration);
+                config.getClass().getName(), 
+                config instanceof TestDefaultConfigurationBuilder.ExtendedXMLConfiguration);
     }
 
     public void testGlobalLookup() throws Exception
@@ -824,7 +827,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testSystemProperties() throws Exception
     {
         factory.setFile(SYSTEM_PROPS_FILE);
-        factory.getConfiguration(true);
+        CombinedConfiguration cc = factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -834,7 +837,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
-        factory.getConfiguration(true);
+        CombinedConfiguration cc = factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -843,7 +846,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testMultiTenentConfiguration() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
-        System.getProperties().remove("Id");
+        System.clearProperty("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
@@ -885,60 +888,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
-    /** This test doesn't pass and rightfully so. A new "MergeCombiner" needs to be
-     * created so it will.
-     * @throws Exception
-     */  /*
-    public void testMultiTenantConfigurationAt() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1001");
-        CombinedConfiguration config = factory.getConfiguration(true);
-        HierarchicalConfiguration sub1 = config.configurationAt("Channels/Channel[@id='1']");
-        assertEquals("My Channel", sub1.getString("Name"));
-        assertEquals("test 1 data", sub1.getString("ChannelData"));
-        HierarchicalConfiguration sub2 = config.configurationAt("Channels/Channel[@id='2']");
-        assertEquals("Channel 2", sub2.getString("Name"));
-        assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
-    } */
-
-    public void testMerge() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1004");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
-
-        List list = config.configurationsAt("colors/*");
-        Iterator iter = list.iterator();
-        System.out.println("Color nodes");
-        while (iter.hasNext())
-        {
-            SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
-            ConfigurationNode node = sub.getRootNode();
-            String value = (node.getValue() == null) ? "null" : node.getValue().toString();
-            System.out.println(node.getName() + "=" + value);
-        }
-
-    }
-
-    public void testDelimiterParsingDisabled() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1004");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
-
-        assertEquals("a,b,c", config.getString("split/list3/@values"));
-        assertEquals(0, config.getMaxIndex("split/list3/@values"));
-        assertEquals("a\\,b\\,c", config.getString("split/list4/@values"));
-        assertEquals("a,b,c", config.getString("split/list1"));
-        assertEquals(0, config.getMaxIndex("split/list1"));
-        assertEquals("a\\,b\\,c", config.getString("split/list2"));
-    }
-
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
@@ -946,57 +895,4 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }
 
-
-    /**
-     * A specialized combined configuration implementation used for testing
-     * custom result classes.
-     */
-    public static class ExtendedCombinedConfiguration extends
-            CombinedConfiguration
-    {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = 4678031745085083392L;
-
-        public Object getProperty(String key)
-        {
-            if (key.equals("test"))
-            {
-                return "Extended";
-            }
-            return super.getProperty(key);
-        }
-    }
-
-    public static class ExtendedXMLConfiguration extends XMLConfiguration
-    {
-        public ExtendedXMLConfiguration()
-        {
-        }
-
-    }
-
-    public static class TestLookup extends StrLookup
-    {
-        Map map = new HashMap();
-
-        public TestLookup()
-        {
-            map.put("test_file_xml", "test.xml");
-            map.put("test_file_combine", "testcombine1.xml");
-            map.put("test_key", "test.value");
-        }
-
-        public String lookup(String key)
-        {
-            if (key == null)
-            {
-                return null;
-            }
-            return (String)map.get(key);
-
-        }
-    }
 }
-

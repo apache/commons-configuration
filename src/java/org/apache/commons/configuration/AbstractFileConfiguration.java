@@ -18,7 +18,6 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,10 +26,7 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,7 +77,9 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$, $Date$
  * @since 1.0-rc2
  */
-public abstract class AbstractFileConfiguration extends BaseConfiguration implements FileConfiguration
+public abstract class AbstractFileConfiguration
+extends BaseConfiguration
+implements FileConfiguration, FileSystemBased
 {
     /** Constant for the configuration reload event.*/
     public static final int EVENT_RELOAD = 20;
@@ -109,6 +107,9 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
     /** A counter that prohibits reloading.*/
     private int noReload;
+
+    /** The FileSystem being used for this Configuration */
+    private FileSystem fileSystem = FileSystem.getDefaultFileSystem();
 
     /**
      * Default constructor
@@ -181,6 +182,26 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         load();
     }
 
+    public void setFileSystem(FileSystem fileSystem)
+    {
+        if (fileSystem == null)
+        {
+            throw new NullPointerException("A valid FileSystem must be specified");
+        }
+        this.fileSystem = fileSystem;
+    }
+
+    public void resetFileSystem()
+    {
+        this.fileSystem = FileSystem.getDefaultFileSystem();
+    }
+
+    public FileSystem getFileSystem()
+    {
+        return this.fileSystem;
+    }
+
+
     /**
      * Load the configuration from the underlying location.
      *
@@ -210,7 +231,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         try
         {
-            URL url = ConfigurationUtils.locate(basePath, fileName);
+            URL url = ConfigurationUtils.locate(this.fileSystem, basePath, fileName);
 
             if (url == null)
             {
@@ -272,18 +293,11 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
             sourceURL = url;
         }
 
-        // throw an exception if the target URL is a directory
-        File file = ConfigurationUtils.fileFromURL(url);
-        if (file != null && file.isDirectory())
-        {
-            throw new ConfigurationException("Cannot load a configuration from a directory");
-        }
-
         InputStream in = null;
 
         try
         {
-            in = url.openStream();
+            in = fileSystem.getInputStream(url);
             load(in);
         }
         catch (ConfigurationException e)
@@ -395,12 +409,19 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     {
         try
         {
-            File file = ConfigurationUtils.getFile(basePath, fileName);
+            URL url = this.fileSystem.getURL(basePath, fileName);
+
+            if (url == null)
+            {
+                throw new ConfigurationException("Cannot locate configuration source " + fileName);
+            }
+            save(url);
+            /*File file = ConfigurationUtils.getFile(basePath, fileName);
             if (file == null)
             {
                 throw new ConfigurationException("Invalid file name for save: " + fileName);
             }
-            save(file);
+            save(file); */
         }
         catch (ConfigurationException e)
         {
@@ -423,50 +444,23 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public void save(URL url) throws ConfigurationException
     {
-        // file URLs have to be converted to Files since FileURLConnection is
-        // read only (http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4191800)
-        File file = ConfigurationUtils.fileFromURL(url);
-        if (file != null)
+        OutputStream out = null;
+        try
         {
-            save(file);
+            out = fileSystem.getOutputStream(url);
+            save(out);
+            if (out instanceof VerifiableOutputStream)
+            {
+                ((VerifiableOutputStream) out).verify();
+            }
         }
-        else
+        catch (IOException e)
         {
-            // for non file URLs save through an URLConnection
-            OutputStream out = null;
-            try
-            {
-                URLConnection connection = url.openConnection();
-                connection.setDoOutput(true);
-
-                // use the PUT method for http URLs
-                if (connection instanceof HttpURLConnection)
-                {
-                    HttpURLConnection conn = (HttpURLConnection) connection;
-                    conn.setRequestMethod("PUT");
-                }
-
-                out = connection.getOutputStream();
-                save(out);
-
-                // check the response code for http URLs and throw an exception if an error occured
-                if (connection instanceof HttpURLConnection)
-                {
-                    HttpURLConnection conn = (HttpURLConnection) connection;
-                    if (conn.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST)
-                    {
-                        throw new IOException("HTTP Error " + conn.getResponseCode() + " " + conn.getResponseMessage());
-                    }
-                }
-            }
-            catch (IOException e)
-            {
-                throw new ConfigurationException("Could not save to URL " + url, e);
-            }
-            finally
-            {
-                closeSilent(out);
-            }
+            throw new ConfigurationException("Could not save to URL " + url, e);
+        }
+        finally
+        {
+            closeSilent(out);
         }
     }
 
@@ -485,14 +479,8 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
 
         try
         {
-            // create the file if necessary
-            createPath(file);
-            out = new FileOutputStream(file);
+            out = fileSystem.getOutputStream(file);
             save(out);
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException("Unable to save the configuration to the file " + file, e);
         }
         finally
         {
@@ -654,36 +642,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      */
     public String getPath()
     {
-        String path = null;
-        File file = getFile();
-        // if resource was loaded from jar file may be null
-        if (file != null)
-        {
-            path = file.getAbsolutePath();
-        }
-
-        // try to see if file was loaded from a jar
-        if (path == null)
-        {
-            if (sourceURL != null)
-            {
-                path = sourceURL.getPath();
-            }
-            else
-            {
-                try
-                {
-                    path = ConfigurationUtils.getURL(getBasePath(), getFileName()).getPath();
-                }
-                catch (MalformedURLException e)
-                {
-                    // simply ignore it and return null
-                    ;
-                }
-            }
-        }
-
-        return path;
+        return fileSystem.getPath(getFile(), sourceURL, getBasePath(), getFileName());
     }
 
     /**
@@ -701,6 +660,11 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         setFile(new File(path));
     }
 
+    URL getSourceURL()
+    {
+        return sourceURL;
+    }
+
     /**
      * Return the URL where the configuration is stored.
      *
@@ -709,7 +673,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
     public URL getURL()
     {
         return (sourceURL != null) ? sourceURL
-                : ConfigurationUtils.locate(getBasePath(), getFileName());
+                : ConfigurationUtils.locate(this.fileSystem, getBasePath(), getFileName());
     }
 
     /**
@@ -974,27 +938,6 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
         }
     }
 
-    /**
-     * Create the path to the specified file.
-     *
-     * @param file the target file
-     */
-    private void createPath(File file)
-    {
-        if (file != null)
-        {
-            // create the path to the file if the file doesn't exist
-            if (!file.exists())
-            {
-                File parent = file.getParentFile();
-                if (parent != null && !parent.exists())
-                {
-                    parent.mkdirs();
-                }
-            }
-        }
-    }
-
     public String getEncoding()
     {
         return encoding;
@@ -1040,7 +983,7 @@ public abstract class AbstractFileConfiguration extends BaseConfiguration implem
      * @param out the output stream to be closed (may be <b>null</b>)
      * @since 1.5
      */
-    private void closeSilent(OutputStream out)
+    protected void closeSilent(OutputStream out)
     {
         try
         {

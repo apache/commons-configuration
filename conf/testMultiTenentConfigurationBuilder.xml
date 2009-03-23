@@ -16,8 +16,14 @@
   </header>
   <override>
     <multifile filePattern="testMultiConfiguration_$$${sys:Id}.xml"
-               config-name="clientConfig"/>
+               config-name="clientConfig" delimiterParsingDisabled="true">
+       <expressionEngine
+          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </multifile>
     <xml fileName="testMultiConfiguration_default.xml"
-         config-name="defaultConfig"/>
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+      <expressionEngine
+          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+    </xml>
   </override>
 </configuration>

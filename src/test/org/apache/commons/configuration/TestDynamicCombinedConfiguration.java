@@ -19,6 +19,9 @@ package org.apache.commons.configuration;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+
+import java.io.File;
 
 /**
  *
@@ -50,16 +53,30 @@ public class TestDynamicCombinedConfiguration extends TestCase
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
+        XPathExpressionEngine engine = new XPathExpressionEngine();
+        config.setExpressionEngine(engine);
         config.setKeyPattern(PATTERN);
+        config.setDelimiterParsingDisabled(true);
         MultiFileHierarchicalConfiguration multi = new MultiFileHierarchicalConfiguration(PATTERN1);
+        multi.setExpressionEngine(engine);
         config.addConfiguration(multi, "Multi");
-        XMLConfiguration xml = new XMLConfiguration(DEFAULT_FILE);
+        XMLConfiguration xml = new XMLConfiguration();
+        xml.setExpressionEngine(engine);
+        xml.setDelimiterParsingDisabled(true);
+        xml.setFile(new File(DEFAULT_FILE));
+        xml.load();
         config.addConfiguration(xml, "Default");
 
         verify("1001", config, 15);
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);
+        assertEquals("a,b,c", config.getString("split/list3/@values"));
+        assertEquals(0, config.getMaxIndex("split/list3/@values"));
+        assertEquals("a\\,b\\,c", config.getString("split/list4/@values"));
+        assertEquals("a,b,c", config.getString("split/list1"));
+        assertEquals(0, config.getMaxIndex("split/list1"));
+        assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
     private void verify(String key, DynamicCombinedConfiguration config, int rows)

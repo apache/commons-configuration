@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.util.Hashtable;
+import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -46,7 +47,10 @@ public class TestJNDIConfiguration extends TestCase {
 
         System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
 
-        conf = new PotentialErrorJNDIConfiguration();
+        Properties props = new Properties();
+        props.put("java.naming.factory.initial", CONTEXT_FACTORY);
+        Context ctx = new InitialContext(props);
+        conf = new PotentialErrorJNDIConfiguration(ctx);
 
         nonStringTestHolder = new NonStringTestHolder();
         nonStringTestHolder.setConfiguration(conf);
@@ -278,15 +282,10 @@ public class TestJNDIConfiguration extends TestCase {
      * throw an exception when accessing the base context. Used for testing the
      * exception handling.
      */
-    static class PotentialErrorJNDIConfiguration extends JNDIConfiguration
+    public static class PotentialErrorJNDIConfiguration extends JNDIConfiguration
     {
         /** A flag whether an exception should be thrown. */
         boolean failOnGetCtx;
-
-        public PotentialErrorJNDIConfiguration() throws NamingException
-        {
-            super();
-        }
 
         public PotentialErrorJNDIConfiguration(Context ctx) throws NamingException
         {

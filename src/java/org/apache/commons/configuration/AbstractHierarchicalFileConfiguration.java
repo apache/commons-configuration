@@ -45,7 +45,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends HierarchicalConfiguration
-implements FileConfiguration, ConfigurationListener
+implements FileConfiguration, ConfigurationListener, FileSystemBased
 {
     /** Stores the delegate used for implementing functionality related to the
      * <code>FileConfiguration</code> interface.
@@ -435,6 +435,32 @@ implements FileConfiguration, ConfigurationListener
     protected void setDelegate(FileConfigurationDelegate delegate)
     {
         this.delegate = delegate;
+    }
+
+    /**
+     * Set the FileSystem to be used for this Configuration.
+     * @param fileSystem The FileSystem to use.
+     */
+    public void setFileSystem(FileSystem fileSystem)
+    {
+        delegate.setFileSystem(fileSystem);
+    }
+
+    /**
+     * Reset the FileSystem to the default;
+     */
+    public void resetFileSystem()
+    {
+        delegate.resetFileSystem();
+    }
+
+    /**
+     * Retrieve the FileSystem being used.
+     * @return The FileSystem.
+     */
+    public FileSystem getFileSystem()
+    {
+        return delegate.getFileSystem();
     }
 
     /**

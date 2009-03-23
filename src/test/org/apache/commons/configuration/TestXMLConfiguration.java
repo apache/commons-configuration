@@ -768,6 +768,18 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("a,b,c", conf2.getString("split.list1"));
         assertEquals(0, conf2.getMaxIndex("split.list1"));
         assertEquals("a\\,b\\,c", conf2.getString("split.list2"));
+        conf2 = new XMLConfiguration();
+        conf2.setExpressionEngine(new XPathExpressionEngine());
+        conf2.setDelimiterParsingDisabled(true);
+        conf2.setFile(new File(testProperties));
+        conf2.load();
+
+        assertEquals("a,b,c", conf2.getString("split/list3/@values"));
+        assertEquals(0, conf2.getMaxIndex("split/list3/@values"));
+        assertEquals("a\\,b\\,c", conf2.getString("split/list4/@values"));
+        assertEquals("a,b,c", conf2.getString("split/list1"));
+        assertEquals(0, conf2.getMaxIndex("split/list1"));
+        assertEquals("a\\,b\\,c", conf2.getString("split/list2"));
     }
 
     /**

@@ -19,18 +19,15 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
 
@@ -38,66 +35,89 @@ import org.apache.commons.lang.text.StrLookup;
  * Test class for DefaultConfigurationBuilder.
  *
  * @author Oliver Heger
- * @version $Id$
+ * @version $Id: TestDefaultConfigurationBuilder.java 737642 2009-01-26 07:27:11Z rgoers $
  */
-public class TestDefaultConfigurationBuilder extends TestCase
+public class TestWebdavConfigurationBuilder extends TestCase implements FileOptionsProvider
 {
     /** Test configuration definition file. */
-    private static final File TEST_FILE = new File(
-            "conf/testDigesterConfiguration.xml");
+    private static final String TEST_FILE =
+            "testDigesterConfiguration.xml";
 
-    private static final File ADDITIONAL_FILE = new File(
-            "conf/testDigesterConfiguration2.xml");
+    private static final String ADDITIONAL_FILE =
+            "testDigesterConfiguration2.xml";
 
-    private static final File OPTIONAL_FILE = new File(
-            "conf/testDigesterOptionalConfiguration.xml");
+    private static final String OPTIONAL_FILE =
+            "testDigesterOptionalConfiguration.xml";
 
-    private static final File OPTIONALEX_FILE = new File(
-            "conf/testDigesterOptionalConfigurationEx.xml");
+    private static final String OPTIONALEX_FILE =
+            "testDigesterOptionalConfigurationEx.xml";
 
-    private static final File MULTI_FILE = new File(
-            "conf/testDigesterConfiguration3.xml");
+    private static final String MULTI_FILE =
+            "testDigesterConfiguration3.xml";
 
-    private static final File INIT_FILE = new File(
-            "conf/testComplexInitialization.xml");
+    private static final String INIT_FILE =
+            "testComplexInitialization.xml";
 
-    private static final File CLASS_FILE = new File(
-            "conf/testExtendedClass.xml");
+    private static final String CLASS_FILE =
+            "testExtendedClass.xml";
 
-    private static final File PROVIDER_FILE = new File(
-            "conf/testConfigurationProvider.xml");
+    private static final String PROVIDER_FILE =
+            "testConfigurationProvider.xml";
 
-    private static final File EXTENDED_PROVIDER_FILE = new File(
-            "conf/testExtendedXMLConfigurationProvider.xml");
+    private static final String EXTENDED_PROVIDER_FILE =
+            "testExtendedXMLConfigurationProvider.xml";
 
-    private static final File GLOBAL_LOOKUP_FILE = new File(
-            "conf/testGlobalLookup.xml");
+    private static final String GLOBAL_LOOKUP_FILE =
+            "testGlobalLookup.xml";
 
-    private static final File SYSTEM_PROPS_FILE = new File(
-            "conf/testSystemProperties.xml");
+    private static final String SYSTEM_PROPS_FILE =
+            "testSystemProperties.xml";
 
-    private static final File VALIDATION_FILE = new File(
-            "conf/testValidation.xml");
+    private static final String VALIDATION_FILE =
+            "testValidation.xml";
 
-    private static final File MULTI_TENENT_FILE = new File(
-            "conf/testMultiTenentConfigurationBuilder.xml");
+    private static final String MULTI_TENENT_FILE =
+            "testMultiTenentConfigurationBuilder.xml";
+
+    private static final String TEST_PROPERTIES = "test.properties.xml";
+
+    private static final String TEST_SAVE = "testsave.xml";
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
+    private Map options;
+
+
     /** Stores the object to be tested. */
     DefaultConfigurationBuilder factory;
+
+    private String getBasePath()
+    {
+        String path = System.getProperty("test.webdav.base");
+        assertNotNull("No base url provided", path);
+        return path;
+    }
 
     protected void setUp() throws Exception
     {
         super.setUp();
-        System
-                .setProperty("java.naming.factory.initial",
+        System.setProperty("java.naming.factory.initial",
                         "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", "test.xml");
         System.setProperty("test_file_combine", "testcombine1.xml");
+        FileSystem fs = new VFSFileSystem();
+        fs.setFileOptionsProvider(this);
+        FileSystem.setDefaultFileSystem(fs);
         factory = new DefaultConfigurationBuilder();
+        factory.setBasePath(getBasePath());
         factory.clearErrorListeners();  // avoid exception messages
+    }
+
+    protected void tearDown() throws Exception
+    {
+        FileSystem.resetDefaultFileSystem();
+        super.tearDown();
     }
 
     /**
@@ -311,7 +331,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadConfiguration() throws ConfigurationException
     {
-        factory.setFile(TEST_FILE);
+        factory.setFileName(TEST_FILE);
         checkConfiguration();
     }
 
@@ -320,27 +340,27 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadConfigurationFromFile() throws ConfigurationException
     {
-        factory = new DefaultConfigurationBuilder(TEST_FILE);
+        factory = new DefaultConfigurationBuilder(getBasePath() + TEST_FILE);
         checkConfiguration();
     }
 
     /**
-     * Tests the file name constructor.
+     * This test doesn't test DefaultConfigurationBuilder. It tests saving a file
+     * using Webdav file options.
      */
-    public void testLoadConfigurationFromFileName()
-            throws ConfigurationException
+    public void testSaveConfiguration() throws ConfigurationException
     {
-        factory = new DefaultConfigurationBuilder(TEST_FILE.getAbsolutePath());
-        checkConfiguration();
-    }
-
-    /**
-     * Tests the URL constructor.
-     */
-    public void testLoadConfigurationFromURL() throws Exception
-    {
-        factory = new DefaultConfigurationBuilder(TEST_FILE.toURL());
-        checkConfiguration();
+        options = new HashMap();
+        options.put(FileOptionsProvider.VERSIONING, Boolean.TRUE);
+        options.put(FileOptionsProvider.CURRENT_USER, "TestUser");
+        XMLConfiguration conf = new XMLConfiguration();
+        conf.setFileName(getBasePath() + TEST_PROPERTIES);
+        conf.load();
+        conf.save(getBasePath() + TEST_SAVE);
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFileName(getBasePath() + TEST_SAVE);
+        checkSavedConfig(conf, checkConfig);
+        options = null;
     }
 
     /**
@@ -390,7 +410,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadAdditional() throws ConfigurationException
     {
-        factory.setFile(ADDITIONAL_FILE);
+        factory.setFileName(ADDITIONAL_FILE);
         CombinedConfiguration compositeConfiguration = (CombinedConfiguration) factory
                 .getConfiguration();
         assertEquals("Verify how many configs", 2, compositeConfiguration
@@ -443,7 +463,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptional() throws Exception
     {
-        factory.setURL(OPTIONAL_FILE.toURL());
+        factory.setFileName(OPTIONAL_FILE);
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
@@ -470,7 +490,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptionalWithException()
     {
-        factory.setFile(OPTIONALEX_FILE);
+        factory.setFileName(OPTIONALEX_FILE);
         try
         {
             factory.getConfiguration();
@@ -493,25 +513,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertTrue("Configuration not empty", config.isEmpty());
         assertEquals("Wrong number of configurations", 0, config
                 .getNumberOfConfigurations());
-    }
-
-    /**
-     * Tests an optional, non existing configuration with the forceCreate
-     * attribute. This configuration should be added to the resulting
-     * configuration.
-     */
-    public void testLoadOptionalForceCreate() throws ConfigurationException
-    {
-        factory.setBasePath(TEST_FILE.getParent());
-        CombinedConfiguration config = prepareOptionalTest("xml", true);
-        assertEquals("Wrong number of configurations", 1, config
-                .getNumberOfConfigurations());
-        FileConfiguration fc = (FileConfiguration) config
-                .getConfiguration(OPTIONAL_NAME);
-        assertNotNull("Optional config not found", fc);
-        assertEquals("File name was not set", "nonExisting.xml", fc
-                .getFileName());
-        assertNotNull("Base path was not set", fc.getBasePath());
     }
 
     /**
@@ -581,7 +582,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadDifferentSources() throws ConfigurationException
     {
-        factory.setFile(MULTI_FILE);
+        factory.setFileName(MULTI_FILE);
         Configuration config = factory.getConfiguration();
         assertFalse(config.isEmpty());
         assertTrue(config instanceof CombinedConfiguration);
@@ -630,7 +631,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testComplexInitialization() throws ConfigurationException
     {
-        factory.setFile(INIT_FILE);
+        factory.setFileName(INIT_FILE);
         CombinedConfiguration cc = (CombinedConfiguration) factory
                 .getConfiguration();
 
@@ -664,7 +665,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testCombinedConfiguration() throws ConfigurationException
     {
-        factory.setFile(INIT_FILE);
+        factory.setFileName(INIT_FILE);
         CombinedConfiguration cc = (CombinedConfiguration) factory
                 .getConfiguration();
         assertNotNull("Properties configuration not found", cc
@@ -690,7 +691,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testCombinedConfigurationNoAdditional()
             throws ConfigurationException
     {
-        factory.setFile(TEST_FILE);
+        factory.setFileName(TEST_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
         assertNull("Additional configuration was found", cc
                 .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME));
@@ -702,7 +703,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testCombinedConfigurationListNodes()
             throws ConfigurationException
     {
-        factory.setFile(INIT_FILE);
+        factory.setFileName(INIT_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
         Set listNodes = cc.getNodeCombiner().getListNodes();
         assertEquals("Wrong number of list nodes", 2, listNodes.size());
@@ -714,21 +715,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
         listNodes = cca.getNodeCombiner().getListNodes();
         assertTrue("Found list nodes for additional combiner", listNodes
                 .isEmpty());
-    }
-
-    /**
-     * Tests whether a configuration builder can itself be declared in a
-     * configuration definition file.
-     */
-    public void testConfigurationBuilderProvider()
-            throws ConfigurationException
-    {
-        factory.addProperty("override.configuration[@fileName]", TEST_FILE
-                .getAbsolutePath());
-        CombinedConfiguration cc = factory.getConfiguration(false);
-        assertEquals("Wrong number of configurations", 1, cc
-                .getNumberOfConfigurations());
-        checkProperties(cc);
     }
 
     /**
@@ -777,11 +763,12 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testExtendedClass() throws ConfigurationException
     {
-        factory.setFile(CLASS_FILE);
+        factory.setFileName(CLASS_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        assertEquals("Extended", cc.getProperty("test"));
+        String prop = (String)cc.getProperty("test");
+        assertEquals("Expected 'Extended', actual '" + prop + "'", "Extended", prop);
         assertTrue("Wrong result class: " + cc.getClass(),
-                cc instanceof ExtendedCombinedConfiguration);
+                cc instanceof TestDefaultConfigurationBuilder.ExtendedCombinedConfiguration);
     }
 
     /**
@@ -789,7 +776,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testConfigurationProvider() throws ConfigurationException
     {
-        factory.setFile(PROVIDER_FILE);
+        factory.setFileName(PROVIDER_FILE);
         factory.getConfiguration(true);
         DefaultConfigurationBuilder.ConfigurationProvider provider = factory
                 .providerForTag("test");
@@ -801,7 +788,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testExtendedXMLConfigurationProvider() throws ConfigurationException
     {
-        factory.setFile(EXTENDED_PROVIDER_FILE);
+        factory.setFileName(EXTENDED_PROVIDER_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
         DefaultConfigurationBuilder.ConfigurationProvider provider = factory
                 .providerForTag("test");
@@ -809,12 +796,13 @@ public class TestDefaultConfigurationBuilder extends TestCase
         Configuration config = cc.getConfiguration("xml");
         assertNotNull("Test configuration not present", config);
         assertTrue("Configuration is not ExtendedXMLConfiguration, is " +
-                config.getClass().getName(), config instanceof ExtendedXMLConfiguration);
+                config.getClass().getName(),
+                config instanceof TestDefaultConfigurationBuilder.ExtendedXMLConfiguration);
     }
 
     public void testGlobalLookup() throws Exception
     {
-        factory.setFile(GLOBAL_LOOKUP_FILE);
+        factory.setFileName(GLOBAL_LOOKUP_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
         String value = cc.getInterpolator().lookup("test:test_key");
         assertNotNull("The test key was not located", value);
@@ -823,8 +811,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testSystemProperties() throws Exception
     {
-        factory.setFile(SYSTEM_PROPS_FILE);
-        factory.getConfiguration(true);
+        factory.setFileName(SYSTEM_PROPS_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -833,8 +821,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testValidation() throws Exception
     {
-        factory.setFile(VALIDATION_FILE);
-        factory.getConfiguration(true);
+        factory.setFileName(VALIDATION_FILE);
+        CombinedConfiguration cc = factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -842,8 +830,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testMultiTenentConfiguration() throws Exception
     {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.getProperties().remove("Id");
+        factory.setFileName(MULTI_TENENT_FILE);
+        System.clearProperty("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
@@ -857,7 +845,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testMultiTenentConfiguration2() throws Exception
     {
-        factory.setFile(MULTI_TENENT_FILE);
+        factory.setFileName(MULTI_TENENT_FILE);
         System.setProperty("Id", "1004");
 
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -872,7 +860,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testMultiTenentConfiguration3() throws Exception
     {
-        factory.setFile(MULTI_TENENT_FILE);
+        factory.setFileName(MULTI_TENENT_FILE);
         System.setProperty("Id", "1005");
 
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -885,60 +873,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
-    /** This test doesn't pass and rightfully so. A new "MergeCombiner" needs to be
-     * created so it will.
-     * @throws Exception
-     */  /*
-    public void testMultiTenantConfigurationAt() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1001");
-        CombinedConfiguration config = factory.getConfiguration(true);
-        HierarchicalConfiguration sub1 = config.configurationAt("Channels/Channel[@id='1']");
-        assertEquals("My Channel", sub1.getString("Name"));
-        assertEquals("test 1 data", sub1.getString("ChannelData"));
-        HierarchicalConfiguration sub2 = config.configurationAt("Channels/Channel[@id='2']");
-        assertEquals("Channel 2", sub2.getString("Name"));
-        assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
-    } */
-
-    public void testMerge() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1004");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
-
-        List list = config.configurationsAt("colors/*");
-        Iterator iter = list.iterator();
-        System.out.println("Color nodes");
-        while (iter.hasNext())
-        {
-            SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
-            ConfigurationNode node = sub.getRootNode();
-            String value = (node.getValue() == null) ? "null" : node.getValue().toString();
-            System.out.println(node.getName() + "=" + value);
-        }
-
-    }
-
-    public void testDelimiterParsingDisabled() throws Exception
-    {
-        factory.setFile(MULTI_TENENT_FILE);
-        System.setProperty("Id", "1004");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
-
-        assertEquals("a,b,c", config.getString("split/list3/@values"));
-        assertEquals(0, config.getMaxIndex("split/list3/@values"));
-        assertEquals("a\\,b\\,c", config.getString("split/list4/@values"));
-        assertEquals("a,b,c", config.getString("split/list1"));
-        assertEquals(0, config.getMaxIndex("split/list1"));
-        assertEquals("a\\,b\\,c", config.getString("split/list2"));
-    }
-
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
@@ -946,57 +880,22 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }
 
+    public Map getOptions()
+    {
+        return this.options;
+    }
 
     /**
-     * A specialized combined configuration implementation used for testing
-     * custom result classes.
+     * Helper method for checking if a save operation was successful. Loads a
+     * saved configuration and then tests against a reference configuration.
+     * @param conf the original configuration
+     * @param newConfig the configuration to check
+     * @throws ConfigurationException if an error occurs
      */
-    public static class ExtendedCombinedConfiguration extends
-            CombinedConfiguration
+    private void checkSavedConfig(XMLConfiguration conf, FileConfiguration newConfig)
+        throws ConfigurationException
     {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = 4678031745085083392L;
-
-        public Object getProperty(String key)
-        {
-            if (key.equals("test"))
-            {
-                return "Extended";
-            }
-            return super.getProperty(key);
-        }
-    }
-
-    public static class ExtendedXMLConfiguration extends XMLConfiguration
-    {
-        public ExtendedXMLConfiguration()
-        {
-        }
-
-    }
-
-    public static class TestLookup extends StrLookup
-    {
-        Map map = new HashMap();
-
-        public TestLookup()
-        {
-            map.put("test_file_xml", "test.xml");
-            map.put("test_file_combine", "testcombine1.xml");
-            map.put("test_key", "test.value");
-        }
-
-        public String lookup(String key)
-        {
-            if (key == null)
-            {
-                return null;
-            }
-            return (String)map.get(key);
-
-        }
+        newConfig.load();
+        ConfigurationAssert.assertEquals(conf, newConfig);
     }
 }
-

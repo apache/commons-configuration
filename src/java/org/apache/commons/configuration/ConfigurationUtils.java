@@ -18,8 +18,6 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -336,28 +334,7 @@ public final class ConfigurationUtils
      */
     public static URL getURL(String basePath, String file) throws MalformedURLException
     {
-        File f = new File(file);
-        if (f.isAbsolute()) // already absolute?
-        {
-            return toURL(f);
-        }
-
-        try
-        {
-            if (basePath == null)
-            {
-                return new URL(file);
-            }
-            else
-            {
-                URL base = new URL(basePath);
-                return new URL(base, file);
-            }
-        }
-        catch (MalformedURLException uex)
-        {
-            return toURL(constructFile(basePath, file));
-        }
+        return FileSystem.getDefaultFileSystem().getURL(basePath, file);
     }
 
     /**
@@ -371,7 +348,7 @@ public final class ConfigurationUtils
      */
     static File constructFile(String basePath, String fileName)
     {
-        File file = null;
+        File file;
 
         File absolute = null;
         if (fileName != null)
@@ -439,6 +416,21 @@ public final class ConfigurationUtils
      */
     public static URL locate(String base, String name)
     {
+        return locate(FileSystem.getDefaultFileSystem(), base, name);
+    }
+
+    /**
+     * Return the location of the specified resource by searching the user home
+     * directory, the current classpath and the system classpath.
+     *
+     * @param fileSystem the FileSystem to use.
+     * @param base the base path of the resource
+     * @param name the name of the resource
+     *
+     * @return the location of the resource
+     */
+    public static URL locate(FileSystem fileSystem, String base, String name)
+    {
         if (log.isDebugEnabled())
         {
             StringBuffer buf = new StringBuffer();
@@ -453,41 +445,9 @@ public final class ConfigurationUtils
             return null;
         }
 
-        URL url = null;
-
         // attempt to create an URL directly
-        try
-        {
-            if (base == null)
-            {
-                url = new URL(name);
-            }
-            else
-            {
-                URL baseURL = new URL(base);
-                url = new URL(baseURL, name);
 
-                // check if the file exists
-                InputStream in = null;
-                try
-                {
-                    in = url.openStream();
-                }
-                finally
-                {
-                    if (in != null)
-                    {
-                        in.close();
-                    }
-                }
-            }
-
-            log.debug("Loading configuration from the URL " + url);
-        }
-        catch (IOException e)
-        {
-            url = null;
-        }
+        URL url = fileSystem.locateFromURL(base, name);
 
         // attempt to load from an absolute path
         if (url == null)

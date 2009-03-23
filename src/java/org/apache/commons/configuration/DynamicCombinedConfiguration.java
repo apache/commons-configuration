@@ -747,6 +747,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             {
                 config = new CombinedConfiguration(getNodeCombiner());
                 config.setExpressionEngine(this.getExpressionEngine());
+                config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+                config.setDetailEvents(this.isDetailEvents());
+                config.setConversionExpressionEngine(getConversionExpressionEngine());
+                config.setListDelimiter(getListDelimiter());
                 Iterator iter = config.getErrorListeners().iterator();
                 while (iter.hasNext())
                 {
