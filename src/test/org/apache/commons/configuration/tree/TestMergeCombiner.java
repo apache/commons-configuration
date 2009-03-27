@@ -125,7 +125,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
 
     public void testMerge() throws ConfigurationException
     {
-        combiner.setDebugStream(System.out);
+        //combiner.setDebugStream(System.out);
         HierarchicalConfiguration config = createCombinedConfiguration();
         config.setExpressionEngine(new XPathExpressionEngine());
         assertEquals("Wrong number of Channels", 3, config.getMaxIndex("Channels/Channel"));
