@@ -36,6 +36,7 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
+import org.apache.commons.configuration.tree.ViewNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -1331,12 +1332,28 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             for (Iterator it = getChildren().iterator(); it.hasNext()
                     && !visitor.terminate();)
             {
-                ((Node) it.next()).visit(visitor, key);
+                Object obj = it.next();
+                if (obj instanceof ViewNode)
+                {
+                    new Node((ViewNode)obj).visit(visitor, key);
+                }
+                else
+                {
+                    ((Node) obj).visit(visitor, key);
+                }
             }
             for (Iterator it = getAttributes().iterator(); it.hasNext()
                     && !visitor.terminate();)
             {
-                ((Node) it.next()).visit(visitor, key);
+                Object obj = it.next();
+                if (obj instanceof ViewNode)
+                {
+                    new Node((ViewNode)obj).visit(visitor, key);
+                }
+                else
+                {
+                    ((Node) obj).visit(visitor, key);
+                }
             }
 
             if (key != null)
@@ -1621,7 +1638,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 do
                 {
                     sibling1 = nd;
-                    nd = (Node) children.next();
+                    Object obj = children.next();
+                    if (obj instanceof ViewNode)
+                    {
+                        nd = new Node((ViewNode)obj);  
+                    }
+                    else
+                    {
+                        nd = (Node) obj;
+                    }
                 } while (nd.getReference() != null && children.hasNext());
 
                 if (nd.getReference() == null)
@@ -1631,7 +1656,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
-                        nd = (Node) children.next();
+                        Object obj = children.next();
+                        if (obj instanceof ViewNode)
+                        {
+                            nd = new Node((ViewNode)obj);
+                        }
+                        else
+                        {
+                            nd = (Node) obj;
+                        }
                         if (nd.getReference() == null)
                         {
                             newNodes.add(nd);

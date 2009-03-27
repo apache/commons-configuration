@@ -19,6 +19,8 @@ package org.apache.commons.configuration.tree;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Iterator;
+import java.io.PrintStream;
 
 /**
  * <p>
@@ -52,6 +54,9 @@ import java.util.Set;
  */
 public abstract class NodeCombiner
 {
+    /** Stream to write debug output to */
+    private PrintStream debugStream = null;
+    
     /** Stores a list with node names that are known to be list nodes. */
     protected Set listNodes;
 
@@ -120,5 +125,55 @@ public abstract class NodeCombiner
     protected ViewNode createViewNode()
     {
         return new ViewNode();
+    }
+
+    /**
+     * Set the output stream to write the tree to.
+     * @param stream The OutputStream.
+     */
+    public void setDebugStream(PrintStream stream)
+    {
+        this.debugStream = stream;
+    }
+        
+    protected void printTree(ConfigurationNode result)
+    {
+        if (debugStream != null)
+        {
+            printTree("", result);
+        }
+    }
+
+    private void printTree(String indent, ConfigurationNode result)
+    {
+        StringBuffer buffer = new StringBuffer(indent).append("<").append(result.getName());
+        Iterator iter = result.getAttributes().iterator();
+        while (iter.hasNext())
+        {
+            ConfigurationNode node = (ConfigurationNode) iter.next();
+            buffer.append(" ").append(node.getName()).append("='").append(node.getValue()).append("'");
+        }
+        buffer.append(">");
+        debugStream.print(buffer.toString());
+        if (result.getValue() != null)
+        {
+            debugStream.print(result.getValue());
+        }
+        boolean newline = false;
+        if (result.getChildrenCount() > 0)
+        {
+            debugStream.print("\n");
+            iter = result.getChildren().iterator();
+            while (iter.hasNext())
+            {
+                printTree(indent + "  ", (ConfigurationNode) iter.next());
+            }
+            newline = true;
+        }
+        if (newline)
+        {
+            debugStream.print(indent);
+        }
+        debugStream.println("</" + result.getName() + ">");
     }
 }

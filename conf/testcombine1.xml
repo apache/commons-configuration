@@ -49,4 +49,15 @@
       </table>
     </tables>
   </database>
+  <Channels>
+    <Channel id="1" type="half">
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id="2">
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+    <Channel id="3" type="half">
+      <Name>Test Channel</Name>
+    </Channel> 
+  </Channels>  
 </config>
