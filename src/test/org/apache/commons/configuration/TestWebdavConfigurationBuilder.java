@@ -19,9 +19,9 @@ package org.apache.commons.configuration;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -29,7 +29,6 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.lang.text.StrLookup;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -812,7 +811,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
     public void testSystemProperties() throws Exception
     {
         factory.setFileName(SYSTEM_PROPS_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -822,7 +821,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
     public void testValidation() throws Exception
     {
         factory.setFileName(VALIDATION_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -831,7 +830,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
     public void testMultiTenentConfiguration() throws Exception
     {
         factory.setFileName(MULTI_TENENT_FILE);
-        System.clearProperty("Id");
+        System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);

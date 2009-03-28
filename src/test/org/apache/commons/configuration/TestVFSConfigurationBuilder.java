@@ -811,7 +811,7 @@ public class TestVFSConfigurationBuilder extends TestCase
         Configuration config = cc.getConfiguration("xml");
         assertNotNull("Test configuration not present", config);
         assertTrue("Configuration is not ExtendedXMLConfiguration, is " +
-                config.getClass().getName(), 
+                config.getClass().getName(),
                 config instanceof TestDefaultConfigurationBuilder.ExtendedXMLConfiguration);
     }
 
@@ -827,7 +827,7 @@ public class TestVFSConfigurationBuilder extends TestCase
     public void testSystemProperties() throws Exception
     {
         factory.setFile(SYSTEM_PROPS_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -837,7 +837,7 @@ public class TestVFSConfigurationBuilder extends TestCase
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -846,7 +846,7 @@ public class TestVFSConfigurationBuilder extends TestCase
     public void testMultiTenentConfiguration() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
-        System.clearProperty("Id");
+        System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
