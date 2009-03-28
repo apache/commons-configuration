@@ -21,9 +21,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Iterator;
 
-import org.apache.commons.configuration.event.ConfigurationEvent;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration.event.ConfigurationEvent;
 
 /**
  * Test class for PropertiesConfigurationLayout.
@@ -257,6 +257,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         assertEquals("Blanc lines before new property", 0, layout
                 .getBlancLinesBefore(TEST_KEY));
         assertTrue("No single line property", layout.isSingleLine(TEST_KEY));
+        assertEquals("Wrong separator", " = ", layout.getSeparator(TEST_KEY));
     }
 
     /**
@@ -578,7 +579,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     }
 
     /**
-     * Tests if the copy and the original are independend from each other.
+     * Tests if the copy and the original are independent from each other.
      */
     public void testInitCopyModify()
     {
@@ -594,6 +595,16 @@ public class TestPropertiesConfigurationLayout extends TestCase
         assertFalse("Blanc lines do not differ", layout
                 .getBlancLinesBefore(TEST_KEY) == l2
                 .getBlancLinesBefore(TEST_KEY));
+    }
+
+    /**
+     * Tests changing the separator for a property.
+     */
+    public void testSetSeparator() throws ConfigurationException
+    {
+        config.addProperty(TEST_KEY, TEST_VALUE);
+        layout.setSeparator(TEST_KEY, ":");
+        checkLayoutString(TEST_KEY + ":" + TEST_VALUE + CR);
     }
 
     /**

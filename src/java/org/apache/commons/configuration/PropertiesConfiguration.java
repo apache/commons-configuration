@@ -177,6 +177,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /** Constant for the supported comment characters.*/
     static final String COMMENT_CHARS = "#!";
 
+    /** Constant for the default properties separator.*/
+    static final String DEFAULT_SEPARATOR = " = ";
+
     /**
      * Constant for the default <code>IOFactory</code>. This instance is used
      * when no specific factory was set.
@@ -602,6 +605,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /** Stores the value of the last read property.*/
         private String propertyValue;
 
+        /** Stores the property separator of the last read property.*/
+        private String propertySeparator = DEFAULT_SEPARATOR;
+
         /** Stores the list delimiter character.*/
         private char delimiter;
 
@@ -741,6 +747,19 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
+         * Returns the separator that was used for the last read property. The
+         * separator can be stored so that it can later be restored when saving
+         * the configuration.
+         *
+         * @return the separator for the last read property
+         * @since 1.7
+         */
+        public String getPropertySeparator()
+        {
+            return propertySeparator;
+        }
+
+        /**
          * Parses a line read from the properties file. This method is called
          * for each non-comment line read from the source file. Its task is to
          * split the passed in line into the property key and its value. The
@@ -755,6 +774,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             String[] property = doParseProperty(line);
             initPropertyName(property[0]);
             initPropertyValue(property[1]);
+            initPropertySeparator(property[2]);
         }
 
         /**
@@ -786,6 +806,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
+         * Sets the separator of the current property. This method can be called
+         * by <code>parseProperty()</code>. It allows the associated layout
+         * object to keep track of the property separators. When saving the
+         * configuration the separators can be restored.
+         *
+         * @param value the separator used for the current property
+         * @since 1.7
+         */
+        protected void initPropertySeparator(String value)
+        {
+            propertySeparator = value;
+        }
+
+        /**
          * Checks if the passed in line should be combined with the following.
          * This is true, if the line ends with an odd number of backslashes.
          *
@@ -804,19 +838,20 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
-         * Parse a property line and return the key and the value in an array.
+         * Parse a property line and return the key, the value, and the separator in an array.
          *
          * @param line the line to parse
-         * @return an array with the property's key and value
+         * @return an array with the property's key, value, and separator
          */
         private static String[] doParseProperty(String line)
         {
             // sorry for this spaghetti code, please replace it as soon as
             // possible with a regexp when the Java 1.3 requirement is dropped
 
-            String[] result = new String[2];
+            String[] result = new String[3];
             StringBuffer key = new StringBuffer();
             StringBuffer value = new StringBuffer();
+            StringBuffer separator = new StringBuffer();
 
             // state of the automaton:
             // 0: key parsing
@@ -839,11 +874,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                         else if (ArrayUtils.contains(WHITE_SPACE, c))
                         {
                             // switch to the separator crossing state
+                            separator.append(c);
                             state = 2;
                         }
                         else if (ArrayUtils.contains(SEPARATORS, c))
                         {
                             // switch to the value parsing state
+                            separator.append(c);
                             state = 3;
                         }
                         else
@@ -872,19 +909,14 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                         break;
 
                     case 2:
-                        if (ArrayUtils.contains(WHITE_SPACE, c))
+                        if (ArrayUtils.contains(WHITE_SPACE, c) || ArrayUtils.contains(SEPARATORS, c))
                         {
-                            // do nothing, eat all white spaces
-                            state = 2;
-                        }
-                        else if (ArrayUtils.contains(SEPARATORS, c))
-                        {
-                            // switch to the value parsing state
-                            state = 3;
+                            // record the separator
+                            separator.append(c);
                         }
                         else
                         {
-                            // any other character indicates we encoutered the beginning of the value
+                            // any other character indicates we encountered the beginning of the value
                             value.append(c);
 
                             // switch to the value parsing state
@@ -901,18 +933,24 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
             result[0] = key.toString().trim();
             result[1] = value.toString().trim();
+            result[2] = separator.toString();
 
             return result;
         }
     } // class PropertiesReader
 
     /**
-     * This class is used to write properties lines.
+     * This class is used to write properties lines. The most important method
+     * is <code>writeProperty(String, Object, boolean)</code>, which is called
+     * during a save operation for each property found in the configuration.
      */
     public static class PropertiesWriter extends FilterWriter
     {
         /** The delimiter for multi-valued properties.*/
         private char delimiter;
+
+        /** The separator to be used for the current property. */
+        private String currentSeparator;
 
         /**
          * Constructor.
@@ -924,6 +962,29 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             super(writer);
             this.delimiter = delimiter;
+        }
+
+        /**
+         * Returns the current property separator.
+         *
+         * @return the current property separator
+         * @since 1.7
+         */
+        public String getCurrentSeparator()
+        {
+            return currentSeparator;
+        }
+
+        /**
+         * Sets the current property separator. This separator is used when
+         * writing the next property.
+         *
+         * @param currentSeparator the current property separator
+         * @since 1.7
+         */
+        public void setCurrentSeparator(String currentSeparator)
+        {
+            this.currentSeparator = currentSeparator;
         }
 
         /**
@@ -991,7 +1052,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
 
             write(escapeKey(key));
-            write(" = ");
+            write(fetchSeparator(key, value));
             write(v);
 
             writeln(null);
@@ -1108,6 +1169,24 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             write(LINE_SEPARATOR);
         }
 
+        /**
+         * Returns the separator to be used for the given property. This method
+         * is called by <code>writeProperty()</code>. The string returned here
+         * is used as separator between the property key and its value. Per
+         * default the separator returned by <code>getCurrentSeparator()</code>
+         * is returned, which was set by the associated layout object. Derived
+         * classes may implement a different strategy for defining the
+         * separator.
+         *
+         * @param key the property key
+         * @param value the value
+         * @return the separator to be used
+         * @since 1.7
+         */
+        protected String fetchSeparator(String key, Object value)
+        {
+            return getCurrentSeparator();
+        }
     } // class PropertiesWriter
 
     /**
