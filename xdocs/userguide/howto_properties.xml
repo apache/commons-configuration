@@ -197,14 +197,58 @@ key = This \n string \t contains \, escaped \\ characters \u0020
       </p>
       <p>
         Normally a developer does not have to deal with these layout objects.
-        However there are some methods that might be of interest in certain use
-        cases. For instance <code>PropertiesConfigurationLayout</code> defines
-        methods for obtaining and setting the comment for a property key. A
-        header comment for the whole properties file is also supported. If the
-        values of multi-valued properties should always be written on a
-        single line rather than adding a new property definition for each value
-        (which would be incompatible with <code>java.util.Properties</code>)
-        the <code>setForceSingleLine()</code> method can be used.
+        However, there are some methods that might be of interest if enhanced
+        control over the output of properties files is needed. The following
+        list describes these methods (note that corresponding get methods are
+        of course also provided):
+        <ul>
+        <li><code>setComment()</code><br/>
+        With this method a comment can be set for a specified property. When
+        storing the configuration the comment is output before the property,
+        followed by a line break. The comment can span multiple lines; in this
+        case the newline character &quot;\n&quot; must be used as line
+        separator.</li>
+        <li><code>setHeaderComment()</code><br/>
+        With <code>setHeaderComment()</code> a global comment can be set for the
+        properties file. This comment is written at the very start of the file,
+        followed by an empty line.</li>
+        <li><code>setBlancLinesBefore()</code><br/>
+        This methods allows defining the number of empty lines to be written
+        before the specified property. It can be used, for instance, for
+        deviding the properties file into multiple logic sections.</li>
+        <li><code>setSingleLine()</code><br/>
+        If a property has multiple values, with <code>setSingleLine()</code> it
+        can be specified that all these values should be written into a single
+        line separated by the default list separator. It is also possible to
+        write multiple definitions for this property (i.e. multiple lines of the
+        form <code>property = value1</code>, <code>property = value2</code> etc.).
+        This is supported by <code>PropertiesConfiguration</code>, but will
+        probably not work when processing the properties file with other tools.
+        </li>
+        <li><code>setForceSingleLine()</code><br/>
+        This is similar to <code>setSingleLine()</code>, but sets a global
+        single line flag. If set to <b>true</b>, all properties with multiple
+        values are always written on a single line.</li>
+        <li><code>setGlobalSeparator()</code><br/>
+        Sometimes it may be necessary to define the properties separator, i.e.
+        the string that separates the property key from the value. This can be
+        done using <code>setGlobalSeparator()</code>. Here an arbitrary string
+        can be specified that will be used as separator. (Note: In order to
+        produce valid properties files only the characters <code>=</code> and
+        <code>:</code> should be used as separators (with or without leading or
+        trailing whitespace), but the method does not enforce this.</li>
+        <li><code>setSeparator()</code><br/>
+        This method is similar to <code>setGlobalSeparator()</code>, but
+        allows setting the property separator for a specific property.</li>
+        <li><code>setLineSeparator()</code><br/>
+        Using this method the line separator can be specified. Per default the
+        platform-specific line separator is used (e.g. <code>\n</code> on unix).
+        </li>
+        </ul>
+        The default settings of <code>PropertiesConfigurationLayout</code> are
+        chosen in a way that most of the original layout of a properties file
+        is retained. With the methods listed above specific layout restrictions
+        can be enforced.
       </p>
       </subsection>
 
