@@ -36,7 +36,10 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 public class TestPropertiesConfigurationLayout extends TestCase
 {
     /** Constant for the line break character. */
-    static final String CR = System.getProperty("line.separator");
+    private static final String CR = System.getProperty("line.separator");
+
+    /** Constant for the normalized line break character. */
+    private static final String CRNORM = "\n";
 
     /** Constant for a test property key. */
     static final String TEST_KEY = "myProperty";
@@ -133,7 +136,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         layout.load(builder.getReader());
         assertEquals("Wrong number of blanc lines", 2, layout
                 .getBlancLinesBefore(TEST_KEY));
-        assertEquals("Wrong comment", TEST_COMMENT + CR, layout
+        assertEquals("Wrong comment", TEST_COMMENT + CRNORM, layout
                 .getCanonicalComment(TEST_KEY, false));
         assertEquals("Wrong property value", TEST_VALUE, config
                 .getString(TEST_KEY));
@@ -177,7 +180,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         builder.addProperty(TEST_KEY, TEST_VALUE + "2");
         layout.load(builder.getReader());
         assertEquals("Wrong combined comment",
-                TEST_COMMENT + CR + TEST_COMMENT, layout.getCanonicalComment(
+                TEST_COMMENT + CRNORM + TEST_COMMENT, layout.getCanonicalComment(
                         TEST_KEY, false));
         assertEquals("Wrong combined blanc numbers", 0, layout
                 .getBlancLinesBefore(TEST_KEY));
@@ -209,7 +212,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(builder.getReader());
-        assertEquals("Wrong header comment", TEST_COMMENT + CR + CR
+        assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM
                 + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
         assertNull("Wrong comment for property", layout.getComment(TEST_KEY));
     }
@@ -228,7 +231,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
         layout.load(builder.getReader());
-        assertEquals("Wrong header comment", TEST_COMMENT + CR + CR
+        assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM
                 + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
         assertEquals("Wrong comment for property", TEST_COMMENT, layout
                 .getCanonicalComment(TEST_KEY, false));
@@ -404,9 +407,9 @@ public class TestPropertiesConfigurationLayout extends TestCase
                 .getCanonicalHeaderComment(false));
         assertFalse("Include property was stored", layout.getKeys().contains(
                 PropertiesConfiguration.getInclude()));
-        assertEquals("Wrong comment for property", TEST_COMMENT + CR
-                + "A nested header comment." + CR + "With multiple lines" + CR
-                + CR + "Second comment", layout.getCanonicalComment(TEST_KEY,
+        assertEquals("Wrong comment for property", TEST_COMMENT + CRNORM
+                + "A nested header comment." + CRNORM + "With multiple lines" + CRNORM
+                + CRNORM + "Second comment", layout.getCanonicalComment(TEST_KEY,
                 false));
     }
 
@@ -442,7 +445,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         layout.setComment("AnotherProperty", "AnotherComment");
         layout.setBlancLinesBefore("AnotherProperty", 2);
         layout.setSingleLine("AnotherProperty", true);
-        layout.setHeaderComment("A header comment" + CR + "for my properties");
+        layout.setHeaderComment("A header comment" + CRNORM + "for my properties");
         checkLayoutString("# A header comment" + CR + "# for my properties"
                 + CR + CR + "# " + TEST_COMMENT + CR + TEST_KEY + " = "
                 + TEST_VALUE + CR + TEST_KEY + " = " + TEST_VALUE + "2" + CR
@@ -624,6 +627,37 @@ public class TestPropertiesConfigurationLayout extends TestCase
     }
 
     /**
+     * Tests setting the line separator.
+     */
+    public void testSetLineSeparator() throws ConfigurationException
+    {
+        final String lf = CR + CR;
+        config.addProperty(TEST_KEY, TEST_VALUE);
+        layout.setBlancLinesBefore(TEST_KEY, 2);
+        layout.setComment(TEST_KEY, TEST_COMMENT);
+        layout.setHeaderComment("Header comment");
+        layout.setLineSeparator(lf);
+        checkLayoutString("# Header comment" + lf + lf + lf + lf + "# "
+                + TEST_COMMENT + lf + TEST_KEY + " = " + TEST_VALUE + lf);
+    }
+
+    /**
+     * Tests whether the line separator is also taken into account within
+     * comments.
+     */
+    public void testSetLineSeparatorInComments() throws ConfigurationException
+    {
+        final String lf = "<-\n";
+        config.addProperty(TEST_KEY, TEST_VALUE);
+        layout.setComment(TEST_KEY, TEST_COMMENT + "\nMore comment");
+        layout.setHeaderComment("Header\ncomment");
+        layout.setLineSeparator(lf);
+        checkLayoutString("# Header" + lf + "# comment" + lf + lf + "# "
+                + TEST_COMMENT + lf + "# More comment" + lf + TEST_KEY + " = "
+                + TEST_VALUE + lf);
+    }
+
+    /**
      * Helper method for filling the layout object with some properties.
      */
     private void fillLayout()
@@ -711,6 +745,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
                     buf.append("! ");
                 }
                 buf.append(s);
+                commentCounter++;
             }
             buf.append(CR);
         }

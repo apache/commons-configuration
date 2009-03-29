@@ -118,7 +118,7 @@ import org.apache.commons.lang.StringUtils;
 public class PropertiesConfigurationLayout implements ConfigurationListener
 {
     /** Constant for the line break character. */
-    private static final String CR = System.getProperty("line.separator");
+    private static final String CR = "\n";
 
     /** Constant for the default comment prefix. */
     private static final String COMMENT_PREFIX = "# ";
@@ -134,6 +134,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
     /** The global separator that will be used for all properties. */
     private String globalSeparator;
+
+    /** The line separator.*/
+    private String lineSeparator;
 
     /** A counter for determining nested load calls. */
     private int loadCounter;
@@ -189,12 +192,13 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
-     * Returns the comment for the specified property key in a cononical form.
+     * Returns the comment for the specified property key in a canonical form.
      * &quot;Canonical&quot; means that either all lines start with a comment
-     * character or none. The <code>commentChar</code> parameter is <b>false</b>,
+     * character or none. If the <code>commentChar</code> parameter is <b>false</b>,
      * all comment characters are removed, so that the result is only the plain
      * text of the comment. Otherwise it is ensured that each line of the
-     * comment starts with a comment character.
+     * comment starts with a comment character. Also, line breaks in the comment
+     * are normalized to the line separator &quot;\n&quot;.
      *
      * @param key the key of the property
      * @param commentChar determines whether all lines should start with comment
@@ -425,6 +429,30 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
+     * Returns the line separator.
+     *
+     * @return the line separator
+     * @since 1.7
+     */
+    public String getLineSeparator()
+    {
+        return lineSeparator;
+    }
+
+    /**
+     * Sets the line separator. When writing the properties configuration, all
+     * lines are terminated with this separator. If no separator was set, the
+     * platform-specific default line separator is used.
+     *
+     * @param lineSeparator the line separator
+     * @since 1.7
+     */
+    public void setLineSeparator(String lineSeparator)
+    {
+        this.lineSeparator = lineSeparator;
+    }
+
+    /**
      * Returns a set with all property keys managed by this object.
      *
      * @return a set with all contained property keys
@@ -516,10 +544,14 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             PropertiesConfiguration.PropertiesWriter writer = getConfiguration()
                     .getIOFactory().createPropertiesWriter(out, delimiter);
             writer.setGlobalSeparator(getGlobalSeparator());
+            if (getLineSeparator() != null)
+            {
+                writer.setLineSeparator(getLineSeparator());
+            }
 
             if (headerComment != null)
             {
-                writer.writeln(getCanonicalHeaderComment(true));
+                writeComment(writer, getCanonicalHeaderComment(true));
                 writer.writeln(null);
             }
 
@@ -536,10 +568,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     }
 
                     // Output the comment
-                    if (getComment(key) != null)
-                    {
-                        writer.writeln(getCanonicalComment(key, true));
-                    }
+                    writeComment(writer, getCanonicalComment(key, true));
 
                     // Output the property and its value
                     boolean singleLine = (isForceSingleLine() || isSingleLine(key))
@@ -755,7 +784,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * Checks if parts of the passed in comment can be used as header comment.
      * This method checks whether a header comment can be defined (i.e. whether
      * this is the first comment in the loaded file). If this is the case, it is
-     * searched for the lates blanc line. This line will mark the end of the
+     * searched for the latest blanc line. This line will mark the end of the
      * header comment. The return value is the index of the first line in the
      * passed in list, which does not belong to the header comment.
      *
@@ -796,6 +825,25 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             PropertyLayoutData data = (PropertyLayoutData) c.layoutData
                     .get(key);
             layoutData.put(key, data.clone());
+        }
+    }
+
+    /**
+     * Helper method for writing a comment line. This method ensures that the
+     * correct line separator is used if the comment spans multiple lines.
+     *
+     * @param writer the writer
+     * @param comment the comment to write
+     * @throws IOException if an IO error occurs
+     */
+    private static void writeComment(
+            PropertiesConfiguration.PropertiesWriter writer, String comment)
+            throws IOException
+    {
+        if (comment != null)
+        {
+            writer.writeln(StringUtils.replace(comment, CR, writer
+                    .getLineSeparator()));
         }
     }
 

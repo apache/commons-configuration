@@ -955,6 +955,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /** The global separator. If set, it overrides the current separator.*/
         private String globalSeparator;
 
+        /** The line separator.*/
+        private String lineSeparator;
+
         /**
          * Constructor.
          *
@@ -1014,6 +1017,30 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public void setGlobalSeparator(String globalSeparator)
         {
             this.globalSeparator = globalSeparator;
+        }
+
+        /**
+         * Returns the line separator.
+         *
+         * @return the line separator
+         * @since 1.7
+         */
+        public String getLineSeparator()
+        {
+            return (lineSeparator != null) ? lineSeparator : LINE_SEPARATOR;
+        }
+
+        /**
+         * Sets the line separator. Each line written by this writer is
+         * terminated with this separator. If not set, the platform-specific
+         * line separator is used.
+         *
+         * @param lineSeparator the line separator to be used
+         * @since 1.7
+         */
+        public void setLineSeparator(String lineSeparator)
+        {
+            this.lineSeparator = lineSeparator;
         }
 
         /**
@@ -1195,7 +1222,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             {
                 write(s);
             }
-            write(LINE_SEPARATOR);
+            write(getLineSeparator());
         }
 
         /**
