@@ -132,6 +132,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /** Stores the header comment. */
     private String headerComment;
 
+    /** The global separator that will be used for all properties. */
+    private String globalSeparator;
+
     /** A counter for determining nested load calls. */
     private int loadCounter;
 
@@ -392,6 +395,36 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
+     * Returns the global separator.
+     *
+     * @return the global properties separator
+     * @since 1.7
+     */
+    public String getGlobalSeparator()
+    {
+        return globalSeparator;
+    }
+
+    /**
+     * Sets the global separator for properties. With this method a separator
+     * can be set that will be used for all properties when writing the
+     * configuration. This is an easy way of determining the properties
+     * separator globally. To be compatible with the properties format only the
+     * characters <code>=</code> and <code>:</code> (with or without whitespace)
+     * should be used, but this method does not enforce this - it accepts
+     * arbitrary strings. If the global separator is set to <b>null</b>,
+     * property separators are not changed. This is the default behavior as it
+     * produces results that are closer to the original properties file.
+     *
+     * @param globalSeparator the separator to be used for all properties
+     * @since 1.7
+     */
+    public void setGlobalSeparator(String globalSeparator)
+    {
+        this.globalSeparator = globalSeparator;
+    }
+
+    /**
      * Returns a set with all property keys managed by this object.
      *
      * @return a set with all contained property keys
@@ -482,6 +515,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     : getConfiguration().getListDelimiter();
             PropertiesConfiguration.PropertiesWriter writer = getConfiguration()
                     .getIOFactory().createPropertiesWriter(out, delimiter);
+            writer.setGlobalSeparator(getGlobalSeparator());
+
             if (headerComment != null)
             {
                 writer.writeln(getCanonicalHeaderComment(true));

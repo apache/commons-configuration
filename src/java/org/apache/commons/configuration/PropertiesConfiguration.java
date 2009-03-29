@@ -952,6 +952,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         /** The separator to be used for the current property. */
         private String currentSeparator;
 
+        /** The global separator. If set, it overrides the current separator.*/
+        private String globalSeparator;
+
         /**
          * Constructor.
          *
@@ -985,6 +988,32 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public void setCurrentSeparator(String currentSeparator)
         {
             this.currentSeparator = currentSeparator;
+        }
+
+        /**
+         * Returns the global property separator.
+         *
+         * @return the global property separator
+         * @since 1.7
+         */
+        public String getGlobalSeparator()
+        {
+            return globalSeparator;
+        }
+
+        /**
+         * Sets the global property separator. This separator corresponds to the
+         * <code>globalSeparator</code> property of
+         * {@link PropertiesConfigurationLayout}. It defines the separator to be
+         * used for all properties. If it is undefined, the current separator is
+         * used.
+         *
+         * @param globalSeparator the global property separator
+         * @since 1.7
+         */
+        public void setGlobalSeparator(String globalSeparator)
+        {
+            this.globalSeparator = globalSeparator;
         }
 
         /**
@@ -1173,10 +1202,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * Returns the separator to be used for the given property. This method
          * is called by <code>writeProperty()</code>. The string returned here
          * is used as separator between the property key and its value. Per
-         * default the separator returned by <code>getCurrentSeparator()</code>
-         * is returned, which was set by the associated layout object. Derived
-         * classes may implement a different strategy for defining the
-         * separator.
+         * default the method checks whether a global separator is set. If this
+         * is the case, it is returned. Otherwise the separator returned by
+         * <code>getCurrentSeparator()</code> is used, which was set by the
+         * associated layout object. Derived classes may implement a different
+         * strategy for defining the separator.
          *
          * @param key the property key
          * @param value the value
@@ -1185,7 +1215,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         protected String fetchSeparator(String key, Object value)
         {
-            return getCurrentSeparator();
+            return (getGlobalSeparator() != null) ? getGlobalSeparator()
+                    : getCurrentSeparator();
         }
     } // class PropertiesWriter
 

@@ -79,6 +79,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
         assertSame("Configuration not stored", config, layout
                 .getConfiguration());
         assertFalse("Force single line flag set", layout.isForceSingleLine());
+        assertNull("Got a global separator", layout.getGlobalSeparator());
     }
 
     /**
@@ -605,6 +606,21 @@ public class TestPropertiesConfigurationLayout extends TestCase
         config.addProperty(TEST_KEY, TEST_VALUE);
         layout.setSeparator(TEST_KEY, ":");
         checkLayoutString(TEST_KEY + ":" + TEST_VALUE + CR);
+    }
+
+    /**
+     * Tests setting the global separator. This separator should override the
+     * separators for all properties.
+     */
+    public void testSetGlobalSeparator() throws ConfigurationException
+    {
+        final String sep = "=";
+        config.addProperty(TEST_KEY, TEST_VALUE);
+        config.addProperty("key2", "value2");
+        layout.setSeparator(TEST_KEY, " : ");
+        layout.setGlobalSeparator(sep);
+        checkLayoutString(TEST_KEY + sep + TEST_VALUE + CR + "key2" + sep
+                + "value2" + CR);
     }
 
     /**
