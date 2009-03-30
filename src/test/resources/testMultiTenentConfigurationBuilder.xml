@@ -5,6 +5,7 @@
     <result delimiterParsingDisabled="true" forceReloadCheck="true"
             config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
       <expressionEngine
           config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>

@@ -45,4 +45,18 @@
       </table>
     </tables>
   </database>
+  <Channels>
+    <Channel id="1">
+      <Name>Channel 1</Name>
+      <ChannelData>test 1 data</ChannelData>
+    </Channel>
+    <Channel id="2" type="full">
+      <Name>Channel 2</Name>
+      <ChannelData>test 2 data</ChannelData>
+    </Channel>
+    <Channel id="3" type="full">
+      <Name>Channel 3</Name>
+      <ChannelData>test 3 data</ChannelData>
+    </Channel>
+  </Channels>  
 </config>

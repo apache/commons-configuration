@@ -880,10 +880,6 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
-    /** This test doesn't pass and rightfully so. A new "MergeCombiner" needs to be
-     * created so it will.
-     * @throws Exception
-     */  /*
     public void testMultiTenantConfigurationAt() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -895,7 +891,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         HierarchicalConfiguration sub2 = config.configurationAt("Channels/Channel[@id='2']");
         assertEquals("Channel 2", sub2.getString("Name"));
         assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
-    } */
+    } 
 
     public void testMerge() throws Exception
     {
