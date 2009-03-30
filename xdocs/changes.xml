@@ -89,7 +89,17 @@
         File system access has been abstracted to a FileSystem interface. Two implementations
         are provided, DefaultFileSystem that behaves in a backward compatible manner and
         VFSFileSystem which uses Commons VFS to retreive and store files.
-      </action>      
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-314">
+        PropertiesConfigurationLayout now allows setting the line separator to
+        be used when writing the properties file.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-371">
+        PropertiesConfigurationLayout now also stores the property separators used for
+        the single properties. It is also possible to change them for specific
+        properties or set a global properties separator. In earlier versions
+        the separator was hard-coded to &quot; = &quot;.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-370">
         PropertiesConfiguration now defines a nested interface IOFactory. Using
         this interface it is possible to inject custom PropertiesReader and

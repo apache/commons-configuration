@@ -102,7 +102,7 @@ import org.apache.commons.lang.StringUtils;
  * which has multiple values defined in one line using the separator character.</li>
  * <li>The <code>AppVendor</code> property appears twice. The comment lines
  * are concatenated, so that <code>layout.getComment("AppVendor");</code> will
- * result in <code>Application vendor&lt;CR&gt;Another vendor</code>, whith
+ * result in <code>Application vendor&lt;CR&gt;Another vendor</code>, with
  * <code>&lt;CR&gt;</code> meaning the line separator. In addition the
  * &quot;single line&quot; flag is set to <b>false</b> for this property. When
  * the file is saved, two property definitions will be written (in series).</li>
@@ -118,7 +118,7 @@ import org.apache.commons.lang.StringUtils;
 public class PropertiesConfigurationLayout implements ConfigurationListener
 {
     /** Constant for the line break character. */
-    private static final String CR = System.getProperty("line.separator");
+    private static final String CR = "\n";
 
     /** Constant for the default comment prefix. */
     private static final String COMMENT_PREFIX = "# ";
@@ -131,6 +131,12 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
     /** Stores the header comment. */
     private String headerComment;
+
+    /** The global separator that will be used for all properties. */
+    private String globalSeparator;
+
+    /** The line separator.*/
+    private String lineSeparator;
 
     /** A counter for determining nested load calls. */
     private int loadCounter;
@@ -359,6 +365,93 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
+     * Returns the separator for the property with the given key.
+     *
+     * @param key the property key
+     * @return the property separator for this property
+     * @since 1.7
+     */
+    public String getSeparator(String key)
+    {
+        return fetchLayoutData(key).getSeparator();
+    }
+
+    /**
+     * Sets the separator to be used for the property with the given key. The
+     * separator is the string between the property key and its value. For new
+     * properties &quot; = &quot; is used. When a properties file is read, the
+     * layout tries to determine the separator for each property. With this
+     * method the separator can be changed. To be compatible with the properties
+     * format only the characters <code>=</code> and <code>:</code> (with or
+     * without whitespace) should be used, but this method does not enforce this
+     * - it accepts arbitrary strings. If the key refers to a property with
+     * multiple values that are written on multiple lines, this separator will
+     * be used on all lines.
+     *
+     * @param key the key for the property
+     * @param sep the separator to be used for this property
+     * @since 1.7
+     */
+    public void setSeparator(String key, String sep)
+    {
+        fetchLayoutData(key).setSeparator(sep);
+    }
+
+    /**
+     * Returns the global separator.
+     *
+     * @return the global properties separator
+     * @since 1.7
+     */
+    public String getGlobalSeparator()
+    {
+        return globalSeparator;
+    }
+
+    /**
+     * Sets the global separator for properties. With this method a separator
+     * can be set that will be used for all properties when writing the
+     * configuration. This is an easy way of determining the properties
+     * separator globally. To be compatible with the properties format only the
+     * characters <code>=</code> and <code>:</code> (with or without whitespace)
+     * should be used, but this method does not enforce this - it accepts
+     * arbitrary strings. If the global separator is set to <b>null</b>,
+     * property separators are not changed. This is the default behavior as it
+     * produces results that are closer to the original properties file.
+     *
+     * @param globalSeparator the separator to be used for all properties
+     * @since 1.7
+     */
+    public void setGlobalSeparator(String globalSeparator)
+    {
+        this.globalSeparator = globalSeparator;
+    }
+
+    /**
+     * Returns the line separator.
+     *
+     * @return the line separator
+     * @since 1.7
+     */
+    public String getLineSeparator()
+    {
+        return lineSeparator;
+    }
+
+    /**
+     * Sets the line separator. When writing the properties configuration, all
+     * lines are terminated with this separator. If no separator was set, the
+     * platform-specific default line separator is used.
+     *
+     * @param lineSeparator the line separator
+     * @since 1.7
+     */
+    public void setLineSeparator(String lineSeparator)
+    {
+        this.lineSeparator = lineSeparator;
+    }
+
+    /**
      * Returns a set with all property keys managed by this object.
      *
      * @return a set with all contained property keys
@@ -416,6 +509,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     {
                         data.setComment(comment);
                         data.setBlancLines(blancLines);
+                        data.setSeparator(reader.getPropertySeparator());
                     }
                 }
             }
@@ -448,9 +542,15 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     : getConfiguration().getListDelimiter();
             PropertiesConfiguration.PropertiesWriter writer = getConfiguration()
                     .getIOFactory().createPropertiesWriter(out, delimiter);
+            writer.setGlobalSeparator(getGlobalSeparator());
+            if (getLineSeparator() != null)
+            {
+                writer.setLineSeparator(getLineSeparator());
+            }
+
             if (headerComment != null)
             {
-                writer.writeln(getCanonicalHeaderComment(true));
+                writeComment(writer, getCanonicalHeaderComment(true));
                 writer.writeln(null);
             }
 
@@ -466,14 +566,12 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     }
 
                     // Output the comment
-                    if (getComment(key) != null)
-                    {
-                        writer.writeln(getCanonicalComment(key, true));
-                    }
+                    writeComment(writer, getCanonicalComment(key, true));
 
                     // Output the property and its value
                     boolean singleLine = (isForceSingleLine() || isSingleLine(key))
                             && !getConfiguration().isDelimiterParsingDisabled();
+                    writer.setCurrentSeparator(getSeparator(key));
                     writer.writeProperty(key, getConfiguration().getProperty(
                             key), singleLine);
                 }
@@ -728,6 +826,25 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
+     * Helper method for writing a comment line. This method ensures that the
+     * correct line separator is used if the comment spans multiple lines.
+     *
+     * @param writer the writer
+     * @param comment the comment to write
+     * @throws IOException if an IO error occurs
+     */
+    private static void writeComment(
+            PropertiesConfiguration.PropertiesWriter writer, String comment)
+            throws IOException
+    {
+        if (comment != null)
+        {
+            writer.writeln(StringUtils.replace(comment, CR, writer
+                    .getLineSeparator()));
+        }
+    }
+
+    /**
      * A helper class for storing all layout related information for a
      * configuration property.
      */
@@ -735,6 +852,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         /** Stores the comment for the property. */
         private StringBuilder comment;
+
+        /** The separator to be used for this property. */
+        private String separator;
 
         /** Stores the number of blanc lines before this property. */
         private int blancLines;
@@ -748,6 +868,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         public PropertyLayoutData()
         {
             singleLine = true;
+            separator = PropertiesConfiguration.DEFAULT_SEPARATOR;
         }
 
         /**
@@ -837,6 +958,26 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         public String getComment()
         {
             return (comment == null) ? null : comment.toString();
+        }
+
+        /**
+         * Returns the separator that was used for this property.
+         *
+         * @return the property separator
+         */
+        public String getSeparator()
+        {
+            return separator;
+        }
+
+        /**
+         * Sets the separator to be used for the represented property.
+         *
+         * @param separator the property separator
+         */
+        public void setSeparator(String separator)
+        {
+            this.separator = separator;
         }
 
         /**

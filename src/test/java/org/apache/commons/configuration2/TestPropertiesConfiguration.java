@@ -17,8 +17,10 @@
 
 package org.apache.commons.configuration2;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,8 +35,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -913,8 +917,9 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests setting an IOFactory that uses a specialized writer.
      */
-    public void testSetIOFactoryWriter() throws ConfigurationException
+    public void testSetIOFactoryWriter() throws ConfigurationException, IOException
     {
+        final PropertiesWriterTestImpl testWriter = new PropertiesWriterTestImpl(',');
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
@@ -926,19 +931,49 @@ public class TestPropertiesConfiguration extends TestCase
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
                     Writer out, char delimiter)
             {
-                try
-                {
-                    return new PropertiesWriterTestImpl(out, delimiter);
-                }
-                catch (IOException ioex)
-                {
-                    fail("Unexpected exception: " + ioex);
-                    return null;
-                }
+                return testWriter;
             }
         });
         conf.save(new StringWriter());
+        testWriter.close();
         checkSavedConfig();
+    }
+
+    /**
+     * Tests that the property separators are retained when saving the
+     * configuration.
+     */
+    public void testKeepSeparators() throws ConfigurationException, IOException
+    {
+        conf.save(testSavePropertiesFile);
+        final String[] separatorTests = {
+                "test.separator.equal = foo", "test.separator.colon : foo",
+                "test.separator.tab\tfoo", "test.separator.whitespace foo",
+                "test.separator.no.space=foo"
+        };
+        Set<String> foundLines = new HashSet<String>();
+        BufferedReader in = new BufferedReader(new FileReader(
+                testSavePropertiesFile));
+        try
+        {
+            String s;
+            while ((s = in.readLine()) != null)
+            {
+                for (int i = 0; i < separatorTests.length; i++)
+                {
+                    if (separatorTests[i].equals(s))
+                    {
+                        foundLines.add(s);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            in.close();
+        }
+        assertEquals("No all separators were found: " + foundLines,
+                separatorTests.length, foundLines.size());
     }
 
     /**
@@ -1130,8 +1165,7 @@ public class TestPropertiesConfiguration extends TestCase
     private static class PropertiesWriterTestImpl extends
             PropertiesConfiguration.PropertiesWriter
     {
-        public PropertiesWriterTestImpl(Writer writer, char delimiter)
-                throws IOException
+        public PropertiesWriterTestImpl(char delimiter) throws IOException
         {
             super(new FileWriter(testSavePropertiesFile), delimiter);
         }
