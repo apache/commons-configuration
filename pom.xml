@@ -398,6 +398,19 @@
             <outputDirectory>src/main/java</outputDirectory>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <executions>
+            <execution>
+              <id>attach-sources</id>
+              <phase>install</phase>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
         <!-- Uncomment to instrument with Clover
         <plugin>
           <groupId>com.atlassian.maven.plugins</groupId>
