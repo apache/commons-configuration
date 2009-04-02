@@ -676,7 +676,10 @@
       <p>
         When merging elements attributes play a critical role. If an element has an attribute that
         appears in both sources, the value of that attribute must be the same for the elements to be
-        merged. Merging is only allowed between a single node in each of the files, so if an element
+        merged.
+      </p>
+      <p>
+        Merging is only allowed between a single node in each of the files, so if an element
         in the first file matches more than one element in the second file no merging will take
         place and the element from the first file (and its contents) are included and the elements
         in the second file are not. If the element is marked as a list node then the elements from

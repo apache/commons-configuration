@@ -347,6 +347,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static final String KEY_LOOKUP_KEY = XMLBeanDeclaration.ATTR_PREFIX + "prefix]";
 
     /**
+     * Constance for the FileSystem.
+     */
+    static final String FILE_SYSTEM = SEC_HEADER + ".fileSystem";
+
+    /**
      * Constant for the key of the result declaration. This key can point to a
      * bean declaration, which defines properties of the resulting combined
      * configuration.
@@ -499,17 +504,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Sets the FileSystem to use for the created CombinedConfiguration
-     * @param fileSystem The FileSystem to use.
-     */
-    public void setFileSystem(FileSystem fileSystem)
-    {
-        FileSystem.setDefaultFileSystem(fileSystem);
-    }
-
-
-
-    /**
      * Adds a configuration provider for the specified tag. Whenever this tag is
      * encountered in the configuration definition file this provider will be
      * called to create the configuration object.
@@ -589,6 +583,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             load();
         }
 
+        initFileSystem();
         initSystemProperties();
         configureEntityResolver();
         registerConfiguredProviders();
@@ -716,6 +711,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             XMLBeanDeclaration<ConfigurationNode> decl = new XMLBeanDeclaration<ConfigurationNode>(config);
             String key = config.getString(KEY_LOOKUP_KEY);
             ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
+        }
+    }
+
+    protected void initFileSystem() throws ConfigurationException
+    {
+        if (getMaxIndex(FILE_SYSTEM) == 0)
+        {
+            SubConfiguration config = configurationAt(FILE_SYSTEM);
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            setFileSystem((FileSystem) BeanHelper.createBean(decl));
         }
     }
 
@@ -1346,6 +1351,14 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 ConfigurationDeclaration decl) throws Exception
         {
             AbstractConfiguration result = getEmptyConfiguration(decl);
+            if (result instanceof FileSystemBased)
+            {
+                DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
+                if (builder.getFileSystem() != null)
+                {
+                    ((FileSystemBased)result).setFileSystem(builder.getFileSystem());
+                }
+            }
             ((FileConfiguration) result).load();
             return result;
         }

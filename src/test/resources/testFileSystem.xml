@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <fileSystem config-class="org.apache.commons.configuration2.VFSFileSystem"/>
+    <providers>
+      <provider config-tag="test"
+                config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"/>
+    </providers>
+    <combiner>
+      <override>
+        <list-nodes>
+          <node>table</node>
+          <node>list</node>
+        </list-nodes>
+      </override>
+    </combiner>
+  </header>
+  <system/>
+  <properties fileName="test.properties" throwExceptionOnMissing="true"
+    config-name="properties">
+    <reloadingStrategy config-class="org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy"
+      refreshDelay="10000"/>
+  </properties>
+  <!-- Fetch the file name from a variable -->
+  <xml fileName="${test_file_xml}" config-name="xml">
+    <expressionEngine config-class="org.apache.commons.configuration2.expr.def.DefaultExpressionEngine"
+      propertyDelimiter="/" indexStart="[" indexEnd="]"/>
+  </xml>
+  <additional>
+    <xml config-name="combiner1" fileName="${test_file_combine}"/>  -->
+    <xml config-name="combiner2" fileName="testcombine2.xml"/>
+  </additional>
+</configuration>

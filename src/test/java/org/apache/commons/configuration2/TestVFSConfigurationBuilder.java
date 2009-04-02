@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -73,6 +74,9 @@ public class TestVFSConfigurationBuilder extends TestCase
 
     private static final File MULTI_TENENT_FILE = ConfigurationAssert
             .getTestFile("testMultiTenentConfigurationBuilder.xml");
+
+    private static final File FILESYSTEM_FILE = ConfigurationAssert
+            .getTestFile("testFileSystem.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -880,6 +884,71 @@ public class TestVFSConfigurationBuilder extends TestCase
         verify("1003", config, 35);
         verify("1004", config, 50);
         verify("1005", config, 50);
+    }
+
+    public void testSetFileSystem() throws Exception
+    {
+        factory.setFile(PROVIDER_FILE);
+        FileSystem fs = new VFSFileSystem();
+        factory.setFileSystem(fs);
+        FileSystem.resetDefaultFileSystem();
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        List<AbstractConfiguration> list = config.getConfigurations();
+        assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
+        for (AbstractConfiguration conf : list)
+        {
+            if (conf instanceof FileSystemBased)
+            {
+                assertTrue("Incorrect file system for Configuration " + conf,
+                        ((FileSystemBased) conf).getFileSystem() == fs);
+            }
+            else if (conf instanceof CombinedConfiguration)
+            {
+                for (AbstractConfiguration sub : ((CombinedConfiguration)conf).getConfigurations())
+                {
+                    if (sub instanceof FileSystemBased)
+                    {
+                        assertTrue("Incorrect file system for Configuration " + sub,
+                            ((FileSystemBased) sub).getFileSystem() == fs);
+                    }
+                }
+            }
+        }
+    }
+
+    public void testConfiguredFileSystem() throws Exception
+    {
+        factory.setFile(FILESYSTEM_FILE);
+        FileSystem.resetDefaultFileSystem();
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        FileSystem fs = factory.getFileSystem();
+        assertNotNull("No File System",fs);
+        assertTrue("Incorrect File System", fs instanceof VFSFileSystem);
+        List<AbstractConfiguration> list = config.getConfigurations();
+        assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
+        for (Configuration conf : list)
+        {
+            if (conf instanceof FileSystemBased)
+            {
+                assertTrue("Incorrect file system for Configuration " + conf,
+                        ((FileSystemBased) conf).getFileSystem() == fs);
+            }
+            else if (conf instanceof CombinedConfiguration)
+            {
+                for (AbstractConfiguration sub : ((CombinedConfiguration) conf).getConfigurations())
+                {
+                    if (sub instanceof FileSystemBased)
+                    {
+                        assertTrue("Incorrect file system for Configuration " + sub,
+                            ((FileSystemBased) sub).getFileSystem() == fs);
+                    }
+                }
+            }
+        }
     }
 
     private void verify(String key, CombinedConfiguration config, int rows)

@@ -76,15 +76,15 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true"
-            config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
       <expressionEngine
-          config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <providers>
       <provider config-tag="multifile"
-         config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
-         configurationClass="org.apache.commons.configuration.MultiFileHierarchicalConfiguration"/>
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
     </providers>
   </header>
   <override>
@@ -132,7 +132,7 @@
         <p>
         <source><![CDATA[
   <bean id="configurationBuilder"
-        class="org.apache.commons.configuration.DefaultConfigurationBuilder">
+        class="org.apache.commons.configuration2.DefaultConfigurationBuilder">
     <property name="fileName">
       <value>configuration.xml</value>
     </property>
@@ -141,7 +141,7 @@
         factory-method="getConfiguration">
   </bean>
   <bean id="subcomponentConfig"
-        class="org.apache.commons.configuration.PatternSubtreeConfigurationWrapper"
+        class="org.apache.commons.configuration2.PatternSubtreeConfigurationWrapper"
         autowire='autodetect'>
     <constructor-arg index="0">
       <ref bean="applicationConfig"/>

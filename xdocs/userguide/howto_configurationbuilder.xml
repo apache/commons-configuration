@@ -308,8 +308,8 @@
     <source><![CDATA[
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true">
-      <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <override>
@@ -354,7 +354,7 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true">
-      <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <additional>
@@ -368,7 +368,7 @@
     <properties fileName="user.properties" throwExceptionOnMissing="true"
       config-name="properties" config-optional="true">
       <reloadingStrategy refreshDelay="10000"
-      config-class="org.apache.commons.configuration.reloading.FileChangedReloadingStrategy"/>
+      config-class="org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy"/>
     </properties>
     <xml fileName="settings.xml" config-name="xml"/>
   </override>
