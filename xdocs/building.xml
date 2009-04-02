@@ -36,11 +36,51 @@
           </p>
         </section>
 
-        <section name="Maven Goals">
+        <section name="Maven 2">
           <p>
-            Maven 1.x is our recommended build tool. To build the Configuration
-            jar file, change into the directory where you unzipped the source
-            distribution or where you checked out the sources from SVN and run
+            Commons Configuration uses Maven 2 as its build tool. To build the Configuration
+            jar, change into the directory where the source distribution resides and run
+            "mvn install". This will compile the source and tests, run the tests, and then
+            package the jar. The jar will also be copied into the local maven repository
+            for use by other builds.
+          </p>
+          <p>
+            To build the web site run "mvn site". When it completes the web site will reside in
+            the target/site directory and may be viewed by opening target/site/index.html.
+          </p>
+        </section>
+        <section name="Running Functional Tests">
+          <p>
+            <code>TestWebdavConfigurationBuilder</code> is a functional test that tests
+            DefaultConfigurationBuilder with the configuration files stored in a WebDAV
+            server. To run the test the steps that follow
+            <ol>
+              <li>Copy all the files in the conf directory to the WebDAV server. Not all the
+              files are required but it is generally easier to use a tool like cadaver
+              and do an mput than try to copy the required files individually.</li>
+              <li>Add the following to the profiles section of settings.xml in the Maven home
+              directory. Modify the urls to match your setup.
+<source><![CDATA[
+   <profile>
+    <profile>
+      <id>webdav</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <test.webdav.base>webdav://vfsusr:vfstest@192.168.10.133:80/conf</test.webdav.base>
+      </properties>
+    </profile>]]></source></li>
+              <li>run "mvn -P webdav test -Dtest=TestWebdavConfigurationBuilder". The test
+              can also be run using "mvn -P webdav test" but this will run all the unit tests
+              in addition to the WebDAV test.</li>
+            </ol>
+          </p>
+        </section>
+        <section name="Maven 1 Goals">
+          <p>
+            To build the Configuration jar file using Maven 1, change into the directory where you
+            unzipped the source distribution or where you checked out the sources from SVN and run
             "maven jar". The result will be in the (newly created) "target"
             subdirectory.
           </p>
@@ -125,7 +165,7 @@
 
         <section name="Setting custom build parameters">
           <p>
-            Both the maven and the ant build script support a file called
+            Both the maven 1 and the ant build script support a file called
             <code>build.properties</code> that can contain custom properties
             definitions. If this file exists in the project's root directory,
             it will be read and the properties it defines will be added to the

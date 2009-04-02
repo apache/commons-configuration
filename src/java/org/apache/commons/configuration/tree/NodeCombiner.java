@@ -54,11 +54,11 @@ import java.io.PrintStream;
  */
 public abstract class NodeCombiner
 {
-    /** Stream to write debug output to */
-    private PrintStream debugStream = null;
-    
     /** Stores a list with node names that are known to be list nodes. */
     protected Set listNodes;
+
+    /** Stream to write debug output to */
+    private PrintStream debugStream;
 
     /**
      * Creates a new instance of <code>NodeCombiner</code>.
@@ -135,7 +135,7 @@ public abstract class NodeCombiner
     {
         this.debugStream = stream;
     }
-        
+
     protected void printTree(ConfigurationNode result)
     {
         if (debugStream != null)

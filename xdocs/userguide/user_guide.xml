@@ -84,13 +84,13 @@
         <li><a href="howto_xml.html#Accessing_structured_properties">Accessing structured properties</a></li>
         <li><a href="howto_xml.html#Adding_new_properties">Adding new properties</a></li>
         <li><a href="howto_xml.html#Escaping_dot_characters_in_property_names">Escaping dot characters in property names</a></li>
+        <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
+        <ul>
+          <li><a href="howto_xml.html#The_default_expression_engine">The default expression engine</a></li>
+          <li><a href="howto_xml.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
+        </ul>
+        <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       </ul>
-      <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
-      <ul>
-        <li><a href="howto_xml.html#The_default_expression_engine">The default expression engine</a></li>
-        <li><a href="howto_xml.html#The_XPATH_expression_engine">The XPATH expression engine</a></li>
-      </ul>
-      <li><a href="howto_xml.html#Validation_of_XML_configuration_files">Validation of XML configuration files</a></li>
       <li><a href="howto_compositeconfiguration.html#Composite_Configuration_Details">Composite Configuration Details</a></li>
       <ul>
         <li><a href="howto_compositeconfiguration.html#Setting_Up_Defaults">Setting Up Defaults</a></li>
@@ -114,17 +114,17 @@
         <li><a href="howto_configurationfactory.html#The_configuration_definition_file">The configuration definition file</a></li>
         <li><a href="howto_configurationfactory.html#Setting_up_a_ConfigurationFactory">Setting up a ConfigurationFactory</a></li>
         <li><a href="howto_configurationfactory.html#Accessing_properties">Accessing properties</a></li>
-      </ul>
-      <li><a href="howto_configurationfactory.html#Multiple_configuration_sources">Multiple configuration sources</a></li>
-      <ul>
-        <li><a href="howto_configurationfactory.html#Overriding_properties">Overriding properties</a></li>
-        <li><a href="howto_configurationfactory.html#Optional_configuration_sources">Optional configuration sources</a></li>
-      </ul>
-      <li><a href="howto_configurationfactory.html#Union_configuration">Union configuration</a></li>
-      <li><a href="howto_configurationfactory.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
-      <ul>
-        <li><a href="howto_configurationfactory.html#Setting_further_options">Setting further options</a></li>
-        <li><a href="howto_configurationfactory.html#Referencing_system_properties">Referencing system properties</a></li>
+        <li><a href="howto_configurationfactory.html#Multiple_configuration_sources">Multiple configuration sources</a></li>
+        <ul>
+          <li><a href="howto_configurationfactory.html#Overriding_properties">Overriding properties</a></li>
+          <li><a href="howto_configurationfactory.html#Optional_configuration_sources">Optional configuration sources</a></li>
+        </ul>
+        <li><a href="howto_configurationfactory.html#Union_configuration">Union configuration</a></li>
+        <li><a href="howto_configurationfactory.html#Configuration_definition_file_reference">Configuration definition file reference</a></li>
+        <ul>
+          <li><a href="howto_configurationfactory.html#Setting_further_options">Setting further options</a></li>
+          <li><a href="howto_configurationfactory.html#Referencing_system_properties">Referencing system properties</a></li>
+        </ul>
       </ul>
       <li><a href="howto_configurationbuilder.html#Using_DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>
       <ul>
@@ -153,6 +153,12 @@
         <li><a href="howto_utilities.html#Converting_between_properties_and_configurations">Converting between properties and configurations</a></li>
         <li><a href="howto_utilities.html#Interpolation_of_all_variables">Interpolation of all variables</a></li>
         <li><a href="howto_utilities.html#Handling_of_runtime_exceptions">Handling of runtime exceptions</a></li>
+      </ul>
+      <li><a href="howto_filesystems.html#File_Systems">File Systems</a></li>
+      <ul>
+        <li><a href="howto_filesystems.html#File_Systems#Configuration">Configuration</a></li>
+        <li><a href="howto_filesystems.html#File_Systems#File_Options_Provider">File Options Provider</a></li>
+        <li><a href="howto_filesystems.html#File_Systems#File_Reloading_Strategy">File Reloading Strategy</a></li>
       </ul>
     </ul>
     </section>

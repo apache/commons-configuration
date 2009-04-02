@@ -58,7 +58,7 @@ public class MergeCombiner extends NodeCombiner
         printTree(result);
         return result;
     }
-    
+
     public ConfigurationNode doCombine(ConfigurationNode node1, ConfigurationNode node2)
     {
         ViewNode result = createViewNode();
@@ -142,7 +142,7 @@ public class MergeCombiner extends NodeCombiner
                 ConfigurationNode attr1 = (ConfigurationNode) iter.next();
                 List list2 = node.getAttributes(attr1.getName());
                 if (list2.size() == 1
-                    && !attr1.getValue().equals(((ConfigurationNode)list2.get(0)).getValue()))
+                    && !attr1.getValue().equals(((ConfigurationNode) list2.get(0)).getValue()))
                 {
                     node = null;
                     break;
@@ -165,7 +165,7 @@ public class MergeCombiner extends NodeCombiner
             {
                 children2.remove(iter.next());
             }
-        }        
+        }
 
         return null;
     }

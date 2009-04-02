@@ -55,7 +55,7 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
     private static final long DEFAULT_DELAY = 1000;
 
     /** Stores a reference to the configuration to be monitored. */
-    protected FileConfiguration configuration;    
+    protected FileConfiguration configuration;
 
     /** The reload status */
     private boolean reloadRequired;
