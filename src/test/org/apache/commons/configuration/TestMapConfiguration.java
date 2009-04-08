@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -31,10 +32,19 @@ import org.apache.commons.configuration.event.ConfigurationListener;
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {
+    /** Constant for a test key.*/
+    private static final String KEY = "key1";
+
+    /** Constant for a test property value with whitespace.*/
+    private static final String SPACE_VALUE = "   Value with whitespace  ";
+
+    /** The trimmed test value.*/
+    private static final String TRIM_VALUE = SPACE_VALUE.trim();
+
     protected AbstractConfiguration getConfiguration()
     {
         Map map = new HashMap();
-        map.put("key1", "value1");
+        map.put(KEY, "value1");
         map.put("key2", "value2");
         map.put("list", "value1, value2");
         map.put("listesc", "value1\\,value2");
@@ -85,5 +95,51 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         copy.clearProperty("key1");
         assertEquals("Map not decoupled (2)", "value1", config
                 .getString("key1"));
+    }
+
+    /**
+     * Tests adding another value to an existing property.
+     */
+    public void testAddProperty()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.addProperty(KEY, TRIM_VALUE);
+        config.addProperty(KEY, "anotherValue");
+        List values = config.getList(KEY);
+        assertEquals("Wrong number of values", 3, values.size());
+    }
+
+    /**
+     * Tests querying a property when trimming is active.
+     */
+    public void testGetPropertyTrim()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.getMap().put(KEY, SPACE_VALUE);
+        assertEquals("Wrong trimmed value", TRIM_VALUE, config.getProperty(KEY));
+    }
+
+    /**
+     * Tests querying a property when trimming is disabled.
+     */
+    public void testGetPropertyTrimDisabled()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.getMap().put(KEY, SPACE_VALUE);
+        config.setTrimmingDisabled(true);
+        assertEquals("Wrong trimmed value", SPACE_VALUE, config.getProperty(KEY));
+    }
+
+    /**
+     * Tests querying a property when trimming is enabled, but list splitting is
+     * disabled. In this case no trimming is performed (trimming only works if
+     * list splitting is enabled).
+     */
+    public void testGetPropertyTrimNoSplit()
+    {
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.getMap().put(KEY, SPACE_VALUE);
+        config.setDelimiterParsingDisabled(true);
+        assertEquals("Wrong trimmed value", SPACE_VALUE, config.getProperty(KEY));
     }
 }

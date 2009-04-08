@@ -23,10 +23,55 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * <p>A Map based Configuration.</p>
- * <p><em>Note:</em>Configuration objects of this type can be read concurrently
- * by multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.</p>
+ * <p>
+ * A Map based Configuration.
+ * </p>
+ * <p>
+ * This implementation of the <code>Configuration</code> interface is
+ * initialized with a <code>java.util.Map</code>. The methods of the
+ * <code>Configuration</code> interface are implemented on top of the content of
+ * this map. The following storage scheme is used:
+ * </p>
+ * <p>
+ * Property keys are directly mapped to map keys, i.e. the
+ * <code>getProperty()</code> method directly performs a <code>get()</code> on
+ * the map. Analogously, <code>setProperty()</code> or
+ * <code>addProperty()</code> operations write new data into the map. If a value
+ * is added to an existing property, a <code>java.util.List</code> is created,
+ * which stores the values of this property.
+ * </p>
+ * <p>
+ * An important use case of this class is to treat a map as a
+ * <code>Configuration</code> allowing access to its data through the richer
+ * interface. This can be a bit problematic in some cases because the map may
+ * contain values that need not adhere to the default storage scheme used by
+ * typical configuration implementations, e.g. regarding lists. In such cases
+ * care must be taken when manipulating the data through the
+ * <code>Configuration</code> interface, e.g. by calling
+ * <code>addProperty()</code>; results may be different than expected.
+ * </p>
+ * <p>
+ * An important point is the handling of list delimiters: If delimiter parsing
+ * is enabled (which it is per default), <code>getProperty()</code> checks
+ * whether the value of a property is a string and whether it contains the list
+ * delimiter character. If this is the case, the value is split at the delimiter
+ * resulting in a list. This split operation typically also involves trimming
+ * the single values as the list delimiter character may be surrounded by
+ * whitespace. Trimming can be disabled with the
+ * {@link #setTrimmingDisabled(boolean)} method. The whole list splitting
+ * behavior can be disabled using the
+ * {@link #setDelimiterParsingDisabled(boolean)} method.
+ * </p>
+ * <p>
+ * Notice that list splitting is only performed for single string values. If a
+ * property has multiple values, the single values are not split even if they
+ * contain the list delimiter character.
+ * </p>
+ * <p>
+ * As the underlying <code>Map</code> is directly used as store of the property
+ * values, the thread-safety of this <code>Configuration</code> implementation
+ * depends on the map passed to the constructor.
+ * </p>
  *
  * @author Emmanuel Bourg
  * @version $Revision$, $Date$
@@ -36,6 +81,9 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** The Map decorated by this configuration. */
     protected Map map;
+
+    /** A flag whether trimming of property values should be disabled.*/
+    private boolean trimmingDisabled;
 
     /**
      * Create a Configuration decorator around the specified Map. The map is
@@ -59,12 +107,38 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         return map;
     }
 
+    /**
+     * Returns the flag whether trimming of property values is disabled.
+     *
+     * @return <b>true</b> if trimming of property values is disabled;
+     *         <b>false</b> otherwise
+     * @since 1.7
+     */
+    public boolean isTrimmingDisabled()
+    {
+        return trimmingDisabled;
+    }
+
+    /**
+     * Sets a flag whether trimming of property values is disabled. This flag is
+     * only evaluated if list splitting is enabled. Refer to the header comment
+     * for more information about list splitting and trimming.
+     *
+     * @param trimmingDisabled a flag whether trimming of property values should
+     *        be disabled
+     * @since 1.7
+     */
+    public void setTrimmingDisabled(boolean trimmingDisabled)
+    {
+        this.trimmingDisabled = trimmingDisabled;
+    }
+
     public Object getProperty(String key)
     {
         Object value = map.get(key);
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
-            List list = PropertyConverter.split((String) value, getListDelimiter());
+            List list = PropertyConverter.split((String) value, getListDelimiter(), !isTrimmingDisabled());
             return list.size() > 1 ? list : list.get(0);
         }
         else

@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-374">
+        MapConfiguration now provides a way of controlling the trimming
+        behavior.
+      </action>
       <action dev="rgoers" type="add" issue="CONFIGURATION-378">
         Added MergeCombiner to allow elements in two configurations to be merged when the
         element and attributes in the first file match those in the second file.
