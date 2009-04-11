@@ -191,7 +191,7 @@ public class ExprLookup extends StrLookup
         }
         catch (Exception e)
         {
-            configuration.getLogger().debug("Error encountered evaluation " + result, e);
+            configuration.getLogger().debug("Error encountered evaluating " + result, e);
         }
 
         return result;
