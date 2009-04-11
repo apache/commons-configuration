@@ -32,6 +32,8 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -71,6 +73,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
 
+    /** The name of the logger to use for each CombinedConfiguration */
+    private String loggerName;
+
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
      * initializes the combiner to be used.
@@ -103,6 +108,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public String getKeyPattern()
     {
         return this.keyPattern;
+    }
+
+    /**
+     * Set the name of the Logger to use on each CombinedConfiguration.
+     * @param name The Logger name.
+     */
+    public void setLoggerName(String name)
+    {
+        this.loggerName = name;
     }
 
     /**
@@ -746,9 +760,16 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
+                if (loggerName != null)
+                {
+                    Log log = LogFactory.getLog(loggerName);
+                    if (log != null)
+                    {
+                        config.setLogger(log);
+                    }
+                }
                 config.setExpressionEngine(this.getExpressionEngine());
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-                config.setDetailEvents(this.isDetailEvents());
                 config.setConversionExpressionEngine(getConversionExpressionEngine());
                 config.setListDelimiter(getListDelimiter());
                 Iterator iter = config.getErrorListeners().iterator();

@@ -24,6 +24,8 @@ import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.UserAuthenticator;
+import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.UriParser;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
@@ -336,9 +338,13 @@ public class VFSFileSystem extends DefaultFileSystem
             {
                 return setWebdavOptions(opts, map);
             }
-            if (scheme.equals("http"))
+            else if (scheme.equals("http"))
             {
                 return setHttpOptions(opts, map);
+            }
+            else
+            {
+                return setDefaultOptions(opts, map);
             }
         }
         return opts;
@@ -365,6 +371,8 @@ public class VFSFileSystem extends DefaultFileSystem
 
     private FileSystemOptions setHttpOptions(FileSystemOptions opts, Map map)
     {
+        setDefaultOptions(opts, map);
+
         if (httpBuilder == null || map == null)
         {
             return opts;
@@ -387,6 +395,30 @@ public class VFSFileSystem extends DefaultFileSystem
         {
             int max = ((Integer) map.get(FileOptionsProvider.MAX_TOTAL_CONNECTIONS)).intValue();
             httpBuilder.setMaxTotalConnections(opts, max);
+        }
+        return opts;
+    }
+
+    private FileSystemOptions setDefaultOptions(FileSystemOptions opts, Map map)
+    {
+        DefaultFileSystemConfigBuilder builder = DefaultFileSystemConfigBuilder.getInstance();
+
+        if (builder == null || map == null)
+        {
+            return opts;
+        }
+
+        if (map.containsKey("userAuthenticator"))
+        {
+            UserAuthenticator auth = (UserAuthenticator) map.get("userAuthenticator");
+            try
+            {
+                builder.setUserAuthenticator(opts, auth);
+            }
+            catch (FileSystemException e)
+            {
+                return opts;
+            }
         }
         return opts;
     }

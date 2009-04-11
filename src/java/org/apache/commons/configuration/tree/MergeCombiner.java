@@ -54,13 +54,6 @@ public class MergeCombiner extends NodeCombiner
 
     public ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2)
     {
-        ConfigurationNode result = doCombine(node1, node2);
-        printTree(result);
-        return result;
-    }
-
-    public ConfigurationNode doCombine(ConfigurationNode node1, ConfigurationNode node2)
-    {
         ViewNode result = createViewNode();
         result.setName(node1.getName());
         result.setValue(node1.getValue());
@@ -74,7 +67,7 @@ public class MergeCombiner extends NodeCombiner
             ConfigurationNode child2 = canCombine(node1, node2, child1, children2);
             if (child2 != null)
             {
-                result.addChild(doCombine(child1, child2));
+                result.addChild(combine(child1, child2));
                 children2.remove(child2);
             }
             else

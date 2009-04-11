@@ -37,6 +37,10 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This class provides access to multiple configuration files that reside in a location that
@@ -76,6 +80,18 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /** Return an empty configuration if loading fails */
     private boolean ignoreException = true;
 
+    /** Capture the schema validation setting */
+    private boolean schemaValidation;
+
+    /** Stores a flag whether DTD or Schema validation should be performed.*/
+    private boolean validating;
+
+    /** A flag whether attribute splitting is disabled.*/
+    private boolean attributeSplittingDisabled;
+
+    /** The Logger name to use */
+    private String loggerName = "";
+
     /**
      * Default Constructor.
      */
@@ -96,6 +112,11 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.init = true;
     }
 
+    public void setLoggerName(String name)
+    {
+        this.loggerName = name;
+    }
+
     /**
      * Set the File pattern
      * @param pathPattern The pattern for the path to the configuration.
@@ -103,6 +124,36 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setFilePattern(String pathPattern)
     {
         this.pattern = pathPattern;
+    }
+
+    public boolean isSchemaValidation()
+    {
+        return schemaValidation;
+    }
+
+    public void setSchemaValidation(boolean schemaValidation)
+    {
+        this.schemaValidation = schemaValidation;
+    }
+
+    public boolean isValidating()
+    {
+        return validating;
+    }
+
+    public void setValidating(boolean validating)
+    {
+        this.validating = validating;
+    }
+
+    public boolean isAttributeSplittingDisabled()
+    {
+        return attributeSplittingDisabled;
+    }
+
+    public void setAttributeSplittingDisabled(boolean attributeSplittingDisabled)
+    {
+        this.attributeSplittingDisabled = attributeSplittingDisabled;
     }
 
     /**
@@ -620,11 +671,23 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         XMLConfiguration configuration = new XMLConfiguration();
         try
         {
+            if (loggerName != null)
+            {
+                Log log = LogFactory.getLog(loggerName);
+                if (log != null)
+                {
+                    configuration.setLogger(log);
+                }
+            }
+            configuration.setBasePath(getBasePath());
             configuration.setFileName(path);
+            configuration.setFileSystem(getFileSystem());
             configuration.setExpressionEngine(getExpressionEngine());
-            configuration.setReloadingStrategy(getReloadingStrategy());
+            configuration.setReloadingStrategy(createReloadingStrategy());
             configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-            configuration.setDetailEvents(this.isDetailEvents());
+            configuration.setValidating(validating);
+            configuration.setSchemaValidation(schemaValidation);
+            configuration.setAttributeSplittingDisabled(attributeSplittingDisabled);
             configuration.setListDelimiter(getListDelimiter());
             configuration.addConfigurationListener(this);
             configuration.addErrorListener(this);
@@ -646,5 +709,28 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
 
         return configuration;
+    }
+
+    /**
+     * Clone the FileReloadingStrategy since each file needs its own.
+     * @return A new FileReloadingStrategy.
+     */
+    private ReloadingStrategy createReloadingStrategy()
+    {
+        if (getReloadingStrategy() == null)
+        {
+            return null;
+        }
+        try
+        {
+            ReloadingStrategy strategy = (ReloadingStrategy) BeanUtils.cloneBean(getReloadingStrategy());
+            strategy.setConfiguration(null);
+            return strategy;
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+
     }
 }

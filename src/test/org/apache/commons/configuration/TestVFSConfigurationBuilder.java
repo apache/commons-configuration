@@ -18,6 +18,10 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.FileReader;
+import java.io.Writer;
+import java.io.FileWriter;
 import java.util.Collection;
 import java.util.Set;
 import java.util.List;
@@ -80,6 +84,9 @@ public class TestVFSConfigurationBuilder extends TestCase
 
     private static final File FILESYSTEM_FILE = new File(
             "conf/testFileSystem.xml");
+
+    private static final File FILEMONITOR_FILE = new File(
+            "target/test-classes/testFileMonitorConfigurationBuilder.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -965,6 +972,48 @@ public class TestVFSConfigurationBuilder extends TestCase
             }
         }
     }
+
+    public void testFileMonitor() throws Exception
+    {
+
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        factory.setFile(FILEMONITOR_FILE);
+        FileSystem.resetDefaultFileSystem();
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+        verify("1001", config, 15);
+
+        // Allow time for FileMonitor to set up.
+        Thread.sleep(1000);
+        XMLConfiguration x = new XMLConfiguration(output);
+        x.setProperty("rowsPerPage", "50");
+        x.save();
+        // Let FileMonitor detect the change.
+        Thread.sleep(2000);
+        verify("1001", config, 50);
+    }
+
+    private void copyFile(File input, File output) throws IOException
+    {
+        Reader reader = new FileReader(input);
+        Writer writer = new FileWriter(output);
+        char[] buffer = new char[4096];
+        int n = 0;
+        while (-1 != (n = reader.read(buffer)))
+        {
+            writer.write(buffer, 0, n);
+        }
+        reader.close();
+        writer.close();
+    }
+
 
     private void verify(String key, CombinedConfiguration config, int rows)
     {

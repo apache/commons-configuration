@@ -2,13 +2,14 @@
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
             config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
+    <fileSystem config-class="org.apache.commons.configuration.VFSFileSystem"/>
     <providers>
       <provider config-tag="multifile"
          config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
@@ -16,15 +17,19 @@
     </providers>
   </header>
   <override>
-    <multifile filePattern="testMultiConfiguration_$$${sys:Id}.xml"
+    <multifile filePattern="testwrite/testMultiConfiguration_$$${sys:Id}.xml"
                config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="false">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+       <reloadingStrategy delay="500"
+          config-class="org.apache.commons.configuration.reloading.VFSFileMonitorReloadingStrategy"/>
     </multifile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" delimiterParsingDisabled="true">
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
+      <reloadingStrategy
+          config-class="org.apache.commons.configuration.reloading.VFSFileMonitorReloadingStrategy"/>
     </xml>
   </override>
 </configuration>

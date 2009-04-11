@@ -23,6 +23,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.io.PrintStream;
+import java.io.ByteArrayOutputStream;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -34,6 +36,7 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.ViewNode;
+import org.apache.commons.configuration.tree.TreeUtils;
 
 /**
  * <p>
@@ -736,6 +739,13 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             {
                 node = getNodeCombiner().combine(node,
                         ((ConfigData) it.next()).getTransformedRoot());
+            }
+            if (getLogger().isDebugEnabled())
+            {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                PrintStream stream = new PrintStream(os);
+                TreeUtils.printTree(stream, node);
+                getLogger().debug(os.toString());
             }
             return node;
         }

@@ -18,6 +18,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +34,13 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.Log4JLogger;
+import org.apache.log4j.WriterAppender;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Level;
+import org.apache.log4j.SimpleLayout;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -81,6 +89,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     private static final File MULTI_TENENT_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder.xml");
+
+    private static final File EXPRESSION_FILE = new File(
+            "conf/testExpression.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -873,12 +884,25 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testMultiTenentConfiguration3() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
+        StringWriter writer = new StringWriter();
+        WriterAppender app = new WriterAppender(new SimpleLayout(), writer);
+        Log log = LogFactory.getLog("TestLogger");
+        Logger logger = ((Log4JLogger)log).getLogger();
+        logger.addAppender(app);
+        logger.setLevel(Level.DEBUG);
+        logger.setAdditivity(false);
+
         System.setProperty("Id", "1005");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
         verify("1001", config, 15);
+        String xml = writer.getBuffer().toString();
+        assertNotNull("No XML returned", xml);
+        assertTrue("Incorect configuration data", xml.contains("<rowsPerPage>15</rowsPerPage>"));
+        logger.removeAppender(app);
+        logger.setLevel(Level.OFF);
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);
@@ -902,19 +926,26 @@ public class TestDefaultConfigurationBuilder extends TestCase
     {
         factory.setFile(MULTI_TENENT_FILE);
         System.setProperty("Id", "1004");
+        Map map = new HashMap();
+        map.put("default", "${colors.header4}");
+        map.put("background", "#40404040");
+        map.put("text", "#000000");
+        map.put("header", "#444444");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
         List list = config.configurationsAt("colors/*");
         Iterator iter = list.iterator();
-        System.out.println("Color nodes");
         while (iter.hasNext())
         {
             SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
             ConfigurationNode node = sub.getRootNode();
             String value = (node.getValue() == null) ? "null" : node.getValue().toString();
-            System.out.println(node.getName() + "=" + value);
+            if (map.containsKey(node.getName()))
+            {
+                assertEquals(map.get(node.getName()), value);
+            }
         }
 
     }
@@ -933,6 +964,18 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("a,b,c", config.getString("split/list1"));
         assertEquals(0, config.getMaxIndex("split/list1"));
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
+    }
+
+    public void testExpression() throws Exception
+    {
+        factory.setFile(EXPRESSION_FILE);
+        factory.setAttributeSplittingDisabled(true);
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+
+        verify("1001", config, 15);
     }
 
     private void verify(String key, CombinedConfiguration config, int rows)

@@ -703,7 +703,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             HierarchicalConfiguration config = (HierarchicalConfiguration) it.next();
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
+            StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
+            BeanHelper.setProperty(lookup, "configuration", this);
+            ConfigurationInterpolator.registerGlobalLookup(key, lookup);
         }
     }
 

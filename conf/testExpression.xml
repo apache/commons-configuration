@@ -2,13 +2,21 @@
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
             config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
+    <lookups>
+      <lookup config-prefix="expr" 
+              config-class="org.apache.commons.configuration.interpol.ExprLookup">
+        <variables>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
     <providers>
       <provider config-tag="multifile"
          config-class="org.apache.commons.configuration.DefaultConfigurationBuilder$FileConfigurationProvider"
@@ -16,8 +24,8 @@
     </providers>
   </header>
   <override>
-    <multifile filePattern="testMultiConfiguration_$$${sys:Id}.xml"
-               config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="false">
+    <multifile filePattern='$$${expr:String.right("$[sys:Id]", 2)}/testMultiConfiguration_$$${sys:Id}.xml'
+               config-name="clientConfig" delimiterParsingDisabled="true">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </multifile>

@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.beans.PropertyDescriptor;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -158,6 +159,32 @@ public class BeanHelper
     public static void initBean(Object bean, BeanDeclaration data)
             throws ConfigurationRuntimeException
     {
+        initBeanProperties(bean, data);
+
+        Map nestedBeans = data.getNestedBeanDeclarations();
+        if (nestedBeans != null)
+        {
+            for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry e = (Map.Entry) it.next();
+                String propName = (String) e.getKey();
+                Class defaultClass = getDefaultClass(bean, propName);
+                initProperty(bean, propName, createBean(
+                        (BeanDeclaration) e.getValue(), defaultClass));
+            }
+        }
+    }
+
+    /**
+     * Initializes the beans properties.
+     *
+     * @param bean the bean to be initialized
+     * @param data the bean declaration
+     * @throws ConfigurationRuntimeException if a property cannot be set
+     */
+    public static void initBeanProperties(Object bean, BeanDeclaration data)
+            throws ConfigurationRuntimeException
+    {
         Map properties = data.getBeanProperties();
         if (properties != null)
         {
@@ -168,17 +195,28 @@ public class BeanHelper
                 initProperty(bean, propName, e.getValue());
             }
         }
+    }
 
-        Map nestedBeans = data.getNestedBeanDeclarations();
-        if (nestedBeans != null)
+    /**
+     * Return the Class of the property if it can be determined.
+     * @param bean The bean containing the property.
+     * @param propName The name of the property.
+     * @return The class associated with the property or null.
+     */
+    private static Class getDefaultClass(Object bean, String propName)
+    {
+        try
         {
-            for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
+            PropertyDescriptor desc = PropertyUtils.getPropertyDescriptor(bean, propName);
+            if (desc == null)
             {
-                Map.Entry e = (Map.Entry) it.next();
-                String propName = (String) e.getKey();
-                initProperty(bean, propName, createBean(
-                        (BeanDeclaration) e.getValue(), null));
+                return null;
             }
+            return desc.getPropertyType();
+        }
+        catch (Exception ex)
+        {
+            return null;
         }
     }
 
@@ -211,6 +249,33 @@ public class BeanHelper
         catch (InvocationTargetException itex)
         {
             throw new ConfigurationRuntimeException(itex);
+        }
+    }
+
+    /**
+     * Set a property on the bean only if the property exists
+     * @param bean the bean
+     * @param propName the name of the property
+     * @param value the property's value
+     * @throws ConfigurationRuntimeException if the property is not writeable or
+     * an error occurred
+     */
+    public static void setProperty(Object bean, String propName, Object value)
+    {
+        if (PropertyUtils.isWriteable(bean, propName))
+        {
+            try
+            {
+                BeanUtils.setProperty(bean, propName, value);
+            }
+            catch (IllegalAccessException iaex)
+            {
+                throw new ConfigurationRuntimeException(iaex);
+            }
+            catch (InvocationTargetException itex)
+            {
+                throw new ConfigurationRuntimeException(itex);
+            }
         }
     }
 
