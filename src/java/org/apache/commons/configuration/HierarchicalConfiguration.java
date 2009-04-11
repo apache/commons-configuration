@@ -1335,7 +1335,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 Object obj = it.next();
                 if (obj instanceof ViewNode)
                 {
-                    new Node((ViewNode)obj).visit(visitor, key);
+                    new Node((ViewNode) obj).visit(visitor, key);
                 }
                 else
                 {
@@ -1348,7 +1348,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 Object obj = it.next();
                 if (obj instanceof ViewNode)
                 {
-                    new Node((ViewNode)obj).visit(visitor, key);
+                    new Node((ViewNode) obj).visit(visitor, key);
                 }
                 else
                 {
@@ -1641,7 +1641,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     Object obj = children.next();
                     if (obj instanceof ViewNode)
                     {
-                        nd = new Node((ViewNode)obj);  
+                        nd = new Node((ViewNode) obj);
                     }
                     else
                     {
@@ -1659,7 +1659,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                         Object obj = children.next();
                         if (obj instanceof ViewNode)
                         {
-                            nd = new Node((ViewNode)obj);
+                            nd = new Node((ViewNode) obj);
                         }
                         else
                         {

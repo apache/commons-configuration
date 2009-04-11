@@ -54,7 +54,7 @@ import org.apache.commons.lang.ClassUtils;
  * @author Oliver Heger
  * @version $Id$
  */
-public class BeanHelper
+public final class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
     private static Map beanFactories = Collections.synchronizedMap(new HashMap());

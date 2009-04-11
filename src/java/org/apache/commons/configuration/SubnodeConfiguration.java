@@ -328,14 +328,14 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
 
     /**
      * Creates a ConfigurationInterpolator with a chain to the parent's
-     * interpolator. 
+     * interpolator.
      *
      * @return the new interpolator
      */
-    protected ConfigurationInterpolator createInterpolator() {
+    protected ConfigurationInterpolator createInterpolator()
+    {
         ConfigurationInterpolator interpolator = super.createInterpolator();
         interpolator.setParentInterpolator(getParent().getInterpolator());
         return interpolator;
     }
-    
 }

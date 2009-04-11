@@ -127,7 +127,7 @@ public class ConfigurationInterpolator extends StrLookup
 
     /** Stores the default lookup object. */
     private StrLookup defaultLookup;
-    
+
     /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
     private ConfigurationInterpolator parentInterpolator;
 
@@ -286,16 +286,18 @@ public class ConfigurationInterpolator extends StrLookup
             String prefix = var.substring(0, prefixPos);
             String name = var.substring(prefixPos + 1);
             String value = fetchLookupForPrefix(prefix).lookup(name);
-            if (value == null && getParentInterpolator() != null) {
+            if (value == null && getParentInterpolator() != null)
+            {
                 value = getParentInterpolator().fetchLookupForPrefix(prefix).lookup(name);
             }
             if (value != null)
             {
                 return value;
-            } 
+            }
         }
         String value = fetchNoPrefixLookup().lookup(var);
-        if (value == null && getParentInterpolator() != null) {
+        if (value == null && getParentInterpolator() != null)
+        {
             value = getParentInterpolator().fetchNoPrefixLookup().lookup(var);
         }
         return value;
@@ -332,36 +334,39 @@ public class ConfigurationInterpolator extends StrLookup
         }
         return lookup;
     }
-    
+
     /**
      * Registers the local lookup instances for the given interpolator.
-     * 
+     *
      * @param interpolator the instance receiving the local lookups
      * @since upcoming
      */
-    public void registerLocalLookups(ConfigurationInterpolator interpolator) {
+    public void registerLocalLookups(ConfigurationInterpolator interpolator)
+    {
         interpolator.localLookups.putAll(localLookups);
     }
 
     /**
-     * Sets the parent interpolator. This object is used if the interpolation is nested hierarchically
-     * and the current interpolation object cannot resolve a variable. 
-     * 
+     * Sets the parent interpolator. This object is used if the interpolation is nested
+     * hierarchically and the current interpolation object cannot resolve a variable.
+     *
      * @param parentInterpolator the parent interpolator object or <code>null</code>
      * @since upcoming
      */
-    public void setParentInterpolator(ConfigurationInterpolator parentInterpolator) {
+    public void setParentInterpolator(ConfigurationInterpolator parentInterpolator)
+    {
         this.parentInterpolator = parentInterpolator;
     }
 
     /**
-     * Requests the parent interpolator. This object is used if the interpolation is nested hierarchically
-     * and the current interpolation
-     * 
+     * Requests the parent interpolator. This object is used if the interpolation is nested
+     * hierarchically and the current interpolation
+     *
      * @return the parent interpolator or <code>null</code>
      * @since upcoming
      */
-    public ConfigurationInterpolator getParentInterpolator() {
+    public ConfigurationInterpolator getParentInterpolator()
+    {
         return this.parentInterpolator;
     }
 

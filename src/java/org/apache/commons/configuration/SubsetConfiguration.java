@@ -206,7 +206,7 @@ public class SubsetConfiguration extends AbstractConfiguration
             }
         });
     }
-    
+
     protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
@@ -218,8 +218,9 @@ public class SubsetConfiguration extends AbstractConfiguration
             SubsetConfiguration config = new SubsetConfiguration(parent, "");
             ConfigurationInterpolator interpolator = config.getInterpolator();
             getInterpolator().registerLocalLookups(interpolator);
-            if (parent instanceof AbstractConfiguration) {
-                interpolator.setParentInterpolator(((AbstractConfiguration)parent).getInterpolator());
+            if (parent instanceof AbstractConfiguration)
+            {
+                interpolator.setParentInterpolator(((AbstractConfiguration) parent).getInterpolator());
             }
             return config.interpolate(base);
         }
