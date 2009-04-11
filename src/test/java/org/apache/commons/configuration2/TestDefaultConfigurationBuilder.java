@@ -18,13 +18,19 @@ package org.apache.commons.configuration2;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Iterator;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.StreamHandler;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
 
 import junit.framework.TestCase;
 
@@ -79,6 +85,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     private static final File MULTI_TENENT_FILE = ConfigurationAssert
             .getTestFile("testMultiTenentConfigurationBuilder.xml");
+
+    private static final File EXPRESSION_FILE = ConfigurationAssert
+            .getTestFile("conf/testExpression.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -868,12 +877,26 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testMultiTenentConfiguration3() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        StreamHandler handler = new StreamHandler(stream, new SimpleFormatter());
+        handler.setLevel(Level.ALL);
+        Logger logger = Logger.getLogger("TestLogger");
+        logger.addHandler(handler);
+        logger.setLevel(Level.ALL);
+        logger.setUseParentHandlers(false);
+
         System.setProperty("Id", "1005");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
         verify("1001", config, 15);
+        handler.flush();
+        String xml = stream.toString();
+        assertNotNull("No XML returned", xml);
+        assertTrue("Incorect configuration data: " + xml, xml.contains("<rowsPerPage>15</rowsPerPage>"));
+        logger.removeHandler(handler);
+        logger.setLevel(Level.OFF);   
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);
@@ -891,25 +914,30 @@ public class TestDefaultConfigurationBuilder extends TestCase
         HierarchicalConfiguration sub2 = config.configurationAt("Channels/Channel[@id='2']");
         assertEquals("Channel 2", sub2.getString("Name"));
         assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
-    } 
+    }
 
     public void testMerge() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
         System.setProperty("Id", "1004");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("default", "${colors.header4}");
+        map.put("background", "#40404040");
+        map.put("text", "#000000");
+        map.put("header", "#444444");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
-        List list = config.configurationsAt("colors/*");
-        Iterator iter = list.iterator();
-        System.out.println("Color nodes");
-        while (iter.hasNext())
+        List<HierarchicalConfiguration> list = config.configurationsAt("colors/*");
+        for (HierarchicalConfiguration sub : list)
         {
-            SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
             ConfigurationNode node = sub.getRootNode();
             String value = (node.getValue() == null) ? "null" : node.getValue().toString();
-            System.out.println(node.getName() + "=" + value);
+            if (map.containsKey(node.getName()))
+            {
+                assertEquals(map.get(node.getName()), value);
+            }
         }
 
     }
@@ -928,6 +956,18 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("a,b,c", config.getString("split/list1"));
         assertEquals(0, config.getMaxIndex("split/list1"));
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
+    }
+
+    public void testExpression() throws Exception
+    {
+        factory.setFile(EXPRESSION_FILE);
+        factory.setAttributeSplittingDisabled(true);
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+
+        verify("1001", config, 15);
     }
 
     private void verify(String key, CombinedConfiguration config, int rows)

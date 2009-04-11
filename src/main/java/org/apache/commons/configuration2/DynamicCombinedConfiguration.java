@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.ConfigurationListener;
@@ -72,6 +73,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
 
+    /** The name of the logger to use for each CombinedConfiguration */
+    private String loggerName;
+
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
      * initializes the combiner to be used.
@@ -104,6 +108,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public String getKeyPattern()
     {
         return this.keyPattern;
+    }
+
+    /**
+     * Set the name of the Logger to use on each CombinedConfiguration.
+     * @param name The Logger name.
+     */
+    public void setLoggerName(String name)
+    {
+        this.loggerName = name;
     }
 
     /**
@@ -722,7 +735,17 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
+                if (loggerName != null)
+                {
+                    Logger log = Logger.getLogger(loggerName);
+                    if (log != null)
+                    {
+                        config.setLogger(log);
+                    }
+                }
                 config.setExpressionEngine(this.getExpressionEngine());
+                config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+                config.setListDelimiter(getListDelimiter());
                 Iterator iter = config.getErrorListeners().iterator();
                 while (iter.hasNext())
                 {

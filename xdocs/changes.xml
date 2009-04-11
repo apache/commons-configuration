@@ -85,6 +85,11 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="rgoers" type="add" issue="CONFIGURATION-380">
+        Add ExprLookup to allow expressions to be evaluated in configurations. When
+        used, this requires that Apache Commons Jexl be added as a dependency to
+        projects using Commons Configuration.
+      </action>      
       <action dev="oheger" type="add" issue="CONFIGURATION-374">
         MapConfiguration now provides a way of controlling the trimming
         behavior.
@@ -195,6 +200,14 @@
       <action dev="oheger" type="add" issue="CONFIGURATION-337" due-to="Ralph Goers">
         DefaultConfigurationBuilder now supports defining new configuration
         providers in the configuration definition file.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-335">
+        XMLConfiguration now allows disabling the attribute splitting mechanism
+        introduced in the 1.5 release (as part of the fix for CONFIGURATION-268).
+        This may be necessary for correctly processing attributes containing
+        both the list delimiter and the attribute delimiter character. The new
+        property &quot;disableAttributeSplitting&quot; was added for this
+        purpose.
       </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-334">
         Made handling of parent nodes more consistent when setRoot() or

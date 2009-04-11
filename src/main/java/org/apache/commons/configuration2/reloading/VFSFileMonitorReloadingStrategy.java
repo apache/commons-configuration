@@ -90,7 +90,7 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
      */
     public void setConfiguration(FileConfiguration configuration)
     {
-        if (configuration instanceof FileSystemBased)
+        if (configuration == null || configuration instanceof FileSystemBased)
         {
             this.configuration = configuration;
         }
@@ -105,6 +105,10 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
      */
     public void init()
     {
+        if (configuration.getURL() == null && configuration.getFileName() == null)
+        {
+            return;
+        }
         if (this.configuration == null)
         {
             throw new IllegalStateException("No configuration has been set for this strategy");
@@ -134,6 +138,10 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
             FileSystem fs = ((FileSystemBased) configuration).getFileSystem();
             String uri = fs.getPath(null, configuration.getURL(), configuration.getBasePath(),
                 configuration.getFileName());
+            if (uri == null)
+            {
+                throw new ConfigurationRuntimeException("Unable to determine file to monitor");
+            }
             FileObject file = fsManager.resolveFile(uri);
             file.getFileSystem().addListener(file, this);
             fm.addFile(file);

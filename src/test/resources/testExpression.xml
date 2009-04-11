@@ -9,16 +9,24 @@
       <expressionEngine
           config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
+    <lookups>
+      <lookup config-prefix="expr" 
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
+        <variables>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
     <providers>
       <provider config-tag="multifile"
          config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
-         configurationClassName="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
     </providers>
   </header>
   <override>
-    <multifile filePattern="testMultiConfiguration_$$${sys:Id}.xml"
-               config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="false">
-      <expressionEngine
+    <multifile filePattern='$$${expr:String.right("$[sys:Id]", 2)}/testMultiConfiguration_$$${sys:Id}.xml'
+               config-name="clientConfig" delimiterParsingDisabled="true">
+       <expressionEngine
           config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
     </multifile>
     <xml fileName="testMultiConfiguration_default.xml"

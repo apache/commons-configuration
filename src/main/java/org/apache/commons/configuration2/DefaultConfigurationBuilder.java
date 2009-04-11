@@ -710,7 +710,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             XMLBeanDeclaration<ConfigurationNode> decl = new XMLBeanDeclaration<ConfigurationNode>(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            ConfigurationInterpolator.registerGlobalLookup(key, (StrLookup) BeanHelper.createBean(decl));
+            StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
+            BeanHelper.setProperty(lookup, "configuration", this);
+            ConfigurationInterpolator.registerGlobalLookup(key, lookup);
         }
     }
 

@@ -271,6 +271,79 @@ ConfigurationInterpolator.registerGlobalLookup("echo", new EchoLookup());
       which are then only used by this configuration instance.
     </p>
     </subsection>
+    <subsection name="Using Expressions">
+      <p>
+        In addition to the simple lookup mechanisms previously described, Commond Configuration
+        provides <code>ExprLookup</code> which uses <a href="http://commons.apache.org/jexl">Apache
+        Commons Jexl</a> to allow expressions to be resolved wherever a StrLookup is allowed. This
+        example shows an alternate way of obtaining a system property if the ExprLookup is
+        configured.
+      </p>
+<source><![CDATA[
+user.file = ${expr:System.getProperty("user.home"}/settings.xml
+]]></source>
+      <p>
+        <code>ExprLookup</code> is not enabled by default, it must be manually added or configured via
+        <code>DefaultConfigurationBuilder</code>. Builds that use Maven 2 and reference Commons
+        Configuration will not include a dependency on Jexl, so if this feature is used the
+        dependency on Jexl must be manually added to the project.
+      </p>
+      <p>
+        When using <code>DefaultConfigurationBuilder</code> adding <code>ExprLookup</code> is
+        straightforward.
+      </p>
+<source><![CDATA[
+<configuration>
+  <header>
+    <result/>
+    <lookups>
+      <lookup config-prefix="expr"
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
+        <variables>
+          <variable name="System" value="Class:java.lang.System"/>
+          <variable name"net" value="Class:java.net.InetAddress"/>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
+  </header>
+  <override>
+    <xml fileName="${expr:System.getProperty('basePath') +
+         String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+    </xml>
+  </override>
+</configuration>
+]]></source>
+      <p>
+        The example above shows how to invoke static methods during expression evaluation. The
+        next example shows mixing expression evaluation with a subordinate lookup to
+        obtain the "basePath" system property. Note the difference in how the
+        system property was obtained in the previous example.
+      </p>
+<source><![CDATA[
+<configuration>
+  <header>
+    <result/>
+    <lookups>
+      <lookup config-prefix="expr"
+              config-class="org.apache.commons.configuration2.interpol.ExprLookup">
+        <variables>
+          <variable name"net" value="Class:java.net.InetAddress"/>
+          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+        </variables>
+      </lookup>
+    </lookups>
+  </header>
+  <override>
+    <xml fileName="${expr:$[sys:basePath] + 
+         String.lowercase(net.localHost.hostName) + '/testMultiConfiguration_default.xml'}"
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+    </xml>
+  </override>
+</configuration>
+]]></source>
+    </subsection>
     </section>
 </body>
 

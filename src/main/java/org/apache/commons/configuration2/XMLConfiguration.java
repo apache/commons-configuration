@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -213,6 +214,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /** Stores a flag whether DTD or Schema validation is used */
     private boolean schemaValidation;
+
+    /** A flag whether attribute splitting is disabled.*/
+    private boolean attributeSplittingDisabled;
 
     /** The EntityResolver to use */
     private EntityResolver entityResolver = new DefaultEntityResolver();
@@ -479,6 +483,70 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         return this.entityResolver;
     }
+    /**
+      * Returns the flag whether attribute splitting is disabled.
+      *
+      * @return the flag whether attribute splitting is disabled
+      * @see #setAttributeSplittingDisabled(boolean)
+      * @since 1.6
+      */
+     public boolean isAttributeSplittingDisabled()
+     {
+         return attributeSplittingDisabled;
+     }
+
+     /**
+      * <p>
+      * Sets a flag whether attribute splitting is disabled.
+      * </p>
+      * <p>
+      * The Configuration API allows adding multiple values to an attribute. This
+      * is problematic when storing the configuration because in XML an attribute
+      * can appear only once with a single value. To solve this problem, per
+      * default multiple attribute values are concatenated using a special
+      * separator character and split again when the configuration is loaded. The
+      * separator character is either the list delimiter character (see
+      * {@link #setListDelimiter(char)}) or the pipe symbol (&quot;|&quot;) if
+      * list delimiter parsing is disabled.
+      * </p>
+      * <p>
+      * In some constellations the splitting of attribute values can have
+      * undesired effects, especially if list delimiter parsing is disabled and
+      * attributes may contain the &quot;|&quot; character. In these cases it is
+      * possible to disable the attribute splitting mechanism by calling this
+      * method with a boolean value set to <b>false</b>. If attribute splitting
+      * is disabled, the values of attributes will not be processed, but stored
+      * as configuration properties exactly as they are returned by the XML
+      * parser.
+      * </p>
+      * <p>
+      * Note that in this mode multiple attribute values cannot be handled
+      * correctly. It is possible to create a <code>XMLConfiguration</code>
+      * object, add multiple values to an attribute and save it. When the
+      * configuration is loaded again and attribute splitting is disabled, the
+      * attribute will only have a single value, which is the concatenation of
+      * all values set before. So it lies in the responsibility of the
+      * application to carefully set the values of attributes.
+      * </p>
+      * <p>
+      * As is true for the {@link #setDelimiterParsingDisabled(boolean)} method,
+      * this method must be called before the configuration is loaded. So it
+      * can't be used together with one of the constructors expecting the
+      * specification of the file to load. Instead the default constructor has to
+      * be used, then <code>setAttributeSplittingDisabled(false)</code> has to be
+      * called, and finally the configuration can be loaded using one of its
+      * <code>load()</code> methods.
+      * </p>
+      *
+      * @param attributeSplittingDisabled <b>true</b> for disabling attribute
+      *        splitting, <b>false</b> for enabling it
+      * @see #setDelimiterParsingDisabled(boolean)
+      * @since 1.6
+      */
+     public void setAttributeSplittingDisabled(boolean attributeSplittingDisabled)
+     {
+         this.attributeSplittingDisabled = attributeSplittingDisabled;
+     }
 
     /**
      * Returns the XML document this configuration was loaded from. The return
@@ -597,8 +665,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                char delimiter = isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER : getListDelimiter();
-                List<String> values = PropertyConverter.split(attr.getValue(), delimiter);
+                List<String> values;
+                if (isAttributeSplittingDisabled())
+                {
+                    values = Collections.singletonList(attr.getValue());
+                }
+                else
+                {
+                    char delimiter = isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER : getListDelimiter();
+                    values = PropertyConverter.split(attr.getValue(), delimiter);
+                }
 
                 for (String value : values)
                 {

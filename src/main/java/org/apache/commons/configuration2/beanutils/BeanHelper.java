@@ -17,19 +17,17 @@
 
 package org.apache.commons.configuration2.beanutils;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.lang.reflect.InvocationTargetException;
+import java.beans.PropertyDescriptor;
 
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.configuration2.converter.Converter;
-import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * <p>
@@ -60,9 +58,6 @@ public class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
     private static Map<String, BeanFactory> beanFactories = Collections.synchronizedMap(new HashMap<String, BeanFactory>());
-
-    /** Converter to set the bean properties */
-    private static Converter converter = new DefaultPropertyConverter();
 
     /**
      * Stores the default bean factory, which will be used if no other factory
@@ -110,7 +105,7 @@ public class BeanHelper
      */
     public static BeanFactory deregisterBeanFactory(String name)
     {
-        return (BeanFactory) beanFactories.remove(name);
+        return beanFactories.remove(name);
     }
 
     /**
@@ -178,6 +173,29 @@ public class BeanHelper
      */
     public static void initBean(Object bean, BeanDeclaration data, boolean lenient) throws ConfigurationRuntimeException
     {
+        initBeanProperties(bean, data, lenient);
+
+        Map<String, BeanDeclaration> nestedBeans = data.getNestedBeanDeclarations();
+        if (nestedBeans != null)
+        {
+            for (Map.Entry<String, BeanDeclaration> e : nestedBeans.entrySet())
+            {
+                String propName = e.getKey();
+                Class defaultClass = getDefaultClass(bean, propName);
+                initProperty(bean, propName, createBean(e.getValue(), defaultClass), lenient);
+            }
+        }
+    }
+
+    public static void initBeanProperties(Object bean, BeanDeclaration data)
+        throws ConfigurationRuntimeException
+    {
+        initBeanProperties(bean, data, false);
+    }
+
+    public static void initBeanProperties(Object bean, BeanDeclaration data, boolean lenient)
+        throws ConfigurationRuntimeException
+    {
         Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
@@ -186,19 +204,33 @@ public class BeanHelper
                 initProperty(bean, e.getKey(), e.getValue(), lenient);
             }
         }
+    }
 
-        Map<String, BeanDeclaration> nestedBeans = data.getNestedBeanDeclarations();
-        if (nestedBeans != null)
+    /**
+     * Return the Class of the property if it can be determined.
+     * @param bean The bean containing the property.
+     * @param propName The name of the property.
+     * @return The class associated with the property or null.
+     */
+    private static Class getDefaultClass(Object bean, String propName)
+    {
+        try
         {
-            for (Map.Entry<String, BeanDeclaration> e : nestedBeans.entrySet())
+            PropertyDescriptor desc = PropertyUtils.getPropertyDescriptor(bean, propName);
+            if (desc == null)
             {
-                initProperty(bean, e.getKey(), createBean(e.getValue(), null), lenient);
+                return null;
             }
+            return desc.getPropertyType();
+        }
+        catch (Exception ex)
+        {
+            return null;
         }
     }
 
     /**
-     * Sets a property on the given bean.
+     * Sets a Property on the given bean using Common Beanutils.
      *
      * @param bean     the bean
      * @param propName the name of the property
@@ -208,63 +240,55 @@ public class BeanHelper
      */
     private static void initProperty(Object bean, String propName, Object value, boolean lenient) throws ConfigurationRuntimeException
     {
+        if (!PropertyUtils.isWriteable(bean, propName))
+        {
+            if (lenient)
+            {
+                return;
+            }
+            throw new ConfigurationRuntimeException("Property " + propName
+                    + " cannot be set!");
+        }
+
         try
         {
-            // find the descriptor for the property requested
-            PropertyDescriptor descriptor = getPropertyDescriptor(bean.getClass(), propName);
-
-            // check if the property is writeable
-            if (descriptor == null || descriptor.getWriteMethod() == null)
-            {
-                if (lenient)
-                {
-                    return;
-                }
-                else
-                {
-                    throw new ConfigurationRuntimeException("Property " + propName + " cannot be set!");
-                }
-            }
-
-            // set the property
-            Class type = descriptor.getPropertyType();
-            Object convertedValue = type.isAssignableFrom(value.getClass()) ? value : converter.convert(type, value);
-            descriptor.getWriteMethod().invoke(bean, convertedValue);
+            BeanUtils.setProperty(bean, propName, value);
         }
-        catch (ConfigurationRuntimeException e)
+        catch (IllegalAccessException iaex)
         {
-            throw e;
+            throw new ConfigurationRuntimeException(iaex);
         }
-        catch (Exception e)
+        catch (InvocationTargetException itex)
         {
-            throw new ConfigurationRuntimeException("Unable to set the property " + propName + " to '" + value + "'", e);
+            throw new ConfigurationRuntimeException(itex);
         }
     }
 
     /**
-     * Returns the PropertyDescriptor of the class for the specified property name.
-     *
-     * @param cls          the class to be introspected
-     * @param propertyName the name of the property
-     * @return the descriptor, or null if no property matches the name specified
-     * @throws IntrospectionException
+     * Set a property on the bean only if the property exists
+     * @param bean the bean
+     * @param propName the name of the property
+     * @param value the property's value
+     * @throws ConfigurationRuntimeException if the property is not writeable or
+     * an error occurred
      */
-    private static PropertyDescriptor getPropertyDescriptor(Class cls, String propertyName) throws IntrospectionException
+    public static void setProperty(Object bean, String propName, Object value)
     {
-        // find the descriptor for the property requested
-        BeanInfo info = Introspector.getBeanInfo(cls);
-        PropertyDescriptor[] descriptors = info.getPropertyDescriptors();
-        PropertyDescriptor descriptor = null;
-        for (PropertyDescriptor d : descriptors)
+        if (PropertyUtils.isWriteable(bean, propName))
         {
-            if (d.getName().equals(propertyName))
+            try
             {
-                descriptor = d;
-                break;
+                BeanUtils.setProperty(bean, propName, value);
+            }
+            catch (IllegalAccessException iaex)
+            {
+                throw new ConfigurationRuntimeException(iaex);
+            }
+            catch (InvocationTargetException itex)
+            {
+                throw new ConfigurationRuntimeException(itex);
             }
         }
-
-        return descriptor;
     }
 
     /**
