@@ -24,7 +24,7 @@ import java.util.Iterator;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id: NodeCombiner.java 761171 2009-04-02 05:42:41Z rgoers $
+ * @version $Id$
  * @since 1.6
  */
 public final class TreeUtils

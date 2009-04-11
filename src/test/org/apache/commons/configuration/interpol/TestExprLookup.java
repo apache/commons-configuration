@@ -34,7 +34,7 @@ import org.apache.log4j.ConsoleAppender;
 /**
  * Test class for ExprLookup.
  *
- * @version $Id:  $
+ * @version $Id$
  */
 public class TestExprLookup extends TestCase
 {
