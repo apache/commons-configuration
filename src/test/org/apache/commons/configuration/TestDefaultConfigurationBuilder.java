@@ -971,6 +971,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.setFile(EXPRESSION_FILE);
         factory.setAttributeSplittingDisabled(true);
         System.getProperties().remove("Id");
+        org.slf4j.MDC.clear();
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
@@ -981,6 +982,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
+        org.slf4j.MDC.put("Id", key);
         int actual = config.getInt("rowsPerPage");
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }

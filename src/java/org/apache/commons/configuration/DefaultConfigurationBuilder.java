@@ -706,6 +706,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
             BeanHelper.setProperty(lookup, "configuration", this);
             ConfigurationInterpolator.registerGlobalLookup(key, lookup);
+            this.getInterpolator().registerLookup(key, lookup);
         }
     }
 

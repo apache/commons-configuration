@@ -155,12 +155,12 @@
             <role>Java Developer</role>
           </roles>
         </developer>
-      
+
         <developer>
           <name>Ralph Goers</name>
           <id>rgoers</id>
           <email>rgoers@apache.org</email>
-          <organization>Intuit</organization>         
+          <organization>Intuit</organization>
           <timezone>-8</timezone>
           <roles>
             <role>Java Developer</role>
@@ -269,7 +269,15 @@
       <version>1.5.6</version>
       <scope>test</scope>
     </dependency>
-      
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-ext</artifactId>
+      <version>1.5.6</version>
+      <scope>test</scope>
+    </dependency>
+
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
@@ -315,7 +323,7 @@
       <artifactId>xml-apis</artifactId>
       <version>1.0.b2</version>
       <scope>provided</scope>
-    </dependency>    
+    </dependency>
 
     <dependency>
       <groupId>xml-resolver</groupId>
@@ -423,7 +431,7 @@
     <commons.binary.suffix></commons.binary.suffix>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
-  </properties> 
+  </properties>
 
   <build>
     <sourceDirectory>src/java</sourceDirectory>
