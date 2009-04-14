@@ -92,6 +92,9 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /** The Logger name to use */
     private String loggerName = "";
 
+    /** The Reloading strategy to use on created configurations */
+    private ReloadingStrategy fileStrategy;
+
     /**
      * Default Constructor.
      */
@@ -154,6 +157,16 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setAttributeSplittingDisabled(boolean attributeSplittingDisabled)
     {
         this.attributeSplittingDisabled = attributeSplittingDisabled;
+    }
+
+    public ReloadingStrategy getReloadingStrategy()
+    {
+        return fileStrategy;
+    }
+
+    public void setReloadingStrategy(ReloadingStrategy strategy)
+    {
+        this.fileStrategy = strategy;
     }
 
     /**
@@ -669,42 +682,48 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
 
         XMLConfiguration configuration = new XMLConfiguration();
+
+        if (loggerName != null)
+        {
+            Log log = LogFactory.getLog(loggerName);
+            if (log != null)
+            {
+                configuration.setLogger(log);
+            }
+        }
+        configuration.setBasePath(getBasePath());
+        configuration.setFileName(path);
+        configuration.setFileSystem(getFileSystem());
+        configuration.setExpressionEngine(getExpressionEngine());
+        ReloadingStrategy strategy = createReloadingStrategy();
+        if (strategy != null)
+        {
+            configuration.setReloadingStrategy(strategy);
+        }
+        configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        configuration.setValidating(validating);
+        configuration.setSchemaValidation(schemaValidation);
+        configuration.setAttributeSplittingDisabled(attributeSplittingDisabled);
+        configuration.setListDelimiter(getListDelimiter());
+        configuration.addConfigurationListener(this);
+        configuration.addErrorListener(this);
+
         try
         {
-            if (loggerName != null)
-            {
-                Log log = LogFactory.getLog(loggerName);
-                if (log != null)
-                {
-                    configuration.setLogger(log);
-                }
-            }
-            configuration.setBasePath(getBasePath());
-            configuration.setFileName(path);
-            configuration.setFileSystem(getFileSystem());
-            configuration.setExpressionEngine(getExpressionEngine());
-            configuration.setReloadingStrategy(createReloadingStrategy());
-            configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-            configuration.setValidating(validating);
-            configuration.setSchemaValidation(schemaValidation);
-            configuration.setAttributeSplittingDisabled(attributeSplittingDisabled);
-            configuration.setListDelimiter(getListDelimiter());
-            configuration.addConfigurationListener(this);
-            configuration.addErrorListener(this);
             configuration.load();
-            synchronized (configurationsMap)
-            {
-                if (!configurationsMap.containsKey(path))
-                {
-                    configurationsMap.put(path, configuration);
-                }
-            }
         }
         catch (ConfigurationException ce)
         {
             if (!ignoreException)
             {
                 throw new ConfigurationRuntimeException(ce);
+            }
+        }
+        synchronized (configurationsMap)
+        {
+            if (!configurationsMap.containsKey(path))
+            {
+                configurationsMap.put(path, configuration);
             }
         }
 
@@ -717,13 +736,13 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      */
     private ReloadingStrategy createReloadingStrategy()
     {
-        if (getReloadingStrategy() == null)
+        if (fileStrategy == null)
         {
             return null;
         }
         try
         {
-            ReloadingStrategy strategy = (ReloadingStrategy) BeanUtils.cloneBean(getReloadingStrategy());
+            ReloadingStrategy strategy = (ReloadingStrategy) BeanUtils.cloneBean(fileStrategy);
             strategy.setConfiguration(null);
             return strategy;
         }
@@ -733,4 +752,5 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
 
     }
+
 }

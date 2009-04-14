@@ -929,7 +929,7 @@ public class TestVFSConfigurationBuilder extends TestCase
                     if (conf instanceof FileSystemBased)
                     {
                         assertTrue("Incorrect file system for Configuration " + conf,
-                            ((FileSystemBased)conf).getFileSystem() == fs); 
+                            ((FileSystemBased)conf).getFileSystem() == fs);
                     }
                 }
             }
@@ -973,12 +973,12 @@ public class TestVFSConfigurationBuilder extends TestCase
         }
     }
 
-    public void testFileMonitor() throws Exception
+    public void testFileMonitor1() throws Exception
     {
-
         // create a new configuration
         File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
         File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
+        output.delete();
         output.getParentFile().mkdir();
         copyFile(input, output);
 
@@ -998,7 +998,36 @@ public class TestVFSConfigurationBuilder extends TestCase
         // Let FileMonitor detect the change.
         Thread.sleep(2000);
         verify("1001", config, 50);
+        output.delete();
     }
+
+    public void testFileMonitor2() throws Exception
+    {
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_1002.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1002.xml");
+        output.delete();
+
+        factory.setFile(FILEMONITOR_FILE);
+        FileSystem.resetDefaultFileSystem();
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+
+        verify("1002", config, 50);
+        Thread.sleep(1000);
+
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        // Allow time for the monitor to notice the change.
+        Thread.sleep(2000);
+        verify("1002", config, 25);
+        output.delete();
+    }
+
+
 
     private void copyFile(File input, File output) throws IOException
     {
