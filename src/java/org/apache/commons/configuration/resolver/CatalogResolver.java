@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.configuration.FileSystem;
 
-import java.net.URL;
 import java.io.InputStream;
 
 /**
