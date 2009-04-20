@@ -22,6 +22,7 @@ import org.xml.sax.SAXException;
 import org.apache.xml.resolver.CatalogManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
+import org.apache.commons.configuration2.FileSystem;
 
 import java.net.URL;
 import java.io.InputStream;
@@ -50,12 +51,17 @@ public class CatalogResolver implements EntityResolver
     /**
      * The CatalogResolver
      */
-    private org.apache.xml.resolver.tools.CatalogResolver resolver;
+    protected org.apache.xml.resolver.tools.CatalogResolver resolver;
 
     /**
      * The CatalogManager
      */
-    private CatalogManager manager = new CatalogManager();
+    protected CatalogManager manager = new CatalogManager();
+
+     /**
+     * The FileSystem in use.
+     */
+    protected FileSystem fs = FileSystem.getDefaultFileSystem();
 
     /**
      * Stores the logger.
@@ -81,6 +87,15 @@ public class CatalogResolver implements EntityResolver
     {
         manager.setCatalogFiles(catalogs);
         resolver = new org.apache.xml.resolver.tools.CatalogResolver(manager);
+    }
+
+    /**
+     * Set the FileSystem.
+     * @param fileSystem The FileSystem.
+     */
+    public void setFileSystem(FileSystem fileSystem)
+    {
+        this.fs = fileSystem;
     }
 
     /**
@@ -143,24 +158,10 @@ public class CatalogResolver implements EntityResolver
 
             try
             {
+                InputStream is = fs.getInputStream(null, resolved);
                 InputSource iSource = new InputSource(resolved);
                 iSource.setPublicId(publicId);
-
-                // Ideally this method would not attempt to open the
-                // InputStream, but there is a bug (in Xerces, at least)
-                // that causes the parser to mistakenly open the wrong
-                // system identifier if the returned InputSource does
-                // not have a byteStream.
-                //
-                // It could be argued that we still shouldn't do this here,
-                // but since the purpose of calling the entityResolver is
-                // almost certainly to open the input stream, it seems to
-                // do little harm.
-                //
-                URL url = new URL(resolved);
-                InputStream iStream = url.openStream();
-                iSource.setByteStream(iStream);
-
+                iSource.setByteStream(is);
                 return iSource;
             }
             catch (Exception e)

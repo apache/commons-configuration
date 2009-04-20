@@ -752,7 +752,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         if (getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_ENTITY_RESOLVER, true);
-            setEntityResolver((EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class));
+            EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
+            BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
+            setEntityResolver(resolver);
         }
     }
 
