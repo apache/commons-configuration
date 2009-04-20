@@ -203,10 +203,11 @@ public class ExprLookup extends StrLookup
      */
     public static class Variables extends ArrayList
     {
+        /*
         public void setVariable(Variable var)
         {
             add(var);
-        }
+        } */
 
         public Variable getVariable()
         {

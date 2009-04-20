@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.beans.PropertyDescriptor;
 
 import org.apache.commons.beanutils.BeanUtils;
@@ -164,13 +166,39 @@ public final class BeanHelper
         Map nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
-            for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
+            if (bean instanceof Collection)
             {
-                Map.Entry e = (Map.Entry) it.next();
-                String propName = (String) e.getKey();
-                Class defaultClass = getDefaultClass(bean, propName);
-                initProperty(bean, propName, createBean(
+                Collection coll = (Collection) bean;
+                if (nestedBeans.size() == 1)
+                {
+                    Map.Entry e = (Map.Entry) nestedBeans.entrySet().iterator().next();
+                    String propName = (String) e.getKey();
+                    Class defaultClass = getDefaultClass(bean, propName);
+                    if (e.getValue() instanceof List)
+                    {
+                        Iterator iter = ((List) e.getValue()).iterator();
+                        while (iter.hasNext())
+                        {
+                            coll.add(createBean((BeanDeclaration) iter.next(), defaultClass));
+                        }
+                    }
+                    else
+                    {
+                        BeanDeclaration decl = (BeanDeclaration) e.getValue();
+                        coll.add(createBean(decl, defaultClass));
+                    }
+                }
+            }
+            else
+            {
+                for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
+                {
+                    Map.Entry e = (Map.Entry) it.next();
+                    String propName = (String) e.getKey();
+                    Class defaultClass = getDefaultClass(bean, propName);
+                    initProperty(bean, propName, createBean(
                         (BeanDeclaration) e.getValue(), defaultClass));
+                }
             }
         }
     }

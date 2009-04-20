@@ -19,10 +19,13 @@ package org.apache.commons.configuration.beanutils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
 import org.apache.commons.configuration.SubnodeConfiguration;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
@@ -310,7 +313,26 @@ public class XMLBeanDeclaration implements BeanDeclaration
             ConfigurationNode child = (ConfigurationNode) it.next();
             if (!isReservedNode(child))
             {
-                nested.put(child.getName(), createBeanDeclaration(child));
+                if (nested.containsKey(child.getName()))
+                {
+                    Object obj = nested.get(child.getName());
+                    List list;
+                    if (obj instanceof List)
+                    {
+                        list = (List) obj;
+                    }
+                    else
+                    {
+                        list = new ArrayList();
+                        list.add(obj);
+                        nested.put(child.getName(), list);
+                    }
+                    list.add(createBeanDeclaration(child));
+                }
+                else
+                {
+                    nested.put(child.getName(), createBeanDeclaration(child));
+                }
             }
         }
 
@@ -365,8 +387,24 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     protected BeanDeclaration createBeanDeclaration(ConfigurationNode node)
     {
-        return new XMLBeanDeclaration(getConfiguration().configurationAt(
-                node.getName()), node);
+        List list = getConfiguration().configurationsAt(node.getName());
+        if (list.size() == 1)
+        {
+            return new XMLBeanDeclaration((SubnodeConfiguration) list.get(0), node);
+        }
+        else
+        {
+            Iterator iter = list.iterator();
+            while (iter.hasNext())
+            {
+                SubnodeConfiguration config = (SubnodeConfiguration) iter.next();
+                if (config.getRootNode().equals(node))
+                {
+                    return new XMLBeanDeclaration(config, node);
+                }
+            }
+            throw new ConfigurationRuntimeException("Unable to match node for " + node.getName());
+        }
     }
 
     /**
