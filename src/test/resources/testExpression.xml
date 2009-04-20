@@ -10,10 +10,11 @@
           config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
     <lookups>
-      <lookup config-prefix="expr" 
+      <lookup config-prefix="expr"
               config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
           <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+          <variable name="MDC" value="Class:org.slf4j.MDC"/>
         </variables>
       </lookup>
     </lookups>
@@ -24,7 +25,7 @@
     </providers>
   </header>
   <override>
-    <multifile filePattern='$$${expr:String.right("$[sys:Id]", 2)}/testMultiConfiguration_$$${sys:Id}.xml'
+    <multifile filePattern='$$${expr:String.right(MDC.get("Id"), 2)}/testMultiConfiguration_$$${sys:Id}.xml'
                config-name="clientConfig" delimiterParsingDisabled="true">
        <expressionEngine
           config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>

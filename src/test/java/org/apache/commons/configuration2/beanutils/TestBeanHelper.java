@@ -19,6 +19,8 @@ package org.apache.commons.configuration2.beanutils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.beanutils.BeanDeclaration;
@@ -398,8 +400,10 @@ public class TestBeanHelper extends TestCase
         {
             buddyData.setBeanFactoryName(TEST_FACTORY);
         }
-        Map nested = new HashMap();
-        nested.put("buddy", buddyData);
+        Map<String, List<BeanDeclaration>> nested = new HashMap<String, List<BeanDeclaration>>();
+        List<BeanDeclaration> list = new ArrayList<BeanDeclaration>();
+        list.add(buddyData);
+        nested.put("buddy", list);
         data.setNestedBeanDeclarations(nested);
         return data;
     }
@@ -517,7 +521,7 @@ public class TestBeanHelper extends TestCase
 
         private Map beanProperties;
 
-        private Map nestedBeanDeclarations;
+        private Map<String, List<BeanDeclaration>> nestedBeanDeclarations;
 
         public String getBeanClassName()
         {
@@ -559,12 +563,12 @@ public class TestBeanHelper extends TestCase
             this.beanProperties = beanProperties;
         }
 
-        public Map getNestedBeanDeclarations()
+        public Map<String, List<BeanDeclaration>> getNestedBeanDeclarations()
         {
             return nestedBeanDeclarations;
         }
 
-        public void setNestedBeanDeclarations(Map nestedBeanDeclarations)
+        public void setNestedBeanDeclarations(Map<String, List<BeanDeclaration>> nestedBeanDeclarations)
         {
             this.nestedBeanDeclarations = nestedBeanDeclarations;
         }

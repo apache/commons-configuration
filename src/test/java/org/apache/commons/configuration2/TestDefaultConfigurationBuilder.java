@@ -29,8 +29,6 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.StreamHandler;
 import java.util.logging.SimpleFormatter;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Handler;
 
 import junit.framework.TestCase;
 
@@ -896,7 +894,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertNotNull("No XML returned", xml);
         assertTrue("Incorect configuration data: " + xml, xml.contains("<rowsPerPage>15</rowsPerPage>"));
         logger.removeHandler(handler);
-        logger.setLevel(Level.OFF);   
+        logger.setLevel(Level.OFF);
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);
@@ -963,6 +961,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.setFile(EXPRESSION_FILE);
         factory.setAttributeSplittingDisabled(true);
         System.getProperties().remove("Id");
+        org.slf4j.MDC.clear();
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
@@ -973,6 +972,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
+        org.slf4j.MDC.put("Id", key);
         int actual = config.getInt("rowsPerPage");
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }

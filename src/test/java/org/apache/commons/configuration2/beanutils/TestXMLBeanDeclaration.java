@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.beanutils;
 
 import java.util.Map;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -272,13 +273,13 @@ public class TestXMLBeanDeclaration extends TestCase
         decl = new XMLBeanDeclaration<ConfigurationNode>(config, KEY);
         checkProperties(decl, TEST_PROPS, TEST_VALUES);
 
-        Map<String, BeanDeclaration> nested = decl.getNestedBeanDeclarations();
+        Map<String, List<BeanDeclaration>> nested = decl.getNestedBeanDeclarations();
         assertEquals("Wrong number of nested declarations",
                 COMPLEX_PROPS.length, nested.size());
         for (int i = 0; i < COMPLEX_PROPS.length; i++)
         {
             XMLBeanDeclaration<ConfigurationNode> d = (XMLBeanDeclaration<ConfigurationNode>) nested
-                    .get(COMPLEX_PROPS[i]);
+                    .get(COMPLEX_PROPS[i]).get(0);
             assertNotNull("No declaration found for " + COMPLEX_PROPS[i], d);
             checkProperties(d, COMPLEX_ATTRIBUTES[i], COMPLEX_VALUES[i]);
             assertEquals("Wrong bean class", COMPLEX_CLASSES[i], d
@@ -304,12 +305,12 @@ public class TestXMLBeanDeclaration extends TestCase
             }
         };
 
-        Map<String, BeanDeclaration> nested = decl.getNestedBeanDeclarations();
+        Map<String, List<BeanDeclaration>> nested = decl.getNestedBeanDeclarations();
         assertEquals("Wrong number of nested declarations",
                 COMPLEX_PROPS.length, nested.size());
         for (int i = 0; i < COMPLEX_PROPS.length; i++)
         {
-            BeanDeclaration d = nested.get(COMPLEX_PROPS[i]);
+            BeanDeclaration d = nested.get(COMPLEX_PROPS[i]).get(0);
             assertTrue("Wrong declaration class: " + d,
                     d instanceof XMLBeanDeclarationTestImpl);
         }
@@ -323,7 +324,7 @@ public class TestXMLBeanDeclaration extends TestCase
         InMemoryConfiguration config = new InMemoryConfiguration();
         setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
         decl = new XMLBeanDeclaration<ConfigurationNode>(config, KEY);
-        Map<String, BeanDeclaration> nested = decl.getNestedBeanDeclarations();
+        Map<String, List<BeanDeclaration>> nested = decl.getNestedBeanDeclarations();
         assertTrue("Found nested declarations", nested == null
                 || nested.isEmpty());
     }

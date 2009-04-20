@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.beanutils;
 
 import java.util.Map;
+import java.util.List;
 
 /**
  * <p>
@@ -96,5 +97,5 @@ public interface BeanDeclaration
      *
      * @return a map with nested bean declarations
      */
-    Map<String, BeanDeclaration> getNestedBeanDeclarations();
+    Map<String, List<BeanDeclaration>> getNestedBeanDeclarations();
 }

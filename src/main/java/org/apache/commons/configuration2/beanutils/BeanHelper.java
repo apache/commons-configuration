@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
+import java.util.List;
 import java.lang.reflect.InvocationTargetException;
 import java.beans.PropertyDescriptor;
 
@@ -175,14 +177,31 @@ public class BeanHelper
     {
         initBeanProperties(bean, data, lenient);
 
-        Map<String, BeanDeclaration> nestedBeans = data.getNestedBeanDeclarations();
+        Map<String, List<BeanDeclaration>> nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
-            for (Map.Entry<String, BeanDeclaration> e : nestedBeans.entrySet())
+            if (bean instanceof Collection)
             {
-                String propName = e.getKey();
-                Class defaultClass = getDefaultClass(bean, propName);
-                initProperty(bean, propName, createBean(e.getValue(), defaultClass), lenient);
+                Collection<Object> coll = (Collection<Object>) bean;
+                if (nestedBeans.size() == 1)
+                {
+                    Map.Entry<String, List<BeanDeclaration>> e = nestedBeans.entrySet().iterator().next();
+                    String propName = e.getKey();
+                    Class defaultClass = getDefaultClass(bean, propName);
+                    for (BeanDeclaration decl : e.getValue())
+                    {
+                        coll.add(createBean(decl, defaultClass));
+                    }
+                }
+            }
+            else
+            {
+                for (Map.Entry<String, List<BeanDeclaration>> e : nestedBeans.entrySet())
+                {
+                    String propName = e.getKey();
+                    Class defaultClass = getDefaultClass(bean, propName);
+                    initProperty(bean, propName, createBean(e.getValue().get(0), defaultClass), lenient);
+                }
             }
         }
     }
@@ -238,7 +257,8 @@ public class BeanHelper
      * @param lenient  ignore a missing or read only property, throws an exception otherwise
      * @throws ConfigurationRuntimeException if the property is not writeable or an error occurred
      */
-    private static void initProperty(Object bean, String propName, Object value, boolean lenient) throws ConfigurationRuntimeException
+    private static void initProperty(Object bean, String propName, Object value, boolean lenient)
+            throws ConfigurationRuntimeException
     {
         if (!PropertyUtils.isWriteable(bean, propName))
         {

@@ -19,10 +19,13 @@ package org.apache.commons.configuration2.beanutils;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.PropertyConverter;
 import org.apache.commons.configuration2.SubConfiguration;
+import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.expr.NodeHandler;
 
 /**
@@ -305,17 +308,27 @@ public class XMLBeanDeclaration<T> implements BeanDeclaration
      *
      * @return a map with bean declarations for complex properties
      */
-    public Map<String, BeanDeclaration> getNestedBeanDeclarations()
+    public Map<String, List<BeanDeclaration>> getNestedBeanDeclarations()
     {
-        Map<String, BeanDeclaration> nested = new HashMap<String, BeanDeclaration>();
+        Map<String, List<BeanDeclaration>> nested = new HashMap<String, List<BeanDeclaration>>();
         if (getNode() != null)
         {
             for (T child : getNodeHandler().getChildren(getNode()))
             {
                 if (!isReservedNode(child))
                 {
+                    List<BeanDeclaration> list;
                     String nodeName = getNodeHandler().nodeName(child);
-                    nested.put(nodeName, createBeanDeclaration(child));
+                    if (nested.containsKey(nodeName))
+                    {
+                        list = nested.get(nodeName);
+                    }
+                    else
+                    {
+                        list = new ArrayList<BeanDeclaration>();
+                        nested.put(nodeName, list);
+                    }
+                    list.add(createBeanDeclaration(child));
                 }
             }
         }
@@ -398,8 +411,23 @@ public class XMLBeanDeclaration<T> implements BeanDeclaration
      */
     protected BeanDeclaration createBeanDeclaration(T node)
     {
-        return new XMLBeanDeclaration<T>(getConfiguration().configurationAt(
-                getNodeHandler().nodeName(node)), node);
+        String nodeName = getNodeHandler().nodeName(node);
+        List<SubConfiguration<T>> list = getConfiguration().configurationsAt(nodeName);
+        if (list.size() == 1)
+        {
+            return new XMLBeanDeclaration<T>(list.get(0), node);
+        }
+        else
+        {
+            for (SubConfiguration<T> config : list)
+            {
+                if (config.getRootNode().equals(node))
+                {
+                    return new XMLBeanDeclaration<T>(config, node);
+                }
+            }
+            throw new ConfigurationRuntimeException("Unable to match node for " + nodeName);
+        }
     }
 
     /**
