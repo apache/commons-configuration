@@ -900,7 +900,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1001", config, 15);
         String xml = writer.getBuffer().toString();
         assertNotNull("No XML returned", xml);
-        assertTrue("Incorect configuration data", xml.contains("<rowsPerPage>15</rowsPerPage>"));
+        assertTrue("Incorect configuration data", xml.indexOf("<rowsPerPage>15</rowsPerPage>") >= 0);
         logger.removeAppender(app);
         logger.setLevel(Level.OFF);
         verify("1002", config, 25);
