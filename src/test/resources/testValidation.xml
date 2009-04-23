@@ -6,7 +6,7 @@
       <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
-    <entity-resolver catalogFiles="target/test-classes/catalog.xml"/>    
+    <entity-resolver catalogFiles="catalog.xml"/>    
   </header>
   <system/>
   <properties fileName="test.properties.xml" throwExceptionOnMissing="true"
