@@ -731,7 +731,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             try
             {
-               SystemConfiguration.setSystemProperties(fileName);
+               SystemConfiguration.setSystemProperties(getConfigurationBasePath(), fileName);
             }
             catch (Exception ex)
             {
@@ -748,6 +748,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_ENTITY_RESOLVER, true);
             EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
             BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
+            BeanHelper.setProperty(resolver, "baseDir", getBasePath());
             setEntityResolver(resolver);
         }
     }
