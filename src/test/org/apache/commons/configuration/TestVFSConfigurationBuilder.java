@@ -79,6 +79,9 @@ public class TestVFSConfigurationBuilder extends TestCase
     private static final File VALIDATION_FILE = new File(
             "conf/testValidation.xml");
 
+    private static final File VALIDATION2_FILE = new File(
+            "conf/testValidation2.xml");
+
     private static final File MULTI_TENENT_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder.xml");
 
@@ -849,6 +852,15 @@ public class TestVFSConfigurationBuilder extends TestCase
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
+        factory.getConfiguration(true);
+        String value = System.getProperty("key1");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","value1",value);
+    }
+
+    public void testValidation2() throws Exception
+    {
+        factory.setFile(VALIDATION2_FILE);
         factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);

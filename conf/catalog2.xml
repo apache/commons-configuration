@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+
+  <public publicId="-//Apache//DTD Resolver Test V1.0//EN"
+          uri="resolver.dtd"/>
+  <rewriteSystem systemIdStartString="http://java.sun.com/dtd/"
+                 rewritePrefix="./"/>
+  <rewriteSystem systemIdStartString="http://commons.apache.org/"
+                 rewritePrefix="file://${sys:user.dir}/conf/"/>
+</catalog>
