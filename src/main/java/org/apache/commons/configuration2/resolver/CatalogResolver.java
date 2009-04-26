@@ -24,6 +24,7 @@ import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.configuration2.FileSystem;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.apache.xml.resolver.CatalogException;
 
@@ -119,6 +120,15 @@ public class CatalogResolver implements EntityResolver
     public void setBaseDir(String baseDir)
     {
         manager.setBaseDir(baseDir);
+    }
+
+    /**
+     * Set the StrSubstitutor.
+     * @param substitutor The StrSubstitutor.
+     */
+    public void setSubstitutor(StrSubstitutor substitutor)
+    {
+        manager.setSubstitutor(substitutor);
     }
 
     /**
@@ -242,6 +252,9 @@ public class CatalogResolver implements EntityResolver
         /** The base directory */
         private String baseDir = System.getProperty("user.dir");
 
+        /** The String Substitutor */
+        private StrSubstitutor substitutor;
+
         /**
          * Set the FileSystem
          * @param fileSystem The FileSystem in use.
@@ -279,6 +292,16 @@ public class CatalogResolver implements EntityResolver
         public String getBaseDir()
         {
             return this.baseDir;
+        }
+
+        public void setSubstitutor(StrSubstitutor substitutor)
+        {
+            this.substitutor = substitutor;
+        }
+
+        public StrSubstitutor getStrSubstitutor()
+        {
+            return this.substitutor;
         }
     }
 
@@ -425,5 +448,18 @@ public class CatalogResolver implements EntityResolver
                 parsePendingCatalogs();
             }
         }
+
+        /**
+         * Perform character normalization on a URI reference.
+         *
+         * @param uriref The URI reference
+         * @return The normalized URI reference.
+         */
+        protected String normalizeURI(String uriref)
+        {
+            StrSubstitutor substitutor = ((CatalogManager) catalogManager).getStrSubstitutor();
+            String resolved = substitutor != null ? substitutor.replace(uriref) : uriref;
+            return super.normalizeURI(resolved);
+        }       
     }
 }

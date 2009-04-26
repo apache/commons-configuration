@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <entity-resolver catalogFiles="file://${sys:user.dir}/target/test-classes/catalog2.xml"/>
+  </header>
+  <system/>
+  <properties fileName="test.properties.xml" throwExceptionOnMissing="true"
+    config-name="properties">
+  </properties>
+  <xml fileName="file://${sys:user.dir}/target/test-classes/sample.xml" config-name="xml" schemaValidation="true"/>
+</configuration>

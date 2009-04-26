@@ -285,8 +285,10 @@ public class VFSFileSystem extends DefaultFileSystem
 
     public URL locateFromURL(String basePath, String fileName)
     {
-        if ((basePath != null && UriParser.extractScheme(basePath) == null)
-            || (basePath == null && UriParser.extractScheme(fileName) == null))
+        String fileScheme = UriParser.extractScheme(fileName);
+
+        // Use DefaultFileSystem if basePath and fileName don't have a scheme.
+        if ((basePath == null || UriParser.extractScheme(basePath) == null) && fileScheme == null)
         {
             return super.locateFromURL(basePath, fileName);
         }
@@ -295,7 +297,8 @@ public class VFSFileSystem extends DefaultFileSystem
             FileSystemManager fsManager = VFS.getManager();
 
             FileObject file;
-            if (basePath != null)
+            // Only use the base path if the file name doesn't have a scheme.
+            if (basePath != null && fileScheme == null)
             {
                 FileObject base = fsManager.resolveFile(basePath);
                 if (base.getType() == FileType.FILE)
