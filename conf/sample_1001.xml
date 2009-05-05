@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<Employees xmlns="http://commons.apache.org/employee"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://commons.apache.org/employee http://commons.apache.org/sample.xsd">
+  <Employee>
+    <Name>Jane Doe</Name>
+  </Employee>
+</Employees>

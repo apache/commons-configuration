@@ -87,6 +87,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     private static final File VALIDATION_FILE = new File(
             "conf/testValidation.xml");
 
+    private static final File VALIDATION3_FILE = new File(
+            "conf/testValidation3.xml");
+
     private static final File MULTI_TENENT_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder.xml");
 
@@ -849,6 +852,21 @@ public class TestDefaultConfigurationBuilder extends TestCase
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
+    }
+
+
+    public void testValidation3() throws Exception
+    {
+        System.getProperties().remove("Id");
+        factory.setFile(VALIDATION3_FILE);
+        CombinedConfiguration config = factory.getConfiguration(true);
+        String value = config.getString("Employee/Name");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","John Doe",value);
+        System.setProperty("Id", "1001");
+        value = config.getString("Employee/Name");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","Jane Doe",value);
     }
 
     public void testMultiTenentConfiguration() throws Exception

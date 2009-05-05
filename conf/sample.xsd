@@ -1,18 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://commons.apache.org/employee" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-  <xs:element name="Employees" type="emp:EmployeesType" xmlns:emp="http://commons.apache.org/employee"/>
-  <xs:complexType name="EmployeeType">
-    <xs:sequence>
-      <xs:element type="xs:string" name="SSN"/>
-      <xs:element type="xs:string" name="Name"/>
-      <xs:element type="xs:string" name="DateOfBirth"/>
-      <xs:element type="xs:string" name="EmployeeType"/>
-      <xs:element type="xs:string" name="Salary"/>
-    </xs:sequence>
-  </xs:complexType>
-  <xs:complexType name="EmployeesType">
-    <xs:sequence>
-      <xs:element type="emp:EmployeeType" name="Employee" xmlns:emp="http://commons.apache.org/employee"/>
-    </xs:sequence>
-  </xs:complexType>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified"
+           targetNamespace="http://commons.apache.org/employee"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Employees" xmlns="http://commons.apache.org/employee">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Employee">
+          <xs:complexType>
+            <xs:sequence>
+            <xs:element type="xs:string" name="SSN" minOccurs="0"/>
+            <xs:element type="xs:string" name="Name" minOccurs="0"/>
+            <xs:element type="xs:string" name="DateOfBirth" minOccurs="0"/>
+            <xs:element type="xs:string" name="EmployeeType" minOccurs="0"/>
+            <xs:element type="xs:string" name="Salary" minOccurs="0"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
 </xs:schema>

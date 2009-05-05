@@ -37,6 +37,7 @@ import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.resolver.CatalogResolver;
+import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
@@ -1386,7 +1387,20 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
-            return super.getConfiguration(decl);
+            AbstractConfiguration config = super.getConfiguration(decl);
+
+            /**
+             * Some wrapper classes may need to pass the EntityResolver to XMLConfigurations
+             * they construct buy may not be an XMLConfiguration.
+             */
+            if (config instanceof EntityResolverSupport)
+            {
+                DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
+                EntityResolver resolver = builder.getEntityResolver();
+                ((EntityResolverSupport)config).setEntityResolver(resolver);
+            }
+
+            return config;
         }
 
         /**

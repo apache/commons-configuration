@@ -20,6 +20,7 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.apache.xml.resolver.CatalogException;
+import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
@@ -88,7 +89,6 @@ public class CatalogResolver implements EntityResolver
     {
         manager.setIgnoreMissingProperties(true);
         manager.setUseStaticCatalog(false);
-        manager.setCatalogClassName(Catalog.class.getName());
         manager.setFileSystem(fs);
         setLogger(null);
     }
@@ -255,6 +255,9 @@ public class CatalogResolver implements EntityResolver
         /** The String Substitutor */
         private StrSubstitutor substitutor;
 
+        /** The static catalog used by this manager. */
+        private static org.apache.xml.resolver.Catalog staticCatalog = null;
+
         /**
          * Set the FileSystem
          * @param fileSystem The FileSystem in use.
@@ -302,6 +305,52 @@ public class CatalogResolver implements EntityResolver
         public StrSubstitutor getStrSubstitutor()
         {
             return this.substitutor;
+        }
+
+
+        /**
+         * Get a new catalog instance. This method is only overridden because xml-resolver
+         * might be in a parent ClassLoader and will be incapable of loading our Catalog
+         * implementation.
+         *
+         * This method always returns a new instance of the underlying catalog class.
+         */
+        public org.apache.xml.resolver.Catalog getPrivateCatalog()
+        {
+            org.apache.xml.resolver.Catalog catalog = staticCatalog;
+
+            if (catalog == null || !getUseStaticCatalog())
+            {
+                try
+                {
+	                catalog = new Catalog();
+	                catalog.setCatalogManager(this);
+	                catalog.setupReaders();
+	                catalog.loadSystemCatalogs();
+                }
+                catch (Exception ex)
+                {
+	                ex.printStackTrace();
+                }
+
+                if (getUseStaticCatalog())
+                {
+	                staticCatalog = catalog;
+                }
+            }
+
+            return catalog;
+        }
+
+        /**
+         * Get a catalog instance.
+         *
+         * If this manager uses static catalogs, the same static catalog will
+         * always be returned. Otherwise a new catalog will be returned.
+         */
+        public org.apache.xml.resolver.Catalog getCatalog()
+        {
+            return getPrivateCatalog();
         }
     }
 

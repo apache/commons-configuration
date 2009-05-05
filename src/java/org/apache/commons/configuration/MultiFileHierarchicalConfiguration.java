@@ -38,9 +38,11 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
+import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.xml.sax.EntityResolver;
 
 /**
  * This class provides access to multiple configuration files that reside in a location that
@@ -55,7 +57,7 @@ import org.apache.commons.logging.LogFactory;
  * @version $Id$
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
-    implements ConfigurationListener, ConfigurationErrorListener
+    implements ConfigurationListener, ConfigurationErrorListener, EntityResolverSupport
 {
     /**
      * Prevent recursion while resolving unprefixed properties.
@@ -94,6 +96,9 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
 
     /** The Reloading strategy to use on created configurations */
     private ReloadingStrategy fileStrategy;
+
+    /** The EntityResolver */
+    private EntityResolver entityResolver;
 
     /**
      * Default Constructor.
@@ -167,6 +172,16 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setReloadingStrategy(ReloadingStrategy strategy)
     {
         this.fileStrategy = strategy;
+    }
+
+    public void setEntityResolver(EntityResolver entityResolver)
+    {
+        this.entityResolver = entityResolver;
+    }
+
+    public EntityResolver getEntityResolver()
+    {
+        return this.entityResolver;
     }
 
     /**
@@ -703,6 +718,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         configuration.setValidating(validating);
         configuration.setSchemaValidation(schemaValidation);
+        configuration.setEntityResolver(entityResolver);
         configuration.setAttributeSplittingDisabled(attributeSplittingDisabled);
         configuration.setListDelimiter(getListDelimiter());
         configuration.addConfigurationListener(this);

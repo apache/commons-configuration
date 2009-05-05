@@ -936,6 +936,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             initProperties(newDocument, oldDocument == null);
             document = (oldDocument == null) ? newDocument : oldDocument;
         }
+        catch (SAXParseException spe)
+        {
+            this.getLogger().debug("Error parsing " + source.getSystemId(), spe);
+            throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
+        }
         catch (Exception e)
         {
             throw new ConfigurationException("Unable to load the configuration", e);
