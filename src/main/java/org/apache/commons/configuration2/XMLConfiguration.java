@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Collections;
+import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -948,9 +949,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             initProperties(newDocument, oldDocument == null);
             document = (oldDocument == null) ? newDocument : oldDocument;
         }
+        catch (SAXParseException spe)
+        {
+            this.getLogger().log(Level.FINE, "Error parsing " + source.getSystemId(), spe);
+            throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
+        }
         catch (Exception e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
 
@@ -971,11 +977,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (TransformerException e)
         {
-            throw new ConfigurationException(e.getMessage(), e);
+            throw new ConfigurationException("Unable to save the configuration", e);
         }
         catch (TransformerFactoryConfigurationError err)
         {
-            throw new ConfigurationException(err.getMessage(), err);
+            throw new ConfigurationException("Unable to save the configuration", err);
         }
     }
 

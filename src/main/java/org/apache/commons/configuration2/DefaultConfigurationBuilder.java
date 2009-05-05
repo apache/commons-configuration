@@ -43,6 +43,7 @@ import org.apache.commons.configuration2.tree.OverrideCombiner;
 import org.apache.commons.configuration2.tree.UnionCombiner;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.resolver.EntityRegistry;
+import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.lang.text.StrLookup;
 import org.xml.sax.EntityResolver;
 
@@ -755,7 +756,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
             BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
             BeanHelper.setProperty(resolver, "baseDir", getBasePath());
-            BeanHelper.setProperty(resolver, "substitutor", getSubstitutor());            
+            BeanHelper.setProperty(resolver, "substitutor", getSubstitutor());
             setEntityResolver(resolver);
         }
     }
@@ -1390,7 +1391,20 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
-            return super.getConfiguration(decl);
+            AbstractConfiguration config = super.getConfiguration(decl);
+
+            /**
+             * Some wrapper classes may need to pass the EntityResolver to XMLConfigurations
+             * they construct buy may not be an XMLConfiguration.
+             */
+            if (config instanceof EntityResolverSupport)
+            {
+                DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
+                EntityResolver resolver = builder.getEntityResolver();
+                ((EntityResolverSupport) config).setEntityResolver(resolver);
+            }
+
+            return config;
         }
 
         /**

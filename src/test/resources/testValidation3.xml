@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
+            keyPattern="$${sys:Id}">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <providers>
+      <provider config-tag="multifile"
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
+    </providers>
+    <entity-resolver catalogFiles="catalog.xml"/>
+  </header>
+  <system/>
+  <properties fileName="test.properties.xml" throwExceptionOnMissing="true"
+    config-name="properties">
+  </properties>
+  <multifile filePattern="sample_$$${sys:Id}.xml"
+             config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="true">
+  </multifile>
+  <xml fileName="sample.xml" config-name="xml" schemaValidation="true"/>
+</configuration>

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.logging.StreamHandler;
 import java.util.logging.SimpleFormatter;
+import java.util.logging.ConsoleHandler;
 
 import junit.framework.TestCase;
 
@@ -36,6 +37,7 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.TreeUtils;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
 
@@ -80,6 +82,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     private static final File VALIDATION_FILE = ConfigurationAssert
             .getTestFile("testValidation.xml");
+
+    private static final File VALIDATION3_FILE = ConfigurationAssert
+            .getTestFile("testValidation3.xml");
 
     private static final File MULTI_TENENT_FILE = ConfigurationAssert
             .getTestFile("testMultiTenentConfigurationBuilder.xml");
@@ -840,6 +845,21 @@ public class TestDefaultConfigurationBuilder extends TestCase
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
+    }
+
+
+    public void testValidation3() throws Exception
+    {
+        System.getProperties().remove("Id");
+        factory.setFile(VALIDATION3_FILE);
+        CombinedConfiguration config = factory.getConfiguration(true);
+        String value = config.getString("Employee/Name");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","John Doe",value);
+        System.setProperty("Id", "1001");
+        value = config.getString("Employee/Name");
+        assertNotNull("The test key was not located", value);
+        assertEquals("Incorrect value retrieved","Jane Doe",value);
     }
 
     public void testMultiTenentConfiguration() throws Exception

@@ -38,8 +38,11 @@ import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.TreeUtils;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
+import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.beanutils.BeanUtils;
+import org.xml.sax.EntityResolver;
 
 /**
  * This class provides access to multiple configuration files that reside in a location that
@@ -54,7 +57,7 @@ import org.apache.commons.beanutils.BeanUtils;
  *
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
-    implements ConfigurationListener, ConfigurationErrorListener
+    implements ConfigurationListener, ConfigurationErrorListener, EntityResolverSupport
 {
     /**
      * Prevent recursion while resolving unprefixed properties.
@@ -91,6 +94,12 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
 
     /** The Logger name to use */
     private String loggerName = "";
+
+    /** The Reloading strategy to use on created configurations */
+    private ReloadingStrategy fileStrategy;
+
+    /** The EntityResolver */
+    private EntityResolver entityResolver;
 
     /**
      * Default Constructor
@@ -154,6 +163,26 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void setAttributeSplittingDisabled(boolean attributeSplittingDisabled)
     {
         this.attributeSplittingDisabled = attributeSplittingDisabled;
+    }
+
+    public ReloadingStrategy getReloadingStrategy()
+    {
+        return fileStrategy;
+    }
+
+    public void setReloadingStrategy(ReloadingStrategy strategy)
+    {
+        this.fileStrategy = strategy;
+    }
+
+    public void setEntityResolver(EntityResolver entityResolver)
+    {
+        this.entityResolver = entityResolver;
+    }
+
+    public EntityResolver getEntityResolver()
+    {
+        return this.entityResolver;
     }
 
     /**
@@ -687,31 +716,34 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
 
         XMLConfiguration configuration = new XMLConfiguration();
+        if (loggerName != null)
+        {
+            Logger log = Logger.getLogger(loggerName);
+            if (log != null)
+            {
+                configuration.setLogger(log);
+            }
+        }
+        configuration.setBasePath(getBasePath());
+        configuration.setFileName(path);
+        configuration.setFileSystem(getFileSystem());
+        configuration.setExpressionEngine(getExpressionEngine());
+        ReloadingStrategy strategy = createReloadingStrategy();
+        if (strategy != null)
+        {
+            configuration.setReloadingStrategy(strategy);
+        }
+        configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        configuration.setAttributeSplittingDisabled(isAttributeSplittingDisabled());
+        configuration.setValidating(validating);
+        configuration.setSchemaValidation(schemaValidation);
+        configuration.setEntityResolver(entityResolver);
+        configuration.setListDelimiter(getListDelimiter());
+        configuration.addConfigurationListener(this);
+        configuration.addErrorListener(this);
         try
         {
-             if (loggerName != null)
-             {
-                Logger log = Logger.getLogger(loggerName);
-                if (log != null)
-                {
-                    configuration.setLogger(log);
-                }
-            }
-            configuration.setBasePath(getBasePath());
-            configuration.setFileName(path);
-            configuration.setFileSystem(getFileSystem());
-            configuration.setExpressionEngine(getExpressionEngine());
-            configuration.setReloadingStrategy(createReloadingStrategy());
-            configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-            configuration.setAttributeSplittingDisabled(isAttributeSplittingDisabled());
-            configuration.setValidating(validating);
-            configuration.setSchemaValidation(schemaValidation);
-            configuration.setListDelimiter(getListDelimiter());
-            configuration.addConfigurationListener(this);
-            configuration.addErrorListener(this);
             configuration.load();
-            configurationsMap.putIfAbsent(path, configuration);
-            configuration = configurationsMap.get(path);
         }
         catch (ConfigurationException ce)
         {
@@ -720,8 +752,8 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 throw new ConfigurationRuntimeException(ce);
             }
         }
-
-        return configuration;
+        configurationsMap.putIfAbsent(path, configuration);
+        return configurationsMap.get(path);
     }
 
     /**
