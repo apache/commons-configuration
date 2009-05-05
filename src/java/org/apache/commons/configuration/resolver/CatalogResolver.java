@@ -246,6 +246,9 @@ public class CatalogResolver implements EntityResolver
      */
     public static class CatalogManager extends org.apache.xml.resolver.CatalogManager
     {
+        /** The static catalog used by this manager. */
+        private static org.apache.xml.resolver.Catalog staticCatalog;
+
         /** The FileSystem */
         private FileSystem fs;
 
@@ -254,9 +257,6 @@ public class CatalogResolver implements EntityResolver
 
         /** The String Substitutor */
         private StrSubstitutor substitutor;
-
-        /** The static catalog used by this manager. */
-        private static org.apache.xml.resolver.Catalog staticCatalog = null;
 
         /**
          * Set the FileSystem
@@ -314,6 +314,7 @@ public class CatalogResolver implements EntityResolver
          * implementation.
          *
          * This method always returns a new instance of the underlying catalog class.
+         * @return the Catalog.
          */
         public org.apache.xml.resolver.Catalog getPrivateCatalog()
         {
@@ -323,19 +324,19 @@ public class CatalogResolver implements EntityResolver
             {
                 try
                 {
-	                catalog = new Catalog();
-	                catalog.setCatalogManager(this);
-	                catalog.setupReaders();
-	                catalog.loadSystemCatalogs();
+                    catalog = new Catalog();
+                    catalog.setCatalogManager(this);
+                    catalog.setupReaders();
+                    catalog.loadSystemCatalogs();
                 }
                 catch (Exception ex)
                 {
-	                ex.printStackTrace();
+                    ex.printStackTrace();
                 }
 
                 if (getUseStaticCatalog())
                 {
-	                staticCatalog = catalog;
+                    staticCatalog = catalog;
                 }
             }
 
@@ -347,6 +348,7 @@ public class CatalogResolver implements EntityResolver
          *
          * If this manager uses static catalogs, the same static catalog will
          * always be returned. Otherwise a new catalog will be returned.
+         * @return The Catalog.
          */
         public org.apache.xml.resolver.Catalog getCatalog()
         {

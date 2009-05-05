@@ -1397,7 +1397,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             {
                 DefaultConfigurationBuilder builder = decl.getConfigurationBuilder();
                 EntityResolver resolver = builder.getEntityResolver();
-                ((EntityResolverSupport)config).setEntityResolver(resolver);
+                ((EntityResolverSupport) config).setEntityResolver(resolver);
             }
 
             return config;
