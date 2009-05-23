@@ -58,7 +58,7 @@ Configuration defaults = new PropertiesConfiguration(fileToDefaults);
 Configuration otherProperties = new PropertiesConfiguration(fileToOtherProperties);
 CompositeConfiguration cc = new CompositeConfiguration();
 cc.addConfiguration(otherProperties);
-cc.addDefaults(fileToDefaults);
+cc.addConfiguration(fileToDefaults);
 ]]></source>
 		</subsection>
 		
