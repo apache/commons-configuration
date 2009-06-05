@@ -406,7 +406,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @param key the key of the property to be removed
      */
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         // build the query
         StringBuffer query = new StringBuffer("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
@@ -452,6 +452,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public void clear()
     {
+        fireEvent(EVENT_CLEAR, null, null, true);
         // build the query
         StringBuffer query = new StringBuffer("DELETE FROM " + table);
         if (nameColumn != null)
@@ -484,6 +485,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             // clean up
             close(conn, pstmt);
         }
+        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

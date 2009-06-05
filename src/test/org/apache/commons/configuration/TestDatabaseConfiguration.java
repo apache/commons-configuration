@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.io.FileInputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -28,13 +27,6 @@ import javax.sql.DataSource;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.test.HsqlDB;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.dbunit.database.DatabaseConnection;
-import org.dbunit.database.IDatabaseConnection;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.XmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
 
 /**
  * Test for database stored configurations.  Note, when running this Unit
@@ -45,35 +37,11 @@ import org.dbunit.operation.DatabaseOperation;
  */
 public class TestDatabaseConfiguration extends TestCase
 {
-    public final String DATABASE_DRIVER = "org.hsqldb.jdbcDriver";
-    public final String DATABASE_URL = "jdbc:hsqldb:target/test-classes/testdb";
-    public final String DATABASE_USERNAME = "sa";
-    public final String DATABASE_PASSWORD = "";
-
-    /** Constant for the configuration table.*/
-    private static final String TABLE = "configuration";
-
-    /** Constant for the multi configuration table.*/
-    private static final String TABLE_MULTI = "configurations";
-
-    /** Constant for the column with the keys.*/
-    private static final String COL_KEY = "key";
-
-    /** Constant for the column with the values.*/
-    private static final String COL_VALUE = "value";
-
-    /** Constant for the column with the configuration name.*/
-    private static final String COL_NAME = "name";
-
-    /** Constant for the name of the test configuration.*/
-    private static final String CONFIG_NAME = "test";
-
-    private static HsqlDB hsqlDB = null;
-
-    private DataSource datasource;
-
     /** An error listener for testing whether internal errors occurred.*/
     private ConfigurationErrorListenerImpl listener;
+
+    /** The test helper. */
+    private DatabaseConfigurationTestHelper helper;
 
     protected void setUp() throws Exception
     {
@@ -85,43 +53,19 @@ public class TestDatabaseConfiguration extends TestCase
 
         // set up the datasource
 
-        if (hsqlDB == null)
-        {
-            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, "conf/testdb.script");
-        }
-
-        BasicDataSource datasource = new BasicDataSource();
-        datasource.setDriverClassName(DATABASE_DRIVER);
-        datasource.setUrl(DATABASE_URL);
-        datasource.setUsername(DATABASE_USERNAME);
-        datasource.setPassword(DATABASE_PASSWORD);
-
-        this.datasource = datasource;
-
-
-        // prepare the database
-        IDatabaseConnection connection = new DatabaseConnection(datasource.getConnection());
-        IDataSet dataSet = new XmlDataSet(new FileInputStream("conf/dataset.xml"));
-
-        try
-        {
-            DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
-        }
-        finally
-        {
-            connection.close();
-        }
+        helper = new DatabaseConfigurationTestHelper();
+        helper.setUp();
     }
 
-    protected void tearDown() throws Exception{
-        datasource.getConnection().commit();
-        datasource.getConnection().close();
-
+    protected void tearDown() throws Exception
+    {
         // if an error listener is defined, we check whether an error occurred
         if(listener != null)
         {
             assertEquals("An internal error occurred", 0, listener.getErrorCount());
         }
+        helper.tearDown();
+
         super.tearDown();
     }
 
@@ -132,7 +76,10 @@ public class TestDatabaseConfiguration extends TestCase
      */
     private PotentialErrorDatabaseConfiguration setUpConfig()
     {
-        return new PotentialErrorDatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
+        return new PotentialErrorDatabaseConfiguration(helper.getDatasource(),
+                DatabaseConfigurationTestHelper.TABLE,
+                DatabaseConfigurationTestHelper.COL_KEY,
+                DatabaseConfigurationTestHelper.COL_VALUE);
     }
 
     /**
@@ -143,7 +90,7 @@ public class TestDatabaseConfiguration extends TestCase
      */
     private DatabaseConfiguration setUpMultiConfig()
     {
-        return new DatabaseConfiguration(datasource, TABLE_MULTI, COL_NAME, COL_KEY, COL_VALUE, CONFIG_NAME);
+        return helper.setUpMultiConfig();
     }
 
     /**
@@ -309,20 +256,20 @@ public class TestDatabaseConfiguration extends TestCase
         Configuration config1 = setUpMultiConfig();
         assertFalse("The configuration named 'test' is empty", config1.isEmpty());
 
-        Configuration config2 = new DatabaseConfiguration(datasource, TABLE_MULTI, COL_NAME, COL_KEY, COL_VALUE, "testIsEmpty");
+        Configuration config2 = new DatabaseConfiguration(helper.getDatasource(), DatabaseConfigurationTestHelper.TABLE_MULTI, DatabaseConfigurationTestHelper.COL_NAME, DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE, "testIsEmpty");
         assertTrue("The configuration named 'testIsEmpty' is not empty", config2.isEmpty());
     }
 
     public void testGetList()
     {
-        Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", COL_KEY, COL_VALUE);
+        Configuration config1 = new DatabaseConfiguration(helper.getDatasource(), "configurationList", DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
         List list = config1.getList("key3");
         assertEquals(3,list.size());
     }
 
     public void testGetKeys()
     {
-        Configuration config1 = new DatabaseConfiguration(datasource, "configurationList", COL_KEY, COL_VALUE);
+        Configuration config1 = new DatabaseConfiguration(helper.getDatasource(), "configurationList", DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
         Iterator i = config1.getKeys();
         assertTrue(i.hasNext());
         Object key = i.next();
@@ -347,7 +294,7 @@ public class TestDatabaseConfiguration extends TestCase
      */
     public void testLogErrorListener()
     {
-        DatabaseConfiguration config = new DatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
+        DatabaseConfiguration config = new DatabaseConfiguration(helper.getDatasource(), DatabaseConfigurationTestHelper.TABLE, DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
         assertEquals("No error listener registered", 1, config.getErrorListeners().size());
     }
 

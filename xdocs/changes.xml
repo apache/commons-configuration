@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-385">
+        DatabaseConfiguration now generates correct events for the clear() and
+        clearProperty() methods.
+      </action>
       <action dev="rgoers" type="add" issue="CONFIGURATION-380">
         Add ExprLookup to allow expressions to be evaluated in configurations. When 
         used, this requires that Apache Commons Jexl be added as a dependency to
