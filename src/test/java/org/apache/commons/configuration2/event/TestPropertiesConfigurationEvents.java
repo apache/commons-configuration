@@ -36,13 +36,15 @@ public class TestPropertiesConfigurationEvents extends
     /** The file to be loaded.*/
     static final File TEST_FILE = ConfigurationAssert.getTestFile("test.properties");
 
+    @Override
     protected AbstractConfiguration createConfiguration()
     {
         return new PropertiesConfiguration();
     }
 
+    @Override
     protected URL getSourceURL() throws IOException
     {
-        return TEST_FILE.toURL();
+        return TEST_FILE.toURI().toURL();
     }
 }

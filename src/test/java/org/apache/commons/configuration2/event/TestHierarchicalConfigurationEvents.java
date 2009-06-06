@@ -22,7 +22,7 @@ import java.util.Collection;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.SubnodeConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
 /**
@@ -33,6 +33,7 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 public class TestHierarchicalConfigurationEvents extends
         AbstractTestConfigurationEvents
 {
+    @Override
     protected AbstractConfiguration createConfiguration()
     {
         return new HierarchicalConfiguration();
@@ -45,7 +46,7 @@ public class TestHierarchicalConfigurationEvents extends
     {
         HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
         String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
-        Collection nodes = hc.getExpressionEngine()
+        Collection<?> nodes = hc.getExpressionEngine()
                 .query(hc.getRootNode(), key);
         hc.clearTree(key);
         l.checkEvent(HierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
@@ -61,7 +62,7 @@ public class TestHierarchicalConfigurationEvents extends
     public void testAddNodesEvent()
     {
         HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
-        Collection nodes = new ArrayList(1);
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(new DefaultConfigurationNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
         l.checkEvent(HierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
@@ -78,7 +79,7 @@ public class TestHierarchicalConfigurationEvents extends
     public void testAddNodesEmptyEvent()
     {
         ((HierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
-                new ArrayList());
+                new ArrayList<ConfigurationNode>());
         l.done();
     }
 
