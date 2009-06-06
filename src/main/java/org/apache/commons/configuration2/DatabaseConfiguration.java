@@ -347,7 +347,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
      * @param key the key of the property to be removed
      */
     @Override
-    public void clearProperty(final String key)
+    protected void clearPropertyDirect(final String key)
     {
         new JdbcOperation(EVENT_CLEAR_PROPERTY, key, null)
         {
@@ -370,6 +370,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
     @Override
     public void clear()
     {
+        fireEvent(EVENT_CLEAR, null, null, true);
         new JdbcOperation(EVENT_CLEAR, null, null)
         {
             @Override
@@ -380,6 +381,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
                 return ps.executeUpdate();
             }
         }.execute();
+        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**
