@@ -31,8 +31,11 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.configuration.reloading.VFSFileMonitorReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.ConfigurationEvent;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -40,7 +43,7 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestVFSConfigurationBuilder extends TestCase
+public class TestVFSConfigurationBuilder extends TestCase implements ConfigurationListener
 {
     /** Test configuration definition file. */
     private static final File TEST_FILE = new File(
@@ -91,11 +94,26 @@ public class TestVFSConfigurationBuilder extends TestCase
     private static final File FILEMONITOR_FILE = new File(
             "target/test-classes/testFileMonitorConfigurationBuilder.xml");
 
+    private static final File FILEMONITOR2_FILE = new File(
+            "target/test-classes/testFileMonitorConfigurationBuilder2.xml");
+
+    private static final String FILEMONITOR_URI = "file://" + System.getProperty("user.dir")
+            + "/target/test-classes/testFileMonitorConfigurationBuilder2.xml";
+
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
+    /** true when a file is changed */
+    private boolean configChanged = false;
+
     /** Stores the object to be tested. */
     DefaultConfigurationBuilder factory;
+
+    public TestVFSConfigurationBuilder()
+    {
+        super();
+        VFSFileMonitorReloadingStrategy.stopMonitor();
+    }
 
     protected void setUp() throws Exception
     {
@@ -105,6 +123,7 @@ public class TestVFSConfigurationBuilder extends TestCase
                         "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", "test.xml");
         System.setProperty("test_file_combine", "testcombine1.xml");
+        System.setProperty("basePath", "file://" + System.getProperty("user.dir") + "/target/test-classes");
         FileSystem.setDefaultFileSystem(new VFSFileSystem());
         factory = new DefaultConfigurationBuilder();
         factory.clearErrorListeners();  // avoid exception messages
@@ -875,6 +894,7 @@ public class TestVFSConfigurationBuilder extends TestCase
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
+        verify(null, config, 50);
         verify("1001", config, 15);
         verify("1002", config, 25);
         verify("1003", config, 35);
@@ -1000,6 +1020,7 @@ public class TestVFSConfigurationBuilder extends TestCase
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertNotNull(config);
+        config.addConfigurationListener(this);
         verify("1001", config, 15);
 
         // Allow time for FileMonitor to set up.
@@ -1007,10 +1028,11 @@ public class TestVFSConfigurationBuilder extends TestCase
         XMLConfiguration x = new XMLConfiguration(output);
         x.setProperty("rowsPerPage", "50");
         x.save();
-        // Let FileMonitor detect the change.
-        Thread.sleep(2000);
+
+        waitForChange();
         verify("1001", config, 50);
         output.delete();
+        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
     public void testFileMonitor2() throws Exception
@@ -1025,6 +1047,7 @@ public class TestVFSConfigurationBuilder extends TestCase
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
+        config.addConfigurationListener(this);
         assertNotNull(config);
 
         verify("1002", config, 50);
@@ -1034,12 +1057,71 @@ public class TestVFSConfigurationBuilder extends TestCase
         copyFile(input, output);
 
         // Allow time for the monitor to notice the change.
-        Thread.sleep(2000);
+        //Thread.sleep(2000);
+        waitForChange();
         verify("1002", config, 25);
         output.delete();
+        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
 
+    public void testFileMonitor3() throws Exception
+    {
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
+        output.delete();
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        factory.setFile(FILEMONITOR2_FILE);
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+        config.addConfigurationListener(this);
+        verify("1001", config, 15);
+
+        // Allow time for FileMonitor to set up.
+        Thread.sleep(1000);
+        XMLConfiguration x = new XMLConfiguration(output);
+        x.setProperty("rowsPerPage", "50");
+        x.save();
+        // Let FileMonitor detect the change.
+        //Thread.sleep(2000);
+        waitForChange();
+        verify("1001", config, 50);
+        output.delete();
+        VFSFileMonitorReloadingStrategy.stopMonitor();
+    }
+
+    public void testFileMonitor4() throws Exception
+    {
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_1002.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1002.xml");
+        output.delete();
+
+        factory.setFileName(FILEMONITOR_URI);
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+        config.addConfigurationListener(this);
+
+        verify("1002", config, 50);
+        Thread.sleep(1000);
+
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        // Allow time for the monitor to notice the change.
+        //Thread.sleep(2000);
+        waitForChange();
+        verify("1002", config, 25);
+        output.delete();
+        VFSFileMonitorReloadingStrategy.stopMonitor();
+    }
 
     private void copyFile(File input, File output) throws IOException
     {
@@ -1058,9 +1140,50 @@ public class TestVFSConfigurationBuilder extends TestCase
 
     private void verify(String key, CombinedConfiguration config, int rows)
     {
-        System.setProperty("Id", key);
+        if (key == null)
+        {
+            System.getProperties().remove("Id");
+        }
+        else
+        {
+            System.setProperty("Id", key);
+        }
         int actual = config.getInt("rowsPerPage");
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }
 
+    private void waitForChange()
+    {
+        synchronized(this)
+        {
+            try
+            {
+                int count = 0;
+                while (!configChanged && count++ <= 3)
+                {
+                    this.wait(5000);
+                }
+            }
+            catch (InterruptedException ie)
+            {
+                throw new IllegalStateException("wait timed out");
+            }
+            finally
+            {
+                configChanged = false;
+            }
+        }
+    }
+
+    public void configurationChanged(ConfigurationEvent event)
+    {
+        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        {
+            synchronized(this)
+            {
+                configChanged = true;
+                this.notify();
+            }
+        }
+    }
 }

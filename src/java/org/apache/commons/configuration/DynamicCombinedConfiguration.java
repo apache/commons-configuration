@@ -772,13 +772,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                 config.setConversionExpressionEngine(getConversionExpressionEngine());
                 config.setListDelimiter(getListDelimiter());
-                Iterator iter = config.getErrorListeners().iterator();
+                Iterator iter = getErrorListeners().iterator();
                 while (iter.hasNext())
                 {
                     ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                     config.addErrorListener(listener);
                 }
-                iter = config.getConfigurationListeners().iterator();
+                iter = getConfigurationListeners().iterator();
                 while (iter.hasNext())
                 {
                     ConfigurationListener listener = (ConfigurationListener) iter.next();

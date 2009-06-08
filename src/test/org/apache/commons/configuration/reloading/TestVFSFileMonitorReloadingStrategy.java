@@ -28,6 +28,9 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.VFSFileSystem;
+import org.apache.commons.configuration.AbstractFileConfiguration;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 
 /**
  * Test case for the VFSFileMonitorReloadingStrategy class.
@@ -36,9 +39,10 @@ import org.apache.commons.configuration.VFSFileSystem;
  * @version $Revision$
  */
 public class TestVFSFileMonitorReloadingStrategy extends TestCase
+        implements ConfigurationListener
 {
-    /** Constant for the name of a test properties file.*/
-    private static final String TEST_FILE = "test.properties";
+    /** true when a file is changed */
+    private boolean configChanged = false;
 
     protected void setUp() throws Exception
     {
@@ -106,6 +110,7 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
 
         PropertiesConfiguration config = new PropertiesConfiguration();
         config.setFile(file);
+        config.addConfigurationListener(this);
         VFSFileMonitorReloadingStrategy strategy = new VFSFileMonitorReloadingStrategy();
         strategy.setDelay(500);
         config.setReloadingStrategy(strategy);
@@ -118,14 +123,20 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
         out.flush();
         out.close();
 
-        Thread.sleep(2000);
+        waitForChange();
 
         // test the automatic reloading
-        assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
-        strategy.stopMonitor();
-        if (file.exists())
+        try
         {
-            file.delete();
+            assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
+        }
+        finally
+        {
+            strategy.stopMonitor();
+            if (file.exists())
+            {
+                file.delete();
+            }
         }
     }
 
@@ -177,6 +188,41 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
         if (file.exists())
         {
             file.delete();
+        }
+    }
+
+    private void waitForChange()
+    {
+        synchronized(this)
+        {
+            try
+            {
+                int count = 0;
+                while (!configChanged && count++ <= 3)
+                {
+                    this.wait(5000);
+                }
+            }
+            catch (InterruptedException ie)
+            {
+                throw new IllegalStateException("wait timed out");
+            }
+            finally
+            {
+                configChanged = false;
+            }
+        }
+    }
+
+    public void configurationChanged(ConfigurationEvent event)
+    {
+        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        {
+            synchronized(this)
+            {
+                configChanged = true;
+                this.notify();
+            }
         }
     }
 }
