@@ -84,6 +84,12 @@ implements FileConfiguration, FileSystemBased
     /** Constant for the configuration reload event.*/
     public static final int EVENT_RELOAD = 20;
 
+    /** Constant fro the configuration changed event. */
+    public static final int EVENT_CONFIG_CHANGED = 21;
+
+    /** The root of the file scheme */
+    private static final String FILE_SCHEME = "file:";   
+
     /** Stores the file name.*/
     protected String fileName;
 
@@ -555,6 +561,10 @@ implements FileConfiguration, FileSystemBased
      */
     public void setFileName(String fileName)
     {
+        if (fileName != null && fileName.startsWith(FILE_SCHEME) && !fileName.startsWith("file://"))
+        {
+            fileName = "file://" + fileName.substring(FILE_SCHEME.length());
+        }
         sourceURL = null;
         this.fileName = fileName;
     }
@@ -588,6 +598,10 @@ implements FileConfiguration, FileSystemBased
      */
     public void setBasePath(String basePath)
     {
+        if (basePath != null && basePath.startsWith(FILE_SCHEME) && !basePath.startsWith("file://"))
+        {
+            basePath = "file://" + basePath.substring(FILE_SCHEME.length());
+        }
         sourceURL = null;
         this.basePath = basePath;
     }
@@ -822,6 +836,14 @@ implements FileConfiguration, FileSystemBased
                 }
             }
         }
+    }
+
+    /**
+     * Send notification that the configuration has changed.
+     */
+    public void configurationChanged()
+    {
+        fireEvent(EVENT_CONFIG_CHANGED, null, getURL(), true);
     }
 
     /**

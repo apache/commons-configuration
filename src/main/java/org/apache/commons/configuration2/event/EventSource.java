@@ -70,10 +70,10 @@ import java.util.LinkedList;
 public class EventSource
 {
     /** A collection for the registered event listeners. */
-    private Collection listeners;
+    private Collection<ConfigurationListener> listeners;
 
     /** A collection for the registered error listeners.*/
-    private Collection errorListeners;
+    private Collection<ConfigurationErrorListener> errorListeners;
 
     /** A counter for the detail events. */
     private int detailEvents;
@@ -117,7 +117,7 @@ public class EventSource
      * of the currently registered listeners; manipulating it has no effect
      * on this event source object)
      */
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return doGetListeners(listeners);
     }
@@ -211,7 +211,7 @@ public class EventSource
      * snapshot of the currently registered listeners; it cannot be manipulated)
      * @since 1.4
      */
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return doGetListeners(errorListeners);
     }
@@ -279,7 +279,7 @@ public class EventSource
      */
     protected void fireError(int type, String propName, Object propValue, Throwable ex)
     {
-        Collection listenersToCall = null;
+        Collection<ConfigurationErrorListener> listenersToCall = null;
 
         synchronized (errorListeners)
         {
@@ -287,7 +287,7 @@ public class EventSource
             {
                 // Copy listeners to another collection so that manipulating
                 // the listener list during event delivery won't cause problems
-                listenersToCall = new ArrayList(errorListeners);
+                listenersToCall = new ArrayList<ConfigurationErrorListener>(errorListeners);
             }
         }
 
@@ -403,7 +403,7 @@ public class EventSource
      */
     private void initListeners()
     {
-        listeners = new LinkedList();
-        errorListeners = new LinkedList();
+        listeners = new LinkedList<ConfigurationListener>();
+        errorListeners = new LinkedList<ConfigurationErrorListener>();
     }
 }

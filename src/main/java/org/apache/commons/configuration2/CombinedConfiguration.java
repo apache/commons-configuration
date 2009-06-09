@@ -522,7 +522,11 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (!event.isBeforeUpdate())
+        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        {
+            fireEvent(event.getType(), event.getPropertyName(), event.getPropertyValue(), event.isBeforeUpdate());
+        }
+        else if (!event.isBeforeUpdate())
         {
             invalidate();
         }
@@ -845,7 +849,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
                 .convertToHierarchical(getConfiguration());
                 root = hc.getRootNode();
             }
-            
+
             // Copy data of the root node to the new path
             atParent.appendChildren(root);
             atParent.appendAttributes(root);

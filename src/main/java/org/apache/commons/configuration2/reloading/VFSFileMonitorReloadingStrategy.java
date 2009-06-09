@@ -20,6 +20,7 @@ import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.FileSystem;
 import org.apache.commons.configuration2.FileSystemBased;
+import org.apache.commons.configuration2.AbstractFileConfiguration;
 import org.apache.commons.vfs.impl.DefaultFileMonitor;
 import org.apache.commons.vfs.FileListener;
 import org.apache.commons.vfs.FileChangeEvent;
@@ -113,6 +114,25 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
         {
             throw new IllegalStateException("No configuration has been set for this strategy");
         }
+        FileObject file;
+
+        try
+        {
+            FileSystemManager fsManager = VFS.getManager();
+            FileSystem fs = ((FileSystemBased) configuration).getFileSystem();
+            String uri = fs.getPath(null, configuration.getURL(), configuration.getBasePath(),
+                configuration.getFileName());
+            if (uri == null)
+            {
+                throw new ConfigurationRuntimeException("Unable to determine file to monitor");
+            }
+            file = fsManager.resolveFile(uri);
+        }
+        catch (FileSystemException fse)
+        {
+            String msg = "Unable to monitor " + configuration.getURL().toString();
+            throw new ConfigurationRuntimeException(msg, fse);
+        }
         synchronized (INIT_GATE)
         {
             if (fm == null)
@@ -130,35 +150,17 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
                     fm.setDelay(delay);
                 }
             }
-        }
-
-        try
-        {
-            FileSystemManager fsManager = VFS.getManager();
-            FileSystem fs = ((FileSystemBased) configuration).getFileSystem();
-            String uri = fs.getPath(null, configuration.getURL(), configuration.getBasePath(),
-                configuration.getFileName());
-            if (uri == null)
-            {
-                throw new ConfigurationRuntimeException("Unable to determine file to monitor");
-            }
-            FileObject file = fsManager.resolveFile(uri);
             file.getFileSystem().addListener(file, this);
             fm.addFile(file);
             strategies.put(file, this);
-        }
-        catch (FileSystemException fse)
-        {
-            String msg = "Unable to monitor " + configuration.getURL().toString();
-            throw new ConfigurationRuntimeException(msg, fse);
         }
 
     }
 
     /**
-     * Shutdown the reloading strategy
+     * Shutdown all reloading strategies
      */
-    public void stopMonitor()
+    public static void stopMonitor()
     {
         synchronized (INIT_GATE)
         {
@@ -204,6 +206,7 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
     public void fileCreated(FileChangeEvent event) throws Exception
     {
         reloadRequired = true;
+        fireEvent();
     }
 
     /**
@@ -224,6 +227,14 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
     public void fileChanged(FileChangeEvent event) throws Exception
     {
         reloadRequired = true;
+        fireEvent();
     }
 
+    private void fireEvent()
+    {
+        if (configuration instanceof AbstractFileConfiguration)
+        {
+            ((AbstractFileConfiguration) configuration).configurationChanged();
+        }
+    }
 }

@@ -278,4 +278,69 @@ public class DefaultFileSystem extends FileSystem
             }
         }
     }
+
+    /**
+     * Wraps the output stream so errors can be detected in the HTTP response.
+     *
+     * @author <a
+     *         href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+     * @since 1.7
+     */
+    private static class HttpOutputStream extends VerifiableOutputStream
+    {
+        /**
+         * The wrapped OutputStream
+         */
+        private final OutputStream stream;
+
+        /**
+         * The HttpURLConnection
+         */
+        private final HttpURLConnection connection;
+
+        public HttpOutputStream(OutputStream stream, HttpURLConnection connection)
+        {
+            this.stream = stream;
+            this.connection = connection;
+        }
+
+        public void write(byte[] bytes) throws IOException
+        {
+            stream.write(bytes);
+        }
+
+        public void write(byte[] bytes, int i, int i1) throws IOException
+        {
+            stream.write(bytes, i, i1);
+        }
+
+        public void flush() throws IOException
+        {
+            stream.flush();
+        }
+
+        public void close() throws IOException
+        {
+            stream.close();
+        }
+
+        public void write(int i) throws IOException
+        {
+            stream.write(i);
+        }
+
+        public String toString()
+        {
+            return stream.toString();
+        }
+
+        public void verify() throws IOException
+        {
+            if (connection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST)
+            {
+                throw new IOException("HTTP Error " + connection.getResponseCode()
+                        + " " + connection.getResponseMessage());
+            }
+        }
+    }
 }

@@ -55,9 +55,9 @@ public class TestFileConfiguration extends TestCase
         assertEquals("base path", "http://commons.apache.org/configuration/", config.getBasePath());
         assertEquals("file name", "index.html", config.getFileName());
 
-        // file URL
+        // file URL - This url is invalid, a valid url would be file:///temp/test.properties.
         config.setURL(new URL("file:/temp/test.properties"));
-        assertEquals("base path", "file:/temp/", config.getBasePath());
+        assertEquals("base path", "file:///temp/", config.getBasePath());
         assertEquals("file name", "test.properties", config.getFileName());
     }
 

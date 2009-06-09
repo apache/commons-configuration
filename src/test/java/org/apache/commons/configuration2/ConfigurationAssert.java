@@ -33,7 +33,7 @@ import junit.framework.Assert;
 public class ConfigurationAssert
 {
     /** Constant for the name of the directory with the test files. */
-    public static final String TEST_DIR_NAME = "src/test/resources";
+    public static final String TEST_DIR_NAME = "target/test-classes";
 
     /** Constant for the name of the directory with the output files. */
     public static final String OUT_DIR_NAME = "target";

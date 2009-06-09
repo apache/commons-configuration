@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.Collection;
 import java.util.List;
+import java.net.URI;
 
 import junit.framework.TestCase;
 import org.xml.sax.SAXException;
@@ -309,7 +310,7 @@ public class TestConfigurationFactory extends TestCase
 
         factory = new DefaultConfigurationBuilder();
         factory.setURL(testDigesterFile.toURL());
-        assertEquals(testDigesterFile.getParentFile().toURL().toString(), factory.getBasePath());
+        assertEquals(testDigesterFile.getParentFile().toURI(), new URI(factory.getBasePath()));
     }
 
     // Tests if system properties can be resolved in the configuration

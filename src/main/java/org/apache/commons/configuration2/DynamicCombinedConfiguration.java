@@ -610,7 +610,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return super.removeConfigurationListener(l);
     }
 
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
@@ -651,7 +651,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         super.clearErrorListeners();
     }
 
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return super.getErrorListeners();
     }
@@ -746,23 +746,17 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 config.setExpressionEngine(this.getExpressionEngine());
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                 config.setListDelimiter(getListDelimiter());
-                Iterator iter = config.getErrorListeners().iterator();
-                while (iter.hasNext())
+                for (ConfigurationErrorListener listener : getErrorListeners())
                 {
-                    ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                     config.addErrorListener(listener);
                 }
-                iter = config.getConfigurationListeners().iterator();
-                while (iter.hasNext())
+                for (ConfigurationListener listener : getConfigurationListeners())
                 {
-                    ConfigurationListener listener = (ConfigurationListener) iter.next();
                     config.addConfigurationListener(listener);
                 }
                 config.setForceReloadCheck(isForceReloadCheck());
-                iter = configurations.iterator();
-                while (iter.hasNext())
+                for (ConfigData data : configurations)
                 {
-                    ConfigData data = (ConfigData) iter.next();
                     config.addConfiguration(data.getConfiguration(), data.getName(),
                             data.getAt());
                 }

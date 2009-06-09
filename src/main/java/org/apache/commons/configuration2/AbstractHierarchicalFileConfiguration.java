@@ -46,7 +46,7 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends InMemoryConfiguration
-implements FileConfiguration, ConfigurationListener
+implements FileConfiguration, ConfigurationListener, FileSystemBased
 {
     /** Stores the delegate used for implementing functionality related to the
      * <code>FileConfiguration</code> interface.

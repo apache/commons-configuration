@@ -53,6 +53,9 @@ public final class ConfigurationUtils
     /** Constant for the resource path separator.*/
     static final String RESOURCE_PATH_SEPARATOR = "/";
 
+    /** Constanct for the file URL protocol */
+    private static final String FILE_SCHEME = "file:";
+
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
 
@@ -521,6 +524,10 @@ public final class ConfigurationUtils
         }
 
         String s = url.toString();
+        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://"))
+        {
+            s = "file://" + s.substring(FILE_SCHEME.length());
+        }
 
         if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
         {
