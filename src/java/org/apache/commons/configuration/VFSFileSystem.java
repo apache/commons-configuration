@@ -33,9 +33,11 @@ import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.MalformedURLException;
+import java.net.URLConnection;
 import java.util.Map;
 
 /**
@@ -424,5 +426,24 @@ public class VFSFileSystem extends DefaultFileSystem
             }
         }
         return opts;
+    }
+
+    /**
+     * Stream handler required to create URL.
+     */
+    private static class VFSURLStreamHandler extends URLStreamHandler
+    {
+        /** The Protocol used */
+        private final String protocol;
+
+        public VFSURLStreamHandler(FileName file)
+        {
+            this.protocol = file.getScheme();
+        }
+
+        protected URLConnection openConnection(URL url) throws IOException
+        {
+            throw new IOException("VFS URLs can only be used with VFS APIs");
+        }
     }
 }

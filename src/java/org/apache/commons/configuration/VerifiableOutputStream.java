@@ -25,7 +25,7 @@ import java.io.IOException;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
-public abstract class VerifiableOutputStream extends OutputStream
+abstract class VerifiableOutputStream extends OutputStream
 {
     public abstract void verify() throws IOException;
 }
