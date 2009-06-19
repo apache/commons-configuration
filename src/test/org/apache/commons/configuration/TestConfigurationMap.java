@@ -17,9 +17,7 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
@@ -67,14 +65,6 @@ public class TestConfigurationMap extends TestCase
         for(int i = 0; i < properties.length ; i++)
             configuration.setProperty(properties[i], values[i]);
         map = new ConfigurationMap(configuration);
-    }
-
-    /**
-     * Return the tests included in this test suite.
-     */
-    public static Test suite()
-    {
-        return (new TestSuite(TestConfigurationMap.class));
     }
 
     /**

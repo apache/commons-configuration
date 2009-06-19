@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration;
 
 import java.io.File;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
@@ -33,24 +31,6 @@ public class TestPatternSubtreeConfiguration extends TestCase
     private static String CONFIG_FILE = "target/test-classes/testPatternSubtreeConfig.xml";
     private static String PATTERN = "BusinessClient[@name='${sys:Id}']";
     private XMLConfiguration conf;
-
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public TestPatternSubtreeConfiguration( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite() throws Exception
-    {
-        return new TestSuite(TestPatternSubtreeConfiguration.class );
-    }
 
     protected void setUp() throws Exception
     {

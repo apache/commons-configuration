@@ -14,14 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration;
 
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 
 /**
  * @author rgladwel
@@ -68,14 +67,6 @@ public class TestConfigurationSet extends TestCase {
         for(int i = 0; i < properties.length ; i++)
             configuration.setProperty(properties[i], values[i]);
         set = new ConfigurationMap.ConfigurationSet(configuration);
-    }
-
-    /**
-     * Return the tests included in this test suite.
-     */
-    public static Test suite()
-    {
-        return (new TestSuite(TestConfigurationSet.class));
     }
 
     /**
