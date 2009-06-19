@@ -18,7 +18,6 @@
 package org.apache.commons.configuration2.tree;
 
 import java.io.PrintStream;
-import java.util.Iterator;
 
 /**
  * Utility methods.
@@ -44,34 +43,35 @@ public class TreeUtils
 
     private static void printTree(PrintStream stream, String indent, ConfigurationNode result)
     {
-        StringBuffer buffer = new StringBuffer(indent).append("<").append(result.getName());
-        Iterator iter = result.getAttributes().iterator();
-        while (iter.hasNext())
+        StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getName());
+        for (ConfigurationNode node : result.getAttributes())
         {
-            ConfigurationNode node = (ConfigurationNode) iter.next();
             buffer.append(" ").append(node.getName()).append("='").append(node.getValue()).append("'");
         }
         buffer.append(">");
         stream.print(buffer.toString());
+        
         if (result.getValue() != null)
         {
             stream.print(result.getValue());
         }
+        
         boolean newline = false;
         if (result.getChildrenCount() > 0)
         {
             stream.print("\n");
-            iter = result.getChildren().iterator();
-            while (iter.hasNext())
+            for (ConfigurationNode node : result.getChildren())
             {
-                printTree(stream, indent + "  ", (ConfigurationNode) iter.next());
+                printTree(stream, indent + "  ", node);
             }
             newline = true;
         }
+        
         if (newline)
         {
             stream.print(indent);
         }
+        
         stream.println("</" + result.getName() + ">");
     }
 }
