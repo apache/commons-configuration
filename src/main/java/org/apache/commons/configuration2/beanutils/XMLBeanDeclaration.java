@@ -196,7 +196,7 @@ public class XMLBeanDeclaration<T> implements BeanDeclaration
      */
     public XMLBeanDeclaration(AbstractHierarchicalConfiguration<T> config)
     {
-        this(config, (String) null);
+        this(config, null);
     }
 
     /**

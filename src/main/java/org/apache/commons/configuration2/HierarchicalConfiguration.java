@@ -1102,7 +1102,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
-            String parentKey = parentKeys.isEmpty() ? null : (String) parentKeys.peek();
+            String parentKey = parentKeys.isEmpty() ? null : parentKeys.peek();
             String key = getExpressionEngine().nodeKey(node, parentKey);
             parentKeys.push(key);
             if (node.getValue() != null)

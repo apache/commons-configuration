@@ -16,32 +16,31 @@
  */
 package org.apache.commons.configuration2;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.Collection;
-import java.util.logging.Logger;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.net.URL;
-import java.io.Writer;
-import java.io.Reader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.logging.Logger;
 
-import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.event.ConfigurationErrorListener;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
-import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.tree.TreeUtils;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -488,7 +487,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     }
 
     @Override
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
@@ -518,7 +517,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     }
 
     @Override
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return super.getErrorListeners();
     }

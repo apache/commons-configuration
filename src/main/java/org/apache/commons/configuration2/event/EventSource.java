@@ -14,12 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.event;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -229,7 +229,7 @@ public class EventSource
      */
     protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
-        Collection listenersToCall = null;
+        Collection<ConfigurationListener> listenersToCall = null;
 
         synchronized (listeners)
         {
@@ -237,16 +237,16 @@ public class EventSource
             {
                 // Copy listeners to another collection so that manipulating
                 // the listener list during event delivery won't cause problems
-                listenersToCall = new ArrayList(listeners);
+                listenersToCall = new ArrayList<ConfigurationListener>(listeners);
             }
         }
 
         if (listenersToCall != null)
         {
             ConfigurationEvent event = createEvent(type, propName, propValue, before);
-            for (Iterator it = listenersToCall.iterator(); it.hasNext();)
+            for (ConfigurationListener listener : listenersToCall)
             {
-                ((ConfigurationListener) it.next()).configurationChanged(event);
+                listener.configurationChanged(event);
             }
         }
     }
@@ -294,9 +294,9 @@ public class EventSource
         if (listenersToCall != null)
         {
             ConfigurationErrorEvent event = createErrorEvent(type, propName, propValue, ex);
-            for (Iterator it = listenersToCall.iterator(); it.hasNext();)
+            for (ConfigurationErrorListener listener : listenersToCall)
             {
-                ((ConfigurationErrorListener) it.next()).configurationError(event);
+                listener.configurationError(event);
             }
         }
     }

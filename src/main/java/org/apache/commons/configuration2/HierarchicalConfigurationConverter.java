@@ -186,9 +186,9 @@ abstract class HierarchicalConfigurationConverter
     {
         if (value != null && value instanceof Collection)
         {
-            for (Iterator it = ((Collection) value).iterator(); it.hasNext();)
+            for (Object element : ((Collection) value))
             {
-                fireValue(name, it.next());
+                fireValue(name, element);
             }
         }
         else

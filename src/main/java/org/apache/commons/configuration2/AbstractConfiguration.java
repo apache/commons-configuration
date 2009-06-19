@@ -629,9 +629,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
          * Each token is of the form 'key=value'.
          */
         Properties props = defaults == null ? new Properties() : new Properties(defaults);
-        for (int i = 0; i < tokens.length; i++)
+        for (String token : tokens)
         {
-            String token = tokens[i];
             int equalSign = token.indexOf('=');
             if (equalSign > 0)
             {

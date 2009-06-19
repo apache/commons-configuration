@@ -20,8 +20,6 @@ package org.apache.commons.configuration2.tree;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.List;
-import java.io.PrintStream;
 
 /**
  * <p>

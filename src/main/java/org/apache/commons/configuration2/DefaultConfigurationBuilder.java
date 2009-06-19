@@ -535,7 +535,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     public ConfigurationProvider removeConfigurationProvider(String tagName)
     {
-        return (ConfigurationProvider) providers.remove(tagName);
+        return providers.remove(tagName);
     }
 
     /**
@@ -547,7 +547,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     public ConfigurationProvider providerForTag(String tagName)
     {
-        return (ConfigurationProvider) providers.get(tagName);
+        return providers.get(tagName);
     }
 
     /**
@@ -652,10 +652,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             List<? extends AbstractHierarchicalConfiguration<ConfigurationNode>> containedConfigs,
             String keyListNodes) throws ConfigurationException
     {
-        List<?> listNodes = getList(keyListNodes);
-        for (Iterator<?> it = listNodes.iterator(); it.hasNext();)
+        List<String> listNodes = getList(keyListNodes);
+        for (String node : listNodes)
         {
-            config.getNodeCombiner().addListNode((String) it.next());
+            config.getNodeCombiner().addListNode(node);
         }
 
         for (AbstractHierarchicalConfiguration<ConfigurationNode> conf : containedConfigs)
@@ -664,8 +664,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
-                config.addConfiguration(newConf, decl.getConfiguration()
-                        .getString(ATTR_NAME), decl.getAt());
+                config.addConfiguration(newConf, decl.getConfiguration().getString(ATTR_NAME), decl.getAt());
             }
         }
     }
@@ -1667,7 +1666,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         @Override
         public AbstractConfiguration getConfiguration(ConfigurationDeclaration decl) throws Exception
         {
-            Map<?, ?> attributes = decl.getBeanProperties();
+            Map<String, ?> attributes = decl.getBeanProperties();
             String jndi = (String) attributes.get("jndi");
             DataSource datasource = (DataSource) new InitialContext().lookup(jndi);
 

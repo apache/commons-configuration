@@ -1108,7 +1108,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key)
     {
-        return (URL) get(URL.class, key);
+        return get(URL.class, key);
     }
 
     /**
@@ -1125,7 +1125,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key, URL defaultValue)
     {
-        return (URL) get(URL.class, key, defaultValue);
+        return get(URL.class, key, defaultValue);
     }
 
     /**
@@ -1205,7 +1205,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key)
     {
-        return (Date) get(Date.class, key);
+        return get(Date.class, key);
     }
 
     /**
@@ -1502,7 +1502,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key)
     {
-        return (Calendar) get(Calendar.class, key);
+        return get(Calendar.class, key);
     }
 
     /**
@@ -1808,7 +1808,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key)
     {
-        return (Locale) get(Locale.class, key);
+        return get(Locale.class, key);
     }
 
     /**
@@ -1825,7 +1825,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key, Locale defaultValue)
     {
-        return (Locale) get(Locale.class, key, defaultValue);
+        return get(Locale.class, key, defaultValue);
     }
 
     /**
@@ -1904,7 +1904,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key)
     {
-        return (Color) get(Color.class, key);
+        return get(Color.class, key);
     }
 
     /**
@@ -1921,7 +1921,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key, Color defaultValue)
     {
-        return (Color) get(Color.class, key, defaultValue);
+        return get(Color.class, key, defaultValue);
     }
 
     /**

@@ -14,73 +14,56 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2.resolver;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Vector;
+
+import org.apache.commons.configuration2.ConfigurationException;
+import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.FileSystem;
+import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.impl.NoOpLog;
+import org.apache.xml.resolver.CatalogException;
+import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.NoOpLog;
-import org.apache.commons.configuration2.FileSystem;
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.ConfigurationUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.xml.resolver.readers.CatalogReader;
-import org.apache.xml.resolver.CatalogException;
-
-import java.net.FileNameMap;
-import java.net.URLConnection;
-import java.net.URL;
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Vector;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Retention;
 
 /**
  * Thin wrapper around xml commons CatalogResolver to allow list of catalogs
  * to be provided.
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @since 1.7
- * @version $Id:  $
+ * @version $Revision$, $Date$
  */
 public class CatalogResolver implements EntityResolver
 {
-    /**
-     * Debug everything.
-     */
+    /** Debug everything. */
     private static final int DEBUG_ALL = 9;
 
-    /**
-     * Normal debug setting.
-     */
+    /** Normal debug setting. */
     private static final int DEBUG_NORMAL = 4;
 
-    /**
-     * Debug nothing.
-     */
+    /** Debug nothing. */
     private static final int DEBUG_NONE = 0;
 
-    /**
-     * The CatalogManager
-     */
+    /** The CatalogManager */
     protected CatalogManager manager = new CatalogManager();
 
-    /**
-     * The FileSystem in use.
-     */
+    /** The FileSystem in use. */
     protected FileSystem fs = FileSystem.getDefaultFileSystem();
 
-    /**
-     * The CatalogResolver
-     */
+    /** The CatalogResolver */
     private org.apache.xml.resolver.tools.CatalogResolver resolver;
 
-    /**
-     * Stores the logger.
-     */
+    /** Stores the logger. */
     private Log log;
 
     /**

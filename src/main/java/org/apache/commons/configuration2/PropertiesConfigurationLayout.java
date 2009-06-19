@@ -490,8 +490,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     int blancLines = 0;
                     int idx = checkHeaderComment(reader.getCommentLines());
                     while (idx < reader.getCommentLines().size()
-                            && ((String) reader.getCommentLines().get(idx))
-                                    .length() < 1)
+                            && (reader.getCommentLines().get(idx)).length() < 1)
                     {
                         idx++;
                         blancLines++;
@@ -639,7 +638,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             throw new IllegalArgumentException("Property key must not be null!");
         }
 
-        PropertyLayoutData data = (PropertyLayoutData) layoutData.get(key);
+        PropertyLayoutData data = layoutData.get(key);
         if (data == null)
         {
             data = new PropertyLayoutData();
@@ -819,8 +818,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         for (String key : c.getKeys())
         {
-            PropertyLayoutData data = (PropertyLayoutData) c.layoutData
-                    .get(key);
+            PropertyLayoutData data = c.layoutData.get(key);
             layoutData.put(key, (PropertyLayoutData) data.clone());
         }
     }

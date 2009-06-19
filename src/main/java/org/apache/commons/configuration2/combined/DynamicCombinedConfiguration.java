@@ -634,7 +634,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
@@ -680,7 +680,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return super.getErrorListeners();
     }
@@ -741,21 +741,18 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             {
                 config = new CombinedConfiguration(getNodeCombiner());
                 config.setExpressionEngine(this.getExpressionEngine());
-                for (ConfigurationErrorListener listener
-                        : (Collection<ConfigurationErrorListener>) config.getErrorListeners())
+                for (ConfigurationErrorListener listener : config.getErrorListeners())
                 {
                     config.addErrorListener(listener);
                 }
-                for (ConfigurationListener listener
-                        : (Collection<ConfigurationListener>) config.getConfigurationListeners())
+                for (ConfigurationListener listener : config.getConfigurationListeners())
                 {
                     config.addConfigurationListener(listener);
                 }
                 config.setForceReloadCheck(isForceReloadCheck());
                 for (ConfigData data : configurations)
                 {
-                    config.addConfiguration(data.getConfiguration(), data.getName(),
-                            data.getAt());
+                    config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());
                 }
                 configs.put(key, config);
             }
@@ -793,7 +790,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             this.at = at;
         }
 
-                /**
+        /**
          * Returns the stored configuration.
          *
          * @return the configuration

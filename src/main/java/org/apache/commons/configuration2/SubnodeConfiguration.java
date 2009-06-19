@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
@@ -264,8 +264,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      * @return a hierarchical configuration for this sub node
      * @since 1.5
      */
-    protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subnodeKey)
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node, String subnodeKey)
     {
         SubnodeConfiguration result = createSubnodeConfiguration(node);
 
@@ -274,9 +273,9 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
             // construct the correct subnode key
             // determine path to root node
             List<ConfigurationNode> lstPathToRoot = new ArrayList<ConfigurationNode>();
-            ConfigurationNode top = super.getRootNode();
+            ConfigurationNode root = super.getRootNode();
             ConfigurationNode nd = node;
-            while (nd != top)
+            while (nd != root)
             {
                 lstPathToRoot.add(nd);
                 nd = nd.getParentNode();
@@ -285,10 +284,9 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
             // construct the keys for the nodes on this path
             Collections.reverse(lstPathToRoot);
             String key = getSubnodeKey();
-            for (Iterator it = lstPathToRoot.iterator(); it.hasNext();)
+            for (ConfigurationNode pathElement : lstPathToRoot)
             {
-                key = getParent().getExpressionEngine().nodeKey(
-                        (ConfigurationNode) it.next(), key);
+                key = getParent().getExpressionEngine().nodeKey(pathElement, key);
             }
             result.setSubnodeKey(key);
         }

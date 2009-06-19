@@ -119,7 +119,7 @@ public class MergeCombiner extends NodeCombiner
             ConfigurationNode node2, ConfigurationNode child, List children2)
     {
         List<ConfigurationNode> attrs1 = child.getAttributes();
-        List<ConfigurationNode> nodes = new ArrayList();
+        List<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
 
         List<ConfigurationNode> children = node2.getChildren(child.getName());
         for (ConfigurationNode node : children)

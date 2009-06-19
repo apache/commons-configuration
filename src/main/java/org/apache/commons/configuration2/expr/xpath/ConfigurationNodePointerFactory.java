@@ -86,15 +86,12 @@ public class ConfigurationNodePointerFactory implements NodePointerFactory
      * @return a pointer for a configuration node if the bean is such a node
      */
     @SuppressWarnings("unchecked")
-    public NodePointer createNodePointer(NodePointer parent, QName name,
-            Object bean)
+    public NodePointer createNodePointer(NodePointer parent, QName name, Object bean)
     {
         if (bean instanceof NodeWrapper)
         {
             NodeWrapper<?> wrapper = (NodeWrapper<?>) bean;
-            return new ConfigurationNodePointer(
-                    (ConfigurationNodePointer) parent, wrapper.getNode(),
-                    wrapper.getNodeHandler());
+            return new ConfigurationNodePointer(parent, wrapper.getNode(), wrapper.getNodeHandler());
         }
         return null;
     }

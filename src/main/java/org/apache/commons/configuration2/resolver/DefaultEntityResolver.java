@@ -38,7 +38,7 @@ import java.util.HashMap;
 public class DefaultEntityResolver implements EntityResolver, EntityRegistry
 {
     /** Stores a map with the registered public IDs.*/
-    private Map registeredEntities = new HashMap();
+    private Map<String, URL> registeredEntities = new HashMap<String, URL>();
 
     /**
      * <p>
@@ -123,7 +123,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
      *
      * @return a map with the registered entity IDs
      */
-    public Map getRegisteredEntities()
+    public Map<String, URL> getRegisteredEntities()
     {
         return registeredEntities;
     }

@@ -58,9 +58,9 @@ public class AppletConfiguration extends BaseWebConfiguration
         List<String> keyList = new ArrayList<String>(paramsInfo != null ? paramsInfo.length : 0);
         if (paramsInfo != null)
         {
-            for (int i = 0; i < paramsInfo.length; i++)
+            for (String[] paramInfo : paramsInfo)
             {
-                keyList.add(paramsInfo[i][0]);
+                keyList.add(paramInfo[0]);
             }
         }
 

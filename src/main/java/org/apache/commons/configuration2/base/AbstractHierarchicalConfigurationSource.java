@@ -120,8 +120,8 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
      * the associated {@code ExpressionEngine}, so the passed in key must match
      * the requirements of this implementation.
      *
-     * @param key the key of the new property
-     * @param obj the value of the new property
+     * @param key   the key of the new property
+     * @param value the value of the new property
      */
     public void addProperty(String key, Object value)
     {
@@ -560,13 +560,11 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
         // Create missing nodes on the path
         for (String nodeName : data.getPathNodes())
         {
-            T child = createNode(node, nodeName);
-            node = child;
+            node = createNode(node, nodeName);
         }
 
         // Add the new property
-        return addNodeValue(node, data.getNewNodeName(), value, data
-                .isAttribute());
+        return addNodeValue(node, data.getNewNodeName(), value, data.isAttribute());
     }
 
     /**
@@ -592,8 +590,7 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
         }
         else
         {
-            T child = createNode(parent, name, value);
-            return child;
+            return createNode(parent, name, value);
         }
     }
 
@@ -820,10 +817,8 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
         @Override
         public void visitBeforeChildren(T node, NodeHandler<T> handler)
         {
-            String parentKey = parentKeys.isEmpty() ? null
-                    : (String) parentKeys.peek();
-            String key = getExpressionEngine()
-                    .nodeKey(node, parentKey, handler);
+            String parentKey = parentKeys.isEmpty() ? null : parentKeys.peek();
+            String key = getExpressionEngine().nodeKey(node, parentKey, handler);
             parentKeys.push(key);
             if (handler.getValue(node) != null)
             {

@@ -14,31 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.expr.ExpressionEngine;
-import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.event.ConfigurationErrorListener;
-
+import java.io.Reader;
+import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Collection;
-import java.io.Writer;
-import java.io.Reader;
 
-
+import org.apache.commons.configuration2.event.ConfigurationErrorListener;
+import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 
 /**
  * Wraps a HierarchicalConfiguration and allows subtrees to be access via a configured path with
  * replaceable tokens derived from the MDC.
  * @since 1.6
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id:  $
  */
 public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFileConfiguration
@@ -376,7 +373,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     }
 
     @Override
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return getConfig().getConfigurationListeners();
     }
@@ -416,7 +413,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     }
 
     @Override
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return getConfig().getErrorListeners();
     }

@@ -379,7 +379,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = (ConfigData) configurations.get(index);
+        ConfigData cd = configurations.get(index);
         return cd.getConfiguration();
     }
 
@@ -392,7 +392,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public Configuration getConfiguration(String name)
     {
-        return (Configuration) namedConfigurations.get(name);
+        return namedConfigurations.get(name);
     }
 
 
@@ -438,7 +438,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (((ConfigData) configurations.get(index)).getConfiguration() == config)
+            if ((configurations.get(index)).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
                 return true;
@@ -456,7 +456,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData cd = (ConfigData) configurations.remove(index);
+        ConfigData cd = configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -688,10 +688,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             ConfigurationNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
-                node = getNodeCombiner().combine(node,
-                        ((ConfigData) it.next()).getTransformedRoot());
+                node = getNodeCombiner().combine(node, it.next().getTransformedRoot());
             }
-             if (getLogger().isLoggable(Level.FINEST))
+            
+            if (getLogger().isLoggable(Level.FINEST))
             {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 PrintStream stream = new PrintStream(os);

@@ -45,11 +45,9 @@ public class ViewNode extends DefaultConfigurationNode
      */
     public void addAttribute(ConfigurationNode attr)
     {
-        ConfigurationNode parent = null;
-
         if (attr != null)
         {
-            parent = attr.getParentNode();
+            ConfigurationNode parent = attr.getParentNode();
             super.addAttribute(attr);
             attr.setParentNode(parent);
         }
@@ -67,11 +65,9 @@ public class ViewNode extends DefaultConfigurationNode
      */
     public void addChild(ConfigurationNode child)
     {
-        ConfigurationNode parent = null;
-
         if (child != null)
         {
-            parent = child.getParentNode();
+            ConfigurationNode parent = child.getParentNode();
             super.addChild(child);
             child.setParentNode(parent);
         }

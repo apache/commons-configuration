@@ -315,7 +315,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     }
 
     @Override
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         reload();
         return super.getKeys();

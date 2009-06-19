@@ -334,7 +334,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      */
     public Configuration getConfiguration(int index)
     {
-        return (Configuration) configList.get(index);
+        return configList.get(index);
     }
 
     /**
@@ -478,8 +478,7 @@ public class CompositeConfiguration extends AbstractConfiguration implements Clo
      * @param key the key of the property
      * @param <E> the type of the elements in the list
      */
-    private static <E> void appendListProperty(List<E> dest, Configuration config,
-            String key)
+    private static <E> void appendListProperty(List<E> dest, Configuration config, String key)
     {
         Object value = config.getProperty(key);
         if (value != null)

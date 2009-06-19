@@ -806,8 +806,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         // Create missing nodes on the path
         for (String nodeName : data.getPathNodes())
         {
-            T child = createNode(node, nodeName);
-            node = child;
+            node = createNode(node, nodeName);
         }
 
         // Add the new property
@@ -837,8 +836,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         }
         else
         {
-            T child = createNode(parent, name, value);
-            return child;
+            return createNode(parent, name, value);
         }
     }
 
@@ -952,7 +950,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
         @Override
         public void visitBeforeChildren(T node, NodeHandler<T> handler)
         {
-            String parentKey = parentKeys.isEmpty() ? null : (String) parentKeys.peek();
+            String parentKey = parentKeys.isEmpty() ? null : parentKeys.peek();
             String key = getExpressionEngine().nodeKey(node, parentKey, handler);
             parentKeys.push(key);
             if (handler.getValue(node) != null)

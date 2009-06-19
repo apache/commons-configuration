@@ -17,8 +17,6 @@
 
 package org.apache.commons.configuration2.tree;
 
-import java.util.Iterator;
-
 /**
  * <p>
  * A concrete combiner implementation that is able to construct an override
@@ -49,9 +47,7 @@ import java.util.Iterator;
  * will never be combined.
  * </p>
  *
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.3
  */
@@ -70,9 +66,8 @@ public class OverrideCombiner extends NodeCombiner
         result.setName(node1.getName());
 
         // Process nodes from the first structure, which override the second
-        for (Iterator<ConfigurationNode> it = node1.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode child : node1.getChildren())
         {
-            ConfigurationNode child = it.next();
             ConfigurationNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
             {

@@ -130,7 +130,6 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * Visits the specified node.
          *
          * @param node the actual node
-         * @param key the key of this node
          */
         @Override
         public void visitBeforeChildren(ConfigurationNode node)
