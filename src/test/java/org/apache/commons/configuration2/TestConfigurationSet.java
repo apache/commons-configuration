@@ -14,17 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.configuration2.ConfigurationMap;
-import org.apache.commons.configuration2.flat.BaseConfiguration;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * @author rgladwel
@@ -45,22 +42,13 @@ public class TestConfigurationSet extends TestCase {
 
     Object[] values = {
             Boolean.TRUE,
-            new Double(Double.MAX_VALUE),
-            new Float(Float.MAX_VALUE),
-            new Integer(Integer.MAX_VALUE),
-            new Long(Long.MAX_VALUE),
-            new Short(Short.MAX_VALUE),
+            Double.MAX_VALUE,
+            Float.MAX_VALUE,
+            Integer.MAX_VALUE,
+            Long.MAX_VALUE,
+            Short.MAX_VALUE,
             "This is a string"
     };
-
-    /**
-     * Construct a new instance of this test case.
-     * @param name Name of the test case
-     */
-    public TestConfigurationSet(String name)
-    {
-        super(name);
-    }
 
     /**
      * Set up instance variables required by this test case.
@@ -71,14 +59,6 @@ public class TestConfigurationSet extends TestCase {
         for(int i = 0; i < properties.length ; i++)
             configuration.setProperty(properties[i], values[i]);
         set = new ConfigurationMap.ConfigurationSet(configuration);
-    }
-
-    /**
-     * Return the tests included in this test suite.
-     */
-    public static Test suite()
-    {
-        return (new TestSuite(TestConfigurationSet.class));
     }
 
     /**

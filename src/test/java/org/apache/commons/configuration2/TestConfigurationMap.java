@@ -17,19 +17,14 @@
 
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.ConfigurationMap;
-import org.apache.commons.configuration2.flat.BaseConfiguration;
-
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
 public class TestConfigurationMap extends TestCase
 {
-
     ConfigurationMap map;
 
     String[] properties = {
@@ -44,22 +39,13 @@ public class TestConfigurationMap extends TestCase
     
     Object[] values = {
             Boolean.TRUE,
-            new Double(Double.MAX_VALUE),
-            new Float(Float.MAX_VALUE),
-            new Integer(Integer.MAX_VALUE),
-            new Long(Long.MAX_VALUE),
-            new Short(Short.MAX_VALUE),
+            Double.MAX_VALUE,
+            Float.MAX_VALUE,
+            Integer.MAX_VALUE,
+            Long.MAX_VALUE,
+            Short.MAX_VALUE,
             "This is a string"
     };
-
-    /**
-     * Construct a new instance of this test case.
-     * @param name Name of the test case
-     */
-    public TestConfigurationMap(String name)
-    {
-        super(name);
-    }
 
     /**
      * Set up instance variables required by this test case.
@@ -67,17 +53,11 @@ public class TestConfigurationMap extends TestCase
     public void setUp() throws Exception
     {
         BaseConfiguration configuration = new BaseConfiguration();
-        for(int i = 0; i < properties.length ; i++)
+        for (int i = 0; i < properties.length; i++)
+        {
             configuration.setProperty(properties[i], values[i]);
+        }
         map = new ConfigurationMap(configuration);
-    }
-
-    /**
-     * Return the tests included in this test suite.
-     */
-    public static Test suite()
-    {
-        return (new TestSuite(TestConfigurationMap.class));
     }
 
     /**
@@ -93,13 +73,14 @@ public class TestConfigurationMap extends TestCase
      */
     public void testPut()
     {
-        for(int i = 0; i < properties.length; i++) {
+        for (int i = 0; i < properties.length; i++)
+        {
             Object object = map.put(properties[i], values[i]);
-            assertNotNull("Returned null from put.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull("Returned null from put.", object);
+            assertEquals("Returned wrong result.", values[i], object);
             object = map.get(properties[i]);
-            assertNotNull("Returned null from get.",object);
-            assertEquals("Returned wrong result.",values[i],object);
+            assertNotNull("Returned null from get.", object);
+            assertEquals("Returned wrong result.", values[i], object);
         }
     }
 

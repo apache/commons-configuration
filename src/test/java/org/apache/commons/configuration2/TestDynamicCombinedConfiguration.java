@@ -14,13 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.io.File;
+
+import junit.framework.TestCase;
 
 /**
  *
@@ -30,24 +29,6 @@ public class TestDynamicCombinedConfiguration extends TestCase
     private static String PATTERN ="${sys:Id}";
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
     private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
-
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public TestDynamicCombinedConfiguration( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( TestDynamicCombinedConfiguration.class );
-    }
 
     public void testConfiguration() throws Exception
     {

@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
 import junit.framework.TestCase;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-/**
- *
- */
 public class TestCatalogResolver extends TestCase
 {
     private static final String CATALOG_FILES = "target/test-classes/catalog.xml";
@@ -35,24 +31,6 @@ public class TestCatalogResolver extends TestCase
 
     private CatalogResolver resolver;
     private XMLConfiguration config;
-
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public TestCatalogResolver(String testName)
-    {
-        super(testName);
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite(TestCatalogResolver.class);
-    }
 
     protected void setUp() throws Exception
     {
