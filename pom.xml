@@ -214,7 +214,7 @@
       <version>1.8.0</version>
       <optional>true</optional>
     </dependency>
-        
+
     <dependency>
       <groupId>commons-jexl</groupId>
       <artifactId>commons-jexl</artifactId>
@@ -227,20 +227,6 @@
       <artifactId>commons-vfs</artifactId>
       <version>2.0-SNAPSHOT</version>
       <optional>true</optional>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.5.6</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <version>1.5.6</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -308,7 +294,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>3.8.2</version>
       <scope>test</scope>
     </dependency>
 
@@ -350,6 +336,20 @@
       <groupId>spice</groupId>
       <artifactId>spice-jndikit</artifactId>
       <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
+    
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.5.6</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.5.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
