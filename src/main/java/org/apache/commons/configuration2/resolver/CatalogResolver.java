@@ -23,13 +23,13 @@ import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.FileSystem;
 import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;
@@ -64,7 +64,7 @@ public class CatalogResolver implements EntityResolver
     private org.apache.xml.resolver.tools.CatalogResolver resolver;
 
     /** Stores the logger. */
-    private Log log;
+    private Logger log;
 
     /**
      * Constructs the CatalogResolver
@@ -183,8 +183,7 @@ public class CatalogResolver implements EntityResolver
             }
             catch (Exception e)
             {
-                log.debug("Failed to create InputSource for " + resolved + " ("
-                                + e.toString() + ")");
+                log.log(Level.FINE, "Failed to create InputSource for " + resolved, e);
                 return null;
             }
         }
@@ -197,7 +196,7 @@ public class CatalogResolver implements EntityResolver
      *
      * @return the logger
      */
-    public Log getLogger()
+    public Logger getLogger()
     {
         return log;
     }
@@ -211,9 +210,16 @@ public class CatalogResolver implements EntityResolver
      *
      * @param log the new logger
      */
-    public void setLogger(Log log)
+    public void setLogger(Logger log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
+        if (log == null)
+        {
+            // create a NoOp logger
+            log = Logger.getLogger(getClass().getName() + "." + hashCode());
+            log.setLevel(Level.OFF);
+        }
+        
+        this.log = log;
     }
 
     private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver()

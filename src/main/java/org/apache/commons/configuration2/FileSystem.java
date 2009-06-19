@@ -14,23 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration2;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.NoOpLog;
-
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.File;
-import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Abstract layer to allow various types of file systems.
+ * 
  * @since 1.7
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
 public abstract class FileSystem
 {
@@ -41,7 +40,7 @@ public abstract class FileSystem
     private static FileSystem fileSystem;
 
     /** The Logger */
-    private Log log;
+    private Logger log;
 
     /** FileSystem options provider */
     private FileOptionsProvider optionsProvider;
@@ -56,7 +55,7 @@ public abstract class FileSystem
      *
      * @return the logger
      */
-    public Log getLogger()
+    public Logger getLogger()
     {
         return log;
     }
@@ -70,9 +69,16 @@ public abstract class FileSystem
      *
      * @param log the new logger
      */
-    public void setLogger(Log log)
+    public void setLogger(Logger log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
+        if (log == null)
+        {
+            // create a NoOp logger
+            log = Logger.getLogger(getClass().getName() + "." + hashCode());
+            log.setLevel(Level.OFF);
+        }
+        
+        this.log = log;
     }
 
     static
@@ -80,7 +86,7 @@ public abstract class FileSystem
         String fsClassName = System.getProperty(FILE_SYSTEM);
         if (fsClassName != null)
         {
-            Log log = LogFactory.getLog(FileSystem.class);
+            Logger log = Logger.getLogger(FileSystem.class.getName());
 
             try
             {
@@ -93,15 +99,15 @@ public abstract class FileSystem
             }
             catch (InstantiationException ex)
             {
-                log.error("Unable to create " + fsClassName, ex);
+                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
             }
             catch (IllegalAccessException ex)
             {
-                log.error("Unable to create " + fsClassName, ex);
+                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
             }
             catch (ClassNotFoundException ex)
             {
-                log.error("Unable to create " + fsClassName, ex);
+                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
             }
         }
 
