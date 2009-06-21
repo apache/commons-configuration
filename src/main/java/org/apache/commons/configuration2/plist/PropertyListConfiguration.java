@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
  * References:
  * <ul>
  *   <li><a
- * href="http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/Articles/OldStylePListsConcept.html">
+ * href="http://developer.apple.com/documentation/Cocoa/Conceptual/PropertyLists/OldStylePlists/OldStylePLists.html#//apple_ref/doc/uid/20001012-BBCBDBJE">
  * Apple Documentation - Old-Style ASCII Property Lists</a></li>
  *   <li><a
  * href="http://www.gnustep.org/resources/documentation/Developer/Base/Reference/NSPropertyList.html">
@@ -225,18 +225,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.print(padding + quoteString(node.getName()) + " = ");
         }
 
-        // get all non trivial nodes
         List<ConfigurationNode> children = new ArrayList<ConfigurationNode>(node.getChildren());
-        Iterator<ConfigurationNode> it = children.iterator();
-        while (it.hasNext())
-        {
-            ConfigurationNode child = it.next();
-            if (child.getValue() == null && (child.getChildren() == null || child.getChildren().isEmpty()))
-            {
-                it.remove();
-            }
-        }
-
         if (!children.isEmpty())
         {
             // skip a line, except for the root dictionary
@@ -248,7 +237,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.println(padding + "{");
 
             // display the children
-            it = children.iterator();
+            Iterator<ConfigurationNode> it = children.iterator();
             while (it.hasNext())
             {
                 ConfigurationNode child = it.next();
@@ -277,11 +266,21 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
                 out.println();
             }
         }
+        else if (node.getValue() == null)
+        {
+            out.println();
+            out.print(padding + "{ };");
+            
+            // line feed if the dictionary is not in an array
+            if (node.getParentNode() != null)
+            {
+                out.println();
+            }
+        }
         else
         {
             // display the leaf value
-            Object value = node.getValue();
-            printValue(out, indentLevel, value);
+            printValue(out, indentLevel, node.getValue());
         }
     }
 

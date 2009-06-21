@@ -285,6 +285,29 @@ public class TestPropertyListConfiguration extends TestCase
         }
     }
 
+    public void testSaveEmptyDictionary() throws Exception
+    {
+        File savedFile = new File("target/testsave.plist");
+
+        // remove the file previously saved if necessary
+        if (savedFile.exists())
+        {
+            assertTrue(savedFile.delete());
+        }
+        
+        // save the configuration
+        String filename = savedFile.getAbsolutePath();
+        config.save(filename);
+
+        assertTrue("The saved file doesn't exist", savedFile.exists());
+
+        // read the configuration and compare the properties
+        PropertyListConfiguration checkConfig = new PropertyListConfiguration(new File(filename));
+
+        assertFalse(config.getRootNode().getChildren("empty-dictionary").isEmpty());
+        assertFalse(checkConfig.getRootNode().getChildren("empty-dictionary").isEmpty());
+    }
+
     public void testQuoteString()
     {
         assertEquals("null string", null, config.quoteString(null));
