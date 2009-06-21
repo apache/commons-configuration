@@ -80,5 +80,8 @@
             </dict>
         </dict>
 
+        <key>empty-dictionary</key>
+        <dict/>
+
     </dict>
 </plist>

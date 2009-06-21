@@ -278,35 +278,51 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     }
 
     /**
+     * Returns the sequence of space characters to indent at the specified level.
+     */
+    private String getPadding(int level)
+    {
+        return StringUtils.repeat(" ", level * INDENT_SIZE);
+    }
+
+    /**
      * Append a node to the writer, indented according to a specific level.
      */
     private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        String padding = getPadding(indentLevel);
 
         if (node.getName() != null)
         {
             out.println(padding + "<key>" + StringEscapeUtils.escapeXml(node.getName()) + "</key>");
         }
 
-        List<ConfigurationNode> children = node.getChildren();
-        if (!children.isEmpty())
+        if (node.getValue() == null)
         {
-            out.println(padding + "<dict>");
-
-            Iterator<ConfigurationNode> it = children.iterator();
-            while (it.hasNext())
+            List<ConfigurationNode> children = node.getChildren();
+            
+            if (children.isEmpty())
             {
-                ConfigurationNode child = it.next();
-                printNode(out, indentLevel + 1, child);
-
-                if (it.hasNext())
-                {
-                    out.println();
-                }
+                out.println(padding + "<dict/>");
             }
+            else
+            {
+                out.println(padding + "<dict>");
 
-            out.println(padding + "</dict>");
+                Iterator<ConfigurationNode> it = children.iterator();
+                while (it.hasNext())
+                {
+                    ConfigurationNode child = it.next();
+                    printNode(out, indentLevel + 1, child);
+
+                    if (it.hasNext())
+                    {
+                        out.println();
+                    }
+                }
+
+                out.println(padding + "</dict>");
+            }
         }
         else
         {
@@ -320,7 +336,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     private void printValue(PrintWriter out, int indentLevel, Object value)
     {
-        String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
+        String padding = getPadding(indentLevel);
 
         if (value instanceof Date)
         {
@@ -397,12 +413,16 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
         else if (value instanceof byte[])
         {
-            String base64 = new String(Base64.encodeBase64((byte[]) value));
+            String base64 = Base64.encodeBase64((byte[]) value);
             out.println(padding + "<data>" + StringEscapeUtils.escapeXml(base64) + "</data>");
+        }
+        else if (value != null)
+        {
+            out.println(padding + "<string>" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "</string>");
         }
         else
         {
-            out.println(padding + "<string>" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "</string>");
+            out.println(padding + "<string/>");
         }
     }
 
@@ -502,6 +522,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             else
             {
+                PListNode node = (PListNode) peek();
                 if ("string".equals(qName))
                 {
                     ((PListNode) peek()).addValue(buffer.toString());
