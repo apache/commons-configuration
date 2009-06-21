@@ -270,6 +270,29 @@ public class TestXMLPropertyListConfiguration extends TestCase
         }
     }
 
+    public void testSaveEmptyDictionary() throws Exception
+    {
+        File savedFile = new File("target/testsave.plist.xml");
+
+        // remove the file previously saved if necessary
+        if (savedFile.exists())
+        {
+            assertTrue(savedFile.delete());
+        }
+        
+        // save the configuration
+        String filename = savedFile.getAbsolutePath();
+        config.save(filename);
+
+        assertTrue("The saved file doesn't exist", savedFile.exists());
+
+        // read the configuration and compare the properties
+        Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
+        
+        assertEquals(null, config.getProperty("empty-dictionary"));
+        assertEquals(null, checkConfig.getProperty("empty-dictionary"));
+    }
+
     /**
      * Ensure that setProperty doesn't alter an array of byte
      * since it's a first class type in plist file

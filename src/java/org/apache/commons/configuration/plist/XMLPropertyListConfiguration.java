@@ -304,6 +304,10 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
             out.println(padding + "</dict>");
         }
+        else if (node.getValue() == null)
+        {
+            out.println(padding + "<dict/>");
+        }
         else
         {
             Object value = node.getValue();
@@ -400,9 +404,13 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             String base64 = new String(Base64.encodeBase64((byte[]) value));
             out.println(padding + "<data>" + StringEscapeUtils.escapeXml(base64) + "</data>");
         }
-        else
+        else if (value != null)
         {
             out.println(padding + "<string>" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "</string>");
+        }
+        else
+        {
+            out.println(padding + "<string/>");
         }
     }
 

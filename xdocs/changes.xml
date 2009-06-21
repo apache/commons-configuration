@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-362">
+        Empty dictionary elements in an XML PropertyList are now preserved and no longer
+        turned into a string when the configuration is saved.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-385">
         DatabaseConfiguration now generates correct events for the clear() and
         clearProperty() methods.
