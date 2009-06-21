@@ -297,37 +297,33 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             out.println(padding + "<key>" + StringEscapeUtils.escapeXml(node.getName()) + "</key>");
         }
 
-        if (node.getValue() == null)
+        List<ConfigurationNode> children = node.getChildren();
+        if (!children.isEmpty())
         {
-            List<ConfigurationNode> children = node.getChildren();
-            
-            if (children.isEmpty())
-            {
-                out.println(padding + "<dict/>");
-            }
-            else
-            {
-                out.println(padding + "<dict>");
+            out.println(padding + "<dict>");
 
-                Iterator<ConfigurationNode> it = children.iterator();
-                while (it.hasNext())
+            Iterator<ConfigurationNode> it = children.iterator();
+            while (it.hasNext())
+            {
+                ConfigurationNode child = it.next();
+                printNode(out, indentLevel + 1, child);
+
+                if (it.hasNext())
                 {
-                    ConfigurationNode child = it.next();
-                    printNode(out, indentLevel + 1, child);
-
-                    if (it.hasNext())
-                    {
-                        out.println();
-                    }
+                    out.println();
                 }
-
-                out.println(padding + "</dict>");
             }
+
+            out.println(padding + "</dict>");
+        }
+        else if (node.getValue() == null)
+        {
+            out.println(padding + "<dict/>");
         }
         else
         {
             Object value = node.getValue();
-            printValue(out, indentLevel, value);
+            printValue(out, indentLevel, value);            
         }
     }
 
