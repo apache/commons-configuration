@@ -85,6 +85,9 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="rgoers" type="fix" issue="CONFIGURATION-388">
+        Attribute or element values will not be escaped when attribute or element splitting are disabled.
+      </action>      
       <action dev="oheger" type="fix" issue="CONFIGURATION-385">
         DatabaseConfiguration now generates correct events for the clear() and
         clearProperty() methods.
@@ -93,7 +96,7 @@
         Add ExprLookup to allow expressions to be evaluated in configurations. When
         used, this requires that Apache Commons Jexl be added as a dependency to
         projects using Commons Configuration.
-      </action>      
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-374">
         MapConfiguration now provides a way of controlling the trimming
         behavior.
@@ -760,7 +763,7 @@
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-63">
         Loading of file-based configurations no longer throws a NullPointerException
-        in setups where the thread context class loader is not set. 
+        in setups where the thread context class loader is not set.
       </action>
       <action dev="oheger" type="update">
         The dependency to dom4j was removed; it was only used by two test classes,
@@ -871,7 +874,7 @@
         ConfigurationMap.
       </action>
     </release>
-    
+
     <release version="1.2-rc1" date="2005-11-11">
       <action dev="oheger" type="update" issue="CONFIGURATION-33">
         The reload() method in AbstractFileConfiguration was updated to prevent
@@ -1093,7 +1096,7 @@
       </action>
       <action dev="ebourg" type="update" issue="CONFIGURATION-58">
         Fixed getLongArray(), getFloatArray() and getDoubleArray() in DataConfiguration,
-        the values were cast into integers. 
+        the values were cast into integers.
       </action>
     </release>
 
@@ -1140,7 +1143,7 @@
       </action>
       <action dev="ebourg" type="fix">
         Calling getProperties on a JNDIConfiguration no longer throws an
-        UnsupportedOperationException.        
+        UnsupportedOperationException.
       </action>
       <action dev="ebourg" type="remove">
         Removed the getPropertyDirect method from AbstractConfiguration,
@@ -1193,8 +1196,8 @@
         XMLConfiguration to AbstractFileConfiguration.
       </action>
       <action dev="epugh" type="remove">
-        Remove deprecated getVector() implementations. 
-      </action>        
+        Remove deprecated getVector() implementations.
+      </action>
       <action dev="ebourg" type="add" issue="CONFIGURATION-147">
         File based configurations can now be automatically reloaded when the
         underlying file is modified.

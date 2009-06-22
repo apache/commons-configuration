@@ -839,7 +839,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             }
 
             XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
-                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
+                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter(),
+                    isAttributeSplittingDisabled());
             visit(getRootNode(), builder);
             initRootElementText(document, getRootNode().getValue());
             return document;
@@ -1324,9 +1325,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             {
                 if (txtNode == null)
                 {
-                    txtNode = document
-                            .createTextNode(PropertyConverter.escapeDelimiters(
-                                    value.toString(), getListDelimiter()));
+                    String newValue = isDelimiterParsingDisabled() ? value.toString() :
+                        PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
+                    txtNode = document.createTextNode(newValue);
                     if (((Element) getReference()).getFirstChild() != null)
                     {
                         ((Element) getReference()).insertBefore(txtNode,
@@ -1339,8 +1340,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 }
                 else
                 {
-                    txtNode.setNodeValue(PropertyConverter.escapeDelimiters(
-                            value.toString(), getListDelimiter()));
+                    String newValue = isDelimiterParsingDisabled() ? value.toString() :
+                        PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
+                    txtNode.setNodeValue(newValue);
                 }
             }
         }
@@ -1351,7 +1353,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          */
         private void updateAttribute()
         {
-            XMLBuilderVisitor.updateAttribute(getParentNode(), getName(), getListDelimiter());
+            XMLBuilderVisitor.updateAttribute(getParentNode(), getName(), getListDelimiter(),
+                    isAttributeSplittingDisabled());
         }
 
         /**
@@ -1414,16 +1417,20 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         private char listDelimiter = AbstractConfiguration.
                 getDefaultListDelimiter();
 
+        /** True if attributes should not be split */
+        private boolean isAttributeSplittingDisabled;
         /**
          * Creates a new instance of <code>XMLBuilderVisitor</code>
          *
          * @param doc the document to be created
          * @param listDelimiter the delimiter for attribute properties with multiple values
+         * @param isAttributeSplittingDisabled true if attribute splitting is disabled.
          */
-        public XMLBuilderVisitor(Document doc, char listDelimiter)
+        public XMLBuilderVisitor(Document doc, char listDelimiter, boolean isAttributeSplittingDisabled)
         {
             document = doc;
             this.listDelimiter = listDelimiter;
+            this.isAttributeSplittingDisabled = isAttributeSplittingDisabled;
         }
 
         /**
@@ -1441,7 +1448,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (newNode.isAttribute())
             {
-                updateAttribute(parent, getElement(parent), newNode.getName(), listDelimiter);
+                updateAttribute(parent, getElement(parent), newNode.getName(), listDelimiter, isAttributeSplittingDisabled);
                 return null;
             }
 
@@ -1481,8 +1488,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param elem the element that is associated with this node
          * @param name the name of the affected attribute
          * @param listDelimiter the delimiter for attributes with multiple values
+         * @param isAttributeSplittingDisabled true if attribute splitting is disabled.
          */
-        private static void updateAttribute(ConfigurationNode node, Element elem, String name, char listDelimiter)
+        private static void updateAttribute(ConfigurationNode node, Element elem, String name, char listDelimiter,
+                                            boolean isAttributeSplittingDisabled)
         {
             if (node != null && elem != null)
             {
@@ -1497,7 +1506,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                         {
                             buf.append(delimiter);
                         }
-                        buf.append(PropertyConverter.escapeDelimiters(attribute.getValue().toString(), delimiter));
+                        String value = isAttributeSplittingDisabled ? attribute.getValue().toString() :
+                            PropertyConverter.escapeDelimiters(attribute.getValue().toString(),
+                                    delimiter);
+                        buf.append(value);
                     }
                     attribute.setReference(elem);
                 }
@@ -1521,12 +1533,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param node the affected node
          * @param name the name of the attribute
          * @param listDelimiter the delimiter for attributes with multiple values
+         * @param isAttributeSplittingDisabled true if attribute splitting is disabled.
          */
-        static void updateAttribute(ConfigurationNode node, String name, char listDelimiter)
+        static void updateAttribute(ConfigurationNode node, String name, char listDelimiter,
+                                    boolean isAttributeSplittingDisabled)
         {
             if (node != null)
             {
-                updateAttribute(node, (Element) node.getReference(), name, listDelimiter);
+                updateAttribute(node, (Element) node.getReference(), name, listDelimiter, isAttributeSplittingDisabled);
             }
         }
 

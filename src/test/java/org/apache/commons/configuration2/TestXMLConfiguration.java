@@ -77,6 +77,7 @@ public class TestXMLConfiguration extends TestCase
     private String testProperties2 = ConfigurationAssert.getTestFile("testDigesterConfigurationInclude1.xml").getAbsolutePath();
     private String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
     private File testSaveConf = ConfigurationAssert.getOutFile("testsave.xml");
+    private File testSaveFile = ConfigurationAssert.getOutFile("testsample2.xml");
     private String testFile2 = ConfigurationAssert.getTestFile("sample.xml").getAbsolutePath();
 
     private XMLConfiguration conf;
@@ -782,6 +783,67 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("a,b,c", conf2.getString("split/list1"));
         assertEquals(0, conf2.getMaxIndex("split/list1"));
         assertEquals("a\\,b\\,c", conf2.getString("split/list2"));
+    }
+
+     /**
+     * Tests string properties with list delimiters when delimiter parsing
+     * is disabled
+     */
+    public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException {
+        XMLConfiguration conf = new XMLConfiguration();
+        conf.setExpressionEngine(new XPathExpressionEngine());
+        conf.setDelimiterParsingDisabled(true);
+        conf.setAttributeSplittingDisabled(true);
+        conf.setFile(new File(testProperties));
+        conf.load();
+
+        assertEquals("a,b,c", conf.getString("split/list3/@values"));
+        assertEquals(0, conf.getMaxIndex("split/list3/@values"));
+        assertEquals("a\\,b\\,c", conf.getString("split/list4/@values"));
+        assertEquals("a,b,c", conf.getString("split/list1"));
+        assertEquals(0, conf.getMaxIndex("split/list1"));
+        assertEquals("a\\,b\\,c", conf.getString("split/list2"));
+        // save the configuration
+        conf.save(testSaveConf.getAbsolutePath());
+
+        // read the configuration and compare the properties
+        XMLConfiguration checkConfig = new XMLConfiguration();
+        checkConfig.setFileName(testSaveConf.getAbsolutePath());
+        checkSavedConfig(checkConfig);
+        XMLConfiguration config = new XMLConfiguration();
+        config.setFileName(testFile2);
+        //config.setExpressionEngine(new XPathExpressionEngine());
+        config.setDelimiterParsingDisabled(true);
+        config.setAttributeSplittingDisabled(true);
+        config.load();
+        config.setProperty("Employee[@attr1]", "3,2,1");
+        assertEquals("3,2,1", config.getString("Employee[@attr1]"));
+        config.save(testSaveFile.getAbsolutePath());
+        config = new XMLConfiguration();
+        config.setFileName(testSaveFile.getAbsolutePath());
+        //config.setExpressionEngine(new XPathExpressionEngine());
+        config.setDelimiterParsingDisabled(true);
+        config.setAttributeSplittingDisabled(true);
+        config.load();
+        config.setProperty("Employee[@attr1]", "1,2,3");
+        assertEquals("1,2,3", config.getString("Employee[@attr1]"));
+        config.setProperty("Employee[@attr2]", "one, two, three");
+        assertEquals("one, two, three", config.getString("Employee[@attr2]"));
+        config.setProperty("Employee.text", "a,b,d");
+        assertEquals("a,b,d", config.getString("Employee.text"));
+        config.setProperty("Employee.Salary", "100,000");
+        assertEquals("100,000", config.getString("Employee.Salary"));
+        config.save(testSaveFile.getAbsolutePath());
+        checkConfig = new XMLConfiguration();
+        checkConfig.setFileName(testSaveFile.getAbsolutePath());
+        checkConfig.setExpressionEngine(new XPathExpressionEngine());
+        checkConfig.setDelimiterParsingDisabled(true);
+        checkConfig.setAttributeSplittingDisabled(true);
+        checkConfig.load();
+        assertEquals("1,2,3", checkConfig.getString("Employee/@attr1"));
+        assertEquals("one, two, three", checkConfig.getString("Employee/@attr2"));
+        assertEquals("a,b,d", checkConfig.getString("Employee/text"));
+        assertEquals("100,000", checkConfig.getString("Employee/Salary"));
     }
 
     /**
