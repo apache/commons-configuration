@@ -1,0 +1,24 @@
+{
+    "boolean-true" : true,
+    "boolean-false" : false,
+    "null-value" : null,
+    "simple-string" : "string1",
+    "complex-string" : "This\tis a complex string\nwith \u0061 lot of \"escaped\" characters\\",
+    
+    "integer" : 123456,
+    "real" : 123.456,
+    
+    "array" : [ "value1", "value2", "value3" ],
+    "empty-array" : [  ],
+    "nested-arrays" : [ [ "a", "b" ], [ "c", "d" ] ],
+    
+    "map" : { "foo1":"bar1", "foo2":"bar2" },
+    "empty-map" : { },
+    "nested-maps" : { "foo" : { "bar" : { "key" : "value" } } },
+    
+    "map-array":
+    [
+        { "foo" : "bar" },
+        { "key" : "value" }
+    ]
+}

@@ -1,0 +1,236 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+options {
+    STATIC = false;
+}
+
+
+PARSER_BEGIN(JSONParser)
+
+package org.apache.commons.configuration2.json;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+
+import org.apache.commons.lang.StringEscapeUtils;
+
+/**
+ * JavaCC based parser for the JSON format.
+ *
+ * @author Emmanuel Bourg
+ * @version $Revision$, $Date$
+ */
+class JSONParser {
+
+    /**
+     * Remove the quotes at the beginning and at the end of the specified String.
+     */
+    protected String removeQuotes(String s)
+    {
+        if (s == null)
+        {
+            return null;
+        }
+
+        if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2)
+        {
+            s = s.substring(1, s.length() - 1);
+        }
+
+        return s;
+    }
+}
+
+PARSER_END(JSONParser)
+
+SKIP : { " " | "\t" | "\n" | "\r" }
+
+TOKEN : { <ARRAY_BEGIN     : "[" > }
+TOKEN : { <ARRAY_END       : "]" > }
+
+TOKEN : { <LIST_SEPARATOR : "," > }
+
+TOKEN : { <OBJECT_BEGIN     : "{" > }
+TOKEN : { <OBJECT_END       : "}" > }
+
+TOKEN : { <SEPARATOR : ":" > }
+
+TOKEN : { < QUOTE : "\"" > }
+TOKEN : { < #LETTER : ~["\t", "\n", "\r", "\b", "\f", "\\", "\""] > }
+TOKEN : { < #HEXA : ["0"-"9", "a"-"f", "A"-"F"] > }
+TOKEN : { < #DIGIT : ["0"-"9"] > }
+
+TOKEN : { < STRING : <QUOTE> (<LETTER> | <ESCAPED_CHARACTER>)* <QUOTE> > }
+
+TOKEN : { < INTEGER : ("-")? ( "0" | ["1"-"9"] (<DIGIT>)* ) > }
+TOKEN : { < REAL : <INTEGER> ( "." (<DIGIT>)+ )? ( ("e" | "E") ("+" | "-")? (<DIGIT>)+ )? > }
+
+TOKEN : { <TRUE : "true"> }
+TOKEN : { <FALSE : "false"> }
+TOKEN : { <NULL : "null"> }
+
+TOKEN : { < #ESCAPED_QUOTE : "\\\"" > }
+TOKEN : { < #ESCAPED_BACKSLASH : "\\\\" > }
+TOKEN : { < #ESCAPED_SLASH : "\\/" > }
+TOKEN : { < #ESCAPED_BACKSPACE : "\\b" > }
+TOKEN : { < #ESCAPED_FORMFEED : "\\f" > }
+TOKEN : { < #ESCAPED_NEWLINE : "\\n" > }
+TOKEN : { < #ESCAPED_RETURN : "\\r" > }
+TOKEN : { < #ESCAPED_TAB : "\\t" > }
+TOKEN : { < #ESCAPED_UNICODE : "\\u" <HEXA><HEXA><HEXA><HEXA> >}
+
+TOKEN : { < #ESCAPED_CHARACTER : (<ESCAPED_QUOTE> | <ESCAPED_BACKSLASH> | <ESCAPED_SLASH> | <ESCAPED_BACKSPACE> | <ESCAPED_FORMFEED> | <ESCAPED_NEWLINE> | <ESCAPED_RETURN> | <ESCAPED_TAB> | <ESCAPED_UNICODE>)  > }
+
+
+JSONConfiguration parse() :
+{
+    JSONConfiguration configuration = null;
+}
+{
+    configuration = Object()
+    <EOF>
+    { return configuration; }
+}
+
+JSONConfiguration Object() :
+{
+    List children = new ArrayList();
+    ConfigurationNode child = null;
+}
+{   
+    <OBJECT_BEGIN>
+    (
+        child = Property()
+        { if (child != null) children.add(child); }
+        (
+            <LIST_SEPARATOR>
+            child = Property()
+            { if (child != null) children.add(child); }
+        )*
+    )?
+    <OBJECT_END>
+    {
+        JSONConfiguration configuration = new JSONConfiguration();
+        ConfigurationNode root = configuration.getRootNode();
+        
+        for (int i = 0; i < children.size(); i++)
+        {
+            child = (ConfigurationNode) children.get(i);
+            root.addChild(child);
+        }
+
+        return configuration;
+    }
+}
+
+ConfigurationNode Property() :
+{
+    String key = null;
+    Object value = null;
+}
+{
+    key = String()
+    <SEPARATOR>
+    value = Value()
+    {
+        ConfigurationNode node = null;
+        
+        if (value instanceof AbstractHierarchicalConfiguration)
+        {
+            // a configuration is returned when the value is an object
+            AbstractHierarchicalConfiguration config = (AbstractHierarchicalConfiguration) value;
+            node = (ConfigurationNode) config.getRootNode();
+            node.setName(key);
+        }
+        else if (value != null)
+        {
+            node = new DefaultConfigurationNode();
+            node.setValue(value);
+            node.setName(key);
+        }
+        
+        return node;
+    }
+}
+
+Object Value() :
+{
+    Object value = null;
+    Token token;
+}
+{   
+    value = Array()
+    { return value; }
+    |
+    value = Object()
+    { return value; }
+    |
+    value = String()
+    { return value; }
+    |
+    token = <INTEGER>
+    { return new BigInteger(token.image); }
+    |
+    token = <REAL>
+    { return new BigDecimal(token.image); }
+    |
+    token = <TRUE>
+    { return Boolean.TRUE; }
+    |
+    token = <FALSE>
+    { return Boolean.FALSE; }
+    |
+    token = <NULL>
+    { return null; }
+}
+
+List Array() :
+{
+    List list = new ArrayList();
+    Object element = null;
+}
+{
+    <ARRAY_BEGIN>
+    (
+        element = Value()
+        { list.add(element); }
+        (
+            <LIST_SEPARATOR>
+            element = Value()
+            { list.add(element); }
+        )*
+    )?
+    <ARRAY_END>
+    { return list; }
+}
+
+String String() :
+{
+    Token token = null;
+}
+{
+    token = <STRING>
+    { return StringEscapeUtils.unescapeJava(removeQuotes(token.image)); }
+}
