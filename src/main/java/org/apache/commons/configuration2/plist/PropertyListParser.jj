@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.apache.commons.configuration2.InMemoryConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
@@ -165,11 +165,11 @@ PropertyListConfiguration Dictionary() :
     (
         child = Property()
         {
-            if (child.getValue() instanceof InMemoryConfiguration)
+            if (child.getValue() instanceof AbstractHierarchicalConfiguration)
             {
                 // prune & graft the nested configuration to the parent configuration
-                InMemoryConfiguration conf = (InMemoryConfiguration) child.getValue();
-                ConfigurationNode root = conf.getRootNode();
+                AbstractHierarchicalConfiguration conf = (AbstractHierarchicalConfiguration) child.getValue();
+                ConfigurationNode root = (ConfigurationNode) conf.getRootNode();
                 root.setName(child.getName());
                 children.add(root);
             }
