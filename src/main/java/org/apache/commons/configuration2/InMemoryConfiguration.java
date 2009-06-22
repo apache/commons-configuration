@@ -96,7 +96,7 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * expression engine, which is used when a new <code>HierarchicalConfiguration</code>
  * instance is created. With the <code>setExpressionEngine()</code> method a
  * different expression engine can be set. For instance with
- * <code>{@link org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine}</code>
+ * <code>{@link org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine}</code>
  * there is an expression engine available that supports configuration keys in
  * XPATH syntax.</p>
  * <p>In addition to the events common for all configuration classes hierarchical
@@ -325,7 +325,7 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
         {
             result.getRootNode().setValue(value);
         }
-        return (result.isEmpty()) ? new HierarchicalConfiguration() : result;
+        return (result.isEmpty()) ? new InMemoryConfiguration() : result;
     }
 
     /**
