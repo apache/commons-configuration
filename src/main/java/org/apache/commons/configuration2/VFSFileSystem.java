@@ -196,7 +196,11 @@ public class VFSFileSystem extends DefaultFileSystem
                 }
             }
 
-            if (basePath != null)
+            if (UriParser.extractScheme(fileName) != null)
+            {
+                return fileName;
+            }
+            else if (basePath != null)
             {
                 FileName base = fsManager.resolveURI(basePath);
                 return fsManager.resolveName(base, fileName).getURI();
