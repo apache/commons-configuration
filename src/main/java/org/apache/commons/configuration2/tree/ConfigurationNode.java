@@ -262,7 +262,8 @@ public interface ConfigurationNode
 
     /**
      * Returns a copy of this node.
+     * 
      * @return the copy
      */
-    Object clone();
+    ConfigurationNode clone();
 }

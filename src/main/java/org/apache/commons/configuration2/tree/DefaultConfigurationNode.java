@@ -425,12 +425,11 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @return a copy of this object
      */
     @Override
-    public Object clone()
+    public ConfigurationNode clone()
     {
         try
         {
-            DefaultConfigurationNode copy = (DefaultConfigurationNode) super
-                    .clone();
+            DefaultConfigurationNode copy = (DefaultConfigurationNode) super.clone();
             copy.initSubNodes();
             return copy;
         }
