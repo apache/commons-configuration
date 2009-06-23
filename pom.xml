@@ -357,6 +357,9 @@
   <build>
     <resources>
       <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
         <directory>.</directory>
         <targetPath>META-INF</targetPath>
         <includes>
@@ -364,14 +367,18 @@
           <include>LICENSE.txt</include>
         </includes>
       </resource>
-      <resource>
-        <directory>src/test/resources</directory>
-        <includes>
-          <include>properties.dtd</include>
-          <include>PropertyList-1.0.dtd</include>
-        </includes>
-      </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+      <testResource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*.dtd</include>
+        </includes>        
+      </testResource>
+    </testResources>
 
       <plugins>
         <plugin>
