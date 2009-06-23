@@ -31,7 +31,6 @@ import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
@@ -224,9 +223,9 @@ public class JSONConfiguration extends AbstractHierarchicalFileConfiguration
             }
             out.print(" ]");
         }
-        else if (value instanceof HierarchicalConfiguration)
+        else if (value instanceof AbstractHierarchicalConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
+            printNode(out, indentLevel, ((AbstractHierarchicalConfiguration<ConfigurationNode>) value).getRootNode());
         }
         else if (value instanceof Configuration)
         {

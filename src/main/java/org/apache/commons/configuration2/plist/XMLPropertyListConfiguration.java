@@ -35,7 +35,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -43,7 +42,6 @@ import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
 import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
@@ -373,9 +371,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             out.println(padding + "</array>");
         }
-        else if (value instanceof HierarchicalConfiguration)
+        else if (value instanceof AbstractHierarchicalConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
+            printNode(out, indentLevel, ((AbstractHierarchicalConfiguration<ConfigurationNode>) value).getRootNode());
         }
         else if (value instanceof Configuration)
         {
@@ -518,7 +516,6 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             else
             {
-                PListNode node = (PListNode) peek();
                 if ("string".equals(qName))
                 {
                     ((PListNode) peek()).addValue(buffer.toString());
