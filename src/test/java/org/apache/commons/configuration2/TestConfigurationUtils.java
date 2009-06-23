@@ -24,6 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration2.flat.BaseConfiguration;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.apache.commons.configuration2.expr.ExpressionEngine;
 
 import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
@@ -268,6 +270,63 @@ public class TestConfigurationUtils extends TestCase
                 hc.getString("test.key"));
     }
 
+    /**
+     * Tests converting a configuration to a hierarchical one using a specific
+     * expression engine.
+     */
+    public void testConvertToHierarchicalEngine()
+    {
+        Configuration conf = new BaseConfiguration();
+        conf.addProperty("test(a)", Boolean.TRUE);
+        conf.addProperty("test(b)", Boolean.FALSE);
+        DefaultExpressionEngine engine = new DefaultExpressionEngine();
+        engine.setIndexStart("[");
+        engine.setIndexEnd("]");
+        AbstractHierarchicalConfiguration hc = ConfigurationUtils.convertToHierarchical(conf, engine);
+        assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
+        assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using an
+     * expression engine. The new engine should be set.
+     */
+    public void testConvertHierarchicalToHierarchicalEngine()
+    {
+        InMemoryConfiguration hc = new InMemoryConfiguration();
+        ExpressionEngine engine = new DefaultExpressionEngine();
+        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, engine));
+        assertSame("Engine was not set", engine, hc.getExpressionEngine());
+    }
+
+    /**
+     * Tests converting an already hierarchical configuration using a null
+     * expression engine. In this case the expression engine of the
+     * configuration should not be touched.
+     */
+    public void testConvertHierarchicalToHierarchicalNullEngine()
+    {
+        InMemoryConfiguration hc = new InMemoryConfiguration();
+        ExpressionEngine engine = new DefaultExpressionEngine();
+        hc.setExpressionEngine(engine);
+        assertSame("Created new configuration", hc, ConfigurationUtils.convertToHierarchical(hc, null));
+        assertSame("Expression engine was changed", engine, hc.getExpressionEngine());
+    }
+
+    /**
+     * Tests converting a configuration to a hierarchical one that contains a
+     * property with multiple values. This test is related to CONFIGURATION-346.
+     */
+    public void testConvertToHierarchicalMultiValues()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty("test", "1,2,3");
+        AbstractHierarchicalConfiguration hc = ConfigurationUtils.convertToHierarchical(config, null);
+        assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
+        assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
+        assertEquals("Wrong value 3", 3, hc.getInt("test(2)"));
+    }
+    
     /**
      * Tests cloning a configuration that supports this operation.
      */
