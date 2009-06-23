@@ -20,13 +20,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
+import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationException;
@@ -37,6 +41,7 @@ import org.apache.commons.configuration2.SubConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 
 /**
@@ -59,13 +64,16 @@ public class TestCombinedConfiguration extends TestCase
     private static final String CHILD2 = TEST_NAME + "2";
 
     /** Constant for the name of the XML reload test file.*/
-    private static final String RELOAD_NAME1 = "reload.xml";
+    private static final String RELOAD_XML_NAME = "reload.xml";
 
     /** Constant for the content of a XML reload test file.*/
-    private static final String RELOAD_CONTENT = "<xml><xmlReload>%d</xmlReload></xml>";
+    private static final String RELOAD_XML_CONTENT = "<xml><xmlReload>%d</xmlReload></xml>";
 
     /** Constant for the name of the properties reload test file.*/
-    private static final String RELOAD_NAME2 = "reload2.xml";
+    private static final String RELOAD_PROPS_NAME = "reload2.xml";
+
+    /** Constant for the content of a properties reload test file.*/
+    private static final String RELOAD_PROPS_CONTENT = "propsReload = {0}";
 
     /** Constant for the directory for writing test files.*/
     private static final File TEST_DIR = new File("target");
@@ -79,7 +87,6 @@ public class TestCombinedConfiguration extends TestCase
     /** The test event listener. */
     private CombinedListener listener;
 
-    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -92,7 +99,6 @@ public class TestCombinedConfiguration extends TestCase
      * Performs clean-up after a test run. If test files have been created, they
      * are removed now.
      */
-    @Override
     protected void tearDown() throws Exception
     {
         if (testFiles != null)
@@ -399,6 +405,7 @@ public class TestCombinedConfiguration extends TestCase
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        //config.addConfiguration(new PropertiesConfiguration(), "props");
 
         CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertEquals("Wrong number of contained configurations", config
@@ -465,8 +472,8 @@ public class TestCombinedConfiguration extends TestCase
         final String prefix1 = "reload1";
         final String prefix2 = "reload2";
         config.setForceReloadCheck(true);
-        File testXmlFile = writeReloadFile(RELOAD_NAME1, 0);
-        File testXmlFile2 = writeReloadFile(RELOAD_NAME2, 0);
+        File testXmlFile = writeReloadFile(RELOAD_XML_NAME, 0);
+        File testXmlFile2 = writeReloadFile(RELOAD_PROPS_NAME, 0);
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
         c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         XMLConfiguration c2 = new XMLConfiguration(testXmlFile2);
@@ -479,11 +486,11 @@ public class TestCombinedConfiguration extends TestCase
         assertEquals("Wrong xml 2 reload value", 0, config.getInt(prefix2
                 + ".xmlReload"));
 
-        writeReloadFile(RELOAD_NAME1, 1);
+        writeReloadFile(RELOAD_XML_NAME, 1);
         assertEquals("XML reload 1 not detected", 1, config.getInt(prefix1
                 + ".xmlReload"));
         config.setForceReloadCheck(false);
-        writeReloadFile(RELOAD_NAME2, 1);
+        writeReloadFile(RELOAD_PROPS_NAME, 1);
         assertEquals("XML 2 reload detected though check flag is false", 0,
                 config.getInt(prefix2 + ".xmlReload"));
     }
@@ -496,13 +503,13 @@ public class TestCombinedConfiguration extends TestCase
             ConfigurationException
     {
         config.setForceReloadCheck(true);
-        File testXmlFile = writeReloadFile(RELOAD_NAME1, 0);
+        File testXmlFile = writeReloadFile(RELOAD_XML_NAME, 0);
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
         c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         final String prefix = "reloadCheck";
         config.addConfiguration(c1, CHILD1, prefix);
         SubConfiguration<?> sub = config.configurationAt(prefix, true);
-        writeReloadFile(RELOAD_NAME1, 1);
+        writeReloadFile(RELOAD_XML_NAME, 1);
         assertEquals("Reload not detected", 1, sub.getInt("xmlReload"));
     }
 
@@ -632,6 +639,138 @@ public class TestCombinedConfiguration extends TestCase
     }
 
     /**
+     * Tests using a conversion expression engine for child configurations with
+     * strange keys. This test is related to CONFIGURATION-336.
+     */
+    public void testConversionExpressionEngine()
+    {
+        InMemoryConfiguration child = new InMemoryConfiguration();
+        DefaultExpressionEngine engineInit = new DefaultExpressionEngine();
+        engineInit.setIndexStart("{");
+        engineInit.setIndexEnd("}");
+        child.setExpressionEngine(engineInit);
+        
+        child.addProperty("test(a)", "1,2,3");
+        
+        config.addConfiguration(child);
+        DefaultExpressionEngine engineQuery = new DefaultExpressionEngine();
+        engineQuery.setIndexStart("<");
+        engineQuery.setIndexEnd(">");
+        config.setExpressionEngine(engineQuery);
+        DefaultExpressionEngine engineConvert = new DefaultExpressionEngine();
+        engineConvert.setIndexStart("[");
+        engineConvert.setIndexEnd("]");
+        config.setConversionExpressionEngine(engineConvert);
+        assertEquals("Wrong property 1", "1", config.getString("test(a)<0>"));
+        assertEquals("Wrong property 2", "2", config.getString("test(a)<1>"));
+        assertEquals("Wrong property 3", "3", config.getString("test(a)<2>"));
+    }
+
+    /**
+     * Tests whether reload operations can cause a deadlock when the combined
+     * configuration is accessed concurrently. This test is related to
+     * CONFIGURATION-344.
+     */
+    /* todo test failing due to the lack of synchronization on the hierarchical configurations (CONFIGURATION-390) 
+    public void testDeadlockWithReload() throws ConfigurationException,
+            InterruptedException
+    {
+        final XMLConfiguration child = new XMLConfiguration(
+                "test.xml");
+        child.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        config.addConfiguration(child);
+        final int count = 1000;
+        
+        assertEquals("Wrong value of combined property", 8, config.getInt("test.short"));
+
+        class ReloadThread extends Thread
+        {
+            boolean error = false;
+
+            public void run()
+            {
+                for (int i = 0; i < count && !error; i++)
+                {
+                    try
+                    {
+                        if (!child.containsKey("test.short"))
+                        {
+                            error = true;
+                        }
+                    }
+                    catch (NoSuchElementException nsex)
+                    {
+                        error = true;
+                    }
+                }
+            }
+        }
+
+        ReloadThread reloadThread = new ReloadThread();
+        reloadThread.start();
+        for (int i = 0; i < count; i++)
+        {
+            assertEquals("Wrong value of combined property", 8, config.getInt("test.short"));
+        }
+        reloadThread.join();
+        assertFalse("Failure in thread", reloadThread.error);
+    }
+    */
+
+    public void testGetConfigurations() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractHierarchicalConfiguration pc = new XMLConfiguration();
+        config.addConfiguration(pc, "props");
+        List list = config.getConfigurations();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        AbstractConfiguration c = ((AbstractConfiguration)list.get(2));
+        assertTrue("Incorrect configuration", c == pc);
+    }
+
+    public void testGetConfigurationNameList() throws Exception
+    {
+        config.addConfiguration(setUpTestConfiguration());
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
+        AbstractHierarchicalConfiguration pc = new XMLConfiguration();
+        config.addConfiguration(pc, "props");
+        List list = config.getConfigurationNameList();
+        assertNotNull("No list of configurations returned", list);
+        assertTrue("Incorrect number of configurations", list.size() == 3);
+        String name = ((String)list.get(1));
+        assertNotNull("No name returned", name);
+        assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
+    }
+
+    /**
+     * Tests whether changes on a sub node configuration that is part of a
+     * combined configuration are detected. This test is related to
+     * CONFIGURATION-368.
+     */
+    public void testReloadWithSubNodeConfig() throws Exception
+    {
+        final String reloadContent = "<config><default><xmlReload1>{0}</xmlReload1></default></config>";
+        config.setForceReloadCheck(true);
+        config.setNodeCombiner(new OverrideCombiner());
+        File testXmlFile1 = writeReloadFile(RELOAD_XML_NAME, reloadContent, 0);
+        final String prefix1 = "default";
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile1);
+        SubConfiguration sub1 = c1.configurationAt(prefix1, true);
+        assertEquals("Inital test for sub config 1 failed", 0, sub1
+                .getInt("xmlReload1"));
+        config.addConfiguration(sub1);
+        assertEquals(
+                "Could not get value for sub config 1 from combined config", 0,
+                config.getInt("xmlReload1"));
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        writeReloadFile(RELOAD_XML_NAME, reloadContent, 1);
+        assertEquals("Reload of sub config 1 not detected", 1, config
+                .getInt("xmlReload1"));
+    }
+    
+    /**
      * Tests a combined configuration that is contained in another combined
      * configuration.
      */
@@ -708,7 +847,24 @@ public class TestCombinedConfiguration extends TestCase
     private File writeReloadFile(String name, int value)
             throws IOException
     {
-        return writeFile(name, String.format(RELOAD_CONTENT, value));
+        return writeFile(name, String.format(RELOAD_XML_CONTENT, value));
+    }
+
+    /**
+     * Writes a file for testing reload operations.
+     *
+     * @param name the name of the reload test file
+     * @param content the content of the file
+     * @param value the value of the reload test property
+     * @return the file that was written
+     * @throws IOException if an error occurs
+     */
+    private File writeReloadFile(String name, String content, int value)
+            throws IOException
+    {
+        return writeFile(name, MessageFormat.format(content, new Object[] {
+            new Integer(value)
+        }));
     }
 
     /**

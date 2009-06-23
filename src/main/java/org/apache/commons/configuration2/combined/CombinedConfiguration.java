@@ -30,6 +30,7 @@ import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.def.DefaultConfigurationKey;
@@ -199,6 +200,12 @@ public class CombinedConfiguration extends
     /** Stores a map with the named configurations. */
     private Map<String, Configuration> namedConfigurations;
 
+    /**
+     * An expression engine used for converting child configurations to
+     * hierarchical ones.
+     */
+    private ExpressionEngine conversionExpressionEngine;
+
     /** A flag whether an enhanced reload check is to be performed. */
     private boolean forceReloadCheck;
 
@@ -284,6 +291,39 @@ public class CombinedConfiguration extends
     public void setForceReloadCheck(boolean forceReloadCheck)
     {
         this.forceReloadCheck = forceReloadCheck;
+    }
+
+    /**
+     * Returns the <code>ExpressionEngine</code> for converting flat child
+     * configurations to hierarchical ones.
+     *
+     * @return the conversion expression engine
+     * @since 1.6
+     */
+    public ExpressionEngine getConversionExpressionEngine()
+    {
+        return conversionExpressionEngine;
+    }
+
+    /**
+     * Sets the <code>ExpressionEngine</code> for converting flat child
+     * configurations to hierarchical ones. When constructing the root node for
+     * this combined configuration the properties of all child configurations
+     * must be combined to a single hierarchical node structure. In this
+     * process, non hierarchical configurations are converted to hierarchical
+     * ones first. This can be problematic if a child configuration contains
+     * keys that are no compatible with the default expression engine used by
+     * hierarchical configurations. Therefore it is possible to specify a
+     * specific expression engine to be used for this purpose.
+     *
+     * @param conversionExpressionEngine the conversion expression engine
+     * @see ConfigurationUtils#convertToHierarchical(Configuration, ExpressionEngine)
+     * @since 1.6
+     */
+    public void setConversionExpressionEngine(
+            ExpressionEngine conversionExpressionEngine)
+    {
+        this.conversionExpressionEngine = conversionExpressionEngine;
     }
 
     /**
@@ -394,7 +434,41 @@ public class CombinedConfiguration extends
      */
     public Configuration getConfiguration(String name)
     {
-        return (Configuration) namedConfigurations.get(name);
+        return namedConfigurations.get(name);
+    }
+
+    /**
+     * Returns a List of all the configurations that have been added.
+     * 
+     * @return A List of all the configurations.
+     * @since 1.7
+     */
+    public List<AbstractHierarchicalConfiguration> getConfigurations()
+    {
+        List<AbstractHierarchicalConfiguration> list = new ArrayList<AbstractHierarchicalConfiguration>();
+        for (ConfigData<?> configuration : configurations)
+        {
+            list.add(configuration.getConfiguration());
+        }
+        return list;
+    }
+
+    /**
+     * Returns a List of the names of all the configurations that have been
+     * added in the order they were added. A NULL value will be present in
+     * the list for each configuration that was added without a name.
+     * 
+     * @return A List of all the configuration names.
+     * @since 1.7
+     */
+    public List<String> getConfigurationNameList()
+    {
+        List<String> list = new ArrayList<String>();
+        for (ConfigData<?> configuration : configurations)
+        {
+            list.add((configuration).getName());
+        }
+        return list;
     }
 
     /**
@@ -785,7 +859,7 @@ public class CombinedConfiguration extends
      *
      * @param <T> the type of the nodes used by the represented configuration
      */
-    static class ConfigData<T>
+    class ConfigData<T>
     {
         /** Stores a reference to the configuration. */
         private AbstractHierarchicalConfiguration<T> configuration;
@@ -884,7 +958,7 @@ public class CombinedConfiguration extends
                 }
             }
 
-            T root = getConfiguration().getRootNode();
+            T root = (T) ConfigurationUtils.convertToHierarchical(getConfiguration(), getConversionExpressionEngine()).getRootNode();
 
             // Copy data of the root node to the new path
             atParent.appendChildren(root, getConfiguration().getNodeHandler());
