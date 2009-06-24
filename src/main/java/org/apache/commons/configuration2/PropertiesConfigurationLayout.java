@@ -593,7 +593,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         if (event.isBeforeUpdate())
         {
-            if (AbstractFileConfiguration.EVENT_RELOAD == event.getType())
+            if (AbstractHierarchicalFileConfiguration.EVENT_RELOAD == event.getType())
             {
                 clear();
             }

@@ -17,28 +17,24 @@
 package org.apache.commons.configuration2;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileReader;
-import java.io.Reader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Set;
 import java.util.List;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import java.util.Set;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.reloading.VFSFileMonitorReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -1167,7 +1163,7 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
 
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        if (event.getType() == AbstractHierarchicalFileConfiguration.EVENT_CONFIG_CHANGED)
         {
             synchronized(this)
             {

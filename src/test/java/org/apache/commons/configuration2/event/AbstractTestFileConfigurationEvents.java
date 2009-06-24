@@ -19,11 +19,9 @@ package org.apache.commons.configuration2.event;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.configuration2.AbstractFileConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.FileConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 
 /**
@@ -70,9 +68,9 @@ public abstract class AbstractTestFileConfigurationEvents extends
     {
         setUpFileConfiguration();
         config.isEmpty(); // This should cause a reload
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), true);
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), false);
         l.done();
     }
@@ -88,10 +86,10 @@ public abstract class AbstractTestFileConfigurationEvents extends
         config.setDetailEvents(true);
         config.isEmpty(); // This should cause a reload
         l.checkEventCount(2);
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), true);
-        l.skipToLast(AbstractFileConfiguration.EVENT_RELOAD);
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.skipToLast(AbstractHierarchicalFileConfiguration.EVENT_RELOAD);
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), false);
         l.done();
     }
@@ -112,9 +110,9 @@ public abstract class AbstractTestFileConfigurationEvents extends
             }
         });
         config.isEmpty();
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), true);
-        l.checkEvent(AbstractFileConfiguration.EVENT_RELOAD, null,
+        l.checkEvent(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null,
                 getSourceURL(), false);
         l.done();
     }

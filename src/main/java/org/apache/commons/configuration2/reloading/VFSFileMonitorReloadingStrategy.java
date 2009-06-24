@@ -16,21 +16,21 @@
  */
 package org.apache.commons.configuration2.reloading;
 
-import org.apache.commons.configuration2.FileConfiguration;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
+import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.FileSystem;
 import org.apache.commons.configuration2.FileSystemBased;
-import org.apache.commons.configuration2.AbstractFileConfiguration;
-import org.apache.commons.vfs.impl.DefaultFileMonitor;
-import org.apache.commons.vfs.FileListener;
 import org.apache.commons.vfs.FileChangeEvent;
+import org.apache.commons.vfs.FileListener;
 import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.FileSystemManager;
 import org.apache.commons.vfs.FileSystemException;
-
-import java.util.Map;
-import java.util.HashMap;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.impl.DefaultFileMonitor;
 
 
 /**
@@ -232,9 +232,9 @@ public class VFSFileMonitorReloadingStrategy implements ReloadingStrategy, FileL
 
     private void fireEvent()
     {
-        if (configuration instanceof AbstractFileConfiguration)
+        if (configuration instanceof AbstractHierarchicalFileConfiguration)
         {
-            ((AbstractFileConfiguration) configuration).configurationChanged();
+            ((AbstractHierarchicalFileConfiguration) configuration).configurationChanged();
         }
     }
 }

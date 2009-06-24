@@ -1014,7 +1014,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
 
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        if (event.getType() == AbstractHierarchicalFileConfiguration.EVENT_CONFIG_CHANGED)
         {
             synchronized(this)
             {

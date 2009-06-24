@@ -378,7 +378,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     {
         fillLayout();
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractFileConfiguration.EVENT_RELOAD, null, null, true);
+                AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null, null, true);
         layout.configurationChanged(event);
         assertTrue("Keys not empty", layout.getKeys().isEmpty());
         assertNull("Header comment was not reset", layout.getHeaderComment());
@@ -392,7 +392,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     {
         fillLayout();
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractFileConfiguration.EVENT_RELOAD, null, null, false);
+                AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null, null, false);
         layout.configurationChanged(event);
         assertFalse("Keys are empty", layout.getKeys().isEmpty());
         assertNotNull("Header comment was reset", layout.getHeaderComment());

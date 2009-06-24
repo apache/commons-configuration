@@ -19,18 +19,14 @@ package org.apache.commons.configuration2.reloading;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.net.URL;
 
 import junit.framework.TestCase;
-
-import org.apache.commons.configuration2.ConfigurationException;
-import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
 import org.apache.commons.configuration2.FileSystem;
+import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.VFSFileSystem;
-import org.apache.commons.configuration2.AbstractFileConfiguration;
-import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationListener;
 
 /**
  * Test case for the VFSFileMonitorReloadingStrategy class.
@@ -215,7 +211,7 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
 
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
+        if (event.getType() == AbstractHierarchicalFileConfiguration.EVENT_CONFIG_CHANGED)
         {
             synchronized(this)
             {
