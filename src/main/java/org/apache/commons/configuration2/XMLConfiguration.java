@@ -21,17 +21,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,11 +46,10 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.configuration2.resolver.DefaultEntityResolver;
+import org.apache.commons.configuration2.resolver.EntityRegistry;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.resolver.EntityRegistry;
-import org.apache.commons.configuration2.resolver.DefaultEntityResolver;
-
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -937,7 +936,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         try
         {
-            URL sourceURL = getDelegate().getURL();
+            URL sourceURL = getURL();
             if (sourceURL != null)
             {
                 source.setSystemId(sourceURL.toString());
@@ -1070,22 +1069,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
         // clear document related properties
         copy.document = null;
-        copy.setDelegate(copy.createDelegate());
         // clear all references in the nodes, too
         clearReferences(copy.getRootNode());
 
         return copy;
-    }
-
-    /**
-     * Creates the file configuration delegate for this object. This implementation
-     * will return an instance of a class derived from <code>FileConfigurationDelegate</code>
-     * that deals with some specialities of <code>XMLConfiguration</code>.
-     * @return the delegate for this object
-     */
-    protected FileConfigurationDelegate createDelegate()
-    {
-        return new XMLFileConfigurationDelegate();
     }
 
     /**
@@ -1408,14 +1395,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * A concrete <code>BuilderVisitor</code> that can construct XML
      * documents.
      */
-    static class XMLBuilderVisitor extends BuilderVisitor
+    static class XMLBuilderVisitor extends InMemoryConfiguration.BuilderVisitor
     {
         /** Stores the document to be constructed. */
         private Document document;
 
         /** Stores the list delimiter.*/
-        private char listDelimiter = AbstractConfiguration.
-                getDefaultListDelimiter();
+        private char listDelimiter = AbstractConfiguration.getDefaultListDelimiter();
 
         /** True if attributes should not be split */
         private boolean isAttributeSplittingDisabled;
@@ -1556,19 +1542,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             return (node.getName() != null && node.getReference() != null) ? (Element) node
                     .getReference()
                     : document.getDocumentElement();
-        }
-    }
-
-    /**
-     * A special implementation of the <code>FileConfiguration</code> interface that is
-     * used internally to implement the <code>FileConfiguration</code> methods
-     * for <code>XMLConfiguration</code>, too.
-     */
-    private class XMLFileConfigurationDelegate extends FileConfigurationDelegate
-    {
-        public void load(InputStream in) throws ConfigurationException
-        {
-            XMLConfiguration.this.load(in);
         }
     }
 }
