@@ -560,6 +560,7 @@ public class TestFileConfiguration extends TestCase
     public void testLogErrorListener()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addErrorLogListener();
         assertEquals("No error log listener registered", 1, config
                 .getErrorListeners().size());
     }

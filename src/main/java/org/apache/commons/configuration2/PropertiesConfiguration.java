@@ -174,7 +174,7 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */
-public class PropertiesConfiguration extends AbstractFileConfiguration
+public class PropertiesConfiguration extends AbstractHierarchicalFileConfiguration
 {
     /** Constant for the supported comment characters.*/
     static final String COMMENT_CHARS = "#!";

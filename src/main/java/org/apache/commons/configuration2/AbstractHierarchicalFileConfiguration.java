@@ -106,7 +106,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     protected ReloadingStrategy strategy;
 
     /** A lock object for protecting reload operations.*/
-    private Object reloadLock = new Object();
+    private final Object reloadLock = new Object();
 
     /** Stores the encoding of the configuration file.*/
     private String encoding;
@@ -911,22 +911,10 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         }
     }
 
-    public Object getProperty(String key)
-    {
-        reload();
-        return super.getProperty(key);
-    }
-
     public boolean isEmpty()
     {
         reload();
         return super.isEmpty();
-    }
-
-    public boolean containsKey(String key)
-    {
-        reload();
-        return super.containsKey(key);
     }
 
     public Iterator<String> getKeys()

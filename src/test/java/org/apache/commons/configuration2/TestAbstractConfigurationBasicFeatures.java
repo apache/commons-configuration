@@ -26,14 +26,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.PropertiesConfiguration;
+import junit.framework.TestCase;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
-
-import junit.framework.TestCase;
 
 /**
  * A test class for some of the basic functionality implemented by
@@ -338,7 +334,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     private AbstractConfiguration setUpDestConfig()
     {
         AbstractConfiguration config = new TestConfigurationImpl(
-                new PropertiesConfiguration());
+                new BaseConfiguration());
         for (int i = 0; i < PROP_COUNT; i++)
         {
             config.addProperty(KEY_PREFIX + i, "value" + i);
