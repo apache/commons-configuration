@@ -25,10 +25,12 @@ import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileSystemOptions;
 import org.apache.commons.vfs.UserAuthenticator;
+import org.apache.commons.vfs.FileSystemConfigBuilder;
 import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.UriParser;
 import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,6 +41,8 @@ import java.net.URLStreamHandler;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.util.Map;
+import java.util.Iterator;
+import java.lang.reflect.Method;
 
 /**
  * FileSystem that uses Commons VFS
@@ -107,7 +111,8 @@ public class VFSFileSystem extends DefaultFileSystem
                 path = manager.resolveName(base, file.getBaseName());
             }
             FileSystemOptions opts = getOptions(path.getScheme());
-            FileObject file = manager.resolveFile(path.getURI(), opts);
+            FileObject file = (opts == null) ? manager.resolveFile(path.getURI()) :
+                    manager.resolveFile(path.getURI(), opts);
             FileContent content = file.getContent();
             if (content == null)
             {
@@ -132,7 +137,8 @@ public class VFSFileSystem extends DefaultFileSystem
         try
         {
             FileSystemOptions opts = getOptions(url.getProtocol());
-            file = VFS.getManager().resolveFile(url.toString(), opts);
+            file = (opts == null) ? VFS.getManager().resolveFile(url.toString()) :
+                    VFS.getManager().resolveFile(url.toString(), opts);
             if (file.getType() != FileType.FILE)
             {
                 throw new ConfigurationException("Cannot load a configuration from a directory");
@@ -158,7 +164,8 @@ public class VFSFileSystem extends DefaultFileSystem
         {
             FileSystemOptions opts = getOptions(url.getProtocol());
             FileSystemManager fsManager = VFS.getManager();
-            FileObject file = fsManager.resolveFile(url.toString(), opts);
+            FileObject file = (opts == null) ? fsManager.resolveFile(url.toString()) :
+                    fsManager.resolveFile(url.toString(), opts);
             // throw an exception if the target URL is a directory
             if (file == null || file.getType() == FileType.FOLDER)
             {
@@ -306,16 +313,22 @@ public class VFSFileSystem extends DefaultFileSystem
             // Only use the base path if the file name doesn't have a scheme.
             if (basePath != null && fileScheme == null)
             {
-                FileObject base = fsManager.resolveFile(basePath);
+                String scheme = UriParser.extractScheme(basePath);
+                FileSystemOptions opts = (scheme != null) ? getOptions(scheme) : null;
+                FileObject base = (opts == null) ? fsManager.resolveFile(basePath) :
+                        fsManager.resolveFile(basePath, opts);
                 if (base.getType() == FileType.FILE)
                 {
                     base = base.getParent();
                 }
+
                 file = fsManager.resolveFile(base, fileName);
             }
             else
             {
-                file = fsManager.resolveFile(fileName);
+                FileSystemOptions opts = (fileScheme != null) ? getOptions(fileScheme) : null;
+                file = (opts == null) ? fsManager.resolveFile(fileName) :
+                        fsManager.resolveFile(fileName, opts);
             }
 
             if (!file.exists())
@@ -339,97 +352,73 @@ public class VFSFileSystem extends DefaultFileSystem
     private FileSystemOptions getOptions(String scheme)
     {
         FileSystemOptions opts = new FileSystemOptions();
+        FileSystemConfigBuilder builder;
+        try
+        {
+            builder = VFS.getManager().getFileSystemConfigBuilder(scheme);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
         FileOptionsProvider provider = getFileOptionsProvider();
         if (provider != null)
         {
             Map map = provider.getOptions();
-            if (scheme.equals("webdav"))
+            if (map == null)
             {
-                return setWebdavOptions(opts, map);
+                return null;
             }
-            else if (scheme.equals("http"))
+            Iterator iter = map.entrySet().iterator();
+            int count = 0;
+            while (iter.hasNext())
             {
-                return setHttpOptions(opts, map);
+                Map.Entry entry = (Map.Entry) iter.next();
+                try
+                {
+                    String key = (String) entry.getKey();
+                    if (FileOptionsProvider.CURRENT_USER.equals(key))
+                    {
+                        key = "creatorName";
+                    }
+                    setProperty(builder, opts, key, entry.getValue());
+                    ++count;
+                }
+                catch (Exception ex)
+                {
+                    // Ignore an incorrect property.
+                }
             }
-            else
-            {
-                return setDefaultOptions(opts, map);
-            }
-        }
-        return opts;
-    }
-
-    private FileSystemOptions setWebdavOptions(FileSystemOptions opts, Map map)
-    {
-        setHttpOptions(opts, map);
-        if (webdavBuilder == null || map == null)
-        {
-            return opts;
-        }
-        if (map.containsKey(FileOptionsProvider.VERSIONING))
-        {
-            boolean versioning = ((Boolean) map.get(FileOptionsProvider.VERSIONING)).booleanValue();
-            webdavBuilder.setVersioning(opts, versioning);
-        }
-        if (map.containsKey(FileOptionsProvider.CURRENT_USER))
-        {
-            webdavBuilder.setCreatorName(opts, (String) map.get(FileOptionsProvider.CURRENT_USER));
-        }
-        return opts;
-    }
-
-    private FileSystemOptions setHttpOptions(FileSystemOptions opts, Map map)
-    {
-        setDefaultOptions(opts, map);
-
-        if (httpBuilder == null || map == null)
-        {
-            return opts;
-        }
-        if (map.containsKey(FileOptionsProvider.PROXY_PORT))
-        {
-            int port = ((Integer) map.get(FileOptionsProvider.PROXY_PORT)).intValue();
-            httpBuilder.setProxyPort(opts, port);
-        }
-        if (map.containsKey(FileOptionsProvider.PROXY_HOST))
-        {
-            httpBuilder.setProxyHost(opts, (String) map.get(FileOptionsProvider.PROXY_HOST));
-        }
-        if (map.containsKey(FileOptionsProvider.MAX_HOST_CONNECTIONS))
-        {
-            int max = ((Integer) map.get(FileOptionsProvider.MAX_HOST_CONNECTIONS)).intValue();
-            httpBuilder.setMaxConnectionsPerHost(opts, max);
-        }
-        if (map.containsKey(FileOptionsProvider.MAX_TOTAL_CONNECTIONS))
-        {
-            int max = ((Integer) map.get(FileOptionsProvider.MAX_TOTAL_CONNECTIONS)).intValue();
-            httpBuilder.setMaxTotalConnections(opts, max);
-        }
-        return opts;
-    }
-
-    private FileSystemOptions setDefaultOptions(FileSystemOptions opts, Map map)
-    {
-        DefaultFileSystemConfigBuilder builder = DefaultFileSystemConfigBuilder.getInstance();
-
-        if (builder == null || map == null)
-        {
-            return opts;
-        }
-
-        if (map.containsKey("userAuthenticator"))
-        {
-            UserAuthenticator auth = (UserAuthenticator) map.get("userAuthenticator");
-            try
-            {
-                builder.setUserAuthenticator(opts, auth);
-            }
-            catch (FileSystemException e)
+            if (count > 0)
             {
                 return opts;
             }
         }
-        return opts;
+        return null;
+
+    }
+
+    private void setProperty(FileSystemConfigBuilder builder, FileSystemOptions options,
+                             String key, Object value)
+    {
+        String methodName = "set" + key.substring(0,1).toUpperCase() + key.substring(1);
+        Class[] paramTypes = new Class[2];
+        paramTypes[0] = FileSystemOptions.class;
+        paramTypes[1] = value.getClass();
+
+        try
+        {
+            Method method = builder.getClass().getMethod(methodName, paramTypes);
+            Object[] params = new Object[2];
+            params[0] = options;
+            params[1] = value;
+            method.invoke(builder, params);
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+
     }
 
     /**

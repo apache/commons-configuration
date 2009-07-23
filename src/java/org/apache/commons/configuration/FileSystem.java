@@ -88,7 +88,10 @@ public abstract class FileSystem
                 if (FileSystem.class.isAssignableFrom(clazz))
                 {
                     fileSystem = (FileSystem) clazz.newInstance();
-                    System.out.println("Using " + fsClassName);
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("Using " + fsClassName);
+                    }
                 }
             }
             catch (InstantiationException ex)
