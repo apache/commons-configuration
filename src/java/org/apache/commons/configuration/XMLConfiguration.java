@@ -1310,8 +1310,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             {
                 if (txtNode == null)
                 {
-                    String newValue = isDelimiterParsingDisabled() ? value.toString() :
-                        PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
+                    String newValue = isDelimiterParsingDisabled() ? value.toString()
+                        : PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
                     txtNode = document.createTextNode(newValue);
                     if (((Element) getReference()).getFirstChild() != null)
                     {
@@ -1325,8 +1325,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 }
                 else
                 {
-                    String newValue = isDelimiterParsingDisabled() ? value.toString() :
-                        PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
+                    String newValue = isDelimiterParsingDisabled() ? value.toString()
+                        : PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
                     txtNode.setNodeValue(newValue);
                 }
             }
@@ -1503,8 +1503,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                         {
                             buf.append(delimiter);
                         }
-                        String value = isAttributeSplittingDisabled ? attr.getValue().toString() :
-                            PropertyConverter.escapeDelimiters(attr.getValue().toString(),
+                        String value = isAttributeSplittingDisabled ? attr.getValue().toString()
+                            : PropertyConverter.escapeDelimiters(attr.getValue().toString(),
                                     delimiter);
                         buf.append(value);
                     }

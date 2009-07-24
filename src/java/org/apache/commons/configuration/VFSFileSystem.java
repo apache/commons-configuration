@@ -24,13 +24,8 @@ import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.UserAuthenticator;
 import org.apache.commons.vfs.FileSystemConfigBuilder;
-import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.UriParser;
-import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
-import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,44 +47,8 @@ import java.lang.reflect.Method;
  */
 public class VFSFileSystem extends DefaultFileSystem
 {
-    /** The builder for Webdav options */
-    private final WebdavFileSystemConfigBuilder webdavBuilder;
-
-    /** The builder for Http optiosn */
-    private final HttpFileSystemConfigBuilder httpBuilder;
-
     public VFSFileSystem()
     {
-        WebdavFileSystemConfigBuilder wb = null;
-        try
-        {
-            FileSystemManager manager = VFS.getManager();
-            if (manager.hasProvider("webdav"))
-            {
-                wb = (WebdavFileSystemConfigBuilder) manager.getFileSystemConfigBuilder("webdav");
-            }
-        }
-        catch (FileSystemException e)
-        {
-            // Just ignore the error. Webdav won't have options.
-            wb = null;
-        }
-        webdavBuilder = wb;
-        HttpFileSystemConfigBuilder hb = null;
-        try
-        {
-            FileSystemManager manager = VFS.getManager();
-            if (manager.hasProvider("http"))
-            {
-                hb = (HttpFileSystemConfigBuilder) manager.getFileSystemConfigBuilder("http");
-            }
-        }
-        catch (FileSystemException e)
-        {
-            // Just ignore the error http won't have options.
-            hb = null;
-        }
-        httpBuilder = hb;
     }
 
     public InputStream getInputStream(String basePath, String fileName)
@@ -111,8 +70,8 @@ public class VFSFileSystem extends DefaultFileSystem
                 path = manager.resolveName(base, file.getBaseName());
             }
             FileSystemOptions opts = getOptions(path.getScheme());
-            FileObject file = (opts == null) ? manager.resolveFile(path.getURI()) :
-                    manager.resolveFile(path.getURI(), opts);
+            FileObject file = (opts == null) ? manager.resolveFile(path.getURI())
+                    : manager.resolveFile(path.getURI(), opts);
             FileContent content = file.getContent();
             if (content == null)
             {
@@ -137,8 +96,8 @@ public class VFSFileSystem extends DefaultFileSystem
         try
         {
             FileSystemOptions opts = getOptions(url.getProtocol());
-            file = (opts == null) ? VFS.getManager().resolveFile(url.toString()) :
-                    VFS.getManager().resolveFile(url.toString(), opts);
+            file = (opts == null) ? VFS.getManager().resolveFile(url.toString())
+                    : VFS.getManager().resolveFile(url.toString(), opts);
             if (file.getType() != FileType.FILE)
             {
                 throw new ConfigurationException("Cannot load a configuration from a directory");
@@ -164,8 +123,8 @@ public class VFSFileSystem extends DefaultFileSystem
         {
             FileSystemOptions opts = getOptions(url.getProtocol());
             FileSystemManager fsManager = VFS.getManager();
-            FileObject file = (opts == null) ? fsManager.resolveFile(url.toString()) :
-                    fsManager.resolveFile(url.toString(), opts);
+            FileObject file = (opts == null) ? fsManager.resolveFile(url.toString())
+                    : fsManager.resolveFile(url.toString(), opts);
             // throw an exception if the target URL is a directory
             if (file == null || file.getType() == FileType.FOLDER)
             {
@@ -315,8 +274,8 @@ public class VFSFileSystem extends DefaultFileSystem
             {
                 String scheme = UriParser.extractScheme(basePath);
                 FileSystemOptions opts = (scheme != null) ? getOptions(scheme) : null;
-                FileObject base = (opts == null) ? fsManager.resolveFile(basePath) :
-                        fsManager.resolveFile(basePath, opts);
+                FileObject base = (opts == null) ? fsManager.resolveFile(basePath)
+                        : fsManager.resolveFile(basePath, opts);
                 if (base.getType() == FileType.FILE)
                 {
                     base = base.getParent();
@@ -327,8 +286,8 @@ public class VFSFileSystem extends DefaultFileSystem
             else
             {
                 FileSystemOptions opts = (fileScheme != null) ? getOptions(fileScheme) : null;
-                file = (opts == null) ? fsManager.resolveFile(fileName) :
-                        fsManager.resolveFile(fileName, opts);
+                file = (opts == null) ? fsManager.resolveFile(fileName)
+                        : fsManager.resolveFile(fileName, opts);
             }
 
             if (!file.exists())
@@ -387,6 +346,7 @@ public class VFSFileSystem extends DefaultFileSystem
                 catch (Exception ex)
                 {
                     // Ignore an incorrect property.
+                    continue;
                 }
             }
             if (count > 0)
@@ -401,7 +361,7 @@ public class VFSFileSystem extends DefaultFileSystem
     private void setProperty(FileSystemConfigBuilder builder, FileSystemOptions options,
                              String key, Object value)
     {
-        String methodName = "set" + key.substring(0,1).toUpperCase() + key.substring(1);
+        String methodName = "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
         Class[] paramTypes = new Class[2];
         paramTypes[0] = FileSystemOptions.class;
         paramTypes[1] = value.getClass();

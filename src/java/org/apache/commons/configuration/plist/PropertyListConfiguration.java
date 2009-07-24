@@ -297,7 +297,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         {
             out.println();
             out.print(padding + "{ };");
-            
+
             // line feed if the dictionary is not in an array
             if (node.getParentNode() != null)
             {
