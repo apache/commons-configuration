@@ -24,11 +24,8 @@ import org.apache.commons.vfs.FileContent;
 import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.vfs.FileType;
 import org.apache.commons.vfs.FileSystemOptions;
-import org.apache.commons.vfs.UserAuthenticator;
-import org.apache.commons.vfs.impl.DefaultFileSystemConfigBuilder;
+import org.apache.commons.vfs.FileSystemConfigBuilder;
 import org.apache.commons.vfs.provider.UriParser;
-import org.apache.commons.vfs.provider.http.HttpFileSystemConfigBuilder;
-import org.apache.commons.vfs.provider.webdav.WebdavFileSystemConfigBuilder;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -39,6 +36,7 @@ import java.net.URLStreamHandler;
 import java.net.MalformedURLException;
 import java.net.URLConnection;
 import java.util.Map;
+import java.lang.reflect.Method;
 
 /**
  * FileSystem that uses Commons VFS
@@ -48,44 +46,8 @@ import java.util.Map;
  */
 public class VFSFileSystem extends DefaultFileSystem
 {
-    /** The builder for Webdav options */
-    private final WebdavFileSystemConfigBuilder webdavBuilder;
-
-    /** The builder for Http optiosn */
-    private final HttpFileSystemConfigBuilder httpBuilder;
-
     public VFSFileSystem()
     {
-        WebdavFileSystemConfigBuilder wb = null;
-        try
-        {
-            FileSystemManager manager = VFS.getManager();
-            if (manager.hasProvider("webdav"))
-            {
-                wb = (WebdavFileSystemConfigBuilder) manager.getFileSystemConfigBuilder("webdav");
-            }
-        }
-        catch (FileSystemException e)
-        {
-            // Just ignore the error. Webdav won't have options.
-            wb = null;
-        }
-        webdavBuilder = wb;
-        HttpFileSystemConfigBuilder hb = null;
-        try
-        {
-            FileSystemManager manager = VFS.getManager();
-            if (manager.hasProvider("http"))
-            {
-                hb = (HttpFileSystemConfigBuilder) manager.getFileSystemConfigBuilder("http");
-            }
-        }
-        catch (FileSystemException e)
-        {
-            // Just ignore the error http won't have options.
-            hb = null;
-        }
-        httpBuilder = hb;
     }
 
     public InputStream getInputStream(String basePath, String fileName)
@@ -339,98 +301,72 @@ public class VFSFileSystem extends DefaultFileSystem
     private FileSystemOptions getOptions(String scheme)
     {
         FileSystemOptions opts = new FileSystemOptions();
+        FileSystemConfigBuilder builder;
+        try
+        {
+            builder = VFS.getManager().getFileSystemConfigBuilder(scheme);
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
         FileOptionsProvider provider = getFileOptionsProvider();
         if (provider != null)
         {
             Map<String, Object> map = provider.getOptions();
-            if (scheme.equals("webdav"))
+            if (map == null)
             {
-                return setWebdavOptions(opts, map);
+                return null;
             }
-            else if (scheme.equals("http"))
+            int count = 0;
+            for (Map.Entry<String, Object> entry : map.entrySet())
             {
-                return setHttpOptions(opts, map);
+                try
+                {
+                    String key = entry.getKey();
+                    if (FileOptionsProvider.CURRENT_USER.equals(key))
+                    {
+                        key = "creatorName";
+                    }
+                    setProperty(builder, opts, key, entry.getValue());
+                    ++count;
+                }
+                catch (Exception ex)
+                {
+                    // Ignore an incorrect property.
+                    continue;
+                }
             }
-            else
-            {
-                return setDefaultOptions(opts, map);
-            }
-        }
-        return opts;
-    }
-
-    private FileSystemOptions setWebdavOptions(FileSystemOptions opts, Map<String, Object> map)
-    {
-        setHttpOptions(opts, map);
-        if (webdavBuilder == null || map == null)
-        {
-            return opts;
-        }
-        if (map.containsKey(FileOptionsProvider.VERSIONING))
-        {
-            boolean versioning = (Boolean) map.get(FileOptionsProvider.VERSIONING);
-            webdavBuilder.setVersioning(opts, versioning);
-        }
-        if (map.containsKey(FileOptionsProvider.CURRENT_USER))
-        {
-            webdavBuilder.setCreatorName(opts, (String) map.get(FileOptionsProvider.CURRENT_USER));
-        }
-        return opts;
-    }
-
-    private FileSystemOptions setHttpOptions(FileSystemOptions opts, Map<String, Object> map)
-    {
-        setDefaultOptions(opts, map);
-
-        if (httpBuilder == null || map == null)
-        {
-            return opts;
-        }
-        if (map.containsKey(FileOptionsProvider.PROXY_PORT))
-        {
-            int port = (Integer) map.get(FileOptionsProvider.PROXY_PORT);
-            httpBuilder.setProxyPort(opts, port);
-        }
-        if (map.containsKey(FileOptionsProvider.PROXY_HOST))
-        {
-            httpBuilder.setProxyHost(opts, (String) map.get(FileOptionsProvider.PROXY_HOST));
-        }
-        if (map.containsKey(FileOptionsProvider.MAX_HOST_CONNECTIONS))
-        {
-            int max = (Integer) map.get(FileOptionsProvider.MAX_HOST_CONNECTIONS);
-            httpBuilder.setMaxConnectionsPerHost(opts, max);
-        }
-        if (map.containsKey(FileOptionsProvider.MAX_TOTAL_CONNECTIONS))
-        {
-            int max = (Integer) map.get(FileOptionsProvider.MAX_TOTAL_CONNECTIONS);
-            httpBuilder.setMaxTotalConnections(opts, max);
-        }
-        return opts;
-    }
-
-
-    private FileSystemOptions setDefaultOptions(FileSystemOptions opts, Map map)
-    {
-        DefaultFileSystemConfigBuilder builder = DefaultFileSystemConfigBuilder.getInstance();
-
-        if (builder == null || map == null)
-        {
-            return opts;
-        }
-
-        if (map.containsKey("userAuthenticator"))
-        {
-            UserAuthenticator auth = (UserAuthenticator) map.get("userAuthenticator");
-            try
-            {
-                builder.setUserAuthenticator(opts, auth);
-            }
-            catch (FileSystemException e)
+            if (count > 0)
             {
                 return opts;
             }
         }
-        return opts;
+        return null;
+
+    }
+
+    private void setProperty(FileSystemConfigBuilder builder, FileSystemOptions options,
+                             String key, Object value)
+    {
+        String methodName = "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
+        Class[] paramTypes = new Class[2];
+        paramTypes[0] = FileSystemOptions.class;
+        paramTypes[1] = value.getClass();
+
+        try
+        {
+            Method method = builder.getClass().getMethod(methodName, paramTypes);
+            Object[] params = new Object[2];
+            params[0] = options;
+            params[1] = value;
+            method.invoke(builder, params);
+        }
+        catch (Exception ex)
+        {
+            return;
+        }
+
     }
 
     /**

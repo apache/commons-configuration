@@ -579,7 +579,7 @@ public class TestFileConfiguration extends TestCase
         config.getString("test");
         config.setFileName("Not existing file");
         config.getString("test");
-        l.verify(AbstractFileConfiguration.EVENT_RELOAD, null, null);
+        l.verify(AbstractHierarchicalFileConfiguration.EVENT_RELOAD, null, null);
         assertNotNull("Exception is not set", l.getLastEvent().getCause());
     }
 

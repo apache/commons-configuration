@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 /**
  * Abstract layer to allow various types of file systems.
- * 
+ *
  * @since 1.7
  * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  */
@@ -77,7 +77,7 @@ public abstract class FileSystem
             log = Logger.getLogger(getClass().getName() + "." + hashCode());
             log.setLevel(Level.OFF);
         }
-        
+
         this.log = log;
     }
 
@@ -94,7 +94,10 @@ public abstract class FileSystem
                 if (FileSystem.class.isAssignableFrom(clazz))
                 {
                     fileSystem = (FileSystem) clazz.newInstance();
-                    System.out.println("Using " + fsClassName);
+                    if (log.isLoggable(Level.FINE))
+                    {
+                        log.fine("Using " + fsClassName);
+                    }
                 }
             }
             catch (InstantiationException ex)
