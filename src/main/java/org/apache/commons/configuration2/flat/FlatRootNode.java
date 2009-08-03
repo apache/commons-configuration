@@ -17,9 +17,11 @@
 package org.apache.commons.configuration2.flat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 
 /**
@@ -187,7 +189,7 @@ class FlatRootNode extends FlatNode
      * @return the value of this node
      */
     @Override
-    public Object getValue(AbstractFlatConfiguration config)
+    public Object getValue(Configuration config)
     {
         return null;
     }
@@ -214,7 +216,7 @@ class FlatRootNode extends FlatNode
      *         node
      */
     @Override
-    public void removeChild(AbstractFlatConfiguration config, FlatNode child)
+    public void removeChild(Configuration config, FlatNode child)
     {
         for (FlatNode c : children)
         {
@@ -223,7 +225,7 @@ class FlatRootNode extends FlatNode
                 int index = c.getValueIndex();
                 if (index != INDEX_UNDEFINED)
                 {
-                    config.clearPropertyValue(c.getName(), index);
+                    changeMultiProperty(config, c, index, null, true);
                 }
                 else
                 {
@@ -248,7 +250,7 @@ class FlatRootNode extends FlatNode
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
     @Override
-    public void setValue(AbstractFlatConfiguration config, Object value)
+    public void setValue(Configuration config, Object value)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot set the value of the root node of a flat configuration!");
@@ -290,5 +292,56 @@ class FlatRootNode extends FlatNode
         }
 
         return INDEX_UNDEFINED;
+    }
+
+    /**
+     * Changes the value of a property with multiple values. This method is
+     * called when the value of a child node was changed that occurs multiple
+     * times. It obtains the list with all values for this property, changes the
+     * value with the given index, and sets the new value.
+     *
+     * @param config the current configuration
+     * @param child the child node that was changed
+     * @param index the value index of this child node
+     * @param value the new value
+     */
+    void setMultiProperty(Configuration config, FlatNode child, int index,
+            Object value)
+    {
+        changeMultiProperty(config, child, index, value, false);
+    }
+
+    /**
+     * Helper method for manipulating a property with multiple values. A value
+     * at a given index can either be changed or removed. If the index is
+     * invalid, no change is performed.
+     *
+     * @param config the current configuration
+     * @param child the child node that was changed
+     * @param index the value index of this child node
+     * @param value the new value
+     * @param remove a flag whether the value at the index is to be removed
+     */
+    private static void changeMultiProperty(Configuration config,
+            FlatNode child, int index, Object value, boolean remove)
+    {
+        Object val = config.getProperty(child.getName());
+        if (val instanceof Collection<?>)
+        {
+            Collection<?> col = (Collection<?>) val;
+            if (col.size() > index)
+            {
+                List<Object> newValues = new ArrayList<Object>(col);
+                if (remove)
+                {
+                    newValues.remove(index);
+                }
+                else
+                {
+                    newValues.set(index, value);
+                }
+                config.setProperty(child.getName(), newValues);
+            }
+        }
     }
 }

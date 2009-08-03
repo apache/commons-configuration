@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 
 /**
@@ -165,10 +166,10 @@ class FlatLeafNode extends FlatNode
      * @return the value of the represented property
      */
     @Override
-    public Object getValue(AbstractFlatConfiguration config)
+    public Object getValue(Configuration config)
     {
         Object value = config.getProperty(getName());
-        if (value instanceof Collection)
+        if (value instanceof Collection<?>)
         {
             int valueIndex = getValueIndex();
             if (valueIndex != INDEX_UNDEFINED)
@@ -213,7 +214,7 @@ class FlatLeafNode extends FlatNode
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
     @Override
-    public void removeChild(AbstractFlatConfiguration config, FlatNode child)
+    public void removeChild(Configuration config, FlatNode child)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot remove a child from a leaf node!");
@@ -229,14 +230,14 @@ class FlatLeafNode extends FlatNode
      * @param value the new value
      */
     @Override
-    public void setValue(AbstractFlatConfiguration config, Object value)
+    public void setValue(Configuration config, Object value)
     {
         if (hasValue)
         {
             int index = getValueIndex();
             if (index != INDEX_UNDEFINED)
             {
-                config.setPropertyValue(getName(), index, value);
+                parent.setMultiProperty(config, this, index, value);
             }
             else
             {

@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.configuration2.ConfigurationRuntimeException;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.ConfigurationRuntimeException;
 
 /**
  * Test class for the FlatNode classes.
- * 
+ *
  * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
  * @version $Id$
@@ -34,7 +34,7 @@ import junit.framework.TestCase;
 public class TestFlatNodes extends TestCase
 {
     /** Constant for the name of the test node. */
-    private static final String NAME = FlatConfigurationMockImpl.NAME;
+    private static final String NAME = "testFlatNode";
 
     /** Constant for a test value. */
     static final Object VALUE = 42;
@@ -148,8 +148,8 @@ public class TestFlatNodes extends TestCase
      */
     public void testGetValueSimple()
     {
-        FlatConfigurationMockImpl conf = new FlatConfigurationMockImpl();
-        conf.property = VALUE;
+        BaseConfiguration conf = new BaseConfiguration();
+        conf.setProperty(NAME, VALUE);
         assertEquals("Wrong property value", VALUE, node.getValue(conf));
     }
 
@@ -159,10 +159,10 @@ public class TestFlatNodes extends TestCase
      */
     public void testGetValueCollectionNoIndex()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         Collection<Object> values = new ArrayList<Object>();
         values.add(VALUE);
-        config.property = values;
+        config.addPropertyDirect(NAME, values);
         assertSame("Wrong value collection", values, node.getValue(config));
     }
 
@@ -171,11 +171,11 @@ public class TestFlatNodes extends TestCase
      */
     public void testGetValueCollection()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         Collection<Object> values = new ArrayList<Object>();
         values.add(VALUE);
         values.add(2);
-        config.property = values;
+        config.setProperty(NAME, values);
         FlatNode c2 = parent.addChild(NAME);
         assertEquals("Wrong value index 1", VALUE, node.getValue(config));
         assertEquals("Wrong value index 2", 2, c2.getValue(config));
@@ -187,10 +187,10 @@ public class TestFlatNodes extends TestCase
      */
     public void testGetValueCollectionInvalidIndex()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
-        Collection<Object> values = new ArrayList<Object>();
-        values.add(VALUE);
-        config.property = values;
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        config.addProperty(NAME, 2);
+        parent.addChild(NAME);
         FlatNode c2 = parent.addChild(NAME);
         assertNull("Found value for invalid index", c2.getValue(config));
     }
@@ -200,10 +200,9 @@ public class TestFlatNodes extends TestCase
      */
     public void testSetValueNew()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
-        config.expectAdd = true;
+        BaseConfiguration config = new BaseConfiguration();
         node.setValue(config, VALUE);
-        assertEquals("Value was not set", VALUE, config.property);
+        assertEquals("Value was not set", VALUE, config.getProperty(NAME));
     }
 
     /**
@@ -211,13 +210,12 @@ public class TestFlatNodes extends TestCase
      */
     public void testSetValueExisting()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         // remove node, so that there is only a single child with this name
         parent.removeChild(config, node);
-        config.expectedIndex = FlatNode.INDEX_UNDEFINED;
         FlatNode child = parent.addChild(NAME, true);
         child.setValue(config, VALUE);
-        assertEquals("Value was not set", VALUE, config.property);
+        assertEquals("Value was not set", VALUE, config.getProperty(NAME));
     }
 
     /**
@@ -225,11 +223,48 @@ public class TestFlatNodes extends TestCase
      */
     public void testSetValueCollection()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, 1);
+        config.addProperty(NAME, 2);
         FlatNode child = parent.addChild(NAME, true);
-        config.expectedIndex = 1;
         child.setValue(config, VALUE);
-        assertEquals("Value was not set", VALUE, config.property);
+        List<?> values = config.getList(NAME);
+        assertEquals("Wrong number of values", 2, values.size());
+        assertEquals("Wrong value 1", 1, values.get(0));
+        assertEquals("Wrong value 2", VALUE, values.get(1));
+    }
+
+    /**
+     * Tests the modification of a property with multiple values if an invalid
+     * value index is involved. This case should not happen normally. No
+     * modification should be performed.
+     */
+    public void testSetValueCollectionInvalidIndex()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        config.addProperty(NAME, 2);
+        parent.addChild(NAME, true);
+        FlatNode child = parent.addChild(NAME, true);
+        child.setValue(config, "new");
+        List<?> values = config.getList(NAME);
+        assertEquals("Wrong number of values", 2, values.size());
+        assertEquals("Wrong value 0", VALUE, values.get(0));
+        assertEquals("Wrong value 1", 2, values.get(1));
+    }
+
+    /**
+     * Tests the modification of a property with multiple values if the configuration
+     * does not return a collection. This should normally not happen. In this
+     * case no modification should be performed.
+     */
+    public void testSetValueCollectionInvalidValue()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        FlatNode child = parent.addChild(NAME, true);
+        child.setValue(config, "new");
+        assertEquals("Value was changed", VALUE, config.getProperty(NAME));
     }
 
     /**
@@ -238,14 +273,14 @@ public class TestFlatNodes extends TestCase
      */
     public void testSetValueNewAndExisting()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
-        config.expectAdd = true;
+        BaseConfiguration config = new BaseConfiguration();
+        config.setProperty(NAME, 1);
         node.setValue(config, VALUE);
-        assertEquals("Value was not set", VALUE, config.property);
-        config.expectAdd = false;
-        config.expectedIndex = FlatNode.INDEX_UNDEFINED;
+        List<?> values = config.getList(NAME);
+        assertEquals("Value was not added", 2, values.size());
+        assertEquals("Wrong value", VALUE, values.get(1));
         node.setValue(config, "new");
-        assertEquals("Value was not changed", "new", config.property);
+        assertEquals("Value was not changed", "new", config.getProperty(NAME));
     }
 
     /**
@@ -254,12 +289,10 @@ public class TestFlatNodes extends TestCase
      */
     public void testRemoveChild()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
         parent.removeChild(config, node);
-        assertTrue("Clear was not called", config.clearProperty);
-        assertEquals("Wrong index", FlatNode.INDEX_UNDEFINED,
-                config.expectedIndex);
-        assertTrue("Child was not removed", parent.getChildren().isEmpty());
+        assertFalse("Property not removed", config.containsKey(NAME));
     }
 
     /**
@@ -267,13 +300,61 @@ public class TestFlatNodes extends TestCase
      */
     public void testRemoveChildCollection()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, new Object[] { 1, 2, 3 });
+        FlatNode n2 = parent.addChild(NAME, true);
         parent.addChild(NAME, true);
-        parent.removeChild(config, node);
-        assertTrue("Clear was not called", config.clearProperty);
-        assertEquals("Wrong index", 0, config.expectedIndex);
-        assertEquals("Child was not removed", 1, parent.getChildren(NAME)
-                .size());
+        parent.removeChild(config, n2);
+        List<?> values = config.getList(NAME);
+        assertEquals("Wrong number of values", 2, values.size());
+        assertEquals("Wrong value 1", 1, values.get(0));
+        assertEquals("Wrong value 2", 3, values.get(1));
+    }
+
+    /**
+     * Tests the behavior of removeChild() if after the operation only a single
+     * collection element remains.
+     */
+    public void testRemoveChildCollectionSingleElement()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        config.addProperty(NAME, 2);
+        FlatNode n2 = parent.addChild(NAME, true);
+        parent.removeChild(config, n2);
+        assertEquals("Wrong value", VALUE, config.getProperty(NAME));
+    }
+
+    /**
+     * Tests removeChild() if the child has an invalid index. This should
+     * normally not happen. In this case no modification should be performed.
+     */
+    public void testRemoveChildCollectionInvalidIndex()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        config.addProperty(NAME, 2);
+        parent.addChild(NAME, true);
+        FlatNode n2 = parent.addChild(NAME, true);
+        parent.removeChild(config, n2);
+        List<?> values = config.getList(NAME);
+        assertEquals("Wrong number of values", 2, values.size());
+        assertEquals("Wrong value 1", VALUE, values.get(0));
+        assertEquals("Wrong value 2", 2, values.get(1));
+    }
+
+    /**
+     * Tests removeChild() for a property with multiple values if the
+     * configuration does not return a collection. This should normally not
+     * happen. In this case no modification should be performed.
+     */
+    public void testRemoveChildeCollectionInvalidValue()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(NAME, VALUE);
+        FlatNode n2 = parent.addChild(NAME, true);
+        parent.removeChild(config, n2);
+        assertEquals("Wrong value", VALUE, config.getProperty(NAME));
     }
 
     /**
@@ -283,7 +364,7 @@ public class TestFlatNodes extends TestCase
     public void testRemoveChildWrongParent()
     {
         FlatLeafNode child = new FlatLeafNode(null, "test", true);
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         try
         {
             parent.removeChild(config, child);
@@ -316,7 +397,7 @@ public class TestFlatNodes extends TestCase
      */
     public void testRemoveChildLeaf()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         try
         {
             node.removeChild(config, parent);
@@ -444,7 +525,7 @@ public class TestFlatNodes extends TestCase
      */
     public void testGetValueRoot()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         assertNull("Wrong value of root node", parent.getValue(config));
     }
 
@@ -454,7 +535,7 @@ public class TestFlatNodes extends TestCase
      */
     public void testSetValueRoot()
     {
-        FlatConfigurationMockImpl config = new FlatConfigurationMockImpl();
+        BaseConfiguration config = new BaseConfiguration();
         try
         {
             parent.setValue(config, VALUE);

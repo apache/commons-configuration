@@ -18,6 +18,7 @@ package org.apache.commons.configuration2.flat;
 
 import java.util.List;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 
 /**
@@ -77,7 +78,7 @@ public abstract class FlatNode
      * @param config the owning configuration
      * @return the value of this node
      */
-    public abstract Object getValue(AbstractFlatConfiguration config);
+    public abstract Object getValue(Configuration config);
 
     /**
      * Sets the value of this node. An implementation can access the passed in
@@ -87,7 +88,7 @@ public abstract class FlatNode
      * @param value the new value
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
-    public abstract void setValue(AbstractFlatConfiguration config, Object value);
+    public abstract void setValue(Configuration config, Object value);
 
     /**
      * Returns the index of the value represented by this node. This is needed
@@ -160,6 +161,5 @@ public abstract class FlatNode
      * @param child the child to be removed
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
-    public abstract void removeChild(AbstractFlatConfiguration config,
-            FlatNode child);
+    public abstract void removeChild(Configuration config, FlatNode child);
 }
