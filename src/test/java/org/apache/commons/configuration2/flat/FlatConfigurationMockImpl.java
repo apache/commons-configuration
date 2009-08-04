@@ -48,9 +48,6 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
     /** Stores the value of the test property. */
     Object property;
 
-    /** Stores the expected index. */
-    int expectedIndex;
-
     /** A flag whether an add property operation is expected. */
     boolean expectAdd;
 
@@ -66,33 +63,18 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
     }
 
     @Override
-    public boolean clearPropertyValueDirect(String key, int index)
+    public void clearPropertyDirect(String key)
     {
         TestFlatNodes.assertEquals("Wrong property key", NAME, key);
         clearProperty = true;
-        expectedIndex = index;
-        return true;
-    }
-
-    @Override
-    public void clearPropertyDirect(String key)
-    {
-        clearPropertyValue(key, FlatNode.INDEX_UNDEFINED);
-    }
-
-    @Override
-    public void setPropertyValueDirect(String key, int index, Object value)
-    {
-        TestFlatNodes.assertFalse("Add operation expected", expectAdd);
-        TestFlatNodes.assertEquals("Wrong property key", NAME, key);
-        TestFlatNodes.assertEquals("Wrong index", expectedIndex, index);
-        property = value;
     }
 
     @Override
     public void setProperty(String key, Object value)
     {
-        setPropertyValue(key, FlatNode.INDEX_UNDEFINED, value);
+        TestFlatNodes.assertFalse("Add operation expected", expectAdd);
+        TestFlatNodes.assertEquals("Wrong property key", NAME, key);
+        property = value;
     }
 
     @Override

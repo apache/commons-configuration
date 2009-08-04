@@ -23,7 +23,6 @@ import java.io.StringWriter;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
 
 /**
  * Test class for PropertiesConfigurationLayout.
@@ -321,7 +320,7 @@ public class TestPropertiesConfigurationLayout extends TestCase
     public void testEventChangeNonExisting()
     {
         ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractFlatConfiguration.EVENT_PROPERTY_CHANGED, TEST_KEY,
+                AbstractConfiguration.EVENT_SET_PROPERTY, TEST_KEY,
                 TEST_VALUE, false);
         layout.configurationChanged(event);
         assertTrue("New property was not found", layout.getKeys().contains(

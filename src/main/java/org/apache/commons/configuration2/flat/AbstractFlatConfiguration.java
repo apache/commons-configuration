@@ -18,7 +18,6 @@ package org.apache.commons.configuration2.flat;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -66,13 +65,6 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  */
 public abstract class AbstractFlatConfiguration extends AbstractConfiguration
 {
-    /**
-     * Constant for the property change event. This event is triggered by
-     * <code>setPropertyValue()</code> and <code>clearPropertyValue()</code>,
-     * which manipulate a value of a property with multiple values.
-     */
-    public static final int EVENT_PROPERTY_CHANGED = 9;
-
     /** Stores the <code>NodeHandler</code> used by this configuration. */
     private FlatNodeHandler nodeHandler;
 
@@ -101,73 +93,6 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     public NodeHandler<FlatNode> getNodeHandler()
     {
         return nodeHandler;
-    }
-
-    /**
-     * Modifies a specific value of a property with multiple values. If a
-     * property has multiple values, this method can be used to alter a specific
-     * value (identified by its 0-based index) without affecting the other
-     * values. If the index is invalid (i.e. less than 0 or greater than the
-     * number of existing values), the value will be added to the existing
-     * values of this property. Note that this method expects a scalar value
-     * rather than an array or a collection. In the latter case the behavior is
-     * undefined and may vary for different derived classes. This method takes
-     * care of firing the appropriate events and delegates to
-     * <code>setPropertyValueDirect()</code>. It generates a
-     * <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
-     * affected property.
-     *
-     * @param key the key of the property
-     * @param index the index of the value to change
-     * @param value the new value; this should be a simple object; arrays or
-     *        collections won't be treated specially, but directly added
-     */
-    public void setPropertyValue(String key, int index, Object value)
-    {
-        fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
-        setDetailEvents(true);
-        try
-        {
-            setPropertyValueDirect(key, index, value);
-        }
-        finally
-        {
-            setDetailEvents(false);
-        }
-        fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
-    }
-
-    /**
-     * Removes a specific value of a property with multiple values. If a
-     * property has multiple values, this method can be used for removing a
-     * single value (identified by its 0-based index). If the index is out of
-     * range, no action is performed; in this case <b>false</b> is returned.
-     * This method takes care of firing the appropriate events and delegates to
-     * <code>clearPropertyValueDirect()</code>. It generates a
-     * <code>EVENT_PROPERTY_CHANGED</code> event that contains the key of the
-     * affected property.
-     *
-     * @param key the key of the property
-     * @param index the index of the value to delete
-     * @return a flag whether the value could be removed
-     */
-    public boolean clearPropertyValue(String key, int index)
-    {
-        fireEvent(EVENT_PROPERTY_CHANGED, key, null, true);
-
-        boolean result = false;
-        setDetailEvents(true);
-        try
-        {
-            result = clearPropertyValueDirect(key, index);
-        }
-        finally
-        {
-            setDetailEvents(false);
-        }
-
-        fireEvent(EVENT_PROPERTY_CHANGED, key, null, false);
-        return result;
     }
 
     /**
@@ -240,7 +165,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
         {
             return -1;
         }
-        else if (value instanceof Collection)
+        else if (value instanceof Collection<?>)
         {
             return ((Collection<?>) value).size() - 1;
         }
@@ -295,89 +220,11 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Performs the actual modification of the specified property value. This
-     * method is called by <code>setPropertyValue()</code>. The base
-     * implementation provided by this class uses {@code getProperty()} for
-     * obtaining the current value(s) of the specified property. If the property
-     * does not exist or the index is invalid, the value is added as if
-     * <code>addProperty()</code> was called. If the property has a single
-     * value, the passed in index determines what happens: if it is 0, the
-     * single value is replaced by the new one; all other indices cause the new
-     * value to be added to the old one. The method delegates to {@code
-     * setProperty()} or {@code addPropertyDirect()} for storing the new
-     * property value. Derived classes should override it if they can provide a
-     * more efficient implementation.
-     *
-     * @param key the key of the property
-     * @param index the index of the value to change
-     * @param value the new value
-     */
-    protected void setPropertyValueDirect(String key, int index, Object value)
-    {
-        Object oldValue = getProperty(key);
-
-        if (oldValue instanceof List)
-        {
-            @SuppressWarnings("unchecked")
-            List<Object> col = (List<Object>) oldValue;
-            if (index >= 0 && index < col.size())
-            {
-                col.set(index, value);
-                setProperty(key, col);
-            }
-            else
-            {
-                addPropertyDirect(key, value);
-            }
-        }
-
-        else if (oldValue == null || index != 0)
-        {
-            addPropertyDirect(key, value);
-        }
-        else
-        {
-            setProperty(key, value);
-        }
-    }
-
-    /**
      * Initializes the node handler of this configuration.
      */
     private void initNodeHandler()
     {
         nodeHandler = new FlatNodeHandler(this);
-    }
-
-    /**
-     * Performs the actual remove property value operation. This method is
-     * called by <code>clearPropertyValue()</code>. The base implementation
-     * provided by this class uses {@code getProperty()} for obtaining the
-     * value(s) of the property. If there are multiple values and the index is
-     * in the allowed range, the value with the given index is removed, and the
-     * new values are stored using {@code setProperty()}. Derived classes should
-     * override this method if they can provide a more efficient implementation.
-     *
-     * @param key the key of the property
-     * @param index the index of the value to delete
-     * @return a flag whether the value could be removed
-     */
-    protected boolean clearPropertyValueDirect(String key, int index)
-    {
-        Object value = getProperty(key);
-
-        if (value instanceof List && index >= 0)
-        {
-            List<?> col = (List<?>) value;
-            if (index < col.size())
-            {
-                col.remove(index);
-                setProperty(key, col);
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

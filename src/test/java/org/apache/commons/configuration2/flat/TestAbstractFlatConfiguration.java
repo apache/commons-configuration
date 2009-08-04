@@ -20,9 +20,6 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.event.ConfigurationListener;
-
 import junit.framework.TestCase;
 
 /**
@@ -204,28 +201,6 @@ public class TestAbstractFlatConfiguration extends TestCase
     }
 
     /**
-     * Tests whether setPropertyValue() sends the expected events.
-     */
-    public void testSetPropertyValueEvents()
-    {
-        ConfigPropertyChangeListener l = new ConfigPropertyChangeListener();
-        config.addConfigurationListener(l);
-        config.setPropertyValue(FlatConfigurationMockImpl.NAME, 0, "newValue");
-        l.verify();
-    }
-
-    /**
-     * Tests whether clearPropertyValue() sends the expected events.
-     */
-    public void testClearPropertyValueEvents()
-    {
-        ConfigPropertyChangeListener l = new ConfigPropertyChangeListener();
-        config.addConfigurationListener(l);
-        config.clearPropertyValue(FlatConfigurationMockImpl.NAME, 0);
-        l.verify();
-    }
-
-    /**
      * Tests cloning a flat configuration. We have to check whether the event
      * listeners are correctly registered.
      */
@@ -240,48 +215,7 @@ public class TestAbstractFlatConfiguration extends TestCase
         prepareGetRootNode(copy, 2);
         FlatNode root = copy.getRootNode();
         checkNodeStructure(root);
-        copy.clearPropertyValue(FlatConfigurationMockImpl.NAME, 0);
+        copy.clearProperty(FlatConfigurationMockImpl.NAME);
         assertNotSame("Structure was not re-created", root, copy.getRootNode());
-    }
-
-    /**
-     * A test event listener implementation for testing the events received for
-     * a manipulation of a property value.
-     */
-    private class ConfigPropertyChangeListener implements ConfigurationListener
-    {
-        /** The number of received before events. */
-        private int beforeCount;
-
-        /** The number of received after events. */
-        private int afterCount;
-
-        public void configurationChanged(ConfigurationEvent event)
-        {
-            assertEquals("Wrong event type",
-                    AbstractFlatConfiguration.EVENT_PROPERTY_CHANGED, event
-                            .getType());
-            assertEquals("Wrong event source", config, event.getSource());
-            assertEquals("Wrong property name", FlatConfigurationMockImpl.NAME,
-                    event.getPropertyName());
-            assertNull("Value not null", event.getPropertyValue());
-            if (event.isBeforeUpdate())
-            {
-                beforeCount++;
-            }
-            else
-            {
-                afterCount++;
-            }
-        }
-
-        /**
-         * Tests whether the expected events were received.
-         */
-        public void verify()
-        {
-            assertEquals("Wrong number of before events", 1, beforeCount);
-            assertEquals("Wrong number of after events", 1, afterCount);
-        }
     }
 }
