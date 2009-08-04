@@ -18,11 +18,12 @@ package org.apache.commons.configuration2.flat;
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for FlatNodeHandler.
@@ -38,11 +39,14 @@ public class TestFlatNodeHandler extends TestCase
             "child1", "anotherChild", "differentChild", "child1", "againAChild"
     };
 
+    /** Constant for the name of a test property. */
+    private static final String NAME = "testProperty";
+
     /** The node handler to be tested. */
     private FlatNodeHandler handler;
 
     /** The mock configuration associated with the node handler. */
-    private FlatConfigurationMockImpl config;
+    private AbstractConfiguration config;
 
     /** Stores the internal update flag of the node handler. */
     private Boolean internalUpdate;
@@ -51,7 +55,7 @@ public class TestFlatNodeHandler extends TestCase
     protected void setUp() throws Exception
     {
         super.setUp();
-        config = new FlatConfigurationMockImpl();
+        config = new BaseConfiguration();
         config.clearConfigurationListeners();
         config.addConfigurationListener(new ConfigurationListener()
         {
@@ -191,12 +195,11 @@ public class TestFlatNodeHandler extends TestCase
     public void testAddChild()
     {
         FlatNode node = setUpTestNode();
-        final String childName = FlatConfigurationMockImpl.NAME;
-        FlatNode child = handler.addChild(node, childName);
-        assertEquals("Wrong name of child", childName, child.getName());
-        config.expectAdd = true;
+        FlatNode child = handler.addChild(node, NAME);
+        assertEquals("Wrong name of child", NAME, child.getName());
+        assertTrue("Config not empty", config.isEmpty());
         child.setValue(config, TestFlatNodes.VALUE);
-        assertEquals("Value not added", TestFlatNodes.VALUE, config.property);
+        assertEquals("Value not added", TestFlatNodes.VALUE, config.getProperty(NAME));
         checkUpdate(false);
     }
 
@@ -206,12 +209,13 @@ public class TestFlatNodeHandler extends TestCase
     public void testRemoveChild()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
+        config.setProperty(NAME, "test");
+        FlatNode child = node.addChild(NAME);
         handler.removeChild(node, child);
         List<FlatNode> children = node.getChildren();
         assertEquals("No child removed", CHILD_NAMES.length, children.size());
         assertFalse("Child still found", children.contains(child));
-        assertTrue("Configuration not removed", config.clearProperty);
+        assertFalse("Property not removed", config.containsKey(NAME));
         checkUpdate(true);
     }
 
@@ -221,11 +225,10 @@ public class TestFlatNodeHandler extends TestCase
     public void testSetValue()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
-        config.expectAdd = true;
+        FlatNode child = node.addChild(NAME);
         handler.setValue(child, TestFlatNodes.VALUE);
         assertEquals("Property not added to config", TestFlatNodes.VALUE,
-                config.property);
+                config.getProperty(NAME));
         checkUpdate(true);
     }
 
@@ -235,8 +238,9 @@ public class TestFlatNodeHandler extends TestCase
     public void testGetValue()
     {
         FlatNode node = setUpTestNode();
-        FlatNode child = node.addChild(FlatConfigurationMockImpl.NAME);
-        config.property = TestFlatNodes.VALUE;
+        config.setProperty(NAME, TestFlatNodes.VALUE);
+        checkUpdate(false);
+        FlatNode child = node.addChild(NAME);
         assertEquals("Wrong value of node", TestFlatNodes.VALUE, handler
                 .getValue(child));
     }

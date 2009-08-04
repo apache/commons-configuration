@@ -19,6 +19,7 @@ package org.apache.commons.configuration2.flat;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.expr.AbstractNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
@@ -60,8 +61,8 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  */
 class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
 {
-    /** Stores the associated flat configuration. */
-    private AbstractFlatConfiguration configuration;
+    /** Stores the associated configuration. */
+    private final Configuration configuration;
 
     /**
      * A flag whether an update of the configuration was caused by an operation
@@ -75,7 +76,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      *
      * @param config the configuration
      */
-    public FlatNodeHandler(AbstractFlatConfiguration config)
+    public FlatNodeHandler(Configuration config)
     {
         configuration = config;
     }
@@ -85,7 +86,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      *
      * @return the associated configuration
      */
-    public AbstractFlatConfiguration getConfiguration()
+    public Configuration getConfiguration()
     {
         return configuration;
     }
