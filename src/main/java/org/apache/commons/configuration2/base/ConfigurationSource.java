@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration2.base;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 /**
@@ -120,16 +119,6 @@ public interface ConfigurationSource
     void setProperty(String key, Object value);
 
     /**
-     * Sets multiple values for a property. Any previously set values will be
-     * replaced. The new value of this property will be constructed from all
-     * values stored in the given collection.
-     *
-     * @param key the key of the property to change
-     * @param values a collection with the new values of this property
-     */
-    void setProperty(String key, Collection<?> values);
-
-    /**
      * Removes a property from the configuration.
      *
      * @param key the key to remove along with corresponding value.
@@ -220,4 +209,34 @@ public interface ConfigurationSource
      * @see #getProperty(String)
      */
     int valueCount(String key);
+
+    /**
+     * Adds a {@code ConfigurationSourceListener} for this {@code
+     * ConfigurationSource}. This listener will be notified about manipulations
+     * on this source. Support for event listeners is optional. An
+     * implementation can throw an {@code UnsupportedOperationException}
+     * exception. By using a wrapper that supports event notifications it is
+     * possible to monitor such a {@code ConfigurationSource}.
+     *
+     * @param l the listener to be added (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the listener is <b>null</b>
+     * @throws UnsupportedOperationException if this operation is not
+     *         implemented
+     */
+    void addConfigurationSourceListener(ConfigurationSourceListener l);
+
+    /**
+     * Removes the specified {@code ConfigurationSourceListener} from this
+     * {@code ConfigurationSource}. It will not receive notifications about
+     * changes on this source any more. The return value indicates whether the
+     * listener existed and could be removed. As was pointed out for
+     * {@link #addConfigurationSourceListener(ConfigurationSourceListener)},
+     * this is an optional operation.
+     *
+     * @param l the listener to be removed
+     * @return a flag whether the listener could be removed
+     * @throws UnsupportedOperationException if this operation is not
+     *         implemented
+     */
+    boolean removeConfigurationSourceListener(ConfigurationSourceListener l);
 }

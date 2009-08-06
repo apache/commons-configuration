@@ -276,7 +276,7 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
                 Object value = nodes.getValue(i, getNodeHandler());
                 if (value != null)
                 {
-                    if (nodes.isAttribute(i) && value instanceof Collection)
+                    if (nodes.isAttribute(i) && value instanceof Collection<?>)
                     {
                         // there may be multiple values
                         list.addAll((Collection<?>) value);
@@ -413,7 +413,7 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
         for (int index = 0; index < nodes.size(); index++)
         {
             Object value = nodes.getValue(index, getNodeHandler());
-            if (value instanceof Collection)
+            if (value instanceof Collection<?>)
             {
                 // if there are multiple values, count them all
                 cnt += ((Collection<?>) value).size();
@@ -447,6 +447,34 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
         }
 
         doVisit((node == null) ? getRootNode() : node, visitor);
+    }
+
+    /**
+     * Adds a listener to this configuration source. This implementation does
+     * not support event notifications, so an exception is thrown.
+     *
+     * @param l the listener to be added
+     * @throws UnsupportedOperationException because this operation is not
+     *         supported
+     */
+    public void addConfigurationSourceListener(ConfigurationSourceListener l)
+    {
+        throw new UnsupportedOperationException("Not implemented!");
+    }
+
+    /**
+     * Removes a listener from this configuration source. This implementation
+     * does not support event notifications, so an exception is thrown.
+     *
+     * @param l the listener to be removed
+     * @return a flag whether the listener could be removed
+     * @throws UnsupportedOperationException because this operation is not
+     *         supported
+     */
+    public boolean removeConfigurationSourceListener(
+            ConfigurationSourceListener l)
+    {
+        throw new UnsupportedOperationException("Not implemented!");
     }
 
     /**
@@ -683,7 +711,7 @@ public abstract class AbstractHierarchicalConfigurationSource<T> implements
             for (String attr : handler.getAttributes(node))
             {
                 Object value = handler.getAttributeValue(node, attr);
-                if (value instanceof Collection)
+                if (value instanceof Collection<?>)
                 {
                     count += ((Collection<?>) value).size();
                 }
