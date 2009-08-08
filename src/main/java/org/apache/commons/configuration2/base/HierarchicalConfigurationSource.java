@@ -17,22 +17,33 @@
 package org.apache.commons.configuration2.base;
 
 import org.apache.commons.configuration2.expr.NodeHandler;
-import org.apache.commons.configuration2.expr.NodeList;
-import org.apache.commons.configuration2.expr.NodeVisitor;
 
 /**
  * <p>
- * A specialized {@code ConfigurationSource} that organizes its data in a
- * hierarchical node structure.
+ * An interface defining a source for configuration settings that organizes its
+ * data in a hierarchical node structure.
  * </p>
  * <p>
- * This interface extends the {@code ConfigurationSource} interface by some
- * methods providing a hierarchical view on the data stored in this
- * configuration source. There is one method returning the root node of the
- * hierarchy. A {@link NodeHandler} can also be queried for performing
- * operations on the node structure. Concrete implementations can use different
- * node classes; therefore the concrete type of the nodes is determined using a
- * type parameter.
+ * This interface provides a completely different way of accessing properties
+ * than a plain configuration source using a map-like data structure. It exposes
+ * the root node of a hierarchical node structure and a {@code NodeHandler} for
+ * traversing this structure. Each node can have a value and a set of
+ * attributes. Concrete implementations can use different node classes;
+ * therefore the concrete type of the nodes is determined using a type
+ * parameter.
+ * </p>
+ * <p>
+ * This interface is pretty lean. It focuses on access to the nodes contained in
+ * this source. However, it is possible to implement sophisticated operations
+ * related to querying and manipulating configuration settings on top of it.
+ * </p>
+ * <p>
+ * The motivation and purpose for this interface are analogous to
+ * {@link ConfigurationSource}, but the organization of the data is different.
+ * Because many typical sources used for storing configuration settings are
+ * hierarchical in nature (e.g. XML documents, the Java Preferences API, or
+ * JNDI) it makes sense to have this interface for providing a uniform access to
+ * these sources.
  * </p>
  *
  * @author Commons Configuration team
@@ -40,7 +51,7 @@ import org.apache.commons.configuration2.expr.NodeVisitor;
  * @param <T> the type of the nodes used by this hierarchical configuration
  *        source
  */
-public interface HierarchicalConfigurationSource<T> extends ConfigurationSource
+public interface HierarchicalConfigurationSource<T>
 {
     /**
      * Returns the {@code NodeHandler} for dealing with the nodes used by this
@@ -72,35 +83,42 @@ public interface HierarchicalConfigurationSource<T> extends ConfigurationSource
     void setRootNode(T root);
 
     /**
-     * Evaluates the specified expression and returns a {@code NodeList} with
-     * the results. An implementation must use the current {@code
-     * ExpressionEngine} to execute the query on the hierarchical node structure
-     * maintained by this source.
+     * Removes all properties contained in this {@code
+     * HierarchicalConfigurationSource}. This is an optional operation. It can
+     * be implemented by removing the content of the root node.
      *
-     * @param expr the expression to be evaluated
-     * @return a {@code NodeList} with the results
+     * @throws UnsupportedOperationException if this operation is not
+     *         implemented
      */
-    NodeList<T> find(String expr);
+    void clear();
 
     /**
-     * Visits the specified configuration node. This method implements the
-     * traversal of the node hierarchy starting with the specified node. The
-     * passed in node can be <b>null</b>; in this case the root node is used as
-     * start node.
+     * Adds a {@code ConfigurationSourceListener} for this {@code
+     * HierarchicalConfigurationSource}. This listener will be notified about
+     * manipulations on this source. Support for event listeners is optional. An
+     * implementation can throw an {@code UnsupportedOperationException}
+     * exception.
      *
-     * @param node the node to be visited
-     * @param visitor the visitor (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the visitor is <b>null</b>
+     * @param l the listener to be added (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the listener is <b>null</b>
+     * @throws UnsupportedOperationException if this operation is not
+     *         implemented
      */
-    void visit(T node, NodeVisitor<T> visitor);
+    void addConfigurationSourceListener(ConfigurationSourceListener l);
 
     /**
-     * Removes all values of the property with the given name and of keys that
-     * start with this name. So if there is a property with the key
-     * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
-     * of {@code clearTree("foo")} would remove both properties.
+     * Removes the specified {@code ConfigurationSourceListener} from this
+     * {@code HierarchicalConfigurationSource}. It will not receive
+     * notifications about changes on this source any more. The return value
+     * indicates whether the listener existed and could be removed. As was
+     * pointed out for
+     * {@link #addConfigurationSourceListener(ConfigurationSourceListener)},
+     * this is an optional operation.
      *
-     * @param key the key of the property to be removed
+     * @param l the listener to be removed
+     * @return a flag whether the listener could be removed
+     * @throws UnsupportedOperationException if this operation is not
+     *         implemented
      */
-    void clearTree(String key);
+    boolean removeConfigurationSourceListener(ConfigurationSourceListener l);
 }
