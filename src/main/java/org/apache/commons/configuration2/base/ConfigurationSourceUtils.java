@@ -122,7 +122,7 @@ public final class ConfigurationSourceUtils
         catch (UnsupportedOperationException uoex)
         {
             Object value = source.getProperty(key);
-            if (value instanceof Collection)
+            if (value instanceof Collection<?>)
             {
                 return ((Collection<?>) value).size();
             }
