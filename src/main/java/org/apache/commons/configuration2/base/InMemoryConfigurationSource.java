@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.base;
 
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
+import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
@@ -35,9 +36,16 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class InMemoryConfigurationSource extends
-        AbstractHierarchicalConfigurationSource<ConfigurationNode>
+public class InMemoryConfigurationSource implements
+        HierarchicalConfigurationSource<ConfigurationNode>
 {
+    /**
+     * The node handler used by this configuration source class. Because {@code
+     * ConfigurationNodeHandler} is stateless an instance can be shared between
+     * all {@code InMemoryConfigurationSource} instances.
+     */
+    private static final NodeHandler<ConfigurationNode> NODE_HANDLER = new ConfigurationNodeHandler();
+
     /** Stores the root configuration node. */
     private volatile ConfigurationNode rootNode;
 
@@ -46,7 +54,6 @@ public class InMemoryConfigurationSource extends
      */
     public InMemoryConfigurationSource()
     {
-        super(new ConfigurationNodeHandler());
         rootNode = new DefaultConfigurationNode();
     }
 
@@ -68,7 +75,6 @@ public class InMemoryConfigurationSource extends
      * @param root the new root node (must not be <b>null</b>)
      * @throws IllegalArgumentException if the root node is <b>null</b>
      */
-    @Override
     public void setRootNode(ConfigurationNode root)
     {
         if (root == null)
@@ -77,5 +83,37 @@ public class InMemoryConfigurationSource extends
         }
 
         rootNode = root;
+    }
+
+    public void addConfigurationSourceListener(ConfigurationSourceListener l)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
+    /**
+     * Removes all data from this configuration source. This implementation
+     * simply creates a new, empty root node.
+     */
+    public void clear()
+    {
+        rootNode = new DefaultConfigurationNode();
+    }
+
+    /**
+     * Returns the {@code NodeHandler} used by this configuration source.
+     *
+     * @return the {@code NodeHandler}
+     */
+    public NodeHandler<ConfigurationNode> getNodeHandler()
+    {
+        return NODE_HANDLER;
+    }
+
+    public boolean removeConfigurationSourceListener(
+            ConfigurationSourceListener l)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
     }
 }
