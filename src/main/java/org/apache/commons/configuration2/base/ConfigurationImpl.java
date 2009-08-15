@@ -58,8 +58,7 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  *
  * @author Commons Configuration team
- * @version $Id: AbstractHierarchicalConfiguration.java 786440 2009-06-19
- *          10:35:01Z ebourg $
+ * @version $Id$
  * @since 2.0
  * @param <T> the type of the nodes this configuration deals with
  */
