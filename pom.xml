@@ -376,7 +376,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>*.dtd</include>
-        </includes>        
+        </includes>
       </testResource>
     </testResources>
 
@@ -387,6 +387,7 @@
           <configuration>
             <forkMode>once</forkMode>
             <excludes>
+              <exclude>**/*$*</exclude>
               <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
             </excludes>
             <additionalClasspathElements>
