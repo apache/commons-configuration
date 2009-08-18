@@ -254,9 +254,9 @@ public class TestFlatNodes extends TestCase
     }
 
     /**
-     * Tests the modification of a property with multiple values if the configuration
-     * does not return a collection. This should normally not happen. In this
-     * case no modification should be performed.
+     * Tests the modification of a property with multiple values if the
+     * configuration does not return a collection. This should normally not
+     * happen. In this case no modification should be performed.
      */
     public void testSetValueCollectionInvalidValue()
     {
@@ -301,7 +301,9 @@ public class TestFlatNodes extends TestCase
     public void testRemoveChildCollection()
     {
         BaseConfiguration config = new BaseConfiguration();
-        config.addProperty(NAME, new Object[] { 1, 2, 3 });
+        config.addProperty(NAME, new Object[] {
+                1, 2, 3
+        });
         FlatNode n2 = parent.addChild(NAME, true);
         parent.addChild(NAME, true);
         parent.removeChild(config, n2);
@@ -374,6 +376,59 @@ public class TestFlatNodes extends TestCase
         {
             // ok
         }
+    }
+
+    /**
+     * Tries to remove a null child node. This should cause an exception.
+     */
+    public void testRemoveChildNull()
+    {
+        try
+        {
+            parent.removeChild(new BaseConfiguration(), null);
+            fail("Could remove null child!");
+        }
+        catch (ConfigurationRuntimeException crex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests corner cases when adding and removing child nodes.
+     */
+    public void testAddAndRemoveChild()
+    {
+        final int count = 5;
+        BaseConfiguration config = new BaseConfiguration();
+        List<FlatNode> nodes = new ArrayList<FlatNode>(count);
+        nodes.add(node);
+        for (int i = 0; i < count; i++)
+        {
+            config.addProperty(NAME, i);
+            if (i > 0)
+            {
+                nodes.add(parent.addChild(NAME, true));
+            }
+        }
+        for (int i = 0; i < count; i++)
+        {
+            assertEquals("Wrong value", Integer.valueOf(i), nodes.get(i)
+                    .getValue(config));
+        }
+        for (int j = count - 1; j > 0; j--)
+        {
+            parent.removeChild(config, nodes.get(j));
+            List<FlatNode> remainingChildren = parent.getChildren(NAME);
+            assertEquals("Wrong children", nodes.subList(0, j),
+                    remainingChildren);
+        }
+        assertEquals("Wrong remaining value", Integer.valueOf(0), config
+                .getProperty(NAME));
+        parent.removeChild(config, nodes.get(0));
+        assertFalse("Property still found", config.containsKey(NAME));
+        assertEquals("Wrong number of children", 0, parent
+                .getChildrenCount(NAME));
     }
 
     /**

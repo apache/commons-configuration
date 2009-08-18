@@ -19,7 +19,11 @@ package org.apache.commons.configuration2.flat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
@@ -34,6 +38,13 @@ import org.apache.commons.configuration2.ConfigurationRuntimeException;
  * root node is somewhat special. It does not have a name nor a value. It is the
  * only node in the whole structure that has children.
  * </p>
+ * <p>
+ * The children are stored internally in two different structures: a list for
+ * accessing all children (optionally with indices), and a map for accessing
+ * children by name. Because standard lists and maps from the Java collection
+ * framework are used, this data cannot be updated concurrently. Read-only
+ * access from multiple threads is possible however.
+ * </p>
  *
  * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
@@ -41,8 +52,14 @@ import org.apache.commons.configuration2.ConfigurationRuntimeException;
  */
 class FlatRootNode extends FlatNode
 {
+    /** Constant for an empty default child node manager. */
+    private static final ChildNodeManager DEF_MANAGER = new ChildNodeManager();
+
     /** Stores the child nodes of this root node. */
-    private List<FlatNode> children;
+    private final List<FlatNode> children;
+
+    /** A map for direct access to child nodes by name. */
+    private final Map<String, ChildNodeManager> childrenByName;
 
     /**
      * Creates a new instance of <code>FlatRootNode</code>.
@@ -50,6 +67,7 @@ class FlatRootNode extends FlatNode
     public FlatRootNode()
     {
         children = new ArrayList<FlatNode>();
+        childrenByName = new HashMap<String, ChildNodeManager>();
     }
 
     /**
@@ -72,16 +90,17 @@ class FlatRootNode extends FlatNode
      *
      * @param name the name of the child node
      * @param hasValue a flag whether the node already has a value; this flag
-     *        impacts the behavior of the <code>setValue()</code> method: if
-     *        it is <b>false</code>, the next <code>setValue()</code> call
-     *        will add a new property to the configuration; otherwise an
-     *        existing property value is overridden
+     *        impacts the behavior of the <code>setValue()</code> method: if it
+     *        is <b>false</code>, the next <code>setValue()</code> call will add
+     *        a new property to the configuration; otherwise an existing
+     *        property value is overridden
      * @return the newly created child node
      */
     public FlatNode addChild(String name, boolean hasValue)
     {
         FlatLeafNode child = new FlatLeafNode(this, name, hasValue);
         children.add(child);
+        fetchChildNodeManager(name, true).addChild(child);
         return child;
     }
 
@@ -117,16 +136,7 @@ class FlatRootNode extends FlatNode
     @Override
     public List<FlatNode> getChildren(String name)
     {
-        List<FlatNode> result = new ArrayList<FlatNode>();
-        for (FlatNode c : children)
-        {
-            if (name.equals(c.getName()))
-            {
-                result.add(c);
-            }
-        }
-
-        return result;
+        return fetchChildNodeManager(name, false).getChildren();
     }
 
     /**
@@ -146,16 +156,7 @@ class FlatRootNode extends FlatNode
 
         else
         {
-            int count = 0;
-            for (FlatNode n : children)
-            {
-                if (name.equals(n.getName()))
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return fetchChildNodeManager(name, false).count();
         }
     }
 
@@ -218,27 +219,28 @@ class FlatRootNode extends FlatNode
     @Override
     public void removeChild(Configuration config, FlatNode child)
     {
-        for (FlatNode c : children)
+        if (child != null)
         {
-            if (c == child)
+            ChildNodeManager cnm = fetchChildNodeManager(child.getName(), false);
+            int index = cnm.getValueIndex(child);
+            cnm.removeChild(child);
+            children.remove(child);
+
+            if (index != INDEX_UNDEFINED)
             {
-                int index = c.getValueIndex();
-                if (index != INDEX_UNDEFINED)
-                {
-                    changeMultiProperty(config, c, index, null, true);
-                }
-                else
-                {
-                    config.clearProperty(c.getName());
-                }
-                children.remove(c);
-                return;
+                changeMultiProperty(config, child, index, null, true);
+            }
+            else
+            {
+                config.clearProperty(child.getName());
             }
         }
-
-        // child was not found
-        throw new ConfigurationRuntimeException(
-                "Node to remove is no child of this node!");
+        else
+        {
+            // child was not found
+            throw new ConfigurationRuntimeException(
+                    "Cannot remove null child node!");
+        }
     }
 
     /**
@@ -267,31 +269,8 @@ class FlatRootNode extends FlatNode
      */
     int getChildValueIndex(FlatNode child)
     {
-        int index = -1;
-        boolean found = false;
-
-        for (FlatNode c : children)
-        {
-            if (c == child)
-            {
-                if (++index > 0)
-                {
-                    return index;
-                }
-                found = true;
-            }
-
-            else if (child.getName().equals(c.getName()))
-            {
-                if (found)
-                {
-                    return index;
-                }
-                index++;
-            }
-        }
-
-        return INDEX_UNDEFINED;
+        return fetchChildNodeManager(child.getName(), false).getValueIndex(
+                child);
     }
 
     /**
@@ -309,6 +288,38 @@ class FlatRootNode extends FlatNode
             Object value)
     {
         changeMultiProperty(config, child, index, value, false);
+    }
+
+    /**
+     * Obtains the {@code ChildNodeManager} for the child nodes with the given
+     * name. This implementation looks up the {@code ChildNodeManager} in an
+     * internal map. If the manager cannot be found, the behavior depends on the
+     * {@code create} parameter: If set to <b>true</b>, a new {@code
+     * ChildNodeManager} instance is created and added to the map. Otherwise an
+     * empty default manager is returned.
+     *
+     * @param name the name of the child node
+     * @param create the create flag
+     * @return the {@code ChildNodeManager} for these child nodes
+     */
+    private ChildNodeManager fetchChildNodeManager(String name, boolean create)
+    {
+        ChildNodeManager cnm = childrenByName.get(name);
+
+        if (cnm == null)
+        {
+            if (create)
+            {
+                cnm = new ChildNodeManager();
+                childrenByName.put(name, cnm);
+            }
+            else
+            {
+                return DEF_MANAGER;
+            }
+        }
+
+        return cnm;
     }
 
     /**
@@ -342,6 +353,153 @@ class FlatRootNode extends FlatNode
                 }
                 config.setProperty(child.getName(), newValues);
             }
+        }
+    }
+
+    /**
+     * A helper class for managing all child nodes of a specific name. This
+     * class provides basic CRUD operations for child nodes. A {@code
+     * FlatRootNode} holds a map that associates the names of child nodes with
+     * instances of this class. An instance can then be used for manipulating
+     * the child nodes with this name.
+     */
+    private static class ChildNodeManager
+    {
+        /** Holds the single child node with this name. */
+        private FlatNode child;
+
+        /** Holds all child nodes with this name. */
+        private List<FlatNode> childNodes;
+
+        /**
+         * Adds the given child node to this manager.
+         *
+         * @param node the node to add
+         */
+        public void addChild(FlatNode node)
+        {
+            if (childNodes != null)
+            {
+                childNodes.add(node);
+            }
+            else if (child != null)
+            {
+                childNodes = new LinkedList<FlatNode>();
+                childNodes.add(child);
+                childNodes.add(node);
+                child = null;
+            }
+            else
+            {
+                child = node;
+            }
+        }
+
+        /**
+         * Removes the given child node. If the return value is <b>false</b>,
+         * there are no more children with this name, and this instance can be
+         * removed.
+         *
+         * @param node the node to remove
+         * @return a flag whether there are remaining nodes with this name
+         * @throws ConfigurationRuntimeException if the child is unknown
+         */
+        public boolean removeChild(FlatNode node)
+        {
+            boolean found = false;
+
+            if (node == child)
+            {
+                child = null;
+                return false;
+            }
+
+            if (childNodes != null)
+            {
+                for (Iterator<FlatNode> it = childNodes.iterator(); it
+                        .hasNext();)
+                {
+                    FlatNode n = it.next();
+                    if (n == node)
+                    {
+                        it.remove();
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (childNodes.size() == 1)
+                {
+                    child = childNodes.get(0);
+                    childNodes = null;
+                }
+            }
+
+            if (!found)
+            {
+                throw new ConfigurationRuntimeException(
+                        "Node to remove is no child of this node!");
+            }
+            return true;
+        }
+
+        /**
+         * Returns the number of child nodes with this name.
+         *
+         * @return the number of child nodes with this name
+         */
+        public int count()
+        {
+            if (childNodes != null)
+            {
+                return childNodes.size();
+            }
+            else
+            {
+                return (child != null) ? 1 : 0;
+            }
+        }
+
+        /**
+         * Returns a list with all child nodes managed by this object.
+         *
+         * @return a list with all child nodes
+         */
+        public List<FlatNode> getChildren()
+        {
+            if (childNodes != null)
+            {
+                return Collections.unmodifiableList(childNodes);
+            }
+            if (child != null)
+            {
+                return Collections.singletonList(child);
+            }
+            return Collections.emptyList();
+        }
+
+        /**
+         * Returns the value index for the specified child node.
+         *
+         * @param node the child node
+         * @return the value index for this node
+         */
+        public int getValueIndex(FlatNode node)
+        {
+            if (childNodes != null)
+            {
+                int index = 0;
+                for (FlatNode n : childNodes)
+                {
+                    if (n == node)
+                    {
+                        return index;
+                    }
+                    index++;
+                }
+            }
+
+            return INDEX_UNDEFINED;
         }
     }
 }
