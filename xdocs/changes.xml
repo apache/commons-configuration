@@ -85,6 +85,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-393">
+        BaseConfiguration.clone() now also clones collections stored in the
+        internal map. This causes list properties to be handled correctly.
+      </action>
       <action dev="rgoers" type="fix" issue="CONFIGURATION-388">
         Attribute or element values will not be escaped when attribute or element splitting are disabled.
       </action>      

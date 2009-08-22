@@ -18,6 +18,7 @@
 package org.apache.commons.configuration2.flat;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -206,13 +207,26 @@ public class BaseConfiguration extends AbstractFlatConfiguration implements Clon
      * @since 1.3
      */
     @Override
-    @SuppressWarnings("unchecked")
     public Object clone()
     {
         try
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
-            copy.store = (Map<String, Object>) ConfigurationUtils.clone(store);
+            @SuppressWarnings("unchecked")
+            Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils
+                    .clone(store);
+
+            // Handle collections in the map; they have to be cloned, too
+            for (Map.Entry<String, Object> e : store.entrySet())
+            {
+                if (e.getValue() instanceof Collection<?>)
+                {
+                    clonedStore.put(e.getKey(), new ArrayList<Object>(
+                            (Collection<?>) e.getValue()));
+                }
+            }
+
+            copy.store = clonedStore;
             return copy;
         }
         catch (CloneNotSupportedException cex)

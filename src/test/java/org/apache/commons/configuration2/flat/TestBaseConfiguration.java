@@ -764,6 +764,20 @@ public class TestBaseConfiguration extends TestCase
     }
 
     /**
+     * Tests the clone() method if a list property is involved.
+     */
+    public void testCloneListProperty()
+    {
+        final String key = "list";
+        config.addProperty(key, "value1");
+        config.addProperty(key, "value2");
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+        config2.addProperty(key, "value3");
+        assertEquals("Wrong number of original properties", 2, config.getList(
+                key).size());
+    }
+
+    /**
      * Tests the getMaxIndex() method for a non existing property.
      */
     public void testGetMaxIndexNonExisting()
