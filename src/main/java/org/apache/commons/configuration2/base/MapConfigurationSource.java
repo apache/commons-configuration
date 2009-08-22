@@ -16,7 +16,9 @@
  */
 package org.apache.commons.configuration2.base;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,12 +46,24 @@ import java.util.Map;
  * that a map-like structure and keep their whole data in memory. An example
  * could be a configuration source wrapping a properties file.
  * </p>
+ * <p>
+ * {@code MapConfigurationSource} implements the {@code Serializable} interface.
+ * The data that is serialized basically consists of the map used as data store.
+ * Serialization can only be successful if all property values can be
+ * serialized.
+ * </p>
  *
  * @author Commons Configuration team
  * @version $Id$
  */
-public class MapConfigurationSource implements ConfigurationSource
+public class MapConfigurationSource implements ConfigurationSource,
+        Serializable
 {
+    /**
+     * The serial version UID.
+     */
+    private static final long serialVersionUID = 3921765607397858876L;
+
     /** The map acting as data store. */
     private final Map<String, Object> store;
 
@@ -81,6 +95,42 @@ public class MapConfigurationSource implements ConfigurationSource
     public MapConfigurationSource()
     {
         this(new LinkedHashMap<String, Object>());
+    }
+
+    /**
+     * Creates a new instance of {@code MapConfigurationSource} and initializes
+     * it from the data of the specified {@code ConfigurationSource}. This
+     * constructor copies all properties stored in the passed in {@code
+     * ConfigurationSource} into this source.
+     *
+     * @param c the {@code ConfigurationSource} to be copied (must not be
+     *        <b>null</b>)
+     * @throws IllegalArgumentException if the source to be copied is
+     *         <b>null</b>
+     */
+    public MapConfigurationSource(ConfigurationSource c)
+    {
+        if (c == null)
+        {
+            throw new IllegalArgumentException(
+                    "Source to copy must not be null!");
+        }
+
+        store = new LinkedHashMap<String, Object>();
+        for (Iterator<String> it = c.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            Object value = c.getProperty(key);
+
+            // special treatment of collection properties: the collections
+            // must be copied, too
+            if (value instanceof Collection<?>)
+            {
+                value = new ArrayList<Object>((Collection<?>) value);
+            }
+
+            store.put(key, value);
+        }
     }
 
     /**

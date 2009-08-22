@@ -16,6 +16,11 @@
  */
 package org.apache.commons.configuration2.base;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -85,7 +90,7 @@ public class TestMapConfigurationSource extends TestCase
     {
         try
         {
-            new MapConfigurationSource(null);
+            new MapConfigurationSource((Map<String, Object>) null);
             fail("Could create instance without a map!");
         }
         catch (IllegalArgumentException iex)
@@ -359,6 +364,100 @@ public class TestMapConfigurationSource extends TestCase
         catch (UnsupportedOperationException uex)
         {
             // ok
+        }
+    }
+
+    /**
+     * Tests whether a copy of a source can be created and the copy contains the
+     * same properties.
+     */
+    public void testInitCopy()
+    {
+        MapConfigurationSource src = new MapConfigurationSource(setUpMap());
+        MapConfigurationSource copy = new MapConfigurationSource(src);
+        assertEquals("Wrong number of properties", COUNT, copy.size());
+        for (int i = 0; i < COUNT; i++)
+        {
+            String key = KEY + i;
+            assertEquals("Wrong property for " + key, i, copy.getProperty(key));
+        }
+    }
+
+    /**
+     * Tests whether changing the original or the copy does not affect the other
+     * object.
+     */
+    public void testInitCopyModify()
+    {
+        MapConfigurationSource src = new MapConfigurationSource(setUpMap());
+        MapConfigurationSource copy = new MapConfigurationSource(src);
+        src.addProperty("original", Boolean.TRUE);
+        src.addProperty("clone", Boolean.FALSE);
+        copy.addProperty("original", Boolean.FALSE);
+        copy.addProperty("clone", Boolean.TRUE);
+        assertEquals("Wrong original property in original", Boolean.TRUE, src
+                .getProperty("original"));
+        assertEquals("Wrong clone property in original", Boolean.FALSE, src
+                .getProperty("clone"));
+        assertEquals("Wrong original property in clone", Boolean.FALSE, copy
+                .getProperty("original"));
+        assertEquals("Wrong clone property in clone", Boolean.TRUE, copy
+                .getProperty("clone"));
+    }
+
+    /**
+     * Tests the copy constructor if list properties are involved.
+     */
+    public void testInitCopyListProperty()
+    {
+        MapConfigurationSource src = new MapConfigurationSource(setUpMap());
+        src.addProperty(KEY, 1);
+        src.addProperty(KEY, 2);
+        MapConfigurationSource copy = new MapConfigurationSource(src);
+        copy.addProperty(KEY, 3);
+        checkList(src.getProperty(KEY), 1, 2);
+        checkList(copy.getProperty(KEY), 1, 2, 3);
+    }
+
+    /**
+     * Tries to invoke the copy constructor with a null source. This should
+     * cause an exception.
+     */
+    public void testInitCopyNullSource()
+    {
+        try
+        {
+            new MapConfigurationSource((ConfigurationSource) null);
+            fail("Could create copy of null source!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests whether the source can be serialized.
+     */
+    public void testSerialization() throws IOException, ClassNotFoundException
+    {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(bos);
+        MapConfigurationSource src = new MapConfigurationSource(setUpMap());
+        src.addProperty(KEY, "value1");
+        src.addProperty(KEY, "value2");
+        oos.writeObject(src);
+        oos.close();
+        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(
+                bos.toByteArray()));
+        MapConfigurationSource src2 = (MapConfigurationSource) ois.readObject();
+        ois.close();
+        assertEquals("Wrong number of properties", src.size(), src2.size());
+        for (Iterator<String> it = src.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            assertEquals("Wrong value for property " + key, src
+                    .getProperty(key), src2.getProperty(key));
         }
     }
 }
