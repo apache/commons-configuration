@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import java.util.Map;
 import org.apache.commons.collections.map.LinkedMap;
 
 /**
- * Basic configuration classe. Stores the configuration data but does not
+ * Basic configuration class. Stores the configuration data but does not
  * provide any load or save functions. If you want to load your Configuration
  * from a file use PropertiesConfiguration or XmlConfiguration.
  *
@@ -45,7 +46,7 @@ import org.apache.commons.collections.map.LinkedMap;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author Oliver Heger
  * @version $Id$
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
@@ -165,6 +166,18 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
             copy.store = (Map) ConfigurationUtils.clone(store);
+
+            // Handle collections in the map; they have to be cloned, too
+            for (Iterator it = store.entrySet().iterator(); it.hasNext();)
+            {
+                Map.Entry e = (Map.Entry) it.next();
+                if (e.getValue() instanceof Collection)
+                {
+                    copy.store.put(e.getKey(), new ArrayList((Collection) e
+                            .getValue()));
+                }
+            }
+
             return copy;
         }
         catch (CloneNotSupportedException cex)

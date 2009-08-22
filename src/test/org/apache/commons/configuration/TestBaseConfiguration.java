@@ -804,4 +804,18 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("Event listener was copied", 0, config2
                 .getConfigurationListeners().size());
     }
+
+    /**
+     * Tests the clone() method if a list property is involved.
+     */
+    public void testCloneListProperty()
+    {
+        final String key = "list";
+        config.addProperty(key, "value1");
+        config.addProperty(key, "value2");
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
+        config2.addProperty(key, "value3");
+        assertEquals("Wrong number of original properties", 2, config.getList(
+                key).size());
+    }
 }
