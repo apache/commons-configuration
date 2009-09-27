@@ -17,6 +17,11 @@
 
 package org.apache.commons.configuration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.Iterator;
+
 /**
  * A configuration based on the system properties.
  *
@@ -26,6 +31,7 @@ package org.apache.commons.configuration;
  */
 public class SystemConfiguration extends MapConfiguration
 {
+    private static Log log = LogFactory.getLog(SystemConfiguration.class);
     /**
      * Create a Configuration based on the system properties.
      *
@@ -38,7 +44,6 @@ public class SystemConfiguration extends MapConfiguration
 
     /**
      * The method allows system properties to be set from a property file.
-     * 
      * @param fileName The name of the property file.
      * @throws Exception if an error occurs.
      * @since 1.6
@@ -50,7 +55,6 @@ public class SystemConfiguration extends MapConfiguration
 
     /**
      * The method allows system properties to be set from a property file.
-     * 
      * @param basePath The base path to look for the property file.
      * @param fileName The name of the property file.
      * @throws Exception if an error occurs.
@@ -71,12 +75,21 @@ public class SystemConfiguration extends MapConfiguration
 
     /**
      * Set System properties from a configuration file.
-     * 
      * @param systemConfig The configuration containing the properties to be set.
      * @since 1.6
      */
     public static void setSystemProperties(PropertiesConfiguration systemConfig)
     {
-        ConfigurationUtils.copy(systemConfig, new SystemConfiguration());
+        Iterator iter = systemConfig.getKeys();
+        while (iter.hasNext())
+        {
+            String key = (String) iter.next();
+            String value = (String) systemConfig.getProperty(key);
+            if (log.isDebugEnabled())
+            {
+                log.debug("Setting system property " + key + " to " + value);
+            }
+            System.setProperty(key, value);
+        }
     }
 }
