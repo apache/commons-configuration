@@ -766,8 +766,27 @@ public class TestHierarchicalConfiguration extends TestCase
     {
         CountVisitor v = new CountVisitor();
         config.getRoot().visit(v, null);
-        assertEquals(28, v.beforeCount);
-        assertEquals(v.beforeCount, v.afterCount);
+        assertEquals("Wrong number of visits", 28, v.beforeCount);
+        assertEquals("Different number of before and after visits",
+                v.beforeCount, v.afterCount);
+    }
+
+    /**
+     * Tests the visitor mechanism if a ConfigurationKey is passed in.
+     */
+    public void testNodeVisitorKeys()
+    {
+        CountVisitor v = new CountVisitor();
+        ConfigurationKey configKey = new ConfigurationKey();
+        config.getRoot().visit(v, configKey);
+        for (Iterator it = config.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            assertTrue("Key not found in before keys: " + key, v.beforeKeys
+                    .contains(key));
+            assertTrue("Key not found in after keys: " + key, v.afterKeys
+                    .contains(key));
+        }
     }
 
     /**
@@ -1112,20 +1131,36 @@ public class TestHierarchicalConfiguration extends TestCase
      */
     static class CountVisitor extends HierarchicalConfiguration.NodeVisitor
     {
-        public int beforeCount;
+        /** The number of invocations of visitBeforeChildren(). */
+        int beforeCount;
 
-        public int afterCount;
+        /** The number of invocations of visitAfterChildren(). */
+        int afterCount;
+
+        /** A set with the keys passed to visitBeforeChildren(). */
+        final Set beforeKeys = new HashSet();
+
+        /** A set with the keys passed to visitAfterChildren(). */
+        final Set afterKeys = new HashSet();
 
         public void visitAfterChildren(Node node, ConfigurationKey key)
         {
             super.visitAfterChildren(node, key);
             afterCount++;
+            if (key != null)
+            {
+                afterKeys.add(key.toString());
+            }
         }
 
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
             super.visitBeforeChildren(node, key);
             beforeCount++;
+            if (key != null)
+            {
+                beforeKeys.add(key.toString());
+            }
         }
     }
 }

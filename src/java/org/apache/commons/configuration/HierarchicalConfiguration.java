@@ -1356,11 +1356,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 }
             }
 
+            visitor.visitAfterChildren(this, key);
             if (key != null)
             {
                 key.setLength(length);
             }
-            visitor.visitAfterChildren(this, key);
         }
     }
 
