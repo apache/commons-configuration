@@ -19,6 +19,7 @@ package org.apache.commons.configuration.reloading;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -26,6 +27,12 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.log4j.Logger;
+import org.apache.log4j.Layout;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.Appender;
+import org.apache.log4j.WriterAppender;
+import org.apache.log4j.Level;
 
 /**
  * Test case for the ReloadableConfiguration class.
@@ -162,5 +169,47 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertTrue("Reloading no more required", strategy.reloadingRequired());
         strategy.reloadingPerformed();
         assertFalse("Reloading still required", strategy.reloadingRequired());
+    }
+
+    public void testFileDeletion() throws Exception
+    {
+        Logger logger = Logger.getLogger(FileChangedReloadingStrategy.class.getName());
+        Layout layout = new PatternLayout("%p - %m%n");
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Appender appender = new WriterAppender(layout, os);
+        logger.addAppender(appender);
+        logger.setLevel(Level.WARN);
+        logger.setAdditivity(false);
+        // create a new configuration
+        File file = new File("target/testReload.properties");
+
+        if (file.exists())
+        {
+            file.delete();
+        }
+
+        // create the configuration file
+        FileWriter out = new FileWriter(file);
+        out.write("string=value1");
+        out.flush();
+        out.close();
+
+        // load the configuration
+        PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
+        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
+        config.setReloadingStrategy(strategy);
+        assertEquals("Initial value", "value1", config.getString("string"));
+
+        Thread.sleep(2000);
+
+        // Delete the file.
+        file.delete();
+        //Old value should still be returned.
+        assertEquals("Initial value", "value1", config.getString("string"));
+        logger.removeAppender(appender);
+        String str = os.toString();
+        //System.out.println(str);
+        assertTrue("No error was logged", str != null && str.length() > 0);
     }
 }

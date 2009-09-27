@@ -37,6 +37,7 @@ import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.ViewNode;
 import org.apache.commons.configuration.tree.TreeUtils;
+import org.apache.commons.configuration.reloading.Reloadable;
 
 /**
  * <p>
@@ -169,7 +170,7 @@ import org.apache.commons.configuration.tree.TreeUtils;
  * @since 1.3
  * @version $Id$
  */
-public class CombinedConfiguration extends HierarchicalConfiguration implements
+public class CombinedConfiguration extends HierarchicalReloadableConfiguration implements
         ConfigurationListener, Cloneable
 {
     /**
@@ -204,6 +205,13 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     /** Stores a map with the named configurations. */
     private Map namedConfigurations;
 
+    /** The default behavior is to ignore exceptions that occur during reload */
+    private boolean ignoreReloadExceptions = true;
+
+    //private final Object reloadLock = new Object();
+
+    private boolean reloadRequired = false;
+
     /**
      * An expression engine used for converting child configurations to
      * hierarchical ones.
@@ -236,6 +244,12 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         this(null);
     }
+
+    /*
+    public Object getReloadLock()
+    {
+        return reloadLock;
+    } */
 
     /**
      * Returns the node combiner that is used for creating the combined node
@@ -327,6 +341,26 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             ExpressionEngine conversionExpressionEngine)
     {
         this.conversionExpressionEngine = conversionExpressionEngine;
+    }
+
+    /**
+     * Retrieves the value of the ignoreReloadExceptions flag.
+     * @return true if exceptions are ignored, false otherwise.
+     */
+    public boolean isIgnoreReloadExceptions()
+    {
+        return ignoreReloadExceptions;
+    }
+
+    /**
+     * If set to true then exceptions that occur during reloading will be
+     * ignored. If false then the exceptions will be allowed to be thrown
+     * back to the caller.
+     * @param ignoreReloadExceptions true if exceptions should be ignored.
+     */
+    public void setIgnoreReloadExceptions(boolean ignoreReloadExceptions)
+    {
+        this.ignoreReloadExceptions = ignoreReloadExceptions;
     }
 
     /**
@@ -546,7 +580,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public void invalidate()
     {
-        combinedRoot = null;
+        reloadRequired = true;
         fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
     }
 
@@ -578,12 +612,152 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public ConfigurationNode getRootNode()
     {
-        if (combinedRoot == null)
+        synchronized(getReloadLock())
         {
-            combinedRoot = constructCombinedNode();
+            if (reloadRequired || combinedRoot == null)
+            {
+                combinedRoot = constructCombinedNode();
+                reloadRequired = false;
+            }
+            return combinedRoot;
         }
-        return combinedRoot;
     }
+    /*
+    public Object getProperty(String key)
+    {
+        synchronized(reloadLock)
+        {
+            return super.getProperty(key);
+        }
+    }
+
+    protected void addPropertyDirect(String key, Object obj)
+    {
+        synchronized(reloadLock)
+        {
+            super.addPropertyDirect(key, obj);
+        }
+    }
+
+    public void addNodes(String key, Collection nodes)
+    {
+        synchronized(reloadLock)
+        {
+            super.addNodes(key, nodes);
+        }
+    }
+
+    public boolean isEmpty()
+    {
+        synchronized(reloadLock)
+        {
+            return super.isEmpty();
+        }
+    }
+
+    public Configuration subset(String prefix)
+    {
+        synchronized(reloadLock)
+        {
+            return super.subset(prefix);
+        }
+    }
+
+    public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
+    {
+        synchronized(reloadLock)
+        {
+            return super.configurationAt(key, supportUpdates);
+        }
+    }
+
+    public SubnodeConfiguration configurationAt(String key)
+    {
+        synchronized(reloadLock)
+        {
+            return super.configurationAt(key);
+        }
+    }
+
+    public List configurationsAt(String key)
+    {
+        synchronized(reloadLock)
+        {
+            return super.configurationsAt(key);
+        }
+    }
+
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
+    {
+        synchronized(reloadLock)
+        {
+            return super.createSubnodeConfiguration(node);
+        }
+    }
+
+    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node, String subnodeKey)
+    {
+        synchronized(reloadLock)
+        {
+            return super.createSubnodeConfiguration(node, subnodeKey);
+        }
+    }
+
+    public boolean containsKey(String key)
+    {
+        synchronized(reloadLock)
+        {
+            return super.containsKey(key);
+        }
+    }
+
+    public void setProperty(String key, Object value)
+    {
+        synchronized(reloadLock)
+        {
+            super.setProperty(key, value);
+        }
+    }
+
+    public void clearTree(String key)
+    {
+        synchronized(reloadLock)
+        {
+            super.clearTree(key);
+        }
+    }
+
+    public void clearProperty(String key)
+    {
+        synchronized(reloadLock)
+        {
+            super.clearProperty(key);
+        }
+    }
+
+    public Iterator getKeys()
+    {
+        synchronized(reloadLock)
+        {
+            return super.getKeys();
+        }
+    }
+
+    public Iterator getKeys(String prefix)
+    {
+        synchronized(reloadLock)
+        {
+            return super.getKeys(prefix);
+        }
+    }
+
+    public int getMaxIndex(String key)
+    {
+        synchronized(reloadLock)
+        {
+            return super.getMaxIndex(key);
+        }
+    } */
 
     /**
      * Clears this configuration. All contained configurations will be removed.
@@ -716,8 +890,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             }
             catch (Exception ex)
             {
-                // ignore all exceptions, e.g. missing property exceptions
-                ;
+                if (!ignoreReloadExceptions)
+                {
+                    throw new ConfigurationRuntimeException(ex);
+                }
             }
         }
     }

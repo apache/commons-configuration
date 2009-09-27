@@ -85,8 +85,8 @@ public class TestCatalogResolver extends TestCase
     {
         Log log = LogFactory.getLog(this.getClass());
         resolver.setLogger(log);
-        assertNotNull("No Logger returned", resolver.getLogger());
-        assertTrue("Incorrect Logger", log == resolver.getLogger());
+        assertNotNull("No Logging returned", resolver.getLogger());
+        assertTrue("Incorrect Logging", log == resolver.getLogger());
     }
 
 }

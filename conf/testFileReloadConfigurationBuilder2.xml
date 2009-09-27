@@ -17,19 +17,19 @@
     </providers>
   </header>
   <override>
-    <multifile filePattern="testwrite/testMultiConfiguration_$$${sys:Id}.xml"
+    <multifile filePattern="${sys:basePath}/testwrite/testMultiConfiguration_$$${sys:Id}.xml"
                config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="false">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
-       <reloadingStrategy delay="500"
-          config-class="org.apache.commons.configuration.reloading.VFSFileMonitorReloadingStrategy"/>
+       <reloadingStrategy refreshDelay="500"
+          config-class="org.apache.commons.configuration.reloading.VFSFileChangedReloadingStrategy"/>
     </multifile>
     <xml fileName="testMultiConfiguration_default.xml"
          config-name="defaultConfig" delimiterParsingDisabled="true">
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
-      <reloadingStrategy
-          config-class="org.apache.commons.configuration.reloading.VFSFileMonitorReloadingStrategy"/>
+      <reloadingStrategy refreshDelay="500"
+          config-class="org.apache.commons.configuration.reloading.VFSFileChangedReloadingStrategy"/>
     </xml>
   </override>
 </configuration>

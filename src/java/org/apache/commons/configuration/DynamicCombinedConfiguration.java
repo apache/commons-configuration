@@ -87,6 +87,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         super();
         setNodeCombiner(comb);
+        setIgnoreReloadExceptions(false);
     }
 
     /**
@@ -98,6 +99,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public DynamicCombinedConfiguration()
     {
         super();
+        setIgnoreReloadExceptions(false);
     }
 
     public void setKeyPattern(String pattern)
@@ -768,6 +770,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                         config.setLogger(log);
                     }
                 }
+                config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
                 config.setExpressionEngine(this.getExpressionEngine());
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                 config.setConversionExpressionEngine(getConversionExpressionEngine());

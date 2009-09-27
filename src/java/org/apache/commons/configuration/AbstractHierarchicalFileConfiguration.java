@@ -29,7 +29,10 @@ import java.util.List;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
+import org.apache.commons.configuration.reloading.Reloadable;
 
 /**
  * <p>Base class for implementing file based hierarchical configurations.</p>
@@ -45,7 +48,8 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends HierarchicalConfiguration
-implements FileConfiguration, ConfigurationListener, FileSystemBased
+implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener, FileSystemBased,
+        Reloadable
 {
     /** Stores the delegate used for implementing functionality related to the
      * <code>FileConfiguration</code> interface.
@@ -137,26 +141,38 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
 
     protected void addPropertyDirect(String key, Object obj)
     {
-        super.addPropertyDirect(key, obj);
-        delegate.possiblySave();
+        synchronized(delegate.getReloadLock())
+        {
+            super.addPropertyDirect(key, obj);
+            delegate.possiblySave();
+        }
     }
 
     public void clearProperty(String key)
     {
-        super.clearProperty(key);
-        delegate.possiblySave();
+        synchronized(delegate.getReloadLock())
+        {
+            super.clearProperty(key);
+            delegate.possiblySave();
+        }
     }
 
     public void clearTree(String key)
     {
-        super.clearTree(key);
-        delegate.possiblySave();
+        synchronized(delegate.getReloadLock())
+        {
+            super.clearTree(key);
+            delegate.possiblySave();
+        }
     }
 
     public void setProperty(String key, Object value)
     {
-        super.setProperty(key, value);
-        delegate.possiblySave();
+        synchronized(delegate.getReloadLock())
+        {
+            super.setProperty(key, value);
+            delegate.possiblySave();
+        }
     }
 
     public void load() throws ConfigurationException
@@ -281,10 +297,15 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
 
     public void reload()
     {
+        reload(false);
+    }
+
+    private boolean reload(boolean checkReload)
+    {
         setDetailEvents(false);
         try
         {
-            delegate.reload();
+            return delegate.reload(checkReload);
         }
         finally
         {
@@ -302,34 +323,58 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         delegate.setEncoding(encoding);
     }
 
+    public Object getReloadLock()
+    {
+        return delegate.getReloadLock();
+    }
+
     public boolean containsKey(String key)
     {
         reload();
-        return super.containsKey(key);
+        synchronized(delegate.getReloadLock())
+        {
+            return super.containsKey(key);
+        }
     }
 
     public Iterator getKeys()
     {
         reload();
-        return super.getKeys();
+        synchronized(delegate.getReloadLock())
+        {
+            return super.getKeys();
+        }
     }
 
     public Iterator getKeys(String prefix)
     {
         reload();
-        return super.getKeys(prefix);
+        synchronized(delegate.getReloadLock())
+        {
+            return super.getKeys(prefix);
+        }
     }
 
     public Object getProperty(String key)
     {
-        reload();
-        return super.getProperty(key);
+        if (reload(true))
+        {
+            // Avoid reloading again and getting the same error.
+            synchronized(delegate.getReloadLock())
+            {
+                return super.getProperty(key);
+            }
+        }
+        return null;
     }
 
     public boolean isEmpty()
     {
         reload();
-        return super.isEmpty();
+        synchronized(delegate.getReloadLock())
+        {
+            return super.isEmpty();
+        }
     }
 
     /**
@@ -342,8 +387,11 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      */
     public void addNodes(String key, Collection nodes)
     {
-        super.addNodes(key, nodes);
-        delegate.possiblySave();
+        synchronized(delegate.getReloadLock())
+        {
+            super.addNodes(key, nodes);
+            delegate.possiblySave();
+        }
     }
 
     /**
@@ -356,7 +404,10 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     protected List fetchNodeList(String key)
     {
         reload();
-        return super.fetchNodeList(key);
+        synchronized(delegate.getReloadLock())
+        {
+            return super.fetchNodeList(key);
+        }
     }
 
     /**
@@ -394,6 +445,8 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     private void initDelegate(FileConfigurationDelegate del)
     {
         del.addConfigurationListener(this);
+        del.addErrorListener(this);
+        del.setLogger(getLogger());
     }
 
     /**
@@ -416,6 +469,12 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         {
             setDetailEvents(false);
         }
+    }
+
+    public void configurationError(ConfigurationErrorEvent event)
+    {
+        fireError(event.getType(), event.getPropertyName(), event.getPropertyValue(),
+                event.getCause());
     }
 
     /**

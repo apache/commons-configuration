@@ -38,11 +38,10 @@ import org.apache.commons.configuration.event.ConfigurationListener;
  * @author Ralph Goers
  * @version $Revision$
  */
-public class TestVFSFileMonitorReloadingStrategy extends TestCase
-        implements ConfigurationListener
+public class TestVFSFileChangedReloadingStrategy extends TestCase
 {
-    /** true when a file is changed */
-    private boolean configChanged = false;
+    /** Constant for the name of a test properties file.*/
+    private static final String TEST_FILE = "test.properties";
 
     protected void setUp() throws Exception
     {
@@ -74,12 +73,12 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
 
         // load the configuration
         PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
-        VFSFileMonitorReloadingStrategy strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(500);
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
         config.setReloadingStrategy(strategy);
         assertEquals("Initial value", "value1", config.getString("string"));
 
-        Thread.sleep(1000);
+        Thread.sleep(2000);
 
         // change the file
         out = new FileWriter(file);
@@ -87,15 +86,8 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
         out.flush();
         out.close();
 
-        Thread.sleep(2000);
-
         // test the automatic reloading
         assertEquals("Modified value with enabled reloading", "value2", config.getString("string"));
-        strategy.stopMonitor();
-        if (file.exists())
-        {
-            file.delete();
-        }
     }
 
     public void testNewFileReloading() throws Exception
@@ -110,9 +102,8 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
 
         PropertiesConfiguration config = new PropertiesConfiguration();
         config.setFile(file);
-        config.addConfigurationListener(this);
-        VFSFileMonitorReloadingStrategy strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(500);
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
         config.setReloadingStrategy(strategy);
 
         assertNull("Initial value", config.getString("string"));
@@ -123,106 +114,40 @@ public class TestVFSFileMonitorReloadingStrategy extends TestCase
         out.flush();
         out.close();
 
-        waitForChange();
+        Thread.sleep(2000);
 
         // test the automatic reloading
-        try
-        {
-            assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
-        }
-        finally
-        {
-            strategy.stopMonitor();
-            if (file.exists())
-            {
-                file.delete();
-            }
-        }
+        assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
     }
 
     public void testGetRefreshDelay() throws Exception
     {
-        // create a new configuration
-        File file = new File("target/testReload.properties");
-
-        if (file.exists())
-        {
-            file.delete();
-        }
-
-        // create the configuration file
-        FileWriter out = new FileWriter(file);
-        out.write("string=value1");
-        out.flush();
-        out.close();
-
-        PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
-        VFSFileMonitorReloadingStrategy strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(500);
-        config.setReloadingStrategy(strategy);
-        // Minimum is 1 second.
-        assertEquals("refresh delay", 1000, strategy.getDelay());
-
-        config = new PropertiesConfiguration("target/testReload.properties");
-        strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(1500);
-        config.setReloadingStrategy(strategy);
-        // Can be made longer
-        assertEquals("refresh delay", 1500, strategy.getDelay());
-
-        config = new PropertiesConfiguration("target/testReload.properties");
-        strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(500);
-        config.setReloadingStrategy(strategy);
-        // Can't be made shorter
-        assertEquals("refresh delay", 1500, strategy.getDelay());
-
-        strategy.stopMonitor();
-        // Reset and verify everything clears
-        config = new PropertiesConfiguration("target/testReload.properties");
-        strategy = new VFSFileMonitorReloadingStrategy();
-        strategy.setDelay(1100);
-        config.setReloadingStrategy(strategy);
-        assertEquals("refresh delay", 1100, strategy.getDelay());
-        strategy.stopMonitor();
-        if (file.exists())
-        {
-            file.delete();
-        }
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
+        strategy.setRefreshDelay(500);
+        assertEquals("refresh delay", 500, strategy.getRefreshDelay());
     }
 
-    private void waitForChange()
+    /**
+     * Tests calling reloadingRequired() multiple times before a reload actually
+     * happens. This test is related to CONFIGURATION-302.
+     */
+    public void testReloadingRequiredMultipleTimes()
+            throws ConfigurationException
     {
-        synchronized(this)
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy()
         {
-            try
+            protected boolean hasChanged()
             {
-                int count = 0;
-                while (!configChanged && count++ <= 3)
-                {
-                    this.wait(5000);
-                }
+                // signal always a change
+                return true;
             }
-            catch (InterruptedException ie)
-            {
-                throw new IllegalStateException("wait timed out");
-            }
-            finally
-            {
-                configChanged = false;
-            }
-        }
-    }
-
-    public void configurationChanged(ConfigurationEvent event)
-    {
-        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
-        {
-            synchronized(this)
-            {
-                configChanged = true;
-                this.notify();
-            }
-        }
+        };
+        strategy.setRefreshDelay(100000);
+        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        config.setReloadingStrategy(strategy);
+        assertTrue("Reloading not required", strategy.reloadingRequired());
+        assertTrue("Reloading no more required", strategy.reloadingRequired());
+        strategy.reloadingPerformed();
+        assertFalse("Reloading still required", strategy.reloadingRequired());
     }
 }

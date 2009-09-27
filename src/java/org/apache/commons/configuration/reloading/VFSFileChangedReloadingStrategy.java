@@ -17,12 +17,14 @@
 
 package org.apache.commons.configuration.reloading;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileConfiguration;
+import org.apache.commons.configuration.FileSystemBased;
+import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.vfs.FileSystemManager;
+import org.apache.commons.vfs.FileObject;
+import org.apache.commons.vfs.VFS;
+import org.apache.commons.vfs.FileSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -43,11 +45,8 @@ import org.apache.commons.logging.LogFactory;
  * @version $Revision$, $Date$
  * @since 1.1
  */
-public class FileChangedReloadingStrategy implements ReloadingStrategy
+public class VFSFileChangedReloadingStrategy implements ReloadingStrategy
 {
-    /** Constant for the jar URL protocol.*/
-    private static final String JAR_PROTOCOL = "jar";
-
     /** Constant for the default refresh delay.*/
     private static final int DEFAULT_REFRESH_DELAY = 5000;
 
@@ -66,8 +65,8 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
     /** A flag whether a reload is required.*/
     private boolean reloading;
 
-    /** The Log to use for diagnostic messages */
-    private Log logger = LogFactory.getLog(FileChangedReloadingStrategy.class);
+    /** Stores the logger.*/
+    private Log log = LogFactory.getLog(getClass());
 
     public void setConfiguration(FileConfiguration configuration)
     {
@@ -76,6 +75,14 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
 
     public void init()
     {
+        if (configuration.getURL() == null && configuration.getFileName() == null)
+        {
+            return;
+        }
+        if (this.configuration == null)
+        {
+            throw new IllegalStateException("No configuration has been set for this strategy");
+        }
         updateLastModified();
     }
 
@@ -90,10 +97,6 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
                 lastChecked = now;
                 if (hasChanged())
                 {
-                    if (logger.isDebugEnabled())
-                    {
-                        logger.debug("File change detected: " + getName());
-                    }
                     reloading = true;
                 }
             }
@@ -132,10 +135,17 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected void updateLastModified()
     {
-        File file = getFile();
+        FileObject file = getFile();
         if (file != null)
         {
-            lastModified = file.lastModified();
+            try
+            {
+                lastModified = file.getContent().getLastModifiedTime();
+            }
+            catch (FileSystemException fse)
+            {
+                log.error("Unable to get last modified time for" + file.getName().getURI());
+            }
         }
         reloading = false;
     }
@@ -147,18 +157,21 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      */
     protected boolean hasChanged()
     {
-        File file = getFile();
-        if (file == null || !file.exists())
+        FileObject file = getFile();
+        try
         {
-            if (logger.isWarnEnabled() && lastModified != 0)
+            if (file == null || !file.exists())
             {
-                logger.warn("File was deleted: " + getName(file));
-                lastModified = 0;
+                return false;
             }
+
+            return file.getContent().getLastModifiedTime() > lastModified;
+        }
+        catch (FileSystemException ex)
+        {
+            log.error("Unable to get last modified time for" + file.getName().getURI());
             return false;
         }
-
-        return file.lastModified() > lastModified;
     }
 
     /**
@@ -167,60 +180,25 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
      *
      * @return the monitored file
      */
-    protected File getFile()
+    protected FileObject getFile()
     {
-        return (configuration.getURL() != null) ? fileFromURL(configuration
-                .getURL()) : configuration.getFile();
-    }
-
-    /**
-     * Helper method for transforming a URL into a file object. This method
-     * handles file: and jar: URLs.
-     *
-     * @param url the URL to be converted
-     * @return the resulting file or <b>null </b>
-     */
-    private File fileFromURL(URL url)
-    {
-        if (JAR_PROTOCOL.equals(url.getProtocol()))
+        try
         {
-            String path = url.getPath();
-            try
+            FileSystemManager fsManager = VFS.getManager();
+            FileSystem fs = ((FileSystemBased) configuration).getFileSystem();
+            String uri = fs.getPath(null, configuration.getURL(), configuration.getBasePath(),
+                configuration.getFileName());
+            if (uri == null)
             {
-                return ConfigurationUtils.fileFromURL(new URL(path.substring(0,
-                        path.indexOf('!'))));
+                throw new ConfigurationRuntimeException("Unable to determine file to monitor");
             }
-            catch (MalformedURLException mex)
-            {
-                return null;
-            }
+            return fsManager.resolveFile(uri);
         }
-        else
+        catch (FileSystemException fse)
         {
-            return ConfigurationUtils.fileFromURL(url);
+            String msg = "Unable to monitor " + configuration.getURL().toString();
+            log.error(msg);
+            throw new ConfigurationRuntimeException(msg, fse);
         }
-    }
-
-    private String getName()
-    {
-        return getName(getFile());
-    }
-
-    private String getName(File file)
-    {
-        String name = configuration.getURL().toString();
-        if (name == null)
-        {
-            if (file != null)
-            {
-                name = file.getAbsolutePath();
-            }
-            else
-            {
-                name = "base: " + configuration.getBasePath()
-                       + "file: " + configuration.getFileName();
-            }
-        }
-        return name;
     }
 }

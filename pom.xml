@@ -462,6 +462,7 @@
             <include>testdb.script</include>
             <include>*.properties</include>
             <include>*.dtd</include>
+            <include>*.xsd</include>
           </includes>
         </testResource>
         <testResource>
@@ -493,6 +494,10 @@
               <property>
                 <name>java.awt.headless</name>
                 <value>true</value>
+              </property>
+              <property>
+                <name>org.apache.commons.logging.Log</name>
+                <value>org.apache.commons.configuration.Logging</value>
               </property>
             </systemProperties>
           </configuration>

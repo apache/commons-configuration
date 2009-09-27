@@ -152,7 +152,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertNotNull("Default logger is null", config.getLogger());
         Log log = LogFactory.getLog(config.getClass());
         config.setLogger(log);
-        assertSame("Logger was not set", log, config.getLogger());
+        assertSame("Logging was not set", log, config.getLogger());
     }
 
     /**

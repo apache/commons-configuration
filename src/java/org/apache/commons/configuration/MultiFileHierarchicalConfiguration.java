@@ -43,6 +43,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXParseException;
 
 /**
  * This class provides access to multiple configuration files that reside in a location that
@@ -92,7 +93,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     private boolean attributeSplittingDisabled;
 
     /** The Logger name to use */
-    private String loggerName = "";
+    private String loggerName = MultiFileHierarchicalConfiguration.class.getName();
 
     /** The Reloading strategy to use on created configurations */
     private ReloadingStrategy fileStrategy;
@@ -107,6 +108,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     {
         super();
         this.init = true;
+        setLogger(LogFactory.getLog(loggerName));
     }
 
     /**
@@ -621,6 +623,14 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 listener.configurationError(event);
             }
         }
+
+        if (event.getType() == AbstractFileConfiguration.EVENT_RELOAD)
+        {
+            if (isThrowable(event.getCause()))
+            {
+                throw new ConfigurationRuntimeException(event.getCause());
+            }
+        }
     }
 
     /*
@@ -730,7 +740,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
         catch (ConfigurationException ce)
         {
-            if (!ignoreException)
+            if (isThrowable(ce))
             {
                 throw new ConfigurationRuntimeException(ce);
             }
@@ -744,6 +754,20 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
 
         return configuration;
+    }
+
+    private boolean isThrowable(Throwable throwable)
+    {
+        if (!ignoreException)
+        {
+            return true;
+        }
+        Throwable cause = throwable.getCause();
+        while (cause != null && !(cause instanceof SAXParseException))
+        {
+            cause = cause.getCause();
+        }
+        return cause != null;
     }
 
     /**

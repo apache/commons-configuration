@@ -1597,6 +1597,50 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    public void testConcurrentGetAndReload() throws Exception
+    {
+        //final FileConfiguration config = new PropertiesConfiguration("test.properties");
+        final FileConfiguration config = new XMLConfiguration("test.xml");
+        config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+
+        assertTrue("Property not found", config.getProperty("test.short") != null);
+
+        Thread testThreads[] = new Thread[5];
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i] = new ReloadThread(config);
+            testThreads[i].start();
+        }
+
+        for (int i = 0; i < 2000; i++)
+        {
+            assertTrue("Property not found", config.getProperty("test.short") != null); 
+        }
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i].join();
+        }
+    }
+
+    private class ReloadThread extends Thread
+    {
+        FileConfiguration config;
+
+        ReloadThread(FileConfiguration config)
+        {
+            this.config = config;
+        }
+        public void run()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                config.reload();
+            }
+        }
+    }
+
     /**
      * Prepares a configuration object for testing a reload operation.
      *

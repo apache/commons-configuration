@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.reloading.Reloadable;
 
 /**
  * <p>
@@ -114,7 +115,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * @author Oliver Heger
  * @version $Id$
  */
-public class SubnodeConfiguration extends HierarchicalConfiguration
+public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
 {
     /**
      * The serial version UID.
@@ -136,6 +137,7 @@ public class SubnodeConfiguration extends HierarchicalConfiguration
      */
     public SubnodeConfiguration(HierarchicalConfiguration parent, ConfigurationNode root)
     {
+        super(parent instanceof Reloadable ? ((Reloadable) parent).getReloadLock() : null);
         if (parent == null)
         {
             throw new IllegalArgumentException(

@@ -939,11 +939,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (SAXParseException spe)
         {
-            this.getLogger().debug("Error parsing " + source.getSystemId(), spe);
             throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
         }
         catch (Exception e)
         {
+            this.getLogger().debug("Unable to load the configuraton", e);
             throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
