@@ -486,6 +486,8 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
+            <!-- Uncomment to enable profiling unit tests -->
+            <!-- <argLine>-agentpath:"${yourkit.home}/bin/mac/libyjpagent.jnilib"</argLine> -->
             <forkMode>once</forkMode>
             <excludes>
               <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
@@ -584,6 +586,14 @@
         </plugins>
       </build>
     </profile>
+    <!-- Uncomment this and set the path accordingly to enable YourKit -->
+    <!-- http://www.yourkit.com/docs/80/help/agent.jsp -->
+    <!-- <profile>
+      <id>yourkit-profile</id>
+      <properties>
+        <yourkit.home>/Applications/YourKit_Java_Profiler_8.0.17.app/</yourkit.home>
+      </properties>
+    </profile> -->
   </profiles>
   <reporting>
     <plugins>

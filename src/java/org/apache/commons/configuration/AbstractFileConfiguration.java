@@ -103,7 +103,7 @@ implements FileConfiguration, FileSystemBased
     protected ReloadingStrategy strategy;
 
     /** A lock object for protecting reload operations.*/
-    protected Object reloadLock = new Object();
+    protected Object reloadLock = new Lock("AbstractFileConfiguration");
 
     /** Stores the encoding of the configuration file.*/
     private String encoding;

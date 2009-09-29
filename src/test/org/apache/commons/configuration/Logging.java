@@ -59,7 +59,7 @@ public class Logging extends Log4JLogger
         {
             org.apache.log4j.Logger log = org.apache.log4j.Logger.getRootLogger();
             log.setLevel(Level.toLevel(level));
-            Appender appender = new ConsoleAppender(new PatternLayout("%p - %m%n"), ConsoleAppender.SYSTEM_OUT);
+            Appender appender = new ConsoleAppender(new PatternLayout("%p %l - %m%n"), ConsoleAppender.SYSTEM_OUT);
             log.addAppender(appender);
         }
     }

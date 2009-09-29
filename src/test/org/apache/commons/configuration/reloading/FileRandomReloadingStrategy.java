@@ -1,5 +1,8 @@
 package org.apache.commons.configuration.reloading;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.util.Random;
 
@@ -9,6 +12,10 @@ import java.util.Random;
 public class FileRandomReloadingStrategy extends FileChangedReloadingStrategy
 {
     Random random = new Random();
+
+      /** The Log to use for diagnostic messages */
+    private Log logger = LogFactory.getLog(FileRandomReloadingStrategy.class);
+
     /**
      * Checks whether a reload is necessary.
      *
@@ -16,7 +23,15 @@ public class FileRandomReloadingStrategy extends FileChangedReloadingStrategy
      */
     public boolean reloadingRequired()
     {
-        return random.nextBoolean();
+        boolean result = random.nextBoolean();
+        if (result)
+        {
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("File change detected: " + getName());
+            }
+        }
+        return result;
     }
 
     /**
@@ -27,5 +42,28 @@ public class FileRandomReloadingStrategy extends FileChangedReloadingStrategy
     public File getMonitoredFile()
     {
         return getFile();
+    }
+
+    private String getName()
+    {
+        return getName(getFile());
+    }
+
+    private String getName(File file)
+    {
+        String name = configuration.getURL().toString();
+        if (name == null)
+        {
+            if (file != null)
+            {
+                name = file.getAbsolutePath();
+            }
+            else
+            {
+                name = "base: " + configuration.getBasePath()
+                       + "file: " + configuration.getFileName();
+            }
+        }
+        return name;
     }
 }

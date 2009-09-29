@@ -234,6 +234,18 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         clear();
     }
 
+    public CombinedConfiguration(NodeCombiner comb, Lock lock)
+    {
+        super(lock);
+        setNodeCombiner((comb != null) ? comb : DEFAULT_COMBINER);
+        clear();
+    }
+
+    public CombinedConfiguration(Lock lock)
+    {
+        this(null, lock);
+    }
+
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> that uses
      * a union combiner.
@@ -242,7 +254,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public CombinedConfiguration()
     {
-        this(null);
+        this(null, null);
     }
 
     /*

@@ -639,6 +639,39 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    public void testReloadingOOM() throws Exception
+    {
+        assertNotNull(conf.getReloadingStrategy());
+        assertTrue(conf.getReloadingStrategy() instanceof InvariantReloadingStrategy);
+        PrintWriter out = null;
+
+        try
+        {
+            out = new PrintWriter(new FileWriter(testSaveConf));
+            out.println("<?xml version=\"1.0\"?><config><test>1</test></config>");
+            out.close();
+            out = null;
+            conf.setFile(testSaveConf);
+            FileAlwaysReloadingStrategy strategy = new FileAlwaysReloadingStrategy();
+            strategy.setRefreshDelay(100);
+            conf.setReloadingStrategy(strategy);
+            conf.load();
+            assertEquals(1, conf.getInt("test"));
+
+            for (int i = 1; i < 50000; ++i)
+            {
+               assertEquals(1, conf.getInt("test"));
+            }
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+        }
+    }
+
     /**
      * Tests access to tag names with delimiter characters.
      */
@@ -1615,7 +1648,7 @@ public class TestXMLConfiguration extends TestCase
 
         for (int i = 0; i < 2000; i++)
         {
-            assertTrue("Property not found", config.getProperty("test.short") != null); 
+            assertTrue("Property not found", config.getProperty("test.short") != null);
         }
 
         for (int i = 0; i < testThreads.length; ++i)

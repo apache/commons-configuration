@@ -567,6 +567,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public void clear()
     {
         super.clear();
+        setRoot(new Node());
         document = null;
     }
 

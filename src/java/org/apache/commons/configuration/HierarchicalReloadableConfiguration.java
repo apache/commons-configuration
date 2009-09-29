@@ -16,19 +16,21 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
 {
     private final Object reloadLock;
 
+    private static final String LOCK_NAME = "HierarchicalReloadableConfigurationLock";
+
     /**
      * Creates a new instance of <code>HierarchicalReloadableConfiguration</code>.
      */
     public HierarchicalReloadableConfiguration()
     {
         super();
-        reloadLock = new Object();
+        reloadLock = new Lock(LOCK_NAME);
     }
 
     public HierarchicalReloadableConfiguration(Object lock)
     {
         super();
-        reloadLock = lock == null ? new Object() : lock;
+        reloadLock = lock == null ? new Lock(LOCK_NAME) : lock;
     }
 
     /**
@@ -43,7 +45,7 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
     public HierarchicalReloadableConfiguration(HierarchicalConfiguration c)
     {
         super(c);
-        reloadLock = new Object();
+        reloadLock = new Lock(LOCK_NAME);
     }
 
 
