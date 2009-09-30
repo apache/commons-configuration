@@ -403,6 +403,19 @@ public class TestDatabaseConfiguration extends TestCase
     }
 
     /**
+     * Tests setProperty() if the property value contains the list delimiter.
+     */
+    public void testSetPropertyWithDelimiter()
+    {
+        DatabaseConfiguration config = setUpMultiConfig();
+        config.setListDelimiter(';');
+        config.setProperty("keyList", "1;2;3");
+        String[] values = config.getStringArray("keyList");
+        assertEquals("Wrong number of property values", 3, values.length);
+        assertEquals("Wrong value at index 1", "2", values[1]);
+    }
+
+    /**
      * A specialized database configuration implementation that can be
      * configured to throw an exception when obtaining a connection. This way
      * database exceptions can be simulated.
