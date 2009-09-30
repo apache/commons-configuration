@@ -419,6 +419,19 @@ public class TestDatabaseConfiguration extends TestCase
     }
 
     /**
+     * Tests setProperty() if the property value contains the list delimiter.
+     */
+    public void testSetPropertyWithDelimiter()
+    {
+        DatabaseConfiguration config = setUpMultiConfig();
+        config.setListDelimiter(';');
+        config.setProperty("keyList", "1;2;3");
+        String[] values = config.getStringArray("keyList");
+        assertEquals("Wrong number of property values", 3, values.length);
+        assertEquals("Wrong value at index 1", "2", values[1]);
+    }
+
+    /**
      * Test instantiating a DatabaseConfiguration from a configuration descriptor.
      */
     public void testConfigurationBuilder() throws Exception
