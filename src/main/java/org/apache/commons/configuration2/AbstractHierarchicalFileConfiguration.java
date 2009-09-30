@@ -34,6 +34,9 @@ import java.util.logging.Level;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.expr.NodeList;
+import org.apache.commons.configuration2.fs.DefaultFileSystem;
+import org.apache.commons.configuration2.fs.FileSystem;
+import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
@@ -82,7 +85,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends InMemoryConfiguration
-implements FileConfiguration, ConfigurationListener, FileSystemBased 
+implements FileConfiguration, ConfigurationListener, FileSystemBased
 {
     /** Constant for the configuration reload event.*/
     public static final int EVENT_RELOAD = 20;
@@ -91,7 +94,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     public static final int EVENT_CONFIG_CHANGED = 21;
 
     /** The root of the file scheme */
-    private static final String FILE_SCHEME = "file:";   
+    private static final String FILE_SCHEME = "file:";
 
     /** Stores the file name.*/
     protected String fileName;
@@ -715,8 +718,8 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      */
     public void setURL(URL url)
     {
-        setBasePath(ConfigurationUtils.getBasePath(url));
-        setFileName(ConfigurationUtils.getFileName(url));
+        setBasePath(DefaultFileSystem.getBasePath(url));
+        setFileName(DefaultFileSystem.getFileName(url));
         sourceURL = url;
     }
 
@@ -756,6 +759,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      * @param key the key of the new property
      * @param value the value
      */
+    @Override
     public void addProperty(String key, Object value)
     {
         super.addProperty(key, value);
@@ -770,12 +774,14 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      * @param key the key of the affected property
      * @param value the value
      */
+    @Override
     public void setProperty(String key, Object value)
     {
         super.setProperty(key, value);
         possiblySave();
     }
 
+    @Override
     public void clearProperty(String key)
     {
         super.clearProperty(key);
@@ -898,6 +904,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      * @param propValue the value of the property
      * @param before the before update flag
      */
+    @Override
     protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
         enterNoReload();
@@ -911,12 +918,14 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         }
     }
 
+    @Override
     public boolean isEmpty()
     {
         reload();
         return super.isEmpty();
     }
 
+    @Override
     public Iterator<String> getKeys()
     {
         reload();
@@ -1002,6 +1011,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      * @return the copy
      * @since 1.3
      */
+    @Override
     public Object clone()
     {
         AbstractHierarchicalFileConfiguration copy = (AbstractHierarchicalFileConfiguration) super.clone();
@@ -1026,7 +1036,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     {
         fireEvent(EVENT_CONFIG_CHANGED, null, getURL(), true);
     }
-    
+
     /**
      * Reacts on configuration change events triggered by the delegate. These
      * events are passed to the registered configuration listeners.

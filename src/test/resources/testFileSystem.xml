@@ -6,7 +6,7 @@
       <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
     </result>
-    <fileSystem config-class="org.apache.commons.configuration2.VFSFileSystem"/>
+    <fileSystem config-class="org.apache.commons.configuration2.fs.VFSFileSystem"/>
     <providers>
       <provider config-tag="test"
                 config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"/>

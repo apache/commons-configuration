@@ -22,11 +22,11 @@ import java.io.FileWriter;
 
 import junit.framework.TestCase;
 import org.apache.commons.configuration2.AbstractHierarchicalFileConfiguration;
-import org.apache.commons.configuration2.FileSystem;
 import org.apache.commons.configuration2.PropertiesConfiguration;
-import org.apache.commons.configuration2.VFSFileSystem;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.fs.FileSystem;
+import org.apache.commons.configuration2.fs.VFSFileSystem;
 
 /**
  * Test case for the VFSFileMonitorReloadingStrategy class.

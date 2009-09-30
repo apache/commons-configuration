@@ -36,6 +36,8 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration2.expr.NodeList;
+import org.apache.commons.configuration2.fs.FileSystem;
+import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultExpressionEngine;

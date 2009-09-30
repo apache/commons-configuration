@@ -34,7 +34,8 @@ import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.configuration2.fs.DefaultFileSystem;
+import org.apache.commons.configuration2.fs.FileSystem;
 
 /**
  * Miscellaneous utility methods for configurations.
@@ -53,9 +54,6 @@ public final class ConfigurationUtils
 
     /** Constant for the resource path separator.*/
     static final String RESOURCE_PATH_SEPARATOR = "/";
-
-    /** Constanct for the file URL protocol */
-    private static final String FILE_SCHEME = "file:";
 
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
@@ -183,7 +181,7 @@ public final class ConfigurationUtils
     public static HierarchicalConfiguration convertToHierarchical(Configuration conf)
     {
         // todo to be changed into convertToHierarchical(conf, null) when HierarchicalConfiguration is removed
-        
+
         if (conf == null)
         {
             return null;
@@ -352,61 +350,6 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Helper method for constructing a file object from a base path and a
-     * file name. This method is called if the base path passed to
-     * <code>getURL()</code> does not seem to be a valid URL.
-     *
-     * @param basePath the base path
-     * @param fileName the file name
-     * @return the resulting file
-     */
-    static File constructFile(String basePath, String fileName)
-    {
-        File file;
-
-        File absolute = null;
-        if (fileName != null)
-        {
-            absolute = new File(fileName);
-        }
-
-        if (StringUtils.isEmpty(basePath) || (absolute != null && absolute.isAbsolute()))
-        {
-            file = new File(fileName);
-        }
-        else
-        {
-            StringBuilder fName = new StringBuilder();
-            fName.append(basePath);
-
-            // My best friend. Paranoia.
-            if (!basePath.endsWith(File.separator))
-            {
-                fName.append(File.separator);
-            }
-
-            //
-            // We have a relative path, and we have
-            // two possible forms here. If we have the
-            // "./" form then just strip that off first
-            // before continuing.
-            //
-            if (fileName.startsWith("." + File.separator))
-            {
-                fName.append(fileName.substring(2));
-            }
-            else
-            {
-                fName.append(fileName);
-            }
-
-            file = new File(fName.toString());
-        }
-
-        return file;
-    }
-
-    /**
      * Return the location of the specified resource by searching the user home
      * directory, the current classpath and the system classpath.
      *
@@ -486,7 +429,7 @@ public final class ConfigurationUtils
         {
             try
             {
-                File file = constructFile(base, name);
+                File file = DefaultFileSystem.constructFile(base, name);
                 if (file != null && file.exists())
                 {
                     url = file.toURI().toURL();
@@ -508,7 +451,7 @@ public final class ConfigurationUtils
         {
             try
             {
-                File file = constructFile(System.getProperty("user.home"), name);
+                File file = DefaultFileSystem.constructFile(System.getProperty("user.home"), name);
                 if (file != null && file.exists())
                 {
                     url = file.toURI().toURL();
@@ -569,61 +512,6 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Return the path without the file name, for example http://xyz.net/foo/bar.xml
-     * results in http://xyz.net/foo/
-     *
-     * @param url the URL from which to extract the path
-     * @return the path component of the passed in URL
-     */
-    static String getBasePath(URL url)
-    {
-        if (url == null)
-        {
-            return null;
-        }
-
-        String s = url.toString();
-        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://"))
-        {
-            s = "file://" + s.substring(FILE_SCHEME.length());
-        }
-
-        if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
-        {
-            return s;
-        }
-        else
-        {
-            return s.substring(0, s.lastIndexOf("/") + 1);
-        }
-    }
-
-    /**
-     * Extract the file name from the specified URL.
-     *
-     * @param url the URL from which to extract the file name
-     * @return the extracted file name
-     */
-    static String getFileName(URL url)
-    {
-        if (url == null)
-        {
-            return null;
-        }
-
-        String path = url.getPath();
-
-        if (path.endsWith("/") || StringUtils.isEmpty(path))
-        {
-            return null;
-        }
-        else
-        {
-            return path.substring(path.lastIndexOf("/") + 1);
-        }
-    }
-
-    /**
      * Tries to convert the specified base path and file name into a file object.
      * This method is called e.g. by the save() methods of file based
      * configurations. The parameter strings can be relative files, absolute
@@ -680,7 +568,7 @@ public final class ConfigurationUtils
             return fileFromURL(url);
         }
 
-        return constructFile(basePath, fileName);
+        return DefaultFileSystem.constructFile(basePath, fileName);
     }
 
     /**

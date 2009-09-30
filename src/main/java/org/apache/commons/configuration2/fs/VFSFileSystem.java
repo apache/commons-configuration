@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.fs;
 
+import org.apache.commons.configuration2.ConfigurationException;
+import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.VFS;

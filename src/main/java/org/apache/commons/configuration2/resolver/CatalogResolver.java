@@ -28,7 +28,7 @@ import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
-import org.apache.commons.configuration2.FileSystem;
+import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.readers.CatalogReader;

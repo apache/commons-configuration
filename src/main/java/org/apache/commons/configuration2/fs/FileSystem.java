@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.fs;
 
 import java.io.File;
 import java.io.InputStream;
@@ -24,6 +24,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.configuration2.ConfigurationException;
 
 /**
  * Abstract layer to allow various types of file systems.

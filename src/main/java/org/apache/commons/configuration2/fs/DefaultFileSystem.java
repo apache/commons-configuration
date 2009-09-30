@@ -14,18 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration2;
+package org.apache.commons.configuration2.fs;
 
-import java.io.InputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.apache.commons.configuration2.ConfigurationException;
+import org.apache.commons.configuration2.ConfigurationUtils;
+import org.apache.commons.configuration2.VerifiableOutputStream;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * FileSystem that uses java.io.File or HttpClient
@@ -35,6 +40,10 @@ import java.net.MalformedURLException;
  */
 public class DefaultFileSystem extends FileSystem
 {
+    /** Constant for the file URL protocol */
+    private static final String FILE_SCHEME = "file:";
+
+    @Override
     public InputStream getInputStream(String basePath, String fileName)
         throws ConfigurationException
     {
@@ -58,6 +67,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
@@ -77,6 +87,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public OutputStream getOutputStream(URL url) throws ConfigurationException
     {
         // file URLs have to be converted to Files since FileURLConnection is
@@ -118,6 +129,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public OutputStream getOutputStream(File file) throws ConfigurationException
     {
         try
@@ -132,6 +144,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public String getPath(File file, URL url, String basePath, String fileName)
     {
         String path = null;
@@ -165,13 +178,14 @@ public class DefaultFileSystem extends FileSystem
         return path;
     }
 
+    @Override
     public String getBasePath(String path)
     {
         URL url;
         try
         {
             url = getURL(null, path);
-            return ConfigurationUtils.getBasePath(url);
+            return getBasePath(url);
         }
         catch (Exception e)
         {
@@ -179,13 +193,14 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public String getFileName(String path)
     {
         URL url;
         try
         {
             url = getURL(null, path);
-            return ConfigurationUtils.getFileName(url);
+            return getFileName(url);
         }
         catch (Exception e)
         {
@@ -194,6 +209,7 @@ public class DefaultFileSystem extends FileSystem
     }
 
 
+    @Override
     public URL getURL(String basePath, String file) throws MalformedURLException
     {
         File f = new File(file);
@@ -216,11 +232,12 @@ public class DefaultFileSystem extends FileSystem
         }
         catch (MalformedURLException uex)
         {
-            return ConfigurationUtils.constructFile(basePath, file).toURI().toURL();
+            return constructFile(basePath, file).toURI().toURL();
         }
     }
 
 
+    @Override
     public URL locateFromURL(String basePath, String fileName)
     {
         try
@@ -255,6 +272,116 @@ public class DefaultFileSystem extends FileSystem
         catch (IOException e)
         {
             return null;
+        }
+    }
+
+    /**
+     * Helper method for constructing a {@code File} object from a base path and
+     * a file name.
+     *
+     * @param basePath the base path
+     * @param fileName the file name
+     * @return the resulting file
+     */
+    public static File constructFile(String basePath, String fileName)
+    {
+        File file;
+
+        File absolute = null;
+        if (fileName != null)
+        {
+            absolute = new File(fileName);
+        }
+
+        if (StringUtils.isEmpty(basePath)
+                || (absolute != null && absolute.isAbsolute()))
+        {
+            file = new File(fileName);
+        }
+        else
+        {
+            StringBuilder fName = new StringBuilder();
+            fName.append(basePath);
+
+            // My best friend. Paranoia.
+            if (!basePath.endsWith(File.separator))
+            {
+                fName.append(File.separator);
+            }
+
+            //
+            // We have a relative path, and we have
+            // two possible forms here. If we have the
+            // "./" form then just strip that off first
+            // before continuing.
+            //
+            if (fileName.startsWith("." + File.separator))
+            {
+                fName.append(fileName.substring(2));
+            }
+            else
+            {
+                fName.append(fileName);
+            }
+
+            file = new File(fName.toString());
+        }
+
+        return file;
+    }
+
+    /**
+     * Extracts the file name from the specified URL.
+     *
+     * @param url the URL from which to extract the file name
+     * @return the extracted file name
+     */
+    public static String getFileName(URL url)
+    {
+        if (url == null)
+        {
+            return null;
+        }
+
+        String path = url.getPath();
+
+        if (path.endsWith("/") || StringUtils.isEmpty(path))
+        {
+            return null;
+        }
+        else
+        {
+            return path.substring(path.lastIndexOf("/") + 1);
+        }
+    }
+
+    /**
+     * Return the path without the file name, for example http://xyz.net/foo/bar.xml
+     * results in http://xyz.net/foo/
+     *
+     * @param url the URL from which to extract the path
+     * @return the path component of the passed in URL
+     */
+    public static String getBasePath(URL url)
+    {
+        if (url == null)
+        {
+            return null;
+        }
+
+        String s = url.toString();
+        if (s.startsWith(FILE_SCHEME) && !s.startsWith("file://"))
+        {
+            s = "file://" + s.substring(FILE_SCHEME.length());
+        }
+
+        if (s.endsWith("/") || StringUtils.isEmpty(url.getPath()))
+        {
+            return s;
+        }
+        else
+        {
+            return s.substring(0, s.lastIndexOf("/") + 1);
         }
     }
 
@@ -304,36 +431,43 @@ public class DefaultFileSystem extends FileSystem
             this.connection = connection;
         }
 
+        @Override
         public void write(byte[] bytes) throws IOException
         {
             stream.write(bytes);
         }
 
+        @Override
         public void write(byte[] bytes, int i, int i1) throws IOException
         {
             stream.write(bytes, i, i1);
         }
 
+        @Override
         public void flush() throws IOException
         {
             stream.flush();
         }
 
+        @Override
         public void close() throws IOException
         {
             stream.close();
         }
 
+        @Override
         public void write(int i) throws IOException
         {
             stream.write(i);
         }
 
+        @Override
         public String toString()
         {
             return stream.toString();
         }
 
+        @Override
         public void verify() throws IOException
         {
             if (connection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST)

@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.configuration2.flat.BaseConfiguration;
-import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
-import org.apache.commons.configuration2.expr.ExpressionEngine;
-
-import com.mockobjects.dynamic.Mock;
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
+
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
+
+import com.mockobjects.dynamic.Mock;
 
 /**
  * Tests the ConfigurationUtils class
@@ -103,35 +104,6 @@ public class TestConfigurationUtils extends TestCase
 
         assertEquals(absFile.toURL(),
         ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
-    }
-
-    public void testGetBasePath() throws Exception
-    {
-        URL url = new URL("http://xyz.net/foo/bar.xml");
-        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/foo/");
-        assertEquals("base path of " + url, "http://xyz.net/foo/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/foo");
-        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net/");
-        assertEquals("base path of " + url, "http://xyz.net/", ConfigurationUtils.getBasePath(url));
-
-        url = new URL("http://xyz.net");
-        assertEquals("base path of " + url, "http://xyz.net", ConfigurationUtils.getBasePath(url));
-    }
-
-    public void testGetFileName() throws Exception
-    {
-        assertEquals("file name for a null URL", null, ConfigurationUtils.getFileName(null));
-
-        URL url = new URL("http://xyz.net/foo/");
-        assertEquals("file for a directory URL " + url, null, ConfigurationUtils.getFileName(url));
-
-        url = new URL("http://xyz.net/foo/bar.xml");
-        assertEquals("file name for a valid URL " + url, "bar.xml", ConfigurationUtils.getFileName(url));
     }
 
     public void testCopy()
@@ -326,7 +298,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
         assertEquals("Wrong value 3", 3, hc.getInt("test(2)"));
     }
-    
+
     /**
      * Tests cloning a configuration that supports this operation.
      */
@@ -374,6 +346,7 @@ public class TestConfigurationUtils extends TestCase
     {
         PropertiesConfiguration config = new PropertiesConfiguration()
         {
+            @Override
             protected void addPropertyDirect(String key, Object value)
             {
                 // always simulate an exception
