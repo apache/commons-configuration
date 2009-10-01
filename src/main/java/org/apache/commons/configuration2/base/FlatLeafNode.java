@@ -165,7 +165,7 @@ class FlatLeafNode extends FlatNode
      * @return the value of the represented property
      */
     @Override
-    public Object getValue(ConfigurationSource config)
+    public Object getValue(FlatConfigurationSource config)
     {
         Object value = config.getProperty(getName());
         if (value instanceof Collection<?>)
@@ -213,7 +213,7 @@ class FlatLeafNode extends FlatNode
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
     @Override
-    public void removeChild(ConfigurationSource config, FlatNode child)
+    public void removeChild(FlatConfigurationSource config, FlatNode child)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot remove a child from a leaf node!");
@@ -230,7 +230,7 @@ class FlatLeafNode extends FlatNode
      * @param value the new value
      */
     @Override
-    public void setValue(ConfigurationSource config, Object value)
+    public void setValue(FlatConfigurationSource config, Object value)
     {
         if (hasValue)
         {

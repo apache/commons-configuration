@@ -39,7 +39,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * </p>
  * <p>
  * The motivation and purpose for this interface are analogous to
- * {@link ConfigurationSource}, but the organization of the data is different.
+ * {@link FlatConfigurationSource}, but the organization of the data is different.
  * Because many typical sources used for storing configuration settings are
  * hierarchical in nature (e.g. XML documents, the Java Preferences API, or
  * JNDI) it makes sense to have this interface for providing a uniform access to

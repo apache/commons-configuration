@@ -24,14 +24,14 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
 /**
  * <p>
  * An adapter implementation for converting a &quot;flat&quot;
- * {@link ConfigurationSource} into a hierarchical one.
+ * {@link FlatConfigurationSource} into a hierarchical one.
  * </p>
  * <p>
  * {@link ConfigurationImpl}, the main implementation of the
  * {@link Configuration} interface, requires a hierarchical configuration source
  * for accessing configuration settings. It does not work with sources
- * implementing only the {@link ConfigurationSource} interface out of the box.
- * With this adapter class a {@link ConfigurationSource} object can be treated
+ * implementing only the {@link FlatConfigurationSource} interface out of the box.
+ * With this adapter class a {@link FlatConfigurationSource} object can be treated
  * as a {@link HierarchicalConfigurationSource}.
  * </p>
  * <p>
@@ -44,18 +44,18 @@ import org.apache.commons.configuration2.tree.ConfigurationNode;
  * </p>
  * <p>
  * Changes at the data of the configuration used for the transformation are not
- * written back into the original {@link ConfigurationSource} automatically.
+ * written back into the original {@link FlatConfigurationSource} automatically.
  * This can be done by calling the {@code writeBack()} method. This will clear
  * the original source and then copy all data from this source into it.
  * </p>
  * <p>
  * It is possible to configure this adapter to register as an event listener at
- * the original {@link ConfigurationSource}. Every change event fired by the
- * {@link ConfigurationSource} causes the configuration used internally to be
- * re-constructed with the current data of the {@link ConfigurationSource}. This
+ * the original {@link FlatConfigurationSource}. Every change event fired by the
+ * {@link FlatConfigurationSource} causes the configuration used internally to be
+ * re-constructed with the current data of the {@link FlatConfigurationSource}. This
  * will throw away all changes made at this hierarchical source! So this mode
  * should only be used for providing a read-only hierarchical view for a plain
- * {@link ConfigurationSource}.
+ * {@link FlatConfigurationSource}.
  * </p>
  *
  * @author Commons Configuration team
@@ -68,7 +68,7 @@ public class HierarchicalSourceAdapter implements
     /**
      * Stores the original source that is transformed by this adapter.
      */
-    private final ConfigurationSource originalSource;
+    private final FlatConfigurationSource originalSource;
 
     /** The configuration used internally for the transformation. */
     private Configuration<ConfigurationNode> transformedConfig;
@@ -91,7 +91,7 @@ public class HierarchicalSourceAdapter implements
      * @throws IllegalArgumentException if the {@code ConfigurationSource} is
      *         <b>null</b>
      */
-    public HierarchicalSourceAdapter(ConfigurationSource wrappedSource,
+    public HierarchicalSourceAdapter(FlatConfigurationSource wrappedSource,
             boolean monitorChanges)
     {
         if (wrappedSource == null)
@@ -119,7 +119,7 @@ public class HierarchicalSourceAdapter implements
      * @throws IllegalArgumentException if the {@code ConfigurationSource} is
      *         <b>null</b>
      */
-    public HierarchicalSourceAdapter(ConfigurationSource wrappedSource)
+    public HierarchicalSourceAdapter(FlatConfigurationSource wrappedSource)
     {
         this(wrappedSource, false);
     }
@@ -137,7 +137,7 @@ public class HierarchicalSourceAdapter implements
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
     public static void fillConfiguration(Configuration<?> config,
-            ConfigurationSource source)
+            FlatConfigurationSource source)
     {
         if (config == null)
         {
@@ -157,7 +157,7 @@ public class HierarchicalSourceAdapter implements
      * An utility method for copying the content of the specified {@code
      * Configuration} into the given {@code ConfigurationSource}. This method is
      * the opposite of
-     * {@link #fillConfiguration(Configuration, ConfigurationSource)}: It
+     * {@link #fillConfiguration(Configuration, FlatConfigurationSource)}: It
      * iterates over the keys in the {@code Configuration} and adds their values
      * to the {@code ConfigurationSource}.
      *
@@ -167,7 +167,7 @@ public class HierarchicalSourceAdapter implements
      *        <b>null</b>)
      * @throws IllegalArgumentException if a required parameter is <b>null</b>
      */
-    public static void fillSource(ConfigurationSource source,
+    public static void fillSource(FlatConfigurationSource source,
             Configuration<?> config)
     {
         if (source == null)
@@ -190,7 +190,7 @@ public class HierarchicalSourceAdapter implements
      *
      * @return the original {@code ConfigurationSource}
      */
-    public ConfigurationSource getOriginalSource()
+    public FlatConfigurationSource getOriginalSource()
     {
         return originalSource;
     }
@@ -379,7 +379,7 @@ public class HierarchicalSourceAdapter implements
      * @param source the configuration source
      */
     private static void doFillConfiguration(Configuration<?> config,
-            ConfigurationSource source)
+            FlatConfigurationSource source)
     {
         for (Iterator<String> it = source.getKeys(); it.hasNext();)
         {
@@ -395,7 +395,7 @@ public class HierarchicalSourceAdapter implements
      * @param source the configuration source
      * @param config the configuration
      */
-    private static void doFillSource(ConfigurationSource source,
+    private static void doFillSource(FlatConfigurationSource source,
             Configuration<?> config)
     {
         for (Iterator<String> it = config.getKeys(); it.hasNext();)

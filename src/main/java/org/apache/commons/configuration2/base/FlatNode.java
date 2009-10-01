@@ -27,7 +27,7 @@ import org.apache.commons.configuration2.ConfigurationRuntimeException;
  * configuration source.
  * </p>
  * <p>
- * The {@link ConfigurationSource} interface provides a map-oriented access to
+ * The {@link FlatConfigurationSource} interface provides a map-oriented access to
  * configuration settings rather than organizing data in a hierarchical
  * structure. Nevertheless, the {@link Configuration} interface defines some
  * operations that are hierarchical in nature. This is required for instance to
@@ -79,7 +79,7 @@ public abstract class FlatNode
      * @param config the owning {@code ConfigurationSource}
      * @return the value of this node
      */
-    public abstract Object getValue(ConfigurationSource config);
+    public abstract Object getValue(FlatConfigurationSource config);
 
     /**
      * Sets the value of this node. An implementation can access the passed in
@@ -89,7 +89,7 @@ public abstract class FlatNode
      * @param value the new value
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
-    public abstract void setValue(ConfigurationSource config, Object value);
+    public abstract void setValue(FlatConfigurationSource config, Object value);
 
     /**
      * Returns the index of the value represented by this node. This is needed
@@ -162,5 +162,5 @@ public abstract class FlatNode
      * @param child the child to be removed
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
-    public abstract void removeChild(ConfigurationSource config, FlatNode child);
+    public abstract void removeChild(FlatConfigurationSource config, FlatNode child);
 }

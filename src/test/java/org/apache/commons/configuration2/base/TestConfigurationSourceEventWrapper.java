@@ -40,7 +40,7 @@ public class TestConfigurationSourceEventWrapper extends TestCase
     private static final Object VALUE = 42;
 
     /** Stores a mock for the wrapped source. */
-    private ConfigurationSource wrappedSource;
+    private FlatConfigurationSource wrappedSource;
 
     /** A test listener. */
     private ConfigurationSourceListenerImpl listener;
@@ -51,7 +51,7 @@ public class TestConfigurationSourceEventWrapper extends TestCase
     @Override
     protected void setUp() throws Exception
     {
-        wrappedSource = EasyMock.createMock(ConfigurationSource.class);
+        wrappedSource = EasyMock.createMock(FlatConfigurationSource.class);
         wrapper = new ConfigurationSourceEventWrapper(wrappedSource);
         listener = new ConfigurationSourceListenerImpl();
         wrapper.addConfigurationSourceListener(listener);

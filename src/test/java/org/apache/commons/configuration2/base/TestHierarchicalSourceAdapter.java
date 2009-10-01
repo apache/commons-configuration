@@ -90,7 +90,7 @@ public class TestHierarchicalSourceAdapter extends TestCase
      *
      * @param src the mock for the source
      */
-    private static void prepareTransformPropertyValues(ConfigurationSource src)
+    private static void prepareTransformPropertyValues(FlatConfigurationSource src)
     {
         for (int i = 0; i < KEYS.length; i++)
         {
@@ -106,7 +106,7 @@ public class TestHierarchicalSourceAdapter extends TestCase
      * @param src the mock for the source
      * @param clear a flag whether the clear() call should be expected, too
      */
-    private static void prepareWriteBack(ConfigurationSource src, boolean clear)
+    private static void prepareWriteBack(FlatConfigurationSource src, boolean clear)
     {
         if (clear)
         {
@@ -141,8 +141,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testInit()
     {
-        ConfigurationSource src = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource src = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.replay(src);
         HierarchicalSourceAdapter adapter = new HierarchicalSourceAdapter(src);
         assertEquals("Wrong wrapped source", src, adapter.getOriginalSource());
@@ -155,11 +155,11 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testInitMonitor()
     {
-        ConfigurationSource src = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource src = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.replay(src);
         final MutableObject listener = new MutableObject();
-        ConfigurationSource orgSrc = new ConfigurationSourceEventWrapper(src)
+        FlatConfigurationSource orgSrc = new ConfigurationSourceEventWrapper(src)
         {
             @Override
             public void addConfigurationSourceListener(
@@ -315,8 +315,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testTransformationMonitor()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         source
                 .addConfigurationSourceListener((ConfigurationSourceListener) EasyMock
                         .anyObject());
@@ -375,8 +375,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testWriteBackMonitor()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         final MutableObject expectedListener = new MutableObject();
         source
                 .addConfigurationSourceListener((ConfigurationSourceListener) EasyMock
@@ -431,8 +431,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testFillConfiguration()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.getKeys()).andReturn(
                 Arrays.asList(KEYS).iterator());
         prepareTransformPropertyValues(source);
@@ -450,8 +450,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testFillConfigurationNullConfig()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.replay(source);
         try
         {
@@ -488,8 +488,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testFillSource()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         prepareWriteBack(source, false);
         EasyMock.replay(source);
         Configuration<ConfigurationNode> config = new ConfigurationImpl<ConfigurationNode>(
@@ -509,8 +509,8 @@ public class TestHierarchicalSourceAdapter extends TestCase
      */
     public void testFillSourceNullConfig()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.replay(source);
         try
         {
@@ -553,7 +553,7 @@ public class TestHierarchicalSourceAdapter extends TestCase
         HierarchicalConfigurationSource<ConfigurationNode> mockSource;
 
         public HierarchicalSourceAdapterTestImpl(
-                ConfigurationSource wrappedSource, boolean monitorChanges)
+                FlatConfigurationSource wrappedSource, boolean monitorChanges)
         {
             super(wrappedSource, monitorChanges);
         }
@@ -564,7 +564,7 @@ public class TestHierarchicalSourceAdapter extends TestCase
          */
         public HierarchicalSourceAdapterTestImpl()
         {
-            super(EasyMock.createMock(ConfigurationSource.class));
+            super(EasyMock.createMock(FlatConfigurationSource.class));
         }
 
         /**

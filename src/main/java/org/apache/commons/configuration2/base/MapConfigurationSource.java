@@ -26,12 +26,12 @@ import java.util.Map;
 
 /**
  * <p>
- * An implementation of the {@code ConfigurationSource} interface that holds its
+ * An implementation of the {@code FlatConfigurationSource} interface that holds its
  * data in a map.
  * </p>
  * <p>
  * Using a map as store for configuration settings is a natural choice as the
- * methods defined by the {@code ConfigurationSource} interface can be easily
+ * methods defined by the {@code FlatConfigurationSource} interface can be easily
  * implemented on top of a map. So most methods more or less directly delegate
  * to the map. At construction time either a map can be provided which will then
  * be used as store or a new one is created.
@@ -43,7 +43,7 @@ import java.util.Map;
  * </p>
  * <p>
  * This class can also be used as a base class for other configuration sources
- * that a map-like structure and keep their whole data in memory. An example
+ * that have a map-like structure and keep their whole data in memory. An example
  * could be a configuration source wrapping a properties file.
  * </p>
  * <p>
@@ -56,7 +56,7 @@ import java.util.Map;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class MapConfigurationSource implements ConfigurationSource,
+public class MapConfigurationSource implements FlatConfigurationSource,
         Serializable
 {
     /**
@@ -108,7 +108,7 @@ public class MapConfigurationSource implements ConfigurationSource,
      * @throws IllegalArgumentException if the source to be copied is
      *         <b>null</b>
      */
-    public MapConfigurationSource(ConfigurationSource c)
+    public MapConfigurationSource(FlatConfigurationSource c)
     {
         if (c == null)
         {

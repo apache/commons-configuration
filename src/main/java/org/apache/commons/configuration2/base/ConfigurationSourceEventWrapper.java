@@ -22,27 +22,27 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <p>
- * A specialized implementation of {@code ConfigurationSource} that allows
+ * A specialized implementation of {@code FlatConfigurationSource} that allows
  * adding support for event notifications to a wrapped {@code
- * ConfigurationSource}.
+ * FlatConfigurationSource}.
  * </p>
  * <p>
- * This class is a wrapper around another {@code ConfigurationSource}. The
- * methods defined by the {@code ConfigurationSource} interface are - to the
+ * This class is a wrapper around another {@code FlatConfigurationSource}. The
+ * methods defined by the {@code FlatConfigurationSource} interface are - to the
  * major part - implemented by delegating to the wrapped source. If a method
  * requires firing an event, the event is fired by this class before and after
  * the wrapped source is invoked. This way support for event notifications can
- * be added to arbitrary {@code ConfigurationSource} implementations
+ * be added to arbitrary {@code FlatConfigurationSource} implementations
  * transparently.
  * </p>
  *
  * @author Commons Configuration team
  * @version $Id$
  */
-public class ConfigurationSourceEventWrapper implements ConfigurationSource
+public class ConfigurationSourceEventWrapper implements FlatConfigurationSource
 {
     /** Stores the wrapped configuration source. */
-    private final ConfigurationSource wrappedSource;
+    private final FlatConfigurationSource wrappedSource;
 
     /** The list with the event listeners that have been registered. */
     private final List<ConfigurationSourceListener> listeners;
@@ -54,7 +54,7 @@ public class ConfigurationSourceEventWrapper implements ConfigurationSource
      * @param wrapped the source to be wrapped (must not be <b>null</b>)
      * @throws IllegalArgumentException if the wrapped source is <b>null</b>
      */
-    public ConfigurationSourceEventWrapper(ConfigurationSource wrapped)
+    public ConfigurationSourceEventWrapper(FlatConfigurationSource wrapped)
     {
         if (wrapped == null)
         {
@@ -71,7 +71,7 @@ public class ConfigurationSourceEventWrapper implements ConfigurationSource
      *
      * @return the wrapped source
      */
-    public ConfigurationSource getWrappedSource()
+    public FlatConfigurationSource getWrappedSource()
     {
         return wrappedSource;
     }

@@ -40,8 +40,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testIsEmptyImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.isEmpty()).andReturn(Boolean.FALSE);
         EasyMock.replay(source);
         assertFalse("Wrong result of isEmpty()", ConfigurationSourceUtils
@@ -54,8 +54,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testIsEmptyNotImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         Iterator<?> it = EasyMock.createMock(Iterator.class);
         EasyMock.expect(source.isEmpty()).andThrow(
                 new UnsupportedOperationException());
@@ -90,8 +90,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testValueCountImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         final int count = 4;
         EasyMock.expect(source.valueCount(KEY)).andReturn(count);
         EasyMock.replay(source);
@@ -106,8 +106,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testValueCountNotImplementedNonExisting()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.valueCount(KEY)).andThrow(
                 new UnsupportedOperationException());
         EasyMock.expect(source.getProperty(KEY)).andReturn(null);
@@ -123,8 +123,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testValueCountNotImplementedSingleValue()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.valueCount(KEY)).andThrow(
                 new UnsupportedOperationException());
         EasyMock.expect(source.getProperty(KEY)).andReturn(this);
@@ -140,8 +140,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testValueCountNotImplementedCollection()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.valueCount(KEY)).andThrow(
                 new UnsupportedOperationException());
         final int count = 5;
@@ -180,8 +180,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testSizeImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         final int size = 256;
         EasyMock.expect(source.size()).andReturn(size);
         EasyMock.replay(source);
@@ -195,8 +195,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testSizeNotImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         final int size = 128;
         EasyMock.expect(source.size()).andThrow(
                 new UnsupportedOperationException());
@@ -238,8 +238,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testGetKeysImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         @SuppressWarnings("unchecked")
         Iterator<String> it = EasyMock.createMock(Iterator.class);
         EasyMock.expect(source.getKeys(KEY)).andReturn(it);
@@ -255,8 +255,8 @@ public class TestConfigurationSourceUtils extends TestCase
      */
     public void testGetKeysNotImplemented()
     {
-        ConfigurationSource source = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource source = EasyMock
+                .createMock(FlatConfigurationSource.class);
         EasyMock.expect(source.getKeys(KEY)).andThrow(
                 new UnsupportedOperationException());
         Collection<String> keys = new ArrayList<String>();

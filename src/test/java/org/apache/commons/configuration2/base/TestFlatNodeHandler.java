@@ -44,7 +44,7 @@ public class TestFlatNodeHandler extends TestCase
     private FlatNodeHandler handler;
 
     /** The configuration source associated with the node handler. */
-    private ConfigurationSource source;
+    private FlatConfigurationSource source;
 
     /** Stores the internal update flag of the node handler. */
     private Boolean internalUpdate;

@@ -23,7 +23,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
 /**
  * <p>
  * An adapter implementation for converting a &quot;flat&quot;
- * {@link ConfigurationSource} into a hierarchical one based on {@link FlatNode}
+ * {@link FlatConfigurationSource} into a hierarchical one based on {@link FlatNode}
  * node objects.
  * </p>
  * <p>
@@ -51,7 +51,7 @@ public class FlatNodeSourceAdapter implements
         HierarchicalConfigurationSource<FlatNode>, ConfigurationSourceListener
 {
     /** The wrapped configuration source. */
-    private final ConfigurationSource originalSource;
+    private final FlatConfigurationSource originalSource;
 
     /** The node handler for accessing the flat nodes. */
     private final FlatNodeHandler nodeHandler;
@@ -69,7 +69,7 @@ public class FlatNodeSourceAdapter implements
      * @throws IllegalArgumentException if the passed in {@code
      *         ConfigurationSource} is <b>null</b>
      */
-    public FlatNodeSourceAdapter(ConfigurationSource wrappedSource)
+    public FlatNodeSourceAdapter(FlatConfigurationSource wrappedSource)
     {
         if (wrappedSource == null)
         {
@@ -88,7 +88,7 @@ public class FlatNodeSourceAdapter implements
      *
      * @return the original {@code ConfigurationSource}
      */
-    public ConfigurationSource getOriginalSource()
+    public FlatConfigurationSource getOriginalSource()
     {
         return originalSource;
     }

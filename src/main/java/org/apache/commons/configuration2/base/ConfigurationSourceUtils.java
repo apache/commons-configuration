@@ -25,8 +25,8 @@ import java.util.Iterator;
  * </p>
  * <p>
  * This class can be used for safely calling methods on a
- * {@link ConfigurationSource} object that are optional. If the
- * {@link ConfigurationSource} implements the method, it is invoked directly.
+ * {@link FlatConfigurationSource} object that are optional. If the
+ * {@link FlatConfigurationSource} implements the method, it is invoked directly.
  * Otherwise, a default implementation is provided that will be called.
  * </p>
  *
@@ -53,9 +53,9 @@ public final class ConfigurationSourceUtils
      * @return <b>true</b> if the configuration source is empty, <b>false</b>
      *         otherwise
      * @throws IllegalArgumentException if the source is <b>null</b>
-     * @see ConfigurationSource#isEmpty()
+     * @see FlatConfigurationSource#isEmpty()
      */
-    public static boolean isEmpty(ConfigurationSource source)
+    public static boolean isEmpty(FlatConfigurationSource source)
     {
         checkNullSource(source);
         try
@@ -78,9 +78,9 @@ public final class ConfigurationSourceUtils
      * @param source the {@code ConfigurationSource} (must not be <b>null</b>)
      * @return the size of the {@code ConfigurationSource}
      * @throws IllegalArgumentException if the source is <b>null</b>
-     * @see ConfigurationSource#size()
+     * @see FlatConfigurationSource#size()
      */
-    public static int size(ConfigurationSource source)
+    public static int size(FlatConfigurationSource source)
     {
         checkNullSource(source);
 
@@ -109,9 +109,9 @@ public final class ConfigurationSourceUtils
      * @param key the key of the property to be tested
      * @return the number of values stored for this property
      * @throws IllegalArgumentException if the source is <b>null</b>
-     * @see ConfigurationSource#valueCount(String)
+     * @see FlatConfigurationSource#valueCount(String)
      */
-    public static int valueCount(ConfigurationSource source, String key)
+    public static int valueCount(FlatConfigurationSource source, String key)
     {
         checkNullSource(source);
 
@@ -144,9 +144,9 @@ public final class ConfigurationSourceUtils
      * @return an {@code Iterator} over all keys contained in this {@code
      *         ConfigurationSource} starting with the given prefix
      * @throws IllegalArgumentException if the source is <b>null</b>
-     * @see ConfigurationSource#getKeys(String)
+     * @see FlatConfigurationSource#getKeys(String)
      */
-    public static Iterator<String> getKeys(ConfigurationSource source,
+    public static Iterator<String> getKeys(FlatConfigurationSource source,
             String prefix)
     {
         checkNullSource(source);
@@ -168,7 +168,7 @@ public final class ConfigurationSourceUtils
      * @param source the source in question
      * @throws IllegalArgumentException if the source is <b>null</b>
      */
-    private static void checkNullSource(ConfigurationSource source)
+    private static void checkNullSource(FlatConfigurationSource source)
     {
         if (source == null)
         {

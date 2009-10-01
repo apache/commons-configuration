@@ -56,10 +56,10 @@ public class TestFlatNodeSourceAdapter extends TestCase
      *
      * @return the mock source
      */
-    private static ConfigurationSource createMockSource()
+    private static FlatConfigurationSource createMockSource()
     {
-        ConfigurationSource src = EasyMock
-                .createMock(ConfigurationSource.class);
+        FlatConfigurationSource src = EasyMock
+                .createMock(FlatConfigurationSource.class);
         src
                 .addConfigurationSourceListener((ConfigurationSourceListener) EasyMock
                         .anyObject());
@@ -79,7 +79,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
         {
             map.put(KEYS[i], VALUES[i]);
         }
-        ConfigurationSource src = new ConfigurationSourceEventWrapper(
+        FlatConfigurationSource src = new ConfigurationSourceEventWrapper(
                 new MapConfigurationSource(map));
         return new FlatNodeSourceAdapter(src);
     }
@@ -125,7 +125,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      */
     public void testGetOriginalSource()
     {
-        ConfigurationSource src = createMockSource();
+        FlatConfigurationSource src = createMockSource();
         EasyMock.replay(src);
         FlatNodeSourceAdapter adapter = new FlatNodeSourceAdapter(src);
         assertEquals("Wrong original source", src, adapter.getOriginalSource());
@@ -138,7 +138,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      */
     public void testAddConfigurationSourceListener()
     {
-        ConfigurationSource src = createMockSource();
+        FlatConfigurationSource src = createMockSource();
         ConfigurationSourceListener l = EasyMock
                 .createMock(ConfigurationSourceListener.class);
         src.addConfigurationSourceListener(l);
@@ -154,7 +154,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      */
     public void testRemoveConfigurationSourceListener()
     {
-        ConfigurationSource src = createMockSource();
+        FlatConfigurationSource src = createMockSource();
         ConfigurationSourceListener l = EasyMock
                 .createMock(ConfigurationSourceListener.class);
         EasyMock.expect(src.removeConfigurationSourceListener(l)).andReturn(
@@ -175,7 +175,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      */
     public void testClear()
     {
-        ConfigurationSource src = createMockSource();
+        FlatConfigurationSource src = createMockSource();
         src.clear();
         EasyMock.replay(src);
         FlatNodeSourceAdapter adapter = new FlatNodeSourceAdapter(src);
@@ -189,7 +189,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      */
     public void testSetRootNode()
     {
-        ConfigurationSource src = createMockSource();
+        FlatConfigurationSource src = createMockSource();
         EasyMock.replay(src);
         FlatNodeSourceAdapter adapter = new FlatNodeSourceAdapter(src);
         try

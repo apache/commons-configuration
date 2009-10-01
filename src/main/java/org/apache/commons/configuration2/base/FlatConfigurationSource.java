@@ -20,14 +20,14 @@ import java.util.Iterator;
 
 /**
  * <p>
- * An interface defining a source for configuration settings.
+ * An interface defining a non-hierarchical source for configuration settings.
  * </p>
  * <p>
  * This interfaces defines a set of fundamental methods for dealing with
- * configuration properties. The (raw) values of properties can be queried or
- * set, new properties can be added, or existing properties can be removed.
- * Further, it is possible to iterate over the property keys stored in this
- * configuration source.
+ * configuration properties in a map-like fashion. The (raw) values of
+ * properties can be queried or set, new properties can be added, or existing
+ * properties can be removed. Further, it is possible to iterate over the
+ * property keys stored in this configuration source.
  * </p>
  * <p>
  * All of the operations provided by this interface are on a very basic level.
@@ -50,7 +50,7 @@ import java.util.Iterator;
  * that an implementation is free to ignore these methods and throw an {@code
  * UnsupportedOperationException}. The background is that it is possible to
  * implement these methods using a combination of other (non optional) methods
- * provided by {@code ConfigurationSource}. For instance, the {@code size()}
+ * provided by {@code FlatConfigurationSource}. For instance, the {@code size()}
  * method can be implemented by iterating over the keys contained in this
  * configuration source, calling {@code getProperty()} on each, and counting the
  * values returned. If an implementation is able to provide more efficient
@@ -61,7 +61,7 @@ import java.util.Iterator;
  * @author Commons Configuration team
  * @version $Id$
  */
-public interface ConfigurationSource
+public interface FlatConfigurationSource
 {
     /**
      * Checks if the configuration is empty. This is an optional operation. It

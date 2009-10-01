@@ -37,8 +37,8 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * </p>
  * <p>
  * Actions caused by this node handler may modify the associated
- * {@link ConfigurationSource} and thus trigger change events. Per default a
- * change of the {@link ConfigurationSource} causes the invalidation of the node
+ * {@link FlatConfigurationSource} and thus trigger change events. Per default a
+ * change of the {@link FlatConfigurationSource} causes the invalidation of the node
  * structure. Because of that the node handler has to keep track of the updates
  * caused by itself to avoid unnecessary invalidation of nodes. (The adapter
  * implementation using this {@code NodeHandler} to simulate a hierarchical
@@ -58,7 +58,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
 class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
 {
     /** Stores the associated ConfigurationSource. */
-    private final ConfigurationSource configurationSource;
+    private final FlatConfigurationSource configurationSource;
 
     /**
      * A flag whether an update of the configuration was caused by an operation
@@ -72,7 +72,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      *
      * @param config the {@code ConfigurationSource}
      */
-    public FlatNodeHandler(ConfigurationSource config)
+    public FlatNodeHandler(FlatConfigurationSource config)
     {
         configurationSource = config;
     }
@@ -83,7 +83,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      *
      * @return the associated {@code ConfigurationSource}
      */
-    public ConfigurationSource getConfigurationSource()
+    public FlatConfigurationSource getConfigurationSource()
     {
         return configurationSource;
     }

@@ -190,7 +190,7 @@ class FlatRootNode extends FlatNode
      * @return the value of this node
      */
     @Override
-    public Object getValue(ConfigurationSource config)
+    public Object getValue(FlatConfigurationSource config)
     {
         return null;
     }
@@ -217,7 +217,7 @@ class FlatRootNode extends FlatNode
      *         node
      */
     @Override
-    public void removeChild(ConfigurationSource config, FlatNode child)
+    public void removeChild(FlatConfigurationSource config, FlatNode child)
     {
         if (child != null)
         {
@@ -252,7 +252,7 @@ class FlatRootNode extends FlatNode
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
     @Override
-    public void setValue(ConfigurationSource config, Object value)
+    public void setValue(FlatConfigurationSource config, Object value)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot set the value of the root node of a flat configuration!");
@@ -284,7 +284,7 @@ class FlatRootNode extends FlatNode
      * @param index the value index of this child node
      * @param value the new value
      */
-    void setMultiProperty(ConfigurationSource config, FlatNode child,
+    void setMultiProperty(FlatConfigurationSource config, FlatNode child,
             int index, Object value)
     {
         changeMultiProperty(config, child, index, value, false);
@@ -333,7 +333,7 @@ class FlatRootNode extends FlatNode
      * @param value the new value
      * @param remove a flag whether the value at the index is to be removed
      */
-    private static void changeMultiProperty(ConfigurationSource config,
+    private static void changeMultiProperty(FlatConfigurationSource config,
             FlatNode child, int index, Object value, boolean remove)
     {
         Object val = config.getProperty(child.getName());

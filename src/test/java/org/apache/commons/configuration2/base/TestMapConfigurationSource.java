@@ -427,7 +427,7 @@ public class TestMapConfigurationSource extends TestCase
     {
         try
         {
-            new MapConfigurationSource((ConfigurationSource) null);
+            new MapConfigurationSource((FlatConfigurationSource) null);
             fail("Could create copy of null source!");
         }
         catch (IllegalArgumentException iex)
