@@ -51,7 +51,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * @param <T> the type of the nodes used by this hierarchical configuration
  *        source
  */
-public interface HierarchicalConfigurationSource<T>
+public interface HierarchicalConfigurationSource<T> extends ConfigurationSource
 {
     /**
      * Returns the {@code NodeHandler} for dealing with the nodes used by this
@@ -81,44 +81,4 @@ public interface HierarchicalConfigurationSource<T>
      * @throws IllegalArgumentException if the root node is <b>null</b>
      */
     void setRootNode(T root);
-
-    /**
-     * Removes all properties contained in this {@code
-     * HierarchicalConfigurationSource}. This is an optional operation. It can
-     * be implemented by removing the content of the root node.
-     *
-     * @throws UnsupportedOperationException if this operation is not
-     *         implemented
-     */
-    void clear();
-
-    /**
-     * Adds a {@code ConfigurationSourceListener} for this {@code
-     * HierarchicalConfigurationSource}. This listener will be notified about
-     * manipulations on this source. Support for event listeners is optional. An
-     * implementation can throw an {@code UnsupportedOperationException}
-     * exception.
-     *
-     * @param l the listener to be added (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the listener is <b>null</b>
-     * @throws UnsupportedOperationException if this operation is not
-     *         implemented
-     */
-    void addConfigurationSourceListener(ConfigurationSourceListener l);
-
-    /**
-     * Removes the specified {@code ConfigurationSourceListener} from this
-     * {@code HierarchicalConfigurationSource}. It will not receive
-     * notifications about changes on this source any more. The return value
-     * indicates whether the listener existed and could be removed. As was
-     * pointed out for
-     * {@link #addConfigurationSourceListener(ConfigurationSourceListener)},
-     * this is an optional operation.
-     *
-     * @param l the listener to be removed
-     * @return a flag whether the listener could be removed
-     * @throws UnsupportedOperationException if this operation is not
-     *         implemented
-     */
-    boolean removeConfigurationSourceListener(ConfigurationSourceListener l);
 }
