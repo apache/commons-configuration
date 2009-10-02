@@ -275,6 +275,22 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
     }
 
     /**
+     * Returns the capability with the specified class. A {@code
+     * SubConfiguration} does not inherit the capabilities of the {@code
+     * ConfigurationSource} used by its parent. So this implementation always
+     * returns <b>null</b>.
+     *
+     * @param <T> the type of the capability requested
+     * @param cls the class of the capability interface
+     * @return the object implementing the desired capability or <b>null</b> if
+     *         this capability is not supported
+     */
+    public <C> C getCapability(Class<C> cls)
+    {
+        return null;
+    }
+
+    /**
      * Returns a hierarchical configuration object for the given sub node.
      * This implementation will ensure that the returned
      * <code>SubConfiguration</code> object will have the same parent as

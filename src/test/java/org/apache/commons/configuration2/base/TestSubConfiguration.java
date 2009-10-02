@@ -377,6 +377,16 @@ public class TestSubConfiguration extends TestCase
     }
 
     /**
+     * Tests the implementation of getCapability(). This is just a dummy which
+     * does not return any concrete capabilities.
+     */
+    public void testGetCapability()
+    {
+        setUpSubnodeConfig();
+        assertNull("Got a capability", config.getCapability(Object.class));
+    }
+
+    /**
      * Initializes the parent configuration. This method creates the typical
      * structure of tables and fields nodes.
      *

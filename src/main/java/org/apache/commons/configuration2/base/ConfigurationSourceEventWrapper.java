@@ -254,6 +254,20 @@ public class ConfigurationSourceEventWrapper implements FlatConfigurationSource
     }
 
     /**
+     * Returns the capability of the the specified type. This implementation
+     * delegates to the wrapped source.
+     *
+     * @param <T> the type of the capability requested
+     * @param cls the class of the capability interface
+     * @return the object implementing the desired capability or <b>null</b> if
+     *         this capability is not supported
+     */
+    public <T> T getCapability(Class<T> cls)
+    {
+        return getWrappedSource().getCapability(cls);
+    }
+
+    /**
      * Helper method for sending an event to all listeners currently registered
      * at this object.
      *

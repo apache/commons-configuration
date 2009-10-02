@@ -276,4 +276,21 @@ public class TestFlatNodeSourceAdapter extends TestCase
         assertEquals("Property not found in source", NEW_VALUE, adapter
                 .getOriginalSource().getProperty(NEW_KEY));
     }
+
+    /**
+     * Tests whether capabilities can be requested.
+     */
+    public void testGetCapability()
+    {
+        FlatConfigurationSource src = createMockSource();
+        ConfigurationSource cap = EasyMock
+                .createMock(ConfigurationSource.class);
+        EasyMock.expect(src.getCapability(ConfigurationSource.class))
+                .andReturn(cap);
+        EasyMock.replay(src, cap);
+        FlatNodeSourceAdapter adapter = new FlatNodeSourceAdapter(src);
+        assertEquals("Wrong capability", cap, adapter
+                .getCapability(ConfigurationSource.class));
+        EasyMock.verify(src, cap);
+    }
 }

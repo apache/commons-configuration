@@ -187,6 +187,19 @@ public class FlatNodeSourceAdapter implements
     }
 
     /**
+     * Queries this object for the specified capability. This implementation
+     * delegates to the original source.
+     *
+     * @param <T> the type of the capability
+     * @param cls the class of the capability interface
+     * @return the object implementing this capability or <b>null</b>
+     */
+    public <T> T getCapability(Class<T> cls)
+    {
+        return getOriginalSource().getCapability(cls);
+    }
+
+    /**
      * Creates a hierarchy of {@code FlatNode} objects that corresponds to the
      * data stored in the wrapped {@code ConfigurationSource}. This
      * implementation relies on the method {@code getKeys()} of the wrapped

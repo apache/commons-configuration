@@ -308,6 +308,20 @@ public class HierarchicalSourceAdapter implements
     }
 
     /**
+     * Returns the capability of the the specified type. This implementation
+     * delegates to the transformed source.
+     *
+     * @param <T> the type of the capability requested
+     * @param cls the class of the capability interface
+     * @return the object implementing the desired capability or <b>null</b> if
+     *         this capability is not supported
+     */
+    public <T> T getCapability(Class<T> cls)
+    {
+        return getOriginalSource().getCapability(cls);
+    }
+
+    /**
      * Notifies this object about a change of a monitored {@code
      * ConfigurationSource}. If this {@code HierarchicalSourceAdapter} was
      * constructed with the {@code monitorChanges} flag set to <b>true</b>, it

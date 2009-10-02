@@ -543,6 +543,22 @@ public class TestHierarchicalSourceAdapter extends TestCase
     }
 
     /**
+     * Tests the implementation of getCapability().
+     */
+    public void testGetCapability()
+    {
+        HierarchicalSourceAdapterTestImpl adapter = new HierarchicalSourceAdapterTestImpl();
+        final Object cap = new Object();
+        EasyMock
+                .expect(adapter.getOriginalSource().getCapability(Object.class))
+                .andReturn(cap);
+        EasyMock.replay(adapter.getOriginalSource());
+        assertEquals("Wrong capability", cap, adapter
+                .getCapability(Object.class));
+        EasyMock.verify(adapter.getOriginalSource());
+    }
+
+    /**
      * A specialized implementation of {@code HierarchicalSourceAdapter} that
      * overrides some methods to inject mock objects.
      */

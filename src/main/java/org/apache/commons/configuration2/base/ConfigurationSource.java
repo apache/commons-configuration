@@ -75,4 +75,31 @@ public interface ConfigurationSource
      *         implemented
      */
     boolean removeConfigurationSourceListener(ConfigurationSourceListener l);
+
+    /**
+     * <p>
+     * Returns the capability of the the specified type.
+     * </p>
+     * <p>
+     * Beyond the basic set of methods defined by the {@code
+     * ConfigurationSource} interface and its sub interfaces a concrete source
+     * implementation can provide additional features (e.g. persistence
+     * operations). The interfaces required for controlling these features can
+     * be queried using this generic method.
+     * </p>
+     * <p>
+     * This is an application of the <em>capability pattern</em>. It allows
+     * keeping the basic interfaces for configuration sources lean, but
+     * flexible. Additional functionality can be added later without the need to
+     * extend the interfaces. Note that this method can return <b>null</b> if
+     * the capability requested is not available. Callers should always check
+     * for <b>null</b> results.
+     * </p>
+     *
+     * @param <T> the type of the capability requested
+     * @param cls the class of the capability interface
+     * @return the object implementing the desired capability or <b>null</b> if
+     *         this capability is not supported
+     */
+    <T> T getCapability(Class<T> cls);
 }

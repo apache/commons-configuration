@@ -116,4 +116,10 @@ public class InMemoryConfigurationSource implements
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Not yet implemented!");
     }
+
+    public <T> T getCapability(Class<T> cls)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
 }

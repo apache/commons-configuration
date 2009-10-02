@@ -319,6 +319,12 @@ public class MapConfigurationSource implements FlatConfigurationSource,
         throw new UnsupportedOperationException("Not implemented!");
     }
 
+    public <T> T getCapability(Class<T> cls)
+    {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Not yet implemented!");
+    }
+
     /**
      * Returns the underlying map, in which the data of this {@code
      * MapConfigurationSource} is stored. This method is intended to be used by
