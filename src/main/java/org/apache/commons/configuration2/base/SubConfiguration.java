@@ -104,7 +104,8 @@ import org.apache.commons.configuration2.expr.NodeList;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class SubConfiguration<T> extends ConfigurationImpl<T> implements HierarchicalConfigurationSource<T>
+public class SubConfiguration<T> extends ConfigurationImpl<T> implements
+        HierarchicalConfigurationSource<T>
 {
     /** Stores the parent configuration. */
     private ConfigurationImpl<T> parent;
@@ -224,6 +225,7 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
     /**
      * Dummy implementation of this {@code HierarchicalConfigurationSource}
      * method. Event listeners are not supported by this implementation.
+     *
      * @param l the listener to be added
      */
     public void addConfigurationSourceListener(ConfigurationSourceListener l)
@@ -234,6 +236,7 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
     /**
      * Dummy implementation of this {@code HierarchicalConfigurationSource}
      * method. Event listeners are not supported by this implementation.
+     *
      * @param l the listener to be removed
      */
     public boolean removeConfigurationSourceListener(
@@ -245,6 +248,7 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
     /**
      * Dummy implementation of this {@code HierarchicalConfigurationSource}
      * method. It is not supported to set a different root node.
+     *
      * @param root the new root node
      */
     public void setRootNode(T root)
@@ -254,7 +258,10 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
 
     /**
      * Returns the underlying {@code HierarchicalConfigurationSource}. This
-     * configuration acts as its own configuration source.
+     * configuration acts as its own configuration source. This trick makes it
+     * possible to let the {@code SubConfiguration} operate on its own root
+     * node.
+     *
      * @return the associated {@code HierarchicalConfigurationSource}
      */
     @Override
@@ -266,6 +273,7 @@ public class SubConfiguration<T> extends ConfigurationImpl<T> implements Hierarc
     /**
      * Returns the {@code NodeHandler} for this configuration. This handler is
      * obtained from the parent.
+     *
      * @return the {@code NodeHandler} for this configuration
      */
     @Override
