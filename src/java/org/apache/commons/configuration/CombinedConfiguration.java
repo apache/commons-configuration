@@ -408,6 +408,10 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         }
 
         ConfigData cd = new ConfigData(config, name, at);
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("Adding configuration " + config + " with name " + name);
+        }
         configurations.add(cd);
         if (name != null)
         {
@@ -634,142 +638,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             return combinedRoot;
         }
     }
-    /*
-    public Object getProperty(String key)
-    {
-        synchronized(reloadLock)
-        {
-            return super.getProperty(key);
-        }
-    }
-
-    protected void addPropertyDirect(String key, Object obj)
-    {
-        synchronized(reloadLock)
-        {
-            super.addPropertyDirect(key, obj);
-        }
-    }
-
-    public void addNodes(String key, Collection nodes)
-    {
-        synchronized(reloadLock)
-        {
-            super.addNodes(key, nodes);
-        }
-    }
-
-    public boolean isEmpty()
-    {
-        synchronized(reloadLock)
-        {
-            return super.isEmpty();
-        }
-    }
-
-    public Configuration subset(String prefix)
-    {
-        synchronized(reloadLock)
-        {
-            return super.subset(prefix);
-        }
-    }
-
-    public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
-    {
-        synchronized(reloadLock)
-        {
-            return super.configurationAt(key, supportUpdates);
-        }
-    }
-
-    public SubnodeConfiguration configurationAt(String key)
-    {
-        synchronized(reloadLock)
-        {
-            return super.configurationAt(key);
-        }
-    }
-
-    public List configurationsAt(String key)
-    {
-        synchronized(reloadLock)
-        {
-            return super.configurationsAt(key);
-        }
-    }
-
-    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
-    {
-        synchronized(reloadLock)
-        {
-            return super.createSubnodeConfiguration(node);
-        }
-    }
-
-    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node, String subnodeKey)
-    {
-        synchronized(reloadLock)
-        {
-            return super.createSubnodeConfiguration(node, subnodeKey);
-        }
-    }
-
-    public boolean containsKey(String key)
-    {
-        synchronized(reloadLock)
-        {
-            return super.containsKey(key);
-        }
-    }
-
-    public void setProperty(String key, Object value)
-    {
-        synchronized(reloadLock)
-        {
-            super.setProperty(key, value);
-        }
-    }
-
-    public void clearTree(String key)
-    {
-        synchronized(reloadLock)
-        {
-            super.clearTree(key);
-        }
-    }
-
-    public void clearProperty(String key)
-    {
-        synchronized(reloadLock)
-        {
-            super.clearProperty(key);
-        }
-    }
-
-    public Iterator getKeys()
-    {
-        synchronized(reloadLock)
-        {
-            return super.getKeys();
-        }
-    }
-
-    public Iterator getKeys(String prefix)
-    {
-        synchronized(reloadLock)
-        {
-            return super.getKeys(prefix);
-        }
-    }
-
-    public int getMaxIndex(String key)
-    {
-        synchronized(reloadLock)
-        {
-            return super.getMaxIndex(key);
-        }
-    } */
 
     /**
      * Clears this configuration. All contained configurations will be removed.
@@ -919,6 +787,10 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     {
         if (getNumberOfConfigurations() < 1)
         {
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("No configurations defined for " + this);
+            }
             return new ViewNode();
         }
 

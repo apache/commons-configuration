@@ -769,7 +769,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             config = (CombinedConfiguration) configs.get(key);
             if (config == null)
             {
-                config = new CombinedConfiguration(getNodeCombiner(), reloadLock);
+                config = new CombinedConfiguration(getNodeCombiner());
                 if (loggerName != null)
                 {
                     Log log = LogFactory.getLog(loggerName);

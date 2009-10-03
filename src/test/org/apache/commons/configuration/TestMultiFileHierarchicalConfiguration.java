@@ -265,7 +265,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         }
 
         output.delete();
-    }
+    }    
 
     private void copyFile(File input, File output) throws IOException
     {

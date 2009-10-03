@@ -49,6 +49,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.resolver.DefaultEntityResolver;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -226,6 +227,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration()
     {
         super();
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -243,6 +245,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         super(c);
         clearReferences(getRootNode());
         setRootElementName(getRootNode().getName());
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -255,6 +258,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(String fileName) throws ConfigurationException
     {
         super(fileName);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -267,6 +271,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(File file) throws ConfigurationException
     {
         super(file);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -279,6 +284,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(URL url) throws ConfigurationException
     {
         super(url);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**

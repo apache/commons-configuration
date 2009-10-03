@@ -32,6 +32,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.Log;
@@ -223,7 +224,19 @@ public final class ConfigurationUtils
 
         if (conf instanceof HierarchicalConfiguration)
         {
-            HierarchicalConfiguration hc = (HierarchicalConfiguration) conf;
+            HierarchicalConfiguration hc;
+            if (conf instanceof Reloadable)
+            {
+                Object lock = ((Reloadable) conf).getReloadLock();
+                synchronized(lock)
+                {
+                    hc = new HierarchicalConfiguration((HierarchicalConfiguration) conf);
+                }
+            }
+            else
+            {
+                hc = (HierarchicalConfiguration) conf;
+            }
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);

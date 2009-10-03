@@ -23,6 +23,7 @@ import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.ConfigurationException;
@@ -199,7 +200,7 @@ public class CatalogResolver implements EntityResolver
             }
             catch (Exception e)
             {
-                log.debug("Failed to create InputSource for " + resolved + " ("
+                log.warn("Failed to create InputSource for " + resolved + " ("
                                 + e.toString() + ")");
                 return null;
             }
@@ -229,7 +230,7 @@ public class CatalogResolver implements EntityResolver
      */
     public void setLogger(Log log)
     {
-        this.log = (log != null) ? log : new NoOpLog();
+        this.log = (log != null) ? log : LogFactory.getLog(CatalogResolver.class);
     }
 
     private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver()
