@@ -408,6 +408,11 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         return this.getConfiguration().subset(prefix);
     }
 
+    public Object getReloadLock()
+    {
+        return this.getConfiguration().getReloadLock();
+    }
+
     public Node getRoot()
     {
         return this.getConfiguration().getRoot();

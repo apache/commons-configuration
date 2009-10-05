@@ -31,6 +31,6 @@ public class Lock
 
     public String toString()
     {
-        return "Lock: " + name + " id = " + instanceId;
+        return "Lock: " + name + " id = " + instanceId + ": " + super.toString();
     }
 }

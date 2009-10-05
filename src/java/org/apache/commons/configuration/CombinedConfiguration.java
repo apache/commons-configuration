@@ -823,23 +823,26 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     private Configuration findSourceConfiguration(ConfigurationNode node)
     {
-        ConfigurationNode root = null;
-        ConfigurationNode current = node;
-
-        // find the root node in this hierarchy
-        while (current != null)
+        synchronized(getReloadLock())
         {
-            root = current;
-            current = current.getParentNode();
-        }
+            ConfigurationNode root = null;
+            ConfigurationNode current = node;
 
-        // Check with the root nodes of the child configurations
-        for (Iterator it = configurations.iterator(); it.hasNext();)
-        {
-            ConfigData cd = (ConfigData) it.next();
-            if (root == cd.getRootNode())
+            // find the root node in this hierarchy
+            while (current != null)
             {
-                return cd.getConfiguration();
+                root = current;
+                current = current.getParentNode();
+            }
+
+            // Check with the root nodes of the child configurations
+            for (Iterator it = configurations.iterator(); it.hasNext();)
+            {
+                ConfigData cd = (ConfigData) it.next();
+                if (root == cd.getRootNode())
+                {
+                    return cd.getConfiguration();
+                }
             }
         }
 
@@ -949,11 +952,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             }
 
             // Copy data of the root node to the new path
-            rootNode = ConfigurationUtils
+            ConfigurationNode root = ConfigurationUtils
                     .convertToHierarchical(getConfiguration(),
                             getConversionExpressionEngine()).getRootNode();
-            atParent.appendChildren(rootNode);
-            atParent.appendAttributes(rootNode);
+            atParent.appendChildren(root);
+            atParent.appendAttributes(root);
+            rootNode = root;
 
             return result;
         }
