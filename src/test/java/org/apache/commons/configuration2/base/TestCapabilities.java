@@ -98,6 +98,21 @@ public class TestCapabilities extends TestCase
     }
 
     /**
+     * Tests whether super interfaces are taken into account when querying
+     * capabilities from the owner object.
+     */
+    public void testGetCapabilityFromOwnerInherited()
+    {
+        @SuppressWarnings("serial")
+        ConfigurationSource owner = new MapConfigurationSource()
+        {
+        };
+        Capabilities caps = new Capabilities(owner, null);
+        assertSame("Wrong source", owner, caps
+                .getCapability(ConfigurationSource.class));
+    }
+
+    /**
      * Tests whether capabilities from the list can be obtained.
      */
     public void testGetCapabilityFromList()

@@ -19,6 +19,8 @@ package org.apache.commons.configuration2.base;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang.ClassUtils;
+
 /**
  * <p>
  * A class for managing <em>capabilities</em>.
@@ -147,9 +149,9 @@ public class Capabilities
     private static void extractOwnerCapabilities(Collection<Capability> caps,
             Object owner)
     {
-        for (Class capCls : owner.getClass().getInterfaces())
+        for (Object capCls : ClassUtils.getAllInterfaces(owner.getClass()))
         {
-            caps.add(new Capability(capCls, owner));
+            caps.add(new Capability((Class) capCls, owner));
         }
     }
 }
