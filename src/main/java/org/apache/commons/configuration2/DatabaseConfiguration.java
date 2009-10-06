@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 
@@ -136,7 +135,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
         this.keyColumn = keyColumn;
         this.valueColumn = valueColumn;
         this.name = name;
-        setLogger(Logger.getLogger(getClass().getName()));
+        setLogger(LogFactory.getLog(getClass().getName()));
         addErrorLogListener();  // log errors per default
     }
 
@@ -447,7 +446,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
         }
         catch (SQLException e)
         {
-            getLogger().log(Level.SEVERE, "An error occured on closing the statement", e);
+            getLogger().error( "An error occured on closing the statement", e);
         }
 
         try
@@ -459,7 +458,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
         }
         catch (SQLException e)
         {
-            getLogger().log(Level.SEVERE, "An error occured on closing the connection", e);
+            getLogger().error( "An error occured on closing the connection", e);
         }
     }
 

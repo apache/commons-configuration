@@ -17,7 +17,8 @@
 
 package org.apache.commons.configuration2;
 
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import junit.framework.TestCase;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
@@ -80,7 +81,7 @@ public class TestCatalogResolver extends TestCase
 
     public void testLogger() throws Exception
     {
-        Logger log = Logger.getLogger(getClass().getName());
+        Log log = LogFactory.getLog(getClass().getName());
         resolver.setLogger(log);
         assertNotNull("No Logger returned", resolver.getLogger());
         assertTrue("Incorrect Logger", log == resolver.getLogger());

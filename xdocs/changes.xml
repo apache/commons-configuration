@@ -35,12 +35,6 @@
         The dependencies on commons-collections, commons-codec and commons-digester are no longer needed.
       </action>
       <action dev="ebourg" type="update">
-        The java.util.logging API is now used instead of commons-logging. If necessary it's still
-        possible to redirect the log messages to a 3rd party logging API using a bridging mechanism
-        such as the one available for Log4J
-        (see http://people.apache.org/~psmith/logging.apache.org/sandbox/jul-log4j-bridge/).
-      </action>
-      <action dev="ebourg" type="update">
         Calendar objects in PropertyListConfiguration are now saved with their own time zone.
       </action>
       <action dev="ebourg" type="remove">
@@ -91,7 +85,7 @@
       </action>
       <action dev="rgoers" type="fix" issue="CONFIGURATION-388">
         Attribute or element values will not be escaped when attribute or element splitting are disabled.
-      </action>      
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-385">
         DatabaseConfiguration now generates correct events for the clear() and
         clearProperty() methods.

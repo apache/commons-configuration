@@ -223,6 +223,23 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+      <exclusions>
+        <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+        </exclusion>
+        <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-vfs</artifactId>
       <version>2.0-SNAPSHOT</version>
@@ -252,7 +269,7 @@
         </exclusion>
       </exclusions>
     </dependency>
-    
+
     <dependency>
       <groupId>xml-resolver</groupId>
       <artifactId>xml-resolver</artifactId>
@@ -338,7 +355,7 @@
       <version>1.2</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>

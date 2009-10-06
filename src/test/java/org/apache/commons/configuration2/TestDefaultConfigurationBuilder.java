@@ -18,18 +18,16 @@ package org.apache.commons.configuration2;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.logging.StreamHandler;
-import java.util.logging.SimpleFormatter;
-import java.util.logging.ConsoleHandler;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Log4JLogger;
 
 import junit.framework.TestCase;
 
@@ -37,9 +35,11 @@ import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.tree.TreeUtils;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
+import org.apache.log4j.WriterAppender;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.Logger;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -895,13 +895,13 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testMultiTenentConfiguration3() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        StreamHandler handler = new StreamHandler(stream, new SimpleFormatter());
-        handler.setLevel(Level.ALL);
-        Logger logger = Logger.getLogger("TestLogger");
-        logger.addHandler(handler);
-        logger.setLevel(Level.ALL);
-        logger.setUseParentHandlers(false);
+        StringWriter writer = new StringWriter();
+        WriterAppender app = new WriterAppender(new SimpleLayout(), writer);
+        Log log = LogFactory.getLog("TestLogger");
+        Logger logger = ((Log4JLogger)log).getLogger();
+        logger.addAppender(app);
+        logger.setLevel(org.apache.log4j.Level.DEBUG);
+        logger.setAdditivity(false);
 
         System.setProperty("Id", "1005");
 
@@ -909,12 +909,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
         verify("1001", config, 15);
-        handler.flush();
-        String xml = stream.toString();
+        String xml = writer.getBuffer().toString();
         assertNotNull("No XML returned", xml);
-        assertTrue("Incorect configuration data: " + xml, xml.contains("<rowsPerPage>15</rowsPerPage>"));
-        logger.removeHandler(handler);
-        logger.setLevel(Level.OFF);
+        assertTrue("Incorect configuration data", xml.indexOf("<rowsPerPage>15</rowsPerPage>") >= 0);
+        logger.removeAppender(app);
+        logger.setLevel(org.apache.log4j.Level.OFF);
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);

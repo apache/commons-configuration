@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
@@ -41,6 +40,8 @@ import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -717,7 +718,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         XMLConfiguration configuration = new XMLConfiguration();
         if (loggerName != null)
         {
-            Logger log = Logger.getLogger(loggerName);
+            Log log = LogFactory.getLog(loggerName);
             if (log != null)
             {
                 configuration.setLogger(log);

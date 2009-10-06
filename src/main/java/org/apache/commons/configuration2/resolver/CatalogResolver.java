@@ -23,8 +23,8 @@ import java.net.FileNameMap;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
@@ -64,7 +64,7 @@ public class CatalogResolver implements EntityResolver
     private org.apache.xml.resolver.tools.CatalogResolver resolver;
 
     /** Stores the logger. */
-    private Logger log;
+    private Log log;
 
     /**
      * Constructs the CatalogResolver
@@ -183,7 +183,7 @@ public class CatalogResolver implements EntityResolver
             }
             catch (Exception e)
             {
-                log.log(Level.FINE, "Failed to create InputSource for " + resolved, e);
+                log.debug("Failed to create InputSource for " + resolved, e);
                 return null;
             }
         }
@@ -196,7 +196,7 @@ public class CatalogResolver implements EntityResolver
      *
      * @return the logger
      */
-    public Logger getLogger()
+    public Log getLogger()
     {
         return log;
     }
@@ -210,16 +210,9 @@ public class CatalogResolver implements EntityResolver
      *
      * @param log the new logger
      */
-    public void setLogger(Logger log)
+    public void setLogger(Log log)
     {
-        if (log == null)
-        {
-            // create a NoOp logger
-            log = Logger.getLogger(getClass().getName() + "." + hashCode());
-            log.setLevel(Level.OFF);
-        }
-        
-        this.log = log;
+        this.log = (log != null) ? log : LogFactory.getLog(CatalogResolver.class);
     }
 
     private synchronized org.apache.xml.resolver.tools.CatalogResolver getResolver()

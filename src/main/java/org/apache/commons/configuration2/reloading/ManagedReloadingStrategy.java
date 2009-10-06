@@ -17,7 +17,8 @@
 
 package org.apache.commons.configuration2.reloading;
 
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.configuration2.FileConfiguration;
 
@@ -30,7 +31,7 @@ import org.apache.commons.configuration2.FileConfiguration;
 public class ManagedReloadingStrategy implements ReloadingStrategy, ManagedReloadingStrategyMBean
 {
     /** The logger. */
-    private Logger log = Logger.getLogger(getClass().getName());
+    private Log log = LogFactory.getLog(getClass().getName());
 
     /** Stores a reference to the associated configuration. */
     private FileConfiguration configuration;

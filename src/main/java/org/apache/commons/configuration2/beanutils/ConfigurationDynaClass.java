@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -40,7 +41,7 @@ import org.apache.commons.configuration2.Configuration;
 public class ConfigurationDynaClass implements DynaClass
 {
     /** The logger.*/
-    private static Logger log = Logger.getLogger(ConfigurationDynaClass.class.getName());
+    private static Log log = LogFactory.getLog(ConfigurationDynaClass.class.getName());
 
     /** Stores the associated configuration.*/
     private Configuration configuration;
@@ -53,18 +54,18 @@ public class ConfigurationDynaClass implements DynaClass
     public ConfigurationDynaClass(Configuration configuration)
     {
         super();
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("ConfigurationDynaClass(" + configuration + ")");
+            log.trace("ConfigurationDynaClass(" + configuration + ")");
         }
         this.configuration = configuration;
     }
 
     public DynaProperty getDynaProperty(String name)
     {
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("getDynaProperty(" + name + ")");
+            log.trace("getDynaProperty(" + name + ")");
         }
 
         if (name == null)
@@ -120,9 +121,9 @@ public class ConfigurationDynaClass implements DynaClass
 
     public DynaProperty[] getDynaProperties()
     {
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("getDynaProperties()");
+            log.trace("getDynaProperties()");
         }
 
         Iterator<String> keys = configuration.getKeys();
@@ -136,9 +137,9 @@ public class ConfigurationDynaClass implements DynaClass
 
         DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("Found " + properties.size() + " properties.");
+            log.trace("Found " + properties.size() + " properties.");
         }
 
         return propertyArray;

@@ -26,13 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.ExpressionEngine;
 import org.apache.commons.configuration2.tree.NodeCombiner;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -737,7 +738,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 config = new CombinedConfiguration(getNodeCombiner());
                 if (loggerName != null)
                 {
-                    Logger log = Logger.getLogger(loggerName);
+                    Log log = LogFactory.getLog(loggerName);
                     if (log != null)
                     {
                         config.setLogger(log);

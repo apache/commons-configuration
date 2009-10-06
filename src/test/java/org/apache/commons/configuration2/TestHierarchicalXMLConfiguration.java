@@ -23,7 +23,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 
 /**

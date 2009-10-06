@@ -27,8 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.configuration2.converter.Converter;
 import org.apache.commons.configuration2.converter.DefaultPropertyConverter;
@@ -39,6 +37,9 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.NoOpLog;
 
 /**
  * <p>Abstract configuration class. Provides basic functionality but does not
@@ -149,7 +150,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     protected Converter converter = new DefaultPropertyConverter();
 
     /** Stores the logger.*/
-    private Logger log;
+    private Log log;
 
     /**
      * Creates a new instance of <code>AbstractConfiguration</code>.
@@ -372,7 +373,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @return the logger
      * @since 1.4
      */
-    public Logger getLogger()
+    public Log getLogger()
     {
         return log;
     }
@@ -387,16 +388,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @param log the new logger
      * @since 1.4
      */
-    public void setLogger(Logger log)
+    public void setLogger(Log log)
     {
-        if (log == null)
-        {
-            // create a NoOp logger
-            log = Logger.getLogger(getClass().getName() + "." + hashCode());
-            log.setLevel(Level.OFF);
-        }
-
-        this.log = log;
+        this.log = (log != null) ? log : new NoOpLog();
     }
 
     /**
@@ -415,7 +409,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             public void configurationError(ConfigurationErrorEvent event)
             {
-                getLogger().log(Level.WARNING, "Internal error", event.getCause());
+                getLogger().warn("Internal error", event.getCause());
             }
         });
     }

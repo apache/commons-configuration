@@ -20,7 +20,8 @@ package org.apache.commons.configuration2;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
+
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameClassPair;
@@ -40,7 +41,7 @@ import org.apache.commons.configuration2.expr.AbstractNodeHandler;
  * test.foo = value1
  * test.foo.bar = value2
  * </pre>
- * 
+ *
  * <p>In this case setting the <tt>test.foo.bar</tt> property will overwrite
  * <tt>test.foo</tt>, and reciprocally.</p>
  *
@@ -109,7 +110,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
 
         root = new JNDINode(context, prefix, 0);
 
-        setLogger(Logger.getLogger(getClass().getName()));
+        setLogger(LogFactory.getLog(getClass().getName()));
         addErrorLogListener();
     }
 
@@ -128,7 +129,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
 
     /**
      * Sets the maximum depth for searching in the JNDI tree.
-     * 
+     *
      * @param maxDepth the maximum depth
      */
     public void setMaxDepth(int maxDepth)
@@ -301,7 +302,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
                 Context context = (Context) value;
                 context.createSubcontext(name);
 
-                return new JNDINode(context, name, node.depth + 1);                
+                return new JNDINode(context, name, node.depth + 1);
             }
             catch (NamingException e)
             {
@@ -346,7 +347,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
             {
                 config.fireError(EVENT_READ_PROPERTY, null, null, e);
             }
-            
+
             return children;
         }
 

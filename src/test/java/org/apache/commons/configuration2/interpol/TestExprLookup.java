@@ -19,12 +19,16 @@ package org.apache.commons.configuration2.interpol;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Logger;
-import java.util.logging.Level;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Log4JLogger;
 
 import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.ConfigurationAssert;
+import org.apache.log4j.Logger;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.Level;
 
 /**
  * Test class for ExprLookup.
@@ -56,23 +60,24 @@ public class TestExprLookup extends TestCase
 
     public void testLookup() throws Exception
     {
-        ConsoleHandler handler = new ConsoleHandler();
-        Logger logger = Logger.getLogger("TestLogger");
-        logger.addHandler(handler);
-        logger.setLevel(Level.FINE);
+        ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
+        Log log = LogFactory.getLog("TestLogger");
+        Logger logger = ((Log4JLogger) log).getLogger();
+        logger.addAppender(app);
+        logger.setLevel(Level.DEBUG);
         ExprLookup.Variables vars = new ExprLookup.Variables();
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         XMLConfiguration config = new XMLConfiguration(TEST_FILE);
-        config.setLogger(logger);
+        config.setLogger(log);
         ExprLookup lookup = new ExprLookup(vars);
         lookup.setConfiguration(config);
         String str = lookup.lookup(PATTERN1);
         assertTrue(str.startsWith("Goodbye"));
         str = lookup.lookup(PATTERN2);
         assertTrue("Incorrect value: " + str, str.equals("value Some text"));
-        logger.removeHandler(handler);
+        logger.removeAppender(app);
 
     }
 

@@ -23,7 +23,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
@@ -690,13 +689,13 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             {
                 node = getNodeCombiner().combine(node, it.next().getTransformedRoot());
             }
-            
-            if (getLogger().isLoggable(Level.FINEST))
+
+            if (getLogger().isDebugEnabled())
             {
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 PrintStream stream = new PrintStream(os);
                 TreeUtils.printTree(stream, node);
-                getLogger().finest(os.toString());
+                getLogger().debug(os.toString());
             }
             return node;
         }

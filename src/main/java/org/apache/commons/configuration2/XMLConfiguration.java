@@ -32,7 +32,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -951,7 +950,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (SAXParseException spe)
         {
-            this.getLogger().log(Level.FINE, "Error parsing " + source.getSystemId(), spe);
+            this.getLogger().debug( "Error parsing " + source.getSystemId(), spe);
             throw new ConfigurationException("Error parsing " + source.getSystemId(), spe);
         }
         catch (Exception e)

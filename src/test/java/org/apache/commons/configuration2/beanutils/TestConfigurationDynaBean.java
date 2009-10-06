@@ -20,8 +20,6 @@ package org.apache.commons.configuration2.beanutils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration2.Configuration;
@@ -138,10 +136,6 @@ public class TestConfigurationDynaBean extends TestCase
         bean.set("doubleArray", doubleArray);
         bean.set("byteArray", byteArray);
         bean.set("stringArray", stringArray);
-
-        // enable the finest logging
-        Logger.getLogger(ConfigurationDynaClass.class.getName()).setLevel(Level.ALL);
-        Logger.getLogger(ConfigurationDynaBean.class.getName()).setLevel(Level.ALL);
     }
 
     /**

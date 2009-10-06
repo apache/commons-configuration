@@ -29,7 +29,6 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
@@ -344,7 +343,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
             }
             catch (IOException e)
             {
-                getLogger().log(Level.WARNING, "Could not close input stream", e);
+                getLogger().warn( "Could not close input stream", e);
             }
         }
     }
@@ -822,9 +821,9 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
 
                     if (strategy.reloadingRequired())
                     {
-                        if (getLogger().isLoggable(Level.FINE))
+                        if (getLogger().isInfoEnabled())
                         {
-                            getLogger().fine("Reloading configuration. URL is " + getURL());
+                            getLogger().info("Reloading configuration. URL is " + getURL());
                         }
                         fireEvent(EVENT_RELOAD, null, getURL(), true);
                         setDetailEvents(false);
@@ -1077,7 +1076,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         }
         catch (IOException e)
         {
-            getLogger().log(Level.WARNING, "Could not close output stream", e);
+            getLogger().warn( "Could not close output stream", e);
         }
     }
 }

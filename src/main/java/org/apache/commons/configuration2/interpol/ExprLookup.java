@@ -28,7 +28,6 @@ import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
 
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 /**
  * Lookup that allows expressions to be evaluated.
@@ -189,7 +188,7 @@ public class ExprLookup extends StrLookup
         }
         catch (Exception e)
         {
-            configuration.getLogger().log(Level.FINE, "Error encountered evaluating " + result, e);
+            configuration.getLogger().debug( "Error encountered evaluating " + result, e);
         }
 
         return result;

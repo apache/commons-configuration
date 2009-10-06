@@ -20,8 +20,8 @@ package org.apache.commons.configuration2.interpol;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.text.StrLookup;
@@ -60,7 +60,7 @@ public class ConstantLookup extends StrLookup
     private static Map<String, String> constantCache = new HashMap<String, String>();
 
     /** The logger. */
-    private Logger log = Logger.getLogger(getClass().getName());
+    private Log log = LogFactory.getLog(getClass().getName());
 
     /**
      * Tries to resolve the specified variable. The passed in variable name is
@@ -113,7 +113,7 @@ public class ConstantLookup extends StrLookup
         }
         catch (Exception ex)
         {
-            log.log(Level.WARNING, "Could not obtain value for variable " + var, ex);
+            log.warn("Could not obtain value for variable " + var, ex);
         }
 
         return result;

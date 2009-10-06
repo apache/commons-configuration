@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.XMLConfiguration;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 
 /**

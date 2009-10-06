@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.apache.commons.logging.LogFactory;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -435,7 +435,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         providers = new HashMap<String, ConfigurationProvider>();
         registerDefaultProviders();
         registerBeanFactory();
-        setLogger(Logger.getLogger(getClass().getName()));
+        setLogger(LogFactory.getLog(getClass().getName()));
         addErrorLogListener();  // log errors per default
     }
 

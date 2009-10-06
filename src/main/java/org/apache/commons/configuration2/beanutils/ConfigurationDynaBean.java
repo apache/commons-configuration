@@ -21,7 +21,8 @@ import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -60,7 +61,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     private static final String PROPERTY_DELIMITER = ".";
 
     /** The logger.*/
-    private static Logger log = Logger.getLogger(ConfigurationDynaBean.class.getName());
+    private static Log log = LogFactory.getLog(ConfigurationDynaBean.class.getName());
 
     /**
      * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
@@ -71,17 +72,17 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     public ConfigurationDynaBean(Configuration configuration)
     {
         super(configuration);
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("ConfigurationDynaBean(" + configuration + ")");
+            log.trace("ConfigurationDynaBean(" + configuration + ")");
         }
     }
 
     public void set(String name, Object value)
     {
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("set(" + name + "," + value + ")");
+            log.trace("set(" + name + "," + value + ")");
         }
 
         if (value == null)
@@ -112,9 +113,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
     public Object get(String name)
     {
-        if (log.isLoggable(Level.FINEST))
+        if (log.isTraceEnabled())
         {
-            log.finest("get(" + name + ")");
+            log.trace("get(" + name + ")");
         }
 
         // get configuration property
@@ -129,9 +130,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
         }
 
-        if (log.isLoggable(Level.FINE))
+        if (log.isTraceEnabled())
         {
-            log.fine(name + "=[" + result + "]");
+            log.trace(name + "=[" + result + "]");
         }
 
         if (result == null)

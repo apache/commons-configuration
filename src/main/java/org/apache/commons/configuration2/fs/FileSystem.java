@@ -22,8 +22,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.NoOpLog;
 
 import org.apache.commons.configuration2.ConfigurationException;
 
@@ -42,7 +43,7 @@ public abstract class FileSystem
     private static FileSystem fileSystem;
 
     /** The Logger */
-    private Logger log;
+    private Log log;
 
     /** FileSystem options provider */
     private FileOptionsProvider optionsProvider;
@@ -57,7 +58,7 @@ public abstract class FileSystem
      *
      * @return the logger
      */
-    public Logger getLogger()
+    public Log getLogger()
     {
         return log;
     }
@@ -71,16 +72,9 @@ public abstract class FileSystem
      *
      * @param log the new logger
      */
-    public void setLogger(Logger log)
+    public void setLogger(Log log)
     {
-        if (log == null)
-        {
-            // create a NoOp logger
-            log = Logger.getLogger(getClass().getName() + "." + hashCode());
-            log.setLevel(Level.OFF);
-        }
-
-        this.log = log;
+        this.log = (log != null) ? log : new NoOpLog();
     }
 
     static
@@ -88,7 +82,7 @@ public abstract class FileSystem
         String fsClassName = System.getProperty(FILE_SYSTEM);
         if (fsClassName != null)
         {
-            Logger log = Logger.getLogger(FileSystem.class.getName());
+            Log log = LogFactory.getLog(FileSystem.class.getName());
 
             try
             {
@@ -96,23 +90,23 @@ public abstract class FileSystem
                 if (FileSystem.class.isAssignableFrom(clazz))
                 {
                     fileSystem = (FileSystem) clazz.newInstance();
-                    if (log.isLoggable(Level.FINE))
+                    if (log.isDebugEnabled())
                     {
-                        log.fine("Using " + fsClassName);
+                        log.debug("Using " + fsClassName);
                     }
                 }
             }
             catch (InstantiationException ex)
             {
-                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
+                log.error("Unable to create " + fsClassName, ex);
             }
             catch (IllegalAccessException ex)
             {
-                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
+                log.error("Unable to create " + fsClassName, ex);
             }
             catch (ClassNotFoundException ex)
             {
-                log.log(Level.SEVERE, "Unable to create " + fsClassName, ex);
+                log.error("Unable to create " + fsClassName, ex);
             }
         }
 
