@@ -36,8 +36,8 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class InMemoryConfigurationSource implements
-        HierarchicalConfigurationSource<ConfigurationNode>
+public class InMemoryConfigurationSource extends AbstractConfigurationSource
+        implements HierarchicalConfigurationSource<ConfigurationNode>
 {
     /**
      * The node handler used by this configuration source class. Because {@code
@@ -85,12 +85,6 @@ public class InMemoryConfigurationSource implements
         rootNode = root;
     }
 
-    public void addConfigurationSourceListener(ConfigurationSourceListener l)
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
-    }
-
     /**
      * Removes all data from this configuration source. This implementation
      * simply creates a new, empty root node.
@@ -108,18 +102,5 @@ public class InMemoryConfigurationSource implements
     public NodeHandler<ConfigurationNode> getNodeHandler()
     {
         return NODE_HANDLER;
-    }
-
-    public boolean removeConfigurationSourceListener(
-            ConfigurationSourceListener l)
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
-    }
-
-    public <T> T getCapability(Class<T> cls)
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
     }
 }
