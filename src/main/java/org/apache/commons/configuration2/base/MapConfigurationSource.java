@@ -56,8 +56,8 @@ import java.util.Map;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class MapConfigurationSource implements FlatConfigurationSource,
-        Serializable
+public class MapConfigurationSource extends AbstractConfigurationSource
+        implements FlatConfigurationSource, Serializable
 {
     /**
      * The serial version UID.
@@ -131,18 +131,6 @@ public class MapConfigurationSource implements FlatConfigurationSource,
 
             store.put(key, value);
         }
-    }
-
-    /**
-     * Adds the specified {@code ConfigurationSourceListener} at this object.
-     * This class does not support event listeners, so an exception is thrown.
-     *
-     * @param l the event listener to be added
-     * @throws UnsupportedOperationException as this operation is not supported
-     */
-    public void addConfigurationSourceListener(ConfigurationSourceListener l)
-    {
-        throw new UnsupportedOperationException("Not implemented!");
     }
 
     /**
@@ -266,21 +254,6 @@ public class MapConfigurationSource implements FlatConfigurationSource,
     }
 
     /**
-     * Removes the specified {@code ConfigurationSourceListener} from this
-     * object. This class does not support event listeners, so an exception is
-     * thrown.
-     *
-     * @param l the listener to be removed
-     * @return a flag whether the listener could be removed successfully
-     * @throws UnsupportedOperationException as this operation is not supported
-     */
-    public boolean removeConfigurationSourceListener(
-            ConfigurationSourceListener l)
-    {
-        throw new UnsupportedOperationException("Not implemented!");
-    }
-
-    /**
      * Sets the value of the specified property. If the property does not exist
      * yet, this method has the same effect as
      * {@link #addProperty(String, Object)}. Otherwise the value of this
@@ -317,12 +290,6 @@ public class MapConfigurationSource implements FlatConfigurationSource,
     public int valueCount(String key)
     {
         throw new UnsupportedOperationException("Not implemented!");
-    }
-
-    public <T> T getCapability(Class<T> cls)
-    {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Not yet implemented!");
     }
 
     /**
