@@ -36,6 +36,7 @@ import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.fs.DefaultFileSystem;
 import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.fs.FileSystemBased;
+import org.apache.commons.configuration2.fs.VerifiableOutputStream;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
