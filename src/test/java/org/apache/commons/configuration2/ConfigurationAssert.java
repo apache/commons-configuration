@@ -18,9 +18,9 @@
 package org.apache.commons.configuration2;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
-
-import org.apache.commons.configuration2.Configuration;
 
 import junit.framework.Assert;
 
@@ -28,7 +28,7 @@ import junit.framework.Assert;
  * Assertions on configurations for the unit tests.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class ConfigurationAssert
 {
@@ -53,23 +53,24 @@ public class ConfigurationAssert
     public static void assertEquals(Configuration expected, Configuration actual)
     {
         // check that the actual configuration contains all the properties of the expected configuration
-        for (Iterator it = expected.getKeys(); it.hasNext();)
+        for (Iterator<String> it = expected.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             Assert.assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
             Assert.assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
         }
 
         // check that the actual configuration has no extra properties
-        for (Iterator it = actual.getKeys(); it.hasNext();)
+        for (Iterator<String> it = actual.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             Assert.assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
     }
 
     /**
      * Returns a <code>File</code> object for the specified test file.
+     *
      * @param name the name of the test file
      * @return a <code>File</code> object pointing to that test file
      */
@@ -80,11 +81,77 @@ public class ConfigurationAssert
 
     /**
      * Returns a <code>File</code> object for the specified out file.
+     *
      * @param name the name of the out file
      * @return a <code>File</code> object pointing to that out file
      */
     public static File getOutFile(String name)
     {
         return new File(OUT_DIR, name);
+    }
+
+    /**
+     * Returns a URL pointing to the specified test file. If the URL cannot be
+     * constructed, a runtime exception is thrown.
+     *
+     * @param name the name of the test file
+     * @return the corresponding URL
+     */
+    public static URL getTestURL(String name)
+    {
+        return urlFromFile(getTestFile(name));
+    }
+
+    /**
+     * Returns a URL pointing to the specified output file. If the URL cannot be
+     * constructed, a runtime exception is thrown.
+     *
+     * @param name the name of the output file
+     * @return the corresponding URL
+     */
+    public static URL getOutURL(String name)
+    {
+        return urlFromFile(getOutFile(name));
+    }
+
+    /**
+     * Helper method for testing equals() and hashCode() implementations.
+     *
+     * @param obj1 object 1
+     * @param obj2 object 2
+     * @param expected the expected result of equals()
+     */
+    public static void checkEquals(Object obj1, Object obj2, boolean expected)
+    {
+        Assert.assertEquals("Wrong result of equals", expected, obj1
+                .equals(obj2));
+        if (obj2 != null)
+        {
+            Assert.assertEquals("Not symmetric", expected, obj2.equals(obj1));
+        }
+        if (expected)
+        {
+            Assert.assertEquals("Different hash codes", obj1.hashCode(), obj2
+                    .hashCode());
+        }
+    }
+
+    /**
+     * Helper method for converting a file to a URL.
+     *
+     * @param file the file
+     * @return the corresponding URL
+     * @throws ConfigurationRuntimeException if the URL cannot be constructed
+     */
+    private static URL urlFromFile(File file)
+    {
+        try
+        {
+            return file.toURI().toURL();
+        }
+        catch (MalformedURLException mex)
+        {
+            throw new ConfigurationRuntimeException(mex);
+        }
     }
 }
