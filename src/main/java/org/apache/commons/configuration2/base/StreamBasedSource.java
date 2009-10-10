@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration2.base;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -47,16 +48,20 @@ public interface StreamBasedSource
      * Reader}. Note: The caller is responsible for closing the reader.
      *
      * @param reader the {@code Reader} to load the data from
-     * @throws ConfigurationException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs that is not related to
+     *         I/O operations, e.g. the data is not in the expected format
      */
-    void load(Reader reader) throws ConfigurationException;
+    void load(Reader reader) throws IOException, ConfigurationException;
 
     /**
      * Saves the data of this configuration source to the specified {@code
      * Writer}. Note: The caller is responsible for closing the reader.
      *
      * @param writer the {@code Writer} for storing the data
-     * @throws ConfigurationException if an I/O error occurs
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs that is not related to
+     *         I/O operations
      */
-    void save(Writer writer) throws ConfigurationException;
+    void save(Writer writer) throws IOException, ConfigurationException;
 }
