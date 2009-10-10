@@ -311,7 +311,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.2</version>
+      <version>4.7</version>
       <scope>test</scope>
     </dependency>
 
@@ -403,6 +403,7 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
             <forkMode>once</forkMode>
+            <argLine>-enableassertions -Xmx128M</argLine>
             <excludes>
               <exclude>**/*$*</exclude>
               <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
