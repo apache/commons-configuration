@@ -194,6 +194,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
+     * Object to synchronize on a reload. This class is not reloadable so this
+     * object isn't important
+     * @return
+     */
+    public Object getReloadLock()
+    {
+        return this;
+    }
+
+    /**
      * Returns the root node of this hierarchical configuration. This method
      * exists for backwards compatibility only. New code should use the
      * <code>{@link #getRootNode()}</code> method instead, which operates on

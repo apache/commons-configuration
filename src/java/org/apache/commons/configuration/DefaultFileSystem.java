@@ -16,6 +16,9 @@
  */
 package org.apache.commons.configuration;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.InputStream;
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +38,11 @@ import java.net.MalformedURLException;
  */
 public class DefaultFileSystem extends FileSystem
 {
+    /**
+     * The Log for diagnostic messages.
+     */
+    private Log log = LogFactory.getLog(DefaultFileSystem.class);
+
     public InputStream getInputStream(String basePath, String fileName)
         throws ConfigurationException
     {
@@ -254,6 +262,10 @@ public class DefaultFileSystem extends FileSystem
         }
         catch (IOException e)
         {
+            if (log.isDebugEnabled())
+            {
+                log.debug("Could not locate file " + fileName + " at " + basePath + ": " + e.getMessage());
+            }
             return null;
         }
     }

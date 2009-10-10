@@ -34,10 +34,13 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
+import org.apache.commons.configuration.reloading.FileRandomReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
+import org.apache.commons.configuration.tree.MergeCombiner;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 /**
  * Test class for CombinedConfiguration.
@@ -762,6 +765,75 @@ public class TestCombinedConfiguration extends TestCase
         writeReloadFile(RELOAD_XML_NAME, reloadContent, 1);
         assertEquals("Reload of sub config 1 not detected", 1, config
                 .getInt("xmlReload1"));
+    }
+
+    public void testConcurrentGetAndReload() throws Exception
+    {
+        final int threadCount = 5;
+        final int loopCount = 1000;
+        config.setForceReloadCheck(true);
+        config.setNodeCombiner(new MergeCombiner());
+        final XMLConfiguration xml = new XMLConfiguration("configA.xml");
+        xml.setReloadingStrategy(new FileRandomReloadingStrategy());
+        config.addConfiguration(xml);
+        final XMLConfiguration xml2 = new XMLConfiguration("configB.xml");
+        xml2.setReloadingStrategy(new FileRandomReloadingStrategy());
+        config.addConfiguration(xml2);
+        config.setExpressionEngine(new XPathExpressionEngine());
+
+        assertEquals(config.getString("/property[@name='config']/@value"), "100");
+
+        Thread testThreads[] = new Thread[threadCount];
+        int failures[] = new int[threadCount];
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i] = new ReloadThread(config, failures, i, loopCount);
+            testThreads[i].start();
+        }
+
+        int totalFailures = 0;
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i].join();
+            totalFailures += failures[i];
+        }
+        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+    }
+
+    private class ReloadThread extends Thread
+    {
+        CombinedConfiguration combined;
+        int[] failures;
+        int index;
+        int count;
+
+        ReloadThread(CombinedConfiguration config, int[] failures, int index, int count)
+        {
+            combined = config;
+            this.failures = failures;
+            this.index = index;
+            this.count = count;
+        }
+        public void run()
+        {
+            failures[index] = 0;
+            for (int i = 0; i < count; i++)
+            {
+                try
+                {
+                    String value = combined.getString("/property[@name='config']/@value");
+                    if (value == null || !value.equals("100"))
+                    {
+                        ++failures[index];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ++failures[index];
+                }
+            }
+        }
     }
 
     /**

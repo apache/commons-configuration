@@ -40,6 +40,7 @@ import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.Log;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -651,6 +652,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                     .next();
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
                     conf);
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("Creating configuration " + decl.getBeanClassName() + " with name " +
+                    decl.getConfiguration().getString(ATTR_NAME));
+            }
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
@@ -1225,6 +1231,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static class ConfigurationBeanFactory implements BeanFactory
     {
+        private Log logger = LogFactory.getLog(DefaultConfigurationBuilder.class);
+
         /**
          * Creates an instance of a bean class. This implementation expects that
          * the passed in bean declaration is a declaration for a configuration.
@@ -1268,6 +1276,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 }
                 else
                 {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("Load failed for optional configuration " + tagName + ": "
+                            + ex.getMessage());
+                    }
                     // Notify registered error listeners
                     decl.getConfigurationBuilder().fireError(
                             EVENT_ERR_LOAD_OPTIONAL,

@@ -169,7 +169,7 @@ import org.apache.commons.configuration.tree.TreeUtils;
  * @since 1.3
  * @version $Id$
  */
-public class CombinedConfiguration extends HierarchicalConfiguration implements
+public class CombinedConfiguration extends HierarchicalReloadableConfiguration implements
         ConfigurationListener, Cloneable
 {
     /**
@@ -204,6 +204,12 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     /** Stores a map with the named configurations. */
     private Map namedConfigurations;
 
+    /** The default behavior is to ignore exceptions that occur during reload */
+    private boolean ignoreReloadExceptions = true;
+
+    /** Set to true when the backing file has changed */
+    private boolean reloadRequired = false;
+
     /**
      * An expression engine used for converting child configurations to
      * hierarchical ones.
@@ -226,6 +232,18 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         clear();
     }
 
+    public CombinedConfiguration(NodeCombiner comb, Lock lock)
+    {
+        super(lock);
+        setNodeCombiner((comb != null) ? comb : DEFAULT_COMBINER);
+        clear();
+    }
+
+    public CombinedConfiguration(Lock lock)
+    {
+        this(null, lock);
+    }
+
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> that uses
      * a union combiner.
@@ -234,7 +252,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public CombinedConfiguration()
     {
-        this(null);
+        this(null, null);
     }
 
     /**
@@ -330,6 +348,26 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     }
 
     /**
+     * Retrieves the value of the ignoreReloadExceptions flag.
+     * @return true if exceptions are ignored, false otherwise.
+     */
+    public boolean isIgnoreReloadExceptions()
+    {
+        return ignoreReloadExceptions;
+    }
+
+    /**
+     * If set to true then exceptions that occur during reloading will be
+     * ignored. If false then the exceptions will be allowed to be thrown
+     * back to the caller.
+     * @param ignoreReloadExceptions true if exceptions should be ignored.
+     */
+    public void setIgnoreReloadExceptions(boolean ignoreReloadExceptions)
+    {
+        this.ignoreReloadExceptions = ignoreReloadExceptions;
+    }
+
+    /**
      * Adds a new configuration to this combined configuration. It is possible
      * (but not mandatory) to give the new configuration a name. This name must
      * be unique, otherwise a <code>ConfigurationRuntimeException</code> will
@@ -362,6 +400,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
         }
 
         ConfigData cd = new ConfigData(config, name, at);
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("Adding configuration " + config + " with name " + name);
+        }
         configurations.add(cd);
         if (name != null)
         {
@@ -546,7 +588,7 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public void invalidate()
     {
-        combinedRoot = null;
+        reloadRequired = true;
         fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
     }
 
@@ -578,11 +620,15 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     public ConfigurationNode getRootNode()
     {
-        if (combinedRoot == null)
+        synchronized(getReloadLock())
         {
-            combinedRoot = constructCombinedNode();
+            if (reloadRequired || combinedRoot == null)
+            {
+                combinedRoot = constructCombinedNode();
+                reloadRequired = false;
+            }
+            return combinedRoot;
         }
-        return combinedRoot;
     }
 
     /**
@@ -716,8 +762,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             }
             catch (Exception ex)
             {
-                // ignore all exceptions, e.g. missing property exceptions
-                ;
+                if (!ignoreReloadExceptions)
+                {
+                    throw new ConfigurationRuntimeException(ex);
+                }
             }
         }
     }
@@ -731,6 +779,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         if (getNumberOfConfigurations() < 1)
         {
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger().debug("No configurations defined for " + this);
+            }
             return new ViewNode();
         }
 
@@ -763,23 +815,26 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
      */
     private Configuration findSourceConfiguration(ConfigurationNode node)
     {
-        ConfigurationNode root = null;
-        ConfigurationNode current = node;
-
-        // find the root node in this hierarchy
-        while (current != null)
+        synchronized(getReloadLock())
         {
-            root = current;
-            current = current.getParentNode();
-        }
+            ConfigurationNode root = null;
+            ConfigurationNode current = node;
 
-        // Check with the root nodes of the child configurations
-        for (Iterator it = configurations.iterator(); it.hasNext();)
-        {
-            ConfigData cd = (ConfigData) it.next();
-            if (root == cd.getRootNode())
+            // find the root node in this hierarchy
+            while (current != null)
             {
-                return cd.getConfiguration();
+                root = current;
+                current = current.getParentNode();
+            }
+
+            // Check with the root nodes of the child configurations
+            for (Iterator it = configurations.iterator(); it.hasNext();)
+            {
+                ConfigData cd = (ConfigData) it.next();
+                if (root == cd.getRootNode())
+                {
+                    return cd.getConfiguration();
+                }
             }
         }
 
@@ -889,11 +944,12 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
             }
 
             // Copy data of the root node to the new path
-            rootNode = ConfigurationUtils
+            ConfigurationNode root = ConfigurationUtils
                     .convertToHierarchical(getConfiguration(),
                             getConversionExpressionEngine()).getRootNode();
-            atParent.appendChildren(rootNode);
-            atParent.appendAttributes(rootNode);
+            atParent.appendChildren(root);
+            atParent.appendAttributes(root);
+            rootNode = root;
 
             return result;
         }

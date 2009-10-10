@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://commons.apache.org/testMultiConfiguration.xsd">
+  <colors>
+    <background>#808080</background>
+    <text>#000000</text>
+    <header>#008000</header>
+    <link normal="#000080" visited="#800080"/>
+    <default>${colors.header}</default>
+  </colors>
+  <rowsPerPage>15</rowsPerPage>
+  <buttons>
+    <name>OK,Cancel,Help</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+  <Channels>
+    <Channel id="1">
+      <Name>My Channel</Name>
+    </Channel>
+    <Channel id="2">
+      <MoreChannelData>more test 2 data</MoreChannelData>
+    </Channel>
+  </Channels>
+</configuration>

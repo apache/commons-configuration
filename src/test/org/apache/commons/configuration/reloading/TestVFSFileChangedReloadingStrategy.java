@@ -19,31 +19,36 @@ package org.apache.commons.configuration.reloading;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.ByteArrayOutputStream;
-import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Layout;
-import org.apache.log4j.PatternLayout;
-import org.apache.log4j.Appender;
-import org.apache.log4j.WriterAppender;
-import org.apache.log4j.Level;
+import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.VFSFileSystem;
 
 /**
- * Test case for the ReloadableConfiguration class.
+ * Test case for the VFSFileMonitorReloadingStrategy class.
  *
- * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @author Ralph Goers
+ * @version $Revision$
  */
-public class TestFileChangedReloadingStrategy extends TestCase
+public class TestVFSFileChangedReloadingStrategy extends TestCase
 {
     /** Constant for the name of a test properties file.*/
     private static final String TEST_FILE = "test.properties";
+
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        FileSystem.setDefaultFileSystem(new VFSFileSystem());
+    }
+
+    protected void tearDown() throws Exception
+    {
+        FileSystem.resetDefaultFileSystem();
+        super.tearDown();
+    }
 
     public void testAutomaticReloading() throws Exception
     {
@@ -63,7 +68,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
 
         // load the configuration
         PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
         strategy.setRefreshDelay(500);
         config.setReloadingStrategy(strategy);
         assertEquals("Initial value", "value1", config.getString("string"));
@@ -92,7 +97,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
 
         PropertiesConfiguration config = new PropertiesConfiguration();
         config.setFile(file);
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
         strategy.setRefreshDelay(500);
         config.setReloadingStrategy(strategy);
 
@@ -110,41 +115,11 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
     }
 
-    public void testGetRefreshDelay()
+    public void testGetRefreshDelay() throws Exception
     {
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
         strategy.setRefreshDelay(500);
         assertEquals("refresh delay", 500, strategy.getRefreshDelay());
-    }
-
-    /**
-     * Tests if a file from the classpath can be monitored.
-     */
-    public void testFromClassPath() throws Exception
-    {
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.setFileName(TEST_FILE);
-        config.load();
-        assertTrue(config.getBoolean("configuration.loaded"));
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
-        config.setReloadingStrategy(strategy);
-        assertEquals(config.getURL(), strategy.getFile().toURL());
-    }
-
-    /**
-     * Tests to watch a configuration file in a jar. In this case the jar file
-     * itself should be monitored.
-     */
-    public void testFromJar() throws Exception
-    {
-        XMLConfiguration config = new XMLConfiguration();
-        // use some jar: URL
-        config.setURL(new URL("jar:" + new File("conf/resources.jar").getAbsoluteFile().toURL() + "!/test-jar.xml"));
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
-        config.setReloadingStrategy(strategy);
-        File file = strategy.getFile();
-        assertNotNull("Strategy's file is null", file);
-        assertEquals("Strategy does not monitor the jar file", "resources.jar", file.getName());
     }
 
     /**
@@ -154,7 +129,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
     public void testReloadingRequiredMultipleTimes()
             throws ConfigurationException
     {
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy()
+        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy()
         {
             protected boolean hasChanged()
             {
@@ -169,47 +144,5 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertTrue("Reloading no more required", strategy.reloadingRequired());
         strategy.reloadingPerformed();
         assertFalse("Reloading still required", strategy.reloadingRequired());
-    }
-
-    public void testFileDeletion() throws Exception
-    {
-        Logger logger = Logger.getLogger(FileChangedReloadingStrategy.class.getName());
-        Layout layout = new PatternLayout("%p - %m%n");
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Appender appender = new WriterAppender(layout, os);
-        logger.addAppender(appender);
-        logger.setLevel(Level.WARN);
-        logger.setAdditivity(false);
-        // create a new configuration
-        File file = new File("target/testReload.properties");
-
-        if (file.exists())
-        {
-            file.delete();
-        }
-
-        // create the configuration file
-        FileWriter out = new FileWriter(file);
-        out.write("string=value1");
-        out.flush();
-        out.close();
-
-        // load the configuration
-        PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
-        FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
-        strategy.setRefreshDelay(500);
-        config.setReloadingStrategy(strategy);
-        assertEquals("Initial value", "value1", config.getString("string"));
-
-        Thread.sleep(2000);
-
-        // Delete the file.
-        file.delete();
-        //Old value should still be returned.
-        assertEquals("Initial value", "value1", config.getString("string"));
-        logger.removeAppender(appender);
-        String str = os.toString();
-        //System.out.println(str);
-        assertTrue("No error was logged", str != null && str.length() > 0);
     }
 }

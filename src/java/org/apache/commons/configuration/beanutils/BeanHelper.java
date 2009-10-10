@@ -263,7 +263,7 @@ public final class BeanHelper
         if (!PropertyUtils.isWriteable(bean, propName))
         {
             throw new ConfigurationRuntimeException("Property " + propName
-                    + " cannot be set!");
+                    + " cannot be set on " + bean.getClass().getName());
         }
 
         try

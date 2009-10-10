@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="configuration" type="configurationType"/>
+  <xs:complexType name="configurationType">
+    <xs:sequence>
+      <xs:element type="colorsType" name="colors" minOccurs="0"/>
+      <xs:element type="xs:integer" name="rowsPerPage" minOccurs="0"/>
+      <xs:element type="buttonsType" name="buttons" minOccurs="0"/>
+      <xs:element type="numberFormatType" name="numberFormat" minOccurs="0"/>
+      <xs:element type="splitType" name="split" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Comma delimited lists</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="ChannelsType" name="Channels" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="splitType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="list1" minOccurs="0"/>
+      <xs:element type="xs:string" name="list2" minOccurs="0"/>
+      <xs:element type="list3Type" name="list3" minOccurs="0"/>
+      <xs:element type="list4Type" name="list4" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="colorsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="background" minOccurs="0"/>
+      <xs:element type="xs:string" name="text" minOccurs="0"/>
+      <xs:element type="xs:string" name="header" minOccurs="0"/>
+      <xs:element type="linkType" name="link" minOccurs="0"/>
+      <xs:element type="xs:string" name="default" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="list4Type">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="values"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="linkType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="normal"/>
+        <xs:attribute type="xs:string" name="visited"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="list3Type">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="values"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="buttonsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="name" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="numberFormatType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="pattern"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ChannelType">
+    <xs:sequence>
+      <xs:element name="Name" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="ChannelData" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="MoreChannelData" minOccurs="0">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="ChannelsType">
+    <xs:choice maxOccurs="unbounded" minOccurs="0">
+      <xs:element type="ChannelType" name="Channel" minOccurs="0"/>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

@@ -23,6 +23,13 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="rgoers" type="fix" issue="CONFIGURATION-397">
+        Schema violation exceptions are now propagated back to the caller.
+      </action>
+       <action dev="rgoers" type="fix" issue="CONFIGURATION-390">
+        XMLConfiguration and CombinedConfiguraton are now synchronized to fix problems
+        caused by reloading in a multithreaded environment.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-396">
         HierarchicalConfiguration.NodeVisitor is now passed the correct key to
         its visitAfterChildren() method.

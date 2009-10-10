@@ -103,7 +103,7 @@ implements FileConfiguration, FileSystemBased
     protected ReloadingStrategy strategy;
 
     /** A lock object for protecting reload operations.*/
-    private Object reloadLock = new Object();
+    protected Object reloadLock = new Lock("AbstractFileConfiguration");
 
     /** Stores the encoding of the configuration file.*/
     private String encoding;
@@ -205,6 +205,11 @@ implements FileConfiguration, FileSystemBased
     public FileSystem getFileSystem()
     {
         return this.fileSystem;
+    }
+
+    public Object getReloadLock()
+    {
+        return reloadLock;
     }
 
 
@@ -747,8 +752,11 @@ implements FileConfiguration, FileSystemBased
      */
     public void addProperty(String key, Object value)
     {
-        super.addProperty(key, value);
-        possiblySave();
+        synchronized(reloadLock)
+        {
+            super.addProperty(key, value);
+            possiblySave();
+        }
     }
 
     /**
@@ -761,14 +769,20 @@ implements FileConfiguration, FileSystemBased
      */
     public void setProperty(String key, Object value)
     {
-        super.setProperty(key, value);
-        possiblySave();
+        synchronized(reloadLock)
+        {
+            super.setProperty(key, value);
+            possiblySave();
+        }
     }
 
     public void clearProperty(String key)
     {
-        super.clearProperty(key);
-        possiblySave();
+        synchronized(reloadLock)
+        {
+            super.clearProperty(key);
+            possiblySave();
+        }
     }
 
     public ReloadingStrategy getReloadingStrategy()
@@ -794,6 +808,11 @@ implements FileConfiguration, FileSystemBased
      * event.
      */
     public void reload()
+    {
+        reload(false);
+    }
+
+    public boolean reload(boolean checkReload)
     {
         synchronized (reloadLock)
         {
@@ -833,6 +852,10 @@ implements FileConfiguration, FileSystemBased
                 {
                     fireError(EVENT_RELOAD, null, null, e);
                     // todo rollback the changes if the file can't be reloaded
+                    if (checkReload)
+                    {
+                        return false;
+                    }
                 }
                 finally
                 {
@@ -840,6 +863,7 @@ implements FileConfiguration, FileSystemBased
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -920,13 +944,19 @@ implements FileConfiguration, FileSystemBased
     public boolean isEmpty()
     {
         reload();
-        return super.isEmpty();
+        synchronized(reloadLock)
+        {
+            return super.isEmpty();
+        }
     }
 
     public boolean containsKey(String key)
     {
         reload();
-        return super.containsKey(key);
+        synchronized(reloadLock)
+        {
+            return super.containsKey(key);
+        }
     }
 
     /**

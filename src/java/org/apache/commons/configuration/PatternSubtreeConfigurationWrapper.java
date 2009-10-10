@@ -78,6 +78,11 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         this.init = true;
     }
 
+    public Object getReloadLock()
+    {
+        return config.getReloadLock();
+    }
+
     public void addProperty(String key, Object value)
     {
         config.addProperty(makePath(key), value);

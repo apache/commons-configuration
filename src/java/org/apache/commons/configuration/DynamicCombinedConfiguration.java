@@ -32,8 +32,10 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -74,7 +76,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private NodeCombiner nodeCombiner;
 
     /** The name of the logger to use for each CombinedConfiguration */
-    private String loggerName;
+    private String loggerName = DynamicCombinedConfiguration.class.getName();
+
+    private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
 
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
@@ -87,6 +91,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         super();
         setNodeCombiner(comb);
+        setIgnoreReloadExceptions(false);
+        setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
     }
 
     /**
@@ -98,6 +104,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public DynamicCombinedConfiguration()
     {
         super();
+        setIgnoreReloadExceptions(false);
+        setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
     }
 
     public void setKeyPattern(String pattern)
@@ -752,7 +760,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     private CombinedConfiguration getCurrentConfig()
     {
-        String key = getSubstitutor().replace(keyPattern);
+        String key = localSubst.replace(keyPattern);
         CombinedConfiguration config;
         synchronized (getNodeCombiner())
         {
@@ -768,6 +776,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                         config.setLogger(log);
                     }
                 }
+                config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
                 config.setExpressionEngine(this.getExpressionEngine());
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                 config.setConversionExpressionEngine(getConversionExpressionEngine());
@@ -794,6 +803,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 }
                 configs.put(key, config);
             }
+        }
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("Returning config for " + key + ": " + config);
         }
         return config;
     }
