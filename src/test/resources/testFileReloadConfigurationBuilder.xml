@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Test configuration definition file that demonstrates complex initialization -->
+<configuration>
+  <header>
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
+            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
+            keyPattern="$${sys:Id}">
+      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
+      <expressionEngine
+          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+    </result>
+    <fileSystem config-class="org.apache.commons.configuration2.fs.VFSFileSystem"/>
+    <providers>
+      <provider config-tag="multifile"
+         config-class="org.apache.commons.configuration2.DefaultConfigurationBuilder$FileConfigurationProvider"
+         configurationClass="org.apache.commons.configuration2.MultiFileHierarchicalConfiguration"/>
+    </providers>
+  </header>
+  <override>
+    <multifile filePattern="testwrite/testMultiConfiguration_$$${sys:Id}.xml"
+               config-name="clientConfig" delimiterParsingDisabled="true" schemaValidation="false">
+       <expressionEngine
+          config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
+       <reloadingStrategy refreshDelay="0"
+          config-class="org.apache.commons.configuration2.reloading.VFSFileChangedReloadingStrategy"/>
+    </multifile>
+    <xml fileName="testMultiConfiguration_default.xml"
+         config-name="defaultConfig" delimiterParsingDisabled="true">
+      <expressionEngine
+          config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
+      <reloadingStrategy refreshDelay="0"
+          config-class="org.apache.commons.configuration2.reloading.VFSFileChangedReloadingStrategy"/>
+    </xml>
+  </override>
+</configuration>

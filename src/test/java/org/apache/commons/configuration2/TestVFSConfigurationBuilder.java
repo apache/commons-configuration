@@ -35,7 +35,6 @@ import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.fs.VFSFileSystem;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.configuration2.reloading.VFSFileMonitorReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 
@@ -90,14 +89,14 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
     private static final File FILESYSTEM_FILE = ConfigurationAssert
             .getTestFile("testFileSystem.xml");
 
-    private static final File FILEMONITOR_FILE = ConfigurationAssert
-            .getTestFile("testFileMonitorConfigurationBuilder.xml");
+    private static final File FILERELOAD_FILE = ConfigurationAssert
+            .getTestFile("testFileReloadConfigurationBuilder.xml");
 
-    private static final File FILEMONITOR2_FILE = ConfigurationAssert
-            .getTestFile("testFileMonitorConfigurationBuilder2.xml");
+    private static final File MULTI_RELOAD_FILE1 = ConfigurationAssert
+            .getTestFile("testVFSMultiTenentConfigurationBuilder1.xml");
 
-    private static final String FILEMONITOR_URI = "file://" + System.getProperty("user.dir")
-            + "/target/test-classes/testFileMonitorConfigurationBuilder2.xml";
+    private static final File MULTI_RELOAD_FILE2 = ConfigurationAssert
+            .getTestFile("testVFSMultiTenentConfigurationBuilder2.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -112,7 +111,6 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
     {
         super();
         //System.setProperty("log4j.configuration", "log4j-test.xml");
-        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
     @Override
@@ -992,7 +990,7 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         }
     }
 
-    public void testFileMonitor1() throws Exception
+    public void testFileReload1() throws Exception
     {
 
         // create a new configuration
@@ -1000,124 +998,146 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
         output.getParentFile().mkdir();
         copyFile(input, output);
+        // Sleep to make sure the file timestamp is not in the same second as "now".
+        Thread.sleep(1100);
 
-        factory.setFile(FILEMONITOR_FILE);
+        factory.setFile(FILERELOAD_FILE);
         FileSystem.resetDefaultFileSystem();
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
         assertNotNull(config);
-        config.addConfigurationListener(this);
         verify("1001", config, 15);
-
-        // Allow time for FileMonitor to set up.
-        Thread.sleep(1000);
         XMLConfiguration x = new XMLConfiguration(output);
         x.setProperty("rowsPerPage", "50");
         x.save();
-
-        waitForChange();
         verify("1001", config, 50);
         output.delete();
-        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
-    public void testFileMonitor2() throws Exception
+    public void testFileReload2() throws Exception
     {
         // create a new configuration
         File input = new File("target/test-classes/testMultiConfiguration_1002.xml");
         File output = new File("target/test-classes/testwrite/testMultiConfiguration_1002.xml");
         output.delete();
 
-        factory.setFile(FILEMONITOR_FILE);
+        factory.setFile(FILERELOAD_FILE);
         FileSystem.resetDefaultFileSystem();
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
-        config.addConfigurationListener(this);
         assertNotNull(config);
 
         verify("1002", config, 50);
-        Thread.sleep(1000);
+        Thread.sleep(1100);
 
         output.getParentFile().mkdir();
         copyFile(input, output);
-
-        // Allow time for the monitor to notice the change.
-        //Thread.sleep(2000);
-        waitForChange();
-        try
-        {
-            verify("1002", config, 25);
-        }
-        finally
-        {
-            output.delete();
-            VFSFileMonitorReloadingStrategy.stopMonitor();
-        }
-    }
-
-
-    public void testFileMonitor3() throws Exception
-    {
-        // create a new configuration
-        File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
-        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
-        output.delete();
-        output.getParentFile().mkdir();
-        copyFile(input, output);
-
-        factory.setFile(FILEMONITOR2_FILE);
-        FileSystem.resetDefaultFileSystem();
-        System.getProperties().remove("Id");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        //config.setLogger(logger);
-        assertNotNull(config);
-        config.addConfigurationListener(this);
-        verify("1001", config, 15);
-
-        // Allow time for FileMonitor to set up.
-        Thread.sleep(1000);
-        XMLConfiguration x = new XMLConfiguration(output);
-        x.setProperty("rowsPerPage", "50");
-        x.save();
-        // Let FileMonitor detect the change.
-        //Thread.sleep(2000);
-        waitForChange();
-        verify("1001", config, 50);
-        output.delete();
-        VFSFileMonitorReloadingStrategy.stopMonitor();
-    }
-
-    public void testFileMonitor4() throws Exception
-    {
-        // create a new configuration
-        File input = new File("target/test-classes/testMultiConfiguration_1002.xml");
-        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1002.xml");
-        output.delete();
-
-        factory.setFileName(FILEMONITOR_URI);
-        FileSystem.resetDefaultFileSystem();
-        System.getProperties().remove("Id");
-
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertNotNull(config);
-        config.addConfigurationListener(this);
-
-        verify("1002", config, 50);
-        Thread.sleep(1000);
-
-        output.getParentFile().mkdir();
-        copyFile(input, output);
-
-        // Allow time for the monitor to notice the change.
-        //Thread.sleep(2000);
-        waitForChange();
         verify("1002", config, 25);
         output.delete();
-        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
+
+
+    public void testFileReload3() throws Exception
+    {
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_1001.xml");
+        output.delete();
+        output.getParentFile().mkdir();
+
+        factory.setFile(FILERELOAD_FILE);
+        FileSystem.resetDefaultFileSystem();
+        System.getProperties().remove("Id");
+
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+        verify("1001", config, 50);
+        copyFile(input, output);
+        // Allow time for FileMonitor to set up.
+        Thread.sleep(1100);
+        verify("1001", config, 15);
+        XMLConfiguration x = new XMLConfiguration(output);
+        x.setProperty("rowsPerPage", "25");
+        x.save();
+        Thread.sleep(1100);
+        verify("1001", config, 25);
+        output.delete();
+    }
+
+    public void testReloadDefault() throws Exception
+    {
+        // create a new configuration
+        String defaultName = "target/test-classes/testMultiConfiguration_default.xml";
+        File input = new File(defaultName);
+
+        System.getProperties().remove("Id");
+        factory.setFile(MULTI_RELOAD_FILE1);
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertNotNull(config);
+        verify("3001", config, 15);
+        verify("3002", config, 25);
+        System.setProperty("Id", "3002");
+        config.addProperty("/ TestProp", "Test");
+        assertTrue("Property not added", "Test".equals(config.getString("TestProp")));
+        System.getProperties().remove("Id");
+        //Sleep so refreshDelay elapses
+        Thread.sleep(600);
+        long time = System.currentTimeMillis();
+        long original = input.lastModified();
+        input.setLastModified(time);
+        File defaultFile = new File(defaultName);
+        long newTime = defaultFile.lastModified();
+        assertTrue("time mismatch", original != newTime);
+        Thread.sleep(600);
+        verify("3001", config, 15);
+        verify("3002", config, 25);
+        System.setProperty("Id", "3002");
+        String test = config.getString("TestProp");
+        assertNull("Property was not cleared by reload", test);
+    }
+
+    /* Test doesn't pass yet.
+    public void testFileReloadSchemaValidationError() throws Exception
+    {
+        System.getProperties().remove("Id");
+        factory.setFile(MULTI_RELOAD_FILE2);
+        CombinedConfiguration config = factory.getConfiguration(true);
+
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiConfiguration_3001.xml");
+        File output = new File("target/test-classes/testwrite/testMultiConfiguration_3001.xml");
+        output.delete();
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        assertNotNull(config);
+        verify("3001", config, 15);
+        Thread.sleep(1100);
+        XMLConfiguration x = new XMLConfiguration();
+        x.setFile(output);
+        x.setAttributeSplittingDisabled(true);
+        x.setDelimiterParsingDisabled(true);
+        x.load();
+        x.setProperty("rowsPerPage", "test");
+        //Insure orginal timestamp and new timestamp aren't the same second.
+        Thread.sleep(1100);
+        x.save();
+        System.setProperty("Id", "3001");
+        try
+        {
+            config.getInt("rowsPerPage");
+            fail("No exception was thrown");
+        }
+        catch (Exception ex)
+        {
+
+        }
+
+        output.delete();
+    } */
+
 
     private void copyFile(File input, File output) throws IOException
     {

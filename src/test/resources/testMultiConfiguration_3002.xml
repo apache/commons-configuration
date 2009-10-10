@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://commons.apache.org/testMultiConfiguration.xsd">
+  <colors>
+    <background>#2222222</background>
+    <text>#000000</text>
+    <header>#222222</header>
+    <link normal="#020202" visited="#202020"/>
+    <default>${colors.header3}</default>
+  </colors>
+  <rowsPerPage>25</rowsPerPage>
+  <buttons>
+    <name>OK-2,Cancel-2,Help-2</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+</configuration>

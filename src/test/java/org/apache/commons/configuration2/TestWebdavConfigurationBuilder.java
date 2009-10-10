@@ -31,7 +31,6 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.configuration2.reloading.VFSFileMonitorReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
@@ -91,13 +90,13 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
     private static final String MULTI_TENENT_FILE =
             "testMultiTenentConfigurationBuilder.xml";
 
-    private static final String FILEMONITOR2_FILE =
-            "testFileMonitorConfigurationBuilder2.xml";
+    private static final String FILERELOAD2_FILE =
+            "testFileReloadConfigurationBuilder2.xml";
 
-    private static final String FILEMONITOR_1001_FILE =
+    private static final String FILERELOAD_1001_FILE =
             "testwrite/testMultiConfiguration_1001.xml";
 
-    private static final String FILEMONITOR_1002_FILE =
+    private static final String FILERELOAD_1002_FILE =
             "testwrite/testMultiConfiguration_1002.xml";
 
     private static final String TEST_PROPERTIES = "test.properties.xml";
@@ -883,16 +882,16 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
         verify("1005", config, 50);
     }
 
-    public void testFileMonitor1() throws Exception
+    public void testFileChanged() throws Exception
     {
         // create a new configuration
         File input = new File("target/test-classes/testMultiConfiguration_1001.xml");
-        FileObject output = getFile(getBasePath() + FILEMONITOR_1001_FILE);
+        FileObject output = getFile(getBasePath() + FILERELOAD_1001_FILE);
         output.delete();
         output.getParent().createFolder();
         copyFile(input, output);
 
-        factory.setFileName(getBasePath() + FILEMONITOR2_FILE);
+        factory.setFileName(getBasePath() + FILERELOAD2_FILE);
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -902,7 +901,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
 
         // Allow time for FileMonitor to set up.
         Thread.sleep(1000);
-        XMLConfiguration x = new XMLConfiguration(getBasePath() + FILEMONITOR_1001_FILE);
+        XMLConfiguration x = new XMLConfiguration(getBasePath() + FILERELOAD_1001_FILE);
         x.setProperty("rowsPerPage", "50");
         x.save();
         // Let FileMonitor detect the change.
@@ -910,17 +909,16 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
         waitForChange();
         verify("1001", config, 50);
         output.delete();
-        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
-    public void testFileMonitor2() throws Exception
+    public void testFileChanged2() throws Exception
     {
         // create a new configuration
         File input = new File("target/test-classes/testMultiConfiguration_1002.xml");
-        FileObject output = getFile(getBasePath() + FILEMONITOR_1002_FILE);
+        FileObject output = getFile(getBasePath() + FILERELOAD_1002_FILE);
         output.delete();
 
-        factory.setFileName(getBasePath() + FILEMONITOR2_FILE);
+        factory.setFileName(getBasePath() + FILERELOAD2_FILE);
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -938,7 +936,6 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
         waitForChange();
         verify("1002", config, 25);
         output.delete();
-        VFSFileMonitorReloadingStrategy.stopMonitor();
     }
 
 
