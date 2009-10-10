@@ -77,7 +77,7 @@
     </xml>
   </override>
 </configuration>
-]]></source>       
+]]></source>
       </subsection>
       <subsection name="File Options Provider">
         <p>
@@ -95,15 +95,11 @@
       </subsection>
       <subsection name="File Reloading Strategy">
         <p>
-          The <code><a href="../apidocs/org/apache/commons/configuration/reloading/VFSFileMonitorReloadingStrategy.html">VFSFileMonitorReloadingStrategy</a></code>
+          The <code><a href="../apidocs/org/apache/commons/configuration2/reloading/VFSFileChangedReloadingStrategy.html">VFSFileMonitorReloadingStrategy</a></code>
           can be used to cause Configurations accessed via the <code>VFSFileSystem</code> to be
           monitored and reloaded when the files are modified. The example below shows how
           <code>DefaultConfigurationBuilder</code> can be configured to use
-          <code>VFSFileMonitorReloadingStrategy</code>. While each declaration will result in
-          a new reloading strategy object, each instance will share a common <code>FileMonitor</code>.
-          The delay setting controls how often the <code>FileMonitor</code> checks for changes
-          and since there is only a single <code>FileMonitor</code>, only the largest value
-          specified on any <code>VFSFileMonitorReloadingStrategy</code> is used.
+          <code>VFSFileChangedReloadingStrategy</code>.
           In the example below both test.properties and settings.xml would be checked for changes
           once per minute.
         </p>
@@ -117,12 +113,12 @@
   </header>
   <override>
     <properties fileName="test.properties" throwExceptionOnMissing="true">
-      <reloadingStrategy delay="60000"
-        config-class="org.apache.commons.configuration2.reloading.VFSFileMonitorReloadingStrategy"/>
+      <reloadingStrategy refreshDelay="60000"
+        config-class="org.apache.commons.configuration2.reloading.VFSFileChangedReloadingStrategy"/>
     </properties>
     <xml fileName="settings.xml" config-name="xml">
-      <reloadingStrategy
-         config-class="org.apache.commons.configuration2.reloading.VFSFileMonitorReloadingStrategy"/>
+      <reloadingStrategy refreshDelay="60000"
+         config-class="org.apache.commons.configuration2.reloading.VFSFileChangedReloadingStrategy"/>
     </xml>
   </override>
 </configuration>

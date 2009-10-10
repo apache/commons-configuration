@@ -54,6 +54,14 @@
           ReloadingStrategy and listeners will be propogated to each of the
           created configurations.
         </p>
+        <p>
+          When used in a combined configuration it is often acceptable for a file
+          matching a particular pattern to be missing so, by default, most exceptions
+          encountered when loading files are ignored. To change this behavior
+          call setIgnoreException(false) or configure the attribute to false in
+          DefaultConfigurationBuilder's configuration file. If schema validation
+          is enabled validation exceptions will always cause a failure.
+        </p>          
       </subsection>
       <subsection name="DynamicCombinedConfiguration">
         <p>

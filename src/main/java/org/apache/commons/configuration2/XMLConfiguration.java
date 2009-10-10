@@ -49,6 +49,7 @@ import org.apache.commons.configuration2.resolver.DefaultEntityResolver;
 import org.apache.commons.configuration2.resolver.EntityRegistry;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.DOMException;
@@ -153,7 +154,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * interface and thus provides full support for loading XML documents from
  * different sources like files, URLs, or streams. A full description of these
  * features can be found in the documentation of
- * <code>{@link AbstractFileConfiguration}</code>.</p>
+ * <code>{@link AbstractHierarchicalFileConfiguration}</code>.</p>
  *
  * <p><em>Note:</em>Configuration objects of this type can be read concurrently
  * by multiple threads. However if one of these threads modifies the object,
@@ -226,6 +227,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration()
     {
         super();
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -243,6 +245,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         super(c);
         clearReferences(getRootNode());
         setRootElementName(getRootNode().getName());
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -255,6 +258,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(String fileName) throws ConfigurationException
     {
         super(fileName);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -267,6 +271,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(File file) throws ConfigurationException
     {
         super(file);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -279,6 +284,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public XMLConfiguration(URL url) throws ConfigurationException
     {
         super(url);
+        setLogger(LogFactory.getLog(XMLConfiguration.class));
     }
 
     /**
@@ -566,6 +572,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     public void clear()
     {
         super.clear();
+        setRootNode(new DefaultConfigurationNode());
         document = null;
     }
 
@@ -955,6 +962,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (Exception e)
         {
+            this.getLogger().debug("Unable to load the configuraton", e);           
             throw new ConfigurationException("Unable to load the configuration", e);
         }
     }

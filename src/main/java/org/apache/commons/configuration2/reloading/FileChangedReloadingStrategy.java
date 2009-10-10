@@ -23,6 +23,8 @@ import java.net.URL;
 
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.FileConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * <p>A reloading strategy that will reload the configuration every time its
@@ -64,6 +66,10 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
     /** A flag whether a reload is required.*/
     private boolean reloading;
 
+     /** The Log to use for diagnostic messages */
+    private Log logger = LogFactory.getLog(FileChangedReloadingStrategy.class);
+
+
     public void setConfiguration(FileConfiguration configuration)
     {
         this.configuration = configuration;
@@ -85,6 +91,10 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
                 lastChecked = now;
                 if (hasChanged())
                 {
+                    if (logger.isDebugEnabled())
+                    {
+                        logger.debug("File change detected: " + getName());
+                    }
                     reloading = true;
                 }
             }
@@ -141,6 +151,11 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
         File file = getFile();
         if (file == null || !file.exists())
         {
+            if (logger.isWarnEnabled() && lastModified != 0)
+            {
+                logger.warn("File was deleted: " + getName(file));
+                lastModified = 0;
+            }
             return false;
         }
 
@@ -185,5 +200,28 @@ public class FileChangedReloadingStrategy implements ReloadingStrategy
         {
             return ConfigurationUtils.fileFromURL(url);
         }
+    }
+
+    private String getName()
+    {
+        return getName(getFile());
+    }
+
+    private String getName(File file)
+    {
+        String name = configuration.getURL().toString();
+        if (name == null)
+        {
+            if (file != null)
+            {
+                name = file.getAbsolutePath();
+            }
+            else
+            {
+                name = "base: " + configuration.getBasePath()
+                       + "file: " + configuration.getFileName();
+            }
+        }
+        return name;
     }
 }

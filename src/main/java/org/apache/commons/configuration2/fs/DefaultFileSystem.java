@@ -30,6 +30,8 @@ import java.net.URLConnection;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * FileSystem that uses java.io.File or HttpClient
@@ -41,6 +43,10 @@ public class DefaultFileSystem extends FileSystem
 {
     /** Constant for the file URL protocol */
     private static final String FILE_SCHEME = "file:";
+    /**
+     * The Log for diagnostic messages.
+     */
+    private Log log = LogFactory.getLog(DefaultFileSystem.class);
 
     @Override
     public InputStream getInputStream(String basePath, String fileName)
@@ -270,6 +276,10 @@ public class DefaultFileSystem extends FileSystem
         }
         catch (IOException e)
         {
+            if (log.isDebugEnabled())
+            {
+                log.debug("Could not locate file " + fileName + " at " + basePath + ": " + e.getMessage());
+            }
             return null;
         }
     }

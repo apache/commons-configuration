@@ -183,7 +183,7 @@ public class CatalogResolver implements EntityResolver
             }
             catch (Exception e)
             {
-                log.debug("Failed to create InputSource for " + resolved, e);
+                log.warn("Failed to create InputSource for " + resolved + " (" + e.toString() + ")");
                 return null;
             }
         }

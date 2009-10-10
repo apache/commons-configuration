@@ -267,7 +267,7 @@ public class BeanHelper
                 return;
             }
             throw new ConfigurationRuntimeException("Property " + propName
-                    + " cannot be set!");
+                    + " cannot be set on " + bean.getClass().getName());
         }
 
         try

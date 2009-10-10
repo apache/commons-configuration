@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<configuration
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:noNamespaceSchemaLocation="http://commons.apache.org/testMultiConfiguration.xsd">
+  <colors>
+    <undefined>This will throw a schema exception</undefined>
+  </colors>
+  <buttons>
+    <name>OK-1,Cancel-2,Help-3</name>
+  </buttons>
+  <numberFormat pattern="###\,###.##"/>
+</configuration>

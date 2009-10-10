@@ -640,6 +640,40 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    /* This test is very slow.
+    public void testReloadingOOM() throws Exception
+    {
+        assertNotNull(conf.getReloadingStrategy());
+        assertTrue(conf.getReloadingStrategy() instanceof InvariantReloadingStrategy);
+        PrintWriter out = null;
+
+        try
+        {
+            out = new PrintWriter(new FileWriter(testSaveConf));
+            out.println("<?xml version=\"1.0\"?><config><test>1</test></config>");
+            out.close();
+            out = null;
+            conf.setFile(testSaveConf);
+            FileAlwaysReloadingStrategy strategy = new FileAlwaysReloadingStrategy();
+            strategy.setRefreshDelay(100);
+            conf.setReloadingStrategy(strategy);
+            conf.load();
+            assertEquals(1, conf.getInt("test"));
+
+            for (int i = 1; i < 50000; ++i)
+            {
+               assertEquals(1, conf.getInt("test"));
+            }
+        }
+        finally
+        {
+            if (out != null)
+            {
+                out.close();
+            }
+        }
+    } */
+    
     /**
      * Tests access to tag names with delimiter characters.
      */
@@ -1536,6 +1570,51 @@ public class TestXMLConfiguration extends TestCase
             assertTrue("Incorrect exception on save", cause instanceof SAXParseException);
         }
     }
+
+    /* Uncomment when reload locking is in place
+    public void testConcurrentGetAndReload() throws Exception
+    {
+        //final FileConfiguration config = new PropertiesConfiguration("test.properties");
+        final FileConfiguration config = new XMLConfiguration("test.xml");
+        config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+
+        assertTrue("Property not found", config.getProperty("test.short") != null);
+
+        Thread testThreads[] = new Thread[5];
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i] = new ReloadThread(config);
+            testThreads[i].start();
+        }
+
+        for (int i = 0; i < 2000; i++)
+        {
+            assertTrue("Property not found", config.getProperty("test.short") != null);
+        }
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i].join();
+        }
+    }
+
+    private class ReloadThread extends Thread
+    {
+        FileConfiguration config;
+
+        ReloadThread(FileConfiguration config)
+        {
+            this.config = config;
+        }
+        public void run()
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                config.reload();
+            }
+        }
+    } */
 
     /**
      * Prepares a configuration object for testing a reload operation.

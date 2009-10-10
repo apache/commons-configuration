@@ -32,6 +32,8 @@ import java.util.Iterator;
 
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.fs.DefaultFileSystem;
 import org.apache.commons.configuration2.fs.FileSystem;
@@ -85,7 +87,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends InMemoryConfiguration
-implements FileConfiguration, ConfigurationListener, FileSystemBased
+implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener, FileSystemBased
 {
     /** Constant for the configuration reload event.*/
     public static final int EVENT_RELOAD = 20;
@@ -812,6 +814,11 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
      */
     public void reload()
     {
+        reload(false);
+    }
+
+    public boolean reload(boolean checkReload)
+    {
         synchronized (reloadLock)
         {
             if (noReload == 0)
@@ -850,6 +857,10 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
                 {
                     fireError(EVENT_RELOAD, null, null, e);
                     // todo rollback the changes if the file can't be reloaded
+                    if (checkReload)
+                    {
+                        return false;
+                    }
                 }
                 finally
                 {
@@ -857,6 +868,7 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
                 }
             }
         }
+        return true;
     }
 
     /**
@@ -982,8 +994,11 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
     @Override
     protected NodeList<ConfigurationNode> fetchNodeList(String key)
     {
-        reload();
-        return super.fetchNodeList(key);
+        if (reload(true))
+        {
+            return super.fetchNodeList(key);
+        }
+        return new NodeList<ConfigurationNode>();
     }
 
     /**
@@ -1057,6 +1072,12 @@ implements FileConfiguration, ConfigurationListener, FileSystemBased
         {
             setDetailEvents(false);
         }
+    }
+
+    public void configurationError(ConfigurationErrorEvent event)
+    {
+        fireError(event.getType(), event.getPropertyName(), event.getPropertyValue(),
+                event.getCause());
     }
 
     /**

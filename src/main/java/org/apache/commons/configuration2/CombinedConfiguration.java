@@ -206,6 +206,9 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     /** A flag whether an enhanced reload check is to be performed.*/
     private boolean forceReloadCheck;
 
+    /** The default behavior is to ignore exceptions that occur during reload */
+    private boolean ignoreReloadExceptions = true;
+
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
      * initializes the combiner to be used.
@@ -288,6 +291,26 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
     {
         this.forceReloadCheck = forceReloadCheck;
     }
+
+    /**
+     * Retrieves the value of the ignoreReloadExceptions flag.
+     * @return true if exceptions are ignored, false otherwise.
+     */
+    public boolean isIgnoreReloadExceptions()
+    {
+        return ignoreReloadExceptions;
+    }
+
+    /**
+     * If set to true then exceptions that occur during reloading will be
+     * ignored. If false then the exceptions will be allowed to be thrown
+     * back to the caller.
+     * @param ignoreReloadExceptions true if exceptions should be ignored.
+     */
+    public void setIgnoreReloadExceptions(boolean ignoreReloadExceptions)
+    {
+        this.ignoreReloadExceptions = ignoreReloadExceptions;
+    }    
 
     /**
      * Adds a new configuration to this combined configuration. It is possible
@@ -610,8 +633,10 @@ public class CombinedConfiguration extends HierarchicalConfiguration implements
                 }
                 catch (Exception ex)
                 {
-                    // ignore all exceptions, e.g. missing property exceptions
-                    ;
+                    if (!ignoreReloadExceptions)
+                    {
+                        throw new ConfigurationRuntimeException(ex);
+                    }
                 }
             }
         }

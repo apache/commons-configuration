@@ -649,9 +649,9 @@ public class TestCombinedConfiguration extends TestCase
         engineInit.setIndexStart("{");
         engineInit.setIndexEnd("}");
         child.setExpressionEngine(engineInit);
-        
+
         child.addProperty("test(a)", "1,2,3");
-        
+
         config.addConfiguration(child);
         DefaultExpressionEngine engineQuery = new DefaultExpressionEngine();
         engineQuery.setIndexStart("<");
@@ -671,7 +671,7 @@ public class TestCombinedConfiguration extends TestCase
      * configuration is accessed concurrently. This test is related to
      * CONFIGURATION-344.
      */
-    /* todo test failing due to the lack of synchronization on the hierarchical configurations (CONFIGURATION-390) 
+    /* todo test failing due to the lack of synchronization on the hierarchical configurations (CONFIGURATION-390)
     public void testDeadlockWithReload() throws ConfigurationException,
             InterruptedException
     {
@@ -680,7 +680,7 @@ public class TestCombinedConfiguration extends TestCase
         child.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         config.addConfiguration(child);
         final int count = 1000;
-        
+
         assertEquals("Wrong value of combined property", 8, config.getInt("test.short"));
 
         class ReloadThread extends Thread
@@ -769,7 +769,7 @@ public class TestCombinedConfiguration extends TestCase
         assertEquals("Reload of sub config 1 not detected", 1, config
                 .getInt("xmlReload1"));
     }
-    
+
     /**
      * Tests a combined configuration that is contained in another combined
      * configuration.
@@ -786,6 +786,76 @@ public class TestCombinedConfiguration extends TestCase
         assertEquals("Key in cc not found", "foo", config
                 .getString("element3[@name]"));
     }
+
+    /* Uncomment when reload locking is in place
+    public void testConcurrentGetAndReload() throws Exception
+    {
+        final int threadCount = 5;
+        final int loopCount = 1000;
+        config.setForceReloadCheck(true);
+        config.setNodeCombiner(new MergeCombiner());
+        final XMLConfiguration xml = new XMLConfiguration("configA.xml");
+        xml.setReloadingStrategy(new FileRandomReloadingStrategy());
+        config.addConfiguration(xml);
+        final XMLConfiguration xml2 = new XMLConfiguration("configB.xml");
+        xml2.setReloadingStrategy(new FileRandomReloadingStrategy());
+        config.addConfiguration(xml2);
+        config.setExpressionEngine(new XPathExpressionEngine());
+
+        assertEquals(config.getString("/property[@name='config']/@value"), "100");
+
+        Thread testThreads[] = new Thread[threadCount];
+        int failures[] = new int[threadCount];
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i] = new ReloadThread(config, failures, i, loopCount);
+            testThreads[i].start();
+        }
+
+        int totalFailures = 0;
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i].join();
+            totalFailures += failures[i];
+        }
+        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+    }
+
+    private class ReloadThread extends Thread
+    {
+        CombinedConfiguration combined;
+        int[] failures;
+        int index;
+        int count;
+
+        ReloadThread(CombinedConfiguration config, int[] failures, int index, int count)
+        {
+            combined = config;
+            this.failures = failures;
+            this.index = index;
+            this.count = count;
+        }
+        public void run()
+        {
+            failures[index] = 0;
+            for (int i = 0; i < count; i++)
+            {
+                try
+                {
+                    String value = combined.getString("/property[@name='config']/@value");
+                    if (value == null || !value.equals("100"))
+                    {
+                        ++failures[index];
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ++failures[index];
+                }
+            }
+        }
+    } */
 
     /**
      * Helper method for writing a file. The file is also added to a list and
@@ -839,7 +909,6 @@ public class TestCombinedConfiguration extends TestCase
      * Writes a file for testing reload operations.
      *
      * @param name the name of the reload test file
-     * @param content the content of the file
      * @param value the value of the reload test property
      * @return the file that was written
      * @throws IOException if an error occurs

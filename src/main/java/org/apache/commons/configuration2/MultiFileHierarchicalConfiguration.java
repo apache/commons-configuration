@@ -40,9 +40,12 @@ import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.xml.sax.EntityResolver;
+import org.xml.sax.SAXParseException;
 
 /**
  * This class provides access to multiple configuration files that reside in a location that
@@ -93,13 +96,16 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     private boolean attributeSplittingDisabled;
 
     /** The Logger name to use */
-    private String loggerName = "";
+    private String loggerName = MultiFileHierarchicalConfiguration.class.getName();
 
     /** The Reloading strategy to use on created configurations */
     private ReloadingStrategy fileStrategy;
 
     /** The EntityResolver */
     private EntityResolver entityResolver;
+
+    /** Substitutor to use to resolve the pattern */
+    private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
 
     /**
      * Default Constructor
@@ -108,6 +114,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     {
         super();
         this.init = true;
+        setLogger(LogFactory.getLog(loggerName));
     }
 
     /**
@@ -119,6 +126,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         super();
         this.pattern = pathPattern;
         this.init = true;
+        setLogger(LogFactory.getLog(loggerName));
     }
 
     public void setLoggerName(String name)
@@ -641,6 +649,14 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 listener.configurationError(event);
             }
         }
+
+        if (event.getType() == AbstractHierarchicalFileConfiguration.EVENT_RELOAD)
+        {
+            if (isThrowable(event.getCause()))
+            {
+                throw new ConfigurationRuntimeException(event.getCause());
+            }
+        }
     }
 
     /*
@@ -691,7 +707,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         {
             throw new ConfigurationRuntimeException("File pattern must be defined");
         }
-        String path = getSubstitutor().replace(pattern);
+        String path = localSubst.replace(pattern);
 
         if (configurationsMap.containsKey(path))
         {
@@ -747,13 +763,27 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
         catch (ConfigurationException ce)
         {
-            if (!ignoreException)
+            if (isThrowable(ce))
             {
                 throw new ConfigurationRuntimeException(ce);
             }
         }
         configurationsMap.putIfAbsent(path, configuration);
         return configurationsMap.get(path);
+    }
+    
+    private boolean isThrowable(Throwable throwable)
+    {
+        if (!ignoreException)
+        {
+            return true;
+        }
+        Throwable cause = throwable.getCause();
+        while (cause != null && !(cause instanceof SAXParseException))
+        {
+            cause = cause.getCause();
+        }
+        return cause != null;
     }
 
     /**
