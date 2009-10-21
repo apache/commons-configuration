@@ -18,6 +18,11 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.FileReader;
+import java.io.Writer;
+import java.io.FileWriter;
 
 import junit.framework.TestCase;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
@@ -30,7 +35,9 @@ public class TestDynamicCombinedConfiguration extends TestCase
     private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
     private static final File MULTI_TENENT_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder4.xml");
-
+     private static final File MULTI_DYNAMIC_FILE = new File(
+            "conf/testMultiTenentConfigurationBuilder5.xml");
+    
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
@@ -158,6 +165,55 @@ public class TestDynamicCombinedConfiguration extends TestCase
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
     }
 
+  public void testConcurrentGetAndReloadFile() throws Exception
+    {
+        final int threadCount = 25;
+        System.getProperties().remove("Id");
+        // create a new configuration
+        File input = new File("target/test-classes/testMultiDynamic_default.xml");
+        File output = new File("target/test-classes/testwrite/testMultiDynamic_default.xml");
+        output.delete();
+        output.getParentFile().mkdir();
+        copyFile(input, output);
+
+        DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
+        factory.setFile(MULTI_DYNAMIC_FILE);
+        CombinedConfiguration config = factory.getConfiguration(true);
+
+        assertEquals(config.getString("Product/FIIndex/FI[@id='123456781']"), "ID0001");
+
+        ReaderThread testThreads[] = new ReaderThread[threadCount];
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i] = new ReaderThread(config);
+            testThreads[i].start();
+        }
+
+        Thread.sleep(2000);
+
+        input = new File("target/test-classes/testMultiDynamic_default2.xml");
+        copyFile(input, output);
+
+        Thread.sleep(2000);
+        String id = config.getString("Product/FIIndex/FI[@id='123456782']");
+        assertNotNull("File did not reload, id is null", id);
+        String rows = config.getString("rowsPerPage");
+        assertTrue("Incorrect value for rowsPerPage", "25".equals(rows));
+
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            testThreads[i].shutdown();
+            testThreads[i].join();
+        }
+        for (int i = 0; i < testThreads.length; ++i)
+        {
+            assertFalse(testThreads[i].failed());
+        }
+        assertEquals("ID0002", config.getString("Product/FIIndex/FI[@id='123456782']"));
+        output.delete();
+    }
+
+
     private class ReloadThread extends Thread
     {
         CombinedConfiguration combined;
@@ -205,10 +261,67 @@ public class TestDynamicCombinedConfiguration extends TestCase
         }
     }
 
+    private class ReaderThread extends Thread
+    {
+        private boolean running = true;
+        private boolean failed = false;
+        CombinedConfiguration combined;
+
+        public ReaderThread(CombinedConfiguration c)
+        {
+            combined = c;
+        }
+
+        public void run()
+        {
+            while (running)
+            {
+                String bcId = combined.getString("Product/FIIndex/FI[@id='123456781']");
+                if ("ID0001".equalsIgnoreCase(bcId))
+                {
+                    if (failed)
+                    {
+                        System.out.println("Thread failed, but recovered");
+                    }
+                    failed = false;
+                }
+                else
+                {
+                    failed = true;
+                }
+            }
+        }
+
+        public boolean failed()
+        {
+            return failed;
+        }
+
+        public void shutdown()
+        {
+            running = false;
+        }
+
+    }
+
     private void verify(String key, DynamicCombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
         assertTrue(config.getInt("rowsPerPage") == rows);
+    }
+
+    private void copyFile(File input, File output) throws IOException
+    {
+        Reader reader = new FileReader(input);
+        Writer writer = new FileWriter(output);
+        char[] buffer = new char[4096];
+        int n = 0;
+        while (-1 != (n = reader.read(buffer)))
+        {
+            writer.write(buffer, 0, n);
+        }
+        reader.close();
+        writer.close();
     }
 
     public static class ThreadLookup extends StrLookup

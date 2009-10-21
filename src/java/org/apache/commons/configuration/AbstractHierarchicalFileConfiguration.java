@@ -302,14 +302,17 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     private boolean reload(boolean checkReload)
     {
-        setDetailEvents(false);
-        try
+        synchronized(delegate.getReloadLock())
         {
-            return delegate.reload(checkReload);
-        }
-        finally
-        {
-            setDetailEvents(true);
+            setDetailEvents(false);
+            try
+            {
+                return delegate.reload(checkReload);
+            }
+            finally
+            {
+                setDetailEvents(true);
+            }
         }
     }
 
