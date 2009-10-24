@@ -38,7 +38,6 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;
 
 /**
@@ -503,6 +502,21 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public void setProperty(String key, Object value)
     {
+        doSetProperty(key, value);
+    }
+
+    /**
+     * A default implementation of the {@code setProperty()} method. This
+     * implementation implements the setProperty() operation by first clearing
+     * the property and then adding the new value. This is fully functional.
+     * However, derived classes may implement {@code setProperty()} in a more
+     * efficient way.
+     *
+     * @param key the key of the property
+     * @param value the new value
+     */
+    protected final void doSetProperty(String key, Object value)
+    {
         fireEvent(EVENT_SET_PROPERTY, key, value, true);
         setDetailEvents(false);
         try
@@ -588,6 +602,21 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     public Iterator<String> getKeys(final String prefix)
+    {
+        return doGetKeys(prefix);
+    }
+
+    /**
+     * A default implementation of the {@code getKeys(String prefix)} method.
+     * This implementation returns a special prefix iterator for obtaining all
+     * keys starting with the specified prefix. This is fully functional.
+     * However, derived classes may implement {@code getKeys(String)} in a more
+     * efficient way.
+     *
+     * @param prefix the prefix for the keys
+     * @return an iterator with all the keys starting with this prefix
+     */
+    protected final Iterator<String> doGetKeys(String prefix)
     {
         return new PrefixedKeysIterator(getKeys(), prefix);
     }

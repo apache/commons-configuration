@@ -3,8 +3,8 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
-      <expressionEngine config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.combined.OverrideCombiner"/>
+      <expressionEngine config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
     </result>
     <combiner>
       <override>

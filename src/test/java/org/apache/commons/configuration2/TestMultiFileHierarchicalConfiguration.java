@@ -17,17 +17,18 @@
 
 package org.apache.commons.configuration2;
 
-import junit.framework.TestCase;
-//import org.apache.commons.configuration2.combined.CombinedConfiguration;
-import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-import org.xml.sax.SAXParseException;
-
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.FileReader;
 import java.io.Writer;
-import java.io.FileWriter;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
+import org.xml.sax.SAXParseException;
 
 /**
  * Unit test for simple MultiConfigurationTest.

@@ -93,6 +93,17 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
     }
 
     /**
+     * Allows setting the {@code NodeHandler}. This method is intended to be
+     * used by sub classes with specific requirements for node handlers.
+     *
+     * @param handler the new {@code NodeHandler}
+     */
+    protected void setNodeHandler(NodeHandler<T> handler)
+    {
+        nodeHandler = handler;
+    }
+
+    /**
      * Returns the root node of this hierarchical configuration.
      *
      * @return the root node
@@ -537,9 +548,9 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      * @param key the key of the property to be removed
      */
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
-        removeNodeList(key, EVENT_CLEAR_PROPERTY, true);
+        removeNodeList(key, -1, true);
     }
 
     /**
@@ -581,7 +592,11 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     private void removeNodeList(String key, int event, boolean clear)
     {
-        fireEvent(event, key, null, true);
+        if (event >= 0)
+        {
+            fireEvent(event, key, null, true);
+        }
+
         NodeList<T> nodes = fetchNodeList(key);
 
         for (int index = 0; index < nodes.size(); index++)
@@ -589,7 +604,10 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
             removeListElement(nodes, index, clear);
         }
 
-        fireEvent(event, key, null, false);
+        if (event >= 0)
+        {
+            fireEvent(event, key, null, false);
+        }
     }
 
     /**

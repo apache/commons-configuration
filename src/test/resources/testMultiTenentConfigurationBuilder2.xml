@@ -3,11 +3,11 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
-            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.combined.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.combined.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
     </result>
     <entity-resolver catalogFiles="catalog.xml"/>
     <providers>

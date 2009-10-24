@@ -19,11 +19,13 @@ package org.apache.commons.configuration2;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
-import java.net.URI;
 
 import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
 import org.xml.sax.SAXException;
 
 /**
@@ -64,6 +66,7 @@ public class TestConfigurationFactory extends TestCase
 
     private DefaultConfigurationBuilder factory;
 
+    @Override
     public void setUp() throws Exception
     {
         System.setProperty("java.naming.factory.initial", "org.apache.commons.configuration2.MockInitialContextFactory");
@@ -225,8 +228,8 @@ public class TestConfigurationFactory extends TestCase
         assertTrue(subset.getBoolean("onlyinjndi"));
 
         // test SystemConfiguration
-        assertNotNull(config.getProperty("java.version"));
-        assertEquals(System.getProperty("java.version"), config.getString("java.version"));
+        assertNotNull(config.getProperty("java..version"));
+        assertEquals(System.getProperty("java.version"), config.getString("java..version"));
     }
 
     // Checks if optional configurations work

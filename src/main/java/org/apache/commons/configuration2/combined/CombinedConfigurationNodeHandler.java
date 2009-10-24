@@ -395,19 +395,24 @@ class CombinedConfigurationNodeHandler implements NodeHandler<Object>,
      */
     public NodeHandler<?> lookupHandler(Object node, boolean subClass)
     {
-        NodeHandler<?> result = getHandlers().get(node.getClass());
+        NodeHandler<?> result = null;
 
-        if (result == null && subClass)
+        if (getHandlers() != null)
         {
-            // check for sub classes
-            for (Class<?> cls : getHandlers().keySet())
+            // the map may be null if we are in the initialization phase
+            result = getHandlers().get(node.getClass());
+            if (result == null && subClass)
             {
-                if (cls.isInstance(node))
+                // check for sub classes
+                for (Class<?> cls : getHandlers().keySet())
                 {
-                    result = getHandlers().get(cls);
-                    // store directly in map for faster access the next time
-                    getHandlers().put(node.getClass(), result);
-                    break;
+                    if (cls.isInstance(node))
+                    {
+                        result = getHandlers().get(cls);
+                        // store directly in map for faster access the next time
+                        getHandlers().put(node.getClass(), result);
+                        break;
+                    }
                 }
             }
         }

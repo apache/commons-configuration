@@ -61,13 +61,20 @@ class FlatRootNode extends FlatNode
     /** A map for direct access to child nodes by name. */
     private final Map<String, ChildNodeManager> childrenByName;
 
+    /** Stores the configuration this node belongs to. */
+    private final Configuration configuration;
+
     /**
-     * Creates a new instance of <code>FlatRootNode</code>.
+     * Creates a new instance of {@code FlatRootNode}. The {@code Configuration}
+     * the node belongs to must be passed in.
+     *
+     * @param owningConfiguration the owning {@code Configuration}
      */
-    public FlatRootNode()
+    public FlatRootNode(Configuration owningConfiguration)
     {
         children = new ArrayList<FlatNode>();
         childrenByName = new HashMap<String, ChildNodeManager>();
+        configuration = owningConfiguration;
     }
 
     /**
@@ -186,11 +193,10 @@ class FlatRootNode extends FlatNode
      * Returns the value of this node. The root node does not have a value, so
      * result is always <b>null</b>.
      *
-     * @param config the associated configuration
      * @return the value of this node
      */
     @Override
-    public Object getValue(Configuration config)
+    public Object getValue()
     {
         return null;
     }
@@ -211,13 +217,12 @@ class FlatRootNode extends FlatNode
      * Removes the specified child node. The corresponding value in the
      * associated configuration will also be removed.
      *
-     * @param config the associated configuration
      * @param child the node to be removed
      * @throws ConfigurationRuntimeException if this node is not a child of this
      *         node
      */
     @Override
-    public void removeChild(Configuration config, FlatNode child)
+    public void removeChild(FlatNode child)
     {
         if (child != null)
         {
@@ -228,11 +233,11 @@ class FlatRootNode extends FlatNode
 
             if (index != INDEX_UNDEFINED)
             {
-                changeMultiProperty(config, child, index, null, true);
+                changeMultiProperty(getConfiguration(), child, index, null, true);
             }
             else
             {
-                config.clearProperty(child.getName());
+                getConfiguration().clearProperty(child.getName());
             }
         }
         else
@@ -252,10 +257,22 @@ class FlatRootNode extends FlatNode
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
     @Override
-    public void setValue(Configuration config, Object value)
+    public void setValue(Object value)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot set the value of the root node of a flat configuration!");
+    }
+
+    /**
+     * Returns the owning {@code Configuration}. The {@code Configuration} is
+     * stored as a member of this node. So it can be directly returned.
+     *
+     * @return the {@code Configuration} this node belongs to
+     */
+    @Override
+    public Configuration getConfiguration()
+    {
+        return configuration;
     }
 
     /**
@@ -279,15 +296,13 @@ class FlatRootNode extends FlatNode
      * times. It obtains the list with all values for this property, changes the
      * value with the given index, and sets the new value.
      *
-     * @param config the current configuration
      * @param child the child node that was changed
      * @param index the value index of this child node
      * @param value the new value
      */
-    void setMultiProperty(Configuration config, FlatNode child, int index,
-            Object value)
+    void setMultiProperty(FlatNode child, int index, Object value)
     {
-        changeMultiProperty(config, child, index, value, false);
+        changeMultiProperty(getConfiguration(), child, index, value, false);
     }
 
     /**

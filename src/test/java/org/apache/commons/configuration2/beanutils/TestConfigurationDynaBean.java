@@ -21,14 +21,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.commons.beanutils.DynaProperty;
-import org.apache.commons.configuration2.Configuration;
-import org.apache.commons.configuration2.MapConfiguration;
-import org.apache.commons.configuration2.flat.BaseConfiguration;
-
 import junit.framework.AssertionFailedError;
 import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
+
+import org.apache.commons.beanutils.DynaProperty;
+import org.apache.commons.configuration2.Configuration;
+import org.apache.commons.configuration2.MapConfiguration;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.apache.commons.configuration2.flat.BaseConfiguration;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -98,6 +99,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Set up instance variables required by this test case.
      */
+    @Override
     public void setUp() throws Exception
     {
         Configuration configuration = createConfiguration();
@@ -144,7 +146,11 @@ public class TestConfigurationDynaBean extends TestCase
      */
     protected Configuration createConfiguration()
     {
-        return new BaseConfiguration();
+        BaseConfiguration config = new BaseConfiguration();
+        DefaultExpressionEngine expr = new DefaultExpressionEngine();
+        expr.setPropertyDelimiter("/");
+        config.setExpressionEngine(expr);
+        return config;
     }
 
     /**

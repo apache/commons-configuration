@@ -67,7 +67,7 @@ public class TestFlatNodeHandler extends TestCase
                 internalUpdate = handler.isInternalUpdate();
             }
         });
-        handler = new FlatNodeHandler(config);
+        handler = new FlatNodeHandler();
     }
 
     /**
@@ -88,7 +88,7 @@ public class TestFlatNodeHandler extends TestCase
      */
     private FlatNode setUpTestNode()
     {
-        FlatRootNode root = new FlatRootNode();
+        FlatRootNode root = new FlatRootNode(config);
         for (String c : CHILD_NAMES)
         {
             root.addChild(c);
@@ -106,14 +106,6 @@ public class TestFlatNodeHandler extends TestCase
         assertEquals("Wrong value of update flag", expected, internalUpdate
                 .booleanValue());
         internalUpdate = null;
-    }
-
-    /**
-     * Tests whether the correct configuration is returned by the handler.
-     */
-    public void testGetConfiguration()
-    {
-        assertSame("Configuration not set", config, handler.getConfiguration());
     }
 
     /**
@@ -198,7 +190,7 @@ public class TestFlatNodeHandler extends TestCase
         FlatNode child = handler.addChild(node, NAME);
         assertEquals("Wrong name of child", NAME, child.getName());
         assertTrue("Config not empty", config.isEmpty());
-        child.setValue(config, TestFlatNodes.VALUE);
+        child.setValue(TestFlatNodes.VALUE);
         assertEquals("Value not added", TestFlatNodes.VALUE, config.getProperty(NAME));
         checkUpdate(false);
     }

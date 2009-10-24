@@ -72,23 +72,19 @@ public abstract class FlatNode
     public abstract String getName();
 
     /**
-     * Returns the value of this node. An implementation can access the passed
-     * in configuration to obtain the value.
+     * Returns the value of this node.
      *
-     * @param config the owning configuration
      * @return the value of this node
      */
-    public abstract Object getValue(Configuration config);
+    public abstract Object getValue();
 
     /**
-     * Sets the value of this node. An implementation can access the passed in
-     * configuration to set the value.
+     * Sets the value of this node.
      *
-     * @param config the owning configuration
      * @param value the new value
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
-    public abstract void setValue(Configuration config, Object value);
+    public abstract void setValue(Object value);
 
     /**
      * Returns the index of the value represented by this node. This is needed
@@ -154,12 +150,17 @@ public abstract class FlatNode
     public abstract FlatNode addChild(String name);
 
     /**
-     * Removes the specified child node from this node. This may also affect the
-     * owning configuration, so this object is also passed to this method.
+     * Removes the specified child node from this node.
      *
-     * @param config the owning configuration
      * @param child the child to be removed
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
-    public abstract void removeChild(Configuration config, FlatNode child);
+    public abstract void removeChild(FlatNode child);
+
+    /**
+     * Returns the {@code Configuration} object this node belongs to.
+     *
+     * @return the owning {@code Configuration}
+     */
+    public abstract Configuration getConfiguration();
 }

@@ -21,6 +21,9 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.configuration2.combined.DynamicCombinedConfiguration;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
+
 /**
  *
  */
@@ -33,14 +36,12 @@ public class TestDynamicCombinedConfiguration extends TestCase
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
-        org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine engine1 =
-            new  org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine();
+        XPathExpressionEngine engine1 = new XPathExpressionEngine();
         config.setExpressionEngine(engine1);
         config.setKeyPattern(PATTERN);
         config.setDelimiterParsingDisabled(true);
         MultiFileHierarchicalConfiguration multi = new MultiFileHierarchicalConfiguration(PATTERN1);
-        org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine engine2 =
-            new  org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine();
+        XPathExpressionEngine engine2 = new XPathExpressionEngine();
         multi.setExpressionEngine(engine2);
         config.addConfiguration(multi, "Multi");
         XMLConfiguration xml = new XMLConfiguration();

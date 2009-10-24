@@ -28,15 +28,18 @@ import java.util.List;
 import java.util.Set;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.combined.DynamicCombinedConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.fs.VFSFileSystem;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -128,6 +131,7 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         factory.clearErrorListeners();  // avoid exception messages
     }
 
+    @Override
     protected void tearDown() throws Exception
     {
         FileSystem.resetDefaultFileSystem();
@@ -649,8 +653,8 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         assertTrue(subset.getBoolean("onlyinjndi"));
 
         // test SystemConfiguration
-        assertNotNull(config.getProperty("java.version"));
-        assertEquals(System.getProperty("java.version"), config.getString("java.version"));
+        assertNotNull(config.getProperty("java..version"));
+        assertEquals(System.getProperty("java.version"), config.getString("java..version"));
 
         // test EnvironmentConfiguration
         assertNotNull("JAVA_HOME property not found", config.getProperty("JAVA_HOME"));
@@ -934,7 +938,7 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
-        List<AbstractConfiguration> list = config.getConfigurations();
+        List<AbstractHierarchicalConfiguration<?>> list = config.getConfigurations();
         assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
         for (AbstractConfiguration conf : list)
         {
@@ -967,7 +971,7 @@ public class TestVFSConfigurationBuilder extends TestCase implements Configurati
         FileSystem fs = factory.getFileSystem();
         assertNotNull("No File System",fs);
         assertTrue("Incorrect File System", fs instanceof VFSFileSystem);
-        List<AbstractConfiguration> list = config.getConfigurations();
+        List<AbstractHierarchicalConfiguration<?>> list = config.getConfigurations();
         assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
         for (Configuration conf : list)
         {

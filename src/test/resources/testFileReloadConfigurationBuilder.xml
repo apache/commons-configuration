@@ -3,11 +3,11 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true" forceReloadCheck="true"
-            config-class="org.apache.commons.configuration2.DynamicCombinedConfiguration"
+            config-class="org.apache.commons.configuration2.combined.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.MergeCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.combined.MergeCombiner"/>
       <expressionEngine
-          config-class="org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine"/>
+          config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
     </result>
     <fileSystem config-class="org.apache.commons.configuration2.fs.VFSFileSystem"/>
     <providers>

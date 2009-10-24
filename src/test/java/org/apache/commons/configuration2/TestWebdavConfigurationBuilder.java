@@ -17,32 +17,34 @@
 package org.apache.commons.configuration2;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
 import java.io.FileReader;
-import java.io.Writer;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Collection;
-import java.util.Set;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
-import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.combined.DynamicCombinedConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.fs.FileOptionsProvider;
 import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.fs.VFSFileSystem;
+import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileObject;
 import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.FileName;
 import org.apache.commons.vfs.FileSystemOptions;
+import org.apache.commons.vfs.VFS;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -137,6 +139,7 @@ public class TestWebdavConfigurationBuilder extends TestCase implements FileOpti
         factory.clearErrorListeners();  // avoid exception messages
     }
 
+    @Override
     protected void tearDown() throws Exception
     {
         FileSystem.resetDefaultFileSystem();

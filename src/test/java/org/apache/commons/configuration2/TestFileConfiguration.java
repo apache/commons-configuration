@@ -26,10 +26,11 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Properties;
 
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-
-import junit.framework.TestCase;
 
 /**
  * @author Emmanuel Bourg

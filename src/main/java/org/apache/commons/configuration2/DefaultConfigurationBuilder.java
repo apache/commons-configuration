@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
@@ -36,18 +34,21 @@ import org.apache.commons.configuration2.beanutils.BeanFactory;
 import org.apache.commons.configuration2.beanutils.BeanHelper;
 import org.apache.commons.configuration2.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration2.beanutils.XMLBeanDeclaration;
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.combined.OverrideCombiner;
+import org.apache.commons.configuration2.combined.UnionCombiner;
 import org.apache.commons.configuration2.expr.NodeList;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration2.tree.OverrideCombiner;
-import org.apache.commons.configuration2.tree.UnionCombiner;
 import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.resolver.EntityRegistry;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
+import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -669,7 +670,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 getLogger().debug("Creating configuration " + decl.getBeanClassName() + " with name " +
                     decl.getConfiguration().getString(ATTR_NAME));
             }
-            AbstractConfiguration newConf = createConfigurationAt(decl);
+            AbstractHierarchicalConfiguration<?> newConf = createConfigurationAt(decl);
             if (newConf != null)
             {
                 config.addConfiguration(newConf, decl.getConfiguration().getString(ATTR_NAME), decl.getAt());
@@ -797,12 +798,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @return the new configuration object
      * @throws ConfigurationException if an error occurs
      */
-    private AbstractConfiguration createConfigurationAt(
+    private AbstractHierarchicalConfiguration<?> createConfigurationAt(
             ConfigurationDeclaration decl) throws ConfigurationException
     {
         try
         {
-            return (AbstractConfiguration) BeanHelper.createBean(decl);
+            return (AbstractHierarchicalConfiguration<?>) BeanHelper.createBean(decl);
         }
         catch (Exception ex)
         {
@@ -1013,11 +1014,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration object
          * @throws Exception if an error occurs
          */
-        public AbstractConfiguration getConfiguration(
+        public AbstractHierarchicalConfiguration<?> getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
-            return (AbstractConfiguration) createBean(fetchConfigurationClass(),
-                    decl, null);
+            return (AbstractHierarchicalConfiguration<?>) createBean(
+                    fetchConfigurationClass(), decl, null);
         }
 
         /**
@@ -1283,7 +1284,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                     {
                         logger.debug("Load failed for optional configuration " + tagName + ": "
                             + ex.getMessage());
-                    }                    
+                    }
                     // Notify registered error listeners
                     decl.getConfigurationBuilder().fireError(
                             EVENT_ERR_LOAD_OPTIONAL,
@@ -1368,7 +1369,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          */
         @Override
-        public AbstractConfiguration getConfiguration(
+        public AbstractHierarchicalConfiguration<?> getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
             AbstractConfiguration result = getEmptyConfiguration(decl);
@@ -1381,7 +1382,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 }
             }
             ((FileConfiguration) result).load();
-            return result;
+            return (AbstractHierarchicalConfiguration<?>) result;
         }
 
         /**
@@ -1646,7 +1647,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @exception Exception if an error occurs
          */
         @Override
-        public AbstractConfiguration getConfiguration(
+        public AbstractHierarchicalConfiguration<?> getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
             DefaultConfigurationBuilder builder = (DefaultConfigurationBuilder) super
@@ -1679,7 +1680,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static class DatabaseConfigurationProvider extends ConfigurationProvider
     {
         @Override
-        public AbstractConfiguration getConfiguration(ConfigurationDeclaration decl) throws Exception
+        public AbstractHierarchicalConfiguration<?> getConfiguration(ConfigurationDeclaration decl) throws Exception
         {
             Map<String, ?> attributes = decl.getBeanProperties();
             String jndi = (String) attributes.get("jndi");

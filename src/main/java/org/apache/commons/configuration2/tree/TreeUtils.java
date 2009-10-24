@@ -19,9 +19,12 @@ package org.apache.commons.configuration2.tree;
 
 import java.io.PrintStream;
 
+import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
+import org.apache.commons.configuration2.expr.NodeHandler;
+
 /**
  * Utility methods.
- * 
+ *
  * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  * @since 1.7
@@ -37,41 +40,59 @@ public class TreeUtils
     {
         if (stream != null)
         {
-            printTree(stream, "", result);
+            printTree(stream, "", result, new ConfigurationNodeHandler());
         }
     }
 
-    private static void printTree(PrintStream stream, String indent, ConfigurationNode result)
+    /**
+     * Prints the data stored in the specified node and its children.
+     *
+     * @param <T> the type of the node
+     * @param stream the output stream
+     * @param result the root node of the tree
+     * @param handler the node handler
+     */
+    public static <T> void printTree(PrintStream stream, T result,
+            NodeHandler<T> handler)
     {
-        StringBuilder buffer = new StringBuilder(indent).append("<").append(result.getName());
-        for (ConfigurationNode node : result.getAttributes())
+        if (stream != null)
         {
-            buffer.append(" ").append(node.getName()).append("='").append(node.getValue()).append("'");
+            printTree(stream, "", result, handler);
+        }
+    }
+
+    private static <T> void printTree(PrintStream stream, String indent, T result, NodeHandler<T> handler)
+    {
+        StringBuilder buffer = new StringBuilder(indent).append("<").append(handler.nodeName(result));
+
+        for (String attr : handler.getAttributes(result))
+        {
+            buffer.append(" ").append(attr).append("='").append(handler.getAttributeValue(result, attr)).append("'");
         }
         buffer.append(">");
         stream.print(buffer.toString());
-        
-        if (result.getValue() != null)
+
+        if (handler.getValue(result) != null)
         {
-            stream.print(result.getValue());
+            stream.print(handler.getValue(result));
         }
-        
+
         boolean newline = false;
-        if (result.getChildrenCount() > 0)
+        if (handler.getChildrenCount(result, null) > 0)
         {
             stream.print("\n");
-            for (ConfigurationNode node : result.getChildren())
+            for (T node : handler.getChildren(result))
             {
-                printTree(stream, indent + "  ", node);
+                printTree(stream, indent + "  ", node, handler);
             }
             newline = true;
         }
-        
+
         if (newline)
         {
             stream.print(indent);
         }
-        
-        stream.println("</" + result.getName() + ">");
+
+        stream.println("</" + handler.nodeName(result) + ">");
     }
 }

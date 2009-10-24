@@ -17,24 +17,26 @@
 package org.apache.commons.configuration2.combined;
 
 
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Collection;
-import java.util.Set;
-import java.util.Properties;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.event.ConfigurationErrorListener;
-import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.SubConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationErrorListener;
+import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -48,6 +50,18 @@ import org.apache.commons.configuration2.SubConfiguration;
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {
+    /**
+     * Prevent recursion while resolving unprefixed properties.
+     */
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
+    {
+        @Override
+        protected synchronized Boolean initialValue()
+        {
+            return Boolean.FALSE;
+        }
+    };
+
     /** The CombinedConfigurations */
     private ConcurrentMap<String, CombinedConfiguration> configs =
             new ConcurrentHashMap<String, CombinedConfiguration>();
@@ -64,6 +78,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
+
+    /** The name of the logger to use for each CombinedConfiguration */
+    private String loggerName = DynamicCombinedConfiguration.class.getName();
 
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
@@ -96,6 +113,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public String getKeyPattern()
     {
         return this.keyPattern;
+    }
+
+    /**
+     * Set the name of the Logger to use on each CombinedConfiguration.
+     * @param name The Logger name.
+     */
+    public void setLoggerName(String name)
+    {
+        this.loggerName = name;
     }
 
     /**
@@ -730,6 +756,33 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    /*
+     * Don't allow resolveContainerStore to be called recursively. This happens
+     * when the key pattern does not resolve and the ConfigurationInterpolator
+     * calls resolveContainerStore, which in turn calls getProperty, which then
+     * calls getConfiguration. GetConfiguration then calls the interpolator
+     * which starts it all over again.
+     * @param key The key to resolve.
+     * @return The value of the key.
+     */
+    @Override
+    protected Object resolveContainerStore(String key)
+    {
+        if (recursive.get())
+        {
+            return null;
+        }
+        recursive.set(Boolean.TRUE);
+        try
+        {
+            return super.resolveContainerStore(key);
+        }
+        finally
+        {
+            recursive.set(Boolean.FALSE);
+        }
+    }
+
     private CombinedConfiguration getCurrentConfig()
     {
         String key = getSubstitutor().replace(keyPattern);
@@ -740,22 +793,38 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
+                if (loggerName != null)
+                {
+                    Log log = LogFactory.getLog(loggerName);
+                    if (log != null)
+                    {
+                        config.setLogger(log);
+                    }
+                }
+                config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
                 config.setExpressionEngine(this.getExpressionEngine());
-                for (ConfigurationErrorListener listener : config.getErrorListeners())
+                config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+                config.setListDelimiter(getListDelimiter());
+                for (ConfigurationErrorListener listener : getErrorListeners())
                 {
                     config.addErrorListener(listener);
                 }
-                for (ConfigurationListener listener : config.getConfigurationListeners())
+                for (ConfigurationListener listener : getConfigurationListeners())
                 {
                     config.addConfigurationListener(listener);
                 }
                 config.setForceReloadCheck(isForceReloadCheck());
                 for (ConfigData data : configurations)
                 {
-                    config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());
+                    config.addConfiguration(data.getConfiguration(), data.getName(),
+                            data.getAt());
                 }
                 configs.put(key, config);
             }
+        }
+        if (getLogger().isDebugEnabled())
+        {
+            getLogger().debug("Returning config for " + key + ": " + config);
         }
         return config;
     }
@@ -767,7 +836,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private AbstractHierarchicalConfiguration configuration;
+        private AbstractHierarchicalConfiguration<?> configuration;
 
         /** Stores the name under which the configuration is stored. */
         private String name;
@@ -783,7 +852,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(AbstractHierarchicalConfiguration config, String n, String at)
+        public ConfigData(AbstractHierarchicalConfiguration<?> config, String n, String at)
         {
             configuration = config;
             name = n;
@@ -795,7 +864,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          *
          * @return the configuration
          */
-        public AbstractHierarchicalConfiguration getConfiguration()
+        public AbstractHierarchicalConfiguration<?> getConfiguration()
         {
             return configuration;
         }

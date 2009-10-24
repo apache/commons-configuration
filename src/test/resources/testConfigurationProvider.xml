@@ -3,7 +3,7 @@
 <configuration>
   <header>
     <result delimiterParsingDisabled="true">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.combined.OverrideCombiner"/>
     </result>
     <providers>
       <provider config-tag="test"

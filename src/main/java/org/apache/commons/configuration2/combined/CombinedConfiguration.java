@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.combined;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -35,6 +37,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.def.DefaultConfigurationKey;
 import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.apache.commons.configuration2.tree.TreeUtils;
 
 /**
  * <p>
@@ -195,7 +198,7 @@ public class CombinedConfiguration extends
     private CombinedNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
-    private List<ConfigData<?>> configurations;
+    private List<ConfigData> configurations;
 
     /** Stores a map with the named configurations. */
     private Map<String, Configuration> namedConfigurations;
@@ -208,6 +211,9 @@ public class CombinedConfiguration extends
 
     /** A flag whether an enhanced reload check is to be performed. */
     private boolean forceReloadCheck;
+
+    /** The default behavior is to ignore exceptions that occur during reload */
+    private boolean ignoreReloadExceptions = true;
 
     /**
      * Creates a new instance of <code>CombinedConfiguration</code> and
@@ -294,6 +300,26 @@ public class CombinedConfiguration extends
     }
 
     /**
+     * Retrieves the value of the ignoreReloadExceptions flag.
+     * @return true if exceptions are ignored, false otherwise.
+     */
+    public boolean isIgnoreReloadExceptions()
+    {
+        return ignoreReloadExceptions;
+    }
+
+    /**
+     * If set to true then exceptions that occur during reloading will be
+     * ignored. If false then the exceptions will be allowed to be thrown
+     * back to the caller.
+     * @param ignoreReloadExceptions true if exceptions should be ignored.
+     */
+    public void setIgnoreReloadExceptions(boolean ignoreReloadExceptions)
+    {
+        this.ignoreReloadExceptions = ignoreReloadExceptions;
+    }
+
+    /**
      * Returns the <code>ExpressionEngine</code> for converting flat child
      * configurations to hierarchical ones.
      *
@@ -345,7 +371,6 @@ public class CombinedConfiguration extends
      * @throws ConfigurationRuntimeException if there is already a configuration
      *         with the given name
      */
-    @SuppressWarnings("unchecked")
     public void addConfiguration(AbstractHierarchicalConfiguration<?> config,
             String name, String at)
     {
@@ -421,7 +446,7 @@ public class CombinedConfiguration extends
      */
     public Configuration getConfiguration(int index)
     {
-        ConfigData<?> cd = (ConfigData<?>) configurations.get(index);
+        ConfigData cd = configurations.get(index);
         return cd.getConfiguration();
     }
 
@@ -439,14 +464,14 @@ public class CombinedConfiguration extends
 
     /**
      * Returns a List of all the configurations that have been added.
-     * 
+     *
      * @return A List of all the configurations.
      * @since 1.7
      */
-    public List<AbstractHierarchicalConfiguration> getConfigurations()
+    public List<AbstractHierarchicalConfiguration<?>> getConfigurations()
     {
-        List<AbstractHierarchicalConfiguration> list = new ArrayList<AbstractHierarchicalConfiguration>();
-        for (ConfigData<?> configuration : configurations)
+        List<AbstractHierarchicalConfiguration<?>> list = new ArrayList<AbstractHierarchicalConfiguration<?>>();
+        for (ConfigData configuration : configurations)
         {
             list.add(configuration.getConfiguration());
         }
@@ -457,14 +482,14 @@ public class CombinedConfiguration extends
      * Returns a List of the names of all the configurations that have been
      * added in the order they were added. A NULL value will be present in
      * the list for each configuration that was added without a name.
-     * 
+     *
      * @return A List of all the configuration names.
      * @since 1.7
      */
     public List<String> getConfigurationNameList()
     {
         List<String> list = new ArrayList<String>();
-        for (ConfigData<?> configuration : configurations)
+        for (ConfigData configuration : configurations)
         {
             list.add((configuration).getName());
         }
@@ -481,7 +506,7 @@ public class CombinedConfiguration extends
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (((ConfigData<?>) configurations.get(index)).getConfiguration() == config)
+            if (configurations.get(index).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
                 return true;
@@ -499,7 +524,7 @@ public class CombinedConfiguration extends
      */
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData<?> cd = (ConfigData<?>) configurations.remove(index);
+        ConfigData cd = configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -599,7 +624,7 @@ public class CombinedConfiguration extends
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
-        configurations = new ArrayList<ConfigData<?>>();
+        configurations = new ArrayList<ConfigData>();
         namedConfigurations = new HashMap<String, Configuration>();
         fireEvent(EVENT_CLEAR, null, null, false);
         invalidate();
@@ -621,7 +646,7 @@ public class CombinedConfiguration extends
         {
             CombinedConfiguration copy = (CombinedConfiguration) super.clone();
             copy.clear();
-            for (ConfigData<?> cd : configurations)
+            for (ConfigData cd : configurations)
             {
                 copy
                         .addConfiguration(
@@ -638,6 +663,42 @@ public class CombinedConfiguration extends
             // cannot happen
             throw new ConfigurationRuntimeException(cnsex);
         }
+    }
+
+    /**
+     * Returns the value of the specified property. This implementation
+     * evaluates the <em>force reload check</em> flag. If it is set, all
+     * contained configurations will be triggered before the value of the
+     * requested property is retrieved.
+     *
+     * @param key the key of the desired property
+     * @return the value of this property
+     * @since 1.4
+     */
+    @Override
+    public Object getProperty(String key)
+    {
+        if (isForceReloadCheck())
+        {
+            for (ConfigData cd : configurations)
+            {
+                try
+                {
+                    // simply retrieve a property; this is enough for
+                    // triggering a reload
+                    cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
+                }
+                catch (Exception ex)
+                {
+                    if (!ignoreReloadExceptions)
+                    {
+                        throw new ConfigurationRuntimeException(ex);
+                    }
+                }
+            }
+        }
+
+        return super.getProperty(key);
     }
 
     /**
@@ -702,7 +763,7 @@ public class CombinedConfiguration extends
     {
         Map<Class<?>, NodeHandler<?>> result = new HashMap<Class<?>, NodeHandler<?>>();
 
-        for (ConfigData<?> cd : configurations)
+        for (ConfigData cd : configurations)
         {
             result.put(cd.getConfiguration().getRootNode().getClass(), cd
                     .getConfiguration().getNodeHandler());
@@ -741,7 +802,7 @@ public class CombinedConfiguration extends
      */
     protected void performReloadCheck()
     {
-        for (ConfigData<?> cd : configurations)
+        for (ConfigData cd : configurations)
         {
             try
             {
@@ -773,12 +834,20 @@ public class CombinedConfiguration extends
 
         else
         {
-            Iterator<ConfigData<?>> it = configurations.iterator();
+            Iterator<ConfigData> it = configurations.iterator();
             CombinedNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
                 node = getNodeCombiner().combine(node, getNodeHandler(),
                         it.next().getTransformedRoot(), getNodeHandler());
+            }
+
+            if (getLogger().isDebugEnabled())
+            {
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                PrintStream stream = new PrintStream(os);
+                TreeUtils.printTree(stream, node, getNodeHandler());
+                getLogger().debug(os.toString());
             }
             return node;
         }
@@ -818,7 +887,7 @@ public class CombinedConfiguration extends
         }
 
         // Check with the root nodes of the child configurations
-        for (ConfigData<?> cd : configurations)
+        for (ConfigData cd : configurations)
         {
             if (root == cd.getRootNode())
             {
@@ -859,10 +928,10 @@ public class CombinedConfiguration extends
      *
      * @param <T> the type of the nodes used by the represented configuration
      */
-    class ConfigData<T>
+    class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private AbstractHierarchicalConfiguration<T> configuration;
+        private AbstractHierarchicalConfiguration<?> configuration;
 
         /** Stores the name under which the configuration is stored. */
         private String name;
@@ -874,7 +943,7 @@ public class CombinedConfiguration extends
         private String at;
 
         /** Stores the root node for this child configuration. */
-        private T rootNode;
+        private Object rootNode;
 
         /**
          * Creates a new instance of <code>ConfigData</code> and initializes
@@ -884,7 +953,7 @@ public class CombinedConfiguration extends
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(AbstractHierarchicalConfiguration<T> config,
+        public ConfigData(AbstractHierarchicalConfiguration<?> config,
                 String n, String at)
         {
             configuration = config;
@@ -898,7 +967,7 @@ public class CombinedConfiguration extends
          *
          * @return the configuration
          */
-        public AbstractHierarchicalConfiguration<T> getConfiguration()
+        public AbstractHierarchicalConfiguration<?> getConfiguration()
         {
             return configuration;
         }
@@ -929,14 +998,14 @@ public class CombinedConfiguration extends
          * @return the root node of this child configuration
          * @since 1.5
          */
-        public T getRootNode()
+        public Object getRootNode()
         {
             return rootNode;
         }
 
         /**
          * Returns the transformed root node of the stored configuration. The
-         * term &quot;transformed&quot; means that an eventually defined at path
+         * term &quot;transformed&quot; means that an optionally defined at path
          * has been applied.
          *
          * @return the transformed root node
@@ -958,15 +1027,26 @@ public class CombinedConfiguration extends
                 }
             }
 
-            T root = (T) ConfigurationUtils.convertToHierarchical(getConfiguration(), getConversionExpressionEngine()).getRootNode();
-
-            // Copy data of the root node to the new path
-            atParent.appendChildren(root, getConfiguration().getNodeHandler());
-            atParent
-                    .appendAttributes(root, getConfiguration().getNodeHandler());
-            rootNode = root;
-
+            rootNode = append(atParent, getConfiguration());
             return result;
+        }
+
+        /**
+         * Appends the content of the root node of the given sub configuration
+         * to the resulting combined root node.
+         *
+         * @param <T> the type of the sub configuration
+         * @param atParent the parent combined node
+         * @param config the sub configuration to be processed
+         * @return the root node of the configuration
+         */
+        private <T> T append(CombinedNode atParent,
+                AbstractHierarchicalConfiguration<T> config)
+        {
+            T root = config.getRootNode();
+            atParent.appendChildren(root, config.getNodeHandler());
+            atParent.appendAttributes(root, config.getNodeHandler());
+            return root;
         }
 
         /**

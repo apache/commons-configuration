@@ -293,7 +293,7 @@ public class TestConfigurationUtils extends TestCase
     {
         BaseConfiguration config = new BaseConfiguration();
         config.addProperty("test", "1,2,3");
-        AbstractHierarchicalConfiguration hc = ConfigurationUtils.convertToHierarchical(config, null);
+        AbstractHierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(config, null);
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
         assertEquals("Wrong value 3", 3, hc.getInt("test(2)"));

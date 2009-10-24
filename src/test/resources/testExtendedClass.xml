@@ -4,7 +4,7 @@
   <header>
     <result delimiterParsingDisabled="true"
             config-class="org.apache.commons.configuration2.TestDefaultConfigurationBuilder$ExtendedCombinedConfiguration">
-      <nodeCombiner config-class="org.apache.commons.configuration2.tree.OverrideCombiner"/>
+      <nodeCombiner config-class="org.apache.commons.configuration2.combined.OverrideCombiner"/>
     </result>
     <combiner>
       <override>

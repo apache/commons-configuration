@@ -21,10 +21,9 @@ import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import org.apache.commons.configuration2.AbstractConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.expr.NodeHandler;
 
 /**
  * <p>
@@ -63,11 +62,8 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  *         Configuration team</a>
  * @version $Id$
  */
-public abstract class AbstractFlatConfiguration extends AbstractConfiguration
+public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConfiguration<FlatNode>
 {
-    /** Stores the <code>NodeHandler</code> used by this configuration. */
-    private FlatNodeHandler nodeHandler;
-
     /** Stores the root node of this configuration. */
     private FlatNode rootNode;
 
@@ -79,20 +75,10 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      */
     protected AbstractFlatConfiguration()
     {
+        super(null);
         lockRoot = new ReentrantLock();
         initNodeHandler();
         registerChangeListener();
-    }
-
-    /**
-     * Returns the <code>NodeHandler</code> used by this configuration. This
-     * is a handler that can deal with flat nodes.
-     *
-     * @return the <code>NodeHandler</code> used
-     */
-    public NodeHandler<FlatNode> getNodeHandler()
-    {
-        return nodeHandler;
     }
 
     /**
@@ -109,6 +95,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      *
      * @return the root node of this configuration
      */
+    @Override
     public FlatNode getRootNode()
     {
         lockRoot.lock();
@@ -157,6 +144,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      * @param key the key of the property
      * @return the maximum index of a value of this property
      */
+    @Override
     public int getMaxIndex(String key)
     {
         Object value = getProperty(key);
@@ -176,6 +164,38 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
     }
 
     /**
+     * An alternative implementation of {@code setProperty()}. We cannot use the
+     * implementation inherited from {@link AbstractHierarchicalConfiguration}
+     * because it makes use of the configuration's node structure. This
+     * implementation delegates to the default implementation in {@code
+     * AbstractConfiguration}.
+     *
+     * @param key the property key
+     * @param value the new value
+     */
+    @Override
+    public void setProperty(String key, Object value)
+    {
+        doSetProperty(key, value);
+    }
+
+    /**
+     * An alternative implementation of {@code getKeys(String)}. We cannot use
+     * the implementation inherited from
+     * {@link AbstractHierarchicalConfiguration} because it makes use of the
+     * configuration's node structure. This implementation delegates to the
+     * default implementation in {@code AbstractConfiguration}.
+     *
+     * @param prefix the prefix for the keys to be returned
+     * @return an iterator with all the keys starting with the given prefix
+     */
+    @Override
+    public Iterator<String> getKeys(String prefix)
+    {
+        return doGetKeys(prefix);
+    }
+
+    /**
      * Creates a hierarchy of <code>FlatNode</code> objects that corresponds
      * to the data stored in this configuration. This implementation relies on
      * the methods <code>getKeys()</code> and <code>getMaxIndex()</code> to
@@ -185,7 +205,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      */
     protected FlatNode constructNodeHierarchy()
     {
-        FlatRootNode root = new FlatRootNode();
+        FlatRootNode root = new FlatRootNode(this);
         for (Iterator<String> it = getKeys(); it.hasNext();)
         {
             String key = it.next();
@@ -224,7 +244,7 @@ public abstract class AbstractFlatConfiguration extends AbstractConfiguration
      */
     private void initNodeHandler()
     {
-        nodeHandler = new FlatNodeHandler(this);
+        setNodeHandler(new FlatNodeHandler());
     }
 
     /**

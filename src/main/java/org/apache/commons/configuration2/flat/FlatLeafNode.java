@@ -166,9 +166,9 @@ class FlatLeafNode extends FlatNode
      * @return the value of the represented property
      */
     @Override
-    public Object getValue(Configuration config)
+    public Object getValue()
     {
-        Object value = config.getProperty(getName());
+        Object value = getConfiguration().getProperty(getName());
         if (value instanceof Collection<?>)
         {
             int valueIndex = getValueIndex();
@@ -209,12 +209,11 @@ class FlatLeafNode extends FlatNode
      * Removes a child from this node. Leaf nodes do not support children, so
      * this implementation always throws a runtime exception.
      *
-     * @param config the associated configuration
      * @param child the node to be removed
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
     @Override
-    public void removeChild(Configuration config, FlatNode child)
+    public void removeChild(FlatNode child)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot remove a child from a leaf node!");
@@ -226,29 +225,40 @@ class FlatLeafNode extends FlatNode
      * was newly created), this method adds a new value to the represented
      * property. Otherwise the corresponding property value is overridden.
      *
-     * @param config the associated configuration
      * @param value the new value
      */
     @Override
-    public void setValue(Configuration config, Object value)
+    public void setValue(Object value)
     {
         if (hasValue)
         {
             int index = getValueIndex();
             if (index != INDEX_UNDEFINED)
             {
-                parent.setMultiProperty(config, this, index, value);
+                parent.setMultiProperty(this, index, value);
             }
             else
             {
-                config.setProperty(getName(), value);
+                getConfiguration().setProperty(getName(), value);
             }
         }
 
         else
         {
-            config.addProperty(getName(), value);
+            getConfiguration().addProperty(getName(), value);
             hasValue = true;
         }
+    }
+
+    /**
+     * Returns the {@code Configuration} object this node belongs to. This
+     * implementation fetches the {@code Configuration} from the parent node.
+     *
+     * @return the owning {@code Configuration}
+     */
+    @Override
+    public Configuration getConfiguration()
+    {
+        return getParent().getConfiguration();
     }
 }

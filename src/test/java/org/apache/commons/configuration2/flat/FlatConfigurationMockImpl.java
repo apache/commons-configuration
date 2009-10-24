@@ -65,26 +65,27 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
     @Override
     public void clearPropertyDirect(String key)
     {
-        TestFlatNodes.assertEquals("Wrong property key", NAME, key);
+        Assert.assertEquals("Wrong property key", NAME, key);
         clearProperty = true;
     }
 
     @Override
     public void setProperty(String key, Object value)
     {
-        TestFlatNodes.assertFalse("Add operation expected", expectAdd);
-        TestFlatNodes.assertEquals("Wrong property key", NAME, key);
+        Assert.assertFalse("Add operation expected", expectAdd);
+        Assert.assertEquals("Wrong property key", NAME, key);
         property = value;
     }
 
     @Override
     protected void addPropertyDirect(String key, Object value)
     {
-        TestFlatNodes.assertTrue("Set operation expected", expectAdd);
-        TestFlatNodes.assertEquals("Wrong property key", NAME, key);
+        Assert.assertTrue("Set operation expected", expectAdd);
+        Assert.assertEquals("Wrong property key", NAME, key);
         property = value;
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         return false;
@@ -96,6 +97,7 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
      *
      * @return the keys stored in this configuration
      */
+    @Override
     public Iterator<String> getKeys()
     {
         return keyList.iterator();
@@ -121,6 +123,7 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
      * exist, this call must match the current element of this list. Otherwise
      * the test property is returned.
      */
+    @Override
     public Object getProperty(String key)
     {
         if (getPropertyInvocations != null)
@@ -167,6 +170,7 @@ class FlatConfigurationMockImpl extends AbstractFlatConfiguration implements Clo
         return getMaxIndexInvocations.remove(0).checkAndReturn(key);
     }
 
+    @Override
     public boolean isEmpty()
     {
         return false;

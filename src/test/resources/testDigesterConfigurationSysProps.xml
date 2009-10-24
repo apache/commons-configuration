@@ -4,5 +4,5 @@
 -->
 <configuration>
   <system/>
-  <properties fileName="${config.file}"/>
+  <properties fileName="${config..file}"/>
 </configuration>

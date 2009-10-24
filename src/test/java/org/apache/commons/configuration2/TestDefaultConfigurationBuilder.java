@@ -21,25 +21,27 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.impl.Log4JLogger;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.beanutils.BeanHelper;
+import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.combined.DynamicCombinedConfiguration;
+import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
-import org.apache.log4j.WriterAppender;
-import org.apache.log4j.SimpleLayout;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.logging.impl.Log4JLogger;
 import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -418,7 +420,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(3, ((Collection<?>) prop).size());
         assertEquals("users", compositeConfiguration
                 .getProperty("tables.table(0).name"));
@@ -429,7 +431,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         prop = compositeConfiguration
                 .getProperty("tables.table.fields.field.name");
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(17, ((Collection<?>) prop).size());
 
         assertEquals("smtp.mydomain.org", compositeConfiguration
@@ -626,8 +628,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertTrue(subset.getBoolean("onlyinjndi"));
 
         // test SystemConfiguration
-        assertNotNull(config.getProperty("java.version"));
-        assertEquals(System.getProperty("java.version"), config.getString("java.version"));
+        assertNotNull(config.getProperty("java..version"));
+        assertEquals(System.getProperty("java.version"), config.getString("java..version"));
 
         // test EnvironmentConfiguration
         assertNotNull("JAVA_HOME property not found", config.getProperty("JAVA_HOME"));
@@ -831,7 +833,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testSystemProperties() throws Exception
     {
         factory.setFile(SYSTEM_PROPS_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
@@ -841,12 +843,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
-        CombinedConfiguration cc = factory.getConfiguration(true);
+        factory.getConfiguration(true);
         String value = System.getProperty("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
     }
-
 
     public void testValidation3() throws Exception
     {
@@ -911,7 +912,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1001", config, 15);
         String xml = writer.getBuffer().toString();
         assertNotNull("No XML returned", xml);
-        assertTrue("Incorect configuration data", xml.indexOf("<rowsPerPage>15</rowsPerPage>") >= 0);
+        assertTrue("Incorect configuration data: " + xml, xml.indexOf("<rowsPerPage>15</rowsPerPage>") >= 0);
         logger.removeAppender(app);
         logger.setLevel(org.apache.log4j.Level.OFF);
         verify("1002", config, 25);
@@ -925,10 +926,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.setFile(MULTI_TENENT_FILE);
         System.setProperty("Id", "1001");
         CombinedConfiguration config = factory.getConfiguration(true);
-        HierarchicalConfiguration sub1 = config.configurationAt("Channels/Channel[@id='1']");
+        SubConfiguration<?> sub1 = config.configurationAt("Channels/Channel[@id='1']");
         assertEquals("My Channel", sub1.getString("Name"));
         assertEquals("test 1 data", sub1.getString("ChannelData"));
-        HierarchicalConfiguration sub2 = config.configurationAt("Channels/Channel[@id='2']");
+        SubConfiguration<?> sub2 = config.configurationAt("Channels/Channel[@id='2']");
         assertEquals("Channel 2", sub2.getString("Name"));
         assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
     }
@@ -946,17 +947,17 @@ public class TestDefaultConfigurationBuilder extends TestCase
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
-        List<HierarchicalConfiguration> list = config.configurationsAt("colors/*");
-        for (HierarchicalConfiguration sub : list)
+        List<SubConfiguration<Object>> list = config.configurationsAt("colors/*");
+        for (SubConfiguration<Object> sub : list)
         {
-            ConfigurationNode node = sub.getRootNode();
-            String value = (node.getValue() == null) ? "null" : node.getValue().toString();
-            if (map.containsKey(node.getName()))
+            NodeHandler<Object> nodeHandler = sub.getNodeHandler();
+            Object node = sub.getRootNode();
+            String value = (nodeHandler.getValue(node) == null) ? "null" : nodeHandler.getValue(node).toString();
+            if (map.containsKey(nodeHandler.nodeName(node)))
             {
-                assertEquals(map.get(node.getName()), value);
+                assertEquals(map.get(nodeHandler.nodeName(node)), value);
             }
         }
-
     }
 
     public void testDelimiterParsingDisabled() throws Exception
@@ -1022,7 +1023,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public static class TestLookup extends StrLookup
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         public TestLookup()
         {
@@ -1031,6 +1032,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
             map.put("test_key", "test.value");
         }
 
+        @Override
         public String lookup(String key)
         {
             if (key == null)

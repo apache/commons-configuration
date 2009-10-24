@@ -19,10 +19,10 @@ package org.apache.commons.configuration2.flat;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.expr.AbstractNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.NodeHandlerRegistry;
 
 /**
  * <p>
@@ -37,7 +37,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * </p>
  * <p>
  * The implementation of the methods required by the
- * <code>{@link NodeHandler}</code> interface is straight forward. In most
+ * {@link NodeHandler} interface is straightforward. In most
  * cases, it is possible to simply delegate to the corresponding
  * <code>FlatNode</code> method. Attributes are not supported by flat nodes,
  * so in this area there are only dummy implementations.
@@ -46,7 +46,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  * Actions caused by this node handler may modify the associated configuration
  * and thus trigger change events. Per default the configuration will invalidate
  * its node structure if a change event is received. Because of that the node
- * handler has to keep track of the updated caused by itself to avoid
+ * handler has to keep track of the updates caused by itself to avoid
  * unnecessary invalidation of nodes. (The configuration asks the node handler
  * for each change event whether the node structure should be invalidated.) Note
  * that modifications of a configuration are not thread-safe. So no additional
@@ -61,35 +61,14 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  */
 class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
 {
-    /** Stores the associated configuration. */
-    private final Configuration configuration;
+    /** Stores the NodeHandlerRegistry. */
+    private NodeHandlerRegistry nodeHandlerRegistry;
 
     /**
      * A flag whether an update of the configuration was caused by an operation
      * on its node structure.
      */
     private boolean internalUpdate;
-
-    /**
-     * Creates a new instance of <code>FlatNodeHandler</code> and initializes
-     * it with the associated configuration.
-     *
-     * @param config the configuration
-     */
-    public FlatNodeHandler(Configuration config)
-    {
-        configuration = config;
-    }
-
-    /**
-     * Returns the configuration associated with this node handler.
-     *
-     * @return the associated configuration
-     */
-    public Configuration getConfiguration()
-    {
-        return configuration;
-    }
 
     /**
      * Returns a flag whether an update of the associated configuration was
@@ -229,7 +208,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      */
     public Object getValue(FlatNode node)
     {
-        return node.getValue(getConfiguration());
+        return node.getValue();
     }
 
     /**
@@ -265,7 +244,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
         internalUpdate = true;
         try
         {
-            node.removeChild(getConfiguration(), child);
+            node.removeChild(child);
         }
         finally
         {
@@ -300,11 +279,69 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
         internalUpdate = true;
         try
         {
-            node.setValue(getConfiguration(), value);
+            node.setValue(value);
         }
         finally
         {
             internalUpdate = false;
         }
+    }
+
+    /**
+     * Initializes the {@code NodeHandlerRegistry}. A {@code FlatNodeHandler}
+     * deals with multiple types of nodes (flat root node and leaf nodes). To be
+     * compatible with a combined configuration it has to tell the parent
+     * {@code NodeHandlerRegistry} that it is responsible for these types of
+     * nodes. It does so by adding a specialized sub {@code NodeHandlerRegistry}
+     * that can lookup all flat node types.
+     *
+     * @param registry the {@code NodeHandlerRegistry}
+     */
+    @Override
+    public void initNodeHandlerRegistry(NodeHandlerRegistry registry)
+    {
+        nodeHandlerRegistry = registry;
+
+        registry.addSubRegistry(new NodeHandlerRegistry()
+        {
+            /**
+             * Resolves the node handler. This is delegated to the parent
+             * registry.
+             *
+             * @param node the node in question
+             * @return a {@code NodeHandler} for this node
+             */
+            public NodeHandler<?> resolveHandler(Object node)
+            {
+                assert nodeHandlerRegistry != null : "No parent registry!";
+                return nodeHandlerRegistry.resolveHandler(node);
+            }
+
+            /**
+             * Checks whether a {@code NodeHandler} for the specified node is
+             * known. This implementation returns this {@code NodeHandler} if
+             * the passed in node is a flat node.
+             *
+             * @param node the node in question
+             * @param subClasses a flag whether subclasses should be taken into
+             *        account
+             * @return a {@code NodeHandler} for this node
+             */
+            public NodeHandler<?> lookupHandler(Object node, boolean subClasses)
+            {
+                return (node instanceof FlatNode) ? FlatNodeHandler.this : null;
+            }
+
+            /**
+             * Adds a sub registry. This is not supported by this
+             * implementation.
+             *
+             * @param subreg the registry to be added
+             */
+            public void addSubRegistry(NodeHandlerRegistry subreg)
+            {
+                throw new UnsupportedOperationException("Not implemented!");
+            }
+        });
     }
 }

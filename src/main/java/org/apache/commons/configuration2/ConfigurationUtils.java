@@ -27,15 +27,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.Iterator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
 import org.apache.commons.configuration2.fs.DefaultFileSystem;
 import org.apache.commons.configuration2.fs.FileSystem;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Miscellaneous utility methods for configurations.
@@ -226,16 +227,16 @@ public final class ConfigurationUtils
      *         and only if the passed in configuration is <b>null</b>)
      * @since 1.6
      */
-    public static AbstractHierarchicalConfiguration convertToHierarchical(Configuration conf, ExpressionEngine engine)
+    public static AbstractHierarchicalConfiguration<?> convertToHierarchical(Configuration conf, ExpressionEngine engine)
     {
         if (conf == null)
         {
             return null;
         }
 
-        if (conf instanceof AbstractHierarchicalConfiguration)
+        if (conf instanceof AbstractHierarchicalConfiguration<?> && !(conf instanceof AbstractFlatConfiguration))
         {
-            AbstractHierarchicalConfiguration hc = (AbstractHierarchicalConfiguration) conf;
+            AbstractHierarchicalConfiguration<?> hc = (AbstractHierarchicalConfiguration<?>) conf;
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);
@@ -245,7 +246,7 @@ public final class ConfigurationUtils
         }
         else
         {
-            AbstractHierarchicalConfiguration hc = new InMemoryConfiguration();
+            AbstractHierarchicalConfiguration<?> hc = new InMemoryConfiguration();
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);
