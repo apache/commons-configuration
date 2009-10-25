@@ -24,6 +24,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 
 /**
  * <p>
@@ -64,6 +65,9 @@ import org.apache.commons.configuration2.event.ConfigurationListener;
  */
 public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConfiguration<FlatNode>
 {
+    /** Constant for the default property delimiter. */
+    private static final String DEF_PROPERTY_DELIMITER = "|";
+
     /** Stores the root node of this configuration. */
     private FlatNode rootNode;
 
@@ -78,6 +82,7 @@ public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConf
         super(null);
         lockRoot = new ReentrantLock();
         initNodeHandler();
+        initExpressionEngine();
         registerChangeListener();
     }
 
@@ -245,6 +250,20 @@ public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConf
     private void initNodeHandler()
     {
         setNodeHandler(new FlatNodeHandler());
+    }
+
+    /**
+     * Initializes the expression engine of this configuration. Per default an
+     * expression engine is used with a special property delimiter that does not
+     * interfere with the dot character (which frequently appears in
+     * configuration keys).
+     */
+    private void initExpressionEngine()
+    {
+        DefaultExpressionEngine expr = new DefaultExpressionEngine();
+        expr.setPropertyDelimiter(DEF_PROPERTY_DELIMITER);
+        expr.setEscapedDelimiter(DEF_PROPERTY_DELIMITER + DEF_PROPERTY_DELIMITER);
+        setExpressionEngine(expr);
     }
 
     /**

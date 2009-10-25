@@ -16,11 +16,18 @@
  */
 package org.apache.commons.configuration2.flat;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A test class for the basic functionality of flat configuration classes.
@@ -29,7 +36,7 @@ import junit.framework.TestCase;
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestAbstractFlatConfiguration extends TestCase
+public class TestAbstractFlatConfiguration
 {
     /** An array with the keys of the test configuration. */
     private static final String[] KEYS = {
@@ -49,10 +56,9 @@ public class TestAbstractFlatConfiguration extends TestCase
     /** The configuration to be tested. */
     private FlatConfigurationMockImpl config;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         config = new FlatConfigurationMockImpl();
     }
 
@@ -150,6 +156,7 @@ public class TestAbstractFlatConfiguration extends TestCase
     /**
      * Tests querying the node handler of the flat configuration.
      */
+    @Test
     public void testGetNodeHandler()
     {
         assertNotNull("No node handler", config.getNodeHandler());
@@ -158,6 +165,7 @@ public class TestAbstractFlatConfiguration extends TestCase
     /**
      * Tests querying the root node of a flat configuration.
      */
+    @Test
     public void testGetRootNode()
     {
         prepareGetRootNode(1);
@@ -169,6 +177,7 @@ public class TestAbstractFlatConfiguration extends TestCase
      * Tests an external update of the configuration. This should cause the node
      * structure to be invalidated.
      */
+    @Test
     public void testGetRootNodeExternalUpdate()
     {
         prepareGetRootNode(2);
@@ -184,6 +193,7 @@ public class TestAbstractFlatConfiguration extends TestCase
      * Tests an internal update of the node structure. This should not cause the
      * node structure to be re-created.
      */
+    @Test
     public void testGetRootNodeInternalUpdate()
     {
         prepareGetRootNode(1);
@@ -202,6 +212,7 @@ public class TestAbstractFlatConfiguration extends TestCase
      * Tests cloning a flat configuration. We have to check whether the event
      * listeners are correctly registered.
      */
+    @Test
     public void testClone() throws CloneNotSupportedException
     {
         prepareGetRootNode(1);
@@ -214,5 +225,17 @@ public class TestAbstractFlatConfiguration extends TestCase
         checkNodeStructure(root);
         copy.clearProperty(FlatConfigurationMockImpl.NAME);
         assertNotSame("Structure was not re-created", root, copy.getRootNode());
+    }
+
+    /**
+     * Tests whether a correct expression engine is set.
+     */
+    @Test
+    public void testExpressionEngine()
+    {
+        DefaultExpressionEngine expr = (DefaultExpressionEngine) config
+                .getExpressionEngine();
+        assertEquals("Wrong default property delimiter", "|", expr
+                .getPropertyDelimiter());
     }
 }

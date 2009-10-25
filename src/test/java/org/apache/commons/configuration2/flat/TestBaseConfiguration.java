@@ -36,6 +36,7 @@ import org.apache.commons.configuration2.ConversionException;
 import org.apache.commons.configuration2.InterpolationTestHelper;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.NodeList;
 
 /**
  * Tests some basic functions of the BaseConfiguration class. Missing keys will
@@ -808,5 +809,18 @@ public class TestBaseConfiguration extends TestCase
         }
         assertEquals("Wrong max index for multiple values", count - 1, config
                 .getMaxIndex(TEST_KEY));
+    }
+
+    /**
+     * Tests whether a query using the expression engine can be issued.
+     */
+    public void testQueryExpressionEngine()
+    {
+        config.getStore().put("test.key", 42);
+        NodeList<FlatNode> list = config.getExpressionEngine().query(
+                config.getRootNode(), "test.key", config.getNodeHandler());
+        assertEquals("Wrong number of nodes", 1, list.size());
+        assertEquals("Wrong value", 42, list.getValue(0, config
+                .getNodeHandler()));
     }
 }
