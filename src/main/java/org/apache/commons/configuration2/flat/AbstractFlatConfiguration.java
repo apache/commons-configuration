@@ -267,6 +267,18 @@ public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConf
     }
 
     /**
+     * Returns a flag whether the latest change on this configuration was caused
+     * by a manipulation of the associated flat node structure. If this is the
+     * case, the node structure need not be invalidated.
+     *
+     * @return the internal update flag
+     */
+    private boolean isInternalUpdate()
+    {
+        return rootNode != null && rootNode.isInternalUpdate();
+    }
+
+    /**
      * Registers a change listener at this configuration that causes the node
      * structure to be invalidated whenever the content is changed.
      */
@@ -283,7 +295,7 @@ public abstract class AbstractFlatConfiguration extends AbstractHierarchicalConf
             {
                 if (!event.isBeforeUpdate())
                 {
-                    if (!((FlatNodeHandler) getNodeHandler()).isInternalUpdate())
+                    if (!isInternalUpdate())
                     {
                         invalidateRootNode();
                     }

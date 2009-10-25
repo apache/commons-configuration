@@ -65,29 +65,6 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
     private NodeHandlerRegistry nodeHandlerRegistry;
 
     /**
-     * A flag whether an update of the configuration was caused by an operation
-     * on its node structure.
-     */
-    private boolean internalUpdate;
-
-    /**
-     * Returns a flag whether an update of the associated configuration was
-     * caused by this node handler. Whenever the configuration receives a change
-     * event, it asks the node hander whether it is responsible for this event.
-     * The result of this method determines whether the configuration's node
-     * structure has to be invalidated: if the event was caused by the node
-     * handler, the structure has already been updated and there is no need to
-     * invalidate it. Otherwise the configuration was directly manipulated, and
-     * the node structure is now out of sync.
-     *
-     * @return a flag whether an internal update was caused by this node handler
-     */
-    public boolean isInternalUpdate()
-    {
-        return internalUpdate;
-    }
-
-    /**
      * Adds an attribute to the specified node. Flat nodes do not support
      * attributes, so this implementation just throws an exception.
      *
@@ -241,14 +218,14 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      */
     public void removeChild(FlatNode node, FlatNode child)
     {
-        internalUpdate = true;
+        setInternalUpdate(node, true);
         try
         {
             node.removeChild(child);
         }
         finally
         {
-            internalUpdate = false;
+            setInternalUpdate(node, false);
         }
     }
 
@@ -276,14 +253,14 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      */
     public void setValue(FlatNode node, Object value)
     {
-        internalUpdate = true;
+        setInternalUpdate(node, true);
         try
         {
             node.setValue(value);
         }
         finally
         {
-            internalUpdate = false;
+            setInternalUpdate(node, false);
         }
     }
 
@@ -343,5 +320,18 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
                 throw new UnsupportedOperationException("Not implemented!");
             }
         });
+    }
+
+    /**
+     * Sets the internal update flag of the specified node. This method is if a
+     * change on the node structure is performed that affects the associated
+     * configuration.
+     *
+     * @param node the flat node affected by the change
+     * @param f the value of the internal update flag
+     */
+    void setInternalUpdate(FlatNode node, boolean f)
+    {
+        node.setInternalUpdate(f);
     }
 }

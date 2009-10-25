@@ -640,4 +640,31 @@ public class TestFlatNodes
     {
         parent.setValue(VALUE);
     }
+
+    /**
+     * Tests the implementation of isInternalUpdate() in the root node.
+     */
+    @Test
+    public void testIsInternalUpdateRoot()
+    {
+        assertFalse("Already an internal update", parent.isInternalUpdate());
+        parent.setInternalUpdate(true);
+        assertTrue("No internal update", parent.isInternalUpdate());
+        parent.setInternalUpdate(false);
+        assertFalse("Still internal update", parent.isInternalUpdate());
+    }
+
+    /**
+     * Tests the implementation of isInternalUpdate() in the leaf node.
+     */
+    @Test
+    public void testIsInternalUpdateLeaf()
+    {
+        assertFalse("Already an internal update", node.isInternalUpdate());
+        node.setInternalUpdate(true);
+        assertTrue("No internal update", node.isInternalUpdate());
+        assertTrue("No internal update in root", parent.isInternalUpdate());
+        parent.setInternalUpdate(false);
+        assertFalse("Still internal update", node.isInternalUpdate());
+    }
 }

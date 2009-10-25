@@ -163,4 +163,29 @@ public abstract class FlatNode
      * @return the owning {@code Configuration}
      */
     public abstract Configuration getConfiguration();
+
+    /**
+     * Returns the internal update flag. This flag is set by the node handler
+     * whenever a change at the node structure affects the associated
+     * configuration. When the configuration receives a change event it queries
+     * this flag. The result of this method determines whether the
+     * configuration's node structure has to be invalidated: if the event was
+     * caused by the node handler, the structure has already been updated and
+     * there is no need to invalidate it. Otherwise the configuration was
+     * directly manipulated, and the node structure is now out of sync.
+     *
+     * @return a flag whether the last update was caused by a manipulation of
+     *         the node structure
+     */
+    public abstract boolean isInternalUpdate();
+
+    /**
+     * Sets the internal update flag. This method is called by the node handler
+     * to indicate that a change event was caused by a change of the flat node
+     * structure.
+     *
+     * @param update the update flag
+     * @see #isInternalUpdate()
+     */
+    public abstract void setInternalUpdate(boolean update);
 }

@@ -65,6 +65,12 @@ class FlatRootNode extends FlatNode
     private final Configuration configuration;
 
     /**
+     * A flag whether an update of the configuration was caused by an operation
+     * on its node structure.
+     */
+    private boolean internalUpdate;
+
+    /**
      * Creates a new instance of {@code FlatRootNode}. The {@code Configuration}
      * the node belongs to must be passed in.
      *
@@ -273,6 +279,29 @@ class FlatRootNode extends FlatNode
     public Configuration getConfiguration()
     {
         return configuration;
+    }
+
+    /**
+     * Returns the internal update flag. The root node of the flat node
+     * structure maintains this flag as a member field.
+     *
+     * @return the internal update flag
+     */
+    @Override
+    public boolean isInternalUpdate()
+    {
+        return internalUpdate;
+    }
+
+    /**
+     * Sets the internal update flag.
+     *
+     * @param update the value of the update flag
+     */
+    @Override
+    public void setInternalUpdate(boolean update)
+    {
+        internalUpdate = update;
     }
 
     /**

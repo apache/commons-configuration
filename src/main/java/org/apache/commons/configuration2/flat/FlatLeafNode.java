@@ -261,4 +261,28 @@ class FlatLeafNode extends FlatNode
     {
         return getParent().getConfiguration();
     }
+
+    /**
+     * Returns the internal update flag. This implementation delegates to the
+     * parent node, which maintains the internal update flag.
+     *
+     * @return the internal update flag
+     */
+    @Override
+    public boolean isInternalUpdate()
+    {
+        return getParent().isInternalUpdate();
+    }
+
+    /**
+     * Sets the internal update flag. This implementation delegates to the
+     * parent node, which maintains the internal update flag.
+     *
+     * @param update the new value of the flag
+     */
+    @Override
+    public void setInternalUpdate(boolean update)
+    {
+        getParent().setInternalUpdate(update);
+    }
 }
