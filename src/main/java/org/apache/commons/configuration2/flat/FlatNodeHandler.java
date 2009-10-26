@@ -61,9 +61,6 @@ import org.apache.commons.configuration2.expr.NodeHandlerRegistry;
  */
 class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
 {
-    /** Stores the NodeHandlerRegistry. */
-    private NodeHandlerRegistry nodeHandlerRegistry;
-
     /**
      * Adds an attribute to the specified node. Flat nodes do not support
      * attributes, so this implementation just throws an exception.
@@ -275,9 +272,9 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      * @param registry the {@code NodeHandlerRegistry}
      */
     @Override
-    public void initNodeHandlerRegistry(NodeHandlerRegistry registry)
+    public void initNodeHandlerRegistry(final NodeHandlerRegistry registry)
     {
-        nodeHandlerRegistry = registry;
+        assert registry != null : "No parent registry!";
 
         registry.addSubRegistry(new NodeHandlerRegistry()
         {
@@ -290,8 +287,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
              */
             public NodeHandler<?> resolveHandler(Object node)
             {
-                assert nodeHandlerRegistry != null : "No parent registry!";
-                return nodeHandlerRegistry.resolveHandler(node);
+                return registry.resolveHandler(node);
             }
 
             /**

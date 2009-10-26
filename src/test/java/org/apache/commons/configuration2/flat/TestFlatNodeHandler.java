@@ -24,6 +24,9 @@ import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
+import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.NodeHandlerRegistry;
+import org.easymock.EasyMock;
 
 /**
  * Test class for FlatNodeHandler.
@@ -325,6 +328,58 @@ public class TestFlatNodeHandler extends TestCase
     }
 
     /**
+     * Tests whether the handler registers itself as a sub node handler
+     * registry.
+     */
+    public void testInitNodeHandlerRegistrySubReg()
+    {
+        NodeHandlerRegistryTestImpl reg = new NodeHandlerRegistryTestImpl();
+        handler.initNodeHandlerRegistry(reg);
+        assertNotNull("No sub registry registered", reg.subRegistry);
+    }
+
+    /**
+     * Tests the resolveHandler() implementation of the node handler registry.
+     */
+    public void testNodeHandlerRegistryResolveHandler()
+    {
+        NodeHandlerRegistryTestImpl reg = new NodeHandlerRegistryTestImpl();
+        handler.initNodeHandlerRegistry(reg);
+        Object node = new Object();
+        NodeHandler<?> h = EasyMock.createMock(NodeHandler.class);
+        EasyMock.replay(h);
+        reg.resolveHandler = h;
+        assertEquals("Wrong resolved handler", h, reg.subRegistry
+                .resolveHandler(node));
+        assertEquals("Wrong node passed to resolveHandler", node,
+                reg.resolveNode);
+        EasyMock.verify(h);
+    }
+
+    /**
+     * Tests the lookupHandler() implementation of the node handler registry if
+     * a flat node is passed in.
+     */
+    public void testNodeHandlerRegistryLookupHandlerFlatNode()
+    {
+        NodeHandlerRegistryTestImpl reg = new NodeHandlerRegistryTestImpl();
+        handler.initNodeHandlerRegistry(reg);
+        assertEquals("Wrong handler", handler, reg.subRegistry.lookupHandler(
+                new FlatRootNode(config), true));
+    }
+
+    /**
+     * Tests the lookupHandler() implementation of the node handler registry if
+     * an unknown node type is passed in.
+     */
+    public void testNodeHandlerRegistryLookupHandlerOtherNode()
+    {
+        NodeHandlerRegistryTestImpl reg = new NodeHandlerRegistryTestImpl();
+        handler.initNodeHandlerRegistry(reg);
+        assertNull("Got a handler", reg.subRegistry.lookupHandler(this, true));
+    }
+
+    /**
      * A test flat node handler implementation. It is used mainly for checking
      * the internal update flag.
      */
@@ -346,6 +401,39 @@ public class TestFlatNodeHandler extends TestCase
         {
             internalUpdate = f;
             super.setInternalUpdate(node, f);
+        }
+    }
+
+    /**
+     * A specialized node handler registry implementation for testing whether
+     * the node handler correctly acts as a sub registry.
+     */
+    private static class NodeHandlerRegistryTestImpl implements
+            NodeHandlerRegistry
+    {
+        /** The registry passed to addSubRegistry(). */
+        NodeHandlerRegistry subRegistry;
+
+        /** The node passed to resolveHandler(). */
+        Object resolveNode;
+
+        /** The node handler to be returned by resolveHandler(). */
+        NodeHandler<?> resolveHandler;
+
+        public void addSubRegistry(NodeHandlerRegistry subreg)
+        {
+            subRegistry = subreg;
+        }
+
+        public NodeHandler<?> lookupHandler(Object node, boolean subClasses)
+        {
+            throw new UnsupportedOperationException("Not yet implemented!");
+        }
+
+        public NodeHandler<?> resolveHandler(Object node)
+        {
+            resolveNode = node;
+            return resolveHandler;
         }
     }
 }
