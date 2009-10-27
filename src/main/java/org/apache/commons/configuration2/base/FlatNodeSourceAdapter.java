@@ -102,7 +102,7 @@ public class FlatNodeSourceAdapter implements
      */
     public void configurationSourceChanged(ConfigurationSourceEvent event)
     {
-        if (!event.isBeforeUpdate() && !nodeHandler.isInternalUpdate())
+        if (!event.isBeforeUpdate() && !isInternalUpdate())
         {
             invalidateRootNode();
         }
@@ -233,5 +233,17 @@ public class FlatNodeSourceAdapter implements
     protected synchronized void invalidateRootNode()
     {
         root = null;
+    }
+
+    /**
+     * Returns a flag whether the latest change on this configuration source was
+     * caused by a manipulation of the associated flat node structure. If this
+     * is the case, the node structure need not be invalidated.
+     *
+     * @return the internal update flag
+     */
+    private boolean isInternalUpdate()
+    {
+        return root != null && root.isInternalUpdate();
     }
 }

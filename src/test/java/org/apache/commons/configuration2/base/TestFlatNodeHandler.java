@@ -47,7 +47,7 @@ public class TestFlatNodeHandler
     private static final String NAME = "testProperty";
 
     /** The node handler to be tested. */
-    private FlatNodeHandler handler;
+    private FlatNodeHandlerTestImpl handler;
 
     /** The configuration source associated with the node handler. */
     private FlatConfigurationSource source;
@@ -71,7 +71,7 @@ public class TestFlatNodeHandler
                 internalUpdate = handler.isInternalUpdate();
             }
         });
-        handler = new FlatNodeHandler();
+        handler = new FlatNodeHandlerTestImpl();
     }
 
     /**
@@ -326,5 +326,30 @@ public class TestFlatNodeHandler
     public void testSetAttributeValue()
     {
         handler.setAttributeValue(setUpTestNode(), "attr", "test");
+    }
+
+    /**
+     * A test flat node handler implementation. It is used mainly for checking
+     * the internal update flag.
+     */
+    private static class FlatNodeHandlerTestImpl extends FlatNodeHandler
+    {
+        /** Stores the internal update flag. */
+        private boolean internalUpdate;
+
+        public boolean isInternalUpdate()
+        {
+            return internalUpdate;
+        }
+
+        /**
+         * Records this invocation and stores the value of the flag.
+         */
+        @Override
+        void setInternalUpdate(FlatNode node, boolean f)
+        {
+            internalUpdate = f;
+            super.setInternalUpdate(node, f);
+        }
     }
 }
