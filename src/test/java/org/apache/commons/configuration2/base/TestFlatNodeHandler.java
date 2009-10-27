@@ -16,11 +16,17 @@
  */
 package org.apache.commons.configuration2.base;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for FlatNodeHandler.
@@ -30,7 +36,7 @@ import org.apache.commons.configuration2.ConfigurationRuntimeException;
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestFlatNodeHandler extends TestCase
+public class TestFlatNodeHandler
 {
     /** An array with the names of the test child nodes. */
     private static final String[] CHILD_NAMES = {
@@ -49,10 +55,9 @@ public class TestFlatNodeHandler extends TestCase
     /** Stores the internal update flag of the node handler. */
     private Boolean internalUpdate;
 
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         source = new ConfigurationSourceEventWrapper(
                 new MapConfigurationSource());
         source.addConfigurationSourceListener(new ConfigurationSourceListener()
@@ -73,11 +78,10 @@ public class TestFlatNodeHandler extends TestCase
      * Clears the test environment. This implementation also checks whether an
      * unexpected change event was received.
      */
-    @Override
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         assertNull("Unexpected change event", internalUpdate);
-        super.tearDown();
     }
 
     /**
@@ -110,6 +114,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the child nodes of a node.
      */
+    @Test
     public void testGetChildren()
     {
         List<FlatNode> children = handler.getChildren(setUpTestNode());
@@ -125,6 +130,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying children by name.
      */
+    @Test
     public void testGetChildrenName()
     {
         List<FlatNode> children = handler.getChildren(setUpTestNode(),
@@ -139,6 +145,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the number of children.
      */
+    @Test
     public void testGetChildrenCount()
     {
         FlatNode root = setUpTestNode();
@@ -161,6 +168,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the total number of children.
      */
+    @Test
     public void testGetChildrenCountTotal()
     {
         assertEquals("Wrong total number of children", CHILD_NAMES.length,
@@ -170,6 +178,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying children by their index.
      */
+    @Test
     public void testGetChild()
     {
         FlatNode node = setUpTestNode();
@@ -183,6 +192,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests adding a new child node.
      */
+    @Test
     public void testAddChild()
     {
         FlatNode node = setUpTestNode();
@@ -198,6 +208,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests removing a child node.
      */
+    @Test
     public void testRemoveChild()
     {
         FlatNode node = setUpTestNode();
@@ -214,6 +225,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests setting the value of a node.
      */
+    @Test
     public void testSetValue()
     {
         FlatNode node = setUpTestNode();
@@ -227,6 +239,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the value of a node.
      */
+    @Test
     public void testGetValue()
     {
         FlatNode node = setUpTestNode();
@@ -240,6 +253,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the name of nodes.
      */
+    @Test
     public void testNodeName()
     {
         FlatNode node = setUpTestNode();
@@ -254,6 +268,7 @@ public class TestFlatNodeHandler extends TestCase
     /**
      * Tests querying the parent of a node.
      */
+    @Test
     public void testGetParent()
     {
         FlatNode node = setUpTestNode();
@@ -265,23 +280,17 @@ public class TestFlatNodeHandler extends TestCase
      * Tests adding a value to an attribute. Because attributes are not
      * supported, this should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testAddAttributeValue()
     {
-        try
-        {
-            handler.addAttributeValue(setUpTestNode(), "attr", "test");
-            fail("Could add an attribute!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        handler.addAttributeValue(setUpTestNode(), "attr", "test");
     }
 
     /**
      * Tests querying the value of an attribute. Because flat nodes do not
      * support attributes, result should always be null.
      */
+    @Test
     public void testGetAttributeValue()
     {
         assertNull("Wrong attribute value", handler.getAttributeValue(
@@ -292,6 +301,7 @@ public class TestFlatNodeHandler extends TestCase
      * Tests querying the existing attributes. Here always an empty list should
      * be returned.
      */
+    @Test
     public void testGetAttributes()
     {
         assertTrue("Found attributes", handler.getAttributes(setUpTestNode())
@@ -302,6 +312,7 @@ public class TestFlatNodeHandler extends TestCase
      * Tests removing an attribute. This should be a no-op. We only test whether
      * no exception is thrown.
      */
+    @Test
     public void testRemoveAttribute()
     {
         handler.removeAttribute(setUpTestNode(), "test");
@@ -311,16 +322,9 @@ public class TestFlatNodeHandler extends TestCase
      * Tests setting the value of an attribute. Because attributes are not
      * supported, this should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testSetAttributeValue()
     {
-        try
-        {
-            handler.setAttributeValue(setUpTestNode(), "attr", "test");
-            fail("Could add an attribute!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        handler.setAttributeValue(setUpTestNode(), "attr", "test");
     }
 }

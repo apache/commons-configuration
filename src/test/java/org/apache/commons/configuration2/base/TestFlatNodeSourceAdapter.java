@@ -16,15 +16,20 @@
  */
 package org.apache.commons.configuration2.base;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
 import org.easymock.EasyMock;
+import org.junit.Test;
 
 /**
  * Test class for {@code FlatNodeSourceAdapter}.
@@ -32,7 +37,7 @@ import org.easymock.EasyMock;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class TestFlatNodeSourceAdapter extends TestCase
+public class TestFlatNodeSourceAdapter
 {
     /** An array with the names of the test properties. */
     private static final String[] KEYS = {
@@ -107,22 +112,16 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tries to create an adapter for a null source. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitNull()
     {
-        try
-        {
-            new FlatNodeSourceAdapter(null);
-            fail("Could create instance without source!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        new FlatNodeSourceAdapter(null);
     }
 
     /**
      * Tests whether the correct original source is returned.
      */
+    @Test
     public void testGetOriginalSource()
     {
         FlatConfigurationSource src = createMockSource();
@@ -136,6 +135,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tests whether a listener can be added. It should be added at the wrapped
      * source.
      */
+    @Test
     public void testAddConfigurationSourceListener()
     {
         FlatConfigurationSource src = createMockSource();
@@ -152,6 +152,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tests whether event listeners can be removed. The calls should be
      * delegated to the wrapped source.
      */
+    @Test
     public void testRemoveConfigurationSourceListener()
     {
         FlatConfigurationSource src = createMockSource();
@@ -173,6 +174,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
     /**
      * Tests the clear() implementation.
      */
+    @Test
     public void testClear()
     {
         FlatConfigurationSource src = createMockSource();
@@ -187,6 +189,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tries to set a root node. This operation is not supported, so an
      * exception should be thrown.
      */
+    @Test
     public void testSetRootNode()
     {
         FlatConfigurationSource src = createMockSource();
@@ -209,6 +212,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * transformed into a hierarchical structure. We test whether it can be
      * accessed from a configuration.
      */
+    @Test
     public void testTransformation()
     {
         FlatNodeSourceAdapter adapter = createTestAdapter();
@@ -230,6 +234,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tests the transformation performed by the adapter if a property with
      * multiple values is involved.
      */
+    @Test
     public void testTransformationList()
     {
         FlatNodeSourceAdapter adapter = createTestAdapter();
@@ -251,6 +256,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
     /**
      * Tests whether changes at the wrapped source are visible.
      */
+    @Test
     public void testConfigurationSourceChanged()
     {
         FlatNodeSourceAdapter adapter = createTestAdapter();
@@ -267,6 +273,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
      * Tests whether updates of the configuration are visible in the wrapped
      * source.
      */
+    @Test
     public void testUpdateOriginalSource()
     {
         FlatNodeSourceAdapter adapter = createTestAdapter();
@@ -281,6 +288,7 @@ public class TestFlatNodeSourceAdapter extends TestCase
     /**
      * Tests whether capabilities can be requested.
      */
+    @Test
     public void testGetCapability()
     {
         FlatConfigurationSource src = createMockSource();
