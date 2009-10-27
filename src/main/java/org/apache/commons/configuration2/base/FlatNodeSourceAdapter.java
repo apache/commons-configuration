@@ -78,7 +78,7 @@ public class FlatNodeSourceAdapter implements
         }
 
         originalSource = wrappedSource;
-        nodeHandler = new FlatNodeHandler(wrappedSource);
+        nodeHandler = new FlatNodeHandler();
         wrappedSource.addConfigurationSourceListener(this);
     }
 
@@ -209,7 +209,7 @@ public class FlatNodeSourceAdapter implements
      */
     protected FlatNode constructNodeHierarchy()
     {
-        FlatRootNode root = new FlatRootNode();
+        FlatRootNode root = new FlatRootNode(getOriginalSource());
         for (Iterator<String> it = getOriginalSource().getKeys(); it.hasNext();)
         {
             String key = it.next();

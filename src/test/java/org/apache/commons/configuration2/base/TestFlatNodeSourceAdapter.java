@@ -194,7 +194,8 @@ public class TestFlatNodeSourceAdapter extends TestCase
         FlatNodeSourceAdapter adapter = new FlatNodeSourceAdapter(src);
         try
         {
-            adapter.setRootNode(new FlatRootNode());
+            adapter.setRootNode(new FlatRootNode(EasyMock
+                    .createNiceMock(FlatConfigurationSource.class)));
             fail("Could set a new root node!");
         }
         catch (UnsupportedOperationException uex)

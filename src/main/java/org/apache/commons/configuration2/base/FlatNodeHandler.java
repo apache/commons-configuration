@@ -57,36 +57,11 @@ import org.apache.commons.configuration2.expr.NodeHandler;
  */
 class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
 {
-    /** Stores the associated ConfigurationSource. */
-    private final FlatConfigurationSource configurationSource;
-
     /**
      * A flag whether an update of the configuration was caused by an operation
      * on its node structure.
      */
     private boolean internalUpdate;
-
-    /**
-     * Creates a new instance of {@code FlatNodeHandler} and initializes it with
-     * the associated {@code ConfigurationSource}.
-     *
-     * @param config the {@code ConfigurationSource}
-     */
-    public FlatNodeHandler(FlatConfigurationSource config)
-    {
-        configurationSource = config;
-    }
-
-    /**
-     * Returns the {@code ConfigurationSource} associated with this node
-     * handler.
-     *
-     * @return the associated {@code ConfigurationSource}
-     */
-    public FlatConfigurationSource getConfigurationSource()
-    {
-        return configurationSource;
-    }
 
     /**
      * Returns a flag whether an update of the associated {@code
@@ -228,7 +203,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
      */
     public Object getValue(FlatNode node)
     {
-        return node.getValue(getConfigurationSource());
+        return node.getValue();
     }
 
     /**
@@ -264,7 +239,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
         internalUpdate = true;
         try
         {
-            node.removeChild(getConfigurationSource(), child);
+            node.removeChild(child);
         }
         finally
         {
@@ -299,7 +274,7 @@ class FlatNodeHandler extends AbstractNodeHandler<FlatNode>
         internalUpdate = true;
         try
         {
-            node.setValue(getConfigurationSource(), value);
+            node.setValue(value);
         }
         finally
         {

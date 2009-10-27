@@ -161,13 +161,12 @@ class FlatLeafNode extends FlatNode
      * from the passed in {@code ConfigurationSource}. It also takes its value
      * index into account if the represented property has multiple values.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @return the value of the represented property
      */
     @Override
-    public Object getValue(FlatConfigurationSource config)
+    public Object getValue()
     {
-        Object value = config.getProperty(getName());
+        Object value = getConfigurationSource().getProperty(getName());
         if (value instanceof Collection<?>)
         {
             int valueIndex = getValueIndex();
@@ -208,12 +207,11 @@ class FlatLeafNode extends FlatNode
      * Removes a child from this node. Leaf nodes do not support children, so
      * this implementation always throws a runtime exception.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @param child the node to be removed
      * @throws ConfigurationRuntimeException if the child cannot be removed
      */
     @Override
-    public void removeChild(FlatConfigurationSource config, FlatNode child)
+    public void removeChild(FlatNode child)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot remove a child from a leaf node!");
@@ -226,29 +224,40 @@ class FlatLeafNode extends FlatNode
      * represented property. Otherwise the corresponding property value is
      * overridden.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @param value the new value
      */
     @Override
-    public void setValue(FlatConfigurationSource config, Object value)
+    public void setValue(Object value)
     {
         if (hasValue)
         {
             int index = getValueIndex();
             if (index != INDEX_UNDEFINED)
             {
-                parent.setMultiProperty(config, this, index, value);
+                parent.setMultiProperty(getConfigurationSource(), this, index, value);
             }
             else
             {
-                config.setProperty(getName(), value);
+                getConfigurationSource().setProperty(getName(), value);
             }
         }
 
         else
         {
-            config.addProperty(getName(), value);
+            getConfigurationSource().addProperty(getName(), value);
             hasValue = true;
         }
+    }
+
+    /**
+     * Returns the {@code FlatConfigurationSource} this node belongs to. This
+     * implementation fetches the source from the parent node.
+     *
+     * @return the owning {@code FlatConfigurationSource}
+     */
+    @Override
+    public FlatConfigurationSource getConfigurationSource()
+    {
+        return getParent().getConfigurationSource();
     }
 }

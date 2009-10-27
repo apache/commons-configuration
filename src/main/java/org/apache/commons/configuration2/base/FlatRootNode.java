@@ -61,13 +61,19 @@ class FlatRootNode extends FlatNode
     /** A map for direct access to child nodes by name. */
     private final Map<String, ChildNodeManager> childrenByName;
 
+    /** Stores the configuration source this node belongs to. */
+    private final FlatConfigurationSource configurationSource;
+
     /**
-     * Creates a new instance of {@code FlatRootNode}.
+     * Creates a new instance of {@code FlatRootNode} and initializes it with
+     * the {@code FlatConfigurationSource} it belongs to.
+     * @param source the owning {@code FlatConfigurationSource}
      */
-    public FlatRootNode()
+    public FlatRootNode(FlatConfigurationSource source)
     {
         children = new ArrayList<FlatNode>();
         childrenByName = new HashMap<String, ChildNodeManager>();
+        configurationSource = source;
     }
 
     /**
@@ -186,11 +192,10 @@ class FlatRootNode extends FlatNode
      * Returns the value of this node. The root node does not have a value, so
      * result is always <b>null</b>.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @return the value of this node
      */
     @Override
-    public Object getValue(FlatConfigurationSource config)
+    public Object getValue()
     {
         return null;
     }
@@ -211,13 +216,12 @@ class FlatRootNode extends FlatNode
      * Removes the specified child node. The corresponding value in the
      * associated {@code ConfigurationSource} will also be removed.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @param child the node to be removed
      * @throws ConfigurationRuntimeException if this node is not a child of this
      *         node
      */
     @Override
-    public void removeChild(FlatConfigurationSource config, FlatNode child)
+    public void removeChild(FlatNode child)
     {
         if (child != null)
         {
@@ -228,11 +232,11 @@ class FlatRootNode extends FlatNode
 
             if (index != INDEX_UNDEFINED)
             {
-                changeMultiProperty(config, child, index, null, true);
+                changeMultiProperty(getConfigurationSource(), child, index, null, true);
             }
             else
             {
-                config.clearProperty(child.getName());
+                getConfigurationSource().clearProperty(child.getName());
             }
         }
         else
@@ -247,15 +251,25 @@ class FlatRootNode extends FlatNode
      * Sets the value of this node. A root node cannot have a value. This
      * implementation will throw an exception.
      *
-     * @param config the associated {@code ConfigurationSource}
      * @param value the new value
      * @throws ConfigurationRuntimeException if the value cannot be set
      */
     @Override
-    public void setValue(FlatConfigurationSource config, Object value)
+    public void setValue(Object value)
     {
         throw new ConfigurationRuntimeException(
                 "Cannot set the value of the root node of a flat configuration!");
+    }
+
+    /**
+     * Returns the {@code FlatConfigurationSource} this node belongs to. The
+     * source was passed when this object was created.
+     * @return the owning {@code FlatConfigurationSource}
+     */
+    @Override
+    public FlatConfigurationSource getConfigurationSource()
+    {
+        return configurationSource;
     }
 
     /**
