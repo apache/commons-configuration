@@ -712,17 +712,7 @@ public abstract class AbstractHierarchicalConfiguration<T> extends AbstractConfi
      */
     protected void visit(T node, NodeVisitor<T> visitor)
     {
-        if (!visitor.terminate())
-        {
-            visitor.visitBeforeChildren(node, getNodeHandler());
-
-            for (Iterator<T> it = getNodeHandler().getChildren(node).iterator(); it.hasNext() && !visitor.terminate();)
-            {
-                visit(it.next(), visitor);
-            }
-
-            visitor.visitAfterChildren(node, getNodeHandler());
-        }
+        NodeVisitorAdapter.visit(visitor, node, getNodeHandler());
     }
 
     /**

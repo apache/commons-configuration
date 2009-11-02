@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration2.expr;
 
+import java.util.Iterator;
+
 /**
  * <p>
  * A simple adapter class that simplifies writing custom node visitor
@@ -23,11 +25,20 @@ package org.apache.commons.configuration2.expr;
  * </p>
  * <p>
  * This class provides dummy implementations for the methods defined in the
- * <code>ConfigurationNodeVisitor</code> interface. Derived classes only need
- * to override the methods they really need.
+ * {@link NodeVisitor} interface. Derived classes only need to override the
+ * methods they really need.
+ * </p>
+ * <p>
+ * In addition to the dummy implementations of the {@link NodeVisitor} methods,
+ * this class also provides a static method that implements the default visiting
+ * mechanism: The {@code visit()} method is passed a {@code NodeVisitor}, a
+ * node, and a corresponding {@code NodeHandler}. It then traverses the whole
+ * nodes structure and invokes the visitor for each encountered node.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the involved nodes
  */
@@ -64,5 +75,35 @@ public class NodeVisitorAdapter<T> implements NodeVisitor<T>
      */
     public void visitBeforeChildren(T node, NodeHandler<T> handler)
     {
+    }
+
+    /**
+     * Traverses the nodes structure below the specified root node and calls the
+     * visitor for each encountered node. If the {@code terminate()} method of
+     * the visitor returns <b>true</b>, the visit operation is aborted. This
+     * method provides a default implementation of the visitor mechanism.
+     *
+     * @param <N> the type of the nodes involved
+     * @param visitor the visitor
+     * @param node the root node of the hierarchy
+     * @param handler the node handler
+     * @throws NullPointerException if a required parameter is missing
+     */
+    public static <N> void visit(NodeVisitor<N> visitor, N node,
+            NodeHandler<N> handler)
+    {
+        if (!visitor.terminate())
+        {
+            visitor.visitBeforeChildren(node, handler);
+
+            for (Iterator<N> it = handler.getChildren(node).iterator(); it
+                    .hasNext()
+                    && !visitor.terminate();)
+            {
+                visit(visitor, it.next(), handler);
+            }
+
+            visitor.visitAfterChildren(node, handler);
+        }
     }
 }
