@@ -17,6 +17,7 @@
 package org.apache.commons.configuration2.base.impl;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -172,7 +173,30 @@ public class XMLConfigurationSource extends InMemoryConfigurationSource
     public XMLConfigurationSource()
     {
         xmlNodeHandler = new XMLNodeHandler();
-        locatorSupport = new DefaultLocatorSupport(this);
+        locatorSupport = new DefaultLocatorSupport(this)
+        {
+            /**
+             * Loads data from the specified {@code InputStream}. This
+             * implementation directly delegates to the {@code
+             * load(InputStream)} method of the owning {@code
+             * XMLConfigurationSource}.
+             *
+             * @param in the {@code InputStream}
+             * @throws ConfigurationException if an error occurs
+             */
+            @Override
+            public void load(InputStream in) throws ConfigurationException
+            {
+                try
+                {
+                    XMLConfigurationSource.this.load(in);
+                }
+                catch (IOException ioex)
+                {
+                    throw new ConfigurationException(ioex);
+                }
+            }
+        };
     }
 
     /**
@@ -480,6 +504,23 @@ public class XMLConfigurationSource extends InMemoryConfigurationSource
     public void load(Reader reader) throws IOException, ConfigurationException
     {
         load(new InputSource(reader));
+    }
+
+    /**
+     * Loads the data from the specified {@code InputStream} and adds it to this
+     * {@code ConfigurationSource} object. Note that the{@code clear()} method
+     * is not called, so the properties contained in the loaded file will be
+     * added to the current set of properties. Note: This method is provided in
+     * addition to {@link #load(Reader)} because it allows the XML parser to
+     * auto-detect the encoding of the XML document to be loaded.
+     *
+     * @param in the input stream
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if an error occurs
+     */
+    public void load(InputStream in) throws IOException, ConfigurationException
+    {
+        load(new InputSource(in));
     }
 
     /**

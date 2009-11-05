@@ -773,14 +773,11 @@ public class TestXMLConfigurationSource
     }
 
     /**
-     * Tests whether the encoding is correctly detected by the XML parser. This
-     * is done by loading an XML file with the encoding "UTF-16". If this
-     * encoding is not detected correctly, an exception will be thrown that
-     * "Content is not allowed in prolog". This test case is related to issue
-     * 34204.
+     * Tests whether the encoding is taken into account when loading a document
+     * if it is explicitly specified.
      */
     @Test
-    public void testLoadWithEncoding() throws ConfigurationException,
+    public void testLoadWithEncodingExplicit() throws ConfigurationException,
             IOException
     {
         LocatorSupport locSupport = source.getCapability(LocatorSupport.class);
@@ -789,6 +786,23 @@ public class TestXMLConfigurationSource
                 .getTestURL("testEncoding.xml")));
         locSupport.load();
         assertEquals("Wrong value", "test3_yoge", conf.getString("yoge"));
+    }
+
+    /**
+     * Tests whether the encoding is correctly detected by the XML parser. This
+     * is done by loading an XML file with the encoding "UTF-16". If this
+     * encoding is not detected correctly, an exception will be thrown that
+     * "Content is not allowed in prolog". This test case is related to issue
+     * 34204.
+     */
+    @Test
+    public void testLoadWithEncoding() throws ConfigurationException
+    {
+        LocatorSupport locSupport = source.getCapability(LocatorSupport.class);
+        locSupport.setLocator(new URLLocator(ConfigurationAssert
+                .getTestURL("testEncoding.xml")));
+        locSupport.load();
+        assertEquals("test3_yoge", conf.getString("yoge"));
     }
 
     /**
