@@ -16,11 +16,16 @@
  */
 package org.apache.commons.configuration2.base;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for {@link InMemoryConfigurationSource}.
@@ -28,7 +33,7 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * @author Commons Configuration team
  * @version $Id$
  */
-public class TestInMemoryConfigurationSource extends TestCase
+public class TestInMemoryConfigurationSource
 {
     /** The source to be tested. */
     private InMemoryConfigurationSource source;
@@ -37,10 +42,9 @@ public class TestInMemoryConfigurationSource extends TestCase
      * Initializes the configuration source with the following structure: tables
      * table name fields field name field name
      */
-    @Override
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         source = new InMemoryConfigurationSource();
     }
 
@@ -60,6 +64,7 @@ public class TestInMemoryConfigurationSource extends TestCase
     /**
      * Tests a newly created instance.
      */
+    @Test
     public void testInit()
     {
         checkEmptyRoot();
@@ -68,6 +73,7 @@ public class TestInMemoryConfigurationSource extends TestCase
     /**
      * Tests setting a new root node.
      */
+    @Test
     public void testSetRootNode()
     {
         DefaultConfigurationNode node = new DefaultConfigurationNode();
@@ -78,22 +84,16 @@ public class TestInMemoryConfigurationSource extends TestCase
     /**
      * Tests setting the root node to null. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetRootNodeNull()
     {
-        try
-        {
-            source.setRootNode(null);
-            fail("Could set null root node!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        source.setRootNode(null);
     }
 
     /**
      * Tests the clear() implementation.
      */
+    @Test
     public void testClear()
     {
         source.getRootNode().setValue("Test");
@@ -108,6 +108,7 @@ public class TestInMemoryConfigurationSource extends TestCase
     /**
      * Tests the node handler used by the model.
      */
+    @Test
     public void testGetNodeHandler()
     {
         assertTrue("Wrong node handler",
