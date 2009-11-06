@@ -24,6 +24,9 @@ import java.util.Iterator;
 
 import junit.framework.Assert;
 
+import org.apache.commons.configuration2.base.ConfigurationImpl;
+import org.apache.commons.configuration2.base.HierarchicalConfigurationSource;
+
 /**
  * Assertions on configurations for the unit tests.
  *
@@ -66,6 +69,57 @@ public class ConfigurationAssert
             String key = it.next();
             Assert.assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
+    }
+
+    /**
+     * Compares two configurations with each other.
+     *
+     * @param <T> the type of the configuration nodes
+     * @param expected the expected configuration
+     * @param actual the configuration to check
+     */
+    public static <T> void assertEquals(
+            org.apache.commons.configuration2.base.Configuration<T> expected,
+            org.apache.commons.configuration2.base.Configuration<T> actual)
+    {
+        // check that the actual configuration contains all the properties of
+        // the expected configuration
+        for (Iterator<String> it = expected.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            Assert.assertTrue(
+                    "The actual configuration doesn't contain the expected key '"
+                            + key + "'", actual.containsKey(key));
+            Assert.assertEquals("Value of the '" + key + "' property", expected
+                    .getProperty(key), actual.getProperty(key));
+        }
+
+        // check that the actual configuration has no extra properties
+        for (Iterator<String> it = actual.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            Assert.assertTrue(
+                    "The actual configuration contains an extra key '" + key
+                            + "'", expected.containsKey(key));
+        }
+    }
+
+    /**
+     * Compares the content of two hierarchical configuration sources.
+     *
+     * @param <T> the type of the nodes used within the sources
+     * @param expected the expected configuration source
+     * @param actual the configuration source to check
+     */
+    public static <T> void assertEquals(
+            HierarchicalConfigurationSource<T> expected,
+            HierarchicalConfigurationSource<T> actual)
+    {
+        org.apache.commons.configuration2.base.Configuration<T> expectedConfig = new ConfigurationImpl<T>(
+                expected);
+        org.apache.commons.configuration2.base.Configuration<T> actualConfig = new ConfigurationImpl<T>(
+                actual);
+        assertEquals(expectedConfig, actualConfig);
     }
 
     /**

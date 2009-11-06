@@ -16,8 +16,11 @@
  */
 package org.apache.commons.configuration2.base;
 
+import java.util.Stack;
+
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
+import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
@@ -55,6 +58,31 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
     public InMemoryConfigurationSource()
     {
         rootNode = new DefaultConfigurationNode();
+    }
+
+    /**
+     * Creates a new instance of {@code InMemoryConfigurationSource} and
+     * initializes it with the data stored in the specified {@code
+     * HierarchicalConfigurationSource}. From the nodes in the specified source
+     * a deep copy is created. So the node structure of the newly created source
+     * exactly corresponds to the one of the original source, but they are
+     * independent of each other. The passed in {@code
+     * HierarchicalConfigurationSource} can be <b>null</b>, then this
+     * constructor behaves like the default constructor.
+     *
+     * @param c the {@code HierarchicalConfigurationSource} to be copied
+     */
+    public InMemoryConfigurationSource(
+            HierarchicalConfigurationSource<? extends ConfigurationNode> c)
+    {
+        this();
+        if (c != null)
+        {
+            CloneVisitor visitor = new CloneVisitor();
+            NodeVisitorAdapter
+                    .visit(visitor, c.getRootNode(), getNodeHandler());
+            setRootNode(visitor.getClone());
+        }
     }
 
     /**
@@ -102,5 +130,78 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
     public NodeHandler<ConfigurationNode> getNodeHandler()
     {
         return NODE_HANDLER;
+    }
+
+    /**
+     * A specialized visitor that is able to create a deep copy of a node
+     * hierarchy.
+     */
+    private static class CloneVisitor extends
+            NodeVisitorAdapter<ConfigurationNode>
+    {
+        /** A stack with the actual object to be copied. */
+        private Stack<ConfigurationNode> copyStack;
+
+        /** Stores the result of the clone process. */
+        private ConfigurationNode result;
+
+        /**
+         * Creates a new instance of {@code CloneVisitor}.
+         */
+        public CloneVisitor()
+        {
+            copyStack = new Stack<ConfigurationNode>();
+        }
+
+        /**
+         * Visits the specified node after its children have been processed.
+         *
+         * @param node the node
+         */
+        @Override
+        public void visitAfterChildren(ConfigurationNode node,
+                NodeHandler<ConfigurationNode> handler)
+        {
+            ConfigurationNode copy = copyStack.pop();
+            if (copyStack.isEmpty())
+            {
+                result = copy;
+            }
+        }
+
+        /**
+         * Visits and copies the specified node.
+         *
+         * @param node the node
+         */
+        @Override
+        public void visitBeforeChildren(ConfigurationNode node,
+                NodeHandler<ConfigurationNode> handler)
+        {
+            ConfigurationNode copy = (ConfigurationNode) node.clone();
+            copy.setParentNode(null);
+
+            for (ConfigurationNode attr : node.getAttributes())
+            {
+                copy.addAttribute((ConfigurationNode) attr.clone());
+            }
+            if (!copyStack.isEmpty())
+            {
+                copyStack.peek().addChild(copy);
+            }
+
+            copyStack.push(copy);
+        }
+
+        /**
+         * Returns the result of the clone process. This is the root node of the
+         * cloned node hierarchy.
+         *
+         * @return the cloned root node
+         */
+        public ConfigurationNode getClone()
+        {
+            return result;
+        }
     }
 }

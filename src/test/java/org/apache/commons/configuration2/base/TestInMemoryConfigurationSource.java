@@ -21,6 +21,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
+import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
@@ -59,6 +62,22 @@ public class TestInMemoryConfigurationSource
         assertNull("Root node has a reference", root.getReference());
         assertEquals("Root node has attributes", 0, root.getAttributeCount());
         assertEquals("Root node has children", 0, root.getChildrenCount());
+    }
+
+    /**
+     * Adds some test properties to the configuration source to be tested.
+     */
+    private void populate()
+    {
+        Configuration<ConfigurationNode> config = new ConfigurationImpl<ConfigurationNode>(source);
+        config.addProperty("test", Boolean.TRUE);
+        config.addProperty("test.list", Arrays.asList("value1", "value2", "value3"));
+        config.addProperty("test[@mode]", "full");
+        config.addProperty("answer", 42);
+        config.addProperty("database.connection", "jdbc:test:local:db");
+        config.addProperty("database.usr", "scott");
+        config.addProperty("database.pwd", "tiger");
+        config.addProperty("[@rootAttr]", "set");
     }
 
     /**
@@ -113,5 +132,29 @@ public class TestInMemoryConfigurationSource
     {
         assertTrue("Wrong node handler",
                 source.getNodeHandler() instanceof ConfigurationNodeHandler);
+    }
+
+    /**
+     * Tests the constructor which copies another configuration source.
+     */
+    @Test
+    public void testInitCopy()
+    {
+        populate();
+        InMemoryConfigurationSource src2 = new InMemoryConfigurationSource(
+                source);
+        ConfigurationAssert.assertEquals(source, src2);
+    }
+
+    /**
+     * Tests the copy constructor if null is passed in.
+     */
+    @Test
+    public void testInitCopyNull()
+    {
+        InMemoryConfigurationSource src2 = new InMemoryConfigurationSource(null);
+        Configuration<ConfigurationNode> conf = new ConfigurationImpl<ConfigurationNode>(
+                src2);
+        assertTrue("Not empty", conf.isEmpty());
     }
 }
