@@ -78,10 +78,7 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
         this();
         if (c != null)
         {
-            CloneVisitor visitor = new CloneVisitor();
-            NodeVisitorAdapter
-                    .visit(visitor, c.getRootNode(), getNodeHandler());
-            setRootNode(visitor.getClone());
+            setRootNode(copyNodes(c.getRootNode(), NODE_HANDLER));
         }
     }
 
@@ -133,24 +130,71 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
     }
 
     /**
+     * Copies the node structure below the specified root node. This method
+     * traverses the node structure with a specialized visitor that can create a
+     * deep clone of all nodes.
+     *
+     * @param <N> the type of the nodes
+     * @param node the root node of the hierarchy which is to be copied
+     * @param handler the {@code NodeHandler} to be used
+     * @return the root node of the copied structure
+     */
+    protected static <N extends ConfigurationNode> N copyNodes(N node,
+            NodeHandler<N> handler)
+    {
+        CloneVisitor<N> visitor = new CloneVisitor<N>();
+        NodeVisitorAdapter.visit(visitor, node, handler);
+        return visitor.getClone();
+    }
+
+    /**
+     * Clears all reference fields in a node structure. A configuration node can
+     * store a so-called &quot;reference&quot;. The meaning of this data is
+     * determined by a concrete sub class. Typically such references are
+     * specific for a configuration instance. If this instance is cloned or
+     * copied, they must be cleared. This can be done using this method.
+     *
+     * @param <N> the type of the nodes
+     * @param node the root node of the node hierarchy, in which the references
+     *        are to be cleared
+     * @param handler the {@code NodeHandler} to be used
+     */
+    protected static <N extends ConfigurationNode> void clearReferences(N node,
+            NodeHandler<N> handler)
+    {
+        NodeVisitorAdapter.visit(new NodeVisitorAdapter<N>()
+        {
+            @Override
+            public void visitBeforeChildren(N node, NodeHandler<N> handler)
+            {
+                node.setReference(null);
+                for (ConfigurationNode attr : node.getAttributes())
+                {
+                    attr.setReference(null);
+                }
+            }
+        }, node, handler);
+    }
+
+    /**
      * A specialized visitor that is able to create a deep copy of a node
      * hierarchy.
      */
-    private static class CloneVisitor extends
-            NodeVisitorAdapter<ConfigurationNode>
+    private static class CloneVisitor<N extends ConfigurationNode> extends
+            NodeVisitorAdapter<N>
     {
         /** A stack with the actual object to be copied. */
-        private Stack<ConfigurationNode> copyStack;
+        private Stack<N> copyStack;
 
         /** Stores the result of the clone process. */
-        private ConfigurationNode result;
+        private N result;
 
         /**
          * Creates a new instance of {@code CloneVisitor}.
          */
         public CloneVisitor()
         {
-            copyStack = new Stack<ConfigurationNode>();
+            copyStack = new Stack<N>();
         }
 
         /**
@@ -159,10 +203,10 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
          * @param node the node
          */
         @Override
-        public void visitAfterChildren(ConfigurationNode node,
-                NodeHandler<ConfigurationNode> handler)
+        public void visitAfterChildren(N node,
+                NodeHandler<N> handler)
         {
-            ConfigurationNode copy = copyStack.pop();
+            N copy = copyStack.pop();
             if (copyStack.isEmpty())
             {
                 result = copy;
@@ -175,10 +219,11 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
          * @param node the node
          */
         @Override
-        public void visitBeforeChildren(ConfigurationNode node,
-                NodeHandler<ConfigurationNode> handler)
+        public void visitBeforeChildren(N node,
+                NodeHandler<N> handler)
         {
-            ConfigurationNode copy = (ConfigurationNode) node.clone();
+            @SuppressWarnings("unchecked")
+            N copy = (N) node.clone();
             copy.setParentNode(null);
 
             for (ConfigurationNode attr : node.getAttributes())
@@ -199,7 +244,7 @@ public class InMemoryConfigurationSource extends AbstractConfigurationSource
          *
          * @return the cloned root node
          */
-        public ConfigurationNode getClone()
+        public N getClone()
         {
             return result;
         }

@@ -43,6 +43,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.base.Capability;
 import org.apache.commons.configuration2.base.DefaultLocatorSupport;
+import org.apache.commons.configuration2.base.HierarchicalConfigurationSource;
 import org.apache.commons.configuration2.base.InMemoryConfigurationSource;
 import org.apache.commons.configuration2.base.LocatorSupport;
 import org.apache.commons.configuration2.base.StreamBasedSource;
@@ -173,30 +174,28 @@ public class XMLConfigurationSource extends InMemoryConfigurationSource
     public XMLConfigurationSource()
     {
         xmlNodeHandler = new XMLNodeHandler();
-        locatorSupport = new DefaultLocatorSupport(this)
+        locatorSupport = initLocatorSupport();
+    }
+
+    /**
+     * Creates a new instance of {@code XMLConfigurationSource} and initializes
+     * its data from the content of the specified {@code
+     * HierarchicalConfigurationSource}. This is a typical copy constructor.
+     *
+     * @param c the {@code HierarchicalConfigurationSource} to be copied (can be
+     *        <b>null</b>)
+     * @see InMemoryConfigurationSource#InMemoryConfigurationSource(HierarchicalConfigurationSource)
+     */
+    public XMLConfigurationSource(
+            HierarchicalConfigurationSource<? extends ConfigurationNode> c)
+    {
+        this();
+        if (c != null)
         {
-            /**
-             * Loads data from the specified {@code InputStream}. This
-             * implementation directly delegates to the {@code
-             * load(InputStream)} method of the owning {@code
-             * XMLConfigurationSource}.
-             *
-             * @param in the {@code InputStream}
-             * @throws ConfigurationException if an error occurs
-             */
-            @Override
-            public void load(InputStream in) throws ConfigurationException
-            {
-                try
-                {
-                    XMLConfigurationSource.this.load(in);
-                }
-                catch (IOException ioex)
-                {
-                    throw new ConfigurationException(ioex);
-                }
-            }
-        };
+            setRootNode(copyNodes(c.getRootNode(), xmlNodeHandler));
+            clearReferences(getRootNode(), xmlNodeHandler);
+        }
+        setRootElementName(getRootNode().getName());
     }
 
     /**
@@ -865,6 +864,42 @@ public class XMLConfigurationSource extends InMemoryConfigurationSource
             // Add a new text node
             elem.appendChild(doc.createTextNode(String.valueOf(value)));
         }
+    }
+
+    /**
+     * Initializes the {@code LocatorSupport} object used by this configuration
+     * source. This implementation returns a special {@code LocatorSupport}
+     * implementation whose {@code load(InputStream)} method delegates to the
+     * corresponding {@code load()} method of this instance.
+     *
+     * @return the {@code LocatorSupport} object
+     */
+    private LocatorSupport initLocatorSupport()
+    {
+        return new DefaultLocatorSupport(this)
+        {
+            /**
+             * Loads data from the specified {@code InputStream}. This
+             * implementation directly delegates to the {@code
+             * load(InputStream)} method of the owning {@code
+             * XMLConfigurationSource}.
+             *
+             * @param in the {@code InputStream}
+             * @throws ConfigurationException if an error occurs
+             */
+            @Override
+            public void load(InputStream in) throws ConfigurationException
+            {
+                try
+                {
+                    XMLConfigurationSource.this.load(in);
+                }
+                catch (IOException ioex)
+                {
+                    throw new ConfigurationException(ioex);
+                }
+            }
+        };
     }
 
     /**

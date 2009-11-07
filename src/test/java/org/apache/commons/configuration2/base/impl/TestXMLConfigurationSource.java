@@ -996,4 +996,132 @@ public class TestXMLConfigurationSource
         assertEquals("Invalid not trimmed", "Some other text", conf
                 .getString("space.testInvalid"));
     }
+
+    /**
+     * Tests the copy constructor.
+     */
+    @Test
+    public void testInitCopy() throws ConfigurationException
+    {
+        XMLConfigurationSource src2 = new XMLConfigurationSource(source);
+        ConfigurationAssert.assertEquals(source, src2);
+    }
+
+    /**
+     * Tests that the XML document is reset by the copy constructor.
+     */
+    @Test
+    public void testInitCopyDocument()
+    {
+        XMLConfigurationSource copy = new XMLConfigurationSource(source);
+        assertNull("Document was copied, too", copy.getDocument());
+    }
+
+    /**
+     * Tests whether element references were cleared by the copy constructor.
+     */
+    @Test
+    public void testInitCopyClearReferences()
+    {
+        XMLConfigurationSource copy = new XMLConfigurationSource(source);
+        ConfigurationNode root = copy.getRootNode();
+        for (ConfigurationNode node : root.getChildren())
+        {
+            assertNull("Reference was not cleared", node.getReference());
+        }
+    }
+
+    /**
+     * Tests whether a configuration source created by the copy constructor can
+     * be correctly saved and reloaded.
+     */
+    @Test
+    public void testInitCopySave() throws ConfigurationException
+    {
+        XMLConfigurationSource copy = new XMLConfigurationSource(source);
+        conf = new ConfigurationImpl<ConfigurationNode>(copy);
+        Configuration<ConfigurationNode> conf2 = reload();
+        // Known issue: For elements with the xml:space="preserve" attribute
+        // that have child elements the number of line feeds is changed.
+        // Therefore the space property has a different value after reloading.
+        conf.clearProperty("space");
+        conf2.clearProperty("space");
+        ConfigurationAssert.assertEquals(conf, conf2);
+    }
+
+    /**
+     * Tests saving a configuration that was created from a hierarchical sub
+     * configuration.
+     */
+    @Test
+    public void testInitCopySaveAfterCreateWithCopyConstructorSub()
+            throws ConfigurationException
+    {
+        Configuration<ConfigurationNode> hc = conf.configurationAt("element2");
+        XMLConfigurationSource copy = new XMLConfigurationSource(hc
+                .getConfigurationSource());
+        conf = new ConfigurationImpl<ConfigurationNode>(copy);
+        Configuration<ConfigurationNode> conf2 = reload();
+        ConfigurationAssert.assertEquals(conf, conf2);
+        XMLConfigurationSource src = (XMLConfigurationSource) conf2
+                .getConfigurationSource();
+        assertEquals("Wrong name of root element", "element2", src
+                .getRootElementName());
+    }
+
+    /**
+     * Tests whether the name of the root element is copied when a configuration
+     * is created using the copy constructor.
+     */
+    @Test
+    public void testInitCopyRootName() throws ConfigurationException,
+            IOException
+    {
+        final String rootName = "rootElement";
+        final String xml = "<" + rootName + "><test>true</test></" + rootName
+                + ">";
+        source.clear();
+        source.load(new StringReader(xml));
+        XMLConfigurationSource copy = new XMLConfigurationSource(source);
+        assertEquals("Wrong name of root element", rootName, copy
+                .getRootElementName());
+        copy.getCapability(LocatorSupport.class).save(testOutLocator);
+        copy = new XMLConfigurationSource();
+        copy.getCapability(LocatorSupport.class).load(testOutLocator);
+        assertEquals("Wrong name of root element after save", rootName, copy
+                .getRootElementName());
+    }
+
+    /**
+     * Tests whether the name of the root element is copied for a configuration
+     * for which not yet a document exists.
+     */
+    @Test
+    public void testInitCopyRootNameNoDocument() throws ConfigurationException
+    {
+        final String rootName = "rootElement";
+        source = new XMLConfigurationSource();
+        source.setRootElementName(rootName);
+        conf = new ConfigurationImpl<ConfigurationNode>(source);
+        conf.setProperty("test", Boolean.TRUE);
+        XMLConfigurationSource copy = new XMLConfigurationSource(source);
+        assertEquals("Wrong name of root element", rootName, copy
+                .getRootElementName());
+        copy.getCapability(LocatorSupport.class).save(testOutLocator);
+        copy = new XMLConfigurationSource();
+        copy.getCapability(LocatorSupport.class).load(testOutLocator);
+        assertEquals("Wrong name of root element after save", rootName, copy
+                .getRootElementName());
+    }
+
+    /**
+     * Tests the copy constructor if null is passed in.
+     */
+    @Test
+    public void testInitCopyNull()
+    {
+        source = new XMLConfigurationSource(null);
+        conf = new ConfigurationImpl<ConfigurationNode>(source);
+        assertTrue("Not empty", conf.isEmpty());
+    }
 }
