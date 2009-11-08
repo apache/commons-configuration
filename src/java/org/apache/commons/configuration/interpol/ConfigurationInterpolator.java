@@ -116,6 +116,13 @@ public class ConfigurationInterpolator extends StrLookup
      */
     public static final String PREFIX_CONSTANTS = "const";
 
+    /**
+     * Constant for the prefix of the standard lookup object for resolving
+     * environment properties.
+     * @since 1.7
+     */
+    public static final String PREFIX_ENVIRONMENT = "env";
+
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
@@ -376,5 +383,6 @@ public class ConfigurationInterpolator extends StrLookup
         globalLookups = new HashMap();
         globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
         globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
+        globalLookups.put(PREFIX_ENVIRONMENT, new EnvironmentLookup());
     }
 }

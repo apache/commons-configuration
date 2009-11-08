@@ -24,11 +24,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-
-import junit.framework.TestCase;
 
 /**
  * A test class for some of the basic functionality implemented by
@@ -252,6 +252,31 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
         AbstractConfiguration config = setUpDestConfig();
         config.append(null);
         ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+    }
+
+    /**
+     * Tests whether environment variables can be interpolated.
+     */
+    public void testInterpolateEnvironmentVariables()
+    {
+        AbstractConfiguration config = new TestConfigurationImpl(
+                new PropertiesConfiguration());
+        EnvironmentConfiguration envConfig = new EnvironmentConfiguration();
+        Map env = new HashMap();
+        for (Iterator it = envConfig.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            String propKey = "envtest." + key;
+            env.put(propKey, envConfig.getProperty(key));
+            config.addProperty(propKey, "${env:" + key + "}");
+        }
+        assertFalse("No environment properties", env.isEmpty());
+        for (Iterator it = env.entrySet().iterator(); it.hasNext();)
+        {
+            Map.Entry e = (Map.Entry) it.next();
+            assertEquals("Wrong value for " + e.getKey(), e.getValue(), config
+                    .getString((String) e.getKey()));
+        }
     }
 
     /**
