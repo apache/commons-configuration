@@ -165,7 +165,7 @@ application.title = ${application.name} ${application.version}
       variables are interpreted as the keys of other properties. This is only a
       special case, the general syntax of a variable name is
       <code>${prefix:name}</code>. The prefix tells Commons Configuration that
-      the variable is to evaluated in a certain context. We have already seen
+      the variable is to be evaluated in a certain context. We have already seen
       that the context is the current configuration instance if the prefix is
       missing. The following other prefix names are supported by default:
       <table border="1">
@@ -190,6 +190,11 @@ application.title = ${application.name} ${application.version}
         specified class will be loaded and the value of this field will be
         obtained.</td>
       </tr>
+      <tr>
+        <td valign="top">env</td>
+        <td>Variables can also reference OS-specific environment properties.
+        This is indicated by the <code>env</code> prefix.</td>
+      </tr>
       </table>
       Here are some examples (again using properties syntax):
     </p>
@@ -197,6 +202,8 @@ application.title = ${application.name} ${application.version}
 user.file = ${sys:user.home}/settings.xml
 
 action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
+
+java.home = ${env:JAVA_HOME}
 ]]></source>
     <p>
       If a variable cannot be resolved, e.g. because the name is invalid or an
@@ -204,7 +211,7 @@ action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
       including the dollar sign and the curly braces.
     </p>
     </subsection>
-    
+
     <subsection name="Customizing interpolation">
     <p>
       This sub section goes a bit behind the scenes of interpolation and
