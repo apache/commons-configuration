@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
@@ -55,6 +56,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
                 new BaseConfiguration())
         {
             // return an iterator that does not support remove operations
+            @Override
             public Iterator<String> getKeys()
             {
                 Collection<String> keyCol = new ArrayList<String>();
@@ -306,6 +308,30 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     }
 
     /**
+     * Tests whether environment variables can be interpolated.
+     */
+    public void testInterpolateEnvironmentVariables()
+    {
+        AbstractConfiguration config = new TestConfigurationImpl(
+                new PropertiesConfiguration());
+        EnvironmentConfiguration envConfig = new EnvironmentConfiguration();
+        Map<String, String> env = new HashMap<String, String>();
+        for (Iterator<String> it = envConfig.getKeys(); it.hasNext();)
+        {
+            String key =  it.next();
+            String propKey = "envtest." + key;
+            env.put(propKey, envConfig.getString(key));
+            config.addProperty(propKey, "${env:" + key + "}");
+        }
+        assertFalse("No environment properties", env.isEmpty());
+        for (Map.Entry<String, String> e : env.entrySet())
+        {
+            assertEquals("Wrong value for " + e.getKey(), e.getValue(), config
+                    .getString(e.getKey()));
+        }
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.
@@ -416,6 +442,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             config = wrappedConfig;
         }
 
+        @Override
         protected void addPropertyDirect(String key, Object value)
         {
             config.addPropertyDirect(key, value);
@@ -441,6 +468,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
             return config.isEmpty();
         }
 
+        @Override
         protected void clearPropertyDirect(String key)
         {
             config.clearPropertyDirect(key);

@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-399">
+        Default variable interpolation now supports the env: prefix for
+        referencing environment variables.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-393">
         BaseConfiguration.clone() now also clones collections stored in the
         internal map. This causes list properties to be handled correctly.

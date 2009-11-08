@@ -116,6 +116,12 @@ public class ConfigurationInterpolator extends StrLookup
      */
     public static final String PREFIX_CONSTANTS = "const";
 
+    /**
+     * Constant for the prefix of the standard lookup object for resolving
+     * environment properties.
+     */
+    public static final String PREFIX_ENVIRONMENT = "env";
+
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
@@ -127,7 +133,7 @@ public class ConfigurationInterpolator extends StrLookup
 
     /** Stores the default lookup object. */
     private StrLookup defaultLookup;
-    
+
     /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
     private ConfigurationInterpolator parentInterpolator;
 
@@ -271,6 +277,7 @@ public class ConfigurationInterpolator extends StrLookup
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
+    @Override
     public String lookup(String var)
     {
         if (var == null)
@@ -290,7 +297,7 @@ public class ConfigurationInterpolator extends StrLookup
             if (value != null)
             {
                 return value;
-            } 
+            }
         }
         String value = fetchNoPrefixLookup().lookup(var);
         if (value == null && getParentInterpolator() != null) {
@@ -330,10 +337,10 @@ public class ConfigurationInterpolator extends StrLookup
         }
         return lookup;
     }
-    
+
     /**
      * Registers the local lookup instances for the given interpolator.
-     * 
+     *
      * @param interpolator the instance receiving the local lookups
      * @since upcoming
      */
@@ -343,8 +350,8 @@ public class ConfigurationInterpolator extends StrLookup
 
     /**
      * Sets the parent interpolator. This object is used if the interpolation is nested hierarchically
-     * and the current interpolation object cannot resolve a variable. 
-     * 
+     * and the current interpolation object cannot resolve a variable.
+     *
      * @param parentInterpolator the parent interpolator object or <code>null</code>
      * @since upcoming
      */
@@ -355,7 +362,7 @@ public class ConfigurationInterpolator extends StrLookup
     /**
      * Requests the parent interpolator. This object is used if the interpolation is nested hierarchically
      * and the current interpolation
-     * 
+     *
      * @return the parent interpolator or <code>null</code>
      * @since upcoming
      */
@@ -369,5 +376,6 @@ public class ConfigurationInterpolator extends StrLookup
         globalLookups = new HashMap<String, StrLookup>();
         globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
         globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
+        globalLookups.put(PREFIX_ENVIRONMENT, new EnvironmentLookup());
     }
 }

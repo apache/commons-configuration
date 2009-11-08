@@ -190,6 +190,11 @@ application.title = ${application.name} ${application.version}
         specified class will be loaded and the value of this field will be
         obtained.</td>
       </tr>
+      <tr>
+        <td valign="top">env</td>
+        <td>Variables can also reference OS-specific environment properties.
+        This is indicated by the <code>env</code> prefix.</td>
+      </tr>
       </table>
       Here are some examples (again using properties syntax):
     </p>
@@ -197,6 +202,8 @@ application.title = ${application.name} ${application.version}
 user.file = ${sys:user.home}/settings.xml
 
 action.key = ${const:java.awt.event.KeyEvent.VK_CANCEL}
+
+java.home = ${env:JAVA_HOME}
 ]]></source>
     <p>
       If a variable cannot be resolved, e.g. because the name is invalid or an
