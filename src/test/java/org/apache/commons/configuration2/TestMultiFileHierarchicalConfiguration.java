@@ -27,11 +27,15 @@ import java.io.Writer;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration2.combined.CombinedConfiguration;
+import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.lang.mutable.MutableObject;
 import org.xml.sax.SAXParseException;
 
 /**
  * Unit test for simple MultiConfigurationTest.
+ * @version $Id$
  */
 public class TestMultiFileHierarchicalConfiguration extends TestCase
 {
@@ -252,19 +256,31 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         x.setDelimiterParsingDisabled(true);
         x.load();
         x.setProperty("rowsPerPage", "test");
-        //Insure orginal timestamp and new timestamp aren't the same second.
+        //Insure original timestamp and new timestamp aren't the same second.
         Thread.sleep(1100);
         x.save();
         System.setProperty("Id", "3001");
-        try
-        {
-            config.getInt("rowsPerPage");
-            fail("No exception was thrown");
-        }
-        catch (Exception ex)
-        {
 
+        // reload should fail, register an error lister which reports this error
+        final MutableObject exception = new MutableObject();
+        ConfigurationErrorListener l = new ConfigurationErrorListener()
+        {
+            public void configurationError(ConfigurationErrorEvent event)
+            {
+                if (event.getType() == AbstractHierarchicalFileConfiguration.EVENT_RELOAD)
+                {
+                    exception.setValue(event.getCause());
+                }
+            }
+        };
+        for (int i = 0; i < config.getNumberOfConfigurations(); i++)
+        {
+            ((AbstractConfiguration) config.getConfiguration(i))
+                    .addErrorListener(l);
         }
+
+        config.getInt("rowsPerPage");
+        assertNotNull("No exception received", exception.getValue());
 
         output.delete();
     }
