@@ -46,7 +46,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id:  $
+ * @version $Id$
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
 {

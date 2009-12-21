@@ -37,13 +37,13 @@ import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.ConfigurationEvent;
 import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.logging.Log;
 import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXParseException;
 
@@ -52,11 +52,12 @@ import org.xml.sax.SAXParseException;
  * can be specified by a pattern allowing applications to be multi-tenant.  For example,
  * providing a pattern of "file:///opt/config/${product}/${client}/config.xml" will result in
  * "product" and "client" being resolved on every call. The configuration resulting from the
+ * resolved pattern will be saved for future access.
  * @since 1.6
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
- * @version $Id:  $resolved pattern will be saved for future access.
+ * @version $Id$
  *
  */
 public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFileConfiguration
@@ -67,6 +68,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      */
     private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
     {
+        @Override
         protected synchronized Boolean initialValue()
         {
             return Boolean.FALSE;
@@ -173,11 +175,13 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.attributeSplittingDisabled = attributeSplittingDisabled;
     }
 
+    @Override
     public ReloadingStrategy getReloadingStrategy()
     {
         return fileStrategy;
     }
 
+    @Override
     public void setReloadingStrategy(ReloadingStrategy strategy)
     {
         this.fileStrategy = strategy;
@@ -203,116 +207,139 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.ignoreException = ignoreException;
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         this.getConfiguration().addProperty(key, value);
     }
 
+    @Override
     public void clear()
     {
         this.getConfiguration().clear();
     }
 
+    @Override
     public void clearProperty(String key)
     {
         this.getConfiguration().clearProperty(key);
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         return this.getConfiguration().containsKey(key);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         return this.getConfiguration().getBigDecimal(key, defaultValue);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key)
     {
         return this.getConfiguration().getBigDecimal(key);
     }
 
+    @Override
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         return this.getConfiguration().getBigInteger(key, defaultValue);
     }
 
+    @Override
     public BigInteger getBigInteger(String key)
     {
         return this.getConfiguration().getBigInteger(key);
     }
 
+    @Override
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return this.getConfiguration().getBoolean(key, defaultValue);
     }
 
+    @Override
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
         return this.getConfiguration().getBoolean(key, defaultValue);
     }
 
+    @Override
     public boolean getBoolean(String key)
     {
         return this.getConfiguration().getBoolean(key);
     }
 
+    @Override
     public byte getByte(String key, byte defaultValue)
     {
         return this.getConfiguration().getByte(key, defaultValue);
     }
 
+    @Override
     public Byte getByte(String key, Byte defaultValue)
     {
         return this.getConfiguration().getByte(key, defaultValue);
     }
 
+    @Override
     public byte getByte(String key)
     {
         return this.getConfiguration().getByte(key);
     }
 
+    @Override
     public double getDouble(String key, double defaultValue)
     {
         return this.getConfiguration().getDouble(key, defaultValue);
     }
 
+    @Override
     public Double getDouble(String key, Double defaultValue)
     {
         return this.getConfiguration().getDouble(key, defaultValue);
     }
 
+    @Override
     public double getDouble(String key)
     {
         return this.getConfiguration().getDouble(key);
     }
 
+    @Override
     public float getFloat(String key, float defaultValue)
     {
         return this.getConfiguration().getFloat(key, defaultValue);
     }
 
+    @Override
     public Float getFloat(String key, Float defaultValue)
     {
         return this.getConfiguration().getFloat(key, defaultValue);
     }
 
+    @Override
     public float getFloat(String key)
     {
         return this.getConfiguration().getFloat(key);
     }
 
+    @Override
     public int getInt(String key, int defaultValue)
     {
         return this.getConfiguration().getInt(key, defaultValue);
     }
 
+    @Override
     public int getInt(String key)
     {
         return this.getConfiguration().getInt(key);
     }
 
+    @Override
     public Integer getInteger(String key, Integer defaultValue)
     {
         return this.getConfiguration().getInteger(key, defaultValue);
@@ -548,61 +575,73 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public void load() throws ConfigurationException
     {
         this.getConfiguration();
     }
 
+    @Override
     public void load(String fileName) throws ConfigurationException
     {
         this.getConfiguration().load(fileName);
     }
 
+    @Override
     public void load(File file) throws ConfigurationException
     {
         this.getConfiguration().load(file);
     }
 
+    @Override
     public void load(URL url) throws ConfigurationException
     {
         this.getConfiguration().load(url);
     }
 
+    @Override
     public void load(InputStream in) throws ConfigurationException
     {
         this.getConfiguration().load(in);
     }
 
+    @Override
     public void load(InputStream in, String encoding) throws ConfigurationException
     {
         this.getConfiguration().load(in, encoding);
     }
 
+    @Override
     public void save() throws ConfigurationException
     {
         this.getConfiguration().save();
     }
 
+    @Override
     public void save(String fileName) throws ConfigurationException
     {
         this.getConfiguration().save(fileName);
     }
 
+    @Override
     public void save(File file) throws ConfigurationException
     {
         this.getConfiguration().save(file);
     }
 
+    @Override
     public void save(URL url) throws ConfigurationException
     {
         this.getConfiguration().save(url);
     }
 
+    @Override
     public void save(OutputStream out) throws ConfigurationException
     {
         this.getConfiguration().save(out);
     }
 
+    @Override
     public void save(OutputStream out, String encoding) throws ConfigurationException
     {
         this.getConfiguration().save(out, encoding);
@@ -627,6 +666,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         if (event.getSource() instanceof XMLConfiguration)
@@ -639,6 +679,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public void configurationError(ConfigurationErrorEvent event)
     {
         if (event.getSource() instanceof XMLConfiguration)
@@ -668,6 +709,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      * @param key The key to resolve.
      * @return The value of the key.
      */
+    @Override
     protected Object resolveContainerStore(String key)
     {
         if (recursive.get())
@@ -718,9 +760,11 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         {
             XMLConfiguration configuration = new XMLConfiguration()
             {
+                @Override
                 public void load() throws ConfigurationException
                 {
                 }
+                @Override
                 public void save() throws ConfigurationException
                 {
                 }
@@ -771,7 +815,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         configurationsMap.putIfAbsent(path, configuration);
         return configurationsMap.get(path);
     }
-    
+
     private boolean isThrowable(Throwable throwable)
     {
         if (!ignoreException)
