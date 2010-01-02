@@ -17,15 +17,15 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.FileReader;
 import java.io.Writer;
-import java.io.FileWriter;
 import java.util.Collection;
-import java.util.Set;
-import java.util.List;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -1011,6 +1011,7 @@ public class TestVFSConfigurationBuilder extends TestCase
         CombinedConfiguration config = factory.getConfiguration(true);
         assertNotNull(config);
         verify("1001", config, 15);
+        Thread.sleep(1100);
         XMLConfiguration x = new XMLConfiguration(output);
         x.setProperty("rowsPerPage", "50");
         x.save();
