@@ -38,9 +38,9 @@ import junit.framework.TestCase;
 
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
+import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -78,6 +78,12 @@ public class TestXMLConfiguration extends TestCase
     private File testSaveConf = new File("target/testsave.xml");
     private File testSaveFile = new File("target/testsample2.xml");
     private String testFile2 = new File("conf/sample.xml").getAbsolutePath();
+
+    /** Constant for the number of test threads. */
+    private static final int THREAD_COUNT = 5;
+
+    /** Constant for the number of loops in tests with multiple threads. */
+    private static final int LOOP_COUNT = 100;
 
     private XMLConfiguration conf;
 
@@ -658,7 +664,7 @@ public class TestXMLConfiguration extends TestCase
             conf.load();
             assertEquals(1, conf.getInt("test"));
 
-            for (int i = 1; i < 50000; ++i)
+            for (int i = 1; i < LOOP_COUNT; ++i)
             {
                assertEquals(1, conf.getInt("test"));
             }
@@ -1638,7 +1644,7 @@ public class TestXMLConfiguration extends TestCase
 
         assertTrue("Property not found", config.getProperty("test.short") != null);
 
-        Thread testThreads[] = new Thread[5];
+        Thread testThreads[] = new Thread[THREAD_COUNT];
 
         for (int i = 0; i < testThreads.length; ++i)
         {
@@ -1646,7 +1652,7 @@ public class TestXMLConfiguration extends TestCase
             testThreads[i].start();
         }
 
-        for (int i = 0; i < 2000; i++)
+        for (int i = 0; i < LOOP_COUNT; i++)
         {
             assertTrue("Property not found", config.getProperty("test.short") != null);
         }
@@ -1667,7 +1673,7 @@ public class TestXMLConfiguration extends TestCase
         }
         public void run()
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < LOOP_COUNT; i++)
             {
                 config.reload();
             }
