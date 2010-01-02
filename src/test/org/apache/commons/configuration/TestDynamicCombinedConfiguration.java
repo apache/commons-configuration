@@ -18,26 +18,33 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.FileReader;
 import java.io.Writer;
-import java.io.FileWriter;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
 
 public class TestDynamicCombinedConfiguration extends TestCase
 {
-    private static String PATTERN ="${sys:Id}";
+    private static String PATTERN = "${sys:Id}";
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
     private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
     private static final File MULTI_TENENT_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder4.xml");
-     private static final File MULTI_DYNAMIC_FILE = new File(
+    private static final File MULTI_DYNAMIC_FILE = new File(
             "conf/testMultiTenentConfigurationBuilder5.xml");
-    
+
+    /** Constant for the number of test threads. */
+    private static final int THREAD_COUNT = 3;
+
+    /** Constant for the number of loops in the multi-thread tests. */
+    private static final int LOOP_COUNT = 100;
+
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
@@ -69,20 +76,18 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
     public void testConcurrentGetAndReload() throws Exception
     {
-        final int threadCount = 5;
-        final int loopCount = 500;
         System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
         CombinedConfiguration config = factory.getConfiguration(true);
 
         assertEquals(config.getString("rowsPerPage"), "50");
-        Thread testThreads[] = new Thread[threadCount];
-        int failures[] = new int[threadCount];
+        Thread testThreads[] = new Thread[THREAD_COUNT];
+        int failures[] = new int[THREAD_COUNT];
 
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, loopCount, false, null, "50");
+            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, false, null, "50");
             testThreads[i].start();
         }
 
@@ -97,8 +102,6 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
     public void testConcurrentGetAndReload2() throws Exception
     {
-        final int threadCount = 5;
-        final int loopCount = 500;
         System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
@@ -106,13 +109,13 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
-        Thread testThreads[] = new Thread[threadCount];
-        int failures[] = new int[threadCount];
+        Thread testThreads[] = new Thread[THREAD_COUNT];
+        int failures[] = new int[THREAD_COUNT];
         System.setProperty("Id", "2002");
         assertEquals(config.getString("rowsPerPage"), "25");
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, loopCount, false, null, "25");
+            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, false, null, "25");
             testThreads[i].start();
         }
 
@@ -128,8 +131,6 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
-        final int threadCount = 5;
-        final int loopCount = 500;
         System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
@@ -137,13 +138,13 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
-        Thread testThreads[] = new Thread[threadCount];
-        int failures[] = new int[threadCount];
+        Thread testThreads[] = new Thread[THREAD_COUNT];
+        int failures[] = new int[THREAD_COUNT];
         String[] ids = new String[] {null, "2002", "3001", "3002", "3003"};
         String[] expected = new String[] {"50", "25", "15", "25", "50"};
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, loopCount, true, ids[i], expected[i]);
+            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, true, ids[i], expected[i]);
             testThreads[i].start();
         }
 
