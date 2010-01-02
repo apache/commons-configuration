@@ -17,14 +17,22 @@
 
 package org.apache.commons.configuration;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.xml.sax.SAXParseException;
 
-import java.io.*;
-
 /**
  * Unit test for simple MultiConfigurationTest.
+ *
+ * @version $Id:$
  */
 public class TestMultiFileHierarchicalConfiguration extends TestCase
 {
@@ -63,7 +71,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
 
     public void testSchemaValidationError() throws Exception
     {
-        System.clearProperty("Id");
+        System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -86,7 +94,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
 
     public void testSchemaValidation() throws Exception
     {
-        System.clearProperty("Id");
+        System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -97,7 +105,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
 
     public void testMissingFile() throws Exception
     {
-        System.clearProperty("Id");
+        System.getProperties().remove("Id");
         DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
         factory.setFile(MULTI_TENENT_FILE);
         CombinedConfiguration config = factory.getConfiguration(true);
@@ -265,7 +273,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         }
 
         output.delete();
-    }    
+    }
 
     private void copyFile(File input, File output) throws IOException
     {
