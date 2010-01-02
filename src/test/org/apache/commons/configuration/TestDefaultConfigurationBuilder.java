@@ -21,26 +21,27 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.List;
-import java.util.Iterator;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.WriterAppender;
-import org.apache.log4j.Logger;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
+import org.apache.log4j.WriterAppender;
 
 /**
  * Test class for DefaultConfigurationBuilder.
@@ -986,15 +987,19 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public void testExpression() throws Exception
     {
-        factory.setFile(EXPRESSION_FILE);
-        factory.setAttributeSplittingDisabled(true);
-        System.getProperties().remove("Id");
-        org.slf4j.MDC.clear();
+        if (SystemUtils.isJavaVersionAtLeast(150))
+        {
+            factory.setFile(EXPRESSION_FILE);
+            factory.setAttributeSplittingDisabled(true);
+            System.getProperties().remove("Id");
+            org.slf4j.MDC.clear();
 
-        CombinedConfiguration config = factory.getConfiguration(true);
-        assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
+            CombinedConfiguration config = factory.getConfiguration(true);
+            assertTrue("Incorrect configuration",
+                    config instanceof DynamicCombinedConfiguration);
 
-        verify("1001", config, 15);
+            verify("1001", config, 15);
+        }
     }
 
     private void verify(String key, CombinedConfiguration config, int rows)
