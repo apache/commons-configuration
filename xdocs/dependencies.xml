@@ -178,7 +178,7 @@
                   Java 1.5 or higher this is not a problem; here everything
                   works out of the box. With Java 1.4 you need further libraries
                   to make these advanced features working. We used
-                  <a href="http://xml.apache.org/xerces2-j/">Xerces 2.3.0</a>,
+                  <a href="http://xml.apache.org/xerces2-j/">Xerces 2.6.2</a>,
                   and <a href="http://xml.apache.org/commons/">XML APIs 1.0.b2</a>.
                 </li>
               </ul>
