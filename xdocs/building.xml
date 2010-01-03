@@ -29,10 +29,7 @@
           <p>
             Commons Configuration can be built using
             <a href="http://maven.apache.org">maven</a> or
-            <a href="http://ant.apache.org">ant</a>. While building on a JDK
-            1.4 and higher should be no problem for JDK 1.3 (which is the
-            minimum required JDK) some preparations are necessary. This is
-            covered in full detail in the Building with JDK 1.3 section below.
+            <a href="http://ant.apache.org">ant</a>.
           </p>
         </section>
 
@@ -77,22 +74,6 @@
             </ol>
           </p>
         </section>
-        <section name="Maven 1 Goals">
-          <p>
-            To build the Configuration jar file using Maven 1, change into the directory where you
-            unzipped the source distribution or where you checked out the sources from SVN and run
-            "maven jar". The result will be in the (newly created) "target"
-            subdirectory.
-          </p>
-          <p>
-            To build the Javadocs, run "maven javadoc".
-            The result will be in "target/docs/apidocs".
-          </p>
-          <p>
-            To build the full website, run "maven site".
-            The result will be in "target/docs".
-          </p>
-        </section>
 
         <section name="Ant Goals">
           <p>
@@ -103,86 +84,6 @@
             To build the Javadocs, run "ant javadoc".
             The result will be in "target/docs/apidocs".
           </p>
-        </section>
-        
-        <section name="Building with JDK 1.3">
-          <p>
-            If you want to build Commons Configuration on a JDK 1.3, you will
-            face two problems:
-          </p>
-          <p>
-            The first problem is that JDK 1.3 does not contain the JDBC 2.0
-            standard extensions, which are used by the
-            <code>DatabaseConfiguration</code> class. Unfortunately, due to legal
-            issues, the jar file containing these extensions cannot be
-            distributed through the typical maven repositories and automatically
-            downloaded. To resolve this issue perform the following steps:
-          </p>
-          <p>
-            <ul>
-              <li>Download the JDBC 2.0 Optional Package from
-              <a href="http://java.sun.com/products/jdbc/download.html">
-              http://java.sun.com/products/jdbc/download.html</a> and store
-              the jdbc-stdext-2.0.jar somewhere on your hard disk.</li>
-              <li>Create a <code>build.properties</code> file in the Configuration
-              root directory that must contain the following line:<br/>
-              <code>dependency.jdbc = <em>&lt;path to jdbc-stdext-2.0.jar&gt;</em></code></li>
-            </ul>
-          </p>
-          <p>
-            The second problem is related to a test class for
-            <code>DatabaseConfiguration</code> that makes use of
-            <a href="http://hsqldb.org">hsqldb</a>. At the time of writing this, the
-            hsqldb jar files distributed on the ibiblio maven repository only
-            support JDK 1.4 and higher. This makes the tests fail with a class
-            not found exception for <code>java.sql.SavePoint</code>. There are
-            some workarounds for this problem:
-          </p>
-          <p>
-            <ul>
-              <li>Disable the failing test class
-              (<code>org.apache.commons.configuration.TestDatabaseConfiguration</code>)
-              in the build script. For instance if building with maven, this can
-              be done with an <code>excludes</code> element in the
-              <code>unitTest</code> section of <code>project.xml</code>.</li>
-              <li>It is possible to download a hsqldb distribution and recompile
-              on JDK 1.3. The jar that is created this way will cause no
-              problems on a JDK 1.3.</li>
-              <li>Another solution would be to run maven on a JDK 1.4 or higher and use
-              the <code>maven.compile.executable</code> property to point to
-              a JDK 1.3 compiler. This will ensure that the classes are compiled
-              on JDK 1.3, but the tests are run on the JDK maven is executing.
-              Refer to the documentation of the
-              <a href="http://maven.apache.org/maven-1.x/reference/plugins/java/">
-              Maven Java Plug-in</a> for further information.</li>
-            </ul>
-          </p>
-          <p>
-            If these problems are solved, the build can be performed as
-            described above.
-          </p>
-        </section>
-
-        <section name="Setting custom build parameters">
-          <p>
-            Both the maven 1 and the ant build script support a file called
-            <code>build.properties</code> that can contain custom properties
-            definitions. If this file exists in the project's root directory,
-            it will be read and the properties it defines will be added to the
-            running build script. This mechanism allows for customizing the
-            build process without the need of changing the main build scripts.
-          </p>
-          <p>
-            One use case for setting custom build properties would be to build
-            for a specific JDK version: If you build the jar on a JDK 1.5 for
-            instance, the classes won't be compatible with older JDK versions.
-            To enforce compatibility you can create a <code>build.properties</code>
-            file containing the following maven specific settings:
-          </p>
-          <source><![CDATA[
-maven.compile.source = 1.3
-maven.compile.target = 1.3
-]]></source>
         </section>
     </body>
 
