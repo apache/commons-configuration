@@ -766,7 +766,7 @@ public class XMLConfigurationSource extends InMemoryConfigurationSource
         {
             text = text.trim();
         }
-        if (text.length() > 0 || !hasChildren(node))
+        if (text.length() > 0 || (!hasChildren(node) && node != getRootNode()))
         {
             node.setValue(text);
         }

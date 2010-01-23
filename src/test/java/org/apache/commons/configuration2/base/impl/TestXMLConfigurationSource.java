@@ -1124,4 +1124,17 @@ public class TestXMLConfigurationSource
         conf = new ConfigurationImpl<ConfigurationNode>(source);
         assertTrue("Not empty", conf.isEmpty());
     }
+
+    /**
+     * Tests whether an empty configuration that was saved and reloaded is still
+     * considered empty.
+     */
+    @Test
+    public void testIsEmptyAfterReload() throws ConfigurationException
+    {
+        source.clear();
+        assertTrue("Not empty", conf.isEmpty());
+        Configuration<ConfigurationNode> conf2 = reload();
+        assertTrue("Not empty after reload", conf2.isEmpty());
+    }
 }
