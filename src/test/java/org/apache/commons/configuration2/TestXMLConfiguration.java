@@ -936,6 +936,18 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests the isEmpty() method for an empty configuration that was reloaded.
+     */
+    public void testEmptyReload() throws ConfigurationException
+    {
+        XMLConfiguration config = new XMLConfiguration();
+        assertTrue("Newly created configuration not empty", config.isEmpty());
+        config.save(testSaveConf);
+        config.load(testSaveConf);
+        assertTrue("Reloaded configuration not empty", config.isEmpty());
+    }
+
+    /**
      * Tests whether the encoding is correctly detected by the XML parser. This
      * is done by loading an XML file with the encoding "UTF-16". If this
      * encoding is not detected correctly, an exception will be thrown that

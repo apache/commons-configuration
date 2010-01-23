@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -164,7 +165,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author J&ouml;rg Schaible
  * @author Oliver Heger
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     implements EntityResolver, EntityRegistry
@@ -569,6 +570,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * Removes all properties from this configuration. If this configuration
      * was loaded from a file, the associated DOM document is also cleared.
      */
+    @Override
     public void clear()
     {
         super.clear();
@@ -637,7 +639,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             text = text.trim();
         }
-        if (text.length() > 0 || !hasChildren(node))
+        if (text.length() > 0 || (!hasChildren(node) && node != getRootNode()))
         {
             node.setValue(text);
         }
@@ -814,6 +816,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 // register an error handler which detects validation errors
                 result.setErrorHandler(new DefaultHandler()
                 {
+                    @Override
                     public void error(SAXParseException ex) throws SAXException
                     {
                         throw ex;
@@ -913,6 +916,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param in the input stream
      * @throws ConfigurationException if an error occurs
      */
+    @Override
     public void load(InputStream in) throws ConfigurationException
     {
         load(new InputSource(in));
@@ -962,7 +966,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         }
         catch (Exception e)
         {
-            this.getLogger().debug("Unable to load the configuraton", e);           
+            this.getLogger().debug("Unable to load the configuraton", e);
             throw new ConfigurationException("Unable to load the configuration", e);
         }
     }
@@ -1070,6 +1074,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @return the copy
      */
+    @Override
     public Object clone()
     {
         XMLConfiguration copy = (XMLConfiguration) super.clone();
@@ -1199,6 +1204,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @since 1.5
      * @deprecated Use getEntityResolver().resolveEntity()
      */
+    @Deprecated
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
     {
