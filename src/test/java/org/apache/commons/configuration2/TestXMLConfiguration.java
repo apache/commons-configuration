@@ -38,9 +38,9 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
+import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -82,6 +82,7 @@ public class TestXMLConfiguration extends TestCase
 
     private XMLConfiguration conf;
 
+    @Override
     protected void setUp() throws Exception
     {
         conf = new XMLConfiguration();
@@ -200,7 +201,7 @@ public class TestXMLConfiguration extends TestCase
         // test multiple sibling elements
         property = conf.getProperty("list.sublist.item");
         assertNotNull(property);
-        assertTrue(property instanceof List);
+        assertTrue(property instanceof List<?>);
         List<?> list = (List<?>)property;
         assertEquals(2, list.size());
         assertEquals("five", list.get(0));
@@ -209,7 +210,7 @@ public class TestXMLConfiguration extends TestCase
         // test multiple, disjoined elements
         property = conf.getProperty("list.item");
         assertNotNull(property);
-        assertTrue(property instanceof List);
+        assertTrue(property instanceof List<?>);
         list = (List<?>)property;
         assertEquals(4, list.size());
         assertEquals("one", list.get(0));
@@ -220,7 +221,7 @@ public class TestXMLConfiguration extends TestCase
         // test multiple, disjoined attributes
         property = conf.getProperty("list.item[@name]");
         assertNotNull(property);
-        assertTrue(property instanceof List);
+        assertTrue(property instanceof List<?>);
         list = (List<?>)property;
         assertEquals(2, list.size());
         assertEquals("one", list.get(0));
@@ -403,7 +404,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testLoadFromURL() throws Exception
     {
-        URL url = new File(testProperties).toURL();
+        URL url = new File(testProperties).toURI().toURL();
         conf = new XMLConfiguration(url);
         assertEquals("value", conf.getProperty("element"));
         assertEquals(url, conf.getURL());
@@ -500,7 +501,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testSaveToURL() throws Exception
     {
-        conf.save(testSaveConf.toURL());
+        conf.save(testSaveConf.toURI().toURL());
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
         checkSavedConfig(checkConfig);
@@ -673,7 +674,7 @@ public class TestXMLConfiguration extends TestCase
             }
         }
     } */
-    
+
     /**
      * Tests access to tag names with delimiter characters.
      */
@@ -701,6 +702,7 @@ public class TestXMLConfiguration extends TestCase
         factory.setValidating(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         builder.setErrorHandler(new DefaultHandler() {
+            @Override
             public void error(SAXParseException ex) throws SAXException
             {
                 throw ex;
@@ -1399,7 +1401,7 @@ public class TestXMLConfiguration extends TestCase
         conf.save(testSaveConf);
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
-        checkConfig.registerEntityId(publicId, dtdFile.toURL());
+        checkConfig.registerEntityId(publicId, dtdFile.toURI().toURL());
         checkConfig.setValidating(true);
         checkSavedConfig(checkConfig);
     }
