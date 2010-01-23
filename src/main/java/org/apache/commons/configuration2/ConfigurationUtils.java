@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -58,6 +59,9 @@ public final class ConfigurationUtils
 
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
+
+    /** Constant for the encoding for URLs. */
+    private static final String ENCODING = "UTF-8";
 
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class.getName());
@@ -583,7 +587,15 @@ public final class ConfigurationUtils
     {
         if (PROTOCOL_FILE.equals(url.getProtocol()))
         {
-            return new File(URLDecoder.decode(url.getPath()));
+            try
+            {
+                return new File(URLDecoder.decode(url.getPath(), ENCODING));
+            }
+            catch (UnsupportedEncodingException uex)
+            {
+                // should not happen because UTF-8 should be supported
+                throw new AssertionError("Encoding not supported: " + uex);
+            }
         }
         else
         {
