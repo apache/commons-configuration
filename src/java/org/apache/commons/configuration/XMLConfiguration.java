@@ -21,9 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,9 +46,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.resolver.DefaultEntityResolver;
+import org.apache.commons.configuration.resolver.EntityRegistry;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -639,7 +639,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             text = text.trim();
         }
-        if (text.length() > 0 || !node.hasChildren())
+        if (text.length() > 0 || (!node.hasChildren() && node != getRoot()))
         {
             node.setValue(text);
         }
