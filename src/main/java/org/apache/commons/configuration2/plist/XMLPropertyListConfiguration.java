@@ -137,6 +137,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      */
     public XMLPropertyListConfiguration()
     {
+        initRoot();
     }
 
     /**
@@ -227,6 +228,14 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
     public void load(Reader in) throws ConfigurationException
     {
+        // We have to make sure that the root node is actually a PListNode.
+        // If this object was not created using the standard constructor, the
+        // root node is a plain Node.
+        if (!(getRootNode() instanceof PListNode))
+        {
+            initRoot();
+        }
+
         // set up the DTD validation
         EntityResolver resolver = new EntityResolver()
         {
@@ -419,6 +428,14 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         {
             out.println(padding + "<string/>");
         }
+    }
+
+    /**
+     * Helper method for initializing the configuration's root node.
+     */
+    private void initRoot()
+    {
+        setRootNode(new PListNode());
     }
 
     /**
