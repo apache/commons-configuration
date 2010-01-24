@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-405">
+        XMLPropertyListConfiguration no longer throws a ConfigurationException
+        if the file to be loaded does not have an outer dict element.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-403">
         When an empty XMLConfiguration was saved and reloaded the root element
         was assigned an empty text value. Because of this isEmpty() returned

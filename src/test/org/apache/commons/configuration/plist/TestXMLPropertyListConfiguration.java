@@ -18,17 +18,22 @@
 package org.apache.commons.configuration.plist;
 
 import java.io.File;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TimeZone;
 
 import junit.framework.TestCase;
-import junitx.framework.ObjectAssert;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
-import org.apache.commons.configuration.FileConfiguration;
+import junitx.framework.ObjectAssert;
+
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationComparator;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.StrictConfigurationComparator;
-import org.apache.commons.configuration.ConfigurationComparator;
 
 /**
  * @author Emmanuel Bourg
@@ -279,7 +284,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
         {
             assertTrue(savedFile.delete());
         }
-        
+
         // save the configuration
         String filename = savedFile.getAbsolutePath();
         config.save(filename);
@@ -288,7 +293,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
         // read the configuration and compare the properties
         Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
-        
+
         assertEquals(null, config.getProperty("empty-dictionary"));
         assertEquals(null, checkConfig.getProperty("empty-dictionary"));
     }
@@ -336,4 +341,29 @@ public class TestXMLPropertyListConfiguration extends TestCase
 		StrictConfigurationComparator comp = new StrictConfigurationComparator();
 		assertTrue("Configurations are not equal", comp.compare(config, copy));
 	}
+
+    /**
+     * Tests whether a configuration can be loaded that does not start with a
+     * <code>dict</code> element. This test case is related to
+     * CONFIGURATION-405.
+     */
+    public void testLoadNoDict() throws ConfigurationException
+    {
+        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
+        plist.setFileName("conf/test2.plist.xml");
+        plist.load();
+        assertFalse("Configuration is empty", plist.isEmpty());
+    }
+
+    /**
+     * Tests whether a configuration that does not start with a
+     * <code>dict</code> element can be loaded from a constructor. This test
+     * case is related to CONFIGURATION-405.
+     */
+    public void testLoadNoDictConstr() throws ConfigurationException
+    {
+        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration(
+                "conf/test2.plist.xml");
+        assertFalse("Configuration is empty", plist.isEmpty());
+    }
 }
