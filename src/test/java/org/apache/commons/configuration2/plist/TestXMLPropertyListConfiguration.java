@@ -23,17 +23,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TimeZone;
 
+import junit.framework.TestCase;
+import junitx.framework.ArrayAssert;
+import junitx.framework.ListAssert;
+import junitx.framework.ObjectAssert;
+
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationAssert;
 import org.apache.commons.configuration2.ConfigurationComparator;
 import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.InMemoryConfiguration;
 import org.apache.commons.configuration2.StrictConfigurationComparator;
-
-import junit.framework.TestCase;
-import junitx.framework.ArrayAssert;
-import junitx.framework.ListAssert;
-import junitx.framework.ObjectAssert;
 
 /**
  * @author Emmanuel Bourg
@@ -43,6 +43,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 {
     private FileConfiguration config;
 
+    @Override
     protected void setUp() throws Exception
     {
         config = new XMLPropertyListConfiguration();
@@ -96,17 +97,17 @@ public class TestXMLPropertyListConfiguration extends TestCase
     public void testSubset()
     {
         Configuration subset = config.subset("dictionary");
-        Iterator keys = subset.getKeys();
+        Iterator<String> keys = subset.getKeys();
 
-        String key = (String) keys.next();
+        String key = keys.next();
         assertEquals("1st key", "key1", key);
         assertEquals("1st value", "value1", subset.getString(key));
 
-        key = (String) keys.next();
+        key = keys.next();
         assertEquals("2nd key", "key2", key);
         assertEquals("2nd value", "value2", subset.getString(key));
 
-        key = (String) keys.next();
+        key = keys.next();
         assertEquals("3rd key", "key3", key);
         assertEquals("3rd value", "value3", subset.getString(key));
 
@@ -119,7 +120,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List list = config.getList("array");
+        List<?> list = config.getList("array");
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 3, list.size());
@@ -137,14 +138,14 @@ public class TestXMLPropertyListConfiguration extends TestCase
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List list = config.getList(key);
+        List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
 
         // 1st array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(0));
-        List list1 = (List) list.get(0);
+        List<?> list1 = (List<?>) list.get(0);
         assertFalse("nested array 1 is empty", list1.isEmpty());
         assertEquals("size", 2, list1.size());
         assertEquals("1st element", "a", list1.get(0));
@@ -152,7 +153,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
         // 2nd array
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, list.get(1));
-        List list2 = (List) list.get(1);
+        List<?> list2 = (List<?>) list.get(1);
         assertFalse("nested array 2 is empty", list2.isEmpty());
         assertEquals("size", 2, list2.size());
         assertEquals("1st element", "c", list2.get(0));
@@ -168,7 +169,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
         // root array
         assertNotNull("array not found", array);
         ObjectAssert.assertInstanceOf("the array element is not parsed as a List", List.class, array);
-        List list = config.getList(key);
+        List<?> list = config.getList(key);
 
         assertFalse("empty array", list.isEmpty());
         assertEquals("size", 2, list.size());
@@ -230,10 +231,10 @@ public class TestXMLPropertyListConfiguration extends TestCase
         // read the configuration and compare the properties
         Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
 
-        Iterator it = config.getKeys();
+        Iterator<String> it = config.getKeys();
         while (it.hasNext())
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertTrue("The saved configuration doesn't contain the key '" + key + "'", checkConfig.containsKey(key));
 
             Object value = checkConfig.getProperty(key);
@@ -242,10 +243,10 @@ public class TestXMLPropertyListConfiguration extends TestCase
                 byte[] array = (byte[]) value;
                 ArrayAssert.assertEquals("Value of the '" + key + "' property", (byte[]) config.getProperty(key), array);
             }
-            else if (value instanceof List)
+            else if (value instanceof List<?>)
             {
-                List list1 = (List) config.getProperty(key);
-                List list2 = (List) value;
+                List<?> list1 = (List<?>) config.getProperty(key);
+                List<?> list2 = (List<?>) value;
 
                 assertEquals("The size of the list for the key '" + key + "' doesn't match", list1.size(), list2.size());
 
@@ -265,7 +266,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
                     }
                 }
 
-                ListAssert.assertEquals("Value of the '" + key + "' property", (List) config.getProperty(key), list1);
+                ListAssert.assertEquals("Value of the '" + key + "' property", (List<?>) config.getProperty(key), list1);
             }
             else
             {
@@ -273,7 +274,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
             }
         }
     }
-    
+
     public void testSaveEmptyDictionary() throws Exception
     {
         File savedFile = new File("target/testsave.plist.xml");
@@ -283,7 +284,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
         {
             assertTrue(savedFile.delete());
         }
-        
+
         // save the configuration
         String filename = savedFile.getAbsolutePath();
         config.save(filename);
@@ -292,7 +293,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
 
         // read the configuration and compare the properties
         Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
-        
+
         assertEquals(null, config.getProperty("empty-dictionary"));
         assertEquals(null, checkConfig.getProperty("empty-dictionary"));
     }
