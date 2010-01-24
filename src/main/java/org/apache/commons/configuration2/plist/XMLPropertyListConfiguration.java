@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
@@ -321,7 +322,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else
         {
             Object value = node.getValue();
-            printValue(out, indentLevel, value);            
+            printValue(out, indentLevel, value);
         }
     }
 
@@ -362,16 +363,16 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
                 out.println(padding + "<false/>");
             }
         }
-        else if (value instanceof List)
+        else if (value instanceof List<?>)
         {
             out.println(padding + "<array>");
-            for (Object val : (List) value)
+            for (Object val : (List<?>) value)
             {
                 printValue(out, indentLevel + 1, val);
             }
             out.println(padding + "</array>");
         }
-        else if (value instanceof AbstractHierarchicalConfiguration)
+        else if (value instanceof AbstractHierarchicalConfiguration<?>)
         {
             printNode(out, indentLevel, ((AbstractHierarchicalConfiguration<ConfigurationNode>) value).getRootNode());
         }
@@ -381,11 +382,11 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             out.println(padding + "<dict>");
 
             Configuration config = (Configuration) value;
-            Iterator it = config.getKeys();
+            Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {
                 // create a node for each property
-                String key = (String) it.next();
+                String key = it.next();
                 ConfigurationNode node = new DefaultConfigurationNode(key);
                 node.setValue(config.getProperty(key));
 
@@ -399,10 +400,10 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             out.println(padding + "</dict>");
         }
-        else if (value instanceof Map)
+        else if (value instanceof Map<?, ?>)
         {
             // display a Map as a dictionary
-            Map map = (Map) value;
+            Map<?, ?> map = (Map<?, ?>) value;
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -602,14 +603,14 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             {
                 setValue(value);
             }
-            else if (getValue() instanceof Collection)
+            else if (getValue() instanceof Collection<?>)
             {
-                Collection collection = (Collection) getValue();
+                Collection<Object> collection = (Collection<Object>) getValue();
                 collection.add(value);
             }
             else
             {
-                List list = new ArrayList();
+                List<Object> list = new ArrayList<Object>();
                 list.add(getValue());
                 list.add(value);
                 setValue(list);
@@ -718,7 +719,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         private static final long serialVersionUID = 5586544306664205835L;
 
         /** The list of values in the array. */
-        private List list = new ArrayList();
+        private List<Object> list = new ArrayList<Object>();
 
         /**
          * Add an object to the array.
