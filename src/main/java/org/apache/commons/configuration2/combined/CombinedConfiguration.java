@@ -233,7 +233,7 @@ public class CombinedConfiguration extends
      * Creates a new instance of <code>CombinedConfiguration</code> that uses
      * a union combiner.
      *
-     * @see org.apache.commons.configuration2.tree.UnionCombiner
+     * @see UnionCombiner
      */
     public CombinedConfiguration()
     {
