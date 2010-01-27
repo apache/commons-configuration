@@ -17,17 +17,29 @@
 
 package org.apache.commons.configuration2.combined;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+
 import org.apache.commons.configuration2.MultiFileHierarchicalConfiguration;
 import org.apache.commons.configuration2.XMLConfiguration;
+import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
+import org.junit.Test;
 
-public class TestDynamicCombinedConfiguration extends TestCase
+/**
+ * Test class for {@code DynamicCombinedConfiguration}.
+ *
+ * @version $Id: $
+ */
+public class TestDynamicCombinedConfiguration
 {
     private static String PATTERN ="${sys:Id}";
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
     private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
 
-    public void testConfiguration() throws Exception
+    @Test
+    public void testConfiguration1() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
         config.setKeyPattern(PATTERN);
@@ -40,6 +52,37 @@ public class TestDynamicCombinedConfiguration extends TestCase
         verify("1002", config, 25);
         verify("1003", config, 35);
         verify("1004", config, 50);
+    }
+
+    @Test
+    public void testConfiguration2() throws Exception
+    {
+        DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
+        XPathExpressionEngine engine1 = new XPathExpressionEngine();
+        config.setExpressionEngine(engine1);
+        config.setKeyPattern(PATTERN);
+        config.setDelimiterParsingDisabled(true);
+        MultiFileHierarchicalConfiguration multi = new MultiFileHierarchicalConfiguration(PATTERN1);
+        XPathExpressionEngine engine2 = new XPathExpressionEngine();
+        multi.setExpressionEngine(engine2);
+        config.addConfiguration(multi, "Multi");
+        XMLConfiguration xml = new XMLConfiguration();
+        xml.setExpressionEngine(engine2);
+        xml.setDelimiterParsingDisabled(true);
+        xml.setFile(new File(DEFAULT_FILE));
+        xml.load();
+        config.addConfiguration(xml, "Default");
+
+        verify("1001", config, 15);
+        verify("1002", config, 25);
+        verify("1003", config, 35);
+        verify("1004", config, 50);
+        assertEquals("a,b,c", config.getString("split/list3/@values"));
+        assertEquals(0, config.getMaxIndex("split/list3/@values"));
+        assertEquals("a\\,b\\,c", config.getString("split/list4/@values"));
+        assertEquals("a,b,c", config.getString("split/list1"));
+        assertEquals(0, config.getMaxIndex("split/list1"));
+        assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
     private void verify(String key, DynamicCombinedConfiguration config, int rows)
