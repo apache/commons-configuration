@@ -134,17 +134,17 @@ public class TestInMemoryConfiguration extends TestCase
 
         Object prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(5, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(10, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables.table.fields.field(3).name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(2, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables.table(1).fields.field(2).name");
@@ -204,14 +204,14 @@ public class TestInMemoryConfiguration extends TestCase
         config.clearTree("tables.table(0).fields.field(3)");
         prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(4, ((Collection<?>) prop).size());
 
         config.clearTree("tables.table(0).fields");
         assertNull(config.getProperty("tables.table(0).fields.field.name"));
         prop = config.getProperty("tables.table.fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(5, ((Collection<?>) prop).size());
 
         config.clearTree("tables.table(1)");
@@ -383,13 +383,13 @@ public class TestInMemoryConfiguration extends TestCase
         config.addProperty("tables.table(0).fields.field(-1).name", "phone");
         Object prop = config.getProperty("tables.table(0).fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(6, ((Collection<?>) prop).size());
 
         config.addProperty("tables.table(0).fields.field.name", "fax");
         prop = config.getProperty("tables.table.fields.field(5).name");
         assertNotNull(prop);
-        assertTrue(prop instanceof List);
+        assertTrue(prop instanceof List<?>);
         List<?> list = (List<?>) prop;
         assertEquals("phone", list.get(0));
         assertEquals("fax", list.get(1));
@@ -397,14 +397,14 @@ public class TestInMemoryConfiguration extends TestCase
         config.addProperty("tables.table(-1).name", "config");
         prop = config.getProperty("tables.table.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(3, ((Collection<?>) prop).size());
         config.addProperty("tables.table(2).fields.field(0).name", "cid");
         config.addProperty("tables.table(2).fields.field(-1).name",
         "confName");
         prop = config.getProperty("tables.table(2).fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(2, ((Collection<?>) prop).size());
         assertEquals("confName",
         config.getProperty("tables.table(2).fields.field(1).name"));
@@ -469,7 +469,7 @@ public class TestInMemoryConfiguration extends TestCase
 
         Object prop = subset.getProperty("fields.field.name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(5, ((Collection<?>) prop).size());
 
         for (int i = 0; i < FIELDS[0].length; i++)
@@ -486,7 +486,7 @@ public class TestInMemoryConfiguration extends TestCase
         // test the subset on the FIELDS
         subset = config.subset("tables.table.fields.field");
         prop = subset.getProperty("name");
-        assertTrue("prop is not a collection", prop instanceof Collection);
+        assertTrue("prop is not a collection", prop instanceof Collection<?>);
         assertEquals(10, ((Collection<?>) prop).size());
 
         assertEquals(FIELDS[0][0], subset.getProperty("name(0)"));
@@ -1094,17 +1094,17 @@ public class TestInMemoryConfiguration extends TestCase
 
         Object prop = config.getProperty("tables/table[0]/fields/field/name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(5, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables/table/fields/field/name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(10, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables/table/fields/field[3]/name");
         assertNotNull(prop);
-        assertTrue(prop instanceof Collection);
+        assertTrue(prop instanceof Collection<?>);
         assertEquals(2, ((Collection<?>) prop).size());
 
         prop = config.getProperty("tables/table[1]/fields/field[2]/name");
