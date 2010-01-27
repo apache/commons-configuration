@@ -1005,6 +1005,16 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("Wrong number of children", 2, oldRoot.getChildrenCount());
     }
 
+    /**
+     * Tests whether keys that contains brackets can be used.
+     */
+    public void testGetPropertyKeyWithBrackets()
+    {
+        final String key = "test.directory.platform(x86)";
+        config.addProperty(key, "C:\\Temp");
+        assertEquals("Wrong property value", "C:\\Temp", config.getString(key));
+    }
+
 	/**
      * Helper method for testing the getKeys(String) method.
      *

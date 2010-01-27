@@ -434,6 +434,25 @@ public class TestDefaultConfigurationKey extends TestCase
     }
 
     /**
+     * Tests whether a key with brackets in it can be iterated over.
+     */
+    public void testIterateWithBrackets()
+    {
+        key.append("directory.platform(x86).path");
+        DefaultConfigurationKey.KeyIterator kit = key.iterator();
+        String part = kit.nextKey();
+        assertEquals("Wrong part 1", "directory", part);
+        assertFalse("Has index 1", kit.hasIndex());
+        part = kit.nextKey();
+        assertEquals("Wrong part 2", "platform(x86)", part);
+        assertFalse("Has index 2", kit.hasIndex());
+        part = kit.nextKey();
+        assertEquals("Wrong part 3", "path", part);
+        assertFalse("Has index 3", kit.hasIndex());
+        assertFalse("Too many elements", kit.hasNext());
+    }
+
+    /**
      * Tests iterating over an attribute key that has an index.
      */
     public void testAttributeKeyWithIndex()

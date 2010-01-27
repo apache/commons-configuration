@@ -823,19 +823,25 @@ public class DefaultConfigurationKey
         {
             boolean result = false;
 
-            int idx = key.lastIndexOf(getExpressionEngine().getIndexStart());
-            if (idx > 0)
+            try
             {
-                int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
-                        idx);
-
-                if (endidx > idx + 1)
+                int idx = key.lastIndexOf(getExpressionEngine().getIndexStart());
+                if (idx > 0)
                 {
-                    indexValue = Integer.parseInt(key
-                            .substring(idx + 1, endidx));
-                    current = key.substring(0, idx);
-                    result = true;
+                    int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
+                            idx);
+    
+                    if (endidx > idx + 1)
+                    {
+                        indexValue = Integer.parseInt(key.substring(idx + 1, endidx));
+                        current = key.substring(0, idx);
+                        result = true;
+                    }
                 }
+            }
+            catch (NumberFormatException nfe)
+            {
+                result = false;
             }
 
             return result;
