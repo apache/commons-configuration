@@ -83,6 +83,12 @@
         XMLPropertyListConfiguration no longer throws a ConfigurationException
         if the file to be loaded does not have an outer dict element.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-404" due-to="Rob Walker">
+        The default expression engine used by hierarchical configurations used to
+        throw a NumberFormatException if invalid indices were used in property
+        keys. This has been fixed. As a side effect brackets can now be used in
+        property keys.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-403">
         When an empty XMLConfiguration was saved and reloaded the root element
         was assigned an empty text value. Because of this isEmpty() returned

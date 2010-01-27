@@ -1054,6 +1054,16 @@ public class TestInMemoryConfiguration extends TestCase
     }
 
     /**
+     * Tests whether keys that contains brackets can be used.
+     */
+    public void testGetPropertyKeyWithBrackets()
+    {
+        final String key = "test.directory.platform(x86)";
+        config.addProperty(key, "C:\\Temp");
+        assertEquals("Wrong property value", "C:\\Temp", config.getString(key));
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()

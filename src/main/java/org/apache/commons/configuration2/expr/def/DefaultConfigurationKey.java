@@ -212,6 +212,7 @@ public class DefaultConfigurationKey
      * @param c the object to compare
      * @return a flag if both objects are equal
      */
+    @Override
     public boolean equals(Object c)
     {
         if (c == null)
@@ -227,6 +228,7 @@ public class DefaultConfigurationKey
      *
      * @return the hash code
      */
+    @Override
     public int hashCode()
     {
         return String.valueOf(keyBuffer).hashCode();
@@ -238,6 +240,7 @@ public class DefaultConfigurationKey
      *
      * @return a string for this object
      */
+    @Override
     public String toString()
     {
         return keyBuffer.toString();
@@ -627,6 +630,7 @@ public class DefaultConfigurationKey
          *
          * @return a clone of this object
          */
+        @Override
         public KeyIterator clone()
         {
             try
@@ -823,19 +827,25 @@ public class DefaultConfigurationKey
         {
             boolean result = false;
 
-            int idx = key.lastIndexOf(getExpressionEngine().getIndexStart());
-            if (idx > 0)
+            try
             {
-                int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
-                        idx);
-
-                if (endidx > idx + 1)
+                int idx = key.lastIndexOf(getExpressionEngine().getIndexStart());
+                if (idx > 0)
                 {
-                    indexValue = Integer.parseInt(key
-                            .substring(idx + 1, endidx));
-                    current = key.substring(0, idx);
-                    result = true;
+                    int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
+                            idx);
+
+                    if (endidx > idx + 1)
+                    {
+                        indexValue = Integer.parseInt(key.substring(idx + 1, endidx));
+                        current = key.substring(0, idx);
+                        result = true;
+                    }
                 }
+            }
+            catch (NumberFormatException nfe)
+            {
+                result = false;
             }
 
             return result;
