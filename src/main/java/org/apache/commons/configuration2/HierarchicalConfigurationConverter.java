@@ -34,12 +34,14 @@ import java.util.Set;
  * the keys in the original configuration.</p>
  * <p>Concrete sub classes will implement event handlers that generate SAX
  * events for XML processing or construct a
- * <code>HierarchicalConfiguration</code> root node. All in all with this class
+ * root node for a hierarchical configuration. All in all, with this class
  * it is possible to treat a default configuration as if it was a hierarchical
  * configuration, which can be sometimes useful.</p>
- * @see HierarchicalConfiguration
+ * @see AbstractHierarchicalConfiguration
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 abstract class HierarchicalConfigurationConverter
@@ -61,7 +63,7 @@ abstract class HierarchicalConfigurationConverter
             ConfigurationKey keyLast = keyEmpty;
             Set<String> keySet = new HashSet<String>();
 
-            for (Iterator it = config.getKeys(); it.hasNext();)
+            for (Iterator<String> it = config.getKeys(); it.hasNext();)
             {
                 String key = (String) it.next();
                 if (keySet.contains(key))
@@ -115,7 +117,7 @@ abstract class HierarchicalConfigurationConverter
     protected void closeElements(ConfigurationKey keyLast, ConfigurationKey keyAct)
     {
         ConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
-        Iterator it = reverseIterator(keyDiff);
+        Iterator<String> it = reverseIterator(keyDiff);
         if (it.hasNext())
         {
             // Skip first because it has already been closed by fireValue()
@@ -136,7 +138,7 @@ abstract class HierarchicalConfigurationConverter
      * @param key the key
      * @return a reverse iterator for the parts of this key
      */
-    protected Iterator reverseIterator(ConfigurationKey key)
+    protected Iterator<String> reverseIterator(ConfigurationKey key)
     {
         List<String> list = new ArrayList<String>();
         for (String k : key.iterator())
@@ -184,9 +186,9 @@ abstract class HierarchicalConfigurationConverter
      */
     protected void fireValue(String name, Object value)
     {
-        if (value != null && value instanceof Collection)
+        if (value != null && value instanceof Collection<?>)
         {
-            for (Object element : ((Collection) value))
+            for (Object element : ((Collection<?>) value))
             {
                 fireValue(name, element);
             }
