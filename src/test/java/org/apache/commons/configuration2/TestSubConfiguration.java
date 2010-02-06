@@ -381,7 +381,7 @@ public class TestSubConfiguration extends TestCase
         {
             assertEquals("Wrong configuration", config, e.getSource());
             assertEquals("Wrong event type",
-                    HierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
+                    AbstractHierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
                             .getType());
             assertNull("Got a property name", e.getPropertyName());
             assertNull("Got a property value", e.getPropertyValue());

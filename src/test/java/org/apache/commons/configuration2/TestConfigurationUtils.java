@@ -243,9 +243,9 @@ public class TestConfigurationUtils extends TestCase
      */
     public void testCloneConfiguration()
     {
-        HierarchicalConfiguration conf = new HierarchicalConfiguration();
+        InMemoryConfiguration conf = new InMemoryConfiguration();
         conf.addProperty("test", "yes");
-        HierarchicalConfiguration copy = (HierarchicalConfiguration) ConfigurationUtils
+        InMemoryConfiguration copy = (InMemoryConfiguration) ConfigurationUtils
                 .cloneConfiguration(conf);
         assertNotSame("Same object was returned", conf, copy);
         assertEquals("Property was not cloned", "yes", copy.getString("test"));
