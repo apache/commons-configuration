@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.configuration2.AbstractConfiguration;
-import org.apache.commons.configuration2.HierarchicalConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
+import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
+import org.apache.commons.configuration2.InMemoryConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
@@ -36,7 +36,7 @@ public class TestHierarchicalConfigurationEvents extends
     @Override
     protected AbstractConfiguration createConfiguration()
     {
-        return new HierarchicalConfiguration();
+        return new InMemoryConfiguration();
     }
 
     /**
@@ -44,14 +44,12 @@ public class TestHierarchicalConfigurationEvents extends
      */
     public void testClearTreeEvent()
     {
-        HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
+        InMemoryConfiguration hc = (InMemoryConfiguration) config;
         String key = EXIST_PROPERTY.substring(0, EXIST_PROPERTY.indexOf('.'));
-        Collection<?> nodes = hc.getExpressionEngine()
-                .query(hc.getRootNode(), key);
         hc.clearTree(key);
-        l.checkEvent(HierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
+        l.checkEvent(InMemoryConfiguration.EVENT_CLEAR_TREE, key, null,
                 true);
-        l.checkEvent(HierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
+        l.checkEvent(InMemoryConfiguration.EVENT_CLEAR_TREE, key, null,
                 false);
         l.done();
     }
@@ -61,13 +59,13 @@ public class TestHierarchicalConfigurationEvents extends
      */
     public void testAddNodesEvent()
     {
-        HierarchicalConfiguration hc = (HierarchicalConfiguration) config;
+        InMemoryConfiguration hc = (InMemoryConfiguration) config;
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(new DefaultConfigurationNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
-        l.checkEvent(HierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        l.checkEvent(InMemoryConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
                 nodes, true);
-        l.checkEvent(HierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        l.checkEvent(InMemoryConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
                 nodes, false);
         l.done();
     }
@@ -78,7 +76,7 @@ public class TestHierarchicalConfigurationEvents extends
      */
     public void testAddNodesEmptyEvent()
     {
-        ((HierarchicalConfiguration) config).addNodes(TEST_PROPNAME,
+        ((InMemoryConfiguration) config).addNodes(TEST_PROPNAME,
                 new ArrayList<ConfigurationNode>());
         l.done();
     }
@@ -89,14 +87,14 @@ public class TestHierarchicalConfigurationEvents extends
      */
     public void testSubnodeChangedEvent()
     {
-        SubnodeConfiguration sub = ((HierarchicalConfiguration) config)
+        AbstractHierarchicalConfiguration<?> sub = ((InMemoryConfiguration) config)
                 .configurationAt(EXIST_PROPERTY);
         sub.addProperty("newProp", "newValue");
         checkSubnodeEvent(l
-                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                .nextEvent(InMemoryConfiguration.EVENT_SUBNODE_CHANGED),
                 true);
         checkSubnodeEvent(l
-                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                .nextEvent(InMemoryConfiguration.EVENT_SUBNODE_CHANGED),
                 false);
         l.done();
     }
@@ -116,7 +114,7 @@ public class TestHierarchicalConfigurationEvents extends
         ConfigurationEvent evSub = (ConfigurationEvent) event
                 .getPropertyValue();
         assertEquals("Wrong event type",
-                HierarchicalConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
+                InMemoryConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
         assertEquals("Wrong property name", "newProp", evSub.getPropertyName());
         assertEquals("Wrong property value", "newValue", evSub
                 .getPropertyValue());
