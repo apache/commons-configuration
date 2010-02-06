@@ -48,9 +48,8 @@ import java.util.LinkedList;
  * property clear events, and property add events). If this mode is turned off
  * (which is the default), detail events are suppressed, so only property set
  * events will be received. Note that the number of received detail events may
- * differ for different configuration implementations.
- * <code>{@link org.apache.commons.configuration2.HierarchicalConfiguration HierarchicalConfiguration}</code>
- * for instance has a custom implementation of <code>setProperty()</code>,
+ * differ for different configuration implementations. Hierarchical configurations
+ * for instance have a custom implementation of <code>setProperty()</code>,
  * which does not generate any detail events.
  * </p>
  * <p>
@@ -329,6 +328,7 @@ public class EventSource
      * @throws CloneNotSupportedException if cloning is not allowed
      * @since 1.4
      */
+    @Override
     protected Object clone() throws CloneNotSupportedException
     {
         EventSource copy = (EventSource) super.clone();
@@ -340,10 +340,11 @@ public class EventSource
      * Adds a new listener object to a listener collection. This is done in a
      * synchronized block. The listener must not be <b>null</b>.
      *
+     * @param <T> the type of listener to be added
      * @param listeners the collection with the listeners
      * @param l the listener object
      */
-    private static void doAddListener(Collection listeners, Object l)
+    private static <T> void doAddListener(Collection<T> listeners, T l)
     {
         if (l == null)
         {
@@ -359,11 +360,12 @@ public class EventSource
      * Removes an event listener from a listener collection. This is done in a
      * synchronized block.
      *
+     * @param <T> the type of listener to be removed
      * @param listeners the collection with the listeners
      * @param l the listener object
      * @return a flag whether the listener could be found and removed
      */
-    private static boolean doRemoveListener(Collection listeners, Object l)
+    private static <T> boolean doRemoveListener(Collection<T> listeners, T l)
     {
         synchronized (listeners)
         {
@@ -376,7 +378,7 @@ public class EventSource
      *
      * @param listeners the collection with the listeners
      */
-    private static void doClearListeners(Collection listeners)
+    private static void doClearListeners(Collection<?> listeners)
     {
         synchronized (listeners)
         {
@@ -387,14 +389,16 @@ public class EventSource
     /**
      * Returns an unmodifiable snapshot of the given event listener collection.
      *
+     * @param <T> the type of the collection with the listeners
      * @param listeners the collection with the listeners
      * @return a snapshot of the listeners collection
      */
-    private static Collection doGetListeners(Collection listeners)
+    private static <T> Collection<T> doGetListeners(Collection<T> listeners)
     {
         synchronized (listeners)
         {
-            return Collections.unmodifiableCollection(new ArrayList(listeners));
+            return Collections.unmodifiableCollection(new ArrayList<T>(
+                    listeners));
         }
     }
 
