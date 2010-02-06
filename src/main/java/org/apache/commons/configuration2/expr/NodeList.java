@@ -36,7 +36,9 @@ import java.util.List;
  * checking.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the nodes contained in this node list
  */
@@ -388,7 +390,7 @@ public class NodeList<T>
         {
             Object value = handler.getAttributeValue(getAssociatedNode(), name);
 
-            if(index != IDX_UNDEF && value instanceof List)
+            if(index != IDX_UNDEF && value instanceof List<?>)
             {
                 List<?> valList = (List<?>) value;
                 if(index < valList.size())

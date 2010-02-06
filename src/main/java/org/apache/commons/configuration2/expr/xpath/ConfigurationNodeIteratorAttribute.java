@@ -30,7 +30,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 class ConfigurationNodeIteratorAttribute<T> extends
@@ -133,7 +135,7 @@ class ConfigurationNodeIteratorAttribute<T> extends
                 parent.getConfigurationNode(), name);
         if (value != null)
         {
-            if (value instanceof Collection)
+            if (value instanceof Collection<?>)
             {
                 // add entries for all values
                 int idx = 0;

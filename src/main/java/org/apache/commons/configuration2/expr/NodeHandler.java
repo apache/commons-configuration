@@ -32,7 +32,9 @@ import java.util.List;
  * structure are delegated to an implementation of this interface.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the nodes this handler deals with
  */

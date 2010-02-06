@@ -40,7 +40,9 @@ package org.apache.commons.configuration2.expr;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public interface ExpressionEngine

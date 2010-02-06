@@ -113,7 +113,9 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  *
  * @since 2.0
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class XPathExpressionEngine implements ExpressionEngine

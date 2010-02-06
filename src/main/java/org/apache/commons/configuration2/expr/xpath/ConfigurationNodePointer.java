@@ -36,7 +36,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 2.0
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the nodes this pointer deals with
  */

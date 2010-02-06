@@ -38,7 +38,9 @@ package org.apache.commons.configuration2.expr;
  * an additional method the traversal process can be aborted.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the involved nodes
  */

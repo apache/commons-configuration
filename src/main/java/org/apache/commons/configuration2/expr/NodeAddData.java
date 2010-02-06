@@ -46,7 +46,9 @@ import java.util.List;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  */
 public class NodeAddData<T>
 {

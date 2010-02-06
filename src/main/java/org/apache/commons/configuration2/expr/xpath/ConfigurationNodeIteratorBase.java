@@ -32,7 +32,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 2.0
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  * @param <T> the type of the nodes this iterator deals with
  */
@@ -113,14 +115,14 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
     /**
      * Returns the node handler for the managed nodes. This is a convenience
      * method.
-     * 
+     *
      * @return the node handler
      */
     protected NodeHandler<T> getNodeHandler()
     {
         return getParent().getNodeHandler();
     }
-    
+
     /**
      * Returns the start offset of the iteration.
      *
@@ -184,7 +186,7 @@ abstract class ConfigurationNodeIteratorBase<T> implements NodeIterator
 
     /**
      * Returns the number of elements in this iteration.
-     * 
+     *
      * @return the number of elements
      */
     protected abstract int size();

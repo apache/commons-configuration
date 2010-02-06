@@ -37,7 +37,9 @@ import org.apache.commons.jxpath.ri.model.NodePointerFactory;
  * the JXPath context.</p>
  *
  * @since 2.0
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class ConfigurationNodePointerFactory implements NodePointerFactory

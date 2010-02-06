@@ -28,7 +28,9 @@ import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
  * operates on <code>ConfigurationNode</code> objects.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class ConfigurationNodeHandler extends AbstractNodeHandler<ConfigurationNode>
