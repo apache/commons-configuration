@@ -272,7 +272,7 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
             {
                 String key = keys.next();
                 Object value = subset.getProperty(key);
-                if (value instanceof Collection)
+                if (value instanceof Collection<?>)
                 {
                     for (Object v : (Collection<?>) value)
                     {
@@ -622,7 +622,7 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
      * provides an easy way of working with a single section only. The way this
      * configuration is structured internally, this method is very similar to
      * calling
-     * <code>{@link HierarchicalConfiguration#configurationAt(String)}</code>
+     * {@link AbstractHierarchicalConfiguration#configurationAt(String)}
      * with the name of the section in question. There are the following
      * differences however:
      * <ul>
