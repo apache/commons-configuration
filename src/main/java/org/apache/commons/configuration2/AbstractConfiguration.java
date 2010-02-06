@@ -1120,7 +1120,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
             array[0] = interpolate((String) value);
         }
-        else if (value instanceof List)
+        else if (value instanceof List<?>)
         {
             List<?> list = (List<?>) value;
             array = new String[list.size()];
@@ -1202,7 +1202,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Object value = getProperty(key);
         if (value != null)
         {
-            if (value instanceof Collection)
+            if (value instanceof Collection<?>)
             {
                 Collection<?> collection = (Collection<?>) value;
                 value = collection.isEmpty() ? null : collection.iterator().next();
@@ -1224,8 +1224,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * hierarchical configurations because it is not able to copy information
      * about the properties' structure (i.e. the parent-child-relationships will
      * get lost). So when dealing with hierarchical configuration objects their
-     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
-     * should be used.
+     * {@code clone()} methods should be used.
      *
      * @param c the configuration to copy (can be <b>null</b>, then this
      * operation will have no effect)
@@ -1264,8 +1263,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * well when appending hierarchical configurations because it is not able to
      * copy information about the properties' structure (i.e. the
      * parent-child-relationships will get lost). So when dealing with
-     * hierarchical configuration objects their
-     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * hierarchical configuration objects their {@code clone()} methods
      * should be used.
      *
      * @param c the configuration to be appended (can be <b>null</b>, then this
