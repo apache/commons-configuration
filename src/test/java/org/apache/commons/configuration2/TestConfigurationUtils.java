@@ -20,7 +20,6 @@ package org.apache.commons.configuration2;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -94,15 +93,15 @@ public class TestConfigurationUtils extends TestCase
                 .toString());
         File absFile = new File("config.xml").getAbsoluteFile();
         assertEquals(
-            absFile.toURL(),
+            absFile.toURI().toURL(),
             ConfigurationUtils.getURL(
                 "http://localhost:8080/webapp/config/baseConfig.xml",
                 absFile.getAbsolutePath()));
         assertEquals(
-            absFile.toURL(),
+            absFile.toURI().toURL(),
             ConfigurationUtils.getURL(null, absFile.getAbsolutePath()));
 
-        assertEquals(absFile.toURL(),
+        assertEquals(absFile.toURI().toURL(),
         ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
 
@@ -140,12 +139,12 @@ public class TestConfigurationUtils extends TestCase
         // append the source configuration to the target configuration
         ConfigurationUtils.append(conf1, conf2);
 
-        List expected = new ArrayList();
+        List<Object> expected = new ArrayList<Object>();
         expected.add("value3");
         expected.add("value1");
         ListAssert.assertEquals("'key1' property", expected, conf2.getList("key1"));
 
-        expected = new ArrayList();
+        expected = new ArrayList<Object>();
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
@@ -159,8 +158,8 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(reference, ConfigurationUtils.getFile(null, reference.getAbsolutePath()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
+        assertEquals(reference, ConfigurationUtils.getFile(directory.toURI().toURL().toString(), reference.getName()));
+        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURI().toURL().toString()));
         assertEquals(reference, ConfigurationUtils.getFile(
                 "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
                 reference.getAbsolutePath()));
@@ -183,66 +182,6 @@ public class TestConfigurationUtils extends TestCase
     }
 
     /**
-     * Tests converting a configuration into a hierarchical one.
-     */
-    public void testConvertToHierarchical()
-    {
-        Configuration conf = new BaseConfiguration();
-        for (int i = 0; i < 10; i++)
-        {
-            conf.addProperty("test" + i, "value" + i);
-            conf.addProperty("test.list", "item" + i);
-        }
-
-        HierarchicalConfiguration hc = ConfigurationUtils
-                .convertToHierarchical(conf);
-        for (Iterator it = conf.getKeys(); it.hasNext();)
-        {
-            String key = (String) it.next();
-            assertEquals("Wrong value for key " + key, conf.getProperty(key),
-                    hc.getProperty(key));
-        }
-    }
-
-    /**
-     * Tests converting a configuration into a hierarchical one that is already
-     * hierarchical.
-     */
-    public void testConvertHierarchicalToHierarchical()
-    {
-        Configuration conf = new HierarchicalConfiguration();
-        conf.addProperty("test", "yes");
-        assertSame("Wrong configuration returned", conf, ConfigurationUtils
-                .convertToHierarchical(conf));
-    }
-
-    /**
-     * Tests converting a null configuration to a hierarchical one. The result
-     * should be null, too.
-     */
-    public void testConvertNullToHierarchical()
-    {
-        assertNull("Wrong conversion result for null config",
-                ConfigurationUtils.convertToHierarchical(null));
-    }
-
-    /**
-     * Tests converting a configuration into a hierarchical one if some of its
-     * properties contain escaped list delimiter characters.
-     */
-    public void testConvertToHierarchicalDelimiters()
-    {
-        Configuration conf = new BaseConfiguration();
-        conf.addProperty("test.key", "1\\,2\\,3");
-        assertEquals("Wrong property value", "1,2,3", conf
-                .getString("test.key"));
-        HierarchicalConfiguration hc = ConfigurationUtils
-                .convertToHierarchical(conf);
-        assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
-                hc.getString("test.key"));
-    }
-
-    /**
      * Tests converting a configuration to a hierarchical one using a specific
      * expression engine.
      */
@@ -254,7 +193,7 @@ public class TestConfigurationUtils extends TestCase
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setIndexStart("[");
         engine.setIndexEnd("]");
-        AbstractHierarchicalConfiguration hc = ConfigurationUtils.convertToHierarchical(conf, engine);
+        AbstractHierarchicalConfiguration<?> hc = ConfigurationUtils.convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
     }

@@ -174,41 +174,6 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Converts the passed in configuration to a hierarchical one. If the
-     * configuration is already hierarchical, it is directly returned. Otherwise
-     * all properties are copied into a new hierarchical configuration.
-     *
-     * @param conf the configuration to convert
-     * @return the new hierarchical configuration (the result is <b>null</b> if
-     * and only if the passed in configuration is <b>null</b>)
-     * @since 1.3
-     */
-    public static HierarchicalConfiguration convertToHierarchical(Configuration conf)
-    {
-        // todo to be changed into convertToHierarchical(conf, null) when HierarchicalConfiguration is removed
-
-        if (conf == null)
-        {
-            return null;
-        }
-
-        if (conf instanceof HierarchicalConfiguration)
-        {
-            return (HierarchicalConfiguration) conf;
-        }
-        else
-        {
-            HierarchicalConfiguration hc = new HierarchicalConfiguration();
-            // Workaround for problem with copy()
-            boolean delimiterParsingStatus = hc.isDelimiterParsingDisabled();
-            hc.setDelimiterParsingDisabled(true);
-            ConfigurationUtils.copy(conf, hc);
-            hc.setDelimiterParsingDisabled(delimiterParsingStatus);
-            return hc;
-        }
-    }
-
-    /**
      * Converts the passed in <code>Configuration</code> object to a
      * hierarchical one using the specified <code>ExpressionEngine</code>. This
      * conversion works by adding the keys found in the configuration to a newly
