@@ -714,7 +714,10 @@ public class HierarchicalINIConfiguration extends
             ConfigurationNode node = (ConfigurationNode) it.next();
             if (!isSectionNode(node))
             {
-                parent.addChild(node);
+                synchronized (node)
+                {
+                    parent.addChild(node);
+                }
             }
         }
 

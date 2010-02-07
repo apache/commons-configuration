@@ -513,6 +513,27 @@ public class TestHierarchicalINIConfiguration extends TestCase
     }
 
     /**
+     * Tests concurrent access to the global section.
+     */
+    public void testGetSectionGloabalMultiThreaded()
+            throws ConfigurationException, InterruptedException
+    {
+        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final int threadCount = 10;
+        GlobalSectionTestThread[] threads = new GlobalSectionTestThread[threadCount];
+        for (int i = 0; i < threadCount; i++)
+        {
+            threads[i] = new GlobalSectionTestThread(config);
+            threads[i].start();
+        }
+        for (int i = 0; i < threadCount; i++)
+        {
+            threads[i].join();
+            assertFalse("Exception occurred", threads[i].error);
+        }
+    }
+
+    /**
      * Tests querying the content of the global section if there is none.
      */
     public void testGetSectionGlobalNonExisting() throws ConfigurationException
@@ -607,5 +628,49 @@ public class TestHierarchicalINIConfiguration extends TestCase
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR, config
                 .getString("section5.continueNoLine"));
+    }
+
+    /**
+     * A thread class for testing concurrent access to the global section.
+     */
+    private static class GlobalSectionTestThread extends Thread
+    {
+        /** The configuration. */
+        private final HierarchicalINIConfiguration config;
+
+        /** A flag whether an error was found. */
+        volatile boolean error;
+
+        /**
+         * Creates a new instance of <code>GlobalSectionTestThread</code> and
+         * initializes it.
+         *
+         * @param conf the configuration object
+         */
+        public GlobalSectionTestThread(HierarchicalINIConfiguration conf)
+        {
+            config = conf;
+        }
+
+        /**
+         * Accesses the global section in a loop. If there is no correct
+         * synchronization, this can cause an exception.
+         */
+        public void run()
+        {
+            final int loopCount = 250;
+
+            for (int i = 0; i < loopCount && !error; i++)
+            {
+                try
+                {
+                    config.getSection(null);
+                }
+                catch (IllegalStateException istex)
+                {
+                    error = true;
+                }
+            }
+        }
     }
 }
