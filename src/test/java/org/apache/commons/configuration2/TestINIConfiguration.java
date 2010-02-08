@@ -27,6 +27,8 @@ import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import junit.framework.TestCase;
 
@@ -513,6 +515,72 @@ public class TestINIConfiguration extends TestCase
         SubConfiguration<ConfigurationNode> section = config.getSection(null);
         assertEquals("Wrong value of global variable", "testGlobal", section
                 .getString("globalVar"));
+    }
+
+    /**
+     * Tests concurrent access to the global section.
+     */
+    public void testGetSectionGloabalMultiThreaded()
+            throws ConfigurationException, InterruptedException
+    {
+        final INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        final int threadCount = 12;
+        final int loopCount = 350;
+        final CountDownLatch syncLatch = new CountDownLatch(1);
+        final AtomicBoolean errorFlag = new AtomicBoolean();
+
+        Thread[] threads = new Thread[threadCount];
+        for (int i = 0; i < threadCount; i++)
+        {
+            threads[i] = new Thread()
+            {
+                /**
+                 * Accesses the global section of the test configuration in a
+                 * loop and checks whether this causes an exception.
+                 */
+                @Override
+                public void run()
+                {
+                    boolean error = false;
+
+                    try
+                    {
+                        // wait on the latch to increase parallelism
+                        syncLatch.await();
+                    }
+                    catch (InterruptedException iex)
+                    {
+                        error = true;
+                    }
+
+                    // access the configuration, check for errors
+                    for (int i = 0; i < loopCount && !error; i++)
+                    {
+                        try
+                        {
+                            config.getSection(null);
+                        }
+                        catch (IllegalStateException istex)
+                        {
+                            error = true;
+                        }
+                    }
+
+                    if (error)
+                    {
+                        errorFlag.set(true);
+                    }
+                };
+            };
+            threads[i].start();
+        }
+
+        syncLatch.countDown(); // start all test threads
+        for (int i = 0; i < threadCount; i++)
+        {
+            threads[i].join();
+        }
+        assertFalse("Exception occurred", errorFlag.get());
     }
 
     /**

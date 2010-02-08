@@ -32,7 +32,6 @@ import java.util.Set;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.configuration2.tree.ViewNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -690,7 +689,26 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
      */
     private SubConfiguration<ConfigurationNode> getGlobalSection()
     {
-        ViewNode parent = new ViewNode();
+        ConfigurationNode parent = new DefaultConfigurationNode()
+        {
+            /**
+             * Adds the specified child node to this node. This implementation
+             * does not change the parent node of the child. So the child node
+             * remains in its original hierarchy.
+             *
+             * @param child the child node to be added
+             */
+            @Override
+            public void addChild(ConfigurationNode child)
+            {
+                synchronized (child)
+                {
+                    ConfigurationNode parent = child.getParentNode();
+                    super.addChild(child);
+                    child.setParentNode(parent);
+                }
+            }
+        };
 
         for (ConfigurationNode node : getRootNode().getChildren())
         {

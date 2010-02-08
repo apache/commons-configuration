@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-407">
+        Fixed a potential IllegalStateException in HierarchicalINIConfiguration
+        that can be thrown when the global section is requested concurrently.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-405">
         XMLPropertyListConfiguration no longer throws a ConfigurationException
         if the file to be loaded does not have an outer dict element.
