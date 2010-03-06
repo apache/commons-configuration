@@ -656,4 +656,29 @@ public class TestINIConfigurationSource
                 source2);
         checkContent(config);
     }
+
+    /**
+     * Tests whether section keys with delimiters in their names cause problems.
+     * This test is related to CONFIGURATION-409.
+     */
+    @Test
+    public void testSaveKeysWithDelimiters() throws IOException,
+            ConfigurationException
+    {
+        Configuration<ConfigurationNode> conf = new ConfigurationImpl<ConfigurationNode>(
+                source);
+        final String section = "Section..with..dots";
+        conf.addProperty(section + ".test1", "test1");
+        conf.addProperty(section + ".test2", "test2");
+        StringWriter writer = new StringWriter();
+        source.save(writer);
+        StringReader reader = new StringReader(writer.toString());
+        source = new INIConfigurationSource();
+        source.load(reader);
+        conf = new ConfigurationImpl<ConfigurationNode>(source);
+        assertEquals("Wrong value (1)", "test1", conf.getString(section
+                + ".test1"));
+        assertEquals("Wrong value (2)", "test2", conf.getString(section
+                + ".test2"));
+    }
 }
