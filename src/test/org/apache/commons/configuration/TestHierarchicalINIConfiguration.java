@@ -631,6 +631,23 @@ public class TestHierarchicalINIConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a configuration can be saved that contains section keys
+     * with delimiter characters. This test is related to CONFIGURATION-409.
+     */
+    public void testSaveKeysWithDelimiters() throws ConfigurationException
+    {
+        HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration();
+        final String section = "Section..with..dots";
+        conf.addProperty(section + ".test1", "test1");
+        conf.addProperty(section + ".test2", "test2");
+        conf.save(TEST_FILE);
+        conf = new HierarchicalINIConfiguration();
+        conf.load(TEST_FILE);
+        assertEquals("Wrong value (1)", "test1", conf.getString(section + ".test1"));
+        assertEquals("Wrong value (2)", "test2", conf.getString(section + ".test2"));
+    }
+
+    /**
      * A thread class for testing concurrent access to the global section.
      */
     private static class GlobalSectionTestThread extends Thread

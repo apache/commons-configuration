@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-409">
+        HierarchicalINIConfiguration now correctly saves sections whose name
+        contains delimiter characters.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-407">
         Fixed a potential IllegalStateException in HierarchicalINIConfiguration
         that can be thrown when the global section is requested concurrently.

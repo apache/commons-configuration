@@ -269,15 +269,20 @@ public class HierarchicalINIConfiguration extends
         while (it.hasNext())
         {
             String section = (String) it.next();
+            Configuration subset;
             if (section != null)
             {
                 out.print("[");
                 out.print(section);
                 out.print("]");
                 out.println();
+                subset = createSubnodeConfiguration(getSectionNode(section));
+            }
+            else
+            {
+                subset = getSection(null);
             }
 
-            Configuration subset = getSection(section);
             Iterator keys = subset.getKeys();
             while (keys.hasNext())
             {
