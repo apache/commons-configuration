@@ -257,15 +257,20 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
         PrintWriter out = new PrintWriter(writer);
         for (String section : getSections())
         {
+            Configuration subset;
             if (section != null)
             {
                 out.print("[");
                 out.print(section);
                 out.print("]");
                 out.println();
+                subset = createSubnodeConfiguration(getSectionNode(section));
+            }
+            else
+            {
+                subset = getSection(null);
             }
 
-            Configuration subset = getSection(section);
             Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
             {
