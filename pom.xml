@@ -420,7 +420,7 @@
 
   <properties>
     <commons.componentid>configuration</commons.componentid>
-    <commons.release.version>1.5</commons.release.version>
+    <commons.release.version>1.6</commons.release.version>
     <commons.binary.suffix></commons.binary.suffix>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
