@@ -27,6 +27,11 @@
         HierarchicalINIConfiguration now correctly saves sections whose name
         contains delimiter characters.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-408">
+        PropertiesConfiguration.save() escaped slashes in properties values.
+        This was caused by a bug in commons-lang 2.4. Updating to the new
+        version commons-lang 2.5 fixed this problem.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-407">
         Fixed a potential IllegalStateException in HierarchicalINIConfiguration
         that can be thrown when the global section is requested concurrently.
