@@ -25,7 +25,7 @@
   <body>
     <menu name="Configuration">
       <item name="Home"                         href="/index.html"/>  
-      <item name="Download"                     href="http://commons.apache.org/downloads/download_configuration.cgi"/>  
+      <item name="Download"                     href="http://commons.apache.org/configuration/download_configuration.cgi"/>  
       <item name="Release History"              href="/changes-report.html"/>
       <item name="User's Guide"                 href="/userguide/user_guide.html"/>
       <item name="Howtos (1.2 release)"         href="/userguide-1.2/index.html"/>
