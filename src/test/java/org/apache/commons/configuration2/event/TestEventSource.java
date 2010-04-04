@@ -16,44 +16,44 @@
  */
 package org.apache.commons.configuration2.event;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Collection;
 
-import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
-import org.apache.commons.configuration2.event.ConfigurationErrorListener;
-import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.event.ConfigurationListener;
-import org.apache.commons.configuration2.event.EventSource;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for EventSource.
  *
  * @version $Id$
  */
-public class TestEventSource extends TestCase
+public class TestEventSource
 {
     /** Constant for the event type used for testing. */
-    static final int TEST_TYPE = 42;
+    private static final int TEST_TYPE = 42;
 
     /** Constant for the event property name. */
-    static final String TEST_PROPNAME = "test.property.name";
+    private static final String TEST_PROPNAME = "test.property.name";
 
     /** Constant for the event property value. */
-    static final Object TEST_PROPVALUE = "a test property value";
+    private static final Object TEST_PROPVALUE = "a test property value";
 
     /** The object under test. */
-    CountingEventSource source;
+    private CountingEventSource source;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         source = new CountingEventSource();
     }
 
     /**
      * Tests a newly created source object.
      */
+    @Test
     public void testInit()
     {
         assertTrue("Listeners list is not empty", source
@@ -68,11 +68,12 @@ public class TestEventSource extends TestCase
     /**
      * Tests registering a new listener.
      */
+    @Test
     public void testAddConfigurationListener()
     {
         TestListener l = new TestListener();
         source.addConfigurationListener(l);
-        Collection listeners = source.getConfigurationListeners();
+        Collection<ConfigurationListener> listeners = source.getConfigurationListeners();
         assertEquals("Wrong number of listeners", 1, listeners.size());
         assertTrue("Listener not in list", listeners.contains(l));
     }
@@ -81,22 +82,16 @@ public class TestEventSource extends TestCase
      * Tests adding an undefined configuration listener. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullConfigurationListener()
     {
-        try
-        {
-            source.addConfigurationListener(null);
-            fail("Could add null listener!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        source.addConfigurationListener(null);
     }
 
     /**
      * Tests removing a listener.
      */
+    @Test
     public void testRemoveConfigurationListener()
     {
         TestListener l = new TestListener();
@@ -115,6 +110,7 @@ public class TestEventSource extends TestCase
     /**
      * Tests if a null listener can be removed. This should be a no-op.
      */
+    @Test
     public void testRemoveNullConfigurationListener()
     {
         source.addConfigurationListener(new TestListener());
@@ -127,28 +123,22 @@ public class TestEventSource extends TestCase
     /**
      * Tests whether the listeners list is read only.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetConfigurationListenersUpdate()
     {
         source.addConfigurationListener(new TestListener());
-        Collection list = source.getConfigurationListeners();
-        try
-        {
-            list.add("test");
-            fail("Could manipulate list!");
-        }
-        catch (Exception ex)
-        {
-            // ok
-        }
+        Collection<ConfigurationListener> list = source.getConfigurationListeners();
+        list.add(new TestListener());
     }
 
     /**
      * Tests that the collection returned by getConfigurationListeners() is
      * really a snapshot. A later added listener must not be visible.
      */
+    @Test
     public void testGetConfigurationListenersAddNew()
     {
-        Collection list = source.getConfigurationListeners();
+        Collection<ConfigurationListener> list = source.getConfigurationListeners();
         source.addConfigurationListener(new TestListener());
         assertTrue("Listener snapshot not empty", list.isEmpty());
     }
@@ -156,6 +146,7 @@ public class TestEventSource extends TestCase
     /**
      * Tests enabling and disabling the detail events flag.
      */
+    @Test
     public void testSetDetailEvents()
     {
         source.setDetailEvents(true);
@@ -170,6 +161,7 @@ public class TestEventSource extends TestCase
     /**
      * Tests delivering an event to a listener.
      */
+    @Test
     public void testFireEvent()
     {
         TestListener l = new TestListener();
@@ -186,8 +178,9 @@ public class TestEventSource extends TestCase
     }
 
     /**
-     * Tests firering an event if there are no listeners.
+     * Tests fireEvent() if there are no listeners.
      */
+    @Test
     public void testFireEventNoListeners()
     {
         source.fireEvent(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE, false);
@@ -197,6 +190,7 @@ public class TestEventSource extends TestCase
     /**
      * Tests generating a detail event if detail events are not allowed.
      */
+    @Test
     public void testFireEventNoDetails()
     {
         TestListener l = new TestListener();
@@ -211,6 +205,7 @@ public class TestEventSource extends TestCase
      * Tests whether an event listener can deregister itself in reaction of a
      * delivered event.
      */
+    @Test
     public void testRemoveListenerInFireEvent()
     {
         ConfigurationListener lstRemove = new ConfigurationListener()
@@ -233,11 +228,12 @@ public class TestEventSource extends TestCase
     /**
      * Tests registering a new error listener.
      */
+    @Test
     public void testAddErrorListener()
     {
         TestListener l = new TestListener();
         source.addErrorListener(l);
-        Collection listeners = source.getErrorListeners();
+        Collection<ConfigurationErrorListener> listeners = source.getErrorListeners();
         assertEquals("Wrong number of listeners", 1, listeners.size());
         assertTrue("Listener not in list", listeners.contains(l));
     }
@@ -245,22 +241,16 @@ public class TestEventSource extends TestCase
     /**
      * Tests adding an undefined error listener. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullErrorListener()
     {
-        try
-        {
-            source.addErrorListener(null);
-            fail("Could add null error listener!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        source.addErrorListener(null);
     }
 
     /**
      * Tests removing an error listener.
      */
+    @Test
     public void testRemoveErrorListener()
     {
         TestListener l = new TestListener();
@@ -277,6 +267,7 @@ public class TestEventSource extends TestCase
     /**
      * Tests if a null error listener can be removed. This should be a no-op.
      */
+    @Test
     public void testRemoveNullErrorListener()
     {
         source.addErrorListener(new TestListener());
@@ -289,24 +280,18 @@ public class TestEventSource extends TestCase
     /**
      * Tests whether the listeners list is read only.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testGetErrorListenersUpdate()
     {
         source.addErrorListener(new TestListener());
-        Collection list = source.getErrorListeners();
-        try
-        {
-            list.add("test");
-            fail("Could manipulate list!");
-        }
-        catch (Exception ex)
-        {
-            // ok
-        }
+        Collection<ConfigurationErrorListener> list = source.getErrorListeners();
+        list.add(new TestListener());
     }
 
     /**
      * Tests delivering an error event to a listener.
      */
+    @Test
     public void testFireError()
     {
         TestListener l = new TestListener();
@@ -327,8 +312,9 @@ public class TestEventSource extends TestCase
     }
 
     /**
-     * Tests firering an error event if there are no error listeners.
+     * Tests fireError() if there are no error listeners.
      */
+    @Test
     public void testFireErrorNoListeners()
     {
         source.fireError(TEST_TYPE, TEST_PROPNAME, TEST_PROPVALUE,
@@ -340,6 +326,7 @@ public class TestEventSource extends TestCase
      * Tests cloning an event source object. The registered listeners should not
      * be registered at the clone.
      */
+    @Test
     public void testClone() throws CloneNotSupportedException
     {
         source.addConfigurationListener(new TestListener());
@@ -388,6 +375,7 @@ public class TestEventSource extends TestCase
 
         int errorCount;
 
+        @Override
         protected ConfigurationEvent createEvent(int type, String propName,
                 Object propValue, boolean before)
         {
@@ -395,6 +383,7 @@ public class TestEventSource extends TestCase
             return super.createEvent(type, propName, propValue, before);
         }
 
+        @Override
         protected ConfigurationErrorEvent createErrorEvent(int type,
                 String propName, Object value, Throwable ex)
         {
