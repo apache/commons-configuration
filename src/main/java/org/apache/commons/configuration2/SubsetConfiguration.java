@@ -17,9 +17,9 @@
 
 package org.apache.commons.configuration2;
 
-import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-
 import java.util.Iterator;
+
+import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 
 /**
  * <p>A subset of another configuration. The new Configuration object contains
@@ -30,7 +30,7 @@ import java.util.Iterator;
  * which will return a correctly initialized instance.</p>
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {
@@ -171,13 +171,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     @Override
-    public void setProperty(String key, Object value)
-    {
-        parent.setProperty(getParentKey(key), value);
-    }
-
-    @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         parent.clearProperty(getParentKey(key));
     }
@@ -197,7 +191,7 @@ public class SubsetConfiguration extends AbstractConfiguration
     {
         return new SubsetIterator(parent.getKeys(prefix));
     }
-    
+
     @Override
     protected Object interpolate(Object base)
     {

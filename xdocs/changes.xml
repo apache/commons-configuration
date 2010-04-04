@@ -79,6 +79,9 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-413" due-to="Alexander Prishchepov">
+        SubsetConfiguration now produces correct events.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-409">
         HierarchicalINIConfiguration now correctly saves sections whose name
         contains delimiter characters.
