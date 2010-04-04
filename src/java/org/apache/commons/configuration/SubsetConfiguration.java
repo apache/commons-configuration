@@ -170,12 +170,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         parent.addProperty(getParentKey(key), value);
     }
 
-    public void setProperty(String key, Object value)
-    {
-        parent.setProperty(getParentKey(key), value);
-    }
-
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         parent.clearProperty(getParentKey(key));
     }
