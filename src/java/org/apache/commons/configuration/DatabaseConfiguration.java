@@ -74,6 +74,12 @@ import org.apache.commons.logging.LogFactory;
  * Configuration config2 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config2");
  * String value2 = conf.getString("key2");
  * </pre>
+ * The configuration can be instructed to perform commits after database updates.
+ * This is achieved by setting the <code>commits</code> parameter of the
+ * constructors to <b>true</b>. If commits should not be performed (which is the
+ * default behavior), it should be ensured that the connections returned by the
+ * <code>DataSource</code> are in auto-commit mode.
+ *
  * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
  * @since 1.0
  *
@@ -100,8 +106,12 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /** The name of the configuration. */
     private String name;
 
+    /** A flag whether commits should be performed by this configuration. */
+    private final boolean doCommits;
+
     /**
      * Build a configuration from a table containing multiple configurations.
+     * No commits are performed by the new configuration instance.
      *
      * @param datasource    the datasource to connect to the database
      * @param table         the name of the table containing the configurations
@@ -113,18 +123,39 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public DatabaseConfiguration(DataSource datasource, String table, String nameColumn,
             String keyColumn, String valueColumn, String name)
     {
+        this(datasource, table, nameColumn, keyColumn, valueColumn, name, false);
+    }
+
+    /**
+     * Creates a new instance of <code>DatabaseConfiguration</code> that operates on
+     * a database table containing multiple configurations.
+     *
+     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param table the name of the table containing the configurations
+     * @param nameColumn the column containing the name of the configuration
+     * @param keyColumn the column containing the keys of the configuration
+     * @param valueColumn the column containing the values of the configuration
+     * @param name the name of the configuration
+     * @param commits a flag whether the configuration should perform a commit
+     *        after a database update
+     */
+    public DatabaseConfiguration(DataSource datasource, String table,
+            String nameColumn, String keyColumn, String valueColumn,
+            String name, boolean commits)
+    {
         this.datasource = datasource;
         this.table = table;
         this.nameColumn = nameColumn;
         this.keyColumn = keyColumn;
         this.valueColumn = valueColumn;
         this.name = name;
+        doCommits = commits;
         setLogger(LogFactory.getLog(getClass()));
         addErrorLogListener();  // log errors per default
     }
 
     /**
-     * Build a configuration from a table.-
+     * Build a configuration from a table.
      *
      * @param datasource    the datasource to connect to the database
      * @param table         the name of the table containing the configurations
@@ -134,6 +165,35 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public DatabaseConfiguration(DataSource datasource, String table, String keyColumn, String valueColumn)
     {
         this(datasource, table, null, keyColumn, valueColumn, null);
+    }
+
+    /**
+     * Creates a new instance of <code>DatabaseConfiguration</code> that
+     * operates on a database table containing a single configuration only.
+     *
+     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param table the name of the table containing the configurations
+     * @param keyColumn the column containing the keys of the configuration
+     * @param valueColumn the column containing the values of the configuration
+     * @param name the name of the configuration
+     * @param commits a flag whether the configuration should perform a commit
+     *        after a database update
+     */
+    public DatabaseConfiguration(DataSource datasource, String table,
+            String keyColumn, String valueColumn, boolean commits)
+    {
+        this(datasource, table, null, keyColumn, valueColumn, null, commits);
+    }
+
+    /**
+     * Returns a flag whether this configuration performs commits after database
+     * updates.
+     *
+     * @return a flag whether commits are performed
+     */
+    public boolean isDoCommits()
+    {
+        return doCommits;
     }
 
     /**
@@ -249,6 +309,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             pstmt.setString(index++, String.valueOf(obj));
 
             pstmt.executeUpdate();
+            commitIfRequired(conn);
         }
         catch (SQLException e)
         {
@@ -431,6 +492,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             }
 
             pstmt.executeUpdate();
+            commitIfRequired(conn);
         }
         catch (SQLException e)
         {
@@ -475,6 +537,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
             }
 
             pstmt.executeUpdate();
+            commitIfRequired(conn);
         }
         catch (SQLException e)
         {
@@ -601,6 +664,22 @@ public class DatabaseConfiguration extends AbstractConfiguration
         catch (SQLException e)
         {
             getLogger().error("An error occured on closing the connection", e);
+        }
+    }
+
+    /**
+     * Performs a commit if needed. This method is called after updates of the
+     * managed database table. If the configuration should perform commits, it
+     * does so now.
+     *
+     * @param conn the active connection
+     * @throws SQLException if an error occurs
+     */
+    private void commitIfRequired(Connection conn) throws SQLException
+    {
+        if (isDoCommits())
+        {
+            conn.commit();
         }
     }
 }
