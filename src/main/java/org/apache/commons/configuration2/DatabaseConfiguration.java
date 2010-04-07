@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.configuration2.flat.AbstractFlatConfiguration;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * Configuration stored in a database. The properties are retrieved from a
@@ -99,22 +99,25 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
     private static final String SQL_GET_KEYS = "SELECT DISTINCT %s FROM %s WHERE 1 = 1";
 
     /** The datasource to connect to the database. */
-    private DataSource datasource;
+    private final DataSource datasource;
 
     /** The name of the table containing the configurations. */
-    private String table;
+    private final String table;
 
     /** The column containing the name of the configuration. */
-    private String nameColumn;
+    private final String nameColumn;
 
     /** The column containing the keys. */
-    private String keyColumn;
+    private final String keyColumn;
 
     /** The column containing the values. */
-    private String valueColumn;
+    private final String valueColumn;
 
     /** The name of the configuration. */
-    private String name;
+    private final String name;
+
+    /** A flag whether commits should be performed by this configuration. */
+    private final boolean doCommits;
 
     /**
      * Build a configuration from a table containing multiple configurations.
@@ -129,18 +132,39 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
     public DatabaseConfiguration(DataSource datasource, String table, String nameColumn,
             String keyColumn, String valueColumn, String name)
     {
+        this(datasource, table, nameColumn, keyColumn, valueColumn, name, false);
+    }
+
+    /**
+     * Creates a new instance of {@code DatabaseConfiguration} that operates on
+     * a database table containing multiple configurations.
+     *
+     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param table the name of the table containing the configurations
+     * @param nameColumn the column containing the name of the configuration
+     * @param keyColumn the column containing the keys of the configuration
+     * @param valueColumn the column containing the values of the configuration
+     * @param name the name of the configuration
+     * @param commits a flag whether the configuration should perform a commit
+     *        after a database update
+     */
+    public DatabaseConfiguration(DataSource datasource, String table,
+            String nameColumn, String keyColumn, String valueColumn,
+            String name, boolean commits)
+    {
         this.datasource = datasource;
         this.table = table;
         this.nameColumn = nameColumn;
         this.keyColumn = keyColumn;
         this.valueColumn = valueColumn;
         this.name = name;
-        setLogger(LogFactory.getLog(getClass().getName()));
+        doCommits = commits;
+        setLogger(LogFactory.getLog(getClass()));
         addErrorLogListener();  // log errors per default
     }
 
     /**
-     * Build a configuration from a table.-
+     * Build a configuration from a table.
      *
      * @param datasource    the datasource to connect to the database
      * @param table         the name of the table containing the configurations
@@ -153,6 +177,35 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
     }
 
     /**
+     * Creates a new instance of {@code DatabaseConfiguration} that
+     * operates on a database table containing a single configuration only.
+     *
+     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param table the name of the table containing the configurations
+     * @param keyColumn the column containing the keys of the configuration
+     * @param valueColumn the column containing the values of the configuration
+     * @param name the name of the configuration
+     * @param commits a flag whether the configuration should perform a commit
+     *        after a database update
+     */
+    public DatabaseConfiguration(DataSource datasource, String table,
+            String keyColumn, String valueColumn, boolean commits)
+    {
+        this(datasource, table, null, keyColumn, valueColumn, null, commits);
+    }
+
+    /**
+     * Returns a flag whether this configuration performs commits after database
+     * updates.
+     *
+     * @return a flag whether commits are performed
+     */
+    public boolean isDoCommits()
+    {
+        return doCommits;
+    }
+
+    /**
      * Returns the value of the specified property. If this causes a database
      * error, an error event will be generated of type
      * <code>EVENT_READ_PROPERTY</code> with the causing exception. The
@@ -162,6 +215,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
      * @param key the key of the desired property
      * @return the value of this property
      */
+    @Override
     public Object getProperty(final String key)
     {
         JdbcOperation op = new JdbcOperation(EVENT_READ_PROPERTY, key, null)
@@ -288,6 +342,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
      *
      * @return a flag whether this configuration is empty.
      */
+    @Override
     public boolean isEmpty()
     {
         JdbcOperation op = new JdbcOperation(EVENT_READ_PROPERTY, null, null)
@@ -317,6 +372,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
      * @param key the key to be checked
      * @return a flag whether this key is defined
      */
+    @Override
     public boolean containsKey(final String key)
     {
         JdbcOperation op = new JdbcOperation(EVENT_READ_PROPERTY, key, null)
@@ -393,6 +449,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
      * @return an iterator with the contained keys (an empty iterator in case of
      *         an error)
      */
+    @Override
     public Iterator<String> getKeys()
     {
         final Collection<String> keys = new ArrayList<String>();
@@ -518,6 +575,11 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
             {
                 conn = getDatasource().getConnection();
                 result = performOperation();
+
+                if (isDoCommits())
+                {
+                    conn.commit();
+                }
             }
             catch (SQLException e)
             {

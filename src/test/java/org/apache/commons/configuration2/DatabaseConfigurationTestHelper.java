@@ -70,10 +70,38 @@ public class DatabaseConfigurationTestHelper
     public static final String CONFIG_NAME = "test";
 
     /** Stores the in-process database. */
-    private static HsqlDB hsqlDB = null;
+    private HsqlDB hsqlDB;
 
     /** The data source. */
     private PotentialErrorDataSource datasource;
+
+    /**
+     * The auto-commit mode for the connections created by the managed data
+     * source.
+     */
+    private boolean autoCommit = true;
+
+    /**
+     * Returns the auto-commit mode of the connections created by the managed
+     * data source.
+     *
+     * @return the auto-commit mode
+     */
+    public boolean isAutoCommit()
+    {
+        return autoCommit;
+    }
+
+    /**
+     * Sets the auto-commit mode of the connections created by the managed data
+     * source.
+     *
+     * @param autoCommit the auto-commit mode
+     */
+    public void setAutoCommit(boolean autoCommit)
+    {
+        this.autoCommit = autoCommit;
+    }
 
     /**
      * Initializes this helper object. This method can be called from a
@@ -84,35 +112,9 @@ public class DatabaseConfigurationTestHelper
      */
     public void setUp() throws Exception
     {
-        if (hsqlDB == null)
-        {
-            File script = ConfigurationAssert.getTestFile("testdb.script");
-            hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script
-                    .getAbsolutePath());
-        }
-
-        PotentialErrorDataSource datasource = new PotentialErrorDataSource();
-        datasource.setDriverClassName(DATABASE_DRIVER);
-        datasource.setUrl(DATABASE_URL);
-        datasource.setUsername(DATABASE_USERNAME);
-        datasource.setPassword(DATABASE_PASSWORD);
-
-        this.datasource = datasource;
-
-        // prepare the database
-        IDatabaseConnection connection = new DatabaseConnection(datasource
-                .getConnection());
-        IDataSet dataSet = new XmlDataSet(new FileInputStream(
-                ConfigurationAssert.getTestFile("dataset.xml")));
-
-        try
-        {
-            DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
-        }
-        finally
-        {
-            connection.close();
-        }
+        File script = ConfigurationAssert.getTestFile("testdb.script");
+        hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script
+                .getAbsolutePath());
     }
 
     /**
@@ -123,8 +125,8 @@ public class DatabaseConfigurationTestHelper
      */
     public void tearDown() throws Exception
     {
-        datasource.getConnection().commit();
-        datasource.getConnection().close();
+        datasource.close();
+        hsqlDB.close();
     }
 
     /**
@@ -134,7 +136,8 @@ public class DatabaseConfigurationTestHelper
      */
     public DatabaseConfiguration setUpConfig()
     {
-        return new DatabaseConfiguration(datasource, TABLE, COL_KEY, COL_VALUE);
+        return new DatabaseConfiguration(getDatasource(), TABLE, COL_KEY,
+                COL_VALUE, !isAutoCommit());
     }
 
     /**
@@ -145,18 +148,81 @@ public class DatabaseConfigurationTestHelper
      */
     public DatabaseConfiguration setUpMultiConfig()
     {
-        return new DatabaseConfiguration(datasource, TABLE_MULTI, COL_NAME,
-                COL_KEY, COL_VALUE, CONFIG_NAME);
+        return setUpMultiConfig(CONFIG_NAME);
     }
 
     /**
-     * Returns the <code>DataSource</code> managed by this class.
+     * Creates a database configuration that supports multiple configurations in
+     * a table and sets the specified configuration name.
+     *
+     * @param configName the name of the configuration
+     * @return the configuration
+     */
+    public DatabaseConfiguration setUpMultiConfig(String configName)
+    {
+        return new DatabaseConfiguration(getDatasource(), TABLE_MULTI,
+                COL_NAME, COL_KEY, COL_VALUE, configName, !isAutoCommit());
+    }
+
+    /**
+     * Returns the <code>DataSource</code> managed by this class. The data
+     * source is created on first access.
      *
      * @return the <code>DataSource</code>
      */
     public PotentialErrorDataSource getDatasource()
     {
+        if (datasource == null)
+        {
+            try
+            {
+                datasource = setUpDataSource();
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationRuntimeException(
+                        "Could not create data source", ex);
+            }
+        }
         return datasource;
+    }
+
+    /**
+     * Creates the internal data source. This method also initializes the
+     * database.
+     *
+     * @return the data source
+     * @throws Exception if an error occurs
+     */
+    private PotentialErrorDataSource setUpDataSource() throws Exception
+    {
+        PotentialErrorDataSource ds = new PotentialErrorDataSource();
+        ds.setDriverClassName(DATABASE_DRIVER);
+        ds.setUrl(DATABASE_URL);
+        ds.setUsername(DATABASE_USERNAME);
+        ds.setPassword(DATABASE_PASSWORD);
+        ds.setDefaultAutoCommit(isAutoCommit());
+
+        // prepare the database
+        Connection conn = ds.getConnection();
+        IDatabaseConnection connection = new DatabaseConnection(conn);
+        IDataSet dataSet = new XmlDataSet(new FileInputStream(
+                ConfigurationAssert.getTestFile("dataset.xml")));
+
+        try
+        {
+            DatabaseOperation.CLEAN_INSERT.execute(connection, dataSet);
+        }
+        finally
+        {
+            if (!isAutoCommit())
+            {
+                conn.commit();
+            }
+            connection.close();
+        }
+
+        return ds;
     }
 
     /**
