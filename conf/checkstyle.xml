@@ -22,7 +22,7 @@
 
     <!-- Exceptions -->
     <module name="SuppressionFilter">
-        <property name="file" value="conf/checkstyle-suppressions.xml"/>
+        <property name="file" value="${basedir}/conf/checkstyle-suppressions.xml"/>
     </module>
 
     <module name="TreeWalker">
