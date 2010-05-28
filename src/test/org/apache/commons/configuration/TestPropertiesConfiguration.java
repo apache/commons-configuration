@@ -262,7 +262,8 @@ public class TestPropertiesConfiguration extends TestCase
     public void testSaveWithBasePath() throws Exception
     {
         conf.setProperty("test", "true");
-        conf.setBasePath(testSavePropertiesFile.getParentFile().toURL().toString());
+        conf.setBasePath(testSavePropertiesFile.getParentFile().toURI().toURL()
+                .toString());
         conf.setFileName(testSavePropertiesFile.getName());
         conf.save();
         assertTrue(testSavePropertiesFile.exists());
