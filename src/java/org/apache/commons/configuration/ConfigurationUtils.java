@@ -35,7 +35,6 @@ import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -57,7 +56,7 @@ public final class ConfigurationUtils
     /** Constant for the resource path separator.*/
     static final String RESOURCE_PATH_SEPARATOR = "/";
 
-    /** Constanct for the file URL protocol */
+    /** Constant for the file URL protocol */
     private static final String FILE_SCHEME = "file:";
 
     /** Constant for the name of the clone() method.*/
@@ -65,9 +64,6 @@ public final class ConfigurationUtils
 
     /** Constant for the encoding for URLs. */
     private static final String ENCODING = "UTF-8";
-
-    /** Constant for Java version 1.4.*/
-    private static final float JAVA_1_4 = 1.4f;
 
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class);
@@ -718,36 +714,17 @@ public final class ConfigurationUtils
 
     /**
      * Convert the specified file into an URL. This method is equivalent
-     * to file.toURI().toURL() on Java 1.4 and above, and equivalent to
-     * file.toURL() on Java 1.3. This is to work around a bug in the JDK
+     * to file.toURI().toURL(). It was used to work around a bug in the JDK
      * preventing the transformation of a file into an URL if the file name
      * contains a '#' character. See the issue CONFIGURATION-300 for
-     * more details.
+     * more details. Now that we switched to JDK 1.4 we can directly use
+     * file.toURI().toURL().
      *
      * @param file the file to be converted into an URL
      */
     static URL toURL(File file) throws MalformedURLException
     {
-        if (SystemUtils.isJavaVersionAtLeast(JAVA_1_4))
-        {
-            try
-            {
-                Method toURI = file.getClass().getMethod("toURI", (Class[]) null);
-                Object uri = toURI.invoke(file, (Class[]) null);
-                Method toURL = uri.getClass().getMethod("toURL", (Class[]) null);
-                URL url = (URL) toURL.invoke(uri, (Class[]) null);
-
-                return url;
-            }
-            catch (Exception e)
-            {
-                throw new MalformedURLException(e.getMessage());
-            }
-        }
-        else
-        {
-            return file.toURL();
-        }
+        return file.toURI().toURL();
     }
 
     /**

@@ -93,15 +93,15 @@ public class TestConfigurationUtils extends TestCase
                 .toString());
         File absFile = new File("config.xml").getAbsoluteFile();
         assertEquals(
-            absFile.toURL(),
+            absFile.toURI().toURL(),
             ConfigurationUtils.getURL(
                 "http://localhost:8080/webapp/config/baseConfig.xml",
                 absFile.getAbsolutePath()));
         assertEquals(
-            absFile.toURL(),
+            absFile.toURI().toURL(),
             ConfigurationUtils.getURL(null, absFile.getAbsolutePath()));
 
-		assertEquals(absFile.toURL(),
+		assertEquals(absFile.toURI().toURL(),
 		ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
 
@@ -187,8 +187,8 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(reference, ConfigurationUtils.getFile(null, reference.getAbsolutePath()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getAbsolutePath()));
         assertEquals(reference, ConfigurationUtils.getFile(directory.getAbsolutePath(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile(directory.toURL().toString(), reference.getName()));
-        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURL().toString()));
+        assertEquals(reference, ConfigurationUtils.getFile(directory.toURI().toURL().toString(), reference.getName()));
+        assertEquals(reference, ConfigurationUtils.getFile("invalid", reference.toURI().toURL().toString()));
         assertEquals(reference, ConfigurationUtils.getFile(
                 "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
                 reference.getAbsolutePath()));
