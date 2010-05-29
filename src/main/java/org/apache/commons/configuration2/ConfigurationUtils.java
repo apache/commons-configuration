@@ -21,12 +21,10 @@ import java.io.File;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.Iterator;
 
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
@@ -47,7 +45,7 @@ import org.apache.commons.logging.LogFactory;
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
  * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public final class ConfigurationUtils
 {
@@ -59,9 +57,6 @@ public final class ConfigurationUtils
 
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
-
-    /** Constant for the encoding for URLs. */
-    private static final String ENCODING = "UTF-8";
 
     /** The logger.*/
     private static Log log = LogFactory.getLog(ConfigurationUtils.class.getName());
@@ -543,28 +538,33 @@ public final class ConfigurationUtils
 
     /**
      * Tries to convert the specified URL to a file object. If this fails,
-     * <b>null</b> is returned.
+     * <b>null</b> is returned. Note: This code has been copied from the
+     * <code>FileUtils</code> class from <em>Commons IO</em>.
      *
      * @param url the URL
      * @return the resulting file object
      */
     public static File fileFromURL(URL url)
     {
-        if (PROTOCOL_FILE.equals(url.getProtocol()))
+        if (url == null || !url.getProtocol().equals(PROTOCOL_FILE))
         {
-            try
-            {
-                return new File(URLDecoder.decode(url.getPath(), ENCODING));
-            }
-            catch (UnsupportedEncodingException uex)
-            {
-                // should not happen because UTF-8 should be supported
-                throw new AssertionError("Encoding not supported: " + uex);
-            }
+            return null;
         }
         else
         {
-            return null;
+            String filename = url.getFile().replace('/', File.separatorChar);
+            int pos = 0;
+            while ((pos = filename.indexOf('%', pos)) >= 0)
+            {
+                if (pos + 2 < filename.length())
+                {
+                    String hexStr = filename.substring(pos + 1, pos + 3);
+                    char ch = (char) Integer.parseInt(hexStr, 16);
+                    filename = filename.substring(0, pos) + ch
+                            + filename.substring(pos + 3);
+                }
+            }
+            return new File(filename);
         }
     }
 
