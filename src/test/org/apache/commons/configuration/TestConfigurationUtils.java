@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -192,6 +193,28 @@ public class TestConfigurationUtils extends TestCase
         assertEquals(reference, ConfigurationUtils.getFile(
                 "jar:file:/C:/myjar.jar!/my-config.xml/someprops.properties",
                 reference.getAbsolutePath()));
+    }
+
+    /**
+     * Tests whether a "+" character in the file name is handled correctly by
+     * fileFromURL(). This test is related to CONFIGURATION-415.
+     */
+    public void testFileFromURLWithPlus() throws MalformedURLException
+    {
+        File file = new File(new File("target"), "foo+bar.txt")
+                .getAbsoluteFile();
+        URL fileURL = file.toURI().toURL();
+        File file2 = ConfigurationUtils.fileFromURL(fileURL);
+        assertEquals("Wrong file", file, file2);
+    }
+
+    /**
+     * Tests whether fileFromURL() handles null URLs correctly.
+     */
+    public void testFileFromURLNull() throws MalformedURLException
+    {
+        assertNull("Wrong file for null URL", ConfigurationUtils
+                .fileFromURL(null));
     }
 
     public void testLocateWithNullTCCL() throws Exception

@@ -383,6 +383,29 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
+     * Tests whether file names containing a "+" character are handled
+     * correctly. This test is related to CONFIGURATION-415.
+     */
+    public void testPathWithPlus() throws ConfigurationException, IOException
+    {
+        File saveFile = new File(TARGET_DIR, "test+config.properties")
+                .getAbsoluteFile();
+        saveFile.createNewFile();
+        try
+        {
+            FileConfiguration config = new PropertiesConfiguration(saveFile);
+            config.addProperty("test", Boolean.TRUE);
+            config.save();
+            File configFile = config.getFile();
+            assertEquals("Wrong configuration file", saveFile, configFile);
+        }
+        finally
+        {
+            assertTrue("Could not remove test file", saveFile.delete());
+        }
+    }
+
+    /**
      * Tests the getFile() method.
      */
     public void testGetFile() throws ConfigurationException
