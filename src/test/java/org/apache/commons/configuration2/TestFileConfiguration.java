@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestFileConfiguration extends TestCase
 {
@@ -87,7 +87,7 @@ public class TestFileConfiguration extends TestCase
         assertEquals(TEST_FILENAME, config.getFileName());
         assertEquals(directory.getAbsolutePath(), config.getBasePath());
         assertEquals(file.getAbsolutePath(), config.getPath());
-        assertEquals(file.toURL(), config.getURL());
+        assertEquals(file.toURI().toURL(), config.getURL());
 
         config.setBasePath(null);
         config.setFileName(TEST_FILENAME);
@@ -165,7 +165,7 @@ public class TestFileConfiguration extends TestCase
         try
         {
             DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            builder.setURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURL());
+            builder.setURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURI().toURL());
             CombinedConfiguration cc = (CombinedConfiguration) builder.getConfiguration();
             PropertiesConfiguration config = null;
             for (int i = 0; config == null; i++)
@@ -345,7 +345,7 @@ public class TestFileConfiguration extends TestCase
             out.close();
             out = null;
 
-            URL url = new URL(ConfigurationAssert.OUT_DIR.toURL()
+            URL url = new URL(ConfigurationAssert.OUT_DIR.toURI().toURL()
                     + "path%20with%20spaces/config-test.properties");
             PropertiesConfiguration config = new PropertiesConfiguration(url);
             config.load();
@@ -451,7 +451,7 @@ public class TestFileConfiguration extends TestCase
         }
 
         config = new PropertiesConfiguration();
-        config.load(file.toURL());
+        config.load(file.toURI().toURL());
         try
         {
             config.save();
