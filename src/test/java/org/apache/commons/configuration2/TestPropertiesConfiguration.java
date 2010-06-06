@@ -991,6 +991,33 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
+     * Tests whether backslashes are correctly handled if lists are parsed. This
+     * test is related to CONFIGURATION-418.
+     */
+    public void testBackslashEscapingInLists() throws ConfigurationException
+    {
+        checkBackslashList("share2");
+        checkBackslashList("share1");
+    }
+
+    /**
+     * Helper method for testing the content of a list with elements that
+     * contain backslashes.
+     *
+     * @param key the key
+     */
+    private void checkBackslashList(String key)
+    {
+        Object prop = conf.getProperty("test." + key);
+        assertTrue("Not a list", prop instanceof List<?>);
+        List<?> list = (List<?>) prop;
+        assertEquals("Wrong number of list elements", 2, list.size());
+        final String prefix = "\\\\" + key;
+        assertEquals("Wrong element 1", prefix + "a", list.get(0));
+        assertEquals("Wrong element 2", prefix + "b", list.get(1));
+    }
+
+    /**
      * Creates a configuration that can be used for testing copy operations.
      *
      * @return the configuration to be copied
