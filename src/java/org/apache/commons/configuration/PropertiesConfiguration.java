@@ -210,6 +210,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     /** Constant for the escaping character.*/
     private static final String ESCAPE = "\\";
 
+    /** Constant for the escaped escaping character.*/
+    private static final String DOUBLE_ESC = ESCAPE + ESCAPE;
+
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
@@ -589,6 +592,24 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
+     * Returns the number of trailing backslashes. This is sometimes needed for
+     * the correct handling of escape characters.
+     *
+     * @param line the string to investigate
+     * @return the number of trailing backslashes
+     */
+    private static int countTrailingBS(String line)
+    {
+        int bsCount = 0;
+        for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
+        {
+            bsCount++;
+        }
+
+        return bsCount;
+    }
+
+    /**
      * This class is used to read properties lines. These lines do
      * not terminate with new-line chars but rather when there is no
      * backslash sign a the end of the line.  This is used to
@@ -828,13 +849,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         private static boolean checkCombineLines(String line)
         {
-            int bsCount = 0;
-            for (int idx = line.length() - 1; idx >= 0 && line.charAt(idx) == '\\'; idx--)
-            {
-                bsCount++;
-            }
-
-            return bsCount % 2 != 0;
+            return countTrailingBS(line) % 2 != 0;
         }
 
         /**
@@ -1104,7 +1119,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             }
             else
             {
-                v = escapeValue(value);
+                v = escapeValue(value, false);
             }
 
             write(escapeKey(key));
@@ -1160,17 +1175,57 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * will be escaped.
          *
          * @param value the property value
+         * @param inList a flag whether the value is part of a list
          * @return the escaped property value
          * @since 1.3
          */
-        private String escapeValue(Object value)
+        private String escapeValue(Object value, boolean inList)
         {
-            String escapedValue = StringEscapeUtils.escapeJava(String.valueOf(value));
+            String escapedValue = handleBackslashs(value, inList);
             if (delimiter != 0)
             {
                 escapedValue = StringUtils.replace(escapedValue, String.valueOf(delimiter), ESCAPE + delimiter);
             }
             return escapedValue;
+        }
+
+        /**
+         * Performs the escaping of backslashes in the specified properties
+         * value. Because a double backslash is used to escape the escape
+         * character of a list delimiter, double backslashes also have to be
+         * escaped if the property is part of a (single line) list. Then, in all cases each backslash has to be doubled in order to produce a
+         * valid properties file.
+         *
+         * @param value the value to be escaped
+         * @param inList a flag whether the value is part of a list
+         * @return the value with escaped backslashes as string
+         */
+        private String handleBackslashs(Object value, boolean inList)
+        {
+            String strValue = String.valueOf(value);
+
+            if (inList && strValue.indexOf(DOUBLE_ESC) >= 0)
+            {
+                char esc = ESCAPE.charAt(0);
+                StringBuffer buf = new StringBuffer(strValue.length() + 8);
+                for (int i = 0; i < strValue.length(); i++)
+                {
+                    if (strValue.charAt(i) == esc && i < strValue.length() - 1
+                            && strValue.charAt(i + 1) == esc)
+                    {
+                        buf.append(DOUBLE_ESC).append(DOUBLE_ESC);
+                        i++;
+                    }
+                    else
+                    {
+                        buf.append(strValue.charAt(i));
+                    }
+                }
+
+                strValue = buf.toString();
+            }
+
+            return StringEscapeUtils.escapeJava(strValue);
         }
 
         /**
@@ -1185,19 +1240,19 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             if (!values.isEmpty())
             {
                 Iterator it = values.iterator();
-                String lastValue = escapeValue(it.next());
+                String lastValue = escapeValue(it.next(), true);
                 StringBuffer buf = new StringBuffer(lastValue);
                 while (it.hasNext())
                 {
                     // if the last value ended with an escape character, it has
                     // to be escaped itself; otherwise the list delimiter will
                     // be escaped
-                    if (lastValue.endsWith(ESCAPE))
+                    if (lastValue.endsWith(ESCAPE) && (countTrailingBS(lastValue) / 2) % 2 != 0)
                     {
                         buf.append(ESCAPE).append(ESCAPE);
                     }
                     buf.append(delimiter);
-                    lastValue = escapeValue(it.next());
+                    lastValue = escapeValue(it.next(), true);
                     buf.append(lastValue);
                 }
                 return buf.toString();
