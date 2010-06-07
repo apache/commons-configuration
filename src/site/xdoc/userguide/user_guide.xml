@@ -65,7 +65,7 @@
         <li><a href="howto_properties.html#Includes">Includes</a></li>
         <li><a href="howto_properties.html#Lists_and_arrays">Lists and arrays</a></li>
         <li><a href="howto_properties.html#Saving">Saving</a></li>
-        <li><a href="howto_properties.html#Special_Characters">Special Characters</a></li>
+        <li><a href="howto_properties.html#Special_Characters_and_Escaping">Special Characters and Escaping</a></li>
         <li><a href="howto_properties.html#Layout_Objects">Layout Objects</a></li>
         <li><a href="howto_properties.html#Custom_properties_readers_and_writers">Custom properties readers and writers</a></li>
       </ul>

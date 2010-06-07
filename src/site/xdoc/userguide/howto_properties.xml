@@ -172,7 +172,7 @@ config.save("usergui.backup.properties);
         </p>
       </subsection>
 
-      <subsection name="Special Characters">
+      <subsection name="Special Characters and Escaping">
         <p>
           If you need a special character in a property like a line feed, a tabulation or
           an unicode character, you can specify it with the same escaped notation used for
@@ -181,6 +181,76 @@ config.save("usergui.backup.properties);
         <source><![CDATA[
 key = This \n string \t contains \, escaped \\ characters \u0020
 ]]></source>
+      <p>
+        When dealing with lists of elements that contain backslash characters
+        (e.g. file paths on Windows systems) escaping rules can become pretty
+        complex. The first thing to keep in mind is that in order to get a
+        single backslash, you have to write two:
+      </p>
+      <source><![CDATA[
+config.dir = C:\\Temp\\
+      ]]></source>
+      <p>
+        This issue is not specific to Commons Configuration, but is related to
+        the standard format for properties files. Refer to the Javadocs of the
+        <code>load()</code> method of <code>java.util.Properties</code> for more
+        information. Now if you want to define a list with file paths, you may
+        be tempted to write the following:
+      </p>
+      <source><![CDATA[
+# Wrong way to define a list of directories
+config.dirs = C:\\Temp\\,D:\\data\\
+      ]]></source>
+      <p>
+        As the comment indicates, this will not work. The trailing backslash of
+        the first directory is interpreted as escape character for the list
+        delimiter. So instead of a list with two elements only a single value
+        of the property is defined - clearly not what was desired. To get a
+        correct list the trailing backslash has to be escaped. This is achieved
+        by duplicating it (yes, in a properties file that means that we now need
+        4 backslashes):
+      </p>
+      <source><![CDATA[
+# Correct way to define a list of directories
+config.dirs = C:\\Temp\\\\,D:\\data\\
+      ]]></source>
+      <p>
+        So a sequence of 4 backslashes in the value of a property is interpreted
+        as an escaped backslash and eventually results in a single backslash.
+        This creates another problem when a properties file should refer to the
+        names of network shares. Typically these names start with two
+        backslashes, so the obvious way to define such a property is as follows:
+      </p>
+      <source><![CDATA[
+# Wrong way to define a list of network shares
+config.dirs = \\\\share1,\\\\share2
+      ]]></source>
+      <p>
+        Unfortunately, this will not work because the shares contain the reserved
+        sequence of 4 backslashes. So when reading the value of the
+        <em>config.dirs</em> property a list with two elements is returned
+        starting only with a single backslash. To fix the problem the sequence
+        for escaping a backslash has to be duplicated - we are now at 8
+        backslashes:
+      </p>
+      <source><![CDATA[
+# Correct way to define a list of network shares
+config.dirs = \\\\\\\\share1,\\\\\\\\share2
+      ]]></source>
+      <p>
+        As becomes obvious, escape sequences can become pretty complex and
+        unreadable. In such situations it is recommended to use the alternative
+        way of defining a list: just use the same key multiple times. In this
+        case no additional escaping of backslashes (beyond the usual duplicating
+        required by properties files) is needed because there is no list
+        delimter character involved. Using this syntax the list of network
+        shares looks like the following:
+      </p>
+      <source><![CDATA[
+# Straightforward way to define a list of network shares
+config.dirs = \\\\share1
+config.dirs = \\\\share2
+      ]]></source>
       </subsection>
 
       <subsection name="Layout Objects">
