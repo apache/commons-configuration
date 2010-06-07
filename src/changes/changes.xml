@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-418">
+        A bug related to the interpretation of escape sequences for backslashes
+        has been fixed. The user guide has also been improved in this area.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-415">
         Files with a plus character in their names are now handled correctly.
       </action>
