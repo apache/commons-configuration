@@ -336,11 +336,11 @@ public class TestXMLPropertyListConfiguration extends TestCase
     }
 
     public void testInitCopy()
-	{
-		XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);
-		StrictConfigurationComparator comp = new StrictConfigurationComparator();
-		assertTrue("Configurations are not equal", comp.compare(config, copy));
-	}
+    {
+        XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);
+        StrictConfigurationComparator comp = new StrictConfigurationComparator();
+        assertTrue("Configurations are not equal", comp.compare(config, copy));
+    }
 
     /**
      * Tests whether a configuration can be loaded that does not start with a

@@ -102,8 +102,8 @@ public class TestConfigurationUtils extends TestCase
             absFile.toURI().toURL(),
             ConfigurationUtils.getURL(null, absFile.getAbsolutePath()));
 
-		assertEquals(absFile.toURI().toURL(),
-		ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
+        assertEquals(absFile.toURI().toURL(),
+        ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
 
     public void testGetBasePath() throws Exception

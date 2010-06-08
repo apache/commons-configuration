@@ -834,25 +834,25 @@ public class TestHierarchicalConfiguration extends TestCase
         }
     }
 
-	/**
+    /**
      * Tests the copy constructor.
      */
-	public void testInitCopy()
-	{
-		HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
-		checkContent(copy);
-	}
+    public void testInitCopy()
+    {
+        HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+        checkContent(copy);
+    }
 
-	/**
+    /**
      * Tests whether the nodes of a copied configuration are independent from
      * the source configuration.
      */
-	public void testInitCopyUpdate()
-	{
-		HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
-		config.setProperty("tables.table(0).name", "NewTable");
-		checkContent(copy);
-	}
+    public void testInitCopyUpdate()
+    {
+        HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+        config.setProperty("tables.table(0).name", "NewTable");
+        checkContent(copy);
+    }
 
     /**
      * Tests interpolation facilities.
@@ -959,16 +959,16 @@ public class TestHierarchicalConfiguration extends TestCase
         testGetProperty();
     }
 
-	/**
+    /**
      * Tests the copy constructor when a null reference is passed.
      */
-	public void testInitCopyNull()
-	{
-		HierarchicalConfiguration copy = new HierarchicalConfiguration(null);
-		assertTrue("Configuration not empty", copy.isEmpty());
-	}
+    public void testInitCopyNull()
+    {
+        HierarchicalConfiguration copy = new HierarchicalConfiguration(null);
+        assertTrue("Configuration not empty", copy.isEmpty());
+    }
 
-	/**
+    /**
      * Tests the parents of nodes when setRootNode() is involved. This is
      * related to CONFIGURATION-334.
      */
@@ -1015,7 +1015,7 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals("Wrong property value", "C:\\Temp", config.getString(key));
     }
 
-	/**
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()
@@ -1081,27 +1081,27 @@ public class TestHierarchicalConfiguration extends TestCase
                 .contains("tables/table/fields/field/name"));
     }
 
-	/**
+    /**
      * Checks the content of the passed in configuration object. Used by some
      * tests that copy a configuration.
      *
      * @param c the configuration to check
      */
-	private void checkContent(Configuration c)
-	{
-		for (int i = 0; i < tables.length; i++)
-		{
-			assertEquals(tables[i], c.getString("tables.table(" + i + ").name"));
-			for (int j = 0; j < fields[i].length; j++)
-			{
-				assertEquals(fields[i][j], c.getString("tables.table(" + i
-						+ ").fields.field(" + j + ").name"));
-			}
-		}
-	}
+    private void checkContent(Configuration c)
+    {
+        for (int i = 0; i < tables.length; i++)
+        {
+            assertEquals(tables[i], c.getString("tables.table(" + i + ").name"));
+            for (int j = 0; j < fields[i].length; j++)
+            {
+                assertEquals(fields[i][j], c.getString("tables.table(" + i
+                        + ").fields.field(" + j + ").name"));
+            }
+        }
+    }
 
-	private ExpressionEngine createAlternativeExpressionEngine()
-	{
+    private ExpressionEngine createAlternativeExpressionEngine()
+    {
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setPropertyDelimiter("/");
         engine.setIndexStart("[");

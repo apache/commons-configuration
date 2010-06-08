@@ -29,8 +29,8 @@ import org.apache.commons.configuration.SubsetConfiguration;
  */
 public class TestSubsetConfigurationEvents extends AbstractTestConfigurationEvents
 {
-	protected AbstractConfiguration createConfiguration()
-	{
-		return (SubsetConfiguration)new MapConfiguration(new HashMap()).subset("test");
-	}
+    protected AbstractConfiguration createConfiguration()
+    {
+        return (SubsetConfiguration)new MapConfiguration(new HashMap()).subset("test");
+    }
 }
