@@ -19,13 +19,11 @@ package org.apache.commons.configuration.interpol;
 import junit.framework.TestCase;
 
 import java.io.File;
-import java.io.StringWriter;
 
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.WriterAppender;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.Logger;
 import org.apache.log4j.Level;

@@ -1,12 +1,6 @@
 package org.apache.commons.configuration;
 
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.reloading.Reloadable;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Iterator;
 
 /**
  *
