@@ -408,7 +408,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testLoadFromURL() throws Exception
     {
-        URL url = new File(testProperties).toURL();
+        URL url = new File(testProperties).toURI().toURL();
         conf = new XMLConfiguration(url);
         assertEquals("value", conf.getProperty("element"));
         assertEquals(url, conf.getURL());
@@ -505,7 +505,7 @@ public class TestXMLConfiguration extends TestCase
      */
     public void testSaveToURL() throws Exception
     {
-        conf.save(testSaveConf.toURL());
+        conf.save(testSaveConf.toURI().toURL());
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
         checkSavedConfig(checkConfig);
@@ -1435,7 +1435,7 @@ public class TestXMLConfiguration extends TestCase
         conf.save(testSaveConf);
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
-        checkConfig.registerEntityId(publicId, dtdFile.toURL());
+        checkConfig.registerEntityId(publicId, dtdFile.toURI().toURL());
         checkConfig.setValidating(true);
         checkSavedConfig(checkConfig);
     }
