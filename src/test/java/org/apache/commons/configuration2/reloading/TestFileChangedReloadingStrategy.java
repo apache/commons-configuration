@@ -122,7 +122,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertTrue(config.getBoolean("configuration.loaded"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
-        assertEquals(config.getURL(), strategy.getFile().toURL());
+        assertEquals(config.getURL().toString(), strategy.getFile().toURI().toString());
     }
 
     /**
