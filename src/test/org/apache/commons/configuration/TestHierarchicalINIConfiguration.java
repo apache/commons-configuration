@@ -76,9 +76,13 @@ public class TestHierarchicalINIConfiguration extends TestCase
             + "  line 2" + LINE_SEPARATOR
             + "continueNoLine = one \\" + LINE_SEPARATOR;
 
+    /** An ini file that contains only a property in the global section. */
+    private static final String INI_DATA_GLOBAL_ONLY = "globalVar = testGlobal"
+            + LINE_SEPARATOR + LINE_SEPARATOR;
+
     /** An ini file with a global section. */
-    private static final String INI_DATA_GLOBAL = "globalVar = testGlobal"
-            + LINE_SEPARATOR + LINE_SEPARATOR + INI_DATA;
+    private static final String INI_DATA_GLOBAL = INI_DATA_GLOBAL_ONLY
+            + INI_DATA;
 
     /** A test ini file. */
     private static final File TEST_FILE = new File("target/test.ini");
@@ -152,15 +156,36 @@ public class TestHierarchicalINIConfiguration extends TestCase
     }
 
     /**
+     * Helper method for testing a save operation. This method constructs a
+     * configuration from the specified content string. Then it saves this
+     * configuration and checks whether the result matches the original content.
+     *
+     * @param content the content of the configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private void checkSave(String content) throws ConfigurationException
+    {
+        HierarchicalINIConfiguration config = setUpConfig(content);
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        assertEquals("Wrong content of ini file", content, writer.toString());
+    }
+
+    /**
      * Tests saving a configuration that contains a global section.
      */
     public void testSaveWithGlobalSection() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
-        StringWriter writer = new StringWriter();
-        config.save(writer);
-        assertEquals("Wrong content of ini file", INI_DATA_GLOBAL, writer
-                .toString());
+        checkSave(INI_DATA_GLOBAL);
+    }
+
+    /**
+     * Tests whether a configuration that contains only a global section can be
+     * saved correctly.
+     */
+    public void testSaveWithOnlyGlobalSection() throws ConfigurationException
+    {
+        checkSave(INI_DATA_GLOBAL_ONLY);
     }
 
     /**
@@ -209,7 +234,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     {
         writeTestFile(INI_DATA);
         HierarchicalINIConfiguration config = new HierarchicalINIConfiguration(
-                TEST_FILE.toURL());
+                TEST_FILE.toURI().toURL());
         checkContent(config);
     }
 
@@ -445,6 +470,17 @@ public class TestHierarchicalINIConfiguration extends TestCase
     {
         checkSectionNames(INI_DATA, new String[] {
                 "section1", "section2", "section3"
+        });
+    }
+
+    /**
+     * Tests whether the sections of a configuration can be queried that
+     * contains only a global section.
+     */
+    public void testGetSectionsGlobalOnly() throws ConfigurationException
+    {
+        checkSectionNames(INI_DATA_GLOBAL_ONLY, new String[] {
+            null
         });
     }
 

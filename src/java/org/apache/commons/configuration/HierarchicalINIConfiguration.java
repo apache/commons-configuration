@@ -616,22 +616,23 @@ public class HierarchicalINIConfiguration extends
     {
         Set sections = new ListOrderedSet();
         boolean globalSection = false;
+        boolean inSection = false;
 
         for (Iterator it = getRootNode().getChildren().iterator(); it.hasNext();)
         {
             ConfigurationNode node = (ConfigurationNode) it.next();
             if (isSectionNode(node))
             {
-                if (globalSection)
-                {
-                    sections.add(null);
-                    globalSection = false;
-                }
+                inSection = true;
                 sections.add(node.getName());
             }
             else
             {
-                globalSection = true;
+                if(!inSection && !globalSection)
+                {
+                    globalSection = true;
+                    sections.add(null);
+                }
             }
         }
 

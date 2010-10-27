@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-424">
+        HierarchicalINIConfiguration now works correctly with configurations
+        that contain only properties in the global section.
+      </action>
       <action dev="rgoers" type="fix" issue="CONFIGURATION-423" due-to="William Buckley">
         testFromClassPath() can fail when it should not because of inconsistent escaping of output from
         PropertiesConfiguration.getURL() and FileChangedReloadingStrategy.getFile().toURL().
