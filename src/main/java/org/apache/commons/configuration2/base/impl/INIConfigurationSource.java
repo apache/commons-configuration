@@ -214,21 +214,22 @@ public class INIConfigurationSource extends InMemoryConfigurationSource
     {
         Set<String> sections = new LinkedHashSet<String>();
         boolean globalSection = false;
+        boolean inSection = false;
 
         for (ConfigurationNode node : getRootNode().getChildren())
         {
             if (isSectionNode(node))
             {
-                if (globalSection)
-                {
-                    sections.add(null);
-                    globalSection = false;
-                }
+                inSection = true;
                 sections.add(node.getName());
             }
             else
             {
-                globalSection = true;
+                if(!inSection && !globalSection)
+                {
+                    globalSection = true;
+                    sections.add(null);
+                }
             }
         }
 

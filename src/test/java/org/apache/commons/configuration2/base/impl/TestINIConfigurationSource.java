@@ -89,9 +89,13 @@ public class TestINIConfigurationSource
             + LINE_SEPARATOR + "  line 2" + LINE_SEPARATOR
             + "continueNoLine = one \\" + LINE_SEPARATOR;
 
+    /** An ini file that contains only a property in the global section. */
+    private static final String INI_DATA_GLOBAL_ONLY = "globalVar = testGlobal"
+            + LINE_SEPARATOR + LINE_SEPARATOR;
+
     /** An ini file with a global section. */
-    private static final String INI_DATA_GLOBAL = "globalVar = testGlobal"
-            + LINE_SEPARATOR + LINE_SEPARATOR + INI_DATA;
+    private static final String INI_DATA_GLOBAL = INI_DATA_GLOBAL_ONLY
+            + INI_DATA;
 
     /** Constant for the name of the test output file. */
     private static final String TEST_OUT_FILE = "test.ini";
@@ -186,17 +190,41 @@ public class TestINIConfigurationSource
     }
 
     /**
+     * Helper method for testing a save operation. This method constructs a
+     * configuration source from the specified content string. Then it saves
+     * this source and checks whether the result matches the original content.
+     *
+     * @param content the content of the configuration source
+     * @throws ConfigurationException if an error occurs
+     */
+    private void checkSave(String content) throws ConfigurationException,
+            IOException
+    {
+        load(content);
+        StringWriter writer = new StringWriter();
+        source.save(writer);
+        assertEquals("Wrong content of ini file", content, writer.toString());
+    }
+
+    /**
      * Tests whether a configuration source with a global section can be saved.
      */
     @Test
     public void testSaveWithGlobalSection() throws ConfigurationException,
             IOException
     {
-        load(INI_DATA_GLOBAL);
-        StringWriter writer = new StringWriter();
-        source.save(writer);
-        assertEquals("Wrong content of ini file", INI_DATA_GLOBAL, writer
-                .toString());
+        checkSave(INI_DATA_GLOBAL);
+    }
+
+    /**
+     * Tests whether a configuration source that contains only a global section
+     * can be saved correctly.
+     */
+    @Test
+    public void testSaveWithOnlyGlobalSection() throws ConfigurationException,
+            IOException
+    {
+        checkSave(INI_DATA_GLOBAL_ONLY);
     }
 
     /**
@@ -462,6 +490,18 @@ public class TestINIConfigurationSource
     {
         checkSectionNames(INI_DATA, new String[] {
                 "section1", "section2", "section3"
+        });
+    }
+
+    /**
+     * Tests whether the sections of a configuration can be queried that
+     * contains only a global section.
+     */
+    @Test
+    public void testGetSectionsGlobalOnly() throws ConfigurationException
+    {
+        checkSectionNames(INI_DATA_GLOBAL_ONLY, new String[] {
+            null
         });
     }
 
