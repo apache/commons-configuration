@@ -17,9 +17,9 @@
 
 package org.apache.commons.configuration.reloading;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.ByteArrayOutputStream;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -27,18 +27,18 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Layout;
-import org.apache.log4j.PatternLayout;
 import org.apache.log4j.Appender;
-import org.apache.log4j.WriterAppender;
+import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
 
 /**
  * Test case for the ReloadableConfiguration class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestFileChangedReloadingStrategy extends TestCase
 {
@@ -128,7 +128,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertTrue(config.getBoolean("configuration.loaded"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
-        assertEquals(config.getURL().toURI().toString(), strategy.getFile().toURI().toString());
+        assertEquals(config.getURL().toExternalForm(), strategy.getFile().toURI().toURL().toExternalForm());
     }
 
     /**
@@ -139,7 +139,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
     {
         XMLConfiguration config = new XMLConfiguration();
         // use some jar: URL
-        config.setURL(new URL("jar:" + new File("conf/resources.jar").getAbsoluteFile().toURL() + "!/test-jar.xml"));
+        config.setURL(new URL("jar:" + new File("conf/resources.jar").getAbsoluteFile().toURI().toURL() + "!/test-jar.xml"));
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
         config.setReloadingStrategy(strategy);
         File file = strategy.getFile();
