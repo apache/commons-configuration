@@ -27,12 +27,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration.event.ConfigurationErrorEvent;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.ConfigurationErrorEvent;
-import org.apache.commons.configuration.reloading.ReloadingStrategy;
 import org.apache.commons.configuration.reloading.Reloadable;
+import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
 /**
  * <p>Base class for implementing file based hierarchical configurations.</p>
@@ -314,6 +314,21 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
                 setDetailEvents(true);
             }
         }
+    }
+
+    /**
+     * Reloads the associated configuration file. This method first clears the
+     * content of this configuration, then the associated configuration file is
+     * loaded again. Updates on this configuration which have not yet been saved
+     * are lost. Calling this method is like invoking <code>reload()</code>
+     * without checking the reloading strategy.
+     *
+     * @throws ConfigurationException if an error occurs
+     * @since 1.7
+     */
+    public void refresh() throws ConfigurationException
+    {
+        delegate.refresh();
     }
 
     public String getEncoding()

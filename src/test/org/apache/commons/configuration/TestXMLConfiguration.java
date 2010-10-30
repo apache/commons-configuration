@@ -679,6 +679,35 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests the refresh() method.
+     */
+    public void testRefresh() throws ConfigurationException
+    {
+        conf.setProperty("element", "anotherValue");
+        conf.refresh();
+        assertEquals("Wrong property after refresh", "value",
+                conf.getString("element"));
+    }
+
+    /**
+     * Tries to call refresh() when the configuration is not associated with a
+     * file.
+     */
+    public void testRefreshNoFile() throws ConfigurationException
+    {
+        conf = new XMLConfiguration();
+        try
+        {
+            conf.refresh();
+            fail("Could refresh a configuration without a file!");
+        }
+        catch (ConfigurationException cex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Tests access to tag names with delimiter characters.
      */
     public void testComplexNames()
