@@ -653,6 +653,38 @@ public class TestFileConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a configuration can be refreshed.
+     */
+    public void testRefresh() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        assertEquals("Wrong value", 10, config.getInt("test.integer"));
+        config.setProperty("test.integer", new Integer(42));
+        assertEquals("Wrong value after update", 42,
+                config.getInt("test.integer"));
+        config.refresh();
+        assertEquals("Wrong value after refresh", 10,
+                config.getInt("test.integer"));
+    }
+
+    /**
+     * Tests refresh if the configuration is not associated with a file.
+     */
+    public void testRefreshNoFile() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        try
+        {
+            config.refresh();
+            fail("Could refresh configuration without a file!");
+        }
+        catch (ConfigurationException cex)
+        {
+            // ok
+        }
+    }
+
+    /**
      * Helper method for testing an iteration over the keys of a file-based
      * configuration while a reload happens.
      *
