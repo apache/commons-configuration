@@ -102,6 +102,10 @@
         update of the managed database table. This makes it usable in
         environments where the connections do not use auto-commit mode.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-410">
+        Added a refresh() method to AbstractFileConfiguration and
+        AbstractHierarchicalFileConfiguration.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-409">
         HierarchicalINIConfiguration now correctly saves sections whose name
         contains delimiter characters.

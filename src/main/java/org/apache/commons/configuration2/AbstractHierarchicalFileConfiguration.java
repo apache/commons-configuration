@@ -30,10 +30,10 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 
-import org.apache.commons.configuration2.event.ConfigurationEvent;
-import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
+import org.apache.commons.configuration2.event.ConfigurationEvent;
+import org.apache.commons.configuration2.event.ConfigurationListener;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.fs.DefaultFileSystem;
 import org.apache.commons.configuration2.fs.FileSystem;
@@ -82,7 +82,7 @@ import org.apache.commons.lang.StringUtils;
  * in <code>java.util.Properties</code>.</p>
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.0-rc2
  */
 public abstract class AbstractHierarchicalFileConfiguration
@@ -833,21 +833,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
                         {
                             getLogger().info("Reloading configuration. URL is " + getURL());
                         }
-                        fireEvent(EVENT_RELOAD, null, getURL(), true);
-                        setDetailEvents(false);
-                        boolean autoSaveBak = this.isAutoSave(); // save the current state
-                        this.setAutoSave(false); // deactivate autoSave to prevent information loss
-                        try
-                        {
-                            clear();
-                            load();
-                        }
-                        finally
-                        {
-                            this.setAutoSave(autoSaveBak); // set autoSave to previous value
-                            setDetailEvents(true);
-                        }
-                        fireEvent(EVENT_RELOAD, null, getURL(), false);
+                        refresh();
 
                         // notify the strategy
                         strategy.reloadingPerformed();
@@ -869,6 +855,35 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
             }
         }
         return true;
+    }
+
+    /**
+     * Reloads the associated configuration file. This method first clears the
+     * content of this configuration, then the associated configuration file is
+     * loaded again. Updates on this configuration which have not yet been saved
+     * are lost. Calling this method is like invoking <code>reload()</code>
+     * without checking the reloading strategy.
+     *
+     * @throws ConfigurationException if an error occurs
+     * @since 1.7
+     */
+    public void refresh() throws ConfigurationException
+    {
+        fireEvent(EVENT_RELOAD, null, getURL(), true);
+        setDetailEvents(false);
+        boolean autoSaveBak = this.isAutoSave(); // save the current state
+        this.setAutoSave(false); // deactivate autoSave to prevent information loss
+        try
+        {
+            clear();
+            load();
+        }
+        finally
+        {
+            this.setAutoSave(autoSaveBak); // set autoSave to previous value
+            setDetailEvents(true);
+        }
+        fireEvent(EVENT_RELOAD, null, getURL(), false);
     }
 
     /**
