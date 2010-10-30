@@ -24,6 +24,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Properties;
 
 import junit.framework.TestCase;
@@ -44,8 +46,81 @@ public class TestFileConfiguration extends TestCase
     /** Constant for a test file.*/
     private static final File TEST_FILE = ConfigurationAssert.getTestFile(TEST_FILENAME);
 
+    /** Constant for a test output file. */
+    private static final File OUT_FILE = new File(
+            "target/test-resources/foo/bar/test.properties");
+
     /** Constant for the name of a resource to be resolved.*/
     private static final String RESOURCE_NAME = "config/deep/deeptest.properties";
+
+    /** A list with temporary files created during a test case. */
+    private Collection<File> tempFiles = new LinkedList<File>();
+
+    /**
+     * Initializes the test environment. This implementation ensures that the
+     * test output file does not exist.
+     */
+    @Override
+    protected void setUp() throws Exception
+    {
+        super.setUp();
+        removeOutFile();
+    }
+
+    /**
+     * Performs cleanup after a test case. This implementation removes temporary
+     * files that have been created.
+     */
+    @Override
+    protected void tearDown() throws Exception
+    {
+        for(File file : tempFiles)
+        {
+            removeFile(file);
+        }
+        removeOutFile();
+
+        super.tearDown();
+    }
+
+    /**
+     * Adds a temporary file used by a test case. This method removes the file
+     * if it already exists. It is then added to a list so that it is removed at
+     * the end of the test.
+     *
+     * @param file the temporary file
+     */
+    private void addTemporaryFile(File file)
+    {
+        removeFile(file);
+        tempFiles.add(file);
+    }
+
+    /**
+     * Removes a file if it exists.
+     *
+     * @param file the file to be removed
+     */
+    private static void removeFile(File file)
+    {
+        if (file.exists())
+        {
+            assertTrue("Cannot remove file: " + file, file.delete());
+        }
+    }
+
+    /**
+     * Removes the test output file if it exists. Its parent directories are
+     * also removed.
+     */
+    private static void removeOutFile()
+    {
+        removeFile(OUT_FILE);
+        File parent = OUT_FILE.getParentFile();
+        removeFile(parent);
+        parent = parent.getParentFile();
+        removeFile(parent);
+    }
 
     public void testSetURL() throws Exception
     {
@@ -97,54 +172,29 @@ public class TestFileConfiguration extends TestCase
 
     public void testCreateFile1() throws Exception
     {
-        File file = new File("target/test-resources/foo/bar/test.properties");
-        if (file.exists())
-        {
-            file.delete();
-            file.getParentFile().delete();
-        }
+        assertFalse("The file should not exist", OUT_FILE.exists());
 
-        assertFalse("The file should not exist", file.exists());
-
-        FileConfiguration config = new PropertiesConfiguration(file);
+        FileConfiguration config = new PropertiesConfiguration(OUT_FILE);
         config.save();
 
-        assertTrue("The file doesn't exist", file.exists());
+        assertTrue("The file doesn't exist", OUT_FILE.exists());
     }
 
     public void testCreateFile2() throws Exception
     {
-        File file = new File("target/test-resources/foo/bar/test.properties");
-        if (file.exists())
-        {
-            file.delete();
-            file.getParentFile().delete();
-        }
-
-        assertFalse("The file should not exist", file.exists());
-
         FileConfiguration config = new PropertiesConfiguration();
-        config.setFile(file);
+        config.setFile(OUT_FILE);
         config.save();
 
-        assertTrue("The file doesn't exist", file.exists());
+        assertTrue("The file doesn't exist", OUT_FILE.exists());
     }
 
     public void testCreateFile3() throws Exception
     {
-        File file = new File("target/test-resources/foo/bar/test.properties");
-        if (file.exists())
-        {
-            file.delete();
-            file.getParentFile().delete();
-        }
-
-        assertFalse("The file should not exist", file.exists());
-
         FileConfiguration config = new PropertiesConfiguration();
-        config.save(file);
+        config.save(OUT_FILE);
 
-        assertTrue("The file doesn't exist", file.exists());
+        assertTrue("The file doesn't exist", OUT_FILE.exists());
     }
 
     /**
@@ -156,43 +206,31 @@ public class TestFileConfiguration extends TestCase
     public void testWithConfigurationFactory() throws Exception
     {
         File file = ConfigurationAssert.getOutFile("testFileConfiguration.properties");
+        addTemporaryFile(file);
 
-        if (file.exists())
+        DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        builder.setURL(ConfigurationAssert
+                .getTestFile("testDigesterConfiguration2.xml").toURI().toURL());
+        CombinedConfiguration cc =
+                (CombinedConfiguration) builder.getConfiguration();
+        PropertiesConfiguration config = null;
+        for (int i = 0; config == null; i++)
         {
-            assertTrue("File cannot be deleted", file.delete());
-        }
-
-        try
-        {
-            DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-            builder.setURL(ConfigurationAssert.getTestFile("testDigesterConfiguration2.xml").toURI().toURL());
-            CombinedConfiguration cc = (CombinedConfiguration) builder.getConfiguration();
-            PropertiesConfiguration config = null;
-            for (int i = 0; config == null; i++)
+            if (cc.getConfiguration(i) instanceof PropertiesConfiguration)
             {
-                if (cc.getConfiguration(i) instanceof PropertiesConfiguration)
-                {
-                    config = (PropertiesConfiguration) cc.getConfiguration(i);
-                }
-            }
-
-            config.setProperty("test", "yes");
-            config.save(file);
-            assertTrue(file.exists());
-            config = new PropertiesConfiguration();
-            config.setFile(file);
-            config.load();
-
-            assertEquals("yes", config.getProperty("test"));
-            assertEquals("masterOfPost", config.getProperty("mail.account.user"));
-        }
-        finally
-        {
-            if (file.exists())
-            {
-                assertTrue("File could not be deleted", file.delete());
+                config = (PropertiesConfiguration) cc.getConfiguration(i);
             }
         }
+
+        config.setProperty("test", "yes");
+        config.save(file);
+        assertTrue(file.exists());
+        config = new PropertiesConfiguration();
+        config.setFile(file);
+        config.load();
+
+        assertEquals("yes", config.getProperty("test"));
+        assertEquals("masterOfPost", config.getProperty("mail.account.user"));
     }
 
     /**
@@ -236,6 +274,7 @@ public class TestFileConfiguration extends TestCase
             String path = System.getProperties().getProperty("user.home");
             File homeDir = new File(path);
             tempFile = File.createTempFile("CONF", null, homeDir);
+            tempFiles.add(tempFile);
             String fileName = tempFile.getName();
             Properties props = new Properties();
             props.setProperty("1", "one");
@@ -279,10 +318,6 @@ public class TestFileConfiguration extends TestCase
                     ioex.printStackTrace();
                 }
             }
-            if (tempFile.exists())
-            {
-                assertTrue(tempFile.delete());
-            }
         }
     }
 
@@ -293,6 +328,7 @@ public class TestFileConfiguration extends TestCase
     public void testReloadingWithAutoSave() throws Exception
     {
         File configFile = ConfigurationAssert.getOutFile(TEST_FILENAME);
+        addTemporaryFile(configFile);
         PrintWriter out = null;
 
         try
@@ -317,10 +353,6 @@ public class TestFileConfiguration extends TestCase
             {
                 out.close();
             }
-            if (configFile.exists())
-            {
-                assertTrue(configFile.delete());
-            }
         }
     }
 
@@ -332,14 +364,13 @@ public class TestFileConfiguration extends TestCase
     {
         File path = ConfigurationAssert.getOutFile("path with spaces");
         File confFile = new File(path, "config-test.properties");
+        addTemporaryFile(confFile);
+        addTemporaryFile(path);
         PrintWriter out = null;
 
         try
         {
-            if (!path.exists())
-            {
-                assertTrue(path.mkdir());
-            }
+            assertTrue(path.mkdir());
             out = new PrintWriter(new FileWriter(confFile));
             out.println("saved = false");
             out.close();
@@ -364,14 +395,6 @@ public class TestFileConfiguration extends TestCase
             {
                 out.close();
             }
-            if (confFile.exists())
-            {
-                assertTrue(confFile.delete());
-            }
-            if (path.exists())
-            {
-                assertTrue(path.delete());
-            }
         }
     }
 
@@ -384,6 +407,7 @@ public class TestFileConfiguration extends TestCase
         File saveFile = ConfigurationAssert.getOutFile("test+config.properties")
                 .getAbsoluteFile();
         saveFile.createNewFile();
+        tempFiles.add(saveFile);
         try
         {
             FileConfiguration config = new PropertiesConfiguration(saveFile);
