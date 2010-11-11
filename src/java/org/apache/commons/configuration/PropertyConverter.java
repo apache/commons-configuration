@@ -589,19 +589,35 @@ public final class PropertyConverter
 
     /**
      * Escapes the delimiters that might be contained in the given string. This
-     * method ensures that list delimiter characters that are part of a
-     * property's value are correctly escaped when a configuration is saved to a
-     * file. Otherwise when loaded again the property will be treated as a list
-     * property. A single backslash will also be escaped.
+     * method works like {@link #escapeListDelimiter(String, char)}. In addition,
+     * a single backslash will also be escaped.
      *
      * @param s the string with the value
      * @param delimiter the list delimiter to use
-     * @return the correctly esaped string
+     * @return the correctly escaped string
      */
     public static String escapeDelimiters(String s, char delimiter)
     {
         String s1 = StringUtils.replace(s, LIST_ESCAPE, LIST_ESCAPE + LIST_ESCAPE);
-        return StringUtils.replace(s1, String.valueOf(delimiter), LIST_ESCAPE + delimiter);
+        return escapeListDelimiter(s1, delimiter);
+    }
+
+    /**
+     * Escapes the list delimiter if it is contained in the given string. This
+     * method ensures that list delimiter characters that are part of a
+     * property's value are correctly escaped when a configuration is saved to a
+     * file. Otherwise when loaded again the property will be treated as a list
+     * property.
+     *
+     * @param s the string with the value
+     * @param delimiter the list delimiter to use
+     * @return the escaped string
+     * @since 1.7
+     */
+    public static String escapeListDelimiter(String s, char delimiter)
+    {
+        return StringUtils.replace(s, String.valueOf(delimiter), LIST_ESCAPE
+                + delimiter);
     }
 
     /**

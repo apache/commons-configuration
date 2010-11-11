@@ -22,9 +22,9 @@ import java.math.BigDecimal;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang.SystemUtils;
-
 import junit.framework.TestCase;
+
+import org.apache.commons.lang.SystemUtils;
 
 /**
  * Test class for PropertyConverter.
@@ -113,6 +113,16 @@ public class TestPropertyConverter extends TestCase
         assertEquals("Wrong escaped delimiters",
                 "C:\\\\Temp\\\\\\,D:\\\\Data\\\\", PropertyConverter
                         .escapeDelimiters("C:\\Temp\\,D:\\Data\\", ','));
+    }
+
+    /**
+     * Tests whether only the list delimiter can be escaped.
+     */
+    public void testEscapeListDelimiter()
+    {
+        assertEquals("Wrong escaped list delimiter", "C:\\Temp\\\\,D:\\Data\\",
+                PropertyConverter.escapeListDelimiter("C:\\Temp\\,D:\\Data\\",
+                        ','));
     }
 
     public void testToIterator()
@@ -354,7 +364,7 @@ public class TestPropertyConverter extends TestCase
         {
             return;
         }
-        
+
         try
         {
             assertEquals(enumObject, PropertyConverter.toEnum(new Integer(-1), enumClass));

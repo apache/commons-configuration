@@ -1704,6 +1704,25 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    /**
+     * Tests whether a windows path can be saved correctly. This test is related
+     * to CONFIGURATION-428.
+     */
+    public void testSaveWindowsPath() throws ConfigurationException
+    {
+        conf.clear();
+        conf.addProperty("path", "C:\\Temp");
+        StringWriter writer = new StringWriter();
+        conf.save(writer);
+        String content = writer.toString();
+        assertTrue("Path not found: " + content,
+                content.indexOf("<path>C:\\Temp</path>") >= 0);
+        conf.save(testSaveFile);
+        XMLConfiguration conf2 = new XMLConfiguration(testSaveFile);
+        assertEquals("Wrong windows path", "C:\\Temp",
+                conf2.getString("path"));
+    }
+
     private class ReloadThread extends Thread
     {
         FileConfiguration config;

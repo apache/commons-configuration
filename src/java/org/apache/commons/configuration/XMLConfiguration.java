@@ -1463,7 +1463,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     String txt = newNode.getValue().toString();
                     if (listDelimiter != 0)
                     {
-                        txt = PropertyConverter.escapeDelimiters(txt, listDelimiter);
+                        txt = PropertyConverter.escapeListDelimiter(txt, listDelimiter);
                     }
                     elem.appendChild(document.createTextNode(txt));
                 }
