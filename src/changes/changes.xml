@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-428">
+        XMLConfiguration no longer escapes backslashs in the values of
+        XML elements.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-424">
         HierarchicalINIConfiguration now works correctly with configurations
         that contain only properties in the global section.
