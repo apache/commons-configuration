@@ -563,7 +563,11 @@ config.addProperty("tables.table.fields.field.type", "java.sql.Date");
 				<code>HierarchicalConfiguration</code>.
 			</p>
 		</subsection>
-		<subsection name="Escaping dot characters in property names">
+		<subsection name="Escaping special characters">
+            <p>
+                Some characters in property keys or values require a special
+                treatment.
+            </p>
 			<p>
                 Per default the dot character is used as delimiter by most
                 configuration classes (we will learn how to change this for
@@ -615,6 +619,55 @@ String complex = config.getString("test..complex.test..sub..element");
                 you should avoid dots in the tag names of your XML configuration
                 files or other configuration sources.
             </p>
+            <p>
+                Another source of problems is related to list delimiter characters
+                in the values of properties. Like other configuration classes
+                <code>XMLConfiguration</code> implements
+                <a href="howto_basicfeatures.html#List_handling">list handling</a>.
+                This means that the values of XML elements and attributes are
+                checked whether they contain a list delimiter character. If this
+                is the case, the value is split, and a list property is created.
+                Per default this feature is enabled. Have a look at the
+                following example:
+            </p>
+   			<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <pi>3,1415</pi>
+</configuration>
+]]></source>
+            <p>
+                Here we use the comma as delimiter for fraction digits (as is
+                standard for some languages). However, the configuration will
+                interpret the comma as list delimiter character and assign the
+                property <em>pi</em> the two values 3 and 1415. This was not
+                desired.
+            </p>
+            <p>
+                XML has a natural way of defining list properties by simply
+                repeating elements. So defining multiple values of a property in
+                a single element or attribute is a rather untypical use case.
+                Unfortunately, early versions of Commons Configuration had list
+                delimiter splitting enabled per default. Later it became obvious
+                that this feature can cause serious problems related to the
+                interpretation of property values and the escaping of delimiter
+                characters. For reasons of backwards compatibility we have to
+                stick to this approach in the 1.x series though.
+            </p>
+            <p>
+                In the next major release the handling of lists will propably be
+                reworked. Therefore it is recommended not to use this feature.
+                You are save if you disable it immediately after the creation of
+                an <code>XMLConfiguration</code> object (and before a file is
+                loaded). This can be achieved as follows:
+            </p>
+   			<source><![CDATA[
+XMLConfiguration config = new XMLConfiguration();
+config.setDelimiterParsingDisabled(true);
+config.setAttributeSplittingDisabled(true);
+config.load("config.xml");
+]]></source>
         </subsection>
 	</section>
 

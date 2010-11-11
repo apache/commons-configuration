@@ -83,7 +83,7 @@
         <li><a href="howto_xml.html#Complex_hierarchical_structures">Complex hierarchical structures</a></li>
         <li><a href="howto_xml.html#Accessing_structured_properties">Accessing structured properties</a></li>
         <li><a href="howto_xml.html#Adding_new_properties">Adding new properties</a></li>
-        <li><a href="howto_xml.html#Escaping_dot_characters_in_property_names">Escaping dot characters in property names</a></li>
+        <li><a href="howto_xml.html#Escaping_special_characters">Escaping dot characters in property names</a></li>
         <li><a href="howto_xml.html#Expression_engines">Expression engines</a></li>
         <ul>
           <li><a href="howto_xml.html#The_default_expression_engine">The default expression engine</a></li>
