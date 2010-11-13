@@ -21,10 +21,10 @@ import org.apache.commons.configuration2.FileConfiguration;
 import org.apache.commons.configuration2.fs.FileSystemBased;
 import org.apache.commons.configuration2.fs.FileSystem;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
-import org.apache.commons.vfs.FileSystemManager;
-import org.apache.commons.vfs.FileObject;
-import org.apache.commons.vfs.VFS;
-import org.apache.commons.vfs.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
