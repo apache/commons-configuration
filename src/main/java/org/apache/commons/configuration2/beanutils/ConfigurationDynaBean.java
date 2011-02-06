@@ -20,9 +20,6 @@ package org.apache.commons.configuration2.beanutils;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Level;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
@@ -30,6 +27,8 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationMap;
 import org.apache.commons.configuration2.ConversionException;
 import org.apache.commons.configuration2.SubsetConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * The <tt>ConfigurationDynaBean</tt> dynamically reads and writes
@@ -92,7 +91,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
         if (value instanceof Collection)
         {
-            for (Object item : (Collection) value)
+            for (Object item : (Collection<?>) value)
             {
                 getConfiguration().addProperty(name, item);
             }
@@ -157,7 +156,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     {
         try
         {
-            List list = getConfiguration().getList(name);
+            List<?> list = getConfiguration().getList(name);
             if (list.isEmpty())
             {
                 throw new IllegalArgumentException("Indexed property '" + name + "' does not exist.");
@@ -205,7 +204,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
             else if (property instanceof List)
             {
-                List list = (List) property;
+                List<Object> list = (List<Object>) property;
                 list.set(index, value);
                 getConfiguration().setProperty(name, list);
             }

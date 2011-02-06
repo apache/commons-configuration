@@ -119,7 +119,7 @@ public class TestConfigurationDynaBean extends TestCase
             configuration.addProperty("stringIndexed", stringArray[a]);
         }
 
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (int i = 0; i < stringArray.length; i++)
         {
             list.add(stringArray[i]);
@@ -563,7 +563,7 @@ public class TestConfigurationDynaBean extends TestCase
      */
     public void testSetArrayValue()
     {
-        MapConfiguration configuration = new MapConfiguration(new HashMap());
+        MapConfiguration configuration = new MapConfiguration(new HashMap<Object, Object>());
         configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
 
         ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
@@ -713,7 +713,7 @@ public class TestConfigurationDynaBean extends TestCase
      * @param name Name of the property to be retrieved
      * @param type Expected class type of this property
      */
-    protected void testGetDescriptorBase(String name, Class type)
+    protected void testGetDescriptorBase(String name, Class<?> type)
     {
         DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
 
