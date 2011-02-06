@@ -21,14 +21,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import junit.framework.AssertionFailedError;
+import junit.framework.TestCase;
+import junitx.framework.ObjectAssert;
+
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
-
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
-import junitx.framework.ObjectAssert;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -716,11 +716,9 @@ public class TestConfigurationDynaBean extends TestCase
     }
 
     /**
-     * Tests if accessing a non-indexed property using the index
-     * get method throws an IllegalArgumentException as it
-     * should.
+     * Tests whether nested properties can be accessed.
      */
-    public void testNonIndexedPropeties()
+    public void testNestedPropeties()
     {
         ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
 
@@ -732,44 +730,73 @@ public class TestConfigurationDynaBean extends TestCase
     }
 
     /**
-     * Tests if accessing a non-indexed property using the index
+     * Tests if reading a non-indexed property using the index
      * get method throws an IllegalArgumentException as it
      * should.
      */
-    public void testNestedPropeties()
+    public void testGetNonIndexedProperties()
     {
         try
         {
             bean.get("booleanProperty", 0);
+            fail("Should have thrown IllegalArgumentException");
         }
         catch (IllegalArgumentException e)
         {
-            return;
+            //ok
         }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of IllegalArgumentException");
-            return;
-        }
-
-        fail("Should have thrown IllegalArgumentException");
-
-        try
-        {
-            bean.set("booleanProperty", 0, Boolean.TRUE);
-        }
-        catch (IllegalArgumentException e)
-        {
-            return;
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of IllegalArgumentException");
-            return;
-        }
-
-        fail("Should have thrown IllegalArgumentException");
     }
 
+    /**
+     * Tests whether accessing a non-indexed string property using the index get
+     * method causes an exception.
+     */
+    public void testGetIndexedString()
+    {
+        bean.set("stringProp", "value");
+        try
+        {
+            bean.get("stringProp", 0);
+            fail("Could access non-indexed property with indexed get method!");
+        }
+        catch(IllegalArgumentException iex)
+        {
+            //ok
+        }
+    }
 
+    /**
+     * Tests whether an indexed access to a non-existing property causes an
+     * exception.
+     */
+    public void testGetIndexedNonExisting()
+    {
+        try
+        {
+            bean.get("Non existing property", 0);
+            fail("Non existing property not detected!");
+        }
+        catch (IllegalArgumentException iex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests if writing a non-indexed property using the index
+     * set method with an index &gt; 0 throws an IllegalArgumentException as it
+     * should.
+     */
+    public void testSetNonIndexedProperties()
+    {
+        try
+        {
+            bean.set("booleanProperty", 1, Boolean.TRUE);
+            fail("Could write indexed property!");
+        }
+        catch (IllegalArgumentException e)
+        {
+            //ok
+        }
+    }
 }

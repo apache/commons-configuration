@@ -26,7 +26,6 @@ import org.apache.commons.beanutils.DynaBean;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationMap;
-import org.apache.commons.configuration.ConversionException;
 import org.apache.commons.configuration.SubsetConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,15 +43,15 @@ import org.apache.commons.logging.LogFactory;
  * method. Similarly, indexed properties reference lists of configuration
  * properties using the
  * {@link org.apache.commons.configuration.Configuration#getList(String)}
- * method. Setting an indexed property always throws an exception.</p>
+ * method. Setting an indexed property is supported, too.</p>
  *
  * <p>Note: Some of the methods expect that a dot (&quot;.&quot;) is used as
- * property delimitor for the wrapped configuration. This is true for most of
+ * property delimiter for the wrapped configuration. This is true for most of
  * the default configurations. Hierarchical configurations, for which a specific
  * expression engine is set, may cause problems.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
@@ -157,20 +156,14 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
     public Object get(String name, int index)
     {
-        try
+        if (!checkIndexedProperty(name))
         {
-            List list = getConfiguration().getList(name);
-            if (list.isEmpty())
-            {
-                throw new IllegalArgumentException("Indexed property '" + name + "' does not exist.");
-            }
+            throw new IllegalArgumentException("Property '" + name
+                    + "' is not indexed.");
+        }
 
-            return list.get(index);
-        }
-        catch (ConversionException e)
-        {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
-        }
+        List list = getConfiguration().getList(name);
+        return list.get(index);
     }
 
     public Object get(String name, String key)
@@ -197,41 +190,54 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
     public void set(String name, int index, Object value)
     {
-        try
+        if (!checkIndexedProperty(name) && index > 0)
         {
-            Object property = getConfiguration().getProperty(name);
-
-            if (property == null)
-            {
-                throw new IllegalArgumentException("Property '" + name + "' does not exist.");
-            }
-            else if (property instanceof List)
-            {
-                List list = (List) property;
-                list.set(index, value);
-                getConfiguration().setProperty(name, list);
-            }
-            else if (property.getClass().isArray())
-            {
-                Array.set(property, index, value);
-            }
-            else if (index == 0)
-            {
-                getConfiguration().setProperty(name, value);
-            }
-            else
-            {
-                throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
-            }
+            throw new IllegalArgumentException("Property '" + name
+                    + "' is not indexed.");
         }
-        catch (ConversionException e)
+
+        Object property = getConfiguration().getProperty(name);
+
+        if (property instanceof List)
         {
-            throw new IllegalArgumentException("Property '" + name + "' is not indexed.");
+            List list = (List) property;
+            list.set(index, value);
+            getConfiguration().setProperty(name, list);
+        }
+        else if (property.getClass().isArray())
+        {
+            Array.set(property, index, value);
+        }
+        else if (index == 0)
+        {
+            getConfiguration().setProperty(name, value);
         }
     }
 
     public void set(String name, String key, Object value)
     {
         getConfiguration().setProperty(name + "." + key, value);
+    }
+
+    /**
+     * Tests whether the given name references an indexed property. This
+     * implementation tests for properties of type list or array. If the
+     * property does not exist, an exception is thrown.
+     *
+     * @param name the name of the property to check
+     * @return a flag whether this is an indexed property
+     * @throws IllegalArgumentException if the property does not exist
+     */
+    private boolean checkIndexedProperty(String name)
+    {
+        Object property = getConfiguration().getProperty(name);
+
+        if (property == null)
+        {
+            throw new IllegalArgumentException("Property '" + name
+                    + "' does not exist.");
+        }
+
+        return (property instanceof List) || property.getClass().isArray();
     }
 }
