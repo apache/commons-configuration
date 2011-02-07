@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-433">
+        Minor improvements of the support for indexed properties in
+        ConfigurationDynaBean.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-428">
         XMLConfiguration no longer escapes backslashs in the values of
         XML elements.
