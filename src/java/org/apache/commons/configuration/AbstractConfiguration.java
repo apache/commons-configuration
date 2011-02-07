@@ -23,6 +23,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -35,6 +36,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
@@ -1093,6 +1095,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             array = new String[0];
         }
+        else if (isScalarValue(value))
+        {
+            array = new String[1];
+            array[0] = value.toString();
+        }
         else
         {
             throw new ConversionException('\'' + key + "' doesn't map to a String/List object");
@@ -1139,6 +1146,10 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             return Arrays.asList((Object[]) value);
         }
+        else if (isScalarValue(value))
+        {
+            return Collections.singletonList(value.toString());
+        }
         else
         {
             throw new ConversionException('\'' + key + "' doesn't map to a List object: " + value + ", a "
@@ -1172,6 +1183,24 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
 
         return value;
+    }
+
+    /**
+     * Checks whether the specified object is a scalar value. This method is
+     * called by <code>getList()</code> and <code>getStringArray()</code> if the
+     * property requested is not a string, a list, or an array. If it returns
+     * <b>true</b>, the calling method transforms the value to a string and
+     * returns a list or an array with this single element. This implementation
+     * returns <b>true</b> if the value is of a wrapper type for a primitive
+     * type.
+     *
+     * @param value the value to be checked
+     * @return a flag whether the value is a scalar
+     * @since 1.7
+     */
+    protected boolean isScalarValue(Object value)
+    {
+        return ClassUtils.wrapperToPrimitive(value.getClass()) != null;
     }
 
     /**

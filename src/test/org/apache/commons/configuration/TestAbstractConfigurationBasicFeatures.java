@@ -280,6 +280,62 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     }
 
     /**
+     * Tests getList() for single non-string values.
+     */
+    public void testGetListNonString()
+    {
+        checkGetListScalar(new Integer(42));
+        checkGetListScalar(new Long(42));
+        checkGetListScalar(new Short((short) 42));
+        checkGetListScalar(new Byte((byte) 42));
+        checkGetListScalar(new Float(42));
+        checkGetListScalar(new Double(42));
+        checkGetListScalar(Boolean.TRUE);
+}
+
+    /**
+     * Tests getStringArray() for single son-string values.
+     */
+    public void testGetStringArrayNonString()
+    {
+        checkGetStringArrayScalar(new Integer(42));
+        checkGetStringArrayScalar(new Long(42));
+        checkGetStringArrayScalar(new Short((short) 42));
+        checkGetStringArrayScalar(new Byte((byte) 42));
+        checkGetStringArrayScalar(new Float(42));
+        checkGetStringArrayScalar(new Double(42));
+        checkGetStringArrayScalar(Boolean.TRUE);
+    }
+
+    /**
+     * Helper method for checking getList() if the property value is a scalar.
+     * @param value the value of the property
+     */
+    private void checkGetListScalar(Object value)
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(KEY_PREFIX, value);
+        List lst = config.getList(KEY_PREFIX);
+        assertEquals("Wrong number of values", 1, lst.size());
+        assertEquals("Wrong value", value.toString(), lst.get(0));
+    }
+
+    /**
+     * Helper method for checking getStringArray() if the property value is a
+     * scalar.
+     *
+     * @param value the value of the property
+     */
+    private void checkGetStringArrayScalar(Object value)
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty(KEY_PREFIX, value);
+        String[] array = config.getStringArray(KEY_PREFIX);
+        assertEquals("Weong number of elements", 1, array.length);
+        assertEquals("Wrong value", value.toString(), array[0]);
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.

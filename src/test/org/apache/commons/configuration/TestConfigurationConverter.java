@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.collections.ExtendedProperties;
 
 /**
@@ -29,7 +30,7 @@ import org.apache.commons.collections.ExtendedProperties;
  *
  * @author Martin Poeschl
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestConfigurationConverter extends TestCase
 {
@@ -104,6 +105,18 @@ public class TestConfigurationConverter extends TestCase
         config.setListDelimiter(';');
         props = ConfigurationConverter.getProperties(config);
         assertEquals("'array' property", "item 1;item 2", props.getProperty("array"));
+    }
+
+    /**
+     * Tests the conversion of a configuration object to properties if scalar
+     * values are involved. This test is related to CONFIGURATION-432.
+     */
+    public void testConfigurationToPropertiesScalarValue()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.addProperty("scalar", new Integer(42));
+        Properties props = ConfigurationConverter.getProperties(config);
+        assertEquals("Wrong value", "42", props.getProperty("scalar"));
     }
 
     public void testConfigurationToMap()
