@@ -83,6 +83,10 @@
         Minor improvements of the support for indexed properties in
         ConfigurationDynaBean.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-432">
+        The methods getList() and getStringArray() of AbstractConfiguration can
+        now handle single-valued properties of primitive types.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-428">
         XMLConfiguration no longer escapes backslashs in the values of
         XML elements.
