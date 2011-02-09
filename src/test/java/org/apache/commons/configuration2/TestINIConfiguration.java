@@ -726,4 +726,24 @@ public class TestINIConfiguration extends TestCase
         assertEquals("Wrong value (2)", "test2", conf.getString(section
                 + ".test2"));
     }
+
+    /**
+     * Tests whether a value which contains a semicolon can be loaded
+     * successfully. This test is related to CONFIGURATION-434.
+     */
+    public void testValueWithSemicolon() throws ConfigurationException
+    {
+        final String path =
+                "C:\\Program Files\\jar\\manage.jar;"
+                        + "C:\\Program Files\\jar\\guiLauncher.jar";
+        final String content =
+                "[Environment]" + LINE_SEPARATOR + "Application Type=any"
+                        + LINE_SEPARATOR + "Class Path=" + path + "  ;comment"
+                        + LINE_SEPARATOR + "Path=" + path
+                        + "\t; another comment";
+        INIConfiguration config = setUpConfig(content);
+        assertEquals("Wrong class path", path,
+                config.getString("Environment.Class Path"));
+        assertEquals("Wrong path", path, config.getString("Environment.Path"));
+    }
 }

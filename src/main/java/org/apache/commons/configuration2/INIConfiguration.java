@@ -382,6 +382,12 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
      * <pre>
      * 'value' ; comment -&gt; value
      * </pre>
+     * Note that a comment character is only recognized if there is at least one
+     * whitespace character before it. So it can appear in the property value,
+     * e.g.:
+     * <pre>
+     * C:\\Windows;C:\\Windows\\system32
+     * </pre>
      *
      * @param val the value to be parsed
      * @param reader the reader (needed if multiple lines have to be read)
@@ -404,6 +410,7 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
             int i = quoted ? 1 : 0;
 
             StringBuilder result = new StringBuilder();
+            char lastChar = 0;
             while (i < value.length() && !stop)
             {
                 char c = value.charAt(i);
@@ -436,17 +443,18 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
                 }
                 else
                 {
-                    if (!isCommentChar(c))
+                    if (isCommentChar(c) && Character.isWhitespace(lastChar))
                     {
-                        result.append(c);
+                        stop = true;
                     }
                     else
                     {
-                        stop = true;
+                        result.append(c);
                     }
                 }
 
                 i++;
+                lastChar = c;
             }
 
             String v = result.toString();
