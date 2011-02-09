@@ -684,6 +684,26 @@ public class TestHierarchicalINIConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a value which contains a semicolon can be loaded
+     * successfully. This test is related to CONFIGURATION-434.
+     */
+    public void testValueWithSemicolon() throws ConfigurationException
+    {
+        final String path =
+                "C:\\Program Files\\jar\\manage.jar;"
+                        + "C:\\Program Files\\jar\\guiLauncher.jar";
+        final String content =
+                "[Environment]" + LINE_SEPARATOR + "Application Type=any"
+                        + LINE_SEPARATOR + "Class Path=" + path + "  ;comment"
+                        + LINE_SEPARATOR + "Path=" + path
+                        + "\t; another comment";
+        HierarchicalINIConfiguration config = setUpConfig(content);
+        assertEquals("Wrong class path", path,
+                config.getString("Environment.Class Path"));
+        assertEquals("Wrong path", path, config.getString("Environment.Path"));
+    }
+
+    /**
      * A thread class for testing concurrent access to the global section.
      */
     private static class GlobalSectionTestThread extends Thread
