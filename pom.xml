@@ -573,9 +573,9 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <excludes>
-                <exclude>**/TestVFSFileChangedReloadingStrategy.java</exclude>
-                <exclude>**/TestVFSConfigurationBuilder.java</exclude>
-                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
+                <exclude>**/TestVFSFileChangedReloadingStrategy*.*</exclude>
+                <exclude>**/TestVFSConfigurationBuilder*.*</exclude>
+                <exclude>**/TestWebdavConfigurationBuilder*.*</exclude>
               </excludes>
             </configuration>
           </plugin>
