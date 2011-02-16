@@ -544,6 +544,46 @@
     </build>
   <profiles>
     <profile>
+      <!-- A profile for building with JDK 1.4. This profile excludes some
+           classes with dependencies to libraries requiring Java 1.5+.
+      -->
+      <id>java-1.4</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/VFSFileSystem.java</exclude>
+                <exclude>**/VFSFileChangedReloadingStrategy.java</exclude>
+              </excludes>
+              <testExcludes>
+                <exclude>**/TestVFSFileChangedReloadingStrategy.java</exclude>
+                <exclude>**/TestVFSConfigurationBuilder.java</exclude>
+                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
+              </testExcludes>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <excludes>
+                <exclude>**/TestVFSFileChangedReloadingStrategy.java</exclude>
+                <exclude>**/TestVFSConfigurationBuilder.java</exclude>
+                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
       <id>webdav</id>
       <activation>
         <activeByDefault>false</activeByDefault>
