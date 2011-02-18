@@ -124,6 +124,10 @@
       <action dev="rgoers" type="fix" issue="CONFIGURATION-388">
         Attribute or element values will not be escaped when attribute or element splitting are disabled.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-363">
+        When using Commons Lang 2.6 or higher as dependency nested interpolation
+        in variable names is supported.
+      </action>
       <action dev="ebourg" type="fix" issue="CONFIGURATION-362">
         Empty dictionaries in a PropertyList configuration are now preserved when the configuration is saved.
       </action>

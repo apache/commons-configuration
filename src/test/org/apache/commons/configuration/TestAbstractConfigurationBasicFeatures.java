@@ -336,6 +336,20 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
     }
 
     /**
+     * Tests whether interpolation works in variable names.
+     */
+    public void testNestedVariableInterpolation()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.getSubstitutor().setEnableSubstitutionInVariables(true);
+        config.addProperty("java.version", "1.4");
+        config.addProperty("jre-1.4", "C:\\java\\1.4");
+        config.addProperty("jre.path", "${jre-${java.version}}");
+        assertEquals("Wrong path", "C:\\java\\1.4",
+                config.getString("jre.path"));
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.
