@@ -79,6 +79,13 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-434">
+        HierarchicalINIConfiguration now recognizes comment characters in
+        property definitions only if they are preceded by whitespace. Thus
+        comment characters can now be part of the property value. This is for
+        instance required for the definition of file paths which use the
+        semicolon as path separator.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-433">
         Minor improvements of the support for indexed properties in
         ConfigurationDynaBean.
@@ -173,6 +180,10 @@
       <action dev="rgoers" type="add" issue="CONFIGURATION-378">
         Added MergeCombiner to allow elements in two configurations to be merged when the
         element and attributes in the first file match those in the second file.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-363">
+        When using Commons Lang 2.6 or higher as dependency nested interpolation
+        in variable names is supported.
       </action>
       <action dev="rgoers" type="add" issue="CONFIGURATION-340">
         File system access has been abstracted to a FileSystem interface. Two implementations
