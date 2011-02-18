@@ -354,7 +354,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadConfigurationFromURL() throws Exception
     {
-        factory = new DefaultConfigurationBuilder(TEST_FILE.toURL());
+        factory = new DefaultConfigurationBuilder(TEST_FILE.toURI().toURL());
         checkConfiguration();
     }
 
@@ -458,7 +458,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      */
     public void testLoadOptional() throws Exception
     {
-        factory.setURL(OPTIONAL_FILE.toURL());
+        factory.setURL(OPTIONAL_FILE.toURI().toURL());
         Configuration config = factory.getConfiguration();
         assertTrue(config.getBoolean("test.boolean"));
         assertEquals("value", config.getProperty("element"));
@@ -775,7 +775,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         factory = new DefaultConfigurationBuilder();
         factory.setFile(testSavedFactory);
-        factory.registerEntityId(publicId, dtdFile.toURL());
+        factory.registerEntityId(publicId, dtdFile.toURI().toURL());
         factory.clearErrorListeners();
         Configuration c = factory.getConfiguration();
         assertEquals("Wrong property value", "value1", c.getString("entry(0)"));
@@ -1035,6 +1035,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public static class ExtendedXMLConfiguration extends XMLConfiguration
     {
+        private static final long serialVersionUID = 1L;
+
         public ExtendedXMLConfiguration()
         {
         }
