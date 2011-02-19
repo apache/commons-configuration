@@ -729,8 +729,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {
         if (getMaxIndex(FILE_SYSTEM) == 0)
         {
-            SubConfiguration config = configurationAt(FILE_SYSTEM);
-            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            SubConfiguration<ConfigurationNode> config =
+                    configurationAt(FILE_SYSTEM);
+            XMLBeanDeclaration<ConfigurationNode> decl =
+                    new XMLBeanDeclaration<ConfigurationNode>(config);
             setFileSystem((FileSystem) BeanHelper.createBean(decl));
         }
     }
@@ -760,7 +762,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     {
         if (getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
         {
-            XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_ENTITY_RESOLVER, true);
+            XMLBeanDeclaration<ConfigurationNode> decl =
+                    new XMLBeanDeclaration<ConfigurationNode>(this,
+                            KEY_ENTITY_RESOLVER, true);
             EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
             BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
             BeanHelper.setProperty(resolver, "baseDir", getBasePath());
