@@ -161,6 +161,10 @@
         BaseConfiguration.clone() now also clones collections stored in the
         internal map. This causes list properties to be handled correctly.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-389">
+        DefaultConfigurationBuilder now supports defining ini files in its
+        configuration definition file.
+      </action>
       <action dev="rgoers" type="fix" issue="CONFIGURATION-388">
         Attribute or element values will not be escaped when attribute or element splitting are disabled.
       </action>
