@@ -8,5 +8,6 @@
     <hierarchicalXml fileName="testDigesterConfigurationInclude1.xml" at="tables"/>
     <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>
     <jndi prefix=""/>
+    <ini fileName="test.ini"/>
   </additional>
 </configuration>

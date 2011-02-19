@@ -623,6 +623,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertNotNull(config.getProperty("java.version"));
         assertEquals(System.getProperty("java.version"), config
                 .getString("java.version"));
+
+        // test INIConfiguration
+        assertEquals("Property from ini file not found", "yes",
+                config.getString("testini.loaded"));
     }
 
     /**

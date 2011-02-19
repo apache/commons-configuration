@@ -31,16 +31,16 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.resolver.CatalogResolver;
+import org.apache.commons.configuration.resolver.EntityRegistry;
+import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.resolver.EntityRegistry;
-import org.apache.commons.configuration.resolver.CatalogResolver;
-import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
 
 /**
@@ -377,6 +377,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider SYSTEM_PROVIDER = new ConfigurationProvider(
             SystemConfiguration.class);
 
+    /** Constant for the provider for ini files. */
+    private static final ConfigurationProvider INI_PROVIDER =
+            new FileConfigurationProvider(HierarchicalINIConfiguration.class);
+
     /** Constant for the provider for plist files. */
     private static final ConfigurationProvider PLIST_PROVIDER = new FileExtensionConfigurationProvider(
             "org.apache.commons.configuration.plist.XMLPropertyListConfiguration",
@@ -387,13 +391,15 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider BUILDER_PROVIDER = new ConfigurationBuilderProvider();
 
     /** An array with the names of the default tags. */
-    private static final String[] DEFAULT_TAGS =
-    {"properties", "xml", "hierarchicalXml", "jndi", "system", "plist", "configuration"};
+    private static final String[] DEFAULT_TAGS = {
+            "properties", "xml", "hierarchicalXml", "jndi", "system", "plist",
+            "configuration", "ini"
+    };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
     {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER};
+            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER, INI_PROVIDER};
 
     /**
      * The serial version UID.
