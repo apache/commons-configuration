@@ -633,6 +633,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         // test EnvironmentConfiguration
         assertNotNull("JAVA_HOME property not found", config.getProperty("JAVA_HOME"));
+
+        // test INIConfiguration
+        assertEquals("Property from ini file not found", "yes",
+                config.getString("testini.loaded"));
     }
 
     /**
