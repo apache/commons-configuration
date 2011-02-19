@@ -149,6 +149,11 @@
         <code>fileName</code> attribute can be used to specify the configuration
         definition file to be loaded. This file must be an XML document that
         conforms to the format described here.</dd>
+        <dt>ini</dt>
+        <dd>This tag can be used to include an ini file into the resulting
+        combined configuration. Behind the scenes an instance of
+        <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
+        HierarchicalINIConfiguration</a></code> is used to load the ini file.</dd>
       </dl>
     </p>
     <p>
