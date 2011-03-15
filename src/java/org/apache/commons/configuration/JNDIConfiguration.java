@@ -218,6 +218,11 @@ public class JNDIConfiguration extends AbstractConfiguration
 
             return keys.iterator();
         }
+        catch (NameNotFoundException e)
+        {
+            // expected exception, no need to log it
+            return new ArrayList().iterator();
+        }
         catch (NamingException e)
         {
             fireError(EVENT_READ_PROPERTY, null, null, e);

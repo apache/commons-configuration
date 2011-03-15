@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
 import junit.framework.TestCase;
@@ -37,7 +38,7 @@ public class TestJNDIConfiguration extends TestCase {
 
     public static final String CONTEXT_FACTORY = MockInitialContextFactory.class.getName();
 
-    private JNDIConfiguration conf;
+    private PotentialErrorJNDIConfiguration conf;
     private NonStringTestHolder nonStringTestHolder;
 
     /** A test error listener for counting internal errors.*/
@@ -176,14 +177,14 @@ public class TestJNDIConfiguration extends TestCase {
     public void testConstructor() throws Exception
     {
         // test the constructor accepting a context
-        conf = new JNDIConfiguration(new InitialContext());
+        JNDIConfiguration c = new JNDIConfiguration(new InitialContext());
 
-        assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
+        assertEquals("'test.boolean' property", "true", c.getString("test.boolean"));
 
         // test the constructor accepting a context and a prefix
-        conf = new JNDIConfiguration(new InitialContext(), "test");
+        c = new JNDIConfiguration(new InitialContext(), "test");
 
-        assertEquals("'boolean' property", "true", conf.getString("boolean"));
+        assertEquals("'boolean' property", "true", c.getString("boolean"));
     }
 
     /**
@@ -191,7 +192,7 @@ public class TestJNDIConfiguration extends TestCase {
      */
     private PotentialErrorJNDIConfiguration setUpErrorConfig()
     {
-        ((PotentialErrorJNDIConfiguration) conf).failOnGetCtx = true;
+        conf.installException();
         conf.removeErrorListener((ConfigurationErrorListener) conf
                 .getErrorListeners().iterator().next());
         return (PotentialErrorJNDIConfiguration) conf;
@@ -217,8 +218,8 @@ public class TestJNDIConfiguration extends TestCase {
      */
     public void testLogListener() throws NamingException
     {
-        conf = new JNDIConfiguration();
-        assertEquals("No error log listener registered", 1, conf
+        JNDIConfiguration c = new JNDIConfiguration();
+        assertEquals("No error log listener registered", 1, c
                 .getErrorListeners().size());
     }
 
@@ -273,8 +274,19 @@ public class TestJNDIConfiguration extends TestCase {
         Hashtable env = new Hashtable();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         InitialContext initCtx = new InitialContext(env);
-        conf = new JNDIConfiguration(initCtx);
-        conf.getKeys("cycle");
+        JNDIConfiguration c = new JNDIConfiguration(initCtx);
+        c.getKeys("cycle");
+    }
+
+    /**
+     * Tests getKeys() if no data is found. This should not cause a problem and
+     * not notify the error listeners.
+     */
+    public void testGetKeysNoData()
+    {
+        conf.installException(new NameNotFoundException("Test exception"));
+        assertFalse("Got keys", conf.getKeys().hasNext());
+        listener.verify();
     }
 
     /**
@@ -282,21 +294,46 @@ public class TestJNDIConfiguration extends TestCase {
      * throw an exception when accessing the base context. Used for testing the
      * exception handling.
      */
-    public static class PotentialErrorJNDIConfiguration extends JNDIConfiguration
+    public static class PotentialErrorJNDIConfiguration extends
+            JNDIConfiguration
     {
-        /** A flag whether an exception should be thrown. */
-        boolean failOnGetCtx;
+        /** An exception to be thrown by getBaseContext(). */
+        private NamingException exception;
 
-        public PotentialErrorJNDIConfiguration(Context ctx) throws NamingException
+        public PotentialErrorJNDIConfiguration(Context ctx)
+                throws NamingException
         {
             super(ctx);
         }
 
+        /**
+         * Prepares this object to throw an exception when the JNDI context is
+         * queried.
+         *
+         * @param nex the exception to be thrown
+         */
+        public void installException(NamingException nex)
+        {
+            exception = nex;
+        }
+
+        /**
+         * Prepares this object to throw a standard exception when the JNDI
+         * context is queried.
+         */
+        public void installException()
+        {
+            installException(new NamingException("Simulated JNDI exception!"));
+        }
+
+        /**
+         * Returns the JNDI context. Optionally throws an exception.
+         */
         public Context getBaseContext() throws NamingException
         {
-            if (failOnGetCtx)
+            if (exception != null)
             {
-                throw new NamingException("Simulated JNDI exception!");
+                throw exception;
             }
             return super.getBaseContext();
         }
