@@ -20,7 +20,6 @@ package org.apache.commons.configuration2;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.commons.logging.LogFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -30,6 +29,7 @@ import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 
 import org.apache.commons.configuration2.expr.AbstractNodeHandler;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * This Configuration class allows you to interface with a JNDI datasource.
@@ -114,6 +114,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
         addErrorLogListener();
     }
 
+    @Override
     public JNDINode getRootNode()
     {
         return root;
@@ -230,6 +231,7 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
             this.config = config;
         }
 
+        @Override
         public boolean hasAttributes(JNDINode node)
         {
             return false;
@@ -321,14 +323,14 @@ public class JNDIConfiguration extends AbstractHierarchicalConfiguration<JNDICon
                 {
                     Context context = (Context) value;
 
-                    NamingEnumeration elements = null;
+                    NamingEnumeration<NameClassPair> elements = null;
 
                     try
                     {
                         elements = context.list("");
                         while (elements.hasMore())
                         {
-                            NameClassPair nameClassPair = (NameClassPair) elements.next();
+                            NameClassPair nameClassPair = elements.next();
                             String name = nameClassPair.getName();
 
                             children.add(new JNDINode(context, name, node.depth + 1));

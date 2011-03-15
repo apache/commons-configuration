@@ -20,6 +20,7 @@ package org.apache.commons.configuration2;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
@@ -40,6 +41,7 @@ public class TestJNDIConfiguration extends TestCase
     /** A test error listener for counting internal errors.*/
     private ConfigurationErrorListenerImpl listener;
 
+    @Override
     public void setUp() throws Exception
     {
         System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
@@ -57,6 +59,7 @@ public class TestJNDIConfiguration extends TestCase
      * Clears the test environment. If an error listener is defined, checks
      * whether no error event was received.
      */
+    @Override
     protected void tearDown() throws Exception
     {
         if (listener != null)
@@ -186,7 +189,7 @@ public class TestJNDIConfiguration extends TestCase
     public void testGetKeys() throws Exception
     {
         boolean found = false;
-        Iterator it = conf.getKeys();
+        Iterator<String> it = conf.getKeys();
 
         assertTrue("no key found", it.hasNext());
 
@@ -201,14 +204,15 @@ public class TestJNDIConfiguration extends TestCase
     public void testGetKeysWithUnknownPrefix()
     {
         // test for a unknown prefix
-        Iterator it = conf.getKeys("foo.bar");
+        Iterator<String> it = conf.getKeys("foo.bar");
         assertFalse("no key should be found", it.hasNext());
+        listener.verify();
     }
 
     public void testGetKeysWithExistingPrefix()
     {
         // test for an existing prefix
-        Iterator it = conf.getKeys("test");
+        Iterator<String> it = conf.getKeys("test");
         boolean found = false;
         while (it.hasNext() && !found)
         {
@@ -335,7 +339,7 @@ public class TestJNDIConfiguration extends TestCase
      */
     public void testGetKeysWithCycles() throws NamingException
     {
-        Hashtable env = new Hashtable();
+        Hashtable<Object, Object> env = new Hashtable<Object, Object>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         InitialContext initCtx = new InitialContext(env);
         conf = new JNDIConfiguration(initCtx);
