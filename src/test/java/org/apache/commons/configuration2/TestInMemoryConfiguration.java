@@ -914,6 +914,20 @@ public class TestInMemoryConfiguration extends TestCase
     }
 
     /**
+     * Tests whether interpolation with a subset configuration works over
+     * multiple layers.
+     */
+    public void testInterpolationSubsetMultipleLayers()
+    {
+        config.clear();
+        config.addProperty("var", "value");
+        config.addProperty("prop2.prop[@attr]", "${var}");
+        Configuration sub1 = config.subset("prop2");
+        Configuration sub2 = sub1.subset("prop");
+        assertEquals("Wrong value", "value", sub2.getString("[@attr]"));
+    }
+
+    /**
      * Tests interpolation of a variable, which cannot be resolved.
      */
     public void testInterpolationUnknownProperty()
