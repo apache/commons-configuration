@@ -808,6 +808,23 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
+     * Tests whether interpolation works if multiple configurations are
+     * involved. This test is related to CONFIGURATION-441.
+     */
+    public void testInterpolationInMultipleConfigs()
+    {
+        Configuration c1 = new PropertiesConfiguration();
+        c1.addProperty("property.one", "one");
+        c1.addProperty("property.two", "two");
+        Configuration c2 = new PropertiesConfiguration();
+        c2.addProperty("property.one.ref", "${property.one}");
+        cc.addConfiguration(c1);
+        cc.addConfiguration(c2);
+        assertEquals("Wrong interpolated value", "one",
+                cc.getString("property.one.ref"));
+    }
+
+    /**
      * A test configuration event listener that counts the number of received
      * events. Used for testing the event facilities.
      */
