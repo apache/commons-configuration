@@ -16,15 +16,15 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
-import java.util.List;
-import java.beans.PropertyDescriptor;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -282,28 +282,18 @@ public final class BeanHelper
 
     /**
      * Set a property on the bean only if the property exists
+     *
      * @param bean the bean
      * @param propName the name of the property
      * @param value the property's value
      * @throws ConfigurationRuntimeException if the property is not writeable or
-     * an error occurred
+     *         an error occurred
      */
     public static void setProperty(Object bean, String propName, Object value)
     {
         if (PropertyUtils.isWriteable(bean, propName))
         {
-            try
-            {
-                BeanUtils.setProperty(bean, propName, value);
-            }
-            catch (IllegalAccessException iaex)
-            {
-                throw new ConfigurationRuntimeException(iaex);
-            }
-            catch (InvocationTargetException itex)
-            {
-                throw new ConfigurationRuntimeException(itex);
-            }
+            initProperty(bean, propName, value);
         }
     }
 
