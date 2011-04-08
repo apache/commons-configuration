@@ -680,7 +680,7 @@ public class TestCombinedConfiguration extends TestCase
         config.addConfiguration(child);
         final int count = 1000;
 
-        class ReloadThread extends Thread
+        class TestDeadlockReloadThread extends Thread
         {
             boolean error = false;
 
@@ -703,7 +703,7 @@ public class TestCombinedConfiguration extends TestCase
             }
         }
 
-        ReloadThread reloadThread = new ReloadThread();
+        TestDeadlockReloadThread reloadThread = new TestDeadlockReloadThread();
         reloadThread.start();
         for (int i = 0; i < count; i++)
         {
