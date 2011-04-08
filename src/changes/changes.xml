@@ -83,6 +83,11 @@
         JNDIConfiguration.getKeys() no more logs an exception if the prefix does
         not exist.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-437">
+        Child configuration builders created for a &lt;configuration&gt; element
+        in a configuration definition file now inherit some of their properties
+        from the builder object which processed the file.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-434">
         HierarchicalINIConfiguration now recognizes comment characters in
         property definitions only if they are preceded by whitespace. Thus
