@@ -79,6 +79,13 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-439">
+        Child configuration builders created for a &lt;configuration&gt; element
+        in a configuration definition file now inherit the configuration and
+        error listeners from the original DefaultConfigurationBuilder. This
+        makes it possible to suppress log output created for optional
+        configurations.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-438" due-to="Mike Noordermeer">
         JNDIConfiguration.getKeys() no more logs an exception if the prefix does
         not exist.

@@ -19,6 +19,9 @@ package org.apache.commons.configuration2;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -598,6 +601,41 @@ public class TestDefaultConfigurationBuilder extends TestCase
             factory.addProperty(prefix + "[@config-forceCreate]", Boolean.TRUE);
         }
         return factory.getConfiguration(false);
+    }
+
+    /**
+     * Tests whether the error log message caused by an optional configuration
+     * can be suppressed if a child builder is involved.
+     */
+    public void testLoadOptionalChildBuilderSuppressErrorLog()
+            throws ConfigurationException
+    {
+        factory.addProperty("override.configuration[@fileName]",
+                OPTIONAL_FILE.getAbsolutePath());
+        // a special invocation handler which checks that the warn() method of
+        // a logger is not called
+        InvocationHandler handler = new InvocationHandler()
+        {
+            public Object invoke(Object proxy, Method method, Object[] args)
+                    throws Throwable
+            {
+                String methodName = method.getName();
+                if (methodName.startsWith("is"))
+                {
+                    return Boolean.TRUE;
+                }
+                if ("warn".equals(methodName))
+                {
+                    fail("Unexpected log output!");
+                }
+                return null;
+            }
+        };
+        factory.setLogger((Log) Proxy.newProxyInstance(getClass()
+                .getClassLoader(), new Class<?>[] {
+            Log.class
+        }, handler));
+        factory.getConfiguration(false);
     }
 
     /**
