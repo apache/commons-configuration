@@ -29,6 +29,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.event.ConfigurationListenerTestImpl;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
@@ -748,6 +749,82 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Wrong number of configurations", 1, cc
                 .getNumberOfConfigurations());
         checkProperties(cc);
+    }
+
+    /**
+     * Tests whether settings of the builder are propagated to child builders.
+     */
+    public void testConfigurationBuilderProviderInheritProperties()
+            throws Exception
+    {
+        factory.addProperty("override.configuration[@fileName]",
+                TEST_FILE.getAbsolutePath());
+        factory.setBasePath("conf");
+        factory.setAttributeSplittingDisabled(true);
+        factory.setDelimiterParsingDisabled(true);
+        factory.setListDelimiter('/');
+        factory.setThrowExceptionOnMissing(true);
+        Log log = LogFactory.getLog(getClass());
+        factory.setLogger(log);
+        factory.clearErrorListeners();
+        factory.clearConfigurationListeners();
+        ConfigurationListenerTestImpl l =
+                new ConfigurationListenerTestImpl(factory);
+        factory.addConfigurationListener(l);
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl =
+                new DefaultConfigurationBuilder.ConfigurationDeclaration(
+                        factory,
+                        factory.configurationAt("override.configuration"));
+        DefaultConfigurationBuilder.ConfigurationBuilderProvider provider =
+                new DefaultConfigurationBuilder.ConfigurationBuilderProvider();
+        DefaultConfigurationBuilder child =
+                (DefaultConfigurationBuilder) provider.createBean(
+                        provider.fetchConfigurationClass(), decl, null);
+        assertEquals("Wrong base path", factory.getBasePath(),
+                child.getBasePath());
+        assertEquals("Wrong attribute splitting flag",
+                factory.isAttributeSplittingDisabled(),
+                child.isAttributeSplittingDisabled());
+        assertEquals("Wrong delimiter parsing flag",
+                factory.isDelimiterParsingDisabled(),
+                child.isDelimiterParsingDisabled());
+        assertEquals("Wrong list delimiter", factory.getListDelimiter(),
+                child.getListDelimiter());
+        assertEquals("Wrong exception flag",
+                factory.isThrowExceptionOnMissing(),
+                child.isThrowExceptionOnMissing());
+        assertSame("Wrong logger", log, child.getLogger());
+        assertTrue("Got error listeners", child.getErrorListeners().isEmpty());
+        assertEquals("Wrong number of listeners", 1, child
+                .getConfigurationListeners().size());
+        assertEquals("Wrong listener", l, child.getConfigurationListeners()
+                .iterator().next());
+    }
+
+    /**
+     * Tests whether properties of the parent configuration can be overridden.
+     */
+    public void testConfigurationBuilderProviderOverrideProperties()
+            throws Exception
+    {
+        factory.addProperty("override.configuration[@fileName]",
+                TEST_FILE.getAbsolutePath());
+        factory.addProperty("override.configuration[@basePath]", "base");
+        factory.addProperty("override.configuration[@throwExceptionOnMissing]",
+                "false");
+        factory.setBasePath("conf");
+        factory.setThrowExceptionOnMissing(true);
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl =
+                new DefaultConfigurationBuilder.ConfigurationDeclaration(
+                        factory,
+                        factory.configurationAt("override.configuration"));
+        DefaultConfigurationBuilder.ConfigurationBuilderProvider provider =
+                new DefaultConfigurationBuilder.ConfigurationBuilderProvider();
+        DefaultConfigurationBuilder child =
+                (DefaultConfigurationBuilder) provider.createBean(
+                        provider.fetchConfigurationClass(), decl, null);
+        assertEquals("Wrong base path", "base", child.getBasePath());
+        assertFalse("Wrong exception flag", child.isThrowExceptionOnMissing());
     }
 
     /**

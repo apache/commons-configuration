@@ -30,6 +30,8 @@ import org.apache.commons.configuration.beanutils.BeanFactory;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.DefaultBeanFactory;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.resolver.EntityRegistry;
@@ -1670,6 +1672,57 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 ConfigurationDeclaration decl) throws Exception
         {
             return new CombinedConfiguration();
+        }
+
+        /**
+         * {@inheritDoc} This implementation ensures that the configuration
+         * builder created by this provider inherits the properties from the
+         * current configuration builder.
+         */
+        protected void initBeanInstance(Object bean, BeanDeclaration data)
+                throws Exception
+        {
+            ConfigurationDeclaration decl = (ConfigurationDeclaration) data;
+            initChildBuilder(decl.getConfigurationBuilder(),
+                    (DefaultConfigurationBuilder) bean);
+            super.initBeanInstance(bean, data);
+        }
+
+        /**
+         * Initializes the given child configuration builder from its parent
+         * builder. This method copies the values of some properties from the
+         * parent builder to the child builder so that the child inherits
+         * properties from its parent.
+         *
+         * @param parent the parent builder
+         * @param child the child builder
+         */
+        private static void initChildBuilder(
+                DefaultConfigurationBuilder parent,
+                DefaultConfigurationBuilder child)
+        {
+            child.setAttributeSplittingDisabled(parent
+                    .isAttributeSplittingDisabled());
+            child.setBasePath(parent.getBasePath());
+            child.setDelimiterParsingDisabled(parent
+                    .isDelimiterParsingDisabled());
+            child.setListDelimiter(parent.getListDelimiter());
+            child.setThrowExceptionOnMissing(parent.isThrowExceptionOnMissing());
+            child.setLogger(parent.getLogger());
+
+            child.clearConfigurationListeners();
+            for (Iterator it = parent.getConfigurationListeners().iterator(); it
+                    .hasNext();)
+            {
+                child.addConfigurationListener((ConfigurationListener) it
+                        .next());
+            }
+            child.clearErrorListeners();
+            for (Iterator it = parent.getErrorListeners().iterator(); it
+                    .hasNext();)
+            {
+                child.addErrorListener((ConfigurationErrorListener) it.next());
+            }
         }
     }
 }
