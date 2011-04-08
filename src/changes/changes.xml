@@ -27,6 +27,11 @@
         JNDIConfiguration.getKeys() no more logs an exception if the prefix does
         not exist.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-437">
+        Child configuration builders created for a &lt;configuration&gt; element
+        in a configuration definition file now inherit some of their properties
+        from the builder object which processed the file.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-436">
         The optional dependency to Apache Ant has been changed to the new
         groupId org.apache.ant. The version was updated to the most recent

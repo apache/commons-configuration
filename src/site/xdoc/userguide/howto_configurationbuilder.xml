@@ -148,7 +148,17 @@
         combined configuration. Like all file-based configurations the
         <code>fileName</code> attribute can be used to specify the configuration
         definition file to be loaded. This file must be an XML document that
-        conforms to the format described here.</dd>
+        conforms to the format described here. Some of the most important
+        settings are copied from the original <code>DefaultConfigurationBuilder</code>
+        object to the newly created builder:
+        <ul>
+        <li>the base path under which configuration files are searched</li>
+        <li>some flags, e.g. for controlling delimiter parsing or throwing
+        exceptions on missing properties</li>
+        <li>the logger</li>
+        <li>the configuration and error listeners</li>
+        </ul>
+        </dd>
         <dt>ini</dt>
         <dd>This tag can be used to include an ini file into the resulting
         combined configuration. Behind the scenes an instance of
