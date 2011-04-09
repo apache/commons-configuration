@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,10 +38,10 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileRandomReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+import org.apache.commons.configuration.tree.MergeCombiner;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.tree.MergeCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 /**
@@ -799,6 +801,38 @@ public class TestCombinedConfiguration extends TestCase
             totalFailures += failures[i];
         }
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+    }
+
+    /**
+     * Tests whether a combined configuration can be copied to an XML
+     * configuration. This test is related to CONFIGURATION-445.
+     */
+    public void testCombinedCopyToXML() throws ConfigurationException
+    {
+        XMLConfiguration x1 = new XMLConfiguration();
+        x1.addProperty("key1", "value1");
+        x1.addProperty("key1[@override]", "USER1");
+        x1.addProperty("key2", "value2");
+        x1.addProperty("key2[@override]", "USER2");
+        XMLConfiguration x2 = new XMLConfiguration();
+        x2.addProperty("key2", "value2.2");
+        x2.addProperty("key2[@override]", "USER2");
+        config.setNodeCombiner(new OverrideCombiner());
+        config.addConfiguration(x2);
+        config.addConfiguration(x1);
+        XMLConfiguration x3 = new XMLConfiguration(config);
+        assertEquals("Wrong element value", "value2.2", x3.getString("key2"));
+        assertEquals("Wrong attribute value", "USER2",
+                x3.getString("key2[@override]"));
+        StringWriter w = new StringWriter();
+        x3.save(w);
+        String s = w.toString();
+        x3 = new XMLConfiguration();
+        x3.load(new StringReader(s));
+        assertEquals("Wrong element value after load", "value2.2",
+                x3.getString("key2"));
+        assertEquals("Wrong attribute value after load", "USER2",
+                x3.getString("key2[@override]"));
     }
 
     private class ReloadThread extends Thread

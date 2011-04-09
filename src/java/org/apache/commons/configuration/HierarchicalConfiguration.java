@@ -1170,6 +1170,38 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
+     * Transforms the specified object into a Node. This method treats view
+     * nodes in a special way. This is necessary because ViewNode does not
+     * extend HierarchicalConfiguration.Node; thus the API for the node visitor
+     * is slightly different. Therefore a view node is transformed into a
+     * special compatibility Node object.
+     *
+     * @param obj the original node object
+     * @return the node to be used
+     */
+    private static Node getNodeFor(Object obj)
+    {
+        Node nd;
+        if (obj instanceof ViewNode)
+        {
+            final ViewNode viewNode = (ViewNode) obj;
+            nd = new Node(viewNode)
+            {
+                public void setReference(Object reference) {
+                    super.setReference(reference);
+                    // also set the reference at the original node
+                    viewNode.setReference(reference);
+                }
+            };
+        }
+        else
+        {
+            nd = (Node) obj;
+        }
+        return nd;
+    }
+
+    /**
      * A data class for storing (hierarchical) property information. A property
      * can have a value and an arbitrary number of child properties. From
      * version 1.3 on this class is only a thin wrapper over the
@@ -1343,27 +1375,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     && !visitor.terminate();)
             {
                 Object obj = it.next();
-                if (obj instanceof ViewNode)
-                {
-                    new Node((ViewNode) obj).visit(visitor, key);
-                }
-                else
-                {
-                    ((Node) obj).visit(visitor, key);
-                }
+                getNodeFor(obj).visit(visitor, key);
             }
             for (Iterator it = getAttributes().iterator(); it.hasNext()
                     && !visitor.terminate();)
             {
                 Object obj = it.next();
-                if (obj instanceof ViewNode)
-                {
-                    new Node((ViewNode) obj).visit(visitor, key);
-                }
-                else
-                {
-                    ((Node) obj).visit(visitor, key);
-                }
+                getNodeFor(obj).visit(visitor, key);
             }
 
             visitor.visitAfterChildren(this, key);
@@ -1649,14 +1667,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 {
                     sibling1 = nd;
                     Object obj = children.next();
-                    if (obj instanceof ViewNode)
-                    {
-                        nd = new Node((ViewNode) obj);
-                    }
-                    else
-                    {
-                        nd = (Node) obj;
-                    }
+                    nd = getNodeFor(obj);
                 } while (nd.getReference() != null && children.hasNext());
 
                 if (nd.getReference() == null)
@@ -1667,14 +1678,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     while (children.hasNext())
                     {
                         Object obj = children.next();
-                        if (obj instanceof ViewNode)
-                        {
-                            nd = new Node((ViewNode) obj);
-                        }
-                        else
-                        {
-                            nd = (Node) obj;
-                        }
+                        nd = getNodeFor(obj);
                         if (nd.getReference() == null)
                         {
                             newNodes.add(nd);
