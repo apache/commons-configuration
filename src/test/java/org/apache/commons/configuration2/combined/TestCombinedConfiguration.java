@@ -23,13 +23,12 @@ import java.io.PrintWriter;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.ConfigurationAssert;
@@ -72,9 +71,6 @@ public class TestCombinedConfiguration extends TestCase
     /** Constant for the name of the properties reload test file.*/
     private static final String RELOAD_PROPS_NAME = "reload2.xml";
 
-    /** Constant for the content of a properties reload test file.*/
-    private static final String RELOAD_PROPS_CONTENT = "propsReload = {0}";
-
     /** Constant for the directory for writing test files.*/
     private static final File TEST_DIR = new File("target");
 
@@ -87,6 +83,7 @@ public class TestCombinedConfiguration extends TestCase
     /** The test event listener. */
     private CombinedListener listener;
 
+    @Override
     protected void setUp() throws Exception
     {
         super.setUp();
@@ -99,6 +96,7 @@ public class TestCombinedConfiguration extends TestCase
      * Performs clean-up after a test run. If test files have been created, they
      * are removed now.
      */
+    @Override
     protected void tearDown() throws Exception
     {
         if (testFiles != null)
@@ -721,9 +719,9 @@ public class TestCombinedConfiguration extends TestCase
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
-        AbstractHierarchicalConfiguration pc = new XMLConfiguration();
+        AbstractHierarchicalConfiguration<?> pc = new XMLConfiguration();
         config.addConfiguration(pc, "props");
-        List list = config.getConfigurations();
+        List<?> list = config.getConfigurations();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
         AbstractConfiguration c = ((AbstractConfiguration)list.get(2));
@@ -734,9 +732,9 @@ public class TestCombinedConfiguration extends TestCase
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
-        AbstractHierarchicalConfiguration pc = new XMLConfiguration();
+        AbstractHierarchicalConfiguration<?> pc = new XMLConfiguration();
         config.addConfiguration(pc, "props");
-        List list = config.getConfigurationNameList();
+        List<?> list = config.getConfigurationNameList();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
         String name = ((String)list.get(1));
@@ -757,7 +755,7 @@ public class TestCombinedConfiguration extends TestCase
         File testXmlFile1 = writeReloadFile(RELOAD_XML_NAME, reloadContent, 0);
         final String prefix1 = "default";
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile1);
-        SubConfiguration sub1 = c1.configurationAt(prefix1, true);
+        SubConfiguration<?> sub1 = c1.configurationAt(prefix1, true);
         assertEquals("Inital test for sub config 1 failed", 0, sub1
                 .getInt("xmlReload1"));
         config.addConfiguration(sub1);
