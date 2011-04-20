@@ -23,6 +23,10 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-446">
+        XMLConfiguration now handles attributes correctly whose value is an
+        empty string.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-445">
         Transforming a CombinedConfiguration with ViewNodes to an
         XMLConfiguration could cause problems with attributes. This has been

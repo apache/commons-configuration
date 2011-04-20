@@ -1741,6 +1741,23 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Tests whether an attribute can be set to an empty string. This test is
+     * related to CONFIGURATION-446.
+     */
+    public void testEmptyAttribute() throws ConfigurationException
+    {
+        String key = "element3[@value]";
+        conf.setProperty(key, "");
+        assertTrue("Key not found", conf.containsKey(key));
+        assertEquals("Wrong value", "", conf.getString(key));
+        conf.save(testSaveConf);
+        conf = new XMLConfiguration();
+        conf.load(testSaveConf);
+        assertTrue("Key not found after save", conf.containsKey(key));
+        assertEquals("Wrong value after save", "", conf.getString(key));
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
