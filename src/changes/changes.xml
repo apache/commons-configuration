@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="update" issue="CONFIGURATION-446">
+        XMLConfiguration now handles attributes correctly whose value is an
+        empty string.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-439">
         Child configuration builders created for a &lt;configuration&gt; element
         in a configuration definition file now inherit the configuration and

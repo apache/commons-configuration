@@ -1494,6 +1494,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (node != null && elem != null)
             {
+                boolean hasAttribute = false;
                 List<ConfigurationNode> attributes = node.getAttributes(name);
                 StringBuilder buf = new StringBuilder();
                 char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
@@ -1501,6 +1502,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 {
                     if (attribute.getValue() != null)
                     {
+                        hasAttribute = true;
                         if (buf.length() > 0)
                         {
                             buf.append(delimiter);
@@ -1513,7 +1515,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                     attribute.setReference(elem);
                 }
 
-                if (buf.length() < 1)
+                if (!hasAttribute)
                 {
                     elem.removeAttribute(name);
                 }
