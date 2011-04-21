@@ -666,6 +666,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
         // test INIConfiguration
         assertEquals("Property from ini file not found", "yes",
                 config.getString("testini.loaded"));
+
+        // test environment configuration
+        EnvironmentConfiguration envConf = new EnvironmentConfiguration();
+        for (Iterator it = envConf.getKeys(); it.hasNext();)
+        {
+            String key = (String) it.next();
+            String combinedKey = "env." + key;
+            assertEquals("Wrong value for env property " + key,
+                    envConf.getString(key), config.getString(combinedKey));
+        }
     }
 
     /**

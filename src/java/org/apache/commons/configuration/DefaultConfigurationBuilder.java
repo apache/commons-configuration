@@ -383,6 +383,10 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final ConfigurationProvider INI_PROVIDER =
             new FileConfigurationProvider(HierarchicalINIConfiguration.class);
 
+    /** Constant for the provider for environment properties. */
+    private static final ConfigurationProvider ENV_PROVIDER =
+            new ConfigurationProvider(EnvironmentConfiguration.class);
+
     /** Constant for the provider for plist files. */
     private static final ConfigurationProvider PLIST_PROVIDER = new FileExtensionConfigurationProvider(
             "org.apache.commons.configuration.plist.XMLPropertyListConfiguration",
@@ -395,13 +399,15 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "jndi", "system", "plist",
-            "configuration", "ini"
+            "configuration", "ini", "env"
     };
 
     /** An array with the providers for the default tags. */
-    private static final ConfigurationProvider[] DEFAULT_PROVIDERS =
-    {PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER, INI_PROVIDER};
+    private static final ConfigurationProvider[] DEFAULT_PROVIDERS = {
+            PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, JNDI_PROVIDER,
+            SYSTEM_PROVIDER, PLIST_PROVIDER, BUILDER_PROVIDER, INI_PROVIDER,
+            ENV_PROVIDER
+    };
 
     /**
      * The serial version UID.
