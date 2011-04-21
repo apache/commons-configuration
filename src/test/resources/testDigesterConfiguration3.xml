@@ -10,5 +10,6 @@
     <properties fileName="testDigesterConfigurationInclude2.properties" at="mail"/>
     <jndi prefix=""/>
     <ini fileName="test.ini"/>
+    <env at="env"/>
   </additional>
 </configuration>

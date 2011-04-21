@@ -25,6 +25,7 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -676,6 +677,16 @@ public class TestDefaultConfigurationBuilder extends TestCase
         // test INIConfiguration
         assertEquals("Property from ini file not found", "yes",
                 config.getString("testini.loaded"));
+
+        // test environment configuration
+        EnvironmentConfiguration envConf = new EnvironmentConfiguration();
+        for (Iterator<String> it = envConf.getKeys(); it.hasNext();)
+        {
+            String key = it.next();
+            String combinedKey = "env." + key;
+            assertEquals("Wrong value for env property " + key,
+                    envConf.getString(key), config.getString(combinedKey));
+        }
     }
 
     /**
