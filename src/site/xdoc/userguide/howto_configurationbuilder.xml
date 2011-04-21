@@ -164,6 +164,10 @@
         combined configuration. Behind the scenes an instance of
         <code><a href="../apidocs/org/apache/commons/configuration/HierarchicalINIConfiguration.html">
         HierarchicalINIConfiguration</a></code> is used to load the ini file.</dd>
+        <dt>env</dt>
+        <dd>With this tag direct access to environment properties can be enabled.
+        This works in the same way as the <code>&lt;system&gt;</code> tag for
+        Java system properties.</dd>
       </dl>
     </p>
     <p>
