@@ -133,6 +133,10 @@ import org.apache.commons.lang.StringUtils;
  *  var3 = foo<br>
  *  var4 = bar<br>
  *  var5 = test2<br>
+ *  <br>
+ *  [sectionSeparators]<br>
+ *  passwd : abc=def<br>
+ *  a:b = "value"
  *  </code>
  * </p>
  * <p>
@@ -150,6 +154,15 @@ import org.apache.commons.lang.StringUtils;
  * <li>Section three uses both '=' and ':' to separate keys and values.</li>
  * <li>Section 3 has a duplicate key named "var5". The value for this key is
  * [test1, test2], and is represented as a List.</li>
+ * <li>The section called <em>sectionSeparators</em> demonstrates how the
+ * configuration deals with multiple occurrences of separator characters. Per
+ * default the first separator character in a line is detected and used to
+ * split the key from the value. Therefore the first property definition in this
+ * section has the key <code>passwd</code> and the value <code>abc=def</code>.
+ * This default behavior can be changed by using quotes. If there is a separator
+ * character before the first quote character (ignoring whitespace), this
+ * character is used as separator. Thus the second property definition in the
+ * section has the key <code>a:b</code> and the value <code>value</code>.</li>
  * </ul>
  * </p>
  * <p>
@@ -206,6 +219,11 @@ public class HierarchicalINIConfiguration extends
      * Constant for the line separator.
      */
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /**
+     * The characters used for quoting values.
+     */
+    private static final String QUOTE_CHARACTERS = "\"'";
 
     /**
      * The line continuation character.
@@ -347,7 +365,7 @@ public class HierarchicalINIConfiguration extends
                     {
                         String key = "";
                         String value = "";
-                        int index = line.indexOf("=");
+                        int index = findSeparator(line);
                         if (index >= 0)
                         {
                             key = line.substring(0, index);
@@ -355,16 +373,7 @@ public class HierarchicalINIConfiguration extends
                         }
                         else
                         {
-                            index = line.indexOf(":");
-                            if (index >= 0)
-                            {
-                                key = line.substring(0, index);
-                                value = parseValue(line.substring(index + 1), bufferedReader);
-                            }
-                            else
-                            {
-                                key = line;
-                            }
+                            key = line;
                         }
                         key = key.trim();
                         if (key.length() < 1)
@@ -554,6 +563,84 @@ public class HierarchicalINIConfiguration extends
     private static boolean isCommentChar(char c)
     {
         return COMMENT_CHARS.indexOf(c) >= 0;
+    }
+
+    /**
+     * Tries to find the index of the separator character in the given string.
+     * This method checks for the presence of separator characters in the given
+     * string. If multiple characters are found, the first one is assumed to be
+     * the correct separator. If there are quoting characters, they are taken
+     * into account, too.
+     *
+     * @param line the line to be checked
+     * @return the index of the separator character or -1 if none is found
+     */
+    private static int findSeparator(String line)
+    {
+        int index =
+                findSeparatorBeforeQuote(line,
+                        findFirstOccurrence(line, QUOTE_CHARACTERS));
+        if (index < 0)
+        {
+            index = findFirstOccurrence(line, SEPARATOR_CHARS);
+        }
+        return index;
+    }
+
+    /**
+     * Checks for the occurrence of the specified separators in the given line.
+     * The index of the first separator is returned.
+     *
+     * @param line the line to be investigated
+     * @param separators a string with the separator characters to look for
+     * @return the lowest index of a separator character or -1 if no separator
+     *         is found
+     */
+    private static int findFirstOccurrence(String line, String separators)
+    {
+        int index = -1;
+
+        for (int i = 0; i < separators.length(); i++)
+        {
+            char sep = separators.charAt(i);
+            int pos = line.indexOf(sep);
+            if (pos >= 0)
+            {
+                if (index < 0 || pos < index)
+                {
+                    index = pos;
+                }
+            }
+        }
+
+        return index;
+    }
+
+    /**
+     * Searches for a separator character directly before a quoting character.
+     * If the first non-whitespace character before a quote character is a
+     * separator, it is considered the "real" separator in this line - even if
+     * there are other separators before.
+     *
+     * @param line the line to be investigated
+     * @param quoteIndex the index of the quote character
+     * @return the index of the separator before the quote or &lt; 0 if there is
+     *         none
+     */
+    private static int findSeparatorBeforeQuote(String line, int quoteIndex)
+    {
+        int index = quoteIndex - 1;
+        while (index >= 0 && Character.isWhitespace(line.charAt(index)))
+        {
+            index--;
+        }
+
+        if (index >= 0 && SEPARATOR_CHARS.indexOf(line.charAt(index)) < 0)
+        {
+            index = -1;
+        }
+
+        return index;
     }
 
     /**
