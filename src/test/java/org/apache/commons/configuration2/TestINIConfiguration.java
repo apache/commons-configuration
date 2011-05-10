@@ -80,6 +80,16 @@ public class TestINIConfiguration extends TestCase
             + "  line 2" + LINE_SEPARATOR
             + "continueNoLine = one \\" + LINE_SEPARATOR;
 
+    private static final String INI_DATA_SEPARATORS = "[section]"
+            + LINE_SEPARATOR + "var1 = value1" + LINE_SEPARATOR
+            + "var2 : value2" + LINE_SEPARATOR
+            + "var3=value3" + LINE_SEPARATOR
+            + "var4:value4" + LINE_SEPARATOR
+            + "var5 : value=5" + LINE_SEPARATOR
+            + "var:6=value" + LINE_SEPARATOR
+            + "var:7=\"value7\"" + LINE_SEPARATOR
+            + "var:8 =  \"value8\"" + LINE_SEPARATOR;
+
     /** An ini file that contains only a property in the global section. */
     private static final String INI_DATA_GLOBAL_ONLY = "globalVar = testGlobal"
             + LINE_SEPARATOR + LINE_SEPARATOR;
@@ -745,5 +755,44 @@ public class TestINIConfiguration extends TestCase
         assertEquals("Wrong class path", path,
                 config.getString("Environment.Class Path"));
         assertEquals("Wrong path", path, config.getString("Environment.Path"));
+    }
+
+    /**
+     * Tests whether the different separators with or without whitespace are
+     * recognized.
+     */
+    public void testSeparators() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        for (int i = 1; i <= 4; i++)
+        {
+            assertEquals("Wrong value", "value" + i,
+                    config.getString("section.var" + i));
+        }
+    }
+
+    /**
+     * Tests property definitions containing multiple separators.
+     */
+    public void testMultipleSeparators() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        assertEquals("Wrong value for var5", "value=5",
+                config.getString("section.var5"));
+        assertEquals("Wrong value for var6", "6=value",
+                config.getString("section.var"));
+    }
+
+    /**
+     * Tests property definitions containing multiple separators that are
+     * quoted.
+     */
+    public void testMultipleSeparatorsQuoted() throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        assertEquals("Wrong value for var7", "value7",
+                config.getString("section.var:7"));
+        assertEquals("Wrong value for var8", "value8",
+                config.getString("section.var:8"));
     }
 }

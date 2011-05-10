@@ -79,6 +79,10 @@
     </release>
 
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="add" issue="CONFIGURATION-448">
+        The parsing of ini files has been improved for property definitions
+        containing multiple separator characters.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-447">
         DefaultConfigurationBuilder now supports including environment properties
         using the "env" tag.
