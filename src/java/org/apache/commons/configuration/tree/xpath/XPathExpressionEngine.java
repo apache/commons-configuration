@@ -129,6 +129,12 @@ public class XPathExpressionEngine implements ExpressionEngine
             + ATTR_DELIMITER;
 
     /**
+     * Constant for a space which is used as delimiter in keys for adding
+     * properties.
+     */
+    private static final String SPACE = " ";
+
+    /**
      * Executes a query. The passed in property key is directly passed to a
      * JXPath context.
      *
@@ -213,18 +219,15 @@ public class XPathExpressionEngine implements ExpressionEngine
                     "prepareAdd: key must not be null!");
         }
 
-        int index = key.length() - 1;
-        while (index >= 0 && !Character.isWhitespace(key.charAt(index)))
-        {
-            index--;
-        }
+        String addKey = key;
+        int index = findKeySeparator(addKey);
         if (index < 0)
         {
-            throw new IllegalArgumentException(
-                    "prepareAdd: Passed in key must contain a whitespace!");
+            addKey = generateKeyForAdd(root, addKey);
+            index = findKeySeparator(addKey);
         }
 
-        List nodes = query(root, key.substring(0, index).trim());
+        List nodes = query(root, addKey.substring(0, index).trim());
         if (nodes.size() != 1)
         {
             throw new IllegalArgumentException(
@@ -233,7 +236,7 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         NodeAddData data = new NodeAddData();
         data.setParent((ConfigurationNode) nodes.get(0));
-        initNodeAddData(data, key.substring(index).trim());
+        initNodeAddData(data, addKey.substring(index).trim());
         return data;
     }
 
@@ -324,6 +327,37 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
+     * Tries to generate a key for adding a property. This method is called if a
+     * key was used for adding properties which does not contain a space
+     * character. It splits the key at its single components and searches for
+     * the last existing component. Then a key compatible for adding properties
+     * is generated.
+     *
+     * @param root the root node of the configuration
+     * @param key the key in question
+     * @return the key to be used for adding the property
+     */
+    private String generateKeyForAdd(ConfigurationNode root, String key)
+    {
+        int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
+
+        while (pos >= 0)
+        {
+            String keyExisting = key.substring(0, pos);
+            if (!query(root, keyExisting).isEmpty())
+            {
+                StringBuffer buf = new StringBuffer(key.length() + 1);
+                buf.append(keyExisting).append(SPACE);
+                buf.append(key.substring(pos + 1));
+                return buf.toString();
+            }
+            pos = key.lastIndexOf(PATH_DELIMITER, pos - 1);
+        }
+
+        return SPACE + key;
+    }
+
+    /**
      * Helper method for throwing an exception about an invalid path.
      *
      * @param path the invalid path
@@ -333,6 +367,23 @@ public class XPathExpressionEngine implements ExpressionEngine
     {
         throw new IllegalArgumentException("Invalid node path: \"" + path
                 + "\" " + msg);
+    }
+
+    /**
+     * Determines the position of the separator in a key for adding new
+     * properties. If no delimiter is found, result is -1.
+     *
+     * @param key the key
+     * @return the position of the delimiter
+     */
+    private static int findKeySeparator(String key)
+    {
+        int index = key.length() - 1;
+        while (index >= 0 && !Character.isWhitespace(key.charAt(index)))
+        {
+            index--;
+        }
+        return index;
     }
 
     // static initializer: registers the configuration node pointer factory

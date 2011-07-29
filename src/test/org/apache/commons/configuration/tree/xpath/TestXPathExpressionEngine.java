@@ -20,14 +20,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.NodeAddData;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for XPathExpressionEngine.
@@ -248,23 +248,6 @@ public class TestXPathExpressionEngine extends TestCase
         {
             engine.prepareAdd(ROOT, "invalidKey newNode");
             fail("Could add to invalid parent!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
-    }
-
-    /**
-     * Tests an add operation where the passed in key has an invalid format: it
-     * does not contain a whitspace. This will cause an error.
-     */
-    public void testPrepareAddInvalidFormat()
-    {
-        try
-        {
-            engine.prepareAdd(ROOT, "anInvalidKey");
-            fail("Could add an invalid key!");
         }
         catch (IllegalArgumentException iex)
         {
