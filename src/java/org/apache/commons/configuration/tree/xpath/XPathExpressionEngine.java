@@ -34,17 +34,17 @@ import org.apache.commons.lang.StringUtils;
  * that is able to evaluate XPATH expressions.
  * </p>
  * <p>
- * This class makes use of <a href="http://commons.apache.org/jxpath/">
- * Commons JXPath</a> for handling XPath expressions and mapping them to the
- * nodes of a hierarchical configuration. This makes the rich and powerful
- * XPATH syntax available for accessing properties from a configuration object.
+ * This class makes use of <a href="http://commons.apache.org/jxpath/"> Commons
+ * JXPath</a> for handling XPath expressions and mapping them to the nodes of a
+ * hierarchical configuration. This makes the rich and powerful XPATH syntax
+ * available for accessing properties from a configuration object.
  * </p>
  * <p>
  * For selecting properties arbitrary XPATH expressions can be used, which
  * select single or multiple configuration nodes. The associated
- * <code>Configuration</code> instance will directly pass the specified
- * property keys into this engine. If a key is not syntactically correct, an
- * exception will be thrown.
+ * <code>Configuration</code> instance will directly pass the specified property
+ * keys into this engine. If a key is not syntactically correct, an exception
+ * will be thrown.
  * </p>
  * <p>
  * For adding new properties, this expression engine uses a specific syntax: the
@@ -96,11 +96,12 @@ import org.apache.commons.lang.StringUtils;
  * <code>table</code>, <code>fields</code>, <code>field</code>, and
  * <code>name</code> will be added.
  * </p>
- *
  * <p>
+ *
  * <pre>
  * &quot;/tables table/fields/field@type&quot;
  * </pre>
+ *
  * </p>
  * <p>
  * This is similar to the last example, but in this case a complex path ending
@@ -111,9 +112,35 @@ import org.apache.commons.lang.StringUtils;
  * with the <code>addProperty()</code> method. <code>setProperty()</code> does
  * not support creating new nodes this way.
  * </p>
+ * <p>
+ * From version 1.7 on, it is possible to use regular keys in calls to
+ * <code>addProperty()</code> (i.e. keys that do not have to contain a
+ * whitespace as delimiter). In this case the key is evaluated, and the biggest
+ * part pointing to an existing node is determined. The remaining part is then
+ * added as new path. As an example consider the key
+ *
+ * <pre>
+ * &quot;tables/table[last()]/fields/field/name&quot;
+ * </pre>
+ *
+ * If the key does not point to an existing node, the engine will check the
+ * paths <code>&quot;tables/table[last()]/fields/field&quot;</code>,
+ * <code>&quot;tables/table[last()]/fields&quot;</code>,
+ * <code>&quot;tables/table[last()]&quot;</code>, and so on, until a key is
+ * found which points to a node. Let's assume that the last key listed above can
+ * be resolved in this way. Then from this key the following key is derived:
+ * <code>&quot;tables/table[last()] fields/field/name&quot;</code> by appending
+ * the remaining part after a whitespace. This key can now be processed using
+ * the original algorithm. Keys of this form can also be used with the
+ * <code>setProperty()</code> method. However, it is still recommended to use
+ * the old format because it makes explicit at which position new nodes should
+ * be added. For keys without a whitespace delimiter there may be ambiguities.
+ * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class XPathExpressionEngine implements ExpressionEngine
@@ -159,13 +186,13 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * Returns a (canonic) key for the given node based on the parent's key.
+     * Returns a (canonical) key for the given node based on the parent's key.
      * This implementation will create an XPATH expression that selects the
      * given node (under the assumption that the passed in parent key is valid).
      * As the <code>nodeKey()</code> implementation of
      * <code>{@link org.apache.commons.configuration.tree.DefaultExpressionEngine DefaultExpressionEngine}</code>
      * this method will not return indices for nodes. So all child nodes of a
-     * given parent whith the same name will have the same key.
+     * given parent with the same name will have the same key.
      *
      * @param node the node for which a key is to be constructed
      * @param parentKey the key of the parent node
