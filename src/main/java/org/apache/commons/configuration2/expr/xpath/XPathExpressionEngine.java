@@ -129,6 +129,12 @@ public class XPathExpressionEngine implements ExpressionEngine
     /** Constant for the delimiters for splitting node paths. */
     private static final String NODE_PATH_DELIMITERS = PATH_DELIMITER + ATTR_DELIMITER;
 
+    /**
+     * Constant for a space which is used as delimiter in keys for adding
+     * properties.
+     */
+    private static final String SPACE = " ";
+
     /** Constant for the index start character.*/
     private static final char INDEX_START = '[';
 
@@ -290,17 +296,15 @@ public class XPathExpressionEngine implements ExpressionEngine
                     "prepareAdd: key must not be null!");
         }
 
-        int index = key.length() - 1;
-        while (index >= 0 && !Character.isWhitespace(key.charAt(index)))
-        {
-            index--;
-        }
+        String addKey = key;
+        int index = findKeySeparator(addKey);
         if (index < 0)
         {
-            throw new IllegalArgumentException("prepareAdd: Passed in key must contain a whitespace!");
+            addKey = generateKeyForAdd(root, addKey, handler);
+            index = findKeySeparator(addKey);
         }
 
-        NodeList<T> nodes = query(root, key.substring(0, index).trim(), handler);
+        NodeList<T> nodes = query(root, addKey.substring(0, index).trim(), handler);
         if (nodes.size() != 1)
         {
             throw new IllegalArgumentException("prepareAdd: key must select exactly one target node!");
@@ -308,7 +312,7 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         NodeAddData<T> data = new NodeAddData<T>();
         data.setParent(nodes.getNode(0));
-        initNodeAddData(data, key.substring(index).trim());
+        initNodeAddData(data, addKey.substring(index).trim());
         return data;
     }
 
@@ -402,15 +406,64 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
+     * Tries to generate a key for adding a property. This method is called if a
+     * key was used for adding properties which does not contain a space
+     * character. It splits the key at its single components and searches for
+     * the last existing component. Then a key compatible for adding properties
+     * is generated.
+     *
+     * @param root the root node of the configuration
+     * @param key the key in question
+     * @param handler the node handler
+     * @return the key to be used for adding the property
+     */
+    private <T> String generateKeyForAdd(T root, String key, NodeHandler<T> handler)
+    {
+        int pos = key.lastIndexOf(PATH_DELIMITER, key.length());
+
+        while (pos >= 0)
+        {
+            String keyExisting = key.substring(0, pos);
+            if (query(root, keyExisting, handler).size() > 0)
+            {
+                StringBuilder buf = new StringBuilder(key.length() + 1);
+                buf.append(keyExisting).append(SPACE);
+                buf.append(key.substring(pos + 1));
+                return buf.toString();
+            }
+            pos = key.lastIndexOf(PATH_DELIMITER, pos - 1);
+        }
+
+        return SPACE + key;
+    }
+
+    /**
      * Helper method for throwing an exception about an invalid path.
      *
      * @param path the invalid path
      * @param msg the exception message
      */
-    private void invalidPath(String path, String msg)
+    private static void invalidPath(String path, String msg)
     {
         throw new IllegalArgumentException("Invalid node path: \"" + path
                 + "\" " + msg);
+    }
+
+    /**
+     * Determines the position of the separator in a key for adding new
+     * properties. If no delimiter is found, result is -1.
+     *
+     * @param key the key
+     * @return the position of the delimiter
+     */
+    private static int findKeySeparator(String key)
+    {
+        int index = key.length() - 1;
+        while (index >= 0 && !Character.isWhitespace(key.charAt(index)))
+        {
+            index--;
+        }
+        return index;
     }
 
     // static initializer: registers the configuration node pointer factory

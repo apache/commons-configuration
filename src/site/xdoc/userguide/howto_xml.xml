@@ -867,6 +867,49 @@ config.addProperty("tables/table[last()]/fields field/name", "startDate");
                 elements further children are added.
             </p>
             <p>
+                There is one gotcha with these keys described so far: they do
+                not work with the <code>setProperty()</code> method! This is
+                because <code>setProperty()</code> has to check whether the
+                passed in key already exists; therefore it needs a key which can
+                be interpreted by query methods. If you want to use
+                <code>setProperty()</code>, you can pass in regular keys (i.e.
+                without a whitespace separator). The method then tries to figure
+                out which part of the key already exists in the configuration
+                and adds new nodes as necessary. In principle such regular keys
+                can also be used with <code>addProperty()</code>. However, they
+                do not contain sufficient information to decide where new nodes
+                should be added.
+            </p>
+            <p>
+                To make this clearer let's go back to the example with the
+                tables. Consider that there is a configuration which already
+                contains information about some database tables. In order to add
+                a new table element in the configuration
+                <code>addProperty()</code> could be used as follows:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables/table/name", "documents");
+         ]]></source>
+            <p>
+                In the configuration a <code>&lt;tables&gt;</code> element
+                already exists, also <code>&lt;table&gt;</code> and
+                <code>&lt;name&gt;</code> elements. How should the expression
+                engine know where new node structures are to be added? The
+                solution to this problem is to provide this information in the
+                key by stating:
+            </p>
+            <source><![CDATA[
+config.addProperty("tables table/name", "documents");
+         ]]></source>
+            <p>
+                Now it is clear that new nodes should be added as children of
+                the  <code>&lt;tables&gt;</code> element. More information about
+                keys and how they play together with <code>addProperty()</code>
+                and <code>setProperty()</code> can be found in the Javadocs for
+                <a href="../apidocs/org/apache/commons/configuration2/tree/xpath/XPathExpressionEngine.html">
+                <code>XPathExpressionEngine</code></a>.
+            </p>
+            <p>
                 <em>Note:</em> XPATH support is implemented through
                 <a href="http://commons.apache.org/jxpath">Commons JXPath</a>.
                 So when making use of this feature, be sure you include the

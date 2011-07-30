@@ -344,23 +344,6 @@ public class TestXPathExpressionEngine extends TestCase
     }
 
     /**
-     * Tests an add operation where the passed in key has an invalid format: it
-     * does not contain a whitespace. This will cause an error.
-     */
-    public void testPrepareAddInvalidFormat()
-    {
-        try
-        {
-            engine.prepareAdd(root, "anInvalidKey", handler);
-            fail("Could add an invalid key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
-    }
-
-    /**
      * Tests an add operation with an empty path for the new node.
      */
     public void testPrepareAddEmptyPath()
