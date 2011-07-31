@@ -24,7 +24,7 @@ import java.util.List;
  * </p>
  * <p>
  * This interface defines a tree like structure for configuration data. A node
- * has a value and can have an arbitrary number of children and attribures.
+ * has a value and can have an arbitrary number of children and attributes.
  * </p>
  *
  * @since 1.3
