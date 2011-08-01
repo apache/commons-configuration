@@ -189,6 +189,14 @@ public class TestHierarchicalConfiguration extends TestCase
         assertEquals(42, config.getInt("test.items.item"));
     }
 
+    public void testClear()
+    {
+        config.setProperty(null, "value");
+        config.addProperty("[@attr]", "defined");
+        config.clear();
+        assertTrue("Configuration not empty", config.isEmpty());
+    }
+
     public void testClearProperty()
     {
         config.clearProperty("tables.table(0).fields.field(0).name");
@@ -577,6 +585,24 @@ public class TestHierarchicalConfiguration extends TestCase
         {
             // ok
         }
+    }
+
+    /**
+     * Tests whether a sub configuration obtained by configurationAt() can be
+     * cleared.
+     */
+    public void testConfigurationAtClear()
+    {
+        config.addProperty("test.sub.test", "fail");
+        assertEquals("Wrong index (1)", 0, config.getMaxIndex("test"));
+        SubnodeConfiguration sub = config.configurationAt("test.sub");
+        assertEquals("Wrong value", "fail", sub.getString("test"));
+        sub.clear();
+        assertNull("Key still found", config.getString("test.sub.key"));
+        sub.setProperty("test", "success");
+        assertEquals("Property not set", "success",
+                config.getString("test.sub.test"));
+        assertEquals("Wrong index (2)", 0, config.getMaxIndex("test"));
     }
 
     /**

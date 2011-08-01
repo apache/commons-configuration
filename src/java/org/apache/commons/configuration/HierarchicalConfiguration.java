@@ -770,6 +770,20 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
+     * Clears this configuration. This is a more efficient implementation than
+     * the one inherited from the base class. It directly removes all data from
+     * the root node.
+     */
+    public void clear()
+    {
+        fireEvent(EVENT_CLEAR, null, null, true);
+        getRootNode().removeAttributes();
+        getRootNode().removeChildren();
+        getRootNode().setValue(null);
+        fireEvent(EVENT_CLEAR, null, null, false);
+    }
+
+    /**
      * Removes all values of the property with the given name and of keys that
      * start with this name. So if there is a property with the key
      * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
