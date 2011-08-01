@@ -568,10 +568,8 @@ public class TestPropertiesConfigurationLayout extends TestCase
         fillLayout();
         layout.setComment("NonExistingKey", "NonExistingComment");
         String output = getLayoutString();
-        assertTrue("Non existing key was found", output
-                .indexOf("NonExistingKey") < 0);
-        assertTrue("Non existing comment was found", output
-                .indexOf("NonExistingComment") < 0);
+        assertTrue("Non existing key was found", !output.contains("NonExistingKey"));
+        assertTrue("Non existing comment was found", !output.contains("NonExistingComment"));
     }
 
     /**

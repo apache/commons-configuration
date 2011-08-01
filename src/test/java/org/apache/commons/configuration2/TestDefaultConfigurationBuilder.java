@@ -1042,7 +1042,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1001", config, 15);
         String xml = writer.getBuffer().toString();
         assertNotNull("No XML returned", xml);
-        assertTrue("Incorect configuration data: " + xml, xml.indexOf("<rowsPerPage>15</rowsPerPage>") >= 0);
+        assertTrue("Incorect configuration data: " + xml, xml.contains("<rowsPerPage>15</rowsPerPage>"));
         logger.removeAppender(app);
         logger.setLevel(org.apache.log4j.Level.OFF);
         verify("1002", config, 25);

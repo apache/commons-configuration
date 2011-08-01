@@ -128,7 +128,7 @@ public class TestCompositeConfiguration extends TestCase
         }
         catch (NoSuchElementException nsee)
         {
-            assertTrue(nsee.getMessage().indexOf("bogus.property") > -1);
+            assertTrue(nsee.getMessage().contains("bogus.property"));
         }
 
         assertTrue("Should be false", !cc.getBoolean("test.missing.boolean", false));

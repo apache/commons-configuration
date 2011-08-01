@@ -446,11 +446,9 @@ public class DefaultConfigurationKey
      */
     private String escapeDelimiters(String key)
     {
-        return (getExpressionEngine().getEscapedDelimiter() == null || key
-                .indexOf(getExpressionEngine().getPropertyDelimiter()) < 0) ? key
-                : StringUtils.replace(key, getExpressionEngine()
-                        .getPropertyDelimiter(), getExpressionEngine()
-                        .getEscapedDelimiter());
+        String delimiter = getExpressionEngine().getPropertyDelimiter();
+        return (getExpressionEngine().getEscapedDelimiter() == null || !key.contains(delimiter)) ? key
+                : StringUtils.replace(key, delimiter, getExpressionEngine().getEscapedDelimiter());
     }
 
     /**

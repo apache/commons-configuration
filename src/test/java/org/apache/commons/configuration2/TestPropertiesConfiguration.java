@@ -986,8 +986,7 @@ public class TestPropertiesConfiguration extends TestCase
         StringWriter writer = new StringWriter();
         conf.save(writer);
         String s = writer.toString();
-        assertTrue("Value not found: " + s, s.indexOf(PROP_NAME
-                + " = http://www.apache.org") >= 0);
+        assertTrue("Value not found: " + s, s.contains(PROP_NAME + " = http://www.apache.org"));
     }
 
     /**

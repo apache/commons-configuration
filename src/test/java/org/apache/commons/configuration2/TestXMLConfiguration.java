@@ -973,8 +973,7 @@ public class TestXMLConfiguration extends TestCase
 
         StringWriter out = new StringWriter();
         conf.save(out);
-        assertTrue("Encoding was not written to file", out.toString().indexOf(
-                "encoding=\"" + ENCODING + "\"") >= 0);
+        assertTrue("Encoding was not written to file", out.toString().contains("encoding=\"" + ENCODING + "\""));
     }
 
     /**
@@ -990,8 +989,7 @@ public class TestXMLConfiguration extends TestCase
 
         StringWriter out = new StringWriter();
         conf.save(out);
-        assertTrue("Encoding was written to file", out.toString().indexOf(
-                "encoding=\"UTF-") >= 0);
+        assertTrue("Encoding was written to file", out.toString().contains("encoding=\"UTF-"));
     }
 
     /**
@@ -1016,7 +1014,7 @@ public class TestXMLConfiguration extends TestCase
         StringWriter out = new StringWriter();
         conf.save(out);
         System.out.println(out.toString());
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(DOCTYPE) >= 0);
+        assertTrue("Did not find DOCTYPE", out.toString().contains(DOCTYPE));
     }
 
     /**
@@ -1031,8 +1029,7 @@ public class TestXMLConfiguration extends TestCase
         conf.setSystemID(SYSTEM_ID);
         StringWriter out = new StringWriter();
         conf.save(out);
-        assertTrue("Did not find DOCTYPE", out.toString().indexOf(
-                DOCTYPE + "testconfig" + DOCTYPE_DECL) >= 0);
+        assertTrue("Did not find DOCTYPE", out.toString().contains(DOCTYPE + "testconfig" + DOCTYPE_DECL));
     }
 
     /**

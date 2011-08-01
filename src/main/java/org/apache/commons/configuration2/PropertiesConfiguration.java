@@ -1133,7 +1133,7 @@ public class PropertiesConfiguration extends AbstractHierarchicalFileConfigurati
         {
             String strValue = String.valueOf(value);
 
-            if (inList && strValue.indexOf(DOUBLE_ESC) >= 0)
+            if (inList && strValue.contains(DOUBLE_ESC))
             {
                 char esc = ESCAPE.charAt(0);
                 StringBuffer buf = new StringBuffer(strValue.length() + 8);

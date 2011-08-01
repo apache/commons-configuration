@@ -166,7 +166,7 @@ public class TestJNDIConfiguration extends TestCase
         }
         catch (NoSuchElementException e)
         {
-            assertTrue(e.getMessage(), e.getMessage().indexOf("test.imaginarykey") != -1);
+            assertTrue(e.getMessage(), e.getMessage().contains("test.imaginarykey"));
         }
     }
 
