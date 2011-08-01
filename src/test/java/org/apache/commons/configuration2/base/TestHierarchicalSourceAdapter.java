@@ -28,7 +28,7 @@ import junit.framework.TestCase;
 import org.apache.commons.configuration2.expr.ConfigurationNodeHandler;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.lang.mutable.MutableObject;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.easymock.EasyMock;
 import org.easymock.IAnswer;
 

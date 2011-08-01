@@ -23,7 +23,7 @@ import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.expr.NodeAddData;
 import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>

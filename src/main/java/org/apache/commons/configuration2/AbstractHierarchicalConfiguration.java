@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.configuration2.expr.NodeVisitor;
 import org.apache.commons.configuration2.expr.NodeVisitorAdapter;
 import org.apache.commons.configuration2.expr.def.DefaultExpressionEngine;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>A base class for hierarchical configurations.</p>

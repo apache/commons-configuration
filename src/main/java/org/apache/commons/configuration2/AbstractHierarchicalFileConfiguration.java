@@ -42,7 +42,7 @@ import org.apache.commons.configuration2.fs.VerifiableOutputStream;
 import org.apache.commons.configuration2.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>Partial implementation of the <code>FileConfiguration</code> interface.

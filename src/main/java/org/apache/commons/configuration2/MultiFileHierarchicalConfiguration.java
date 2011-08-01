@@ -41,7 +41,7 @@ import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration2.reloading.ReloadingStrategy;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;

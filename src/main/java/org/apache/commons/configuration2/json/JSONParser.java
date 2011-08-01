@@ -11,7 +11,7 @@ import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * JavaCC based parser for the JSON format.

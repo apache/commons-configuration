@@ -32,7 +32,7 @@ import java.util.Set;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>

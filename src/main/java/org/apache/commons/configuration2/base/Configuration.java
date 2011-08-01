@@ -24,7 +24,7 @@ import java.util.List;
 import org.apache.commons.configuration2.ConversionException;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
  * <p>

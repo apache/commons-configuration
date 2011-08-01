@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Decorator providing additional getters for any Configuration. This extended

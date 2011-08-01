@@ -26,7 +26,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.NodeList;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>

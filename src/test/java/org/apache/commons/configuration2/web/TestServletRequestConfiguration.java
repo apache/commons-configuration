@@ -26,7 +26,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.ConfigurationConverter;
 import org.apache.commons.configuration2.TestAbstractConfiguration;
 import org.apache.commons.configuration2.flat.BaseConfiguration;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
 

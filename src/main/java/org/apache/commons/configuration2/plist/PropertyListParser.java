@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.configuration2.AbstractHierarchicalConfiguration;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * JavaCC based parser for the PropertyList format.

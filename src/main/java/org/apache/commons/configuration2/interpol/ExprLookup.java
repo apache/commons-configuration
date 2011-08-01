@@ -16,10 +16,10 @@
  */
 package org.apache.commons.configuration2.interpol;
 
-import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang3.text.StrLookup;
+import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.ConfigurationRuntimeException;
 import org.apache.commons.jexl.JexlHelper;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
  *
  * <pre>
  *     ExprLookup.Variables vars = new ExprLookup.Variables();
- *     vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
+ *     vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
  *     vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
  *     vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
  *     XMLConfiguration config = new XMLConfiguration(TEST_FILE);

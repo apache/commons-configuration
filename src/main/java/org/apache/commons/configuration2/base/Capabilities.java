@@ -19,7 +19,7 @@ package org.apache.commons.configuration2.base;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang3.ClassUtils;
 
 /**
  * <p>

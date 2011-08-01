@@ -48,7 +48,7 @@ import org.apache.commons.configuration2.resolver.CatalogResolver;
 import org.apache.commons.configuration2.resolver.EntityRegistry;
 import org.apache.commons.configuration2.resolver.EntityResolverSupport;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;

@@ -13,7 +13,7 @@
       <lookup config-prefix="expr"
               config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
-          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+          <variable name="String" value="Class:org.apache.commons.lang3.StringUtils"/>
           <variable name="MDC" value="Class:org.slf4j.MDC"/>
         </variables>
       </lookup>

@@ -29,7 +29,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
 import org.apache.commons.configuration2.fs.FileSystem;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.xml.resolver.CatalogException;
 import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;

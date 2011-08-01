@@ -17,7 +17,7 @@
 package org.apache.commons.configuration2.interpol;
 
 import org.apache.commons.configuration2.EnvironmentConfiguration;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 
 /**
  * <p>

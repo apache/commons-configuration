@@ -34,7 +34,7 @@ import org.apache.commons.configuration2.base.LocatorSupport;
 import org.apache.commons.configuration2.base.StreamBasedSource;
 import org.apache.commons.configuration2.expr.ExpressionEngine;
 import org.apache.commons.configuration2.tree.ConfigurationNode;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>

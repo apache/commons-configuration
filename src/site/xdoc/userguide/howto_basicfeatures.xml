@@ -238,7 +238,7 @@ java.home = ${env:JAVA_HOME}
       for the variable passed in:
     </p>
     <source><![CDATA[
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 
 public class EchoLookup extends StrLookup
 {
@@ -309,7 +309,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
         <variables>
           <variable name="System" value="Class:java.lang.System"/>
           <variable name"net" value="Class:java.net.InetAddress"/>
-          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+          <variable name="String" value="Class:org.apache.commons.lang3.StringUtils"/>
         </variables>
       </lookup>
     </lookups>
@@ -337,7 +337,7 @@ user.file = ${expr:System.getProperty("user.home"}/settings.xml
               config-class="org.apache.commons.configuration2.interpol.ExprLookup">
         <variables>
           <variable name"net" value="Class:java.net.InetAddress"/>
-          <variable name="String" value="Class:org.apache.commons.lang.StringUtils"/>
+          <variable name="String" value="Class:org.apache.commons.lang3.StringUtils"/>
         </variables>
       </lookup>
     </lookups>

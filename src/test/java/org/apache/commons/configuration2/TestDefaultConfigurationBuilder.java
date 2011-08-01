@@ -40,7 +40,7 @@ import org.apache.commons.configuration2.expr.NodeHandler;
 import org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration2.tree.DefaultConfigurationNode;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;

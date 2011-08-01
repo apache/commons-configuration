@@ -29,7 +29,7 @@ import java.net.URLConnection;
 
 import org.apache.commons.configuration2.ConfigurationException;
 import org.apache.commons.configuration2.ConfigurationUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

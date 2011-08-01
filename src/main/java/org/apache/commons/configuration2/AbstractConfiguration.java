@@ -35,10 +35,9 @@ import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.event.EventSource;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.text.StrLookup;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
 
@@ -692,7 +691,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public boolean getBoolean(String key, boolean defaultValue)
     {
-        return getBoolean(key, BooleanUtils.toBooleanObject(defaultValue)).booleanValue();
+        return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
     }
 
     /**

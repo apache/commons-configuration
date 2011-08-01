@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration2.flat.BaseConfiguration;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 
 import junit.framework.TestCase;
 

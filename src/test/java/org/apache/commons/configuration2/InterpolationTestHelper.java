@@ -24,7 +24,7 @@ import junit.framework.Assert;
 import org.apache.commons.configuration2.AbstractConfiguration;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
 
 /**
  * A helper class that defines a bunch of tests related to variable

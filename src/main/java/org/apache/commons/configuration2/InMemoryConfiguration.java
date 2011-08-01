@@ -451,12 +451,12 @@ public class InMemoryConfiguration extends AbstractHierarchicalConfiguration<Con
         @Override
         public void visitBeforeChildren(ConfigurationNode node, NodeHandler<ConfigurationNode> handler)
         {
-            ConfigurationNode copy = (ConfigurationNode) node.clone();
+            ConfigurationNode copy = node.clone();
             copy.setParentNode(null);
 
             for(ConfigurationNode attr : node.getAttributes())
             {
-                copy.addAttribute((ConfigurationNode) attr.clone());
+                copy.addAttribute(attr.clone());
             }
             if (!copyStack.isEmpty())
             {

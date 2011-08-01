@@ -17,7 +17,7 @@
 
 package org.apache.commons.configuration2.converter;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.configuration2.ConversionException;
 
 /**

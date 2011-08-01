@@ -20,7 +20,7 @@ package org.apache.commons.configuration2.converter;
 import java.awt.Color;
 
 import org.apache.commons.configuration2.ConversionException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Color converter. This converter supports String value matching the format

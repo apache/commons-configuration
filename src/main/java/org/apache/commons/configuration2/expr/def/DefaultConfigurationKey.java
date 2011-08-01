@@ -19,7 +19,7 @@ package org.apache.commons.configuration2.expr.def;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>

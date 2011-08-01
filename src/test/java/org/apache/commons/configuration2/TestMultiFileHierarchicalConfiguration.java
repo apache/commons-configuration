@@ -30,7 +30,7 @@ import org.apache.commons.configuration2.combined.CombinedConfiguration;
 import org.apache.commons.configuration2.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration2.event.ConfigurationErrorListener;
 import org.apache.commons.configuration2.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.lang.mutable.MutableObject;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.xml.sax.SAXParseException;
 
 /**
