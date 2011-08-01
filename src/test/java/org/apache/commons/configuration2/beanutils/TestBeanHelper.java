@@ -368,7 +368,7 @@ public class TestBeanHelper extends TestCase
      */
     public void testCreateBeanWithParameter()
     {
-        Object param = new Integer(42);
+        Object param = 42;
         TestBeanFactory factory = new TestBeanFactory();
         BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
         TestBeanDeclaration data = setUpBeanDeclaration();
@@ -393,7 +393,7 @@ public class TestBeanHelper extends TestCase
         TestBeanDeclaration buddyData = new TestBeanDeclaration();
         Map properties2 = new HashMap();
         properties2.put("stringValue", "Another test string");
-        properties2.put("intValue", new Integer(100));
+        properties2.put("intValue", 100);
         buddyData.setBeanProperties(properties2);
         buddyData.setBeanClassName(TestBean.class.getName());
         if (BeanHelper.getDefaultBeanFactory() == null)

@@ -681,7 +681,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Boolean b = getBoolean(key, null);
         if (b != null)
         {
-            return b.booleanValue();
+            return b;
         }
         else
         {
@@ -691,7 +691,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public boolean getBoolean(String key, boolean defaultValue)
     {
-        return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
+        return getBoolean(key, Boolean.valueOf(defaultValue));
     }
 
     /**
@@ -731,7 +731,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Byte b = getByte(key, null);
         if (b != null)
         {
-            return b.byteValue();
+            return b;
         }
         else
         {
@@ -741,7 +741,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public byte getByte(String key, byte defaultValue)
     {
-        return getByte(key, new Byte(defaultValue)).byteValue();
+        return getByte(key, new Byte(defaultValue));
     }
 
     public Byte getByte(String key, Byte defaultValue)
@@ -770,7 +770,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Double d = getDouble(key, null);
         if (d != null)
         {
-            return d.doubleValue();
+            return d;
         }
         else
         {
@@ -780,7 +780,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public double getDouble(String key, double defaultValue)
     {
-        return getDouble(key, new Double(defaultValue)).doubleValue();
+        return getDouble(key, new Double(defaultValue));
     }
 
     public Double getDouble(String key, Double defaultValue)
@@ -809,7 +809,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Float f = getFloat(key, null);
         if (f != null)
         {
-            return f.floatValue();
+            return f;
         }
         else
         {
@@ -819,7 +819,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public float getFloat(String key, float defaultValue)
     {
-        return getFloat(key, new Float(defaultValue)).floatValue();
+        return getFloat(key, new Float(defaultValue));
     }
 
     public Float getFloat(String key, Float defaultValue)
@@ -848,7 +848,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Integer i = getInteger(key, null);
         if (i != null)
         {
-            return i.intValue();
+            return i;
         }
         else
         {
@@ -865,7 +865,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             return defaultValue;
         }
 
-        return i.intValue();
+        return i;
     }
 
     public Integer getInteger(String key, Integer defaultValue)
@@ -894,7 +894,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Long l = getLong(key, null);
         if (l != null)
         {
-            return l.longValue();
+            return l;
         }
         else
         {
@@ -904,7 +904,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public long getLong(String key, long defaultValue)
     {
-        return getLong(key, new Long(defaultValue)).longValue();
+        return getLong(key, new Long(defaultValue));
     }
 
     public Long getLong(String key, Long defaultValue)
@@ -933,7 +933,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         Short s = getShort(key, null);
         if (s != null)
         {
-            return s.shortValue();
+            return s;
         }
         else
         {
@@ -943,7 +943,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     public short getShort(String key, short defaultValue)
     {
-        return getShort(key, new Short(defaultValue)).shortValue();
+        return getShort(key, new Short(defaultValue));
     }
 
     public Short getShort(String key, Short defaultValue)

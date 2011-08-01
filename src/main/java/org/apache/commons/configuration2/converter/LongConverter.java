@@ -44,7 +44,7 @@ class LongConverter extends NumberConverter<Long>
         }
         else
         {
-            return new Long(n.longValue());
+            return n.longValue();
         }
     }
 }

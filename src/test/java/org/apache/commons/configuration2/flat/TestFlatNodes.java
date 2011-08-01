@@ -465,22 +465,18 @@ public class TestFlatNodes
         }
         for (int i = 0; i < count; i++)
         {
-            assertEquals("Wrong value", Integer.valueOf(i), nodes.get(i)
-                    .getValue());
+            assertEquals("Wrong value", i, nodes.get(i).getValue());
         }
         for (int j = count - 1; j > 0; j--)
         {
             parent.removeChild(nodes.get(j));
             List<FlatNode> remainingChildren = parent.getChildren(NAME);
-            assertEquals("Wrong children", nodes.subList(0, j),
-                    remainingChildren);
+            assertEquals("Wrong children", nodes.subList(0, j), remainingChildren);
         }
-        assertEquals("Wrong remaining value", Integer.valueOf(0), config
-                .getProperty(NAME));
+        assertEquals("Wrong remaining value", 0, config.getProperty(NAME));
         parent.removeChild(nodes.get(0));
         assertFalse("Property still found", config.containsKey(NAME));
-        assertEquals("Wrong number of children", 0, parent
-                .getChildrenCount(NAME));
+        assertEquals("Wrong number of children", 0, parent.getChildrenCount(NAME));
     }
 
     /**

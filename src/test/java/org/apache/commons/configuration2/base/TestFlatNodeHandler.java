@@ -106,8 +106,7 @@ public class TestFlatNodeHandler
      */
     private void checkUpdate(boolean expected)
     {
-        assertEquals("Wrong value of update flag", expected, internalUpdate
-                .booleanValue());
+        assertEquals("Wrong value of update flag", expected, internalUpdate);
         internalUpdate = null;
     }
 

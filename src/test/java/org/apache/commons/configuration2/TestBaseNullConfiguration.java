@@ -170,7 +170,7 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF"), 0);
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
         assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
-        assertEquals("This returns 1(Float)", new Float(oneF), config.getFloat("numberF", new Float("2")));
+        assertEquals("This returns 1(Float)", oneF, config.getFloat("numberF", new Float("2")));
 
         // missing key without default value
         Throwable t = null;
@@ -202,7 +202,7 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD"), 0);
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
         assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
-        assertEquals("This returns 1(Double)", new Double(oneD), config.getDouble("numberD", new Double("2")));
+        assertEquals("This returns 1(Double)", oneD, config.getDouble("numberD", new Double("2")));
 
         // missing key without default value
         Throwable t = null;

@@ -930,7 +930,7 @@ public class TestCombinedConfiguration extends TestCase
             throws IOException
     {
         return writeFile(name, MessageFormat.format(content, new Object[] {
-            new Integer(value)
+                value
         }));
     }
 

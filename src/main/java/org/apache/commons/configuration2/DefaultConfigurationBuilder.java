@@ -1156,14 +1156,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          */
         public boolean isOptional()
         {
-            Boolean value = this.getConfiguration().getBoolean(ATTR_OPTIONAL_RES,
-                    null);
+            Boolean value = this.getConfiguration().getBoolean(ATTR_OPTIONAL_RES, null);
             if (value == null)
             {
-                value = this.getConfiguration().getBoolean(ATTR_OPTIONAL,
-                        Boolean.FALSE);
+                value = this.getConfiguration().getBoolean(ATTR_OPTIONAL, Boolean.FALSE);
             }
-            return value.booleanValue();
+            return value;
         }
 
         /**

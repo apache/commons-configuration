@@ -44,7 +44,7 @@ class ByteConverter extends NumberConverter<Byte>
         }
         else
         {
-            return new Byte(n.byteValue());
+            return n.byteValue();
         }
     }
 }

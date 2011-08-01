@@ -359,7 +359,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
         };
 
         Integer count = (Integer) op.execute();
-        return count == null || count.intValue() == 0;
+        return count == null || count == 0;
     }
 
     /**
@@ -389,7 +389,7 @@ public class DatabaseConfiguration extends AbstractFlatConfiguration
         };
 
         Boolean result = (Boolean) op.execute();
-        return result != null && result.booleanValue();
+        return result != null && result;
     }
 
     /**

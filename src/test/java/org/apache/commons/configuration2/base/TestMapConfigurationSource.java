@@ -113,8 +113,7 @@ public class TestMapConfigurationSource extends TestCase
         assertSame("Wrong map as store", map, src.getStore());
         for (int i = 0; i < COUNT; i++)
         {
-            assertEquals("Wrong property value", Integer.valueOf(i), src
-                    .getProperty(KEY + i));
+            assertEquals("Wrong property value", i, src.getProperty(KEY + i));
         }
     }
 

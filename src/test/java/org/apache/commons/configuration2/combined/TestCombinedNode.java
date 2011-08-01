@@ -69,7 +69,7 @@ public class TestCombinedNode extends TestCase
         {
             for (int j = 1; j <= i; j++)
             {
-                node.addChild(CHILD_NAME + i, Integer.valueOf(j));
+                node.addChild(CHILD_NAME + i, j);
             }
         }
     }
@@ -121,8 +121,7 @@ public class TestCombinedNode extends TestCase
         {
             for (int j = 1; j <= i; j++, idx++)
             {
-                assertEquals("Wrong child at " + idx, Integer.valueOf(j),
-                        children.get(idx));
+                assertEquals("Wrong child at " + idx, j, children.get(idx));
             }
         }
     }
@@ -153,8 +152,7 @@ public class TestCombinedNode extends TestCase
             assertEquals("Wrong number of children", i, children.size());
             for (int j = 0; j < i; j++)
             {
-                assertEquals("Wrong child at " + j, Integer.valueOf(j + 1),
-                        children.get(j));
+                assertEquals("Wrong child at " + j, j + 1, children.get(j));
             }
         }
     }
@@ -165,7 +163,7 @@ public class TestCombinedNode extends TestCase
     public void testRemoveChild()
     {
         initChildren();
-        Object child = Integer.valueOf(CHILD_COUNT);
+        Object child = CHILD_COUNT;
         node.removeChild(child);
         for (Object o : node.getChildren())
         {
@@ -225,8 +223,7 @@ public class TestCombinedNode extends TestCase
         assertEquals("Wrong number of values", CHILD_COUNT, values.size());
         for (int i = 0; i < CHILD_COUNT; i++)
         {
-            assertEquals("Wrong value at " + i, Integer.valueOf(i), values
-                    .get(i));
+            assertEquals("Wrong value at " + i, i, values.get(i));
         }
     }
 
@@ -236,8 +233,7 @@ public class TestCombinedNode extends TestCase
     public void testSetAttributeValue()
     {
         node.setAttribute(ATTR_NAME, "test");
-        assertEquals("Wrong attribute value", "test", node
-                .getAttribute(ATTR_NAME));
+        assertEquals("Wrong attribute value", "test", node.getAttribute(ATTR_NAME));
     }
 
     /**
@@ -330,8 +326,7 @@ public class TestCombinedNode extends TestCase
         for (int i = 0; i < CHILD_COUNT; i++)
         {
             assertEquals("Wrong attribute at " + i, attrs.get(i), attrs2.get(i));
-            assertEquals("Wrong attribute value at " + i, Integer.valueOf(i),
-                    node.getAttribute(attrs2.get(i)));
+            assertEquals("Wrong attribute value at " + i, i, node.getAttribute(attrs2.get(i)));
         }
         EasyMock.verify(handler);
     }
@@ -358,8 +353,7 @@ public class TestCombinedNode extends TestCase
         assertEquals("Wrong number of children", CHILD_COUNT, children2.size());
         for (int i = 0; i < CHILD_COUNT; i++)
         {
-            assertEquals("Wrong child at " + i, Integer.valueOf(i), children2
-                    .get(i));
+            assertEquals("Wrong child at " + i, i, children2.get(i));
         }
         EasyMock.verify(handler);
     }

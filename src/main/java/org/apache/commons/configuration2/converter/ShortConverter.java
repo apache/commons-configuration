@@ -44,7 +44,7 @@ class ShortConverter extends NumberConverter<Short>
         }
         else
         {
-            return new Short(n.shortValue());
+            return n.shortValue();
         }
     }
 }

@@ -44,7 +44,7 @@ public class TestDefaultPropertyConverter extends TestCase
      */
     public void testToNumberDirect()
     {
-        Integer i = new Integer(42);
+        Integer i = 42;
         assertSame("Wrong integer", i, converter.convert(Integer.class, i));
         BigDecimal d = new BigDecimal("3.1415");
         assertSame("Wrong BigDecimal", d, converter.convert(Number.class, d));
@@ -129,14 +129,14 @@ public class TestDefaultPropertyConverter extends TestCase
 
     public void testToEnumFromNumber()
     {
-        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, new Integer(2)));
+        assertEquals(ENUM_OBJECT, converter.convert(ENUM_CLASS, 2));
     }
 
     public void testToEnumFromInvalidNumber()
     {
         try
         {
-            converter.convert(ENUM_CLASS, new Integer(-1));
+            converter.convert(ENUM_CLASS, -1);
             fail("Could convert invalid number!");
         }
         catch (ConversionException e)

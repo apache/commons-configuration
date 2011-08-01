@@ -123,9 +123,9 @@ public class TestPropertyConverter extends TestCase
 
         Iterator<?> it = PropertyConverter.toIterator(array, ',');
 
-        assertEquals("1st element", new Integer(1), it.next());
-        assertEquals("2nd element", new Integer(2), it.next());
-        assertEquals("3rd element", new Integer(3), it.next());
+        assertEquals("1st element", 1, it.next());
+        assertEquals("2nd element", 2, it.next());
+        assertEquals("3rd element", 3, it.next());
     }
 
     /**
@@ -235,8 +235,8 @@ public class TestPropertyConverter extends TestCase
      */
     public void testInterpolateObject()
     {
-        assertEquals("Object was not correctly interpolated", new Integer(42),
-                PropertyConverter.interpolate(new Integer(42), new PropertiesConfiguration()));
+        assertEquals("Object was not correctly interpolated", 42,
+                PropertyConverter.interpolate(42, new PropertiesConfiguration()));
     }
 
     /**

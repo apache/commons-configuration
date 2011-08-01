@@ -248,8 +248,7 @@ public class TestFlatNodeSourceAdapter
         assertEquals("Wrong number of values", count, values.size());
         for (int i = 0; i < count; i++)
         {
-            assertEquals("Wrong value at " + i, Integer.valueOf(i), values
-                    .get(i));
+            assertEquals("Wrong value at " + i, i, values.get(i));
         }
     }
 

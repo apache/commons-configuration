@@ -363,7 +363,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
         else if (value instanceof Boolean)
         {
-            if (((Boolean) value).booleanValue())
+            if ((Boolean) value)
             {
                 out.println(padding + "<true/>");
             }

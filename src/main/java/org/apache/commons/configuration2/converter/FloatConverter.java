@@ -44,7 +44,7 @@ class FloatConverter extends NumberConverter<Float>
         }
         else
         {
-            return new Float(n.floatValue());
+            return n.floatValue();
         }
     }
 }

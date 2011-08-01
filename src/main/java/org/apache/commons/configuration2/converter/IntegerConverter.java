@@ -44,7 +44,7 @@ class IntegerConverter extends NumberConverter<Integer>
         }
         else
         {
-            return new Integer(n.intValue());
+            return n.intValue();
         }
     }
 }

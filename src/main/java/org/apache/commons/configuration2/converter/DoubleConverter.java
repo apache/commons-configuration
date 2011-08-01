@@ -44,7 +44,7 @@ class DoubleConverter extends NumberConverter<Double>
         }
         else
         {
-            return new Double(n.doubleValue());
+            return n.doubleValue();
         }
     }
 }
