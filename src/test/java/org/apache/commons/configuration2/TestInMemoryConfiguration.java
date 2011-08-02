@@ -179,6 +179,14 @@ public class TestInMemoryConfiguration extends TestCase
         assertEquals(42, config.getInt("test.items.item"));
     }
 
+    public void testClear()
+    {
+        config.setProperty(null, "value");
+        config.addProperty("[@attr]", "defined");
+        config.clear();
+        assertTrue("Configuration not empty", config.isEmpty());
+    }
+
     public void testClearProperty()
     {
         config.clearProperty("tables.table(0).fields.field(0).name");
