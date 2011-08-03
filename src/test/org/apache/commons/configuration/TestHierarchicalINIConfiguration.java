@@ -753,6 +753,81 @@ public class TestHierarchicalINIConfiguration extends TestCase
     }
 
     /**
+     * Tests whether a section that has been cleared can be manipulated and
+     * saved later.
+     */
+    public void testSaveClearedSection() throws ConfigurationException
+    {
+        final String data = "[section]\ntest = failed\n";
+        HierarchicalINIConfiguration config = setUpConfig(data);
+        SubnodeConfiguration sub = config.getSection("section");
+        assertFalse("No content", sub.isEmpty());
+        sub.clear();
+        sub.setProperty("test", "success");
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        HierarchicalConfiguration config2 = setUpConfig(writer.toString());
+        assertEquals("Wrong value", "success",
+                config2.getString("section.test"));
+    }
+
+    /**
+     * Tests whether a duplicate session is merged.
+     */
+    public void testMergeDuplicateSection() throws ConfigurationException
+    {
+        final String data =
+                "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
+        HierarchicalINIConfiguration config = setUpConfig(data);
+        assertEquals("Wrong value 1", "sec1", config.getString("section.var1"));
+        assertEquals("Wrong value 2", "sec2", config.getString("section.var2"));
+        SubnodeConfiguration sub = config.getSection("section");
+        assertEquals("Wrong sub value 1", "sec1", sub.getString("var1"));
+        assertEquals("Wrong sub value 2", "sec2", sub.getString("var2"));
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        String content = writer.toString();
+        int pos = content.indexOf("[section]");
+        assertTrue("Section not found: " + content, pos >= 0);
+        assertTrue("Section found multiple times: " + content,
+                content.indexOf("[section]", pos + 1) < 0);
+    }
+
+    /**
+     * Tests whether a section that was created by getSection() can be
+     * manipulated.
+     */
+    public void testGetSectionNonExistingManipulate()
+            throws ConfigurationException
+    {
+        HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
+        SubnodeConfiguration section = config.getSection("newSection");
+        section.addProperty("test", "success");
+        assertEquals("Main config not updated", "success",
+                config.getString("newSection.test"));
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        HierarchicalINIConfiguration config2 = setUpConfig(writer.toString());
+        section = config2.getSection("newSection");
+        assertEquals("Wrong value", "success", section.getString("test"));
+    }
+
+    /**
+     * Tests whether getSection() can deal with duplicate sections.
+     */
+    public void testGetSectionDuplicate()
+    {
+        HierarchicalINIConfiguration config =
+                new HierarchicalINIConfiguration();
+        config.addProperty("section.var1", "value1");
+        config.addProperty("section(-1).var2", "value2");
+        SubnodeConfiguration section = config.getSection("section");
+        Iterator keys = section.getKeys();
+        assertEquals("Wrong key", "var1", keys.next());
+        assertFalse("Too many keys", keys.hasNext());
+    }
+
+    /**
      * A thread class for testing concurrent access to the global section.
      */
     private static class GlobalSectionTestThread extends Thread

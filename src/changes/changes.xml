@@ -28,6 +28,11 @@
         clear() method. This is more efficient and also solves some other
         problems related to clearing a SubnodeConfiguration.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-455">
+        HierarchicalINIConfiguration.getSection() now creates a section if it
+        does not exist. The SubnodeConfiguration returned by this method is now
+        always connected to the parent ini configuration.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-452">
         XPathExpressionEngine now provides better support for the setProperty()
         method.
