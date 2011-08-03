@@ -795,4 +795,80 @@ public class TestINIConfiguration extends TestCase
         assertEquals("Wrong value for var8", "value8",
                 config.getString("section.var:8"));
     }
+
+    /**
+     * Tests whether a section that has been cleared can be manipulated and
+     * saved later.
+     */
+    public void testSaveClearedSection() throws ConfigurationException
+    {
+        final String data = "[section]\ntest = failed\n";
+        INIConfiguration config = setUpConfig(data);
+        SubConfiguration<ConfigurationNode> sub = config.getSection("section");
+        assertFalse("No content", sub.isEmpty());
+        sub.clear();
+        sub.setProperty("test", "success");
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        INIConfiguration config2 = setUpConfig(writer.toString());
+        assertEquals("Wrong value", "success",
+                config2.getString("section.test"));
+    }
+
+    /**
+     * Tests whether a duplicate session is merged.
+     */
+    public void testMergeDuplicateSection() throws ConfigurationException
+    {
+        final String data =
+                "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
+        INIConfiguration config = setUpConfig(data);
+        assertEquals("Wrong value 1", "sec1", config.getString("section.var1"));
+        assertEquals("Wrong value 2", "sec2", config.getString("section.var2"));
+        SubConfiguration<ConfigurationNode> sub = config.getSection("section");
+        assertEquals("Wrong sub value 1", "sec1", sub.getString("var1"));
+        assertEquals("Wrong sub value 2", "sec2", sub.getString("var2"));
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        String content = writer.toString();
+        int pos = content.indexOf("[section]");
+        assertTrue("Section not found: " + content, pos >= 0);
+        assertTrue("Section found multiple times: " + content,
+                content.indexOf("[section]", pos + 1) < 0);
+    }
+
+    /**
+     * Tests whether a section that was created by getSection() can be
+     * manipulated.
+     */
+    public void testGetSectionNonExistingManipulate()
+            throws ConfigurationException
+    {
+        INIConfiguration config = setUpConfig(INI_DATA);
+        SubConfiguration<ConfigurationNode> section =
+                config.getSection("newSection");
+        section.addProperty("test", "success");
+        assertEquals("Main config not updated", "success",
+                config.getString("newSection.test"));
+        StringWriter writer = new StringWriter();
+        config.save(writer);
+        INIConfiguration config2 = setUpConfig(writer.toString());
+        section = config2.getSection("newSection");
+        assertEquals("Wrong value", "success", section.getString("test"));
+    }
+
+    /**
+     * Tests whether getSection() can deal with duplicate sections.
+     */
+    public void testGetSectionDuplicate()
+    {
+        INIConfiguration config = new INIConfiguration();
+        config.addProperty("section.var1", "value1");
+        config.addProperty("section(-1).var2", "value2");
+        SubConfiguration<ConfigurationNode> section =
+                config.getSection("section");
+        Iterator<String> keys = section.getKeys();
+        assertEquals("Wrong key", "var1", keys.next());
+        assertFalse("Too many keys", keys.hasNext());
+    }
 }

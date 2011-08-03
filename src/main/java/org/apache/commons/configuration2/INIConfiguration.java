@@ -87,8 +87,10 @@ import org.apache.commons.lang3.StringUtils;
  * '=' to separate keys and values in parameters, for example
  * <code>var1 : foo</code>.</li>
  * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed,
- * this configuration does however support it. In the event of a duplicate
- * section, the two section's values are merged.</li>
+ * this configuration does however support this feature. In the event of a duplicate
+ * section, the two section's values are merged so that there is only a single
+ * section. <strong>Note</strong>: This also affects the internal data of the
+ * configuration. If it is saved, only a single section is written!</li>
  * <li><b>Duplicate parameters:</b> Typically duplicate parameters are only
  * allowed if they are in two different sections, thus they are local to
  * sections; this configuration simply merges duplicates; if a section has a
@@ -177,7 +179,10 @@ import org.apache.commons.lang3.StringUtils;
  * also use other methods of {@link InMemoryConfiguration} for querying or
  * manipulating the hierarchy of configuration nodes, for instance the
  * {@code configurationAt()} method for obtaining the data of a specific
- * section.
+ * section. However, be careful that the storage scheme described above is not
+ * violated (e.g. by adding multiple levels of nodes or inserting duplicate
+ * section nodes). Otherwise, the special methods for ini configurations may not
+ * work correctly!
  * </p>
  * <p>
  * The set of sections in this configuration can be retrieved using the
@@ -721,13 +726,18 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
      * Returns a configuration with the content of the specified section. This
      * provides an easy way of working with a single section only. The way this
      * configuration is structured internally, this method is very similar to
-     * calling
-     * {@link AbstractHierarchicalConfiguration#configurationAt(String)}
+     * calling {@link AbstractHierarchicalConfiguration#configurationAt(String)}
      * with the name of the section in question. There are the following
      * differences however:
      * <ul>
      * <li>This method never throws an exception. If the section does not exist,
-     * an empty configuration is returned.</li>
+     * it is created now. The configuration returned in this case is empty.</li>
+     * <li>If section is contained multiple times in the configuration, the
+     * configuration returned by this method is initialized with the first
+     * occurrence of the section. (This can only happen if {@code addProperty()}
+     * has been used in a way that does not conform to the storage scheme used
+     * by {@code INIConfiguration}. If used correctly, there will not be
+     * duplicate sections.)</li>
      * <li>There is special support for the global section: Passing in
      * <b>null</b> as section name returns a configuration with the content of
      * the global section (which may also be empty).</li>
@@ -756,7 +766,7 @@ public class INIConfiguration extends AbstractHierarchicalFileConfiguration
                 // the passed in key does not map to exactly one node
                 // return an empty configuration
                 return new SubConfiguration<ConfigurationNode>(this,
-                        new DefaultConfigurationNode());
+                        getSectionNode(name));
             }
         }
     }
