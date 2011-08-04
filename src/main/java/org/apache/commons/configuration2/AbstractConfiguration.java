@@ -609,10 +609,12 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * A default implementation of the {@code getKeys(String prefix)} method.
-     * This implementation returns a special prefix iterator for obtaining all
-     * keys starting with the specified prefix. This is fully functional.
-     * However, derived classes may implement {@code getKeys(String)} in a more
-     * efficient way.
+     * This implementation returns a special prefix iterator which accept keys
+     * that either match the prefix or start with the prefix followed by a dot
+     * ('.'). So the call {@code getKeys("db");} will find the keys {@code db},
+     * {@code db.user}, or {@code db.password}, but not the key {@code dbdriver}
+     * . This is fully functional. However, derived classes may implement
+     * {@code getKeys(String)} in a more efficient way.
      *
      * @param prefix the prefix for the keys
      * @return an iterator with all the keys starting with this prefix

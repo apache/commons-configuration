@@ -168,7 +168,15 @@ public interface Configuration
 
     /**
      * Get the list of the keys contained in the configuration that match the
-     * specified prefix.
+     * specified prefix. For instance, if the configuration contains the
+     * following keys:<br>
+     * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
+     * an invocation of {@code getKeys("db");}<br>
+     * will return the keys below:<br>
+     * {@code db.user, db.pwd, db.url}.<br>
+     * Note that the prefix itself is included in the result set if there is a
+     * matching key. The exact behavior - how the prefix is actually
+     * interpreted - depends on a concrete implementation.
      *
      * @param prefix The prefix to test against.
      * @return An Iterator of keys that match the prefix.
