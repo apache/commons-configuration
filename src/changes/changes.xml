@@ -28,6 +28,10 @@
         clear() method. This is more efficient and also solves some other
         problems related to clearing a SubnodeConfiguration.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-456">
+        Improved Javadocs of getKeys(String) method for some configuration
+        classes.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-455">
         HierarchicalINIConfiguration.getSection() now creates a section if it
         does not exist. The SubnodeConfiguration returned by this method is now

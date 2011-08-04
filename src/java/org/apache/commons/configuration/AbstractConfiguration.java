@@ -560,6 +560,13 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         fireEvent(EVENT_CLEAR, null, null, false);
     }
 
+    /**
+     * {@inheritDoc} This implementation returns keys that either match the
+     * prefix or start with the prefix followed by a dot ('.'). So the call
+     * <code>getKeys("db");</code> will find the keys <code>db</code>,
+     * <code>db.user</code>, or <code>db.password</code>, but not the key
+     * <code>dbdriver</code>.
+     */
     public Iterator getKeys(final String prefix)
     {
         return new FilterIterator(getKeys(), new Predicate()

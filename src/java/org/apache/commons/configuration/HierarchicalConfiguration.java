@@ -841,7 +841,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Returns an iterator with all keys defined in this configuration that
      * start with the given prefix. The returned keys will not contain any
-     * indices.
+     * indices. This implementation tries to locate a node whose key is the same
+     * as the passed in prefix. Then the subtree of this node is traversed, and
+     * the keys of all nodes encountered (including attributes) are added to the
+     * result set.
      *
      * @param prefix the prefix of the keys to start with
      * @return an iterator with the found keys
