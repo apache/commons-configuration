@@ -15,80 +15,367 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!-- $Id$ -->
 
 <document>
 
  <properties>
   <title>Configuration Builder Howto</title>
-  <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
 <body>
 	<section name="Using DefaultConfigurationBuilder">
     <p>
-      The <code>ConfigurationFactory</code> class that was introduced in the
-      <a href="howto_configurationfactory.html#Using_a_Configuration_Factory">last
-      section</a> is a powerful tool for dealing with multiple different
-      configuration sources, but it also has some shortcomings:
+      This section explains how a
+      <code><a href="../apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
+      DefaultConfigurationBuilder</a></code>object is setup that provides
+      access to a collection of different configuration sources.
+      <code>DefaultConfigurationBuilder</code> is the option of choice for
+      applications that have to deal with multiple configuration sources. It
+      provides the following features:
       <ul>
-        <li>The format for configuration definition files is not extensible.</li>
-        <li>Complex initializations of the declared configuration sources (e.g.
-        for assigning a reloading strategy) are not supported.</li>
-        <li>The returned configuration object is not hierarchical, which limits
-        the query facilities somewhat.</li>
-        <li>Declared configuration sources can only be accessed by index from the
-        returned composite configuration, which means that code using a
-        <code>ConfigurationFactory</code> depends on the order of declarations
-        in a configuration definition file.</li>
+        <li>Various configuration sources can be combined to a single
+        <a href="howto_combinedconfiguration.html#Combined Configuration">
+        CombinedConfiguration</a> object. This is a truly hierarchical
+        configuration supporting enhanced query facilities.</li>
+        <li>As configuration sources the most relevant <code>Configuration</code>
+        implementations provided by this library are supported. Sources are
+        defined as <a href="howto_beans.html#Declaring and Creating Beans">bean
+        declarations</a>, so complex initializations are possible.</li>
+        <li>Meta data can be provided to fine-tune the constructed
+        configuration.</li>
+        <li><code>DefaultConfigurationBuilder</code> is extensible. Custom
+        configuration sources can be added.</li>
       </ul>
     </p>
     <p>
-      To work around these limitations the class
-      <code><a href="../apidocs/org/apache/commons/configuration/DefaultConfigurationBuilder.html">
-      DefaultConfigurationBuilder</a></code> was introduced.
+      This document starts with some explanations of
+      <code>DefaultConfigurationBuilder</code> basics. Then the <em>configuration
+      definition files</em> processed by <code>DefaultConfigurationBuilder</code>
+      are discussed in detail. Finally an advanced example is presented.
     </p>
 
-    <subsection name="ConfigurationFactory Differences">
-	<p>
-      From its basic usage scenarios <code>DefaultConfigurationBuilder</code> is
-      very similar to <code>ConfigurationFactory</code>. It is able to process
-      the same configuration definition files as can be read by
-      <code>ConfigurationFactory</code>, but supports more options. The following
-      list identifies the main differences between these classes:
-	</p>
+    <subsection name="The configuration definition file">
     <p>
-      <ul>
-        <li><code>DefaultConfigurationBuilder</code> extends <code>XMLConfiguration</code>.
-        This means that it is a <a href="howto_filebased.html#File-based Configurations">
-        file-based configuration</a>, and thus supports multiple ways of
-        specifying the location of the configuration definition file (e.g.
-        as <code>java.io.File</code> object, as URL, etc.).</li>
-        <li>The configuration object returned by a <code>DefaultConfigurationBuilder</code>
-        is an instance of the <a href="howto_combinedconfiguration.html#Combined Configuration">
-        CombinedConfiguration</a> class, i.e. a truely hierarchical
-        configuration supporting enhanced query facilities.</li>
-        <li>Each declaration of a configuration source in the configuration
-        definition file is interpreted as a
-        <a href="howto_beans.html#Declaring and Creating Beans">bean
-        declaration</a>, so complex initializations are supported.</li>
-        <li><code>DefaultConfigurationBuilder</code> supports custom tags in its
-        configuration definition file. For this purpose a so-called
-        <em>configuration provider</em> has to be registered, which will be
-        called when a corresponding tag is encountered.</li>
-      </ul>
+      In previous chapters we have already seen how specific configuration
+      classes like <code>PropertiesConfiguration</code> or
+      <code>XMLConfiguration</code> can be used to load configuration data from
+      a single source. This may be sufficient for small applications, but if
+      requirements for configuration become more complex, additional support
+      for managing a set of different configuration sources is desired. This is
+      the domain of <code>DefaultConfigurationBuilder</code> which allows
+      combining multiple configuration sources. The properties defined in these
+      sources can then be accessed as if they were defined in a single
+      configuration file. The sources to be loaded have to be defined in a
+      XML document with a specific structure, a so-called <em>configuration
+      definition file</em>. The following listing shows a simple example of such
+      a definition file:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties fileName="usergui.properties"/>
+</configuration>
+]]></source>
+    <p>
+      A configuration definition file can contain an arbitrary number of
+      elements declaring the configuration sources to load. The
+      <code>&lt;properties&gt;</code> element is one of these; it is used to
+      include properties files. For this example we store the definition file
+      in the same directory as the properties file and call it
+      <code>config.xml</code>. The properties file used in this example is the
+      same as in the section about <a href="howto_properties.html">properties
+      files</a>.
     </p>
     </subsection>
 
-    <subsection name="Enhancements to the configuration definition file">
+    <subsection name="Setting up a DefaultConfigurationBuilder">
     <p>
-      As was already pointed out, <code>DefaultConfigurationBuilder</code>
-      maintains compatibility with <code>ConfigurationFactory</code> in that it
-      understands the same configuration definition files. In addition to the
-      elements that are allowed in a configuration definition file for
-      <code>ConfigurationFactory</code> the data files for
-      <code>DefaultConfigurationBuilder</code> support some additional options
-      providing greater flexibility. This section explains these enhanced
-      features.
+      Now we have to create a <code>DefaultConfigurationBuilder</code> object
+      and let it read this definition file. This is quite simple: Just create a
+      new instance and set the name of the definition file
+      (<code>DefaultConfigurationBuilder</code> is derived from
+      <code>XMLConfiguration</code>, so all options for specifying the document
+      to load are available here, too). The combined configuration collecting
+      all sources defined in the configuration definition file can then be
+      obtained by calling the <code>getConfiguration()</code> method:
+    </p>
+    <source><![CDATA[
+DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+builder.setFile(new File("config.xml"));
+Configuration config = builder.getConfiguration(true);
+]]></source>
+    <p>
+      Now the <em>config</em> object can be accessed in the usual way to query
+      configuration properties, e.g. by using methods like <code>getString()</code>,
+      or <code>getInt()</code>. We will see in a moment how properties defined
+      in different configuration sources are accessed.
+    </p>
+    </subsection>
+
+    <subsection name="Overriding properties">
+    <p>
+      Using <code>DefaultConfigurationBuilder</code> to collect configuration
+      sources does not make much sense if there is only a single source to be
+      loaded. So let's add another one! This time we will embedd a XML file:
+      <em>gui.xml</em> which is shown in the next listing:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<gui-definition>
+  <colors>
+    <background>#808080</background>
+    <text>#000000</text>
+    <header>#008000</header>
+    <link normal="#000080" visited="#800080"/>
+  </colors>
+  <rowsPerPage>15</rowsPerPage>
+</gui-definition>
+]]></source>
+    <p>
+      To make this XML document part of our global configuration we	have to
+      modify our configuration definition file to also include the new file. For
+      XML documents the element <code>&lt;xml&gt;</code> can be used so that we
+      ave now:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties fileName="usergui.properties"/>
+  <xml fileName="gui.xml"/>
+</configuration>
+]]></source>
+    <p>
+      The code for setting up the <code>DefaultConfigurationBuilder</code>
+      object remains the same. From the <code>Configuration</code> object
+      returned by the factory the new properties can be accessed in the usual
+      way.
+    </p>
+    <p>
+      There is one problem with this example configuration setup: The
+      <code>color.background</code> property is defined in both the properties
+      and the XML file, and - to make things worse - with different values.
+      Which value will be returned by a call to <code>getString()</code>?
+    </p>
+    <p>
+      The answer is that the configuration sources are searched in the order
+      they are defined in the configuration definition file. Here the properties
+      file is included first, then comes the XML file. Because the
+      <code>color.background</code> property can be found in the properties file
+      the value specified there will be returned (which happens to be
+      <code>#FFFFFF</code>).
+    </p>
+    <p>
+      It might not be obvious why it makes sense to define the value of one and
+      the same property in multiple configuration sources. But consider the
+      following scenario: An application comes with a set of default properties
+      and allows the user to override some or all of them. This can now easily
+      be realized by saving the user's settings in one file and the default
+      settings in another. Then in the configuration definition file the file
+      with the user settings is included first and after that the file with the
+      default values. The application code that queries these settings needs no
+      be aware whether a property was overriden by the user. <code>DefaultConfigurationBuilder</code>
+      takes care that properties defined in the first file (the user file) are
+      found; other properties which the user has not changed will still be
+      returned from the second file (the defaults file).
+    </p>
+    </subsection>
+
+    <subsection name="Optional configuration sources">
+    <p>
+      The example above with two configuration sources - one for user settings
+      and one with default values - raises an interesting question: What happens
+      if the user has not defined specific properties yet? Or what if a new user
+      starts our application for the first time and thus no user specific
+      properties exist?
+    </p>
+    <p>
+      The default behavior of <code>DefaultConfigurationBuilder</code> is to
+      throw a <code>ConfigurationException</code> exception if one of the sources
+      defined in the configuration definition file cannot be loaded. For our
+      example this behavior is not desired: the properties file with specific user
+      settings is not required. If it cannot be loaded, the example application
+      should still work because a complete set of configuration properties is
+      defined in the second file.
+    </p>
+    <p>
+      <code>DefaultConfigurationBuilder</code> supports such optional configuration
+      sources. For this purpose in the definition of a configuration source the
+      <code>config-optional</code> attribute can be placed. An example of this
+      is shown below:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<configuration>
+  <properties fileName="usersettings.properties" config-optional="true"/>
+  <properties fileName="default.properties"/>
+</configuration>
+]]></source>
+    <p>
+      In this configuration definition file the first properties file with user
+      specific settings is marked as optional. This means that if it cannot be
+      loaded, <code>DefaultConfigurationBuilder</code> will not throw an exception,
+      but only write a warning message to its logger. Note that the
+      <code>config-optional</code> attribute is absent for the second properties
+      file. Thus it is mandatory, and the <code>getConfiguration()</code> method
+      of <code>DefaultConfigurationBuilder</code> would throw an exception if it
+      could not be found.
+    </p>
+    </subsection>
+
+    <subsection name="Union configuration">
+    <p>
+      In an earlier section about the configuration definition file for
+      <code>DefaultConfigurationBuilder</code> it was stated that configuration
+      files included first can override properties in configuraton files
+      included later, and an example use case for this behaviour was given. There
+      may be cases when there are other requirements.
+    </p>
+    <p>
+      Let's continue the example with the application that somehow process
+      database tables and that reads the definitions of the affected tables from
+      its configuration. This example and the corresponding XML configuration
+      files were introduced in the section about <a href="howto_xml.html">XMLConfiguration</a>.
+      Now consider that this application grows larger and must be maintained by
+      a team of developers. Each developer works on a separated set of tables.
+      In such a scenario it would be problematic if the definitions for all
+      tables would be kept in a single file. It can be expected that this file
+      needs to be changed very often and thus can be a bottleneck for team
+      development when it is nearly steadily checked out. It would be much better
+      if each developer had an associated file with table definitions and all
+      these information could be linked together at the end.
+    </p>
+    <p>
+      <code>DefaultConfigurationBuilder</code> provides support for such a use case,
+      too. It is possible to specify in the configuration definition file that
+      from a set of configuration sources a logic union configuration is to be
+      constructed. Then all properties defined in the provided sources are
+      collected and can be accessed as if they had been defined in a single source.
+      To demonstrate this feature let us assume that a developer of the database
+      application has defined a specific XML file with a table definition named
+      <code>tasktables.xml</code>:
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<config>
+  <table tableType="application">
+    <name>tasks</name>
+    <fields>
+      <field>
+        <name>taskid</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>name</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>description</name>
+        <type>java.lang.String</type>
+      </field>
+      <field>
+        <name>responsibleID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>creatorID</name>
+        <type>long</type>
+      </field>
+      <field>
+        <name>startDate</name>
+        <type>java.util.Date</type>
+      </field>
+      <field>
+        <name>endDate</name>
+        <type>java.util.Date</type>
+      </field>
+    </fields>
+  </table>
+</config>
+]]></source>
+    <p>
+      This file defines the structure of an additional table, which should be
+      added to the so far existing table definitions. To achieve this the
+      configuration definition file has to be changed: A new section is added
+      that contains the include elements of all configuration sources which
+      are to be combined.
+    </p>
+    <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!-- Configuration definition file that demonstrates the
+     override and additional sections -->
+
+<configuration>
+  <override>
+    <properties fileName="usergui.properties"/>
+    <xml fileName="gui.xml"/>
+  </override>
+
+  <additional>
+    <xml fileName="tables.xml"/>
+    <xml fileName="tasktables.xml" config-at="tables"/>
+  </additional>
+</configuration>
+]]></source>
+    <p>
+      Compared to the older versions of this file some changes have been done.
+      One major difference is that the elements for including configuration
+      sources are no longer direct children of the root element, but are now
+      contained in either an <code>&lt;override&gt;</code> or <code>&lt;additional&gt;</code>
+      section. The names of these sections already imply their purpose.
+    </p>
+    <p>
+      The <code>override</code> section is not strictly necessary. Elements in
+      this section are treated as if they were children of the root element, i.e.
+      properties in the included configuration sources override properties in
+      sources included later. So the <code>&lt;override&gt;</code> tags could have
+      been ommitted, but for the sake of clearity it is recommended to use them
+      if there is also an <code>&lt;additional&gt;</code> section.
+    </p>
+    <p>
+      It is the <code>&lt;additonal&gt;</code> section that introduces a new behaviour.
+      All configuration sources listed here are combined to a union configuration.
+      In our example we have put two <code>xml</code> elements in this area
+      that load the available files with database table definitions. The syntax
+      of elements in the <code>additional</code> section is analogous to the
+      syntax described so far. In this example the <code>config-at</code>
+      attribute is introduced. It specifies the position in the logic union
+      configuration where the included properties are to be added. Here it is set
+      for the second element to the value <em>tables</em>. This is because the
+      file starts with a <code>&lt;table&gt;</code> element, but to be compatible
+      with the other table definition file it should be accessable under the key
+      <code>tables.table</code>.
+    </p>
+    <p>
+      After these modifications have been performed, the configuration obtained
+      from <code>DefaultConfigurationBuilder</code> allows access to three database
+      tables. A call of <code>config.getString("tables.table(2).name");</code>
+      results in a value of <em>tasks</em>. In an analogous way it is possible
+      to retrieve the fields of the third table.
+    </p>
+    <p>
+      Note that it is also possible to override properties defined in an
+      <code>additonal</code> section. This can be done by placing a configuration
+      source in the <code>override</code> section that defines properties that
+      are also defined in one of the sources listed in the <code>additional</code>
+      section. The example does not make use of that. Note also that the order of
+      the <code>override</code> and <code>additional</code> sections in a
+      configuration definition file does not matter. Sources in an <code>override</code>
+      section are always treated with higher priority (otherwise they could not
+      override the values of other sources).
+    </p>
+    </subsection>
+
+   <subsection name="Configuration definition file reference">
+    <p>
+      Configuration definition files are XML documents telling
+      <code>DefaultConfigurationBuilder</code> which configuration sources to
+      load and how to process them in order to create the resulting combined
+      configuration.
     </p>
     <p>
       <strong>Overall structure of a configuration definition file</strong>
@@ -117,27 +404,60 @@
       <strong>Declaring configuration sources</strong>
     </p>
     <p>
-      The <code>override</code> and <code>additional</code> sections should look
-      familar to users that have already worked with
-      <code>ConfigurationFactory</code>. They have the exact same purpose here,
-      i.e. they contain declarations for the configuration sources to be
-      embedded. For compatibility reasons it is also allowed to declare
+      The <code>override</code> and <code>additional</code> sections have already
+      been introduced when the basics of <code>DefaultConfigurationBuilder</code>
+      were discussed. They contain declarations for the configuration sources to be
+      embedded. For convenience reasons it is also possible to declare
       configuration sources outside these sections; they are then treated as if
       they were placed inside the <code>override</code> section.
     </p>
     <p>
       Each declaration of a configuration source is represented by an XML
-      element whose name determines the type of the configuration source (e.g.
-      <code>properties</code> for properties files, or <code>xml</code> for
-      XML documents). Per default all configuration types are supported that
-      are also allowed for <code>ConfigurationFactory</code>. A list of all
-      supported tags can be found
-      <a href="howto_configurationfactory.html#Configuration definition file reference">here</a>.
-      In addition to the default tags provided by <code>ConfigurationFactory</code>
-      <code>DefaultConfigurationBuilder</code> knows the following tags:
+      element whose name determines the type of the configuration source.
+      Attributes or nested elements can be used to provide additional
+      configuration options for the sources to be included (e.g. a name of a
+      file to be loaded or a reloading strategy). Below is a list of all
+      tags which can be used out of the box:
     </p>
     <p>
       <dl>
+        <dt>properties</dt>
+        <dd>With this element properties files can be included. The name of
+        the file to load is specified using the <code>fileName</code>
+        attribute. Which configuration class is created by this tag
+        depends on the extension of the file to load: If the extension
+        is ".xml", a <code>XMLPropertiesConfiguration</code> object is
+        created, which is able to process the XML properties format
+        introduced in Java 5.0. Otherwise a <code>PropertiesConfiguration</code>
+        object is created, the default reader for properties files.</dd>
+        <dt>xml</dt>
+        <dd>The <code>xml</code> element can be used to load XML configuration
+        files. It also uses the <code>fileName</code> attribute to
+        determine the name of the file to load and creates an instance
+        of <code>XMLConfiguration</code>.</dd>
+        <dt>jndi</dt>
+        <dd>As the name implies, with this element JNDI resources can be
+        included in the resulting configuration. Under the hood this is
+        done by an instance of the <code>JNDIConfiguration</code>
+        class. The <code>prefix</code> attribute can be used to
+        select a subset of the JNDI tree.</dd>
+        <dt>plist</dt>
+        <dd>The <code>plist</code> element allows to embedd configuration
+        files in the NeXT / OpenStep or Mac OS X format. Again the
+        name of the file to load is specified through the
+        <code>fileName</code> attribute. If a XML file is specified,
+        a <code>XMLPropertyListConfiguration</code> object is created
+        to process the file. Otherwise this task is delegated to a
+        <code>PropertyListConfiguration</code> instance.</dd>
+        <dt>system</dt>
+        <dd>With this element an instance of <code>SystemConfiguration</code>
+        is added to the resulting configuration allowing access to
+        system properties. <em>Note:</em> Using this element system properties
+        are directly made available. Alternatively the
+        interpolation features introduced in version 1.4 (see
+        <a href="howto_basicfeatures.html#Variable_Interpolation">
+        Variable Interpolation</a> for more details) can be used for referencing
+        system properties.</dd>
         <dt>configuration</dt>
         <dd>The <code>configuration</code> tag allows other configuration
         definition files to be included. This makes it possible to nest these
@@ -176,7 +496,7 @@
       declarations are indeed
       <a href="howto_beans.html#Declaring and Creating Beans">Bean
       declarations</a>. That means they can have attributes matching simple
-      properties of the configuration object to create and sub elements
+      properties of the configuration object to create, and sub elements
       matching complex properties. The following example fragment shows how
       complex initialization can be performed in a configuration declaration:
     </p>
@@ -267,14 +587,12 @@
     </table>
     </p>
     <p>
-      The <code>config-at</code> and <code>config-optional</code> attributes
-      have the same meaning as the <code>at</code> and <code>optional</code>
-      attributes for <code>ConfigurationFactory</code>. For compatibility
-      reasons the old attributes without the <code>config-</code> prefix are
-      still supported. Note that the <code>config-at</code> is now allowed for
-      override configurations, too (<code>ConfigurationFactory</code> evaluated
-      the <code>at</code> attribute only for configuration declarations in the
-      <code>additional</code> section).
+      <em>Note:</em> In older versions of Commons Configuration the attributes
+      <code>config-at</code> and <code>config-optional</code> were named
+      <code>at</code> and <code>optional</code> respective. They have been
+      renamed in order to avoid possible name clashes with property names for
+      configuration sources. However, for reasons of backwards compatibility,
+      the old attribute names can still be used.
     </p>
     <p>
       Another useful feature is the built-in support for interpolation (i.e.
@@ -308,9 +626,11 @@
 </configuration>
 ]]></source>
     <p>
-      This example differs from the previous one by allowing CONFIG_FILE, and other
-      properties, to be defined in a properties file and added to the system
-      properties before the configuration is constructed.
+      This example differs from the previous one by the <code>systemProperties</code>
+      attribute added to the root element. It causes the specified to be read
+      and all properties defined therein to be added to the system properties.
+      So properties like <em>CONFIG_FILE</em> can be defined in a properties
+      file and are then treated as if they were system properties.
     </p>
     <p>
       <strong>The header section</strong>
@@ -349,7 +669,7 @@
       The <code>result</code> element points to the bean declaration for the
       resulting combined configuration. In this example we set some attributes
       and initialize the node combiner (which is not necessary because the
-      default override combiner is specified) and the expression engine to be
+      default override combiner is specified), and the expression engine to be
       used. Note that the <code>config-class</code> attribute makes it
       possible to inject custom classes for the resulting configuration or the
       node combiner.
@@ -360,12 +680,20 @@
       correctly. More information can be found in the section about
       <a href="howto_combinedconfiguration.html#Node combiners">Node combiners</a>.
     </p>
+    <p>
+      <em>Note:</em> From time to time the question is raised whether there is a
+      document type definition or a schema defining exactly the structure of a
+      configuration definition file. Frankly, the answer is no. This is due to
+      the fact that the format is extensible. As will be shown below, it is
+      possible to register yout own tags in order to embedd custom configuration
+      sources.
+    </p>
     </subsection>
-    
+
     <subsection name="An example">
     <p>
-      After all that theory let's go through an example! We start with the
-      configuration definition file that looks like the following:
+      After all that theory let's go through a more complex example! We start
+      with the configuration definition file that looks like the following:
     </p>
     <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
