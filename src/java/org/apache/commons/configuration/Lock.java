@@ -17,36 +17,66 @@
 package org.apache.commons.configuration;
 
 /**
- * Created by IntelliJ IDEA.
- * User: rgoers
- * Date: Sep 29, 2009
- * Time: 12:50:36 PM
- * To change this template use File | Settings | File Templates.
+ * <p>
+ * A simple class acting as lock.
+ * </p>
+ * <p>
+ * Instances of this class are used by some configuration classes to synchronize
+ * themselves.
+ * </p>
+ *
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
+ * @version $Id$
  */
 public class Lock
 {
+    /** A string used internally to synchronize counter updates. */
+    private static String counterLock = "Lock";
+
+    /** A counter for generating unique instance IDs. */
+    private static int counter;
+
+    /** The name of this lock. */
     private final String name;
+
+    /** The unique ID of this lock instance. */
     private final int instanceId;
 
-    private static String counterLock = "Lock";
-    private static int counter = 0;
-
+    /**
+     * Creates a new instance of {@code Lock} with the specified name.
+     *
+     * @param name the name of this lock
+     */
     public Lock(String name)
     {
         this.name = name;
-        synchronized(counterLock)
+        synchronized (counterLock)
         {
             instanceId = ++counter;
         }
     }
 
+    /**
+     * Returns the name of this lock.
+     *
+     * @return the name of this lock
+     */
     public String getName()
     {
         return name;
     }
 
+    /**
+     * Returns a string representation of this object. This implementation
+     * returns a string which contains the lock name and the instance ID.
+     *
+     * @return a string for this object
+     */
     public String toString()
     {
-        return "Lock: " + name + " id = " + instanceId + ": " + super.toString();
+        return "Lock: " + name + " id = " + instanceId + ": "
+                + super.toString();
     }
 }
