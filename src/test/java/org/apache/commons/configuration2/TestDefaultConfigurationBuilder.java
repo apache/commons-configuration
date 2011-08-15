@@ -741,7 +741,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests if the returned combined configuration has the expected structure.
      */
-    public void testCombinedConfiguration() throws ConfigurationException
+    public void testCombinedConfigurationStructure() throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
         CombinedConfiguration cc = (CombinedConfiguration) factory
@@ -760,6 +760,35 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 .size());
         assertTrue("Config 1 not contained", names.contains("combiner1"));
         assertTrue("Config 2 not contained", names.contains("combiner2"));
+    }
+
+    /**
+     * Helper method for testing the attributes of a combined configuration
+     * created by the builder.
+     *
+     * @param cc the configuration to be checked
+     */
+    private void checkCombinedConfigAttrs(CombinedConfiguration cc)
+    {
+        assertTrue("Wrong delimiter parsing flag",
+                cc.isDelimiterParsingDisabled());
+        assertTrue("Wrong reload check", cc.isForceReloadCheck());
+        assertTrue("Wrong ignore reload ex flag", cc.isIgnoreReloadExceptions());
+    }
+
+    /**
+     * Tests whether attributes are correctly set on the combined configurations
+     * for the override and additional sections.
+     */
+    public void testCombinedConfigurationAttributes() throws ConfigurationException
+    {
+        factory.setFile(INIT_FILE);
+        CombinedConfiguration cc = (CombinedConfiguration) factory
+                .getConfiguration();
+        checkCombinedConfigAttrs(cc);
+        CombinedConfiguration cc2 = (CombinedConfiguration) cc
+                .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
+        checkCombinedConfigAttrs(cc2);
     }
 
     /**

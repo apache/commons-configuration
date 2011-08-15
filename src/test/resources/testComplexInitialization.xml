@@ -2,7 +2,8 @@
 <!-- Test configuration definition file that demonstrates complex initialization -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true">
+    <result delimiterParsingDisabled="true" forceReloadCheck="true"
+      ignoreReloadExceptions="true">
       <nodeCombiner config-class="org.apache.commons.configuration2.combined.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration2.expr.xpath.XPathExpressionEngine"/>
     </result>
