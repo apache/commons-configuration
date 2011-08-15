@@ -512,6 +512,32 @@ public class TestCombinedConfiguration extends TestCase
     }
 
     /**
+     * Tests whether reloading works for a combined configuration nested in
+     * another combined configuration.
+     */
+    public void testReloadingNestedCC() throws IOException,
+            ConfigurationException
+    {
+        config.setForceReloadCheck(true);
+        File testXmlFile =
+                writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 0);
+        File testPropsFile =
+                writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 0);
+        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
+        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        PropertiesConfiguration c2 = new PropertiesConfiguration(testPropsFile);
+        c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+        config.addConfiguration(c2);
+        CombinedConfiguration cc2 = new CombinedConfiguration();
+        cc2.setForceReloadCheck(true);
+        cc2.addConfiguration(c1);
+        config.addConfiguration(cc2);
+        assertEquals("Wrong xml reload value", 0, config.getInt("xmlReload"));
+        writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 1);
+        assertEquals("XML reload not detected", 1, config.getInt("xmlReload"));
+    }
+
+    /**
      * Prepares a test of the getSource() method.
      */
     private void setUpSourceTest()
