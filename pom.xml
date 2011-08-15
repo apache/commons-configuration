@@ -664,7 +664,7 @@
         <artifactId>clirr-maven-plugin</artifactId>
         <version>2.2.1</version>
         <configuration>
-          <comparisonVersion>1.5</comparisonVersion>
+          <comparisonVersion>1.6</comparisonVersion>
         </configuration>
       </plugin>
       <plugin>
