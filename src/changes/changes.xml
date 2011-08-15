@@ -23,6 +23,11 @@
 
   <body>
     <release version="1.7" date="in SVN" description="">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-460">
+        Reloading now also works for configuration sources declared in the
+        additional section of a configuration definition file for
+        DefaultConfigurationBuilder.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-458">
         HierarchicalConfiguration now provides a specific implementation of the
         clear() method. This is more efficient and also solves some other

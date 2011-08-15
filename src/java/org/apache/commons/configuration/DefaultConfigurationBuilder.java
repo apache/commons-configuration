@@ -603,8 +603,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         List additionals = fetchChildConfigs(KEY_UNION);
         if (!additionals.isEmpty())
         {
-            CombinedConfiguration addConfig = new CombinedConfiguration(
-                    new UnionCombiner());
+            CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
             result.addConfiguration(addConfig, ADDITIONAL_NAME);
             initCombinedConfiguration(addConfig, additionals,
                     KEY_ADDITIONAL_LIST);
@@ -641,12 +640,38 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
+     * Creates the <code>CombinedConfiguration</code> for the configuration
+     * sources in the <code>&lt;additional&gt;</code> section. This method is
+     * called when the builder constructs the final configuration. It creates a
+     * new <code>CombinedConfiguration</code> and initializes some properties
+     * from the result configuration.
+     *
+     * @param resultConfig the result configuration (this is the configuration
+     *        that will be returned by the builder)
+     * @return the <code>CombinedConfiguration</code> for the additional
+     *         configuration sources
+     * @since 1.7
+     */
+    protected CombinedConfiguration createAdditionalsConfiguration(
+            CombinedConfiguration resultConfig)
+    {
+        CombinedConfiguration addConfig =
+                new CombinedConfiguration(new UnionCombiner());
+        addConfig.setDelimiterParsingDisabled(resultConfig
+                .isDelimiterParsingDisabled());
+        addConfig.setForceReloadCheck(resultConfig.isForceReloadCheck());
+        addConfig.setIgnoreReloadExceptions(resultConfig
+                .isIgnoreReloadExceptions());
+        return addConfig;
+    }
+
+    /**
      * Initializes a combined configuration for the configurations of a specific
      * section. This method is called for the override and for the additional
      * section (if it exists).
      *
      * @param config the configuration to be initialized
-     * @param containedConfigs the list with the declaratinos of the contained
+     * @param containedConfigs the list with the declarations of the contained
      * configurations
      * @param keyListNodes a list with the declaration of list nodes
      * @throws ConfigurationException if an error occurs
