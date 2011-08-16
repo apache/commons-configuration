@@ -29,13 +29,13 @@ import java.util.Set;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
@@ -78,6 +78,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /** The name of the logger to use for each CombinedConfiguration */
     private String loggerName = DynamicCombinedConfiguration.class.getName();
 
+    /** The object for handling variable substitution in key patterns. */
     private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
 
     /**
