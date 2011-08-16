@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,8 +25,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.io.PrintStream;
-import java.io.ByteArrayOutputStream;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -34,9 +34,9 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
+import org.apache.commons.configuration.tree.TreeUtils;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.ViewNode;
-import org.apache.commons.configuration.tree.TreeUtils;
 
 /**
  * <p>
@@ -208,7 +208,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     private boolean ignoreReloadExceptions = true;
 
     /** Set to true when the backing file has changed */
-    private boolean reloadRequired = false;
+    private boolean reloadRequired;
 
     /**
      * An expression engine used for converting child configurations to
@@ -620,7 +620,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public ConfigurationNode getRootNode()
     {
-        synchronized(getReloadLock())
+        synchronized (getReloadLock())
         {
             if (reloadRequired || combinedRoot == null)
             {
@@ -815,7 +815,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     private Configuration findSourceConfiguration(ConfigurationNode node)
     {
-        synchronized(getReloadLock())
+        synchronized (getReloadLock())
         {
             ConfigurationNode root = null;
             ConfigurationNode current = node;
