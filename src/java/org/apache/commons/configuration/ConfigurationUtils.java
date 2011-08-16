@@ -42,9 +42,8 @@ import org.apache.commons.logging.LogFactory;
  * @see ConfigurationConverter Utility methods to convert configurations.
  *
  * @author <a href="mailto:herve.quiroz@esil.univ-mrs.fr">Herve Quiroz</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public final class ConfigurationUtils
 {
@@ -60,8 +59,11 @@ public final class ConfigurationUtils
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
 
+    /** Constant for parsing numbers in hex format. */
+    private static final int HEX = 16;
+
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationUtils.class);
+    private static final Log LOG = LogFactory.getLog(ConfigurationUtils.class);
 
     /**
      * Private constructor. Prevents instances from being created.
@@ -223,7 +225,7 @@ public final class ConfigurationUtils
             if (conf instanceof Reloadable)
             {
                 Object lock = ((Reloadable) conf).getReloadLock();
-                synchronized(lock)
+                synchronized (lock)
                 {
                     hc = new HierarchicalConfiguration((HierarchicalConfiguration) conf);
                 }
@@ -442,12 +444,12 @@ public final class ConfigurationUtils
      */
     public static URL locate(FileSystem fileSystem, String base, String name)
     {
-        if (log.isDebugEnabled())
+        if (LOG.isDebugEnabled())
         {
             StringBuffer buf = new StringBuffer();
             buf.append("ConfigurationUtils.locate(): base is ").append(base);
             buf.append(", name is ").append(name);
-            log.debug(buf.toString());
+            LOG.debug(buf.toString());
         }
 
         if (name == null)
@@ -469,11 +471,11 @@ public final class ConfigurationUtils
                 try
                 {
                     url = toURL(file);
-                    log.debug("Loading configuration from the absolute path " + name);
+                    LOG.debug("Loading configuration from the absolute path " + name);
                 }
                 catch (MalformedURLException e)
                 {
-                    log.warn("Could not obtain URL from file", e);
+                    LOG.warn("Could not obtain URL from file", e);
                 }
             }
         }
@@ -491,12 +493,12 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Loading configuration from the path " + file);
+                    LOG.debug("Loading configuration from the path " + file);
                 }
             }
             catch (MalformedURLException e)
             {
-                log.warn("Could not obtain URL from file", e);
+                LOG.warn("Could not obtain URL from file", e);
             }
         }
 
@@ -513,13 +515,13 @@ public final class ConfigurationUtils
 
                 if (url != null)
                 {
-                    log.debug("Loading configuration from the home path " + file);
+                    LOG.debug("Loading configuration from the home path " + file);
                 }
 
             }
             catch (MalformedURLException e)
             {
-                log.warn("Could not obtain URL from file", e);
+                LOG.warn("Could not obtain URL from file", e);
             }
         }
 
@@ -548,7 +550,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Loading configuration from the context classpath (" + resourceName + ")");
+                LOG.debug("Loading configuration from the context classpath (" + resourceName + ")");
             }
         }
 
@@ -559,7 +561,7 @@ public final class ConfigurationUtils
 
             if (url != null)
             {
-                log.debug("Loading configuration from the system classpath (" + resourceName + ")");
+                LOG.debug("Loading configuration from the system classpath (" + resourceName + ")");
             }
         }
         return url;
@@ -703,7 +705,7 @@ public final class ConfigurationUtils
                 if (pos + 2 < filename.length())
                 {
                     String hexStr = filename.substring(pos + 1, pos + 3);
-                    char ch = (char) Integer.parseInt(hexStr, 16);
+                    char ch = (char) Integer.parseInt(hexStr, HEX);
                     filename = filename.substring(0, pos) + ch
                             + filename.substring(pos + 3);
                 }
