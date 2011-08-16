@@ -727,7 +727,7 @@ public class HierarchicalINIConfiguration extends
             }
             else
             {
-                if(!inSection && !globalSection)
+                if (!inSection && !globalSection)
                 {
                     globalSection = true;
                     sections.add(null);
