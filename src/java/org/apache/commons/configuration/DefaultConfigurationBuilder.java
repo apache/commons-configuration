@@ -693,8 +693,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                     conf);
             if (getLogger().isDebugEnabled())
             {
-                getLogger().debug("Creating configuration " + decl.getBeanClassName() + " with name " +
-                    decl.getConfiguration().getString(ATTR_NAME));
+                getLogger().debug("Creating configuration " + decl.getBeanClassName() + " with name "
+                    + decl.getConfiguration().getString(ATTR_NAME));
             }
             AbstractConfiguration newConf = createConfigurationAt(decl);
             if (newConf != null)
@@ -1270,6 +1270,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     static class ConfigurationBeanFactory implements BeanFactory
     {
+        /** The logger. */
         private Log logger = LogFactory.getLog(DefaultConfigurationBuilder.class);
 
         /**
