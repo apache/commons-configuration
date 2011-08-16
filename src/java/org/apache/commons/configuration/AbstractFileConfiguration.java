@@ -752,7 +752,7 @@ implements FileConfiguration, FileSystemBased
      */
     public void addProperty(String key, Object value)
     {
-        synchronized(reloadLock)
+        synchronized (reloadLock)
         {
             super.addProperty(key, value);
             possiblySave();
@@ -769,7 +769,7 @@ implements FileConfiguration, FileSystemBased
      */
     public void setProperty(String key, Object value)
     {
-        synchronized(reloadLock)
+        synchronized (reloadLock)
         {
             super.setProperty(key, value);
             possiblySave();
@@ -778,7 +778,7 @@ implements FileConfiguration, FileSystemBased
 
     public void clearProperty(String key)
     {
-        synchronized(reloadLock)
+        synchronized (reloadLock)
         {
             super.clearProperty(key);
             possiblySave();
@@ -959,7 +959,7 @@ implements FileConfiguration, FileSystemBased
     public boolean isEmpty()
     {
         reload();
-        synchronized(reloadLock)
+        synchronized (reloadLock)
         {
             return super.isEmpty();
         }
@@ -968,7 +968,7 @@ implements FileConfiguration, FileSystemBased
     public boolean containsKey(String key)
     {
         reload();
-        synchronized(reloadLock)
+        synchronized (reloadLock)
         {
             return super.containsKey(key);
         }
