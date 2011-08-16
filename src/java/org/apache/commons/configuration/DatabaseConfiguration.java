@@ -175,7 +175,6 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param table the name of the table containing the configurations
      * @param keyColumn the column containing the keys of the configuration
      * @param valueColumn the column containing the values of the configuration
-     * @param name the name of the configuration
      * @param commits a flag whether the configuration should perform a commit
      *        after a database update
      */
