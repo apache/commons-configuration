@@ -194,9 +194,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Object to synchronize on a reload. This class is not reloadable so this
-     * object isn't important
-     * @return
+     * Returns the object to synchronize on a reload. This class is not
+     * reloadable so this object isn't important
+     *
+     * @return the lock object
      */
     public Object getReloadLock()
     {
@@ -1204,7 +1205,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             final ViewNode viewNode = (ViewNode) obj;
             nd = new Node(viewNode)
             {
-                public void setReference(Object reference) {
+                public void setReference(Object reference)
+                {
                     super.setReference(reference);
                     // also set the reference at the original node
                     viewNode.setReference(reference);
