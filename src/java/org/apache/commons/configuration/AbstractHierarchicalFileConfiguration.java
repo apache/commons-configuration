@@ -44,7 +44,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * @since 1.2
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public abstract class AbstractHierarchicalFileConfiguration
 extends HierarchicalConfiguration
@@ -141,7 +141,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     protected void addPropertyDirect(String key, Object obj)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             super.addPropertyDirect(key, obj);
             delegate.possiblySave();
@@ -150,7 +150,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     public void clearProperty(String key)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             super.clearProperty(key);
             delegate.possiblySave();
@@ -159,7 +159,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     public void clearTree(String key)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             super.clearTree(key);
             delegate.possiblySave();
@@ -168,7 +168,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     public void setProperty(String key, Object value)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             super.setProperty(key, value);
             delegate.possiblySave();
@@ -302,7 +302,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     private boolean reload(boolean checkReload)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             setDetailEvents(false);
             try
@@ -349,7 +349,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     public boolean containsKey(String key)
     {
         reload();
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             return super.containsKey(key);
         }
@@ -358,7 +358,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     public Iterator getKeys()
     {
         reload();
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             return super.getKeys();
         }
@@ -367,7 +367,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     public Iterator getKeys(String prefix)
     {
         reload();
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             return super.getKeys(prefix);
         }
@@ -378,7 +378,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         if (reload(true))
         {
             // Avoid reloading again and getting the same error.
-            synchronized(delegate.getReloadLock())
+            synchronized (delegate.getReloadLock())
             {
                 return super.getProperty(key);
             }
@@ -389,7 +389,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     public boolean isEmpty()
     {
         reload();
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             return super.isEmpty();
         }
@@ -405,7 +405,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
      */
     public void addNodes(String key, Collection nodes)
     {
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             super.addNodes(key, nodes);
             delegate.possiblySave();
@@ -422,7 +422,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     protected List fetchNodeList(String key)
     {
         reload();
-        synchronized(delegate.getReloadLock())
+        synchronized (delegate.getReloadLock())
         {
             return super.fetchNodeList(key);
         }
