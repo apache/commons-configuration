@@ -17,21 +17,23 @@
 
 package org.apache.commons.configuration;
 
+import java.util.Iterator;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import java.util.Iterator;
 
 /**
  * A configuration based on the system properties.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class SystemConfiguration extends MapConfiguration
 {
+    /** The logger. */
     private static Log log = LogFactory.getLog(SystemConfiguration.class);
+
     /**
      * Create a Configuration based on the system properties.
      *
