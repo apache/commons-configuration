@@ -31,19 +31,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.tree.ConfigurationNode;
-import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 import org.apache.commons.configuration.resolver.EntityResolverSupport;
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXParseException;
 
@@ -103,6 +103,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /** The EntityResolver */
     private EntityResolver entityResolver;
 
+    /** The internally used helper object for variable substitution. */
     private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
 
     /**
