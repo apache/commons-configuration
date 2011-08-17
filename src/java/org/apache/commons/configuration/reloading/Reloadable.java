@@ -18,6 +18,11 @@ package org.apache.commons.configuration.reloading;
 
 /**
  * Interface that allows other objects to synchronize on a root lock.
+ *
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
+ * @version $Id$
  */
 public interface Reloadable
 {
