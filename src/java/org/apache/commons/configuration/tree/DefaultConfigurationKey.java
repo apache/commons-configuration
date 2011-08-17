@@ -830,7 +830,7 @@ public class DefaultConfigurationKey
                 {
                     int endidx = key.indexOf(getExpressionEngine().getIndexEnd(),
                             idx);
-    
+
                     if (endidx > idx + 1)
                     {
                         indexValue = Integer.parseInt(key.substring(idx + 1, endidx));
