@@ -961,6 +961,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
+        /** Constant for the initial size when creating a string buffer. */
+        private static final int BUF_SIZE = 8;
+
         /** The delimiter for multi-valued properties.*/
         private char delimiter;
 
@@ -1193,8 +1196,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * Performs the escaping of backslashes in the specified properties
          * value. Because a double backslash is used to escape the escape
          * character of a list delimiter, double backslashes also have to be
-         * escaped if the property is part of a (single line) list. Then, in all cases each backslash has to be doubled in order to produce a
-         * valid properties file.
+         * escaped if the property is part of a (single line) list. Then, in all
+         * cases each backslash has to be doubled in order to produce a valid
+         * properties file.
          *
          * @param value the value to be escaped
          * @param inList a flag whether the value is part of a list
@@ -1207,7 +1211,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             if (inList && strValue.indexOf(DOUBLE_ESC) >= 0)
             {
                 char esc = ESCAPE.charAt(0);
-                StringBuffer buf = new StringBuffer(strValue.length() + 8);
+                StringBuffer buf = new StringBuffer(strValue.length() + BUF_SIZE);
                 for (int i = 0; i < strValue.length(); i++)
                 {
                     if (strValue.charAt(i) == esc && i < strValue.length() - 1
@@ -1322,7 +1326,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @since 1.7
      */
-    public static interface IOFactory
+    public interface IOFactory
     {
         /**
          * Creates a <code>PropertiesReader</code> for reading a properties
