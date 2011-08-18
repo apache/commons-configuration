@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>20</version>
+    <version>21</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
@@ -635,7 +635,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.0</version>
+        <version>2.4</version>
         <configuration>
           <xmlPath>${basedir}/src/changes/changes.xml</xmlPath>
           <issueLinkTemplate>%URL%/%ISSUE%</issueLinkTemplate>
@@ -662,7 +662,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
-        <version>2.2.1</version>
+        <version>2.2.2</version>
         <configuration>
           <comparisonVersion>1.6</comparisonVersion>
         </configuration>
@@ -681,19 +681,18 @@
        <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>findbugs-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>2.3.1</version>
         <configuration>
           <threshold>Normal</threshold>
           <effort>Default</effort>
           <excludeFilterFile>${basedir}/conf/findbugs-exclude-filter.xml</excludeFilterFile>
        </configuration>
       </plugin>
-      <!-- Uncomment to generate clover report
       <plugin>
-        <groupId>com.atlassian.maven.plugins</groupId>
-        <artifactId>maven-clover2-plugin</artifactId>
-        <version>2.4.2</version>
-      </plugin> -->
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.4</version>
+      </plugin>
     </plugins>
   </reporting>
 
