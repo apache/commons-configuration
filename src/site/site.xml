@@ -28,7 +28,6 @@
       <item name="Download"                     href="http://commons.apache.org/configuration/download_configuration.cgi"/>  
       <item name="Release History"              href="/changes-report.html"/>
       <item name="User's Guide"                 href="/userguide/user_guide.html"/>
-      <item name="Howtos (1.2 release)"         href="/userguide-1.2/index.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
       <item name="Javadoc (current)"            href="/apidocs/index.html"/>
       <item name="Javadoc (old releases)"       href="/javadoc.html"/>
@@ -36,9 +35,7 @@
 
     <menu name="Development">
       <item name="Building"                     href="/building.html"/>
-      <item name="Roadmap"                      href="/tasks-report.html"/>
       <item name="Issue Tracking"               href="issue-tracking.html"/>
-      <item name="SVN"                          href="http://svn.apache.org/repos/asf/commons/proper/configuration/"/>
     </menu>
 
   </body>
