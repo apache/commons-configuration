@@ -240,15 +240,20 @@
         file pattern resolved to a non-existent file. This is now
         configurable.
       </action>
-      <action dev="joehni" type="update">
-        <fixes issue="CONFIGURATION-375" />
-        <fixes issue="CONFIGURATION-376" />
-        <fixes issue="CONFIGURATION-377" />
+      <action dev="joehni" type="update" issue="CONFIGURATION-375">
         Align interpolation functionality of SubnodeConfiguration and
         SubsetConfiguration. SubsetConfiguration will now also interpolate
         keys of the parent configuration or use the local lookups of its
         parent. SubnodeConfiguration is in turn now able to lookup local
         keys as well.
+      </action>
+      <action dev="joehni" type="update" issue="CONFIGURATION-376">
+        Align interpolation functionality of SubnodeConfiguration and
+        SubsetConfiguration.
+      </action>
+      <action dev="joehni" type="update" issue="CONFIGURATION-377">
+        Align interpolation functionality of SubnodeConfiguration and
+        SubsetConfiguration.
       </action>
       <action dev="joehni" type="fix" issue="CONFIGURATION-369">
         SubsetConfiguration did not use locally registered lookups of its
@@ -725,9 +730,9 @@
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-192">
         Variable interpolation features have been improved. A variable can now
-        have the form <code>${prefix:variableName}</code> where the prefix
-        defines the type of the variable. The standard types <em>sys</em> for
-        system properties and <em>const</em> for constants are supported.
+        have the form ${prefix:variableName} where the prefix
+        defines the type of the variable. The standard types sys for
+        system properties and const for constants are supported.
         Variables without a prefix are treated as references to other
         configuration properties (which is compatible to earlier versions).
       </action>
@@ -753,7 +758,7 @@
       <action dev="oheger" type="add" issue="CONFIGURATION-243">
         Configuration declarations in the configuration definition file for
         DefaultConfigurationBuilder that are marked as optional now support a
-        new attribute <code>config-forceCreate</code>. If this attribute is set
+        new attribute config-forceCreate. If this attribute is set
         to true and the initialization of the configuration fails,
         DefaultConfigurationBuilder tries to add an empty configuration of the
         correct type to the resulting combined configuration. Before this
@@ -1436,9 +1441,9 @@
       </action>
       <action dev="henning" type="add">
         Make the behaviour on missing properties for the get methods that
-        return objects configurable. A property <code>throwExceptionOnMissing</code>
-        can be set and then the getters throw an <code>NoSuchElementException</code>.
-        The old default behaviour of returning a <code>null</code> value has
+        return objects configurable. A property throwExceptionOnMissing
+        can be set and then the getters throw an NoSuchElementException.
+        The old default behaviour of returning a null value has
         been restored.
       </action>
       <action dev="epugh" type="add" issue="CONFIGURATION-151">
@@ -1498,18 +1503,21 @@
       <action dev="epugh" type="fix" issue="CONFIGURATION-18">
         DatabaseConfiguration doesn't support List properties.
       </action>
-      <action dev="ebourg" type="fix">
-        <fixes issue="CONFIGURATION-137"/>
-        <fixes issue="CONFIGURATION-116"/>
-        <fixes issue="CONFIGURATION-4"/>
-        <fixes issue="CONFIGURATION-32"/>
-        Fixed several bugs related to XMLConfiguration:
-        <ul>
-          <li>Can't add a new property as an attribute in XMLConfiguration</li>
-          <li>XMLConfiguration doesn't support attribute names with a dot</li>
-          <li>XMLConfiguration doesn't ignore comments</li>
-          <li>XMLConfiguration.save() doesn't escape reserved characters</li>
-        </ul>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-137">
+        Fixed a bug related to XMLConfiguration. Can't add a new property as an
+        attribute in XMLConfiguration.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-116">
+        Fixed a bug related to XMLConfiguration. XMLConfiguration doesn't
+        support attribute names with a dot.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-4">
+        Fixed a bug related to XMLConfiguration. XMLConfiguration doesn't ignore
+        comments.
+      </action>
+      <action dev="ebourg" type="fix" issue="CONFIGURATION-32">
+        Fixed a bug related to XMLConfiguration. XMLConfiguration.save() doesn't
+        escape reserved characters.
       </action>
       <action dev="ebourg" type="add" issue="CONFIGURATION-114">
         Added save methods in XMLConfiguration similar to PropertiesConfiguration
@@ -1598,12 +1606,9 @@
       </action>
       <action dev="ebourg" type="add">
         New DatabaseConfiguration that uses a database to store the properties.
-        It supports 2 table structures :
-        <ul>
-          <li>one table per configuration (2 colums key/value)</li>
-          <li>one table for multiple configurations (2 columns key/value + 1 column
-              for the name of the configuration)</li>
-        </ul>
+        It supports 2 table structures: one table per configuration (2 colums
+        key/value), one table for multiple configurations (2 columns key/value +
+        1 column for the name of the configuration).
       </action>
       <action dev="oheger" type="add">
         ConfigurationFactory now supports the hierarchicalDom4j element in configuration
@@ -1632,22 +1637,20 @@
         having to implement the methods required.
       </action>
       <action dev="bdunbar" type="fix">
-        <strong>ClassPropertiesConfiguration Additions</strong>
-        <ul>
-          <li>Use the classloader of class that is provided by the constructor.</li>
-          <li>Add a constructor that indicates whether to use relative or absolute.</li>
-          <li>Change getPropertyStream to utilize the relative or absolute flag.</li>
-          <li>Add a test case that checks that absolute paths work.</li>
-        </ul>
+        ClassPropertiesConfiguration Additions:
+        Use the classloader of class that is provided by the constructor.
+        Add a constructor that indicates whether to use relative or absolute.
+        Change getPropertyStream to utilize the relative or absolute flag.
+        Add a test case that checks that absolute paths work.
       </action>
       <action dev="epugh" type="fix">
-        <strong>JNDIConfiguration.getKeys() Addition</strong>
+        JNDIConfiguration.getKeys() Addition:
         The JNDIConfiguration.getKeys() method was returning an unsupported
         operation error.  However, this is an important method to have
         supported.
       </action>
       <action dev="epugh" type="fix">
-        <strong>CompositeConfiguration.getKeys() Fix</strong>
+        CompositeConfiguration.getKeys() Fix
         The CompositeConfiguration.getKeys() method was returning an
         unordered list of configuration values.  However, many apps
         expect the order that keys are returned to be the order they
