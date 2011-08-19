@@ -15,12 +15,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!-- ===================================================================== -->
+<!-- $Id$ -->
+<!-- ===================================================================== -->
 
 <document>
 
     <properties>
         <title>Building</title>
-        <author email="oheger@apache.org">Oliver Heger</author>
     </properties>
 
     <body>
@@ -82,7 +84,7 @@
           </p>
           <p>
             To build the Javadocs, run "ant javadoc".
-            The result will be in "target/docs/apidocs".
+            The result will be in "target/site/apidocs".
           </p>
         </section>
     </body>
