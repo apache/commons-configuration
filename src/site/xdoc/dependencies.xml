@@ -108,6 +108,14 @@
                         <td>Web configurations</td>
                         <td>servlet-api</td>
                     </tr>
+                    <tr>
+                        <td>ExprLookup</td>
+                        <td>commons-jexl</td>
+                    </tr>
+                    <tr>
+                        <td>VFSFileSystem</td>
+                        <td>commons-vfs</td>
+                    </tr>
                 </tbody>
             </table>
 
@@ -157,6 +165,14 @@
                     <tr>
                       <td>commons-jxpath</td>
                       <td>1.2, 1.3</td>
+                    </tr>
+                    <tr>
+                      <td>commons-jexl</td>
+                      <td>1.1</td>
+                    </tr>
+                    <tr>
+                      <td>commons-vfs</td>
+                      <td>2.0</td>
                     </tr>
                     <tr>
                       <td>xml-resolver</td>
