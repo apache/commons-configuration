@@ -28,6 +28,10 @@
         additional section of a configuration definition file for
         DefaultConfigurationBuilder.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-459">
+        The user guide was updated to no more mention ConfigurationFactory.
+        This class is scheduled for deprecation.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-458">
         HierarchicalConfiguration now provides a specific implementation of the
         clear() method. This is more efficient and also solves some other
