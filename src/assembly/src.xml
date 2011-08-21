@@ -25,7 +25,8 @@
         <fileSet>
             <includes>
                 <include>build.xml</include>
-                <include>default.properties</include>
+                <include>maven-build.properties</include>
+                <include>maven-build.xml</include>
                 <include>LICENSE.txt</include>
                 <include>NOTICE.txt</include>
                 <include>pom.xml</include>
