@@ -29,8 +29,7 @@
       <item name="Release History"              href="/changes-report.html"/>
       <item name="User's Guide"                 href="/userguide/user_guide.html"/>
       <item name="Runtime Dependencies"         href="/dependencies.html"/>
-      <item name="Javadoc (current)"            href="/apidocs/index.html"/>
-      <item name="Javadoc (old releases)"       href="/javadoc.html"/>
+      <item name="Javadoc"                      href="/apidocs/index.html"/>
     </menu>
 
     <menu name="Development">
