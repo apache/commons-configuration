@@ -256,8 +256,8 @@ IMPROVEMENTS AND NEW FEATURES IN 1.7
 OTHER CHANGES
 =============
 * [CONFIGURATION-459]
-  The user guide was updated to no more mention ConfigurationFactory. This class
-  is scheduled for deprecation.
+  ConfigurationFactory has been deprecated. The user guide was updated to no
+  more mention this class.
 
 * [CONFIGURATION-456]
   Improved Javadocs of getKeys(String) method for some configuration classes.

@@ -29,8 +29,8 @@
         DefaultConfigurationBuilder.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-459">
-        The user guide was updated to no more mention ConfigurationFactory.
-        This class is scheduled for deprecation.
+        ConfigurationFactory has been deprecated. The user guide was updated to
+        no more mention this class.
       </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-458">
         HierarchicalConfiguration now provides a specific implementation of the
