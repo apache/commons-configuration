@@ -60,8 +60,10 @@ import org.xml.sax.SAXException;
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
  * @version $Id$
+ * @deprecated Use {@link DefaultConfigurationBuilder} instead; this class
+ * provides the same features as ConfigurationFactory plus some more; it can
+ * also process the same configuration definition files.
  */
 public class ConfigurationFactory
 {
