@@ -54,7 +54,7 @@
     <pathelement location="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
     <pathelement location="${maven.repo.local}/commons-codec/commons-codec/1.5/commons-codec-1.5.jar"/>
     <pathelement location="${maven.repo.local}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar"/>
-    <pathelement location="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar"/>
+    <pathelement location="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar"/>
     <pathelement location="${maven.repo.local}/org/apache/maven/scm/maven-scm-api/1.4/maven-scm-api-1.4.jar"/>
     <pathelement location="${maven.repo.local}/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar"/>
     <pathelement location="${maven.repo.local}/org/apache/maven/scm/maven-scm-provider-svnexe/1.4/maven-scm-provider-svnexe-1.4.jar"/>
@@ -76,7 +76,7 @@
     <pathelement location="${maven.repo.local}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
     <pathelement location="${maven.repo.local}/commons-codec/commons-codec/1.5/commons-codec-1.5.jar"/>
     <pathelement location="${maven.repo.local}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar"/>
-    <pathelement location="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar"/>
+    <pathelement location="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar"/>
     <pathelement location="${maven.repo.local}/org/apache/maven/scm/maven-scm-api/1.4/maven-scm-api-1.4.jar"/>
     <pathelement location="${maven.repo.local}/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar"/>
     <pathelement location="${maven.repo.local}/org/apache/maven/scm/maven-scm-provider-svnexe/1.4/maven-scm-provider-svnexe-1.4.jar"/>
@@ -395,13 +395,13 @@
          dest="${maven.repo.local}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
-    <mkdir dir="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0-SNAPSHOT"/>
-    <get src="http://repository.apache.org/snapshots/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar" 
-         dest="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar" 
+    <mkdir dir="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0"/>
+    <get src="http://repository.apache.org/snapshots/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar" 
+         dest="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
-    <get src="http://repo1.maven.org/maven2/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar" 
-         dest="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0-SNAPSHOT/commons-vfs2-2.0-20110818.063144-26.jar" 
+    <get src="http://repo1.maven.org/maven2/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar" 
+         dest="${maven.repo.local}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar" 
          usetimestamp="false" 
          ignoreerrors="true"/>
     <mkdir dir="${maven.repo.local}/org/apache/maven/scm/maven-scm-api/1.4"/>
