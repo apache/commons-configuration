@@ -1367,6 +1367,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * done by extending this class and overriding the corresponding
      * <code>createXXXX()</code> method.
      * </p>
+     *
+     * @since 1.7
      */
     public static class DefaultIOFactory implements IOFactory
     {

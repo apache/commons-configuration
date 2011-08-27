@@ -26,7 +26,8 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
- * @version $Id: $
+ * @since 1.7
+ * @version $Id$
  */
 public class HierarchicalReloadableConfiguration extends HierarchicalConfiguration
     implements Reloadable

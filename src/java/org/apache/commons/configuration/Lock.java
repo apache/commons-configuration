@@ -28,6 +28,7 @@ package org.apache.commons.configuration;
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
+ * @since 1.7
  * @version $Id$
  */
 public class Lock

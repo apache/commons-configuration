@@ -25,7 +25,7 @@ import java.util.Iterator;
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @version $Id$
- * @since 1.6
+ * @since 1.7
  */
 public final class TreeUtils
 {
