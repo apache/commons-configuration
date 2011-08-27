@@ -17,33 +17,37 @@
 
 package org.apache.commons.configuration.reloading;
 
-import org.apache.commons.configuration.FileConfiguration;
-import org.apache.commons.configuration.FileSystemBased;
-import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.configuration.FileConfiguration;
+import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.FileSystemBased;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
 
 /**
- * <p>A reloading strategy that will reload the configuration every time its
- * underlying file is changed.</p>
- * <p>This reloading strategy does not actively monitor a configuration file,
- * but is triggered by its associated configuration whenever properties are
- * accessed. It then checks the configuration file's last modification date
- * and causes a reload if this has changed.</p>
- * <p>To avoid permanent disc access on successive property lookups a refresh
- * delay can be specified. This has the effect that the configuration file's
- * last modification date is only checked once in this delay period. The default
- * value for this refresh delay is 5 seconds.</p>
- * <p>This strategy only works with FileConfiguration instances.</p>
+ * <p>
+ * A file-based reloading strategy that uses <a
+ * href="http://commons.apache.org/vfs/">Commons VFS</a> to determine when a
+ * file was changed.
+ * </p>
+ * <p>
+ * This reloading strategy is very similar to
+ * {@link FileChangedReloadingStrategy}, except for the fact that it uses VFS
+ * and thus can deal with a variety of different configuration sources.
+ * </p>
+ * <p>
+ * This strategy only works with FileConfiguration instances.
+ * </p>
  *
- * @author Emmanuel Bourg
- * @version $Revision$, $Date$
- * @since 1.1
+ * @author <a
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
+ * @version $Id$
+ * @since 1.7
  */
 public class VFSFileChangedReloadingStrategy implements ReloadingStrategy
 {
