@@ -24,7 +24,13 @@ addressed: the algorithm for locating configuration files.
 
 Commons Configuration 1.7 is fully binary compatible to the previous version.
 Support for Java 1.3 has been dropped, a minimum of Java 1.4 is now
-required.
+required. There is one exception, however: Commons Configuration 1.7 supports
+optionally loading configuration files through Commons VFS
+(http://commons.apache.org/vfs/). VFS requires Java 1.5+, so if this feature is
+going to be used, a minimum JDK version of 1.5 is needed. More information
+about optional dependencies required by specific components of Commons
+Configuration can be found at
+http://commons.apache.org/configuration/dependencies.html.
 
 Following is a complete list of all changes in the new 1.7 release:
 
