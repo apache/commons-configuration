@@ -113,8 +113,8 @@
                         <td>commons-jexl</td>
                     </tr>
                     <tr>
-                        <td>VFSFileSystem</td>
-                        <td>commons-vfs</td>
+                        <td>VFSFileSystem, VFSFileChangedReloadingStrategy</td>
+                        <td>commons-vfs (requires Java 1.5)</td>
                     </tr>
                 </tbody>
             </table>
