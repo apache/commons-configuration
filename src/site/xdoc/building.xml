@@ -37,11 +37,21 @@
 
         <section name="Maven 2">
           <p>
-            Commons Configuration uses Maven 2 as its build tool. To build the Configuration
+            Commons Configuration uses Maven 2 as its build tool. The recommended
+            version is Maven 2.2.1. To build the Configuration
             jar, change into the directory where the source distribution resides and run
             "mvn install". This will compile the source and tests, run the tests, and then
             package the jar. The jar will also be copied into the local maven repository
             for use by other builds.
+          </p>
+          <p>
+            This build requires a JDK 1.5 or higher. It is possible to build
+            Commons Configuration on a JDK 1.4 by specifying the "java-1.4"
+            profile: "mvn install -Pjava-1.4". This profile and the settings required are described in
+            detail in <a href="http://commons.apache.org/commons-parent-pom.html#Testing_with_different_Java_versions">
+            Testing with different Java versions</a>. If this profile is active,
+            some classes depending on Commons VFS (which is available for Java
+            1.5+ only) are excluded from compilation.
           </p>
           <p>
             To build the web site run "mvn site". When it completes the web site will reside in
