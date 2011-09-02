@@ -487,16 +487,10 @@
             <excludes>
               <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
             </excludes>
-            <systemProperties>
-              <property>
-                <name>java.awt.headless</name>
-                <value>true</value>
-              </property>
-              <property>
-                <name>org.apache.commons.logging.Log</name>
-                <value>org.apache.commons.configuration.Logging</value>
-              </property>
-            </systemProperties>
+            <systemPropertyVariables>
+              <java.awt.headless>true</java.awt.headless>
+              <org.apache.commons.logging.Log>org.apache.commons.configuration.Logging</org.apache.commons.logging.Log>
+            </systemPropertyVariables>
           </configuration>
         </plugin>
         <plugin>
