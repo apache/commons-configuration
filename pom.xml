@@ -597,16 +597,10 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <forkMode>once</forkMode>
-              <systemProperties>
-                <property>
-                  <name>java.awt.headless</name>
-                  <value>true</value>
-                </property>
-                <property>
-                  <name>test.webdav.base</name>
-                  <value>${test.webdav.base}</value>
-                </property>
-              </systemProperties>
+              <systemPropertyVariables>
+                  <java.awt.headless>true</java.awt.headless>
+                  <test.webdav.base>${test.webdav.base}</test.webdav.base>
+              </systemPropertyVariables>
               <includes>
                 <include>**/TestWebdavConfigurationBuilder.java</include>
               </includes>
