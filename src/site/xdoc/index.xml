@@ -15,6 +15,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!-- ===================================================================== -->
+<!-- $Id$ -->
+<!-- ===================================================================== -->
 <document>
 
   <properties>
@@ -30,7 +33,7 @@
   <body>
     <section name="Intro">
       <p>
-      	Commons Configuration provides a generic configuration interface which enables
+      	The Commons Configuration software library provides a generic configuration interface which enables
         a Java application to read configuration data from a variety of sources. Commons Configuration
       	provides typed access to single, and multi-valued configuration parameters as demonstrated
         by the following code:
