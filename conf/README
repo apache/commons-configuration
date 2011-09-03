@@ -1,4 +1,4 @@
 DO NOT DELETE THESE FILES! 
 
-They're used for testing the PropertiesLoader in
-the TestPropertiesConfiguration class
+They're used by the unit tests for testing various Configuration implementations.
+
