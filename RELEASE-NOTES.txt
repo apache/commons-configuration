@@ -10,8 +10,9 @@ INTRODUCTION
 
 This document contains the release notes for this version of the Commons
 Configuration component, and highlights changes since the previous version.
-Commons Configuration provides a generic configuration interface which enables
-an application to read configuration data from a variety of sources.
+The Commons Configuration software library provides a generic configuration
+interface which enables an application to read configuration data from a variety
+of sources.
 
 It has been a while since the last release, therefore numerous bug fixes have
 accumulated. Most of them are not critical, but make the library more stable
