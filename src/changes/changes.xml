@@ -22,7 +22,8 @@
   </properties>
 
   <body>
-    <release version="1.7" date="in SVN" description="">
+    <release version="1.7" date="2011-09-07"
+      description="Many bugfixes, some new features.">
       <action dev="oheger" type="fix" issue="CONFIGURATION-460">
         Reloading now also works for configuration sources declared in the
         additional section of a configuration definition file for
