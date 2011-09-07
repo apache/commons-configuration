@@ -30,7 +30,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
   <artifactId>commons-configuration</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.8-SNAPSHOT</version>
   <name>Commons Configuration</name>
 
   <inceptionYear>2001</inceptionYear>
