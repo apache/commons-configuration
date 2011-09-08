@@ -52,6 +52,13 @@
     <url>http://svn.apache.org/viewvc/commons/proper/configuration/trunk</url>
   </scm>
 
+  <distributionManagement>
+    <site>
+      <id>apache.website</id>
+      <url>${commons.deployment.protocol}://people.apache.org/www/commons.apache.org/${commons.componentid}</url>
+    </site>
+  </distributionManagement>
+
     <developers>
         <developer>
           <name>Daniel Rall</name>
