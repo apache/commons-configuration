@@ -32,7 +32,7 @@ import org.xml.sax.SAXParseException;
 /**
  * Unit test for simple MultiConfigurationTest.
  *
- * @version $Id:$
+ * @version $Id$
  */
 public class TestMultiFileHierarchicalConfiguration extends TestCase
 {
