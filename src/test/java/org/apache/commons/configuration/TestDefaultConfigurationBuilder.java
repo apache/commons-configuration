@@ -22,6 +22,7 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -912,15 +913,14 @@ public class TestDefaultConfigurationBuilder extends TestCase
     {
         File confDir = new File("conf");
         File targetDir = new File("target");
-        File testXMLSource = new File(confDir, "testDtd.xml");
         File testXMLValidationSource = new File(confDir,
                 "testValidateInvalid.xml");
         File testSavedXML = new File(targetDir, "testSave.xml");
         File testSavedFactory = new File(targetDir, "testSaveFactory.xml");
-        File dtdFile = new File(confDir, "properties.dtd");
+        URL dtdFile = getClass().getResource("/properties.dtd");
         final String publicId = "http://commons.apache.org/test.dtd";
 
-        XMLConfiguration config = new XMLConfiguration(testXMLSource);
+        XMLConfiguration config = new XMLConfiguration("testDtd.xml");
         config.setPublicID(publicId);
         config.save(testSavedXML);
         factory.addProperty("xml[@fileName]", testSavedXML.getAbsolutePath());
@@ -933,7 +933,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         factory = new DefaultConfigurationBuilder();
         factory.setFile(testSavedFactory);
-        factory.registerEntityId(publicId, dtdFile.toURI().toURL());
+        factory.registerEntityId(publicId, dtdFile);
         factory.clearErrorListeners();
         Configuration c = factory.getConfiguration();
         assertEquals("Wrong property value", "value1", c.getString("entry(0)"));

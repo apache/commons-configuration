@@ -1036,7 +1036,7 @@ public class TestXMLConfiguration extends TestCase
                 + "<properties version=\"1.0\"><entry key=\"test\">value</entry></properties>";
         StringReader in = new StringReader(content);
         conf = new XMLConfiguration();
-        conf.setFileName("conf/testDtd.xml");
+        conf.setFileName("testDtd.xml");
         conf.load();
         conf.clear();
         conf.load(in);
@@ -1457,14 +1457,14 @@ public class TestXMLConfiguration extends TestCase
     public void testRegisterEntityId() throws ConfigurationException,
             IOException
     {
-        File dtdFile = new File("conf/properties.dtd");
+        URL dtdURL = getClass().getResource("/properties.dtd");
         final String publicId = "http://commons.apache.org/test/properties.dtd";
         conf = new XMLConfiguration("testDtd.xml");
         conf.setPublicID(publicId);
         conf.save(testSaveConf);
         XMLConfiguration checkConfig = new XMLConfiguration();
         checkConfig.setFile(testSaveConf);
-        checkConfig.registerEntityId(publicId, dtdFile.toURI().toURL());
+        checkConfig.registerEntityId(publicId, dtdURL);
         checkConfig.setValidating(true);
         checkSavedConfig(checkConfig);
     }

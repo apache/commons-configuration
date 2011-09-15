@@ -438,19 +438,14 @@
   <build>
     <resources>
       <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
         <directory>.</directory>
         <targetPath>META-INF</targetPath>
           <includes>
             <include>NOTICE.txt</include>
             <include>LICENSE.txt</include>
-          </includes>
-        </resource>
-        <resource>
-          <directory>conf</directory>
-          <includes>
-            <include>digesterRules.xml</include>
-            <include>properties.dtd</include>
-            <include>PropertyList-1.0.dtd</include>
           </includes>
         </resource>
       </resources>
@@ -480,6 +475,12 @@
             <include>**/*.properties</include>
           </includes>
         </testResource>
+      <testResource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*.dtd</include>
+        </includes>
+      </testResource>
       </testResources>
       <plugins>
         <plugin>

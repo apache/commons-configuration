@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
@@ -34,7 +35,7 @@ import org.xml.sax.SAXException;
 public class TestConfigurationFactory extends TestCase
 {
     /** The Files that we test with */
-    private File digesterRules = new File("conf/digesterRules.xml");
+    private URL digesterRules = getClass().getResource("/digesterRules.xml");
     private File testDigesterFile =
             new File("conf/testDigesterConfiguration.xml");
     private File testDigesterFileReverseOrder =
@@ -105,7 +106,7 @@ public class TestConfigurationFactory extends TestCase
     public void testLoadingConfigurationWithRulesXML() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFile.toString());
-        factory.setDigesterRules(digesterRules.toURL());
+        factory.setDigesterRules(digesterRules);
 
         compositeConfiguration = (CompositeConfiguration) factory.getConfiguration();
 
@@ -142,7 +143,6 @@ public class TestConfigurationFactory extends TestCase
     public void testLoadingConfigurationNamespaceAware() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFileNamespaceAware.toString());
-        //factory.setDigesterRules(digesterRules.toURL());
         factory.setDigesterRuleNamespaceURI("namespace-one");
 
         checkCompositeConfiguration();
@@ -154,7 +154,6 @@ public class TestConfigurationFactory extends TestCase
 
         factory.setBasePath(testBasePath);
 
-        //factory.setDigesterRules(digesterRules.toURL());
         //factory.setDigesterRuleNamespaceURI("namespace-one");
 
         checkCompositeConfiguration();
