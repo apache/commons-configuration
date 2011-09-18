@@ -51,9 +51,9 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * The File that we test with
      */
-    private String testProperties = new File("conf/test.properties").getAbsolutePath();
-    private String testProperties2 = new File("conf/test2.properties").getAbsolutePath();
-    private String testPropertiesXML = new File("conf/test.xml").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
+    private String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
     protected void setUp() throws Exception
     {

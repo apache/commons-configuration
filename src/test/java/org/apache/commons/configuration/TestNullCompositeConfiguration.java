@@ -37,9 +37,9 @@ public class TestNullCompositeConfiguration extends TestCase
     protected CompositeConfiguration cc;
 
     /** The File that we test with */
-    private String testProperties = new File("conf/test.properties").getAbsolutePath();
-    private String testProperties2 = new File("conf/test2.properties").getAbsolutePath();
-    private String testPropertiesXML = new File("conf/test.xml").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
+    private String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
+    private String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
     protected void setUp() throws Exception
     {
@@ -78,7 +78,7 @@ public class TestNullCompositeConfiguration extends TestCase
         assertTrue(l.contains("packagea"));
 
     }
-    
+
     public void testGetProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -330,7 +330,7 @@ public class TestNullCompositeConfiguration extends TestCase
         cc.addProperty("array", "value5");
 
         List list = cc.getList("array");
-        
+
         for (Iterator it = list.iterator(); it.hasNext(); )
         {
             Object value = it.next();
@@ -356,8 +356,8 @@ public class TestNullCompositeConfiguration extends TestCase
         assertEquals(orderedList.size(),iteratedList.size());
         for (int i =0;i<orderedList.size();i++){
             assertEquals(orderedList.get(i),iteratedList.get(i));
-        }        
-    }    
+        }
+    }
 
     /**
       * Tests <code>getKeys(String key)</code> preserves the order
@@ -376,16 +376,16 @@ public class TestNullCompositeConfiguration extends TestCase
         assertEquals(orderedList.size(),iteratedList.size());
         for (int i =0;i<orderedList.size();i++){
             assertEquals(orderedList.get(i),iteratedList.get(i));
-        }        
-    }        
-    
+        }
+    }
+
     public void testGetStringWithDefaults()
     {
         BaseConfiguration defaults = new BaseConfiguration();
         defaults.addProperty("default", "default string");
 
         Configuration c = new CompositeConfiguration(defaults);
-        
+
         c.addProperty("string", "test string");
 
         assertEquals("test string", c.getString("string"));
@@ -404,7 +404,7 @@ public class TestNullCompositeConfiguration extends TestCase
             "some default value",
             c.getString("XXX", "some default value"));
     }
-    
+
     public void testCheckingInMemoryConfiguration() throws Exception
     {
         String TEST_KEY = "testKey";
@@ -427,5 +427,5 @@ public class TestNullCompositeConfiguration extends TestCase
         assertTrue(foundTestKey);
         testConfiguration.clearProperty(TEST_KEY);
         assertFalse(testConfiguration.containsKey(TEST_KEY));
-    }    
+    }
 }

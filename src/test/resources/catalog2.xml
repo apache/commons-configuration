@@ -22,5 +22,5 @@
   <rewriteSystem systemIdStartString="http://java.sun.com/dtd/"
                  rewritePrefix="./"/>
   <rewriteSystem systemIdStartString="http://commons.apache.org/"
-                 rewritePrefix="file://${sys:user.dir}/conf/"/>
+                 rewritePrefix="file://${sys:user.dir}/target/test-classes/"/>
 </catalog>

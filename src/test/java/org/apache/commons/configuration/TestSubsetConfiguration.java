@@ -25,19 +25,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.text.StrLookup;
-import junit.framework.TestCase;
 
 /**
  * Test case for the {@link SubsetConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestSubsetConfiguration extends TestCase
 {
-    static final String TEST_DIR = "conf";
+    static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
     public void testGetProperty()
@@ -294,7 +295,7 @@ public class TestSubsetConfiguration extends TestCase
                 .subset("prefix");
         InterpolationTestHelper.testGetInterpolator(subset);
     }
-    
+
     public void testLocalLookupsInInterpolatorAreInherited() {
         BaseConfiguration config = new BaseConfiguration();
         ConfigurationInterpolator interpolator = config.getInterpolator();
@@ -303,7 +304,7 @@ public class TestSubsetConfiguration extends TestCase
             public String lookup(String key) {
                 return "(" + key +")";
             }
-            
+
         });
         config.setProperty("prefix.var", "${brackets:x}");
         AbstractConfiguration subset = (AbstractConfiguration) config
@@ -311,7 +312,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("Local lookup was not inherited", "(x)", subset
                 .getString("var", ""));
     }
-    
+
     public void testInterpolationForKeysOfTheParent() {
         BaseConfiguration config = new BaseConfiguration();
         config.setProperty("test", "junit");

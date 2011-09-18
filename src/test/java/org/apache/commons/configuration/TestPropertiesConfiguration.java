@@ -62,11 +62,11 @@ public class TestPropertiesConfiguration extends TestCase
     private PropertiesConfiguration conf;
 
     /** The File that we test with */
-    private static String testProperties = new File("conf/test.properties").getAbsolutePath();
+    private static String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
-    private static String testBasePath = new File("conf").getAbsolutePath();
-    private static String testBasePath2 = new File("conf").getAbsoluteFile().getParentFile().getAbsolutePath();
-    private static File testSavePropertiesFile = new File("target/testsave.properties");
+    private static String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+    private static String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
+    private static File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
 
     protected void setUp() throws Exception
     {
@@ -92,7 +92,7 @@ public class TestPropertiesConfiguration extends TestCase
      */
     public void testAppend() throws Exception
     {
-        File file2 = new File("conf/threesome.properties");
+        File file2 = ConfigurationAssert.getTestFile("threesome.properties");
         conf.load(file2);
         assertEquals("aaa", conf.getString("test.threesome.one"));
         assertEquals("true", conf.getString("configuration.loaded"));
@@ -143,7 +143,7 @@ public class TestPropertiesConfiguration extends TestCase
 
         // load the configuration
         PropertiesConfiguration conf = new PropertiesConfiguration();
-        conf.load("conf/test.properties");
+        conf.load(ConfigurationAssert.getTestFile("test.properties"));
 
         // restore the previous value for the other tests
         PropertiesConfiguration.setInclude("include");
@@ -309,14 +309,14 @@ public class TestPropertiesConfiguration extends TestCase
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
         pc.setBasePath(testBasePath2);
-        pc.setFileName("conf/test.properties");
+        pc.setFileName("test.properties");
         pc.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
 
         pc = new PropertiesConfiguration();
         pc.setBasePath(testBasePath2);
-        pc.setFileName("conf/test.properties");
+        pc.setFileName("test.properties");
         pc.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
@@ -324,7 +324,7 @@ public class TestPropertiesConfiguration extends TestCase
 
     public void testLoadFromFile() throws Exception
     {
-        File file = new File("conf/test.properties");
+        File file = ConfigurationAssert.getTestFile("test.properties");
         conf = new PropertiesConfiguration(file);
 
         assertEquals("true", conf.getString("configuration.loaded"));

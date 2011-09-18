@@ -29,6 +29,7 @@ import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
 
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.FileConfiguration;
@@ -37,7 +38,7 @@ import org.apache.commons.configuration.StrictConfigurationComparator;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestXMLPropertyListConfiguration extends TestCase
 {
@@ -46,7 +47,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
     protected void setUp() throws Exception
     {
         config = new XMLPropertyListConfiguration();
-        config.setFileName("conf/test.plist.xml");
+        config.setFile(ConfigurationAssert.getTestFile("test.plist.xml"));
         config.load();
     }
 
@@ -350,7 +351,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
     public void testLoadNoDict() throws ConfigurationException
     {
         XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
-        plist.setFileName("conf/test2.plist.xml");
+        plist.setFile(ConfigurationAssert.getTestFile("test2.plist.xml"));
         plist.load();
         assertFalse("Configuration is empty", plist.isEmpty());
     }
@@ -363,7 +364,7 @@ public class TestXMLPropertyListConfiguration extends TestCase
     public void testLoadNoDictConstr() throws ConfigurationException
     {
         XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration(
-                "conf/test2.plist.xml");
+                ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
 }

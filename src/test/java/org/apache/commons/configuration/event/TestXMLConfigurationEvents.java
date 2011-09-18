@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
 
 /**
@@ -31,11 +32,11 @@ import org.apache.commons.configuration.XMLConfiguration;
 public class TestXMLConfigurationEvents extends
         AbstractTestFileConfigurationEvents
 {
-    static final File TEST_FILE = new File("conf/test.xml");
+    static final File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
     protected URL getSourceURL() throws IOException
     {
-        return TEST_FILE.toURL();
+        return TEST_FILE.toURI().toURL();
     }
 
     protected AbstractConfiguration createConfiguration()

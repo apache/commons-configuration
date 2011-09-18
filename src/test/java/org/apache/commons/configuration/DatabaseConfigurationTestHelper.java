@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.sql.Connection;
 
@@ -112,7 +113,8 @@ public class DatabaseConfigurationTestHelper
      */
     public void setUp() throws Exception
     {
-        hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, "conf/testdb.script");
+        File script = ConfigurationAssert.getTestFile("testdb.script");
+        hsqlDB = new HsqlDB(DATABASE_URL, DATABASE_DRIVER, script.getAbsolutePath());
     }
 
     /**
@@ -208,7 +210,7 @@ public class DatabaseConfigurationTestHelper
         Connection conn = ds.getConnection();
         IDatabaseConnection connection = new DatabaseConnection(conn);
         IDataSet dataSet = new XmlDataSet(new FileInputStream(
-                "conf/dataset.xml"));
+                ConfigurationAssert.getTestFile("dataset.xml")));
 
         try
         {

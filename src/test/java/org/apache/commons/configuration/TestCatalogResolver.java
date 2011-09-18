@@ -18,19 +18,22 @@
 package org.apache.commons.configuration;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * Test class for CatalogResolver.
  *
+ * @version $Id:$
  */
 public class TestCatalogResolver extends TestCase
 {
-    private static final String CATALOG_FILES = "conf/catalog.xml";
-    private static final String PUBLIC_FILE = "conf/testResolver.xml";
-    private static final String REWRITE_SYSTEM_FILE = "conf/test.properties.xml";
-    private static final String REWRITE_SCHEMA_FILE = "conf/sample.xml";
+    private static final String CATALOG_FILES = "catalog.xml";
+    private static final String PUBLIC_FILE = "testResolver.xml";
+    private static final String REWRITE_SYSTEM_FILE = "test.properties.xml";
+    private static final String REWRITE_SCHEMA_FILE = "sample.xml";
 
     private CatalogResolver resolver;
     private XMLConfiguration config;

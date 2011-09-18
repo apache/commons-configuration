@@ -22,12 +22,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
+import junit.framework.TestCase;
+
 import org.apache.commons.jxpath.JXPathContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
-
-import junit.framework.TestCase;
 
 /**
  * Test class for HierarchicalConfigurationXMLReader.
@@ -36,7 +36,8 @@ import junit.framework.TestCase;
  */
 public class TestHierarchicalConfigurationXMLReader extends TestCase
 {
-    private static final String TEST_FILE = "conf/testHierarchicalXMLConfiguration.xml";
+    private static final String TEST_FILE = ConfigurationAssert.getTestFile(
+            "testHierarchicalXMLConfiguration.xml").getAbsolutePath();
 
     private HierarchicalConfigurationXMLReader parser;
 

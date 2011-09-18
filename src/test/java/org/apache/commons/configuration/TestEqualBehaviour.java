@@ -17,7 +17,6 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,22 +25,22 @@ import junit.framework.TestCase;
 /**
  * Compare the behaviour of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
- * 
+ *
  * @version $Id$
  */
-public class TestEqualBehaviour  extends TestCase
+public class TestEqualBehaviour extends TestCase
 {
     private Configuration setupSimpleConfiguration()
             throws Exception
     {
-        String simpleConfigurationFile = new File("conf/testEqual.properties").getAbsolutePath();
+        String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
         return new PropertiesConfiguration(simpleConfigurationFile);
     }
 
     private Configuration setupCompositeConfiguration()
             throws Exception
     {
-        String compositeConfigurationFile = new File("conf/testEqualDigester.xml").getAbsolutePath();
+        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testEqualDigester.xml").getAbsolutePath();
 
         ConfigurationFactory configurationFactory = new ConfigurationFactory();
         configurationFactory.setConfigurationFileName(compositeConfigurationFile);
@@ -49,7 +48,7 @@ public class TestEqualBehaviour  extends TestCase
     }
 
     /**
-     * Checks whether two configurations have the same size, 
+     * Checks whether two configurations have the same size,
      * the same key sequence and contain the same key -> value mappings
      */
     private void checkEquality(String msg, Configuration c1, Configuration c2)

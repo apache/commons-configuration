@@ -36,7 +36,7 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 
 /**
- * Test class for DefaultConfigurationBuilder.
+ * Test class for VFSConfigurationBuilder.
  *
  * @author Oliver Heger
  * @version $Id$
@@ -44,59 +44,59 @@ import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 public class TestVFSConfigurationBuilder extends TestCase
 {
     /** Test configuration definition file. */
-    private static final File TEST_FILE = new File(
-            "conf/testDigesterConfiguration.xml");
+    private static final File TEST_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration.xml");
 
-    private static final File ADDITIONAL_FILE = new File(
-            "conf/testDigesterConfiguration2.xml");
+    private static final File ADDITIONAL_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration2.xml");
 
-    private static final File OPTIONAL_FILE = new File(
-            "conf/testDigesterOptionalConfiguration.xml");
+    private static final File OPTIONAL_FILE = ConfigurationAssert
+            .getTestFile("testDigesterOptionalConfiguration.xml");
 
-    private static final File OPTIONALEX_FILE = new File(
-            "conf/testDigesterOptionalConfigurationEx.xml");
+    private static final File OPTIONALEX_FILE = ConfigurationAssert
+            .getTestFile("testDigesterOptionalConfigurationEx.xml");
 
-    private static final File MULTI_FILE = new File(
-            "conf/testDigesterConfiguration3.xml");
+    private static final File MULTI_FILE = ConfigurationAssert
+            .getTestFile("testDigesterConfiguration3.xml");
 
-    private static final File INIT_FILE = new File(
-            "conf/testComplexInitialization.xml");
+    private static final File INIT_FILE = ConfigurationAssert
+            .getTestFile("testComplexInitialization.xml");
 
-    private static final File CLASS_FILE = new File(
-            "conf/testExtendedClass.xml");
+    private static final File CLASS_FILE = ConfigurationAssert
+            .getTestFile("testExtendedClass.xml");
 
-    private static final File PROVIDER_FILE = new File(
-            "conf/testConfigurationProvider.xml");
+    private static final File PROVIDER_FILE = ConfigurationAssert
+            .getTestFile("testConfigurationProvider.xml");
 
-    private static final File EXTENDED_PROVIDER_FILE = new File(
-            "conf/testExtendedXMLConfigurationProvider.xml");
+    private static final File EXTENDED_PROVIDER_FILE = ConfigurationAssert
+            .getTestFile("testExtendedXMLConfigurationProvider.xml");
 
-    private static final File GLOBAL_LOOKUP_FILE = new File(
-            "conf/testGlobalLookup.xml");
+    private static final File GLOBAL_LOOKUP_FILE = ConfigurationAssert
+            .getTestFile("testGlobalLookup.xml");
 
-    private static final File SYSTEM_PROPS_FILE = new File(
-            "conf/testSystemProperties.xml");
+    private static final File SYSTEM_PROPS_FILE = ConfigurationAssert
+            .getTestFile("testSystemProperties.xml");
 
-    private static final File VALIDATION_FILE = new File(
-            "conf/testValidation.xml");
+    private static final File VALIDATION_FILE = ConfigurationAssert
+            .getTestFile("testValidation.xml");
 
-    private static final File VALIDATION2_FILE = new File(
-            "conf/testValidation2.xml");
+    private static final File VALIDATION2_FILE = ConfigurationAssert
+            .getTestFile("testValidation2.xml");
 
-    private static final File MULTI_TENENT_FILE = new File(
-            "conf/testMultiTenentConfigurationBuilder.xml");
+    private static final File MULTI_TENENT_FILE = ConfigurationAssert
+            .getTestFile("testMultiTenentConfigurationBuilder.xml");
 
-    private static final File FILESYSTEM_FILE = new File(
-            "conf/testFileSystem.xml");
+    private static final File FILESYSTEM_FILE = ConfigurationAssert
+            .getTestFile("testFileSystem.xml");
 
-    private static final File FILERELOAD_FILE = new File(
-            "target/test-classes/testFileReloadConfigurationBuilder.xml");
+    private static final File FILERELOAD_FILE = ConfigurationAssert
+            .getTestFile("testFileReloadConfigurationBuilder.xml");
 
-      private static final File MULTI_RELOAD_FILE1 = new File(
-            "target/test-classes/testVFSMultiTenentConfigurationBuilder1.xml");
+    private static final File MULTI_RELOAD_FILE1 = ConfigurationAssert
+            .getTestFile("testVFSMultiTenentConfigurationBuilder1.xml");
 
-    private static final File MULTI_RELOAD_FILE2 = new File(
-            "target/test-classes/testVFSMultiTenentConfigurationBuilder2.xml");
+    private static final File MULTI_RELOAD_FILE2 = ConfigurationAssert
+            .getTestFile("testVFSMultiTenentConfigurationBuilder2.xml");
 
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
@@ -640,7 +640,7 @@ public class TestVFSConfigurationBuilder extends TestCase
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
         factory.addProperty("properties[@fileName]", "test.properties");
-        File deepDir = new File("conf/config/deep");
+        File deepDir = new File(ConfigurationAssert.TEST_DIR, "config/deep");
         factory.setConfigurationBasePath(deepDir.getAbsolutePath());
 
         Configuration config = factory.getConfiguration(false);

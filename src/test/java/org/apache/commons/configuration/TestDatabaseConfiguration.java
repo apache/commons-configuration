@@ -33,7 +33,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
  * Test in Eclipse it sometimes takes a couple tries. Otherwise you may get
  * database is already in use by another process errors.
  *
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestDatabaseConfiguration extends TestCase
 {

@@ -16,18 +16,19 @@
  */
 package org.apache.commons.configuration.interpol;
 
-import junit.framework.TestCase;
-
 import java.io.File;
 
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.Logger;
-import org.apache.log4j.Level;
 import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.SimpleLayout;
 
 /**
  * Test class for ExprLookup.
@@ -36,7 +37,7 @@ import org.apache.log4j.ConsoleAppender;
  */
 public class TestExprLookup extends TestCase
 {
-    private static File TEST_FILE = new File("conf/test.xml");
+    private static File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
     private static String PATTERN1 =
         "String.replace(Util.message, 'Hello', 'Goodbye') + System.getProperty('user.name')";

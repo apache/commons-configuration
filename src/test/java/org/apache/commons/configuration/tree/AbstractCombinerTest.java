@@ -18,11 +18,12 @@ package org.apache.commons.configuration.tree;
 
 import java.io.File;
 
+import junit.framework.TestCase;
+
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
-
-import junit.framework.TestCase;
 
 /**
  * A base class for testing combiner implementations. This base class provides
@@ -35,10 +36,10 @@ import junit.framework.TestCase;
 public abstract class AbstractCombinerTest extends TestCase
 {
     /** Constant for the first test configuration. */
-    static File CONF1 = new File("conf/testcombine1.xml");
+    static File CONF1 = ConfigurationAssert.getTestFile("testcombine1.xml");
 
     /** Constant for the second test configuration. */
-    static File CONF2 = new File("conf/testcombine2.xml");
+    static File CONF2 = ConfigurationAssert.getTestFile("testcombine2.xml");
 
     /** The combiner to be tested. */
     protected NodeCombiner combiner;

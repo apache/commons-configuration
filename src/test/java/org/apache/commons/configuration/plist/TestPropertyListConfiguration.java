@@ -20,29 +20,31 @@ package org.apache.commons.configuration.plist;
 import java.io.File;
 import java.io.StringReader;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Date;
 import java.util.TimeZone;
 
 import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
+
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.StrictConfigurationComparator;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestPropertyListConfiguration extends TestCase
 {
     private PropertyListConfiguration config;
 
-    private String testProperties = new File("conf/test.plist").getAbsolutePath();
+    private String testProperties = ConfigurationAssert.getTestFile("test.plist").getAbsolutePath();
 
     protected void setUp() throws Exception
     {

@@ -17,11 +17,11 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
-
 import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
+
+import junit.framework.TestCase;
 
 /**
  * Test class for XMLConfiguration. In addition to TestXMLConfiguration this
@@ -45,19 +45,19 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     private static final String TEST_FILENAME2 = "testHierarchicalXMLConfiguration2.xml";
 
     /** Test file path #1 **/
-    private static final String TEST_FILE = TEST_DIR + File.separator + TEST_FILENAME;
+    private static final String TEST_FILE = ConfigurationAssert.getTestFile(TEST_FILENAME).getAbsolutePath();
 
     /** Test file path #2 **/
-    private static final String TEST_FILE2 = TEST_DIR + File.separator + TEST_FILENAME2;
+    private static final String TEST_FILE2 = ConfigurationAssert.getTestFile(TEST_FILENAME2).getAbsolutePath();
 
     /** Test file path #3.*/
-    private static final String TEST_FILE3 = TEST_DIR + File.separator + "test.xml";
+    private static final String TEST_FILE3 = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
     /** File name for saving.*/
     private static final String TEST_SAVENAME = "testhierarchicalsave.xml";
 
     /** File path for saving.*/
-    private static final String TEST_SAVE = "target" + File.separator + TEST_SAVENAME;
+    private static final String TEST_SAVE = ConfigurationAssert.getOutFile(TEST_SAVENAME).getAbsolutePath();
 
     /** Instance config used for tests. */
     private XMLConfiguration config;
@@ -279,7 +279,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
             removeTestSaveFile();
         }
     }
-    
+
     /**
      * Tests manipulation of the root element's name.
      *
@@ -289,7 +289,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
         assertEquals("configuration", config.getRootElementName());
         config.setRootElementName("newRootName");
         assertEquals("newRootName", config.getRootElementName());
-        
+
         config.setFile(new File(TEST_FILE3));
         config.load();
         assertEquals("testconfig", config.getRootElementName());
@@ -305,7 +305,7 @@ public class TestHierarchicalXMLConfiguration extends TestCase
     }
 
     /**
-     * Helper method that ensures that the test save file has been removed. 
+     * Helper method that ensures that the test save file has been removed.
      *
      */
     private void removeTestSaveFile()
