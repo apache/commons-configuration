@@ -25,14 +25,13 @@
   <property name="component.final.name" value="commons-configuration-1.8-SNAPSHOT"/>
   <property name="build.dir" value="target"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
-  <property name="src.java.dir" value="src/java"/>
-  <property name="build.resource.dir" value="conf"/>
+  <property name="src.java.dir" value="src/main/java"/>
+  <property name="build.resource.dir" value="src/main/resources"/>
   <property name="build.test-classes.dir" value="${build.dir}/test-classes"/>
-  <property name="src.test.dir" value="src/test"/>
-  <property name="test.resource.dir" value="conf"/>
-  <property name="test.resource.dir" value="conf"/>
+  <property name="src.test.dir" value="src/test/java"/>
+  <property name="test.resource.dir" value="src/test/resources"/>
   <property name="maven.repo.local" value="${user.home}/.m2/repository"/>
-	
+
   <!-- Check to see if maven.repo.local exists -->
   <target name="repo.check">
     <condition property="repo.exists">
@@ -179,11 +178,11 @@
     </javac>
     <copy todir="${build.test-classes.dir}">
       <fileset dir="${test.resource.dir}">
-        <include name="*.xml"/>
-        <include name="testdb.script"/>
-        <include name="*.properties"/>
+      </fileset>
+    </copy>
+    <copy todir="${build.test-classes.dir}">
+      <fileset dir="${build.resource.dir}">
         <include name="*.dtd"/>
-        <include name="*.xsd"/>
       </fileset>
     </copy>
     <mkdir dir="${build.test-classes.dir}/org/apache/commons/configuration"/>
