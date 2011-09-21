@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.apache.commons</groupId>
     <artifactId>commons-parent</artifactId>
-    <version>21</version>
+    <version>22</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>commons-configuration</groupId>
@@ -436,19 +436,6 @@
   </properties>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>.</directory>
-        <targetPath>META-INF</targetPath>
-          <includes>
-            <include>NOTICE.txt</include>
-            <include>LICENSE.txt</include>
-          </includes>
-        </resource>
-      </resources>
       <testResources>
         <testResource>
           <directory>src/test/resources</directory>
@@ -457,6 +444,15 @@
           <directory>src/main/resources</directory>
           <includes>
             <include>*.dtd</include>
+          </includes>
+        </testResource>
+        <!-- hack to ensure the N&L appear in jars -->
+        <testResource>
+          <directory>${basedir}</directory>
+          <targetPath>META-INF</targetPath>
+          <includes>
+            <include>NOTICE.txt</include>
+            <include>LICENSE.txt</include>
           </includes>
         </testResource>
       </testResources>
@@ -641,8 +637,8 @@
         </configuration>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rat-maven-plugin</artifactId>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
             <exclude>conf/**/*</exclude>
