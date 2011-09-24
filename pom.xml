@@ -632,7 +632,6 @@
         <artifactId>apache-rat-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>conf/**/*</exclude>
             <exclude>src/java/org/apache/commons/configuration/plist/*.java</exclude>
             <exclude>velocity.log</exclude>
           </excludes>
