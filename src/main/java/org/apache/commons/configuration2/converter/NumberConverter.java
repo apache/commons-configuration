@@ -38,6 +38,12 @@ abstract class NumberConverter<T extends Number> implements TypeConverter<T>
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
+    /** Constant for the prefix of binary numbers.*/
+    private static final String BIN_PREFIX = "0b";
+
+    /** Constant for the radix of binary numbers.*/
+    private static final int BIN_RADIX = 2;
+
     /**
      * Tries to convert the specified object into a number object. This method
      * is used by the conversion methods for number types. Note that the return
@@ -72,7 +78,21 @@ abstract class NumberConverter<T extends Number> implements TypeConverter<T>
                             + "! Invalid hex number.", nex);
                 }
             }
-
+            
+            if (str.startsWith(BIN_PREFIX))
+            {
+                try
+                {
+                    return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
+                }
+                catch (NumberFormatException nex)
+                {
+                    throw new ConversionException("Could not convert " + str
+                            + " to " + targetClass.getName()
+                            + "! Invalid binary number.", nex);
+                }
+            }
+            
             try
             {
                 Constructor<? extends Number> constr = targetClass.getConstructor(String.class);
