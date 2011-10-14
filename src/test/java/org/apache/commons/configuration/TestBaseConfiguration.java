@@ -688,6 +688,23 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue());
     }
 
+    public void testGetBinaryValue()
+    {
+        config.setProperty("number", "0b11111111");
+        assertEquals("byte value", (byte) 0xFF, config.getByte("number"));
+
+        config.setProperty("number", "0b1111111111111111");
+        assertEquals("short value", (short) 0xFFFF, config.getShort("number"));
+
+        config.setProperty("number", "0b11111111111111111111111111111111");
+        assertEquals("int value", 0xFFFFFFFF, config.getInt("number"));
+
+        config.setProperty("number", "0b1111111111111111111111111111111111111111111111111111111111111111");
+        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getLong("number"));
+
+        assertEquals("long value", 0xFFFFFFFFFFFFFFFFL, config.getBigInteger("number").longValue());
+    }
+
     public void testResolveContainerStore()
     {
         AbstractConfiguration config = new BaseConfiguration();

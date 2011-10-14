@@ -27,6 +27,9 @@
   <body>
     <release version="1.8" date="in SVN"
       description="TBD">
+      <action dev="ebourg" type="add" issue="CONFIGURATION-466">
+        Binary literals are now supported (i.e Ob11010001).
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-461">
         The project now uses standard Maven directory layout.
       </action>

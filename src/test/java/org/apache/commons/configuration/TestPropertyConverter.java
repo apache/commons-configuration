@@ -241,8 +241,8 @@ public class TestPropertyConverter extends TestCase
     }
 
     /**
-     * Tests conversion to numbers when an invalid Hex value is passed in. This
-     * should cause an exception.
+     * Tests conversion to numbers when an invalid Hex value is passed in.
+     * This should cause an exception.
      */
     public void testToNumberFromInvalidHexString()
     {
@@ -250,6 +250,33 @@ public class TestPropertyConverter extends TestCase
         {
             PropertyConverter.toNumber("0xNotAHexValue", Integer.class);
             fail("Could convert invalid hex value!");
+        }
+        catch (ConversionException cex)
+        {
+            // ok
+        }
+    }
+
+    /**
+     * Tests conversion to numbers when the passed in objects are strings with
+     * prefixes for special radices.
+     */
+    public void testToNumberFromBinaryString()
+    {
+        Number n = PropertyConverter.toNumber("0b1111", Integer.class);
+        assertEquals("Incorrect Integer value", 15, n.intValue());
+    }
+
+    /**
+     * Tests conversion to numbers when an invalid binary value is passed in.
+     * This should cause an exception.
+     */
+    public void testToNumberFromInvalidBinaryString()
+    {
+        try
+        {
+            PropertyConverter.toNumber("0bNotABinValue", Integer.class);
+            fail("Could convert invalid binary value!");
         }
         catch (ConversionException cex)
         {

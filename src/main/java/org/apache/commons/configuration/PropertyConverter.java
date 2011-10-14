@@ -66,6 +66,12 @@ public final class PropertyConverter
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
 
+    /** Constant for the prefix of binary numbers.*/
+    private static final String BIN_PREFIX = "0b";
+
+    /** Constant for the radix of binary numbers.*/
+    private static final int BIN_RADIX = 2;
+
     /** Constant for the Java version 1.5.*/
     private static final float JAVA_VERSION_1_5 = 1.5f;
 
@@ -402,7 +408,21 @@ public final class PropertyConverter
                             + "! Invalid hex number.", nex);
                 }
             }
-
+            
+            if (str.startsWith(BIN_PREFIX))
+            {
+                try
+                {
+                    return new BigInteger(str.substring(BIN_PREFIX.length()), BIN_RADIX);
+                }
+                catch (NumberFormatException nex)
+                {
+                    throw new ConversionException("Could not convert " + str
+                            + " to " + targetClass.getName()
+                            + "! Invalid binary number.", nex);
+                }
+            }
+            
             try
             {
                 Constructor constr = targetClass.getConstructor(CONSTR_ARGS);
