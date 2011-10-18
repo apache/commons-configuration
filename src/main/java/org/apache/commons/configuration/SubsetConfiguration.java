@@ -19,8 +19,6 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.iterators.TransformIterator;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 
 /**
@@ -182,24 +180,12 @@ public class SubsetConfiguration extends AbstractConfiguration
 
     public Iterator getKeys(String prefix)
     {
-        return new TransformIterator(parent.getKeys(getParentKey(prefix)), new Transformer()
-        {
-            public Object transform(Object obj)
-            {
-                return getChildKey((String) obj);
-            }
-        });
+        return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
     }
 
     public Iterator getKeys()
     {
-        return new TransformIterator(parent.getKeys(prefix), new Transformer()
-        {
-            public Object transform(Object obj)
-            {
-                return getChildKey((String) obj);
-            }
-        });
+        return new SubsetIterator(parent.getKeys(prefix));
     }
 
     protected Object interpolate(Object base)
@@ -327,6 +313,62 @@ public class SubsetConfiguration extends AbstractConfiguration
         else
         {
             super.setDelimiterParsingDisabled(delimiterParsingDisabled);
+        }
+    }
+    
+
+    /**
+     * A specialized iterator to be returned by the <code>getKeys()</code>
+     * methods. This implementation wraps an iterator from the parent
+     * configuration. The keys returned by this iterator are correspondingly
+     * transformed.
+     */
+    private class SubsetIterator implements Iterator
+    {
+        /** Stores the wrapped iterator. */
+        private final Iterator parentIterator;
+
+        /**
+         * Creates a new instance of <code>SubsetIterator</code> and
+         * initializes it with the parent iterator.
+         *
+         * @param it the iterator of the parent configuration
+         */
+        public SubsetIterator(Iterator it)
+        {
+            parentIterator = it;
+        }
+
+        /**
+         * Checks whether there are more elements. Delegates to the parent
+         * iterator.
+         *
+         * @return a flag whether there are more elements
+         */
+        public boolean hasNext()
+        {
+            return parentIterator.hasNext();
+        }
+
+        /**
+         * Returns the next element in the iteration. This is the next key from
+         * the parent configuration, transformed to correspond to the point of
+         * view of this subset configuration.
+         *
+         * @return the next element
+         */
+        public Object next()
+        {
+            return getChildKey((String) parentIterator.next());
+        }
+
+        /**
+         * Removes the current element from the iteration. Delegates to the
+         * parent iterator.
+         */
+        public void remove()
+        {
+            parentIterator.remove();
         }
     }
 }
