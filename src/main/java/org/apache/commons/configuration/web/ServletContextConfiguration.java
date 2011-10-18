@@ -17,11 +17,10 @@
 
 package org.apache.commons.configuration.web;
 
+import java.util.Collections;
 import java.util.Iterator;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
-
-import org.apache.commons.collections.iterators.EnumerationIterator;
 
 /**
  * A configuration wrapper to read the initialization parameters of a servlet
@@ -66,6 +65,6 @@ public class ServletContextConfiguration extends BaseWebConfiguration
 
     public Iterator getKeys()
     {
-        return new EnumerationIterator(context.getInitParameterNames());
+        return Collections.list(context.getInitParameterNames()).iterator();
     }
 }

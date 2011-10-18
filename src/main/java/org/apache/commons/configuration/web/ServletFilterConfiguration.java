@@ -17,10 +17,9 @@
 
 package org.apache.commons.configuration.web;
 
+import java.util.Collections;
 import java.util.Iterator;
 import javax.servlet.FilterConfig;
-
-import org.apache.commons.collections.iterators.EnumerationIterator;
 
 /**
  * A configuration wrapper around a {@link FilterConfig}. This configuration is
@@ -53,6 +52,6 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
 
     public Iterator getKeys()
     {
-        return new EnumerationIterator(config.getInitParameterNames());
+        return Collections.list(config.getInitParameterNames()).iterator();
     }
 }

@@ -22,6 +22,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
@@ -31,8 +32,6 @@ import java.util.StringTokenizer;
 import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 import junitx.framework.ObjectAssert;
-
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 
@@ -723,7 +722,7 @@ public class TestBaseConfiguration extends TestCase
         assertEquals("first element of the 'list' property", "foo", config.resolveContainerStore("list"));
 
         // set of objects
-        Set set = new ListOrderedSet();
+        Set set = new LinkedHashSet();
         set.add("foo");
         set.add("bar");
         config.addPropertyDirect("set", set);

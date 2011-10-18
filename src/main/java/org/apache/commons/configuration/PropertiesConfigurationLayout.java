@@ -20,11 +20,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.map.LinkedMap;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.lang.StringUtils;
@@ -172,7 +172,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     "Configuration must not be null!");
         }
         configuration = config;
-        layoutData = new LinkedMap();
+        layoutData = new LinkedHashMap();
         config.addConfigurationListener(this);
 
         if (c != null)

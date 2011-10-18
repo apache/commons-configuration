@@ -349,7 +349,7 @@ public class JNDIConfiguration extends AbstractConfiguration
         {
             return false;
         }
-        key = StringUtils.replace(key, ".", "/");
+        key = key.replaceAll("\\.", "/");
         try
         {
             // throws a NamingException if JNDI doesn't contain the key.
@@ -405,7 +405,7 @@ public class JNDIConfiguration extends AbstractConfiguration
 
         try
         {
-            key = StringUtils.replace(key, ".", "/");
+            key = key.replaceAll("\\.", "/");
             return getBaseContext().lookup(key);
         }
         catch (NameNotFoundException e)

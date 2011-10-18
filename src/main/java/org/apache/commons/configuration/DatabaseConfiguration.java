@@ -26,10 +26,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.sql.DataSource;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -246,7 +244,10 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 else
                 {
                     // Split value if it containts the list delimiter
-                    CollectionUtils.addAll(results, PropertyConverter.toIterator(value, getListDelimiter()));
+                    Iterator it = PropertyConverter.toIterator(value, getListDelimiter());
+                    while (it.hasNext()) {
+                        results.add(it.next());
+                    }
                 }
             }
 

@@ -29,8 +29,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * <p>
  * An initialization or ini file is a configuration file typically found on
@@ -428,7 +426,7 @@ public class INIConfiguration extends AbstractFileConfiguration
 
         if (quoted)
         {
-            return '"' + StringUtils.replace(value, "\"", "\\\"") + '"';
+            return '"' + value.replaceAll("\"", "\\\\\\\"") + '"';
         }
         else
         {

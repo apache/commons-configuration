@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * JavaCC based parser for the PropertyList format.
@@ -39,7 +39,7 @@ class PropertyListParser implements PropertyListParserConstants {
 
     protected String unescapeQuotes(String s)
     {
-        return StringUtils.replace(s, "\\\"", "\"");
+        return s.replaceAll("\\\\\"", "\"");
     }
 
     /**
@@ -60,7 +60,7 @@ class PropertyListParser implements PropertyListParserConstants {
         }
 
         // remove the white spaces
-        s = StringUtils.replaceChars(s, " \t\n\r", "");
+        s = s.replaceAll("\\s", "");
 
         // add a leading 0 to ensure well formed bytes
         if (s.length() % 2 != 0)

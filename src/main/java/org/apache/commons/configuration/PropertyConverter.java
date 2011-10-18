@@ -33,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +41,6 @@ import java.util.Locale;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.iterators.IteratorChain;
-import org.apache.commons.collections.iterators.SingletonIterator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -939,7 +939,7 @@ public final class PropertyConverter
     {
         if (value == null)
         {
-            return IteratorUtils.emptyIterator();
+            return Collections.EMPTY_SET.iterator();
         }
         if (value instanceof String)
         {
@@ -950,7 +950,7 @@ public final class PropertyConverter
             }
             else
             {
-                return new SingletonIterator(value);
+                return Collections.singleton(value).iterator();
             }
         }
         else if (value instanceof Collection)
@@ -973,7 +973,7 @@ public final class PropertyConverter
         }
         else
         {
-            return new SingletonIterator(value);
+            return Collections.singleton(value).iterator();
         }
     }
 

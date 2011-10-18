@@ -24,8 +24,6 @@ import java.util.List;
 
 import javax.servlet.ServletRequest;
 
-import org.apache.commons.collections.iterators.EnumerationIterator;
-
 /**
  * A configuration wrapper to read the parameters of a servlet request. This
  * configuration is read only, adding or removing a property will throw an
@@ -84,6 +82,6 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
 
     public Iterator getKeys()
     {
-        return new EnumerationIterator(request.getParameterNames());
+        return request.getParameterMap().keySet().iterator();
     }
 }

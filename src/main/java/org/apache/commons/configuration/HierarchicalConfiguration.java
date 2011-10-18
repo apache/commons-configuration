@@ -20,14 +20,14 @@ package org.apache.commons.configuration;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
-import org.apache.commons.collections.iterators.SingletonIterator;
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -747,7 +747,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
         else
         {
-            itValues = new SingletonIterator(value);
+            itValues = Collections.singleton(value).iterator();
         }
 
         while (itNodes.hasNext() && itValues.hasNext())
@@ -1521,7 +1521,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          */
         public DefinedKeysVisitor()
         {
-            keyList = new ListOrderedSet();
+            keyList = new LinkedHashSet();
             parentKeys = new Stack();
         }
 

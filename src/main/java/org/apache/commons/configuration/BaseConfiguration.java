@@ -20,10 +20,9 @@ package org.apache.commons.configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.collections.map.LinkedMap;
 
 /**
  * Basic configuration class. Stores the configuration data but does not
@@ -52,7 +51,7 @@ import org.apache.commons.collections.map.LinkedMap;
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
-    private Map store = new LinkedMap();
+    private Map store = new LinkedHashMap();
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.

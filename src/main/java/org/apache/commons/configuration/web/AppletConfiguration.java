@@ -18,9 +18,8 @@
 package org.apache.commons.configuration.web;
 
 import java.applet.Applet;
+import java.util.Arrays;
 import java.util.Iterator;
-
-import org.apache.commons.collections.iterators.ArrayIterator;
 
 /**
  * A configuration wrapper to read applet parameters. This configuration is
@@ -61,6 +60,6 @@ public class AppletConfiguration extends BaseWebConfiguration
             keys[i] = paramsInfo[i][0];
         }
 
-        return new ArrayIterator(keys);
+        return Arrays.asList(keys).iterator();
     }
 }

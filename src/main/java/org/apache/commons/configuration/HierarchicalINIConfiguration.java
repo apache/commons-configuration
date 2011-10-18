@@ -25,13 +25,12 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.collections.set.ListOrderedSet;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ViewNode;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
@@ -665,7 +664,7 @@ public class HierarchicalINIConfiguration extends
 
         if (quoted)
         {
-            return '"' + StringUtils.replace(value, "\"", "\\\"") + '"';
+            return '"' + value.replaceAll("\"", "\\\\\\\"") + '"';
         }
         else
         {
@@ -713,7 +712,7 @@ public class HierarchicalINIConfiguration extends
      */
     public Set getSections()
     {
-        Set sections = new ListOrderedSet();
+        Set sections = new LinkedHashSet();
         boolean globalSection = false;
         boolean inSection = false;
 

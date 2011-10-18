@@ -413,7 +413,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
                 || s.indexOf(',') != -1
                 || s.indexOf(';') != -1)
         {
-            s = StringUtils.replace(s, "\"", "\\\"");
+            s = s.replaceAll("\"", "\\\\\\\"");
             s = "\"" + s + "\"";
         }
 

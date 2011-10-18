@@ -17,18 +17,17 @@
 
 package org.apache.commons.configuration.web;
 
-import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import javax.servlet.ServletRequest;
 
 import com.mockobjects.servlet.MockHttpServletRequest;
-import org.apache.commons.collections.iterators.IteratorEnumeration;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.TestAbstractConfiguration;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
@@ -62,9 +61,9 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
                 return null;
             }
 
-            public Enumeration getParameterNames()
+            public Map getParameterMap()
             {
-                return new IteratorEnumeration(configuration.getKeys());
+                return new HashMap();
             }
         };
 
@@ -78,8 +77,7 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      * @param base the configuration with the underlying values
      * @return the servlet request configuration
      */
-    private ServletRequestConfiguration createConfiguration(
-            final Configuration base)
+    private ServletRequestConfiguration createConfiguration(final Configuration base)
     {
         ServletRequest request = new MockHttpServletRequest()
         {
@@ -88,9 +86,9 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
                 return base.getStringArray(key);
             }
 
-            public Enumeration getParameterNames()
+            public Map getParameterMap()
             {
-                return new IteratorEnumeration(base.getKeys());
+                return new ConfigurationMap(base);
             }
         };
 
@@ -128,22 +126,23 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
      */
     public void testListWithEscapedElements()
     {
-        String[] values =
-        { "test1", "test2\\,test3", "test4\\,test5" };
-        final String listKey = "test.list";
+        String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
+        String listKey = "test.list";
+        
         BaseConfiguration config = new BaseConfiguration();
         config.setListDelimiter('\0');
         config.addProperty(listKey, values);
-        assertEquals("Wrong number of list elements", values.length, config
-                .getList(listKey).size());
+        
+        assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
+        
         Configuration c = createConfiguration(config);
         List v = c.getList(listKey);
-        assertEquals("Wrong number of elements in list", values.length, v
-                .size());
+        
+        assertEquals("Wrong number of elements in list", values.length, v.size());
+        
         for (int i = 0; i < values.length; i++)
         {
-            assertEquals("Wrong value at index " + i, StringUtils.replace(
-                    values[i], "\\", StringUtils.EMPTY), v.get(i));
+            assertEquals("Wrong value at index " + i, values[i].replaceAll("\\\\", ""), v.get(i));
         }
     }
 }
