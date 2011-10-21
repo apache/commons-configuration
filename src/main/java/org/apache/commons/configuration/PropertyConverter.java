@@ -33,14 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.LinkedList;
 
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.collections.iterators.IteratorChain;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.SystemUtils;
@@ -921,59 +919,93 @@ public final class PropertyConverter
     }
 
     /**
-     * Return an iterator over the simple values of a composite value. The value
-     * specified is handled depending on its type:
-     * <ul>
-     *   <li>Strings are checked for delimiter characters and splitted if necessary.</li>
-     *   <li>For collections the single elements are checked.</li>
-     *   <li>Arrays are treated like collections.</li>
-     *   <li>All other types are directly inserted.</li>
-     *   <li>Recursive combinations are supported, e.g. a collection containing array that contain strings.</li>
-     * </ul>
+     * Returns an iterator over the simple values of a composite value. This
+     * implementation calls <code>{@link #flatten(Object, char)}</code> and
+     * returns an iterator over the returned collection.
      *
-     * @param value     the value to "split"
+     * @param value the value to "split"
      * @param delimiter the delimiter for String values
      * @return an iterator for accessing the single values
      */
     public static Iterator toIterator(Object value, char delimiter)
     {
-        if (value == null)
-        {
-            return Collections.EMPTY_SET.iterator();
-        }
+        return flatten(value, delimiter).iterator();
+    }
+
+    /**
+     * Returns a collection with all values contained in the specified object.
+     * This method is used for instance by the <code>addProperty()</code>
+     * implementation of the default configurations to gather all values of the
+     * property to add. Depending on the type of the passed in object the
+     * following things happen:
+     * <ul>
+     * <li>Strings are checked for delimiter characters and split if necessary.</li>
+     * <li>For objects implementing the <code>Iterable</code> interface, the
+     * corresponding <code>Iterator</code> is obtained, and contained elements
+     * are added to the resulting collection.</li>
+     * <li>Arrays are treated as <code>Iterable</code> objects.</li>
+     * <li>All other types are directly inserted.</li>
+     * <li>Recursive combinations are supported, e.g. a collection containing
+     * an array that contains strings: The resulting collection will only
+     * contain primitive objects (hence the name &quot;flatten&quot;).</li>
+     * </ul>
+     *
+     * @param value the value to be processed
+     * @param delimiter the delimiter for String values
+     * @return a &quot;flat&quot; collection containing all primitive values of
+     *         the passed in object
+     */
+    private static Collection flatten(Object value, char delimiter)
+    {
         if (value instanceof String)
         {
             String s = (String) value;
             if (s.indexOf(delimiter) > 0)
             {
-                return split((String) value, delimiter).iterator();
-            }
-            else
-            {
-                return Collections.singleton(value).iterator();
+                return split((String) s, delimiter);
             }
         }
-        else if (value instanceof Collection)
+
+        Collection result = new LinkedList();
+        if (value instanceof Collection)
         {
-            return toIterator(((Collection) value).iterator(), delimiter);
-        }
-        else if (value.getClass().isArray())
-        {
-            return toIterator(IteratorUtils.arrayIterator(value), delimiter);
+            flattenIterator(result, ((Iterable) value).iterator(), delimiter);
         }
         else if (value instanceof Iterator)
         {
-            Iterator iterator = (Iterator) value;
-            IteratorChain chain = new IteratorChain();
-            while (iterator.hasNext())
-            {
-                chain.addIterator(toIterator(iterator.next(), delimiter));
-            }
-            return chain;
+            flattenIterator(result, (Iterator) value, delimiter);
         }
-        else
+        else if (value != null)
         {
-            return Collections.singleton(value).iterator();
+            if (value.getClass().isArray())
+            {
+                for (int len = Array.getLength(value), idx = 0; idx < len; idx++)
+                {
+                    result.addAll(flatten(Array.get(value, idx), delimiter));
+                }
+            }
+            else
+            {
+                result.add(value);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Flattens the given iterator. For each element in the iteration
+     * <code>flatten()</code> will be called recursively.
+     *
+     * @param target the target collection
+     * @param it the iterator to process
+     * @param delimiter the delimiter for String values
+     */
+    private static void flattenIterator(Collection target, Iterator it, char delimiter)
+    {
+        while (it.hasNext())
+        {
+            target.addAll(flatten(it.next(), delimiter));
         }
     }
 
