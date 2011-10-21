@@ -14,13 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.apache.commons.configuration;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -42,11 +39,10 @@ public class TestEnvironmentConfiguration extends TestCase
     }
 
     /**
-     * Helper method for checking that the configuration contains some
-     * environment properties. (We expect that at least some properties are set
-     * in each environment.)
+     * Tests whether a newly created configuration contains some properties. (We
+     * expect that at least some properties are set in each environment.)
      */
-    private void checkProperties()
+    public void testInit()
     {
         boolean found = false;
         assertFalse("No properties found", config.isEmpty());
@@ -58,58 +54,6 @@ public class TestEnvironmentConfiguration extends TestCase
             found = true;
         }
         assertTrue("No property keys returned", found);
-    }
-
-    /**
-     * Tests whether a newly created configuration contains some properties. (We
-     * expect that at least some properties are set in each environment.)
-     */
-    public void testInit()
-    {
-        checkProperties();
-    }
-
-    /**
-     * Tests extracting properties for JDK before 1.5. This method should work
-     * on later JDKs, too, so we can test it always.
-     */
-    public void testExtractProperties14()
-    {
-        config.extractProperties14();
-        checkProperties();
-    }
-
-    /**
-     * Tests whether a collection with properties is correctly processed.
-     */
-    public void testExtractPropertiesFromCollection()
-    {
-        final int count = 8;
-        final String prop = "property";
-        final String value = "value";
-
-        Collection env = new ArrayList(count);
-        for (int i = 0; i < count; i++)
-        {
-            env.add(prop + i + "=" + value + i);
-        }
-        env.add("irregularProperty");
-        config.extractPropertiesFromCollection(env);
-
-        Map props = new HashMap();
-        for (Iterator it = config.getKeys(); it.hasNext();)
-        {
-            String key = (String) it.next();
-            props.put(key, config.getString(key));
-        }
-        assertEquals("Wrong number of properties", count, props.size());
-        for (int i = 0; i < count; i++)
-        {
-            assertEquals("Wrong value for property " + i, value + i, props
-                    .get(prop + i));
-        }
-        assertFalse("Irregular property found", config
-                .containsKey("irregularProperty"));
     }
 
     /**

@@ -267,7 +267,7 @@ public class TestAbstractConfigurationBasicFeatures extends TestCase
         {
             String key = (String) it.next();
             String propKey = "envtest." + key;
-            env.put(propKey, envConfig.getProperty(key));
+            env.put(propKey, envConfig.getString(key));
             config.addProperty(propKey, "${env:" + key + "}");
         }
         assertFalse("No environment properties", env.isEmpty());
