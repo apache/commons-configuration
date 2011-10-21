@@ -23,7 +23,6 @@
 
     <properties>
         <title>Runtime dependencies</title>
-        <author email="ebourg@apache.org">Emmanuel Bourg</author>
     </properties>
 
     <body>
@@ -34,7 +33,7 @@
               Commons Configuration requires Java 1.4 or later.
             </p>
             <p>
-              In the maven POM a lot of dependencies are declared. These are all
+              A lot of dependencies are declared in the Maven POM. These are all
               needed during compile time. On runtime however you only need to
               add the dependencies to your classpath that are required by the
               parts of the Commons Configuration package you are using. The
@@ -53,7 +52,6 @@
                     <tr>
                         <td>Core</td>
                         <td>
-                            commons-collections<br/>
                             commons-lang<br/>
                             commons-logging
                         </td>
@@ -65,18 +63,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>DatabaseConfiguration</td>
-                        <td>JDBC 3.0 (shipped with Java 1.4)</td>
+                        <td>ConfigurationFactory (deprecated)</td>
+                        <td>
+                            commons-digester<br/>
+                        </td>
                     </tr>
                     <tr>
-                        <td>XMLConfiguration</td>
-                        <td>see notes about XML processing</td>
+                        <td>ConfigurationConverter</td>
+                        <td>
+                            commons-collections<br/>
+                        </td>
                     </tr>
                     <tr>
-                        <td>XMLPropertiesConfiguration</td>
+                        <td>
+                          XMLConfiguration<br/>
+                          XMLPropertiesConfiguration
+                        </td>
                         <td>see notes about XML processing</td>
                     </tr>
-
                     <tr>
                         <td>PropertyListConfiguration</td>
                         <td>commons-codec</td>
@@ -94,7 +98,7 @@
                     </tr>
                     <tr>
                         <td>EnvironmentConfiguration</td>
-                        <td>Java 1.5 or ant 1.6.5</td>
+                        <td>Java 1.5 or Ant 1.6.5</td>
                     </tr>
                     <tr>
                         <td>XPathExpressionEngine</td>
