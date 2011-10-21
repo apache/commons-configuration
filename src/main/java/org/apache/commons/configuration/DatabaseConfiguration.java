@@ -245,7 +245,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 {
                     // Split value if it containts the list delimiter
                     Iterator it = PropertyConverter.toIterator(value, getListDelimiter());
-                    while (it.hasNext()) {
+                    while (it.hasNext())
+                    {
                         results.add(it.next());
                     }
                 }

@@ -23,7 +23,7 @@ import java.util.NoSuchElementException;
 /**
  * * A specialized iterator implementation used by <code>{@link AbstractConfiguration}</code>
  * to return an iteration over all keys starting with a specified prefix.
- * 
+ *
  * <p>This class is basically a stripped-down version of the
  * <code>FilterIterator</code> class of Commons Collections</p>
  *

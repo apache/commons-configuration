@@ -315,7 +315,7 @@ public class SubsetConfiguration extends AbstractConfiguration
             super.setDelimiterParsingDisabled(delimiterParsingDisabled);
         }
     }
-    
+
 
     /**
      * A specialized iterator to be returned by the <code>getKeys()</code>

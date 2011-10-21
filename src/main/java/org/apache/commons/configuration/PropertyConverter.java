@@ -406,7 +406,7 @@ public final class PropertyConverter
                             + "! Invalid hex number.", nex);
                 }
             }
-            
+
             if (str.startsWith(BIN_PREFIX))
             {
                 try
@@ -420,7 +420,7 @@ public final class PropertyConverter
                             + "! Invalid binary number.", nex);
                 }
             }
-            
+
             try
             {
                 Constructor constr = targetClass.getConstructor(CONSTR_ARGS);
