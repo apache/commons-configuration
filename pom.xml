@@ -433,8 +433,8 @@
     <commons.release.version>1.7</commons.release.version>
     <commons.jira.id>CONFIGURATION</commons.jira.id>
     <commons.jira.pid>12310467</commons.jira.pid>
-    <maven.compile.source>1.4</maven.compile.source>
-    <maven.compile.target>1.4</maven.compile.target>
+    <maven.compile.source>1.5</maven.compile.source>
+    <maven.compile.target>1.5</maven.compile.target>
   </properties>
 
   <build>
@@ -519,46 +519,6 @@
 
     </build>
   <profiles>
-    <profile>
-      <!-- A profile for building with JDK 1.4. This profile excludes some
-           classes with dependencies to libraries requiring Java 1.5+.
-      -->
-      <id>java-1.4</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/VFSFileSystem.java</exclude>
-                <exclude>**/VFSFileChangedReloadingStrategy.java</exclude>
-              </excludes>
-              <testExcludes>
-                <exclude>**/TestVFSFileChangedReloadingStrategy.java</exclude>
-                <exclude>**/TestVFSConfigurationBuilder.java</exclude>
-                <exclude>**/TestWebdavConfigurationBuilder.java</exclude>
-              </testExcludes>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <excludes>
-                <exclude>**/TestVFSFileChangedReloadingStrategy*.*</exclude>
-                <exclude>**/TestVFSConfigurationBuilder*.*</exclude>
-                <exclude>**/TestWebdavConfigurationBuilder*.*</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <profile>
       <id>webdav</id>
       <activation>

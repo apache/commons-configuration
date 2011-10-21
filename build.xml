@@ -39,14 +39,6 @@
     </condition>
   </target>
 	
-  <!-- Check JDK - if 1.4, set isJDK1.4 -->
-  <target name="javaCheck">
-    <echo message="ant.java.version=${ant.java.version}" />
-	<condition property="isJDK1.4">
-	  <equals arg1="${ant.java.version}" arg2="1.4" />
-	</condition>
-  </target>
-	
   <!-- If the maven local repo check failed, create a lib directory to house dependencies -->
   <target name="lib.check" depends="repo.check" unless="repo.exists">
     <echo>No maven repo found; creating lib directory for dependencies</echo>
@@ -54,7 +46,7 @@
 	<mkdir dir="${basedir}/lib"/>
   </target>
 
-  <target name="init" depends="lib.check, javaCheck">
+  <target name="init" depends="lib.check">
     <property name="lib" value="${maven.repo.local}"/> <!-- only sets if unset - i.e., repo.check succeeded -->
 	<path id="build.classpath">
         <pathelement location="${lib}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
@@ -129,12 +121,10 @@
            debug="true" 
            optimize="false" 
            deprecation="true" 
-           target="1.4" 
+           target="1.5" 
            verbose="false" 
            fork="false" 
-           source="1.4">
-      	<exclude name="**/VFSFileSystem.java" if="isJDK1.4"/>
-      	<exclude name="**/VFSFileChangedReloadingStrategy.java" if="isJDK1.4"/>
+           source="1.5">
       <classpath refid="build.classpath"/>
     </javac>
     <mkdir dir="${build.classes.dir}/META-INF"/>
@@ -164,13 +154,10 @@
            debug="true" 
            optimize="false" 
            deprecation="true" 
-           target="1.4" 
+           target="1.5" 
            verbose="false" 
            fork="false" 
-           source="1.4">
-      	<exclude name="**/TestVFSFileChangedReloadingStrategy.java" if="isJDK1.4"/>
-        <exclude name="**/TestVFSConfigurationBuilder.java" if="isJDK1.4"/>
-        <exclude name="**/TestWebdavConfigurationBuilder.java" if="isJDK1.4"/>
+           source="1.5">
       <classpath>
         <path refid="build.test.classpath"/>
         <pathelement location="${build.classes.dir}"/>
@@ -220,9 +207,6 @@
           <exclude name="**/TestAbstractConfiguration.java"/>
           <exclude name="**/AbstractCombinerTest.java"/>
           <exclude name="**/AbstractXPathTest.java"/>
-          <exclude name="**/TestVFSFileChangedReloadingStrategy.java" if="isJDK1.4"/>
-          <exclude name="**/TestVFSConfigurationBuilder.java" if="isJDK1.4"/>
-          <exclude name="**/TestWebdavConfigurationBuilder.java" if="isJDK1.4"/>
         </fileset>
       </batchtest>
       <batchtest  todir="${build.dir}">
@@ -253,14 +237,12 @@
              nonavbar="false" 
              serialwarn="false" 
              charset="ISO-8859-1" 
-             source="1.4" 
+             source="1.5" 
              linksource="true" 
              breakiterator="false">
       <classpath refid="build.classpath"/>
       <fileset dir="${src.java.dir}">
       	<include name="**/*.java"/>
-        <exclude name="**/VFSFileSystem.java" if="isJDK1.4"/>
-        <exclude name="**/VFSFileChangedReloadingStrategy.java" if="isJDK1.4"/>
       </fileset>
       <link href="http://download.oracle.com/javase/6/docs/api/"/>
       <link href="http://download.oracle.com/javaee/6/api/"/>

@@ -30,7 +30,7 @@
         <section name="Runtime dependencies">
 
             <p>
-              Commons Configuration requires Java 1.4 or later.
+              Commons Configuration requires Java 5 or later.
             </p>
             <p>
               A lot of dependencies are declared in the Maven POM. These are all
@@ -58,47 +58,26 @@
                     </tr>
                     <tr>
                         <td>DefaultConfigurationBuilder</td>
-                        <td>
-                            commons-beanutils<br/>
-                        </td>
+                        <td>commons-beanutils</td>
                     </tr>
                     <tr>
                         <td>ConfigurationFactory (deprecated)</td>
-                        <td>
-                            commons-digester<br/>
-                        </td>
+                        <td>commons-digester</td>
                     </tr>
                     <tr>
                         <td>ConfigurationConverter</td>
-                        <td>
-                            commons-collections<br/>
-                        </td>
+                        <td>commons-collections</td>
                     </tr>
                     <tr>
                         <td>
-                          XMLConfiguration<br/>
-                          XMLPropertiesConfiguration
+                          PropertyListConfiguration<br/>
+                          XMLPropertyListConfiguration
                         </td>
-                        <td>see notes about XML processing</td>
-                    </tr>
-                    <tr>
-                        <td>PropertyListConfiguration</td>
                         <td>commons-codec</td>
-                    </tr>
-                    <tr>
-                        <td>XMLPropertyListConfiguration</td>
-                        <td>
-                            commons-codec<br/>
-                            see notes about XML processing
-                        </td>
                     </tr>
                     <tr>
                         <td>ConfigurationDynaBean</td>
                         <td>commons-beanutils</td>
-                    </tr>
-                    <tr>
-                        <td>EnvironmentConfiguration</td>
-                        <td>Java 1.5 or Ant 1.6.5</td>
                     </tr>
                     <tr>
                         <td>XPathExpressionEngine</td>
@@ -118,7 +97,7 @@
                     </tr>
                     <tr>
                         <td>VFSFileSystem, VFSFileChangedReloadingStrategy</td>
-                        <td>commons-vfs (requires Java 1.5)</td>
+                        <td>commons-vfs</td>
                     </tr>
                 </tbody>
             </table>
@@ -184,18 +163,6 @@
                     </tr>
                   </tbody>
                 </table>
-                </li>
-                <li>
-                  Java 1.4 comes with XML support. If you use only standard
-                  features (e.g. loading XML documents with
-                  <code>XMLConfiguration</code>), no additional dependencies are
-                  needed. However, some modern features like schema validation
-                  are not supported by the parser shipped with Java 1.4. On
-                  Java 1.5 or higher this is not a problem; here everything
-                  works out of the box. With Java 1.4 you need further libraries
-                  to make these advanced features working. We used
-                  <a href="http://xml.apache.org/xerces2-j/">Xerces 2.6.2</a>,
-                  and <a href="http://xml.apache.org/commons/">XML APIs 1.0.b2</a>.
                 </li>
               </ul>
             </p>

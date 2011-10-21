@@ -298,13 +298,10 @@ public class TestDataConfiguration extends TestCase
         conf.addProperty("ip.string.interpolated", "${ip.string}");
         conf.addProperty("ip.object", InetAddress.getByName("127.0.0.1"));
 
-        // email address (tested on Java 1.4+)
-        if (SystemUtils.isJavaVersionAtLeast(1.4f))
-        {
-            conf.addProperty("email.string", "ebourg@apache.org");
-            conf.addProperty("email.string.interpolated", "${email.string}");
-            conf.addProperty("email.object", createInternetAddress("ebourg@apache.org"));
-        }
+        // email address
+        conf.addProperty("email.string", "ebourg@apache.org");
+        conf.addProperty("email.string.interpolated", "${email.string}");
+        conf.addProperty("email.object", createInternetAddress("ebourg@apache.org"));
     }
 
     public void testGetConfiguration()
