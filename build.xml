@@ -31,6 +31,9 @@
   <property name="src.test.dir" value="src/test/java"/>
   <property name="test.resource.dir" value="src/test/resources"/>
   <property name="maven.repo.local" value="${user.home}/.m2/repository"/>
+  <property name="src.grammar.dir" value="src/main/javacc"/>
+  <property name="src.grammar.plist.dir" value="org/apache/commons/configuration/plist"/>
+  <property name="build.javacc.dir" value="${build.dir}/generated-sources/javacc"/>
 
   <!-- Check to see if maven.repo.local exists -->
   <target name="repo.check">
@@ -112,10 +115,9 @@
     <delete dir="${build.dir}"/>
   </target>
 
-  <target name="compile" depends="init,get-deps" description="Compile the code">
+  <target name="compile" depends="init,get-deps,javaccgen" description="Compile the code">
     <mkdir dir="${build.classes.dir}"/>
     <javac destdir="${build.classes.dir}" 
-    	   srcdir="${src.java.dir}"
            encoding="iso-8859-1" 
            nowarn="false" 
            debug="true" 
@@ -126,6 +128,8 @@
            fork="false" 
            source="1.5">
       <classpath refid="build.classpath"/>
+      <src path="${src.java.dir}"/>
+      <src path="${build.javacc.dir}"/>
     </javac>
     <mkdir dir="${build.classes.dir}/META-INF"/>
     <copy todir="${build.classes.dir}/META-INF">
@@ -216,6 +220,13 @@
         </fileset>
       </batchtest>
     </junit>
+  </target>
+
+  <target name="javaccgen" description="Generate sources using JavaCC">
+    <mkdir dir="${build.javacc.dir}/${src.grammar.plist.dir}"/>
+    <javacc target="${src.grammar.dir}/PropertyListParser.jj"
+      outputdirectory="${build.javacc.dir}/${src.grammar.plist.dir}"
+      javacchome="${javacc_home}"/>
   </target>
 
   <target name="javadoc" depends="init" description="Generates the Javadoc of the application">
