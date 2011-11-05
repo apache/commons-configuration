@@ -26,15 +26,6 @@
 
 <suppressions>
 
-    <!-- Disable the warnings for the generated classes -->
-    <suppress checks=".*" files="ParseException.java"/>
-    <suppress checks=".*" files="PropertyListParser.java"/>
-    <suppress checks=".*" files="PropertyListParserConstants.java"/>
-    <suppress checks=".*" files="PropertyListParserTokenManager.java"/>
-    <suppress checks=".*" files="SimpleCharStream.java"/>
-    <suppress checks=".*" files="Token.java"/>
-    <suppress checks=".*" files="TokenMgrError.java"/>
-    
     <suppress checks="MissingSwitchDefault" files="PropertiesConfiguration.java"/>
 
 </suppressions>
