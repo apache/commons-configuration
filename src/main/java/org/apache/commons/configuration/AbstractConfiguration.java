@@ -45,12 +45,12 @@ import org.apache.commons.logging.impl.NoOpLog;
  * store any data.</p>
  * <p>If you want to write your own Configuration class then you should
  * implement only abstract methods from this class. A lot of functionality
- * needed by typical implementations of the <code>Configuration</code>
+ * needed by typical implementations of the {@code Configuration}
  * interface is already provided by this base class. Following is a list of
  * features implemented here:
  * <ul><li>Data conversion support. The various data types required by the
- * <code>Configuration</code> interface are already handled by this base class.
- * A concrete sub class only needs to provide a generic <code>getProperty()</code>
+ * {@code Configuration} interface are already handled by this base class.
+ * A concrete sub class only needs to provide a generic {@code getProperty()}
  * method.</li>
  * <li>Support for variable interpolation. Property values containing special
  * variable tokens (like <code>${var}</code>) will be replaced by their
@@ -59,22 +59,21 @@ import org.apache.commons.logging.impl.NoOpLog;
  * configuration are checked whether they contain a list delimiter character. If
  * this is the case and if list splitting is enabled, the string is split and
  * multiple values are added for this property. (With the
- * <code>setListDelimiter()</code> method the delimiter character can be
+ * {@code setListDelimiter()} method the delimiter character can be
  * specified; per default a comma is used. The
- * <code>setDelimiterParsingDisabled()</code> method can be used to disable
+ * {@code setDelimiterParsingDisabled()} method can be used to disable
  * list splitting completely.)</li>
  * <li>Allows to specify how missing properties are treated. Per default the
  * get methods returning an object will return <b>null</b> if the searched
  * property key is not found (and no default value is provided). With the
- * <code>setThrowExceptionOnMissing()</code> method this behavior can be
+ * {@code setThrowExceptionOnMissing()} method this behavior can be
  * changed to throw an exception when a requested property cannot be found.</li>
  * <li>Basic event support. Whenever this configuration is modified registered
- * event listeners are notified. Refer to the various <code>EVENT_XXX</code>
+ * event listeners are notified. Refer to the various {@code EVENT_XXX}
  * constants to get an impression about which event types are supported.</li>
  * </ul></p>
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
- * @author Oliver Heger
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
  * @version $Id$
  */
@@ -149,7 +148,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     private Log log;
 
     /**
-     * Creates a new instance of <code>AbstractConfiguration</code>.
+     * Creates a new instance of {@code AbstractConfiguration}.
      */
     public AbstractConfiguration()
     {
@@ -176,6 +175,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @deprecated Use AbstractConfiguration.setDefaultListDelimiter(char)
      * instead
      */
+    @Deprecated
     public static void setDelimiter(char delimiter)
     {
         setDefaultListDelimiter(delimiter);
@@ -197,6 +197,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * @return the default list delimiter
      * @deprecated Use AbstractConfiguration.getDefaultListDelimiter() instead
      */
+    @Deprecated
     public static char getDelimiter()
     {
         return getDefaultListDelimiter();
@@ -254,12 +255,12 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
-     * Allows to set the <code>throwExceptionOnMissing</code> flag. This
+     * Allows to set the {@code throwExceptionOnMissing} flag. This
      * flag controls the behavior of property getter methods that return
      * objects if the requested property is missing. If the flag is set to
      * <b>false</b> (which is the default value), these methods will return
      * <b>null</b>. If set to <b>true</b>, they will throw a
-     * <code>NoSuchElementException</code> exception. Note that getter methods
+     * {@code NoSuchElementException} exception. Note that getter methods
      * for primitive data types are not affected by this flag.
      *
      * @param throwExceptionOnMissing The new value for the property
@@ -295,15 +296,15 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     }
 
     /**
-     * Returns the <code>ConfigurationInterpolator</code> object that manages
+     * Returns the {@code ConfigurationInterpolator} object that manages
      * the lookup objects for resolving variables. <em>Note:</em> If this
-     * object is manipulated (e.g. new lookup objects added), synchronisation
+     * object is manipulated (e.g. new lookup objects added), synchronization
      * has to be manually ensured. Because
-     * <code>ConfigurationInterpolator</code> is not thread-safe concurrent
+     * {@code ConfigurationInterpolator} is not thread-safe concurrent
      * access to properties of this configuration instance (which causes the
      * interpolator to be invoked) may cause race conditions.
      *
-     * @return the <code>ConfigurationInterpolator</code> associated with this
+     * @return the {@code ConfigurationInterpolator} associated with this
      * configuration
      * @since 1.4
      */
@@ -317,7 +318,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * Creates the interpolator object that is responsible for variable
      * interpolation. This method is invoked on first access of the
      * interpolation features. It creates a new instance of
-     * <code>ConfigurationInterpolator</code> and sets the default lookup
+     * {@code ConfigurationInterpolator} and sets the default lookup
      * object to an implementation that queries this configuration.
      *
      * @return the newly created interpolator object
@@ -328,6 +329,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         ConfigurationInterpolator interpol = new ConfigurationInterpolator();
         interpol.setDefaultLookup(new StrLookup()
         {
+            @Override
             public String lookup(String var)
             {
                 Object prop = resolveContainerStore(var);
@@ -365,11 +367,11 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Adds a special
-     * <code>{@link org.apache.commons.configuration.event.ConfigurationErrorListener}</code>
+     * {@link org.apache.commons.configuration.event.ConfigurationErrorListener}
      * object to this configuration that will log all internal errors. This
      * method is intended to be used by certain derived classes, for which it is
      * known that they can fail on property access (e.g.
-     * <code>DatabaseConfiguration</code>).
+     * {@code DatabaseConfiguration}).
      *
      * @since 1.4
      */
@@ -405,7 +407,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     /**
      * Adds the specified value for the given property. This method supports
      * single values and containers (e.g. collections or arrays) as well. In the
-     * latter case, <code>addPropertyDirect()</code> will be called for each
+     * latter case, {@code addPropertyDirect()} will be called for each
      * element.
      *
      * @param key the property key
@@ -459,9 +461,10 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      *
      * @return the string with the interpolation taken care of
      * @deprecated Interpolation is now handled by
-     * <code>{@link PropertyConverter}</code>; this method will no longer be
+     * {@link PropertyConverter}; this method will no longer be
      * called
      */
+    @Deprecated
     protected String interpolateHelper(String base, List priorVariables)
     {
         return base; // just a dummy implementation
@@ -491,7 +494,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     /**
      * Removes the specified property from this configuration. This
      * implementation performs some preparations and then delegates to
-     * <code>clearPropertyDirect()</code>, which will do the real work.
+     * {@code clearPropertyDirect()}, which will do the real work.
      *
      * @param key the key to be removed
      */
@@ -504,8 +507,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Removes the specified property from this configuration. This method is
-     * called by <code>clearProperty()</code> after it has done some
-     * preparations. It should be overriden in sub classes. This base
+     * called by {@code clearProperty()} after it has done some
+     * preparations. It should be overridden in sub classes. This base
      * implementation is just left empty.
      *
      * @param key the key to be removed
@@ -561,9 +564,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     /**
      * {@inheritDoc} This implementation returns keys that either match the
      * prefix or start with the prefix followed by a dot ('.'). So the call
-     * <code>getKeys("db");</code> will find the keys <code>db</code>,
-     * <code>db.user</code>, or <code>db.password</code>, but not the key
-     * <code>dbdriver</code>.
+     * {@code getKeys("db");} will find the keys {@code db},
+     * {@code db.user}, or {@code db.password}, but not the key
+     * {@code dbdriver}.
      */
     public Iterator getKeys(String prefix)
     {
@@ -580,7 +583,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      *
      * @param key The configuration key.
      * @param defaults Any default values for the returned
-     * <code>Properties</code> object. Ignored if <code>null</code>.
+     * {@code Properties} object. Ignored if {@code null}.
      *
      * @return The associated properties if key is found.
      *
@@ -653,14 +656,14 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Obtains the value of the specified key and tries to convert it into a
-     * <code>Boolean</code> object. If the property has no value, the passed
+     * {@code Boolean} object. If the property has no value, the passed
      * in default value will be used.
      *
      * @param key the key of the property
      * @param defaultValue the default value
-     * @return the value of this key converted to a <code>Boolean</code>
+     * @return the value of this key converted to a {@code Boolean}
      * @throws ConversionException if the value cannot be converted to a
-     * <code>Boolean</code>
+     * {@code Boolean}
      * @see PropertyConverter#toBoolean(Object)
      */
     public Boolean getBoolean(String key, Boolean defaultValue)
@@ -1055,8 +1058,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * contains multiple values. This is obvious if the added object is a list
      * or an array. For strings it is checked whether the string contains the
      * list delimiter character that can be specified using the
-     * <code>setListDelimiter()</code> method. If this is the case, the string
-     * is splitted at these positions resulting in a property with multiple
+     * {@code setListDelimiter()} method. If this is the case, the string
+     * is split at these positions resulting in a property with multiple
      * values.
      *
      * @param key The configuration key.
@@ -1185,7 +1188,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
     /**
      * Checks whether the specified object is a scalar value. This method is
-     * called by <code>getList()</code> and <code>getStringArray()</code> if the
+     * called by {@code getList()} and {@code getStringArray()} if the
      * property requested is not a string, a list, or an array. If it returns
      * <b>true</b>, the calling method transforms the value to a string and
      * returns a list or an array with this single element. This implementation
@@ -1209,7 +1212,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * hierarchical configurations because it is not able to copy information
      * about the properties' structure (i.e. the parent-child-relationships will
      * get lost). So when dealing with hierarchical configuration objects their
-     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * {@link HierarchicalConfiguration#clone() clone()} methods
      * should be used.
      *
      * @param c the configuration to copy (can be <b>null</b>, then this
@@ -1250,7 +1253,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * copy information about the properties' structure (i.e. the
      * parent-child-relationships will get lost). So when dealing with
      * hierarchical configuration objects their
-     * <code>{@link HierarchicalConfiguration#clone() clone()}</code> methods
+     * {@link HierarchicalConfiguration#clone() clone()} methods
      * should be used.
      *
      * @param c the configuration to be appended (can be <b>null</b>, then this
