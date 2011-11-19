@@ -27,27 +27,27 @@ import java.util.Properties;
  * <p>The main Configuration interface.</p>
  * <p>This interface allows accessing and manipulating a configuration object.
  * The major part of the methods defined in this interface deals with accessing
- * properties of various data types. There is a generic <code>getProperty()</code>
+ * properties of various data types. There is a generic {@code getProperty()}
  * method, which returns the value of the queried property in its raw data
  * type. Other getter methods try to convert this raw data type into a specific
- * data type. If this fails, a <code>ConversionException</code> will be thrown.</p>
+ * data type. If this fails, a {@code ConversionException} will be thrown.</p>
  * <p>For most of the property getter methods an overloaded version exists that
  * allows to specify a default value, which will be returned if the queried
  * property cannot be found in the configuration. The behavior of the methods
  * that do not take a default value in case of a missing property is not defined
  * by this interface and depends on a concrete implementation. E.g. the
- * <code>{@link AbstractConfiguration}</code> class, which is the base class
+ * {@link AbstractConfiguration} class, which is the base class
  * of most configuration implementations provided by this package, per default
  * returns <b>null</b> if a property is not found, but provides the
- * <code>{@link org.apache.commons.configuration.AbstractConfiguration#setThrowExceptionOnMissing(boolean)
- * setThrowExceptionOnMissing()}</code>
- * method, with which it can be configured to throw a <code>NoSuchElementException</code>
+ * {@link AbstractConfiguration#setThrowExceptionOnMissing(boolean)
+ * setThrowExceptionOnMissing()}
+ * method, with which it can be configured to throw a {@code NoSuchElementException}
  * exception in that case. (Note that getter methods for primitive types in
- * <code>AbstractConfiguration</code> always throw an exception for missing
+ * {@code AbstractConfiguration} always throw an exception for missing
  * properties because there is no way of overloading the return value.)</p>
- * <p>With the <code>addProperty()</code> and <code>setProperty()</code> methods
+ * <p>With the {@code addProperty()} and {@code setProperty()} methods
  * new properties can be added to a configuration or the values of properties
- * can be changed. With <code>clearProperty()</code> a property can be removed.
+ * can be changed. With {@code clearProperty()} a property can be removed.
  * Other methods allow to iterate over the contained properties or to create
  * a subset configuration.</p>
  *
@@ -68,7 +68,7 @@ public interface Configuration
      *    prefixed.foo = bar
      *    prefix = Jakarta</pre>
      *
-     * the Configuration returned by <code>subset("prefix")</code> will contain
+     * the Configuration returned by {@code subset("prefix")} will contain
      * the properties:
      *
      * <pre>
@@ -92,8 +92,8 @@ public interface Configuration
     /**
      * Check if the configuration is empty.
      *
-     * @return <code>true</code> if the configuration contains no property,
-     *         <code>false</code> otherwise.
+     * @return {@code true} if the configuration contains no property,
+     *         {@code false} otherwise.
      */
     boolean isEmpty();
 
@@ -102,8 +102,8 @@ public interface Configuration
      *
      * @param key the key whose presence in this configuration is to be tested
      *
-     * @return <code>true</code> if the configuration contains a value for this
-     *         key, <code>false</code> otherwise
+     * @return {@code true} if the configuration contains a value for this
+     *         key, {@code false} otherwise
      */
     boolean containsKey(String key);
 
@@ -151,11 +151,11 @@ public interface Configuration
     /**
      * Gets a property from the configuration. This is the most basic get
      * method for retrieving values of properties. In a typical implementation
-     * of the <code>Configuration</code> interface the other get methods (that
+     * of the {@code Configuration} interface the other get methods (that
      * return specific data types) will internally make use of this method. On
      * this level variable substitution is not yet performed. The returned
      * object is an internal representation of the property value for the passed
-     * in key. It is owned by the <code>Configuration</code> object. So a caller
+     * in key. It is owned by the {@code Configuration} object. So a caller
      * should not modify this object. It cannot be guaranteed that this object
      * will stay constant over time (i.e. further update operations on the
      * configuration may change its internal state).
@@ -170,10 +170,10 @@ public interface Configuration
      * Get the list of the keys contained in the configuration that match the
      * specified prefix. For instance, if the configuration contains the
      * following keys:<br>
-     * <code>db.user, db.pwd, db.url, window.xpos, window.ypos</code>,<br>
-     * an invocation of <code>getKeys("db");</code><br>
+     * {@code db.user, db.pwd, db.url, window.xpos, window.ypos},<br>
+     * an invocation of {@code getKeys("db");}<br>
      * will return the keys below:<br>
-     * <code>db.user, db.pwd, db.url</code>.<br>
+     * {@code db.user, db.pwd, db.url}.<br>
      * Note that the prefix itself is included in the result set if there is a
      * matching key. The exact behavior - how the prefix is actually
      * interpreted - depends on a concrete implementation.
@@ -182,29 +182,29 @@ public interface Configuration
      * @return An Iterator of keys that match the prefix.
      * @see #getKeys()
      */
-    Iterator getKeys(String prefix);
+    Iterator<String> getKeys(String prefix);
 
     /**
      * Get the list of the keys contained in the configuration. The returned
      * iterator can be used to obtain all defined keys. Note that the exact
-     * behavior of the iterator's <code>remove()</code> method is specific to
+     * behavior of the iterator's {@code remove()} method is specific to
      * a concrete implementation. It <em>may</em> remove the corresponding
      * property from the configuration, but this is not guaranteed. In any case
      * it is no replacement for calling
-     * <code>{@link #clearProperty(String)}</code> for this property. So it is
-     * highly recommended to avoid using the iterator's <code>remove()</code>
+     * {@link #clearProperty(String)} for this property. So it is
+     * highly recommended to avoid using the iterator's {@code remove()}
      * method.
      *
      * @return An Iterator.
      */
-    Iterator getKeys();
+    Iterator<String> getKeys();
 
     /**
      * Get a list of properties associated with the given configuration key.
      * This method expects the given key to have an arbitrary number of String
-     * values, each of which is of the form <code>key=value</code>. These
-     * strings are splitted at the equals sign, and the key parts will become
-     * keys of the returned <code>Properties</code> object, the value parts
+     * values, each of which is of the form {code key=value}. These
+     * strings are split at the equals sign, and the key parts will become
+     * keys of the returned {@code Properties} object, the value parts
      * become values.
      *
      * @param key The configuration key.
@@ -580,7 +580,7 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List getList(String key);
+    List<Object> getList(String key);
 
     /**
      * Get a List of strings associated with the given configuration key.
@@ -594,5 +594,5 @@ public interface Configuration
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a List.
      */
-    List getList(String key, List defaultValue);
+    List<Object> getList(String key, List<Object> defaultValue);
 }
