@@ -35,6 +35,7 @@ import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
@@ -416,7 +417,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      */
     private void addPropertyValues(String key, Object value, char delimiter)
     {
-        Iterator it = PropertyConverter.toIterator(value, delimiter);
+        Iterator<?> it = PropertyConverter.toIterator(value, delimiter);
         while (it.hasNext())
         {
             addPropertyDirect(key, it.next());
@@ -465,7 +466,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * called
      */
     @Deprecated
-    protected String interpolateHelper(String base, List priorVariables)
+    protected String interpolateHelper(String base, List<?> priorVariables)
     {
         return base; // just a dummy implementation
     }
@@ -525,7 +526,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         boolean useIterator = true;
         try
         {
-            Iterator it = getKeys();
+            Iterator<String> it = getKeys();
             while (it.hasNext())
             {
                 String key = (String) it.next();
@@ -568,7 +569,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * {@code db.user}, or {@code db.password}, but not the key
      * {@code dbdriver}.
      */
-    public Iterator getKeys(String prefix)
+    public Iterator<String> getKeys(String prefix)
     {
         return new PrefixedKeysIterator(getKeys(), prefix);
     }
@@ -604,9 +605,8 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
          * Each token is of the form 'key=value'.
          */
         Properties props = defaults == null ? new Properties() : new Properties(defaults);
-        for (int i = 0; i < tokens.length; i++)
+        for (String token : tokens)
         {
-            String token = tokens[i];
             int equalSign = token.indexOf('=');
             if (equalSign > 0)
             {
@@ -1084,12 +1084,12 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
         else if (value instanceof List)
         {
-            List list = (List) value;
+            List<?> list = (List<?>) value;
             array = new String[list.size()];
 
             for (int i = 0; i < array.length; i++)
             {
-                array[i] = interpolate((String) list.get(i));
+                array[i] = interpolate(ObjectUtils.toString(list.get(i), null));
             }
         }
         else if (value == null)
@@ -1112,31 +1112,30 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
      * {@inheritDoc}
      * @see #getStringArray(String)
      */
-    public List getList(String key)
+    public List<Object> getList(String key)
     {
-        return getList(key, new ArrayList());
+        return getList(key, new ArrayList<Object>());
     }
 
-    public List getList(String key, List defaultValue)
+    public List<Object> getList(String key, List<Object> defaultValue)
     {
         Object value = getProperty(key);
-        List list;
+        List<Object> list;
 
         if (value instanceof String)
         {
-            list = new ArrayList(1);
+            list = new ArrayList<Object>(1);
             list.add(interpolate((String) value));
         }
         else if (value instanceof List)
         {
-            list = new ArrayList();
-            List l = (List) value;
+            list = new ArrayList<Object>();
+            List<?> l = (List<?>) value;
 
             // add the interpolated elements in the new list
-            Iterator it = l.iterator();
-            while (it.hasNext())
+            for(Object elem : l)
             {
-                list.add(interpolate(it.next()));
+                list.add(interpolate(elem));
             }
         }
         else if (value == null)
@@ -1149,7 +1148,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         }
         else if (isScalarValue(value))
         {
-            return Collections.singletonList(value.toString());
+            return Collections.singletonList((Object) value.toString());
         }
         else
         {
@@ -1174,7 +1173,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             if (value instanceof Collection)
             {
-                Collection collection = (Collection) value;
+                Collection<?> collection = (Collection<?>) value;
                 value = collection.isEmpty() ? null : collection.iterator().next();
             }
             else if (value.getClass().isArray() && Array.getLength(value) > 0)
@@ -1223,9 +1222,9 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         if (c != null)
         {
-            for (Iterator it = c.getKeys(); it.hasNext();)
+            for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
-                String key = (String) it.next();
+                String key = it.next();
                 Object value = c.getProperty(key);
                 fireEvent(EVENT_SET_PROPERTY, key, value, true);
                 setDetailEvents(false);
@@ -1264,7 +1263,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
     {
         if (c != null)
         {
-            for (Iterator it = c.getKeys(); it.hasNext();)
+            for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
                 String key = (String) it.next();
                 Object value = c.getProperty(key);
@@ -1298,7 +1297,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
 
         // now perform interpolation
         c.setDelimiterParsingDisabled(true);
-        for (Iterator it = getKeys(); it.hasNext();)
+        for (Iterator<String> it = getKeys(); it.hasNext();)
         {
             String key = (String) it.next();
             c.setProperty(key, getList(key));
