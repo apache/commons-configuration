@@ -21,7 +21,6 @@ import java.awt.Color;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.InetAddress;
@@ -35,19 +34,18 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.LinkedList;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
 
 /**
  * A utility class to convert the configuration properties into any type.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public final class PropertyConverter
@@ -70,11 +68,8 @@ public final class PropertyConverter
     /** Constant for the radix of binary numbers.*/
     private static final int BIN_RADIX = 2;
 
-    /** Constant for the Java version 1.5.*/
-    private static final float JAVA_VERSION_1_5 = 1.5f;
-
     /** Constant for the argument classes of the Number constructor that takes a String. */
-    private static final Class[] CONSTR_ARGS = {String.class};
+    private static final Class<?>[] CONSTR_ARGS = {String.class};
 
     /** The fully qualified name of {@link javax.mail.internet.InternetAddress} */
     private static final String INTERNET_ADDRESS_CLASSNAME = "javax.mail.internet.InternetAddress";
@@ -84,7 +79,7 @@ public final class PropertyConverter
      */
     private PropertyConverter()
     {
-        // to prevent instanciation...
+        // to prevent instantiation...
     }
 
     /**
@@ -100,7 +95,7 @@ public final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object to(Class cls, Object value, Object[] params) throws ConversionException
+    static Object to(Class<?> cls, Object value, Object[] params) throws ConversionException
     {
         if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
         {
@@ -159,7 +154,7 @@ public final class PropertyConverter
         }
         else if (isEnum(cls))
         {
-            return toEnum(value, cls);
+            return convertToEnum(cls, value);
         }
         else if (Color.class.equals(cls))
         {
@@ -180,11 +175,11 @@ public final class PropertyConverter
 
     /**
      * Convert the specified object into a Boolean. Internally the
-     * <code>org.apache.commons.lang.BooleanUtils</code> class from the
+     * {@code org.apache.commons.lang.BooleanUtils} class from the
      * <a href="http://commons.apache.org/lang/">Commons Lang</a>
      * project is used to perform this conversion. This class accepts some more
-     * tokens for the boolean value of <b>true</b>, e.g. <code>yes</code> and
-     * <code>on</code>. Please refer to the documentation of this class for more
+     * tokens for the boolean value of <b>true</b>, e.g. {@code yes} and
+     * {@code on}. Please refer to the documentation of this class for more
      * details.
      *
      * @param value the value to convert
@@ -380,11 +375,11 @@ public final class PropertyConverter
      *
      * @param value the value to be converted (must not be <b>null</b>)
      * @param targetClass the target class of the conversion (must be derived
-     * from <code>java.lang.Number</code>)
+     * from {@code java.lang.Number})
      * @return the converted number
      * @throws ConversionException if the object cannot be converted
      */
-    static Number toNumber(Object value, Class targetClass) throws ConversionException
+    static Number toNumber(Object value, Class<?> targetClass) throws ConversionException
     {
         if (value instanceof Number)
         {
@@ -423,7 +418,7 @@ public final class PropertyConverter
 
             try
             {
-                Constructor constr = targetClass.getConstructor(CONSTR_ARGS);
+                Constructor<?> constr = targetClass.getConstructor(CONSTR_ARGS);
                 return (Number) constr.newInstance(new Object[]{str});
             }
             catch (InvocationTargetException itex)
@@ -487,14 +482,14 @@ public final class PropertyConverter
         }
         else if (value instanceof String)
         {
-            List elements = split((String) value, '_');
+            List<String> elements = split((String) value, '_');
             int size = elements.size();
 
-            if (size >= 1 && (((String) elements.get(0)).length() == 2 || ((String) elements.get(0)).length() == 0))
+            if (size >= 1 && ((elements.get(0)).length() == 2 || (elements.get(0)).length() == 0))
             {
-                String language = (String) elements.get(0);
-                String country = (String) ((size >= 2) ? elements.get(1) : "");
-                String variant = (String) ((size >= 3) ? elements.get(2) : "");
+                String language = elements.get(0);
+                String country = ((size >= 2) ? elements.get(1) : "");
+                String variant = ((size >= 3) ? elements.get(2) : "");
 
                 return new Locale(language, country, variant);
             }
@@ -520,16 +515,16 @@ public final class PropertyConverter
      * @param trim       a flag whether the single elements should be trimmed
      * @return a list with the single tokens
      */
-    public static List split(String s, char delimiter, boolean trim)
+    public static List<String> split(String s, char delimiter, boolean trim)
     {
         if (s == null)
         {
-            return new ArrayList();
+            return new ArrayList<String>();
         }
 
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
 
-        StringBuffer token = new StringBuffer();
+        StringBuilder token = new StringBuilder();
         int begin = 0;
         boolean inEscape = false;
 
@@ -560,7 +555,7 @@ public final class PropertyConverter
                         t = t.trim();
                     }
                     list.add(t);
-                    token = new StringBuffer();
+                    token = new StringBuilder();
                 }
                 else if (c == LIST_ESC_CHAR)
                 {
@@ -594,13 +589,13 @@ public final class PropertyConverter
 
     /**
      * Split a string on the specified delimiter always trimming the elements.
-     * This is a shortcut for <code>split(s, delimiter, true)</code>.
+     * This is a shortcut for {@code split(s, delimiter, true)}.
      *
      * @param s          the string to split
      * @param delimiter  the delimiter
      * @return a list with the single tokens
      */
-    public static List split(String s, char delimiter)
+    public static List<String> split(String s, char delimiter)
     {
         return split(s, delimiter, true);
     }
@@ -760,7 +755,7 @@ public final class PropertyConverter
         {
             try
             {
-                Constructor ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
+                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
                 return ctor.newInstance(new Object[] {value});
             }
             catch (Exception e)
@@ -777,23 +772,9 @@ public final class PropertyConverter
     /**
      * Calls Class.isEnum() on Java 5, returns false on older JRE.
      */
-    static boolean isEnum(Class cls)
+    static boolean isEnum(Class<?> cls)
     {
-        if (!SystemUtils.isJavaVersionAtLeast(JAVA_VERSION_1_5))
-        {
-            return false;
-        }
-
-        try
-        {
-            Method isEnumMethod = Class.class.getMethod("isEnum", new Class[] {});
-            return ((Boolean) isEnumMethod.invoke(cls, new Object[] {})).booleanValue();
-        }
-        catch (Exception e)
-        {
-            // impossible
-            throw new RuntimeException(e.getMessage());
-        }
+        return cls.isEnum();
     }
 
     /**
@@ -806,18 +787,17 @@ public final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object toEnum(Object value, Class cls) throws ConversionException
+    static <E extends Enum<E>> E toEnum(Object value, Class<E> cls) throws ConversionException
     {
         if (value.getClass().equals(cls))
         {
-            return value;
+            return cls.cast(value);
         }
         else if (value instanceof String)
         {
             try
             {
-                Method valueOfMethod = cls.getMethod("valueOf", new Class[] {String.class});
-                return valueOfMethod.invoke(null, new Object[] {value});
+                return Enum.valueOf(cls, (String) value);
             }
             catch (Exception e)
             {
@@ -828,10 +808,8 @@ public final class PropertyConverter
         {
             try
             {
-                Method valuesMethod = cls.getMethod("values", new Class[] {});
-                Object valuesArray = valuesMethod.invoke(null, new Object[] {});
-
-                return Array.get(valuesArray, ((Number) value).intValue());
+                E[] enumConstants = cls.getEnumConstants();
+                return enumConstants[((Number) value).intValue()];
             }
             catch (Exception e)
             {
@@ -920,30 +898,30 @@ public final class PropertyConverter
 
     /**
      * Returns an iterator over the simple values of a composite value. This
-     * implementation calls <code>{@link #flatten(Object, char)}</code> and
+     * implementation calls {@link #flatten(Object, char)} and
      * returns an iterator over the returned collection.
      *
      * @param value the value to "split"
      * @param delimiter the delimiter for String values
      * @return an iterator for accessing the single values
      */
-    public static Iterator toIterator(Object value, char delimiter)
+    public static Iterator<?> toIterator(Object value, char delimiter)
     {
         return flatten(value, delimiter).iterator();
     }
 
     /**
      * Returns a collection with all values contained in the specified object.
-     * This method is used for instance by the <code>addProperty()</code>
+     * This method is used for instance by the {@code addProperty()}
      * implementation of the default configurations to gather all values of the
      * property to add. Depending on the type of the passed in object the
      * following things happen:
      * <ul>
      * <li>Strings are checked for delimiter characters and split if necessary.</li>
-     * <li>For objects implementing the <code>Iterable</code> interface, the
-     * corresponding <code>Iterator</code> is obtained, and contained elements
+     * <li>For objects implementing the {@code Iterable} interface, the
+     * corresponding {@code Iterator} is obtained, and contained elements
      * are added to the resulting collection.</li>
-     * <li>Arrays are treated as <code>Iterable</code> objects.</li>
+     * <li>Arrays are treated as {@code Iterable} objects.</li>
      * <li>All other types are directly inserted.</li>
      * <li>Recursive combinations are supported, e.g. a collection containing
      * an array that contains strings: The resulting collection will only
@@ -955,7 +933,7 @@ public final class PropertyConverter
      * @return a &quot;flat&quot; collection containing all primitive values of
      *         the passed in object
      */
-    private static Collection flatten(Object value, char delimiter)
+    private static Collection<?> flatten(Object value, char delimiter)
     {
         if (value instanceof String)
         {
@@ -966,14 +944,14 @@ public final class PropertyConverter
             }
         }
 
-        Collection result = new LinkedList();
-        if (value instanceof Collection)
+        Collection<Object> result = new LinkedList<Object>();
+        if (value instanceof Iterable)
         {
-            flattenIterator(result, ((Iterable) value).iterator(), delimiter);
+            flattenIterator(result, ((Iterable<?>) value).iterator(), delimiter);
         }
         else if (value instanceof Iterator)
         {
-            flattenIterator(result, (Iterator) value, delimiter);
+            flattenIterator(result, (Iterator<?>) value, delimiter);
         }
         else if (value != null)
         {
@@ -995,13 +973,13 @@ public final class PropertyConverter
 
     /**
      * Flattens the given iterator. For each element in the iteration
-     * <code>flatten()</code> will be called recursively.
+     * {@code flatten()} will be called recursively.
      *
      * @param target the target collection
      * @param it the iterator to process
      * @param delimiter the delimiter for String values
      */
-    private static void flattenIterator(Collection target, Iterator it, char delimiter)
+    private static void flattenIterator(Collection<Object> target, Iterator<?> it, char delimiter)
     {
         while (it.hasNext())
         {
@@ -1012,7 +990,7 @@ public final class PropertyConverter
     /**
      * Performs interpolation of the specified value. This method checks if the
      * given value contains variables of the form <code>${...}</code>. If
-     * this is the case, all occurrances will be substituted by their current
+     * this is the case, all occurrences will be substituted by their current
      * values.
      *
      * @param value the value to be interpolated
@@ -1029,5 +1007,17 @@ public final class PropertyConverter
         {
             return value;
         }
+    }
+
+    /**
+     * Helper method for converting a value to a constant of an enumeration class.
+     * @param enumClass the enumeration class
+     * @param value the value to be converted
+     * @return the converted value
+     */
+    @SuppressWarnings("unchecked")
+    // conversion is safe because we know that the class is an Enum class
+    private static Object convertToEnum(Class<?> enumClass, Object value) {
+        return toEnum(value, enumClass.asSubclass(Enum.class));
     }
 }
