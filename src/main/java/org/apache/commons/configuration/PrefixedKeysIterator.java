@@ -21,19 +21,19 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * * A specialized iterator implementation used by <code>{@link AbstractConfiguration}</code>
+ * * A specialized iterator implementation used by {@link AbstractConfiguration}
  * to return an iteration over all keys starting with a specified prefix.
  *
  * <p>This class is basically a stripped-down version of the
- * <code>FilterIterator</code> class of Commons Collections</p>
+ * {@code FilterIterator} class of Commons Collections</p>
  *
  * @author <a href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  */
-class PrefixedKeysIterator implements Iterator
+class PrefixedKeysIterator implements Iterator<String>
 {
     /** Stores the wrapped iterator. */
-    private final Iterator iterator;
+    private final Iterator<String> iterator;
 
     /** Stores the prefix. */
     private final String prefix;
@@ -45,13 +45,13 @@ class PrefixedKeysIterator implements Iterator
     private boolean nextElementSet;
 
     /**
-     * Creates a new instance of <code>PrefixedKeysIterator</code> and sets
+     * Creates a new instance of {@code PrefixedKeysIterator} and sets
      * the wrapped iterator and the prefix for the accepted keys.
      *
      * @param wrappedIterator the wrapped iterator
      * @param keyPrefix the prefix of the allowed keys
      */
-    public PrefixedKeysIterator(Iterator wrappedIterator, String keyPrefix)
+    public PrefixedKeysIterator(Iterator<String> wrappedIterator, String keyPrefix)
     {
         iterator = wrappedIterator;
         prefix = keyPrefix;
@@ -74,7 +74,7 @@ class PrefixedKeysIterator implements Iterator
      * @return the next element in the iteration
      * @throws NoSuchElementException if there is no next element
      */
-    public Object next()
+    public String next()
     {
         if (!nextElementSet && !setNextElement())
         {
@@ -87,10 +87,10 @@ class PrefixedKeysIterator implements Iterator
     /**
      * Removes from the underlying collection of the base iterator the last
      * element returned by this iterator. This method can only be called if
-     * <code>next()</code> was called, but not after <code>hasNext()</code>,
-     * because the <code>hasNext()</code> call changes the base iterator.
+     * {@code next()} was called, but not after {@code hasNext()},
+     * because the {@code hasNext()} call changes the base iterator.
      *
-     * @throws IllegalStateException if <code>hasNext()</code> has already
+     * @throws IllegalStateException if {@code hasNext()} has already
      *         been called.
      */
     public void remove()
@@ -112,7 +112,7 @@ class PrefixedKeysIterator implements Iterator
     {
         while (iterator.hasNext())
         {
-            String key = (String) iterator.next();
+            String key = iterator.next();
             if (key.startsWith(prefix + ".") || key.equals(prefix))
             {
                 nextElement = key;
