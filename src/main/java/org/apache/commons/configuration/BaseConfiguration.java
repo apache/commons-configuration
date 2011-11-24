@@ -45,13 +45,12 @@ import java.util.Map;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov</a>
- * @author Oliver Heger
  * @version $Id$
  */
 public class BaseConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** stores the configuration key-value pairs */
-    private Map store = new LinkedHashMap();
+    private Map<String, Object> store = new LinkedHashMap<String, Object>();
 
     /**
      * Adds a key/value pair to the map.  This routine does no magic morphing.
@@ -60,6 +59,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @param key key to use for mapping
      * @param value object to store
      */
+    @Override
     protected void addPropertyDirect(String key, Object value)
     {
         Object previousValue = getProperty(key);
@@ -70,13 +70,16 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         }
         else if (previousValue instanceof List)
         {
+            // safe to case because we have created the lists ourselves
+            @SuppressWarnings("unchecked")
+            List<Object> valueList = (List<Object>) previousValue;
             // the value is added to the existing list
-            ((List) previousValue).add(value);
+            valueList.add(value);
         }
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
             list.add(previousValue);
             list.add(value);
 
@@ -99,8 +102,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     /**
      * Check if the configuration is empty
      *
-     * @return <code>true</code> if Configuration is empty,
-     * <code>false</code> otherwise.
+     * @return {@code true} if Configuration is empty,
+     * {@code false} otherwise.
      */
     public boolean isEmpty()
     {
@@ -112,8 +115,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @param key the configuration key
      *
-     * @return <code>true</code> if Configuration contain given key,
-     * <code>false</code> otherwise.
+     * @return {@code true} if Configuration contain given key,
+     * {@code false} otherwise.
      */
     public boolean containsKey(String key)
     {
@@ -125,6 +128,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @param key the key to remove along with corresponding value.
      */
+    @Override
     protected void clearPropertyDirect(String key)
     {
         if (containsKey(key))
@@ -133,6 +137,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         }
     }
 
+    @Override
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
@@ -146,7 +151,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @return An Iterator.
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return store.keySet().iterator();
     }
@@ -159,21 +164,26 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @return the copy
      * @since 1.3
      */
-    public Object clone()
+    @Override
+    public BaseConfiguration clone()
     {
         try
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
-            copy.store = (Map) ConfigurationUtils.clone(store);
+            // This is safe because the type of the map is known
+            @SuppressWarnings("unchecked")
+            Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
+            copy.store = clonedStore;
 
             // Handle collections in the map; they have to be cloned, too
-            for (Iterator it = store.entrySet().iterator(); it.hasNext();)
+            for (Map.Entry<String, Object> e : store.entrySet())
             {
-                Map.Entry e = (Map.Entry) it.next();
                 if (e.getValue() instanceof Collection)
                 {
-                    copy.store.put(e.getKey(), new ArrayList((Collection) e
-                            .getValue()));
+                    // This is safe because the collections were created by ourselves
+                    @SuppressWarnings("unchecked")
+                    Collection<String> strList = (Collection<String>) e.getValue();
+                    copy.store.put(e.getKey(), new ArrayList<String>(strList));
                 }
             }
 

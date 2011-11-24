@@ -357,6 +357,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @return the encoding
      */
+    @Override
     public String getEncoding()
     {
         String enc = super.getEncoding();
@@ -503,6 +504,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @param basePath The new basePath to set.
      */
+    @Override
     public void setBasePath(String basePath)
     {
         super.setBasePath(basePath);
@@ -514,7 +516,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      *
      * @return the copy
      */
-    public Object clone()
+    @Override
+    public PropertiesConfiguration clone()
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
         if (layout != null)
