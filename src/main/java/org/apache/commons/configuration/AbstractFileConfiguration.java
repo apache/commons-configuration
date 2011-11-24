@@ -37,28 +37,28 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * <p>Partial implementation of the <code>FileConfiguration</code> interface.
+ * <p>Partial implementation of the {@code FileConfiguration} interface.
  * Developers of file based configuration may want to extend this class,
- * the two methods left to implement are <code>{@link FileConfiguration#load(Reader)}</code>
- * and <code>{@link FileConfiguration#save(Writer)}</code>.</p>
+ * the two methods left to implement are {@link FileConfiguration#load(Reader)}
+ * and {@link FileConfiguration#save(Writer)}.</p>
  * <p>This base class already implements a couple of ways to specify the location
  * of the file this configuration is based on. The following possibilities
  * exist:
- * <ul><li>URLs: With the method <code>setURL()</code> a full URL to the
+ * <ul><li>URLs: With the method {@code setURL()} a full URL to the
  * configuration source can be specified. This is the most flexible way. Note
- * that the <code>save()</code> methods support only <em>file:</em> URLs.</li>
- * <li>Files: The <code>setFile()</code> method allows to specify the
+ * that the {@code save()} methods support only <em>file:</em> URLs.</li>
+ * <li>Files: The {@code setFile()} method allows to specify the
  * configuration source as a file. This can be either a relative or an
  * absolute file. In the former case the file is resolved based on the current
  * directory.</li>
- * <li>As file paths in string form: With the <code>setPath()</code> method a
+ * <li>As file paths in string form: With the {@code setPath()} method a
  * full path to a configuration file can be provided as a string.</li>
  * <li>Separated as base path and file name: This is the native form in which
  * the location is stored. The base path is a string defining either a local
- * directory or a URL. It can be set using the <code>setBasePath()</code>
+ * directory or a URL. It can be set using the {@code setBasePath()}
  * method. The file name, non surprisingly, defines the name of the configuration
  * file.</li></ul></p>
- * <p>Note that the <code>load()</code> methods do not wipe out the configuration's
+ * <p>Note that the {@code load()} methods do not wipe out the configuration's
  * content before the new configuration file is loaded. Thus it is very easy to
  * construct a union configuration by simply loading multiple configuration
  * files, e.g.</p>
@@ -68,10 +68,10 @@ import org.apache.commons.logging.LogFactory;
  * </pre></p>
  * <p>After executing this code fragment, the resulting configuration will
  * contain both the properties of configFile1 and configFile2. On the other
- * hand, if the current configuration file is to be reloaded, <code>clear()</code>
+ * hand, if the current configuration file is to be reloaded, {@code clear()}
  * should be called first. Otherwise the properties are doubled. This behavior
- * is analogous to the behavior of the <code>load(InputStream)</code> method
- * in <code>java.util.Properties</code>.</p>
+ * is analogous to the behavior of the {@code load(InputStream)} method
+ * in {@code java.util.Properties}.</p>
  *
  * @author Emmanuel Bourg
  * @version $Id$
@@ -354,7 +354,7 @@ implements FileConfiguration, FileSystemBased
      * encoding. If the encoding is null the default encoding is used.
      *
      * @param in the input stream
-     * @param encoding the encoding used. <code>null</code> to use the default encoding
+     * @param encoding the encoding used. {@code null} to use the default encoding
      *
      * @throws ConfigurationException if an error occurs during the load operation
      */
@@ -559,8 +559,8 @@ implements FileConfiguration, FileSystemBased
      * Set the name of the file. The passed in file name can contain a
      * relative path.
      * It must be used when referring files with relative paths from classpath.
-     * Use <code>{@link AbstractFileConfiguration#setPath(String)
-     * setPath()}</code> to set a full qualified file name.
+     * Use {@link AbstractFileConfiguration#setPath(String)
+     * setPath()} to set a full qualified file name.
      *
      * @param fileName the name of the file
      */
@@ -590,7 +590,7 @@ implements FileConfiguration, FileSystemBased
     /**
      * Sets the base path. The base path is typically either a path to a
      * directory or a URL. Together with the value passed to the
-     * <code>setFileName()</code> method it defines the location of the
+     * {@code setFileName()} method it defines the location of the
      * configuration file to be loaded. The strategies for locating the file are
      * quite tolerant. For instance if the file name is already an absolute path
      * or a fully defined URL, the base path will be ignored. The base path can
@@ -598,7 +598,7 @@ implements FileConfiguration, FileSystemBased
      * context. Because the base path is used by some of the derived classes for
      * resolving relative file names it should contain a meaningful value. If
      * other methods are used for determining the location of the configuration
-     * file (e.g. <code>setFile()</code> or <code>setURL()</code>), the
+     * file (e.g. {@code setFile()} or {@code setURL()}), the
      * base path is automatically set.
      *
      * @param basePath the base path.
@@ -750,6 +750,7 @@ implements FileConfiguration, FileSystemBased
      * @param key the key of the new property
      * @param value the value
      */
+    @Override
     public void addProperty(String key, Object value)
     {
         synchronized (reloadLock)
@@ -767,6 +768,7 @@ implements FileConfiguration, FileSystemBased
      * @param key the key of the affected property
      * @param value the value
      */
+    @Override
     public void setProperty(String key, Object value)
     {
         synchronized (reloadLock)
@@ -776,6 +778,7 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
+    @Override
     public void clearProperty(String key)
     {
         synchronized (reloadLock)
@@ -804,7 +807,7 @@ implements FileConfiguration, FileSystemBased
      * configuration is cleared and loaded again from its source. If this
      * operation causes an exception, the registered error listeners will be
      * notified. The error event passed to the listeners is of type
-     * <code>EVENT_RELOAD</code> and contains the exception that caused the
+     * {@code EVENT_RELOAD} and contains the exception that caused the
      * event.
      */
     public void reload()
@@ -856,7 +859,7 @@ implements FileConfiguration, FileSystemBased
      * Reloads the associated configuration file. This method first clears the
      * content of this configuration, then the associated configuration file is
      * loaded again. Updates on this configuration which have not yet been saved
-     * are lost. Calling this method is like invoking <code>reload()</code>
+     * are lost. Calling this method is like invoking {@code reload()}
      * without checking the reloading strategy.
      *
      * @throws ConfigurationException if an error occurs
@@ -892,12 +895,12 @@ implements FileConfiguration, FileSystemBased
     /**
      * Enters the &quot;No reloading mode&quot;. As long as this mode is active
      * no reloading will be performed. This is necessary for some
-     * implementations of <code>save()</code> in derived classes, which may
+     * implementations of {@code save()} in derived classes, which may
      * cause a reload while accessing the properties to save. This may cause the
      * whole configuration to be erased. To avoid this, this method can be
      * called first. After a call to this method there always must be a
-     * corresponding call of <code>{@link #exitNoReload()}</code> later! (If
-     * necessary, <code>finally</code> blocks must be used to ensure this.
+     * corresponding call of {@link #exitNoReload()} later! (If
+     * necessary, {@code finally} blocks must be used to ensure this.
      */
     protected void enterNoReload()
     {
@@ -934,6 +937,7 @@ implements FileConfiguration, FileSystemBased
      * @param propValue the value of the property
      * @param before the before update flag
      */
+    @Override
     protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
         enterNoReload();
@@ -947,6 +951,7 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
+    @Override
     public Object getProperty(String key)
     {
         synchronized (reloadLock)
@@ -956,6 +961,7 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
+    @Override
     public boolean isEmpty()
     {
         reload();
@@ -965,6 +971,7 @@ implements FileConfiguration, FileSystemBased
         }
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         reload();
@@ -975,9 +982,9 @@ implements FileConfiguration, FileSystemBased
     }
 
     /**
-     * Returns an <code>Iterator</code> with the keys contained in this
+     * Returns an {@code Iterator} with the keys contained in this
      * configuration. This implementation performs a reload if necessary before
-     * obtaining the keys. The <code>Iterator</code> returned by this method
+     * obtaining the keys. The {@code Iterator} returned by this method
      * points to a snapshot taken when this method was called. Later changes at
      * the set of keys (including those caused by a reload) won't be visible.
      * This is because a reload can happen at any time during iteration, and it
@@ -987,16 +994,17 @@ implements FileConfiguration, FileSystemBased
      * operation some keys are no longer present, the iterator will still return
      * those keys because they were found when it was created.
      *
-     * @return an <code>Iterator</code> with the keys of this configuration
+     * @return an {@code Iterator} with the keys of this configuration
      */
-    public Iterator getKeys()
+    @Override
+    public Iterator<String> getKeys()
     {
         reload();
-        List keyList = new LinkedList();
+        List<String> keyList = new LinkedList<String>();
         enterNoReload();
         try
         {
-            for (Iterator it = super.getKeys(); it.hasNext();)
+            for (Iterator<String> it = super.getKeys(); it.hasNext();)
             {
                 keyList.add(it.next());
             }
@@ -1030,7 +1038,8 @@ implements FileConfiguration, FileSystemBased
      * @return the copy
      * @since 1.3
      */
-    public Object clone()
+    @Override
+    public AbstractFileConfiguration clone()
     {
         AbstractFileConfiguration copy = (AbstractFileConfiguration) super.clone();
         copy.setBasePath(null);
