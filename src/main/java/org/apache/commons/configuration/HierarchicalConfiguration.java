@@ -43,7 +43,7 @@ import org.apache.commons.lang.StringUtils;
  * <p>A specialized configuration class that extends its base class by the
  * ability of keeping more structure in the stored properties.</p><p>There
  * are some sources of configuration data that cannot be stored very well in a
- * <code>BaseConfiguration</code> object because then their structure is lost.
+ * {@code BaseConfiguration} object because then their structure is lost.
  * This is especially true for XML documents. This class can deal with such
  * structured configuration sources by storing the properties in a tree-like
  * organization.</p><p>The internal used storage form allows for a more
@@ -83,39 +83,39 @@ import org.apache.commons.lang.StringUtils;
  * </pre>
  *
  * </p><p>If this document is parsed and stored in a
- * <code>HierarchicalConfiguration</code> object (which can be done by one of
+ * {@code HierarchicalConfiguration} object (which can be done by one of
  * the sub classes), there are enhanced possibilities of accessing properties.
  * The keys for querying information can contain indices that select a certain
  * element if there are multiple hits.</p><p>For instance the key
- * <code>tables.table(0).name</code> can be used to find out the name of the
- * first table. In opposite <code>tables.table.name</code> would return a
+ * {@code tables.table(0).name} can be used to find out the name of the
+ * first table. In opposite {@code tables.table.name} would return a
  * collection with the names of all available tables. Similarly the key
- * <code>tables.table(1).fields.field.name</code> returns a collection with
+ * {@code tables.table(1).fields.field.name} returns a collection with
  * the names of all fields of the second table. If another index is added after
- * the <code>field</code> element, a single field can be accessed:
- * <code>tables.table(1).fields.field(0).name</code>.</p><p>There is a
- * <code>getMaxIndex()</code> method that returns the maximum allowed index
+ * the {@code field} element, a single field can be accessed:
+ * {@code tables.table(1).fields.field(0).name}.</p><p>There is a
+ * {@code getMaxIndex()} method that returns the maximum allowed index
  * that can be added to a given property key. This method can be used to iterate
  * over all values defined for a certain property.</p>
  * <p>Since the 1.3 release of <em>Commons Configuration</em> hierarchical
  * configurations support an <em>expression engine</em>. This expression engine
  * is responsible for evaluating the passed in configuration keys and map them
  * to the stored properties. The examples above are valid for the default
- * expression engine, which is used when a new <code>HierarchicalConfiguration</code>
- * instance is created. With the <code>setExpressionEngine()</code> method a
+ * expression engine, which is used when a new {@code HierarchicalConfiguration}
+ * instance is created. With the {@code setExpressionEngine()} method a
  * different expression engine can be set. For instance with
- * <code>{@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}</code>
+ * {@link org.apache.commons.configuration.tree.xpath.XPathExpressionEngine}
  * there is an expression engine available that supports configuration keys in
  * XPATH syntax.</p>
  * <p>In addition to the events common for all configuration classes hierarchical
  * configurations support some more events that correspond to some specific
  * methods and features:
- * <dl><dt><em>EVENT_ADD_NODES</em></dt><dd>The <code>addNodes()</code> method
+ * <dl><dt><em>EVENT_ADD_NODES</em></dt><dd>The {@code addNodes()} method
  * was called; the event object contains the key, to which the nodes were added,
  * and a collection with the new nodes as value.</dd>
- * <dt><em>EVENT_CLEAR_TREE</em></dt><dd>The <code>clearTree()</code> method was
+ * <dt><em>EVENT_CLEAR_TREE</em></dt><dd>The {@code clearTree()} method was
  * called; the event object stores the key of the removed sub tree.</dd>
- * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A <code>SubnodeConfiguration</code>
+ * <dt><em>EVENT_SUBNODE_CHANGED</em></dt><dd>A {@code SubnodeConfiguration}
  * that was created from this configuration has been changed. The value property
  * of the event object contains the original event object as it was sent by the
  * subnode configuration.</dd></dl></p>
@@ -166,7 +166,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     private transient ExpressionEngine expressionEngine;
 
     /**
-     * Creates a new instance of <code>HierarchicalConfiguration</code>.
+     * Creates a new instance of {@code HierarchicalConfiguration}.
      */
     public HierarchicalConfiguration()
     {
@@ -174,7 +174,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Creates a new instance of <code>HierarchicalConfiguration</code> and
+     * Creates a new instance of {@code HierarchicalConfiguration} and
      * copies all data contained in the specified configuration into the new
      * one.
      *
@@ -207,8 +207,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Returns the root node of this hierarchical configuration. This method
      * exists for backwards compatibility only. New code should use the
-     * <code>{@link #getRootNode()}</code> method instead, which operates on
-     * the preferred data type <code>ConfigurationNode</code>.
+     * {@link #getRootNode()} method instead, which operates on
+     * the preferred data type {@code ConfigurationNode}.
      *
      * @return the root node
      */
@@ -226,8 +226,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Sets the root node of this hierarchical configuration. This method
      * exists for backwards compatibility only. New code should use the
-     * <code>{@link #setRootNode(ConfigurationNode)}</code> method instead,
-     * which operates on the preferred data type <code>ConfigurationNode</code>.
+     * {@link #setRootNode(ConfigurationNode)} method instead,
+     * which operates on the preferred data type {@code ConfigurationNode}.
      *
      * @param node the root node
      */
@@ -341,7 +341,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public Object getProperty(String key)
     {
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
 
         if (nodes.size() == 0)
         {
@@ -349,10 +349,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
         else
         {
-            List list = new ArrayList();
-            for (Iterator it = nodes.iterator(); it.hasNext();)
+            List<Object> list = new ArrayList<Object>();
+            for (ConfigurationNode node : nodes)
             {
-                ConfigurationNode node = (ConfigurationNode) it.next();
                 if (node.getValue() != null)
                 {
                     list.add(node.getValue());
@@ -372,12 +371,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Adds the property with the specified key. This task will be delegated to
-     * the associated <code>ExpressionEngine</code>, so the passed in key
+     * the associated {@code ExpressionEngine}, so the passed in key
      * must match the requirements of this implementation.
      *
      * @param key the key of the new property
      * @param obj the value of the new property
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         NodeAddData data = getExpressionEngine().prepareAdd(getRootNode(), key);
@@ -387,26 +387,26 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
     /**
      * Adds a collection of nodes at the specified position of the configuration
-     * tree. This method works similar to <code>addProperty()</code>, but
+     * tree. This method works similar to {@code addProperty()}, but
      * instead of a single property a whole collection of nodes can be added -
      * and thus complete configuration sub trees. E.g. with this method it is
-     * possible to add parts of another <code>HierarchicalConfiguration</code>
+     * possible to add parts of another {@code HierarchicalConfiguration}
      * object to this object. (However be aware that a
-     * <code>ConfigurationNode</code> object can only belong to a single
+     * {@code ConfigurationNode} object can only belong to a single
      * configuration. So if nodes from one configuration are directly added to
      * another one using this method, the structure of the source configuration
      * will be broken. In this case you should clone the nodes to be added
-     * before calling <code>addNodes()</code>.) If the passed in key refers to
+     * before calling {@code addNodes()}.) If the passed in key refers to
      * an existing and unique node, the new nodes are added to this node.
      * Otherwise a new node will be created at the specified position in the
      * hierarchy.
      *
      * @param key the key where the nodes are to be added; can be <b>null </b>,
      * then they are added to the root node
-     * @param nodes a collection with the <code>Node</code> objects to be
+     * @param nodes a collection with the {@code Node} objects to be
      * added
      */
-    public void addNodes(String key, Collection nodes)
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         if (nodes == null || nodes.isEmpty())
         {
@@ -415,11 +415,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         fireEvent(EVENT_ADD_NODES, key, nodes, true);
         ConfigurationNode parent;
-        List target = fetchNodeList(key);
+        List<ConfigurationNode> target = fetchNodeList(key);
         if (target.size() == 1)
         {
             // existing unique key
-            parent = (ConfigurationNode) target.get(0);
+            parent = target.get(0);
         }
         else
         {
@@ -434,9 +434,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     "Cannot add nodes to an attribute node!");
         }
 
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        for (ConfigurationNode child : nodes)
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             if (child.isAttribute())
             {
                 parent.addAttribute(child);
@@ -462,9 +461,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Creates a new <code>Configuration</code> object containing all keys
+     * Creates a new {@code Configuration} object containing all keys
      * that start with the specified prefix. This implementation will return a
-     * <code>HierarchicalConfiguration</code> object so that the structure of
+     * {@code HierarchicalConfiguration} object so that the structure of
      * the keys will be saved. The nodes selected by the prefix (it is possible
      * that multiple nodes are selected) are mapped to the root node of the
      * returned configuration, i.e. their children and attributes will become
@@ -472,16 +471,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * node is only set if exactly one of the selected nodes contain a value (if
      * multiple nodes have a value, there is simply no way to decide how these
      * values are merged together). Note that the returned
-     * <code>Configuration</code> object is not connected to its source
+     * {@code Configuration} object is not connected to its source
      * configuration: updates on the source configuration are not reflected in
      * the subset and vice versa.
      *
      * @param prefix the prefix of the keys for the subset
      * @return a new configuration object representing the selected subset
      */
+    @Override
     public Configuration subset(String prefix)
     {
-        Collection nodes = fetchNodeList(prefix);
+        Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
         if (nodes.isEmpty())
         {
             return new HierarchicalConfiguration();
@@ -491,6 +491,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         HierarchicalConfiguration result = new HierarchicalConfiguration()
         {
             // Override interpolate to always interpolate on the parent
+            @Override
             protected Object interpolate(Object value)
             {
                 return parent.interpolate(value);
@@ -501,9 +502,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         // Initialize the new root node
         Object value = null;
         int valueCount = 0;
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        for (ConfigurationNode nd : nodes)
         {
-            ConfigurationNode nd = (ConfigurationNode) it.next();
             if (nd.getValue() != null)
             {
                 value = nd.getValue();
@@ -511,16 +511,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             }
             nd.visit(visitor);
 
-            for (Iterator it2 = visitor.getClone().getChildren().iterator(); it2
-                    .hasNext();)
+            for (ConfigurationNode c : visitor.getClone().getChildren())
             {
-                result.getRootNode().addChild((ConfigurationNode) it2.next());
+                result.getRootNode().addChild(c);
             }
-            for (Iterator it2 = visitor.getClone().getAttributes().iterator(); it2
-                    .hasNext();)
+            for (ConfigurationNode attr : visitor.getClone().getAttributes())
             {
-                result.getRootNode().addAttribute(
-                        (ConfigurationNode) it2.next());
+                result.getRootNode().addAttribute(attr);
             }
         }
 
@@ -540,20 +537,20 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * returned configuration the sub tree can directly be accessed, it becomes
      * the root node of this configuration. Because of this the passed in key
      * must select exactly one configuration node; otherwise an
-     * <code>IllegalArgumentException</code> will be thrown.
+     * {@code IllegalArgumentException} will be thrown.
      * </p>
      * <p>
      * The difference between this method and the
-     * <code>{@link #subset(String)}</code> method is that
-     * <code>subset()</code> supports arbitrary subsets of configuration nodes
-     * while <code>configurationAt()</code> only returns a single sub tree.
+     * {@link #subset(String)} method is that
+     * {@code subset()} supports arbitrary subsets of configuration nodes
+     * while {@code configurationAt()} only returns a single sub tree.
      * Please refer to the documentation of the
-     * <code>SubnodeConfiguration</code> class to obtain further information
+     * {@code SubnodeConfiguration} class to obtain further information
      * about subnode configurations and when they should be used.
      * </p>
      * <p>
-     * With the <code>supportUpdate</code> flag the behavior of the returned
-     * <code>SubnodeConfiguration</code> regarding updates of its parent
+     * With the {@code supportUpdate} flag the behavior of the returned
+     * {@code SubnodeConfiguration} regarding updates of its parent
      * configuration can be determined. A subnode configuration operates on the
      * same nodes as its parent, so changes at one configuration are normally
      * directly visible for the other configuration. There are however changes
@@ -562,7 +559,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * file-based configurations): Here the complete node set of the parent
      * configuration is replaced, but the subnode configuration still references
      * the old nodes. If such changes should be detected by the subnode
-     * configuration, the <code>supportUpdates</code> flag must be set to
+     * configuration, the {@code supportUpdates} flag must be set to
      * <b>true</b>. This causes the subnode configuration to reevaluate the key
      * used for its creation each time it is accessed. This guarantees that the
      * subnode configuration always stays in sync with its key, even if the
@@ -582,21 +579,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     public SubnodeConfiguration configurationAt(String key,
             boolean supportUpdates)
     {
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
         if (nodes.size() != 1)
         {
             throw new IllegalArgumentException(
                     "Passed in key must select exactly one node: " + key);
         }
         return supportUpdates ? createSubnodeConfiguration(
-                (ConfigurationNode) nodes.get(0), key)
-                : createSubnodeConfiguration((ConfigurationNode) nodes.get(0));
+                nodes.get(0), key)
+                : createSubnodeConfiguration(nodes.get(0));
     }
 
     /**
      * Returns a hierarchical subnode configuration for the node specified by
-     * the given key. This is a short form for <code>configurationAt(key,
-     * <b>false</b>)</code>.
+     * the given key. This is a short form for {@code configurationAt(key,
+     * <b>false</b>)}.
      *
      * @param key the key that selects the sub tree
      * @return a hierarchical configuration that contains this sub tree
@@ -611,9 +608,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * Returns a list of sub configurations for all configuration nodes selected
      * by the given key. This method will evaluate the passed in key (using the
-     * current <code>ExpressionEngine</code>) and then create a subnode
+     * current {@code ExpressionEngine}) and then create a subnode
      * configuration for each returned node (like
-     * <code>{@link #configurationAt(String)}</code>}). This is especially
+     * {@link #configurationAt(String)}}). This is especially
      * useful when dealing with list-like structures. As an example consider the
      * configuration that contains data about database tables and their fields.
      * If you need access to all fields of a certain table, you can simply do
@@ -635,21 +632,21 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * configuration represents one of the nodes selected by the passed in key
      * @since 1.3
      */
-    public List configurationsAt(String key)
+    public List<HierarchicalConfiguration> configurationsAt(String key)
     {
-        List nodes = fetchNodeList(key);
-        List configs = new ArrayList(nodes.size());
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        List<ConfigurationNode> nodes = fetchNodeList(key);
+        List<HierarchicalConfiguration> configs = new ArrayList<HierarchicalConfiguration>(nodes.size());
+        for (ConfigurationNode node : nodes)
         {
-            configs.add(createSubnodeConfiguration((ConfigurationNode) it.next()));
+            configs.add(createSubnodeConfiguration(node));
         }
         return configs;
     }
 
     /**
      * Creates a subnode configuration for the specified node. This method is
-     * called by <code>configurationAt()</code> and
-     * <code>configurationsAt()</code>.
+     * called by {@code configurationAt()} and
+     * {@code configurationsAt()}.
      *
      * @param node the node, for which a subnode configuration is to be created
      * @return the configuration for the given node
@@ -683,7 +680,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * This method is always called when a subnode configuration created from
      * this configuration has been modified. This implementation transforms the
-     * received event into an event of type <code>EVENT_SUBNODE_CHANGED</code>
+     * received event into an event of type {@code EVENT_SUBNODE_CHANGED}
      * and notifies the registered listeners.
      *
      * @param event the event describing the change
@@ -734,13 +731,14 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param key the key of the property to set
      * @param value the new value of this property
      */
+    @Override
     public void setProperty(String key, Object value)
     {
         fireEvent(EVENT_SET_PROPERTY, key, value, true);
 
         // Update the existing nodes for this property
-        Iterator itNodes = fetchNodeList(key).iterator();
-        Iterator itValues;
+        Iterator<ConfigurationNode> itNodes = fetchNodeList(key).iterator();
+        Iterator<?> itValues;
         if (!isDelimiterParsingDisabled())
         {
             itValues = PropertyConverter.toIterator(value, getListDelimiter());
@@ -775,6 +773,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * the one inherited from the base class. It directly removes all data from
      * the root node.
      */
+    @Override
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
@@ -788,18 +787,18 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * Removes all values of the property with the given name and of keys that
      * start with this name. So if there is a property with the key
      * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call
-     * of <code>clearTree("foo")</code> would remove both properties.
+     * of {@code clearTree("foo")} would remove both properties.
      *
      * @param key the key of the property to be removed
      */
     public void clearTree(String key)
     {
         fireEvent(EVENT_CLEAR_TREE, key, null, true);
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
 
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        for (ConfigurationNode node : nodes)
         {
-            removeNode((ConfigurationNode) it.next());
+            removeNode(node);
         }
         fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
     }
@@ -811,14 +810,15 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *
      * @param key the key of the property to be removed
      */
+    @Override
     public void clearProperty(String key)
     {
         fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
 
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        for (ConfigurationNode node : nodes)
         {
-            clearNode((ConfigurationNode) it.next());
+            clearNode(node);
         }
 
         fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
@@ -831,7 +831,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *
      * @return an iterator with the defined keys in this configuration
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         getRootNode().visit(visitor);
@@ -850,7 +850,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param prefix the prefix of the keys to start with
      * @return an iterator with the found keys
      */
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         if (containsKey(prefix))
@@ -859,18 +860,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             visitor.getKeyList().add(prefix);
         }
 
-        List nodes = fetchNodeList(prefix);
+        List<ConfigurationNode> nodes = fetchNodeList(prefix);
 
-        for (Iterator itNodes = nodes.iterator(); itNodes.hasNext();)
+        for (ConfigurationNode node : nodes)
         {
-            ConfigurationNode node = (ConfigurationNode) itNodes.next();
-            for (Iterator it = node.getChildren().iterator(); it.hasNext();)
+            for (ConfigurationNode c : node.getChildren())
             {
-                ((ConfigurationNode) it.next()).visit(visitor);
+                c.visit(visitor);
             }
-            for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode attr : node.getAttributes())
             {
-                ((ConfigurationNode) it.next()).visit(visitor);
+                attr.visit(visitor);
             }
         }
 
@@ -899,6 +899,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return the copy
      * @since 1.2
      */
+    @Override
     public Object clone()
     {
         try
@@ -930,11 +931,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @return a configuration with all variables interpolated
      * @since 1.5
      */
+    @Override
     public Configuration interpolatedConfiguration()
     {
         HierarchicalConfiguration c = (HierarchicalConfiguration) clone();
         c.getRootNode().visit(new ConfigurationNodeVisitorAdapter()
         {
+            @Override
             public void visitAfterChildren(ConfigurationNode node)
             {
                 node.setValue(interpolate(node.getValue()));
@@ -950,7 +953,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param key the key
      * @return a list with all affected nodes (never <b>null </b>)
      */
-    protected List fetchNodeList(String key)
+    protected List<ConfigurationNode> fetchNodeList(String key)
     {
         return getExpressionEngine().query(getRootNode(), key);
     }
@@ -966,10 +969,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @deprecated Property keys are now evaluated by the expression engine
      * associated with the configuration; this method will no longer be called.
      * If you want to modify the way properties are looked up, consider
-     * implementing you own <code>ExpressionEngine</code> implementation.
+     * implementing you own {@code ExpressionEngine} implementation.
      */
+    @Deprecated
     protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart,
-            Node node, Collection nodes)
+            Node node, Collection<ConfigurationNode> nodes)
     {
     }
 
@@ -978,9 +982,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      *
      * @param node the node to be checked
      * @return a flag if this node is defined
-     * @deprecated Use the method <code>{@link #nodeDefined(ConfigurationNode)}</code>
+     * @deprecated Use the method {@link #nodeDefined(ConfigurationNode)}
      * instead.
      */
+    @Deprecated
     protected boolean nodeDefined(Node node)
     {
         return nodeDefined((ConfigurationNode) node);
@@ -1005,9 +1010,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * removed.
      *
      * @param node the node to be removed
-     * @deprecated Use the method <code>{@link #removeNode(ConfigurationNode)}</code>
+     * @deprecated Use the method {@link #removeNode(ConfigurationNode)}
      * instead.
      */
+    @Deprecated
     protected void removeNode(Node node)
     {
         removeNode((ConfigurationNode) node);
@@ -1038,9 +1044,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * this operation, it is removed from the hierarchy.
      *
      * @param node the node to be cleared
-     * @deprecated Use the method <code>{@link #clearNode(ConfigurationNode)}</code>
+     * @deprecated Use the method {@link #clearNode(ConfigurationNode)}
      * instead
      */
+    @Deprecated
     protected void clearNode(Node node)
     {
         clearNode((ConfigurationNode) node);
@@ -1070,11 +1077,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param startNode the node to start the search with
      * @return the parent node for the add operation
      * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * {@code ExpressionEngine} associated with this configuration instance.
      * This method will no longer be called. Developers who want to modify the
      * process of adding new properties should consider implementing their own
      * expression engine.
      */
+    @Deprecated
     protected Node fetchAddNode(ConfigurationKey.KeyIterator keyIt, Node startNode)
     {
         return null;
@@ -1089,11 +1097,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param node the actual node
      * @return the last existing node on the given path
      * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * {@code ExpressionEngine} associated with this configuration instance.
      * This method will no longer be called. Developers who want to modify the
      * process of adding new properties should consider implementing their own
      * expression engine.
      */
+    @Deprecated
     protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
     {
         return null;
@@ -1108,21 +1117,22 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * @param root the base node of the path to be created
      * @return the last node of the path
      * @deprecated Adding new properties is now to a major part delegated to the
-     * <code>ExpressionEngine</code> associated with this configuration instance.
+     * {@code ExpressionEngine} associated with this configuration instance.
      * This method will no longer be called. Developers who want to modify the
      * process of adding new properties should consider implementing their own
      * expression engine.
      */
+    @Deprecated
     protected Node createAddPath(ConfigurationKey.KeyIterator keyIt, Node root)
     {
         return null;
     }
 
     /**
-     * Creates a new <code>Node</code> object with the specified name. This
+     * Creates a new {@code Node} object with the specified name. This
      * method can be overloaded in derived classes if a specific node type is
      * needed. This base implementation always returns a new object of the
-     * <code>Node</code> class.
+     * {@code Node} class.
      *
      * @param name the name of the new node
      * @return the new node
@@ -1145,9 +1155,9 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         ConfigurationNode node = data.getParent();
 
         // Create missing nodes on the path
-        for (Iterator it = data.getPathNodes().iterator(); it.hasNext();)
+        for (String name : data.getPathNodes())
         {
-            ConfigurationNode child = createNode((String) it.next());
+            ConfigurationNode child = createNode(name);
             node.addChild(child);
             node = child;
         }
@@ -1180,6 +1190,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     {
         node.visit(new ConfigurationNodeVisitorAdapter()
         {
+            @Override
             public void visitBeforeChildren(ConfigurationNode node)
             {
                 node.setReference(null);
@@ -1205,6 +1216,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             final ViewNode viewNode = (ViewNode) obj;
             nd = new Node(viewNode)
             {
+                @Override
                 public void setReference(Object reference)
                 {
                     super.setReference(reference);
@@ -1224,7 +1236,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * A data class for storing (hierarchical) property information. A property
      * can have a value and an arbitrary number of child properties. From
      * version 1.3 on this class is only a thin wrapper over the
-     * <code>{@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}</code>
+     * {@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}
      * class that exists mainly for the purpose of backwards compatibility.
      */
     public static class Node extends DefaultConfigurationNode implements Serializable
@@ -1235,7 +1247,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         private static final long serialVersionUID = -6357500633536941775L;
 
         /**
-         * Creates a new instance of <code>Node</code>.
+         * Creates a new instance of {@code Node}.
          */
         public Node()
         {
@@ -1243,7 +1255,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
 
         /**
-         * Creates a new instance of <code>Node</code> and sets the name.
+         * Creates a new instance of {@code Node} and sets the name.
          *
          * @param name the node's name
          */
@@ -1253,7 +1265,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
 
         /**
-         * Creates a new instance of <code>Node</code> and sets the name and the value.
+         * Creates a new instance of {@code Node} and sets the name and the value.
          *
          * @param name the node's name
          * @param value the value
@@ -1264,7 +1276,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         }
 
         /**
-         * Creates a new instance of <code>Node</code> based on the given
+         * Creates a new instance of {@code Node} based on the given
          * source node. All properties of the source node, including its
          * children and attributes, will be copied.
          *
@@ -1274,18 +1286,16 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         {
             this(src.getName(), src.getValue());
             setReference(src.getReference());
-            for (Iterator it = src.getChildren().iterator(); it.hasNext();)
+            for (ConfigurationNode nd : src.getChildren())
             {
-                ConfigurationNode nd = (ConfigurationNode) it.next();
                 // Don't change the parent node
                 ConfigurationNode parent = nd.getParentNode();
                 addChild(nd);
                 nd.setParentNode(parent);
             }
 
-            for (Iterator it = src.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode nd : src.getAttributes())
             {
-                ConfigurationNode nd = (ConfigurationNode) it.next();
                 // Don't change the parent node
                 ConfigurationNode parent = nd.getParentNode();
                 addAttribute(nd);
@@ -1365,8 +1375,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * @param visitor the visitor
          * @param key here a configuration key with the name of the root node of
          * the iteration can be passed; if this key is not <b>null </b>, the
-         * full pathes to the visited nodes are builded and passed to the
-         * visitor's <code>visit()</code> methods
+         * full paths to the visited nodes are builded and passed to the
+         * visitor's {@code visit()} methods
          */
         public void visit(NodeVisitor visitor, ConfigurationKey key)
         {
@@ -1390,13 +1400,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
             visitor.visitBeforeChildren(this, key);
 
-            for (Iterator it = getChildren().iterator(); it.hasNext()
+            for (Iterator<ConfigurationNode> it = getChildren().iterator(); it.hasNext()
                     && !visitor.terminate();)
             {
                 Object obj = it.next();
                 getNodeFor(obj).visit(visitor, key);
             }
-            for (Iterator it = getAttributes().iterator(); it.hasNext()
+            for (Iterator<ConfigurationNode> it = getAttributes().iterator(); it.hasNext()
                     && !visitor.terminate();)
             {
                 Object obj = it.next();
@@ -1414,8 +1424,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /**
      * <p>Definition of a visitor class for traversing a node and all of its
      * children.</p><p>This class defines the interface of a visitor for
-     * <code>Node</code> objects and provides a default implementation. The
-     * method <code>visit()</code> of <code>Node</code> implements a generic
+     * {@code Node} objects and provides a default implementation. The
+     * method {@code visit()} of {@code Node} implements a generic
      * iteration algorithm based on the <em>Visitor</em> pattern. By providing
      * different implementations of visitors it is possible to collect different
      * data during the iteration process.</p>
@@ -1478,6 +1488,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @return a flag if iteration should be stopped
          */
+        @Override
         public boolean terminate()
         {
             return isDefined();
@@ -1488,6 +1499,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the actual node
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             defined = node.getValue() != null;
@@ -1511,22 +1523,22 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     class DefinedKeysVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** Stores the list to be filled. */
-        private Set keyList;
+        private Set<String> keyList;
 
         /** A stack with the keys of the already processed nodes. */
-        private Stack parentKeys;
+        private Stack<String> parentKeys;
 
         /**
          * Default constructor.
          */
         public DefinedKeysVisitor()
         {
-            keyList = new LinkedHashSet();
-            parentKeys = new Stack();
+            keyList = new LinkedHashSet<String>();
+            parentKeys = new Stack<String>();
         }
 
         /**
-         * Creates a new <code>DefinedKeysVisitor</code> instance and sets the
+         * Creates a new {@code DefinedKeysVisitor} instance and sets the
          * prefix for the keys to fetch.
          *
          * @param prefix the prefix
@@ -1542,7 +1554,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @return the list with the defined keys
          */
-        public Set getKeyList()
+        public Set<String> getKeyList()
         {
             return keyList;
         }
@@ -1553,6 +1565,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitAfterChildren(ConfigurationNode node)
         {
             parentKeys.pop();
@@ -1564,6 +1577,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node to be visited
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             String parentKey = parentKeys.isEmpty() ? null
@@ -1584,17 +1598,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     static class CloneVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** A stack with the actual object to be copied. */
-        private Stack copyStack;
+        private Stack<ConfigurationNode> copyStack;
 
         /** Stores the result of the clone process. */
         private ConfigurationNode result;
 
         /**
-         * Creates a new instance of <code>CloneVisitor</code>.
+         * Creates a new instance of {@code CloneVisitor}.
          */
         public CloneVisitor()
         {
-            copyStack = new Stack();
+            copyStack = new Stack<ConfigurationNode>();
         }
 
         /**
@@ -1602,9 +1616,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitAfterChildren(ConfigurationNode node)
         {
-            ConfigurationNode copy = (ConfigurationNode) copyStack.pop();
+            ConfigurationNode copy = copyStack.pop();
             if (copyStack.isEmpty())
             {
                 result = copy;
@@ -1616,6 +1631,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          *
          * @param node the node
          */
+        @Override
         public void visitBeforeChildren(ConfigurationNode node)
         {
             ConfigurationNode copy = (ConfigurationNode) node.clone();
@@ -1625,11 +1641,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             {
                 if (node.isAttribute())
                 {
-                    ((ConfigurationNode) copyStack.peek()).addAttribute(copy);
+                    copyStack.peek().addAttribute(copy);
                 }
                 else
                 {
-                    ((ConfigurationNode) copyStack.peek()).addChild(copy);
+                    copyStack.peek().addChild(copy);
                 }
             }
 
@@ -1653,11 +1669,11 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * configuration nodes. The basic idea is that each node can be associated
      * with a reference object. This reference object has a concrete meaning in
      * a derived class, e.g. an entry in a JNDI context or an XML element. When
-     * the configuration tree is set up, the <code>load()</code> method is
+     * the configuration tree is set up, the {@code load()} method is
      * responsible for setting the reference objects. When the configuration
      * tree is later modified, new nodes do not have a defined reference object.
      * This visitor class processes all nodes and finds the ones without a
-     * defined reference object. For those nodes the <code>insert()</code>
+     * defined reference object. For those nodes the {@code insert()}
      * method is called, which must be defined in concrete sub classes. This
      * method can perform all steps to integrate the new node into the original
      * structure.
@@ -1671,11 +1687,12 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * @param node the node to visit
          * @param key the current key
          */
+        @Override
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
-            Collection subNodes = new LinkedList(node.getChildren());
+            Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
             subNodes.addAll(node.getAttributes());
-            Iterator children = subNodes.iterator();
+            Iterator<ConfigurationNode> children = subNodes.iterator();
             Node sibling1 = null;
             Node nd = null;
 
@@ -1692,7 +1709,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 if (nd.getReference() == null)
                 {
                     // find all following new nodes
-                    List newNodes = new LinkedList();
+                    List<Node> newNodes = new LinkedList<Node>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
@@ -1710,9 +1727,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
                     // Insert all new nodes
                     Node sibling2 = (nd.getReference() == null) ? null : nd;
-                    for (Iterator it = newNodes.iterator(); it.hasNext();)
+                    for (Node insertNode : newNodes)
                     {
-                        Node insertNode = (Node) it.next();
                         if (insertNode.getReference() == null)
                         {
                             Object ref = insert(insertNode, node, sibling1, sibling2);
@@ -1735,8 +1751,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * structure. The passed in nodes define the position of the node to be
          * inserted: its parent and the siblings between to insert. The return
          * value is interpreted as the new reference of the affected
-         * <code>Node</code> object; if it is not <b>null </b>, it is passed
-         * to the node's <code>setReference()</code> method.
+         * {@code Node} object; if it is not <b>null </b>, it is passed
+         * to the node's {@code setReference()} method.
          *
          * @param newNode the node to be inserted
          * @param parent the parent node
