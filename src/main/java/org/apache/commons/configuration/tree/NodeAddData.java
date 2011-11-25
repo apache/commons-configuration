@@ -22,14 +22,14 @@ import java.util.List;
 
 /**
  * <p>
- * A simple data class used by <code>{@link ExpressionEngine}</code> to store
- * the results of the <code>prepareAdd()</code> operation.
+ * A simple data class used by {@link ExpressionEngine} to store
+ * the results of the {@code prepareAdd()} operation.
  * </p>
  * <p>
  * If a new property is to be added to a configuration, the affected
- * <code>Configuration</code> object must know, where in its hierarchy of
+ * {@code Configuration} object must know, where in its hierarchy of
  * configuration nodes new elements have to be added. This information is
- * obtained by an <code>ExpressionEngine</code> object that interprets the key
+ * obtained by an {@code ExpressionEngine} object that interprets the key
  * of the new property. This expression engine will pack all information
  * necessary for the configuration to perform the add operation in an instance
  * of this class.
@@ -57,7 +57,7 @@ public class NodeAddData
      * Stores a list with nodes that are on the path between the parent node and
      * the new node.
      */
-    private List pathNodes;
+    private List<String> pathNodes;
 
     /** Stores the name of the new node. */
     private String newNodeName;
@@ -66,7 +66,7 @@ public class NodeAddData
     private boolean attribute;
 
     /**
-     * Creates a new, uninitialized instance of <code>NodeAddData</code>.
+     * Creates a new, uninitialized instance of {@code NodeAddData}.
      */
     public NodeAddData()
     {
@@ -74,7 +74,7 @@ public class NodeAddData
     }
 
     /**
-     * Creates a new instance of <code>NodeAddData</code> and sets the most
+     * Creates a new instance of {@code NodeAddData} and sets the most
      * important data fields.
      *
      * @param parent the parent node
@@ -152,21 +152,27 @@ public class NodeAddData
     /**
      * Returns a list with further nodes that must be added. This is needed if a
      * complete branch is to be added at once. For instance imagine that there
-     * exists only a node <code>database</code>. Now the key
-     * <code>database.connection.settings.username</code> (assuming the syntax
+     * exists only a node {@code database}. Now the key
+     * {@code database.connection.settings.username} (assuming the syntax
      * of the default expression engine) is to be added. Then
-     * <code>username</code> is the name of the new node, but the nodes
-     * <code>connection</code> and <code>settings</code> must be added to
+     * {@code username} is the name of the new node, but the nodes
+     * {@code connection} and {@code settings} must be added to
      * the parent node first. In this example these names would be returned by
      * this method.
      *
      * @return a list with the names of nodes that must be added as parents of
      * the new node (never <b>null</b>)
      */
-    public List getPathNodes()
+    public List<String> getPathNodes()
     {
-        return (pathNodes != null) ? Collections.unmodifiableList(pathNodes)
-                : Collections.EMPTY_LIST;
+        if(pathNodes != null)
+        {
+            return Collections.unmodifiableList(pathNodes);
+        }
+        else
+        {
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -180,7 +186,7 @@ public class NodeAddData
     {
         if (pathNodes == null)
         {
-            pathNodes = new LinkedList();
+            pathNodes = new LinkedList<String>();
         }
         pathNodes.add(nodeName);
     }
