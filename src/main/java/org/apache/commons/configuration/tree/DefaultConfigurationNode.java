@@ -29,11 +29,14 @@ import org.apache.commons.configuration.ConfigurationRuntimeException;
 
 /**
  * <p>
- * A default implementation of the <code>ConfigurationNode</code> interface.
+ * A default implementation of the {@code ConfigurationNode} interface.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
 public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 {
@@ -59,8 +62,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     private boolean attribute;
 
     /**
-     * Creates a new uninitialized instance of
-     * <code>DefaultConfigurationNode</code>.
+     * Creates a new uninitialized instance of {@code DefaultConfigurationNode}.
      */
     public DefaultConfigurationNode()
     {
@@ -68,7 +70,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationNode</code> and
+     * Creates a new instance of {@code DefaultConfigurationNode} and
      * initializes it with the node name.
      *
      * @param name the name of this node
@@ -79,7 +81,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationNode</code> and
+     * Creates a new instance of {@code DefaultConfigurationNode} and
      * initializes it with the name and a value.
      *
      * @param name the node's name
@@ -190,7 +192,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a list with all child nodes
      */
-    public List getChildren()
+    public List<ConfigurationNode> getChildren()
     {
         return children.getSubNodes();
     }
@@ -211,7 +213,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the name; can be <b>null </b>, then all children are returned
      * @return a list of all children with the given name
      */
-    public List getChildren(String name)
+    public List<ConfigurationNode> getChildren(String name)
     {
         return children.getSubNodes(name);
     }
@@ -305,11 +307,11 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 
     /**
      * Returns a list with the attributes of this node. This list contains
-     * <code>ConfigurationNode</code> objects, too.
+     * {@code DefaultConfigurationNode} objects, too.
      *
      * @return the attribute list, never <b>null </b>
      */
-    public List getAttributes()
+    public List<ConfigurationNode> getAttributes()
     {
         return attributes.getSubNodes();
     }
@@ -330,7 +332,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      * @param name the attribute's name
      * @return all attributes with this name
      */
-    public List getAttributes(String name)
+    public List<ConfigurationNode> getAttributes(String name)
     {
         return attributes.getSubNodes(name);
     }
@@ -417,7 +419,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
             children.visit(visitor);
             attributes.visit(visitor);
             visitor.visitAfterChildren(this);
-        } /* if */
+        }
     }
 
     /**
@@ -426,6 +428,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
      *
      * @return a copy of this object
      */
+    @Override
     public Object clone()
     {
         try
@@ -457,12 +460,12 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     }
 
     /**
-     * Creates a <code>SubNodes</code> instance that is used for storing
+     * Creates a {@code SubNodes} instance that is used for storing
      * either this node's children or attributes.
      *
      * @param attributes <b>true</b> if the returned instance is used for
      * storing attributes, <b>false</b> for storing child nodes
-     * @return the <code>SubNodes</code> object to use
+     * @return the {@code SubNodes} object to use
      */
     protected SubNodes createSubNodes(boolean attributes)
     {
@@ -495,10 +498,10 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
     protected static class SubNodes
     {
         /** Stores a list for the sub nodes. */
-        private List nodes;
+        private List<ConfigurationNode> nodes;
 
         /** Stores a map for accessing subnodes by name. */
-        private Map namedNodes;
+        private Map<String, List<ConfigurationNode>> namedNodes;
 
         /**
          * Adds a new sub node.
@@ -516,15 +519,15 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 
             if (nodes == null)
             {
-                nodes = new ArrayList();
-                namedNodes = new HashMap();
+                nodes = new ArrayList<ConfigurationNode>();
+                namedNodes = new HashMap<String, List<ConfigurationNode>>();
             }
 
             nodes.add(node);
-            List lst = (List) namedNodes.get(node.getName());
+            List<ConfigurationNode> lst = namedNodes.get(node.getName());
             if (lst == null)
             {
-                lst = new LinkedList();
+                lst = new LinkedList<ConfigurationNode>();
                 namedNodes.put(node.getName(), lst);
             }
             lst.add(node);
@@ -543,7 +546,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
                 detachNode(node);
                 nodes.remove(node);
 
-                List lst = (List) namedNodes.get(node.getName());
+                List<ConfigurationNode> lst = namedNodes.get(node.getName());
                 if (lst != null)
                 {
                     lst.remove(node);
@@ -571,7 +574,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         {
             if (nodes != null && name != null)
             {
-                List lst = (List) namedNodes.remove(name);
+                List<ConfigurationNode> lst = namedNodes.remove(name);
                 if (lst != null)
                 {
                     detachNodes(lst);
@@ -597,7 +600,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 
         /**
          * Returns the node with the given index. If this index cannot be found,
-         * an <code>IndexOutOfBoundException</code> exception will be thrown.
+         * an {@code IndexOutOfBoundException} exception will be thrown.
          *
          * @param index the index (0-based)
          * @return the sub node at the specified index
@@ -617,10 +620,16 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
          *
          * @return a list with the sub nodes
          */
-        public List getSubNodes()
+        public List<ConfigurationNode> getSubNodes()
         {
-            return (nodes == null) ? Collections.EMPTY_LIST : Collections
-                    .unmodifiableList(nodes);
+            if (nodes == null)
+            {
+                return Collections.emptyList();
+            }
+            else
+            {
+                return Collections.unmodifiableList(nodes);
+            }
         }
 
         /**
@@ -631,25 +640,31 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
          * be returned
          * @return all sub nodes with this name
          */
-        public List getSubNodes(String name)
+        public List<ConfigurationNode> getSubNodes(String name)
         {
             if (name == null)
             {
                 return getSubNodes();
             }
 
-            List result;
+            List<ConfigurationNode> result;
             if (nodes == null)
             {
                 result = null;
             }
             else
             {
-                result = (List) namedNodes.get(name);
+                result = namedNodes.get(name);
             }
 
-            return (result == null) ? Collections.EMPTY_LIST : Collections
-                    .unmodifiableList(result);
+            if (result == null)
+            {
+                return Collections.emptyList();
+            }
+            else
+            {
+                return Collections.unmodifiableList(result);
+            }
         }
 
         /**
@@ -661,10 +676,10 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         {
             if (nodes != null)
             {
-                for (Iterator it = nodes.iterator(); it.hasNext()
+                for (Iterator<ConfigurationNode> it = nodes.iterator(); it.hasNext()
                         && !visitor.terminate();)
                 {
-                    ((ConfigurationNode) it.next()).visit(visitor);
+                    it.next().visit(visitor);
                 }
             }
         }
@@ -672,7 +687,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
         /**
          * This method is called whenever a sub node is removed from this
          * object. It ensures that the removed node's parent is reset and its
-         * <code>removeReference()</code> method gets called.
+         * {@code removeReference()} method gets called.
          *
          * @param subNode the node to be removed
          */
@@ -687,15 +702,15 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
 
         /**
          * Detaches a list of sub nodes. This method calls
-         * <code>detachNode()</code> for each node contained in the list.
+         * {@code detachNode()} for each node contained in the list.
          *
          * @param subNodes the list with nodes to be detached
          */
-        protected void detachNodes(Collection subNodes)
+        protected void detachNodes(Collection<? extends ConfigurationNode> subNodes)
         {
-            for (Iterator it = subNodes.iterator(); it.hasNext();)
+            for (ConfigurationNode nd : subNodes)
             {
-                detachNode((ConfigurationNode) it.next());
+                detachNode(nd);
             }
         }
     }
