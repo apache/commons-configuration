@@ -49,7 +49,7 @@ import org.apache.commons.lang.StringUtils;
  * <ul>
  *  <li>
  *   Each property has the syntax <code>key &lt;separator> value</code>. The
- *   separators accepted are <code>'='</code>, <code>':'</code> and any white
+ *   separators accepted are {@code '='}, {@code ':'} and any white
  *   space character. Examples:
  * <pre>
  *  key1 = value1
@@ -73,7 +73,7 @@ import org.apache.commons.lang.StringUtils;
  *  key = This property, has multiple, values
  * </pre>
  *   will result in a property with three values. You can change the value
- *   delimiter using the <code>{@link AbstractConfiguration#setListDelimiter(char)}</code>
+ *   delimiter using the {@link AbstractConfiguration#setListDelimiter(char)}
  *   method. Setting the delimiter to 0 will disable value splitting completely.
  *  </li>
  *  <li>
@@ -84,14 +84,14 @@ import org.apache.commons.lang.StringUtils;
  *   If a <i>key</i> is used more than once, the values are appended
  *   like if they were on the same line separated with commas. <em>Note</em>:
  *   When the configuration file is written back to disk the associated
- *   <code>{@link PropertiesConfigurationLayout}</code> object (see below) will
+ *   {@link PropertiesConfigurationLayout} object (see below) will
  *   try to preserve as much of the original format as possible, i.e. properties
  *   with multiple values defined on a single line will also be written back on
  *   a single line, and multiple occurrences of a single key will be written on
- *   multiple lines. If the <code>addProperty()</code> method was called
+ *   multiple lines. If the {@code addProperty()} method was called
  *   multiple times for adding multiple values to a property, these properties
  *   will per default be written on multiple lines in the output file, too.
- *   Some options of the <code>PropertiesConfigurationLayout</code> class have
+ *   Some options of the {@code PropertiesConfigurationLayout} class have
  *   influence on that behavior.
  *  </li>
  *  <li>
@@ -143,11 +143,11 @@ import org.apache.commons.lang.StringUtils;
  *      second.prop = ${first.prop}/second
  * </pre>
  *
- * <p>A <code>PropertiesConfiguration</code> object is associated with an
- * instance of the <code>{@link PropertiesConfigurationLayout}</code> class,
+ * <p>A {@code PropertiesConfiguration} object is associated with an
+ * instance of the {@link PropertiesConfigurationLayout} class,
  * which is responsible for storing the layout of the parsed properties file
- * (i.e. empty lines, comments, and such things). The <code>getLayout()</code>
- * method can be used to obtain this layout object. With <code>setLayout()</code>
+ * (i.e. empty lines, comments, and such things). The {@code getLayout()}
+ * method can be used to obtain this layout object. With {@code setLayout()}
  * a new layout object can be set. This should be done before a properties file
  * was loaded.
  * <p><em>Note:</em>Configuration objects of this type can be read concurrently
@@ -168,7 +168,6 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
- * @author Oliver Heger
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */
@@ -181,7 +180,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     static final String DEFAULT_SEPARATOR = " = ";
 
     /**
-     * Constant for the default <code>IOFactory</code>. This instance is used
+     * Constant for the default {@code IOFactory}. This instance is used
      * when no specific factory was set.
      */
     private static final IOFactory DEFAULT_IO_FACTORY = new DefaultIOFactory();
@@ -256,7 +255,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * Creates and loads the extended properties from the specified file.
      * The specified file can contain "include = " properties which then
      * are loaded and merged into the properties. If the file does not exist,
-     * an empty configuration will be created. Later the <code>save()</code>
+     * an empty configuration will be created. Later the {@code save()}
      * method can be called to save the properties to the specified file.
      *
      * @param file The properties file to load.
@@ -418,10 +417,10 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Returns the <code>IOFactory</code> to be used for creating readers and
+     * Returns the {@code IOFactory} to be used for creating readers and
      * writers when loading or saving this configuration.
      *
-     * @return the <code>IOFactory</code>
+     * @return the {@code IOFactory}
      * @since 1.7
      */
     public IOFactory getIOFactory()
@@ -430,17 +429,17 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Sets the <code>IOFactory</code> to be used for creating readers and
+     * Sets the {@code IOFactory} to be used for creating readers and
      * writers when loading or saving this configuration. Using this method a
      * client can customize the reader and writer classes used by the load and
      * save operations. Note that this method must be called before invoking
-     * one of the <code>load()</code> and <code>save()</code> methods.
-     * Especially, if you want to use a custom <code>IOFactory</code> for
-     * changing the <code>PropertiesReader</code>, you cannot load the
+     * one of the {@code load()} and {@code save()} methods.
+     * Especially, if you want to use a custom {@code IOFactory} for
+     * changing the {@code PropertiesReader}, you cannot load the
      * configuration data in the constructor.
      *
-     * @param ioFactory the new <code>IOFactory</code> (must not be <b>null</b>)
-     * @throws IllegalArgumentException if the <code>IOFactory</code> is
+     * @param ioFactory the new {@code IOFactory} (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code IOFactory} is
      *         <b>null</b>
      * @since 1.7
      */
@@ -456,7 +455,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * Load the properties from the given reader.
-     * Note that the <code>clear()</code> method is not called, so
+     * Note that the {@code clear()} method is not called, so
      * the properties contained in the loaded file will be added to the
      * actual set of properties.
      *
@@ -529,10 +528,10 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * This method is invoked by the associated
-     * <code>{@link PropertiesConfigurationLayout}</code> object for each
+     * {@link PropertiesConfigurationLayout} object for each
      * property definition detected in the parsed properties file. Its task is
      * to check whether this is a special property definition (e.g. the
-     * <code>include</code> property). If not, the property must be added to
+     * {@code include} property). If not, the property must be added to
      * this configuration. The return value indicates whether the property
      * should be treated as a normal property. If it is <b>false</b>, the
      * layout object will ignore this property.
@@ -562,9 +561,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                 {
                     files = new String[]{value};
                 }
-                for (int i = 0; i < files.length; i++)
+                for (String f : files)
                 {
-                    loadIncludeFile(interpolate(files[i].trim()));
+                    loadIncludeFile(interpolate(f.trim()));
                 }
             }
             result = false;
@@ -621,7 +620,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public static class PropertiesReader extends LineNumberReader
     {
         /** Stores the comment lines for the currently processed property.*/
-        private List commentLines;
+        private List<String> commentLines;
 
         /** Stores the name of the last read property.*/
         private String propertyName;
@@ -646,7 +645,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
 
         /**
-         * Creates a new instance of <code>PropertiesReader</code> and sets
+         * Creates a new instance of {@code PropertiesReader} and sets
          * the underlying reader and the list delimiter.
          *
          * @param reader the reader
@@ -656,7 +655,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public PropertiesReader(Reader reader, char listDelimiter)
         {
             super(reader);
-            commentLines = new ArrayList();
+            commentLines = new ArrayList<String>();
             delimiter = listDelimiter;
         }
 
@@ -674,7 +673,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         public String readProperty() throws IOException
         {
             commentLines.clear();
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
 
             while (true)
             {
@@ -736,17 +735,17 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * Returns the comment lines that have been read for the last property.
          *
          * @return the comment lines for the last property returned by
-         * <code>readProperty()</code>
+         * {@code readProperty()}
          * @since 1.3
          */
-        public List getCommentLines()
+        public List<String> getCommentLines()
         {
             return commentLines;
         }
 
         /**
          * Returns the name of the last read property. This method can be called
-         * after <code>{@link #nextProperty()}</code> was invoked and its
+         * after {@link #nextProperty()} was invoked and its
          * return value was <b>true</b>.
          *
          * @return the name of the last read property
@@ -759,7 +758,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Returns the value of the last read property. This method can be
-         * called after <code>{@link #nextProperty()}</code> was invoked and
+         * called after {@link #nextProperty()} was invoked and
          * its return value was <b>true</b>.
          *
          * @return the value of the last read property
@@ -788,7 +787,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * for each non-comment line read from the source file. Its task is to
          * split the passed in line into the property key and its value. The
          * results of the parse operation can be stored by calling the
-         * <code>initPropertyXXX()</code> methods.
+         * {@code initPropertyXXX()} methods.
          *
          * @param line the line read from the properties file
          * @since 1.7
@@ -803,7 +802,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Sets the name of the current property. This method can be called by
-         * <code>parseProperty()</code> for storing the results of the parse
+         * {@code parseProperty()} for storing the results of the parse
          * operation. It also ensures that the property key is correctly
          * escaped.
          *
@@ -817,7 +816,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Sets the value of the current property. This method can be called by
-         * <code>parseProperty()</code> for storing the results of the parse
+         * {@code parseProperty()} for storing the results of the parse
          * operation. It also ensures that the property value is correctly
          * escaped.
          *
@@ -831,7 +830,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Sets the separator of the current property. This method can be called
-         * by <code>parseProperty()</code>. It allows the associated layout
+         * by {@code parseProperty()}. It allows the associated layout
          * object to keep track of the property separators. When saving the
          * configuration the separators can be restored.
          *
@@ -959,7 +958,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * This class is used to write properties lines. The most important method
-     * is <code>writeProperty(String, Object, boolean)</code>, which is called
+     * is {@code writeProperty(String, Object, boolean)}, which is called
      * during a save operation for each property found in the configuration.
      */
     public static class PropertiesWriter extends FilterWriter
@@ -1027,7 +1026,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Sets the global property separator. This separator corresponds to the
-         * <code>globalSeparator</code> property of
+         * {@code globalSeparator} property of
          * {@link PropertiesConfigurationLayout}. It defines the separator to be
          * used for all properties. If it is undefined, the current separator is
          * used.
@@ -1085,7 +1084,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          *
          * @throws IOException if an I/O error occurs
          */
-        public void writeProperty(String key, List values) throws IOException
+        public void writeProperty(String key, List<?> values) throws IOException
         {
             for (int i = 0; i < values.size(); i++)
             {
@@ -1095,7 +1094,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Writes the given property and its value. If the value happens to be a
-         * list, the <code>forceSingleLine</code> flag is evaluated. If it is
+         * list, the {@code forceSingleLine} flag is evaluated. If it is
          * set, all values are written on a single line using the list delimiter
          * as separator.
          *
@@ -1112,7 +1111,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
             if (value instanceof List)
             {
-                List values = (List) value;
+                List<?> values = (List<?>) value;
                 if (forceSingleLine)
                 {
                     v = makeSingleLineValue(values);
@@ -1155,7 +1154,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         private String escapeKey(String key)
         {
-            StringBuffer newkey = new StringBuffer();
+            StringBuilder newkey = new StringBuilder();
 
             for (int i = 0; i < key.length(); i++)
             {
@@ -1214,7 +1213,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             if (inList && strValue.indexOf(DOUBLE_ESC) >= 0)
             {
                 char esc = ESCAPE.charAt(0);
-                StringBuffer buf = new StringBuffer(strValue.length() + BUF_SIZE);
+                StringBuilder buf = new StringBuilder(strValue.length() + BUF_SIZE);
                 for (int i = 0; i < strValue.length(); i++)
                 {
                     if (strValue.charAt(i) == esc && i < strValue.length() - 1
@@ -1242,13 +1241,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          * @return a string with the single line value (can be <b>null</b>)
          * @since 1.3
          */
-        private String makeSingleLineValue(List values)
+        private String makeSingleLineValue(List<?> values)
         {
             if (!values.isEmpty())
             {
-                Iterator it = values.iterator();
+                Iterator<?> it = values.iterator();
                 String lastValue = escapeValue(it.next(), true);
-                StringBuffer buf = new StringBuffer(lastValue);
+                StringBuilder buf = new StringBuilder(lastValue);
                 while (it.hasNext())
                 {
                     // if the last value ended with an escape character, it has
@@ -1289,11 +1288,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         /**
          * Returns the separator to be used for the given property. This method
-         * is called by <code>writeProperty()</code>. The string returned here
+         * is called by {@code writeProperty()}. The string returned here
          * is used as separator between the property key and its value. Per
          * default the method checks whether a global separator is set. If this
          * is the case, it is returned. Otherwise the separator returned by
-         * <code>getCurrentSeparator()</code> is used, which was set by the
+         * {@code getCurrentSeparator()} is used, which was set by the
          * associated layout object. Derived classes may implement a different
          * strategy for defining the separator.
          *
@@ -1316,13 +1315,13 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * </p>
      * <p>
      * For reading and writing properties files the inner classes
-     * <code>PropertiesReader</code> and <code>PropertiesWriter</code> are used.
+     * {@code PropertiesReader} and {@code PropertiesWriter} are used.
      * This interface defines factory methods for creating both a
-     * <code>PropertiesReader</code> and a <code>PropertiesWriter</code>. An
+     * {@code PropertiesReader} and a {@code PropertiesWriter}. An
      * object implementing this interface can be passed to the
-     * <code>setIOFactory()</code> method of
-     * <code>PropertiesConfiguration</code>. Every time the configuration is
-     * read or written the <code>IOFactory</code> is asked to create the
+     * {@code setIOFactory()} method of
+     * {@code PropertiesConfiguration}. Every time the configuration is
+     * read or written the {@code IOFactory} is asked to create the
      * appropriate reader or writer object. This provides an opportunity to
      * inject custom reader or writer implementations.
      * </p>
@@ -1332,27 +1331,27 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public interface IOFactory
     {
         /**
-         * Creates a <code>PropertiesReader</code> for reading a properties
+         * Creates a {@code PropertiesReader} for reading a properties
          * file. This method is called whenever the
-         * <code>PropertiesConfiguration</code> is loaded. The reader returned
+         * {@code PropertiesConfiguration} is loaded. The reader returned
          * by this method is then used for parsing the properties file.
          *
          * @param in the underlying reader (of the properties file)
          * @param delimiter the delimiter character for list parsing
-         * @return the <code>PropertiesReader</code> for loading the
+         * @return the {@code PropertiesReader} for loading the
          *         configuration
          */
         PropertiesReader createPropertiesReader(Reader in, char delimiter);
 
         /**
-         * Creates a <code>PropertiesWriter</code> for writing a properties
+         * Creates a {@code PropertiesWriter} for writing a properties
          * file. This method is called before the
-         * <code>PropertiesConfiguration</code> is saved. The writer returned by
+         * {@code PropertiesConfiguration} is saved. The writer returned by
          * this method is then used for writing the properties file.
          *
          * @param out the underlying writer (to the properties file)
          * @param delimiter the delimiter character for list parsing
-         * @return the <code>PropertiesWriter</code> for saving the
+         * @return the {@code PropertiesWriter} for saving the
          *         configuration
          */
         PropertiesWriter createPropertiesWriter(Writer out, char delimiter);
@@ -1360,15 +1359,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * <p>
-     * A default implementation of the <code>IOFactory</code> interface.
+     * A default implementation of the {@code IOFactory} interface.
      * </p>
      * <p>
-     * This class implements the <code>createXXXX()</code> methods defined by
-     * the <code>IOFactory</code> interface in a way that the default objects
-     * (i.e. <code>PropertiesReader</code> and <code>PropertiesWriter</code> are
+     * This class implements the {@code createXXXX()} methods defined by
+     * the {@code IOFactory} interface in a way that the default objects
+     * (i.e. {@code PropertiesReader} and {@code PropertiesWriter} are
      * returned. Customizing either the reader or the writer (or both) can be
      * done by extending this class and overriding the corresponding
-     * <code>createXXXX()</code> method.
+     * {@code createXXXX()} method.
      * </p>
      *
      * @since 1.7
@@ -1388,15 +1387,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * <p>Unescapes any Java literals found in the <code>String</code> to a
-     * <code>Writer</code>.</p> This is a slightly modified version of the
+     * <p>Unescapes any Java literals found in the {@code String} to a
+     * {@code Writer}.</p> This is a slightly modified version of the
      * StringEscapeUtils.unescapeJava() function in commons-lang that doesn't
      * drop escaped separators (i.e '\,').
      *
-     * @param str  the <code>String</code> to unescape, may be null
+     * @param str  the {@code String} to unescape, may be null
      * @param delimiter the delimiter for multi-valued properties
      * @return the processed string
-     * @throws IllegalArgumentException if the Writer is <code>null</code>
+     * @throws IllegalArgumentException if the Writer is {@code null}
      */
     protected static String unescapeJava(String str, char delimiter)
     {
@@ -1405,8 +1404,8 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
             return null;
         }
         int sz = str.length();
-        StringBuffer out = new StringBuffer(sz);
-        StringBuffer unicode = new StringBuffer(UNICODE_LEN);
+        StringBuilder out = new StringBuilder(sz);
+        StringBuilder unicode = new StringBuilder(UNICODE_LEN);
         boolean hadSlash = false;
         boolean inUnicode = false;
         for (int i = 0; i < sz; i++)
@@ -1511,7 +1510,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /**
      * Helper method for loading an included properties file. This method is
-     * called by <code>load()</code> when an <code>include</code> property
+     * called by {@code load()} when an {@code include} property
      * is encountered. It tries to resolve relative file names based on the
      * current base path. If this fails, a resolution based on the location of
      * this properties file is tried.
