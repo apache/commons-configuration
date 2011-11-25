@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -619,6 +621,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public static class PropertiesReader extends LineNumberReader
     {
+        /** The regular expression to parse the key and the value of a property. */
+        private static final Pattern PROPERTY_PATTERN = Pattern
+                .compile("(([\\S&&[^\\\\" + new String(SEPARATORS)
+                        + "]]|\\\\.)*)(\\s*(\\s+|[" + new String(SEPARATORS)
+                        + "])\\s*)(.*)");
+
         /** Stores the comment lines for the currently processed property.*/
         private List<String> commentLines;
 
@@ -862,95 +870,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
          */
         private static String[] doParseProperty(String line)
         {
-            // sorry for this spaghetti code, please replace it as soon as
-            // possible with a regexp when the Java 1.3 requirement is dropped
+            Matcher matcher = PROPERTY_PATTERN.matcher(line);
 
-            String[] result = new String[3];
-            StringBuffer key = new StringBuffer();
-            StringBuffer value = new StringBuffer();
-            StringBuffer separator = new StringBuffer();
+            String[] result = {"", "", ""};
 
-            // state of the automaton:
-            // 0: key parsing
-            // 1: antislash found while parsing the key
-            // 2: separator crossing
-            // 3: value parsing
-            int state = 0;
-
-            for (int pos = 0; pos < line.length(); pos++)
-            {
-                char c = line.charAt(pos);
-
-                switch (state)
-                {
-                    case 0:
-                        if (c == '\\')
-                        {
-                            state = 1;
-                        }
-                        else if (ArrayUtils.contains(WHITE_SPACE, c))
-                        {
-                            // switch to the separator crossing state
-                            separator.append(c);
-                            state = 2;
-                        }
-                        else if (ArrayUtils.contains(SEPARATORS, c))
-                        {
-                            // switch to the value parsing state
-                            separator.append(c);
-                            state = 3;
-                        }
-                        else
-                        {
-                            key.append(c);
-                        }
-
-                        break;
-
-                    case 1:
-                        if (ArrayUtils.contains(SEPARATORS, c) || ArrayUtils.contains(WHITE_SPACE, c))
-                        {
-                            // this is an escaped separator or white space
-                            key.append(c);
-                        }
-                        else
-                        {
-                            // another escaped character, the '\' is preserved
-                            key.append('\\');
-                            key.append(c);
-                        }
-
-                        // return to the key parsing state
-                        state = 0;
-
-                        break;
-
-                    case 2:
-                        if (ArrayUtils.contains(WHITE_SPACE, c) || ArrayUtils.contains(SEPARATORS, c))
-                        {
-                            // record the separator
-                            separator.append(c);
-                        }
-                        else
-                        {
-                            // any other character indicates we encountered the beginning of the value
-                            value.append(c);
-
-                            // switch to the value parsing state
-                            state = 3;
-                        }
-
-                        break;
-
-                    case 3:
-                        value.append(c);
-                        break;
-                }
+            if (matcher.matches()) {
+                result[0] = matcher.group(1).trim();
+                result[1] = matcher.group(5).trim();
+                result[2] = matcher.group(3);
             }
-
-            result[0] = key.toString().trim();
-            result[1] = value.toString().trim();
-            result[2] = separator.toString();
 
             return result;
         }
