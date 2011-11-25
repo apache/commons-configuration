@@ -19,7 +19,6 @@ package org.apache.commons.configuration;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +30,20 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
- * A helper class used by <code>{@link PropertiesConfiguration}</code> to keep
+ * A helper class used by {@link PropertiesConfiguration} to keep
  * the layout of a properties file.
  * </p>
  * <p>
  * Instances of this class are associated with a
- * <code>PropertiesConfiguration</code> object. They are responsible for
+ * {@code PropertiesConfiguration} object. They are responsible for
  * analyzing properties files and for extracting as much information about the
  * file layout (e.g. empty lines, comments) as possible. When the properties
  * file is written back again it should be close to the original.
  * </p>
  * <p>
- * The <code>PropertiesConfigurationLayout</code> object associated with a
- * <code>PropertiesConfiguration</code> object can be obtained using the
- * <code>getLayout()</code> method of the configuration. Then the methods
+ * The {@code PropertiesConfigurationLayout} object associated with a
+ * {@code PropertiesConfiguration} object can be obtained using the
+ * {@code getLayout()} method of the configuration. Then the methods
  * provided by this class can be used to alter the properties file's layout.
  * </p>
  * <p>
@@ -89,20 +88,20 @@ import org.apache.commons.lang.StringUtils;
  * <ul>
  * <li>The first two lines are set as header comment. The header comment is
  * determined by the last blanc line before the first property definition.</li>
- * <li>For the property <code>AppName</code> one comment line and one
+ * <li>For the property {@code AppName} one comment line and one
  * leading blanc line is stored.</li>
- * <li>For the property <code>windowColors</code> two comment lines and two
+ * <li>For the property {@code windowColors} two comment lines and two
  * leading blanc lines are stored.</li>
  * <li>Include files is something this class cannot deal with well. When saving
  * the properties configuration back, the included properties are simply
  * contained in the original file. The comment before the include property is
  * skipped.</li>
- * <li>For all properties except for <code>AppVendor</code> the &quot;single
- * line&quot; flag is set. This is relevant only for <code>windowColors</code>,
+ * <li>For all properties except for {@code AppVendor} the &quot;single
+ * line&quot; flag is set. This is relevant only for {@code windowColors},
  * which has multiple values defined in one line using the separator character.</li>
- * <li>The <code>AppVendor</code> property appears twice. The comment lines
- * are concatenated, so that <code>layout.getComment("AppVendor");</code> will
- * result in <code>Application vendor&lt;CR&gt;Another vendor</code>, whith
+ * <li>The {@code AppVendor} property appears twice. The comment lines
+ * are concatenated, so that {@code layout.getComment("AppVendor");} will
+ * result in <code>Application vendor&lt;CR&gt;Another vendor</code>, with
  * <code>&lt;CR&gt;</code> meaning the line separator. In addition the
  * &quot;single line&quot; flag is set to <b>false</b> for this property. When
  * the file is saved, two property definitions will be written (in series).</li>
@@ -127,7 +126,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     private PropertiesConfiguration configuration;
 
     /** Stores a map with the contained layout information. */
-    private Map layoutData;
+    private Map<String, PropertyLayoutData> layoutData;
 
     /** Stores the header comment. */
     private String headerComment;
@@ -145,7 +144,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     private boolean forceSingleLine;
 
     /**
-     * Creates a new instance of <code>PropertiesConfigurationLayout</code>
+     * Creates a new instance of {@code PropertiesConfigurationLayout}
      * and initializes it with the associated configuration object.
      *
      * @param config the configuration (must not be <b>null</b>)
@@ -156,7 +155,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     }
 
     /**
-     * Creates a new instance of <code>PropertiesConfigurationLayout</code>
+     * Creates a new instance of {@code PropertiesConfigurationLayout}
      * and initializes it with the given configuration object. The data of the
      * specified layout object is copied.
      *
@@ -172,7 +171,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     "Configuration must not be null!");
         }
         configuration = config;
-        layoutData = new LinkedHashMap();
+        layoutData = new LinkedHashMap<String, PropertyLayoutData>();
         config.addConfigurationListener(this);
 
         if (c != null)
@@ -194,7 +193,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /**
      * Returns the comment for the specified property key in a canonical form.
      * &quot;Canonical&quot; means that either all lines start with a comment
-     * character or none. If the <code>commentChar</code> parameter is <b>false</b>,
+     * character or none. If the {@code commentChar} parameter is <b>false</b>,
      * all comment characters are removed, so that the result is only the plain
      * text of the comment. Otherwise it is ensured that each line of the
      * comment starts with a comment character. Also, line breaks in the comment
@@ -221,7 +220,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /**
      * Returns the comment for the specified property key. The comment is
      * returned as it was set (either manually by calling
-     * <code>setComment()</code> or when it was loaded from a properties
+     * {@code setComment()} or when it was loaded from a properties
      * file). No modifications are performed.
      *
      * @param key the key of the property
@@ -275,7 +274,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
     /**
      * Returns the header comment of the represented properties file in a
-     * canonical form. With the <code>commentChar</code> parameter it can be
+     * canonical form. With the {@code commentChar} parameter it can be
      * specified whether comment characters should be stripped or be always
      * present.
      *
@@ -291,7 +290,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /**
      * Returns the header comment of the represented properties file. This
      * method returns the header comment exactly as it was set using
-     * <code>setHeaderComment()</code> or extracted from the loaded properties
+     * {@code setHeaderComment()} or extracted from the loaded properties
      * file.
      *
      * @return the header comment (can be <b>null</b>)
@@ -354,7 +353,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /**
      * Sets the &quot;force single line&quot; flag. If this flag is set, all
      * properties with multiple values are written on single lines. This mode
-     * provides more compatibility with <code>java.lang.Properties</code>,
+     * provides more compatibility with {@code java.lang.Properties},
      * which cannot deal with multiple definitions of a single property. This
      * mode has no effect if the list delimiter parsing is disabled.
      *
@@ -383,7 +382,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * properties &quot; = &quot; is used. When a properties file is read, the
      * layout tries to determine the separator for each property. With this
      * method the separator can be changed. To be compatible with the properties
-     * format only the characters <code>=</code> and <code>:</code> (with or
+     * format only the characters {@code =} and {@code :} (with or
      * without whitespace) should be used, but this method does not enforce this
      * - it accepts arbitrary strings. If the key refers to a property with
      * multiple values that are written on multiple lines, this separator will
@@ -414,7 +413,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * can be set that will be used for all properties when writing the
      * configuration. This is an easy way of determining the properties
      * separator globally. To be compatible with the properties format only the
-     * characters <code>=</code> and <code>:</code> (with or without whitespace)
+     * characters {@code =} and {@code :} (with or without whitespace)
      * should be used, but this method does not enforce this - it accepts
      * arbitrary strings. If the global separator is set to <b>null</b>,
      * property separators are not changed. This is the default behavior as it
@@ -457,7 +456,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      *
      * @return a set with all contained property keys
      */
-    public Set getKeys()
+    public Set<String> getKeys()
     {
         return layoutData.keySet();
     }
@@ -555,9 +554,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                 writer.writeln(null);
             }
 
-            for (Iterator it = layoutData.keySet().iterator(); it.hasNext();)
+            for (String key : layoutData.keySet())
             {
-                String key = (String) it.next();
                 if (getConfiguration().containsKey(key))
                 {
 
@@ -640,7 +638,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             throw new IllegalArgumentException("Property key must not be null!");
         }
 
-        PropertyLayoutData data = (PropertyLayoutData) layoutData.get(key);
+        PropertyLayoutData data = layoutData.get(key);
         if (data == null)
         {
             data = new PropertyLayoutData();
@@ -684,7 +682,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     static String trimComment(String s, boolean comment)
     {
-        StringBuffer buf = new StringBuffer(s.length());
+        StringBuilder buf = new StringBuilder(s.length());
         int lastPos = 0;
         int pos;
 
@@ -761,7 +759,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * @param to the end index (inclusive)
      * @return the comment string (<b>null</b> if it is undefined)
      */
-    private String extractComment(List commentLines, int from, int to)
+    private String extractComment(List<String> commentLines, int from, int to)
     {
         if (to < from)
         {
@@ -770,7 +768,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
         else
         {
-            StringBuffer buf = new StringBuffer((String) commentLines.get(from));
+            StringBuilder buf = new StringBuilder(commentLines.get(from));
             for (int i = from + 1; i <= to; i++)
             {
                 buf.append(CR);
@@ -791,7 +789,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * @param commentLines the comment lines
      * @return the index of the next line after the header comment
      */
-    private int checkHeaderComment(List commentLines)
+    private int checkHeaderComment(List<String> commentLines)
     {
         if (loadCounter == 1 && getHeaderComment() == null
                 && layoutData.isEmpty())
@@ -819,9 +817,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     private void copyFrom(PropertiesConfigurationLayout c)
     {
-        for (Iterator it = c.getKeys().iterator(); it.hasNext();)
+        for (String key : c.getKeys())
         {
-            String key = (String) it.next();
             PropertyLayoutData data = (PropertyLayoutData) c.layoutData
                     .get(key);
             layoutData.put(key, data.clone());
@@ -866,7 +863,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         private boolean singleLine;
 
         /**
-         * Creates a new instance of <code>PropertyLayoutData</code>.
+         * Creates a new instance of {@code PropertyLayoutData}.
          */
         public PropertyLayoutData()
         {
@@ -988,7 +985,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
          *
          * @return the copy
          */
-        public Object clone()
+        @Override
+        public PropertyLayoutData clone()
         {
             try
             {
