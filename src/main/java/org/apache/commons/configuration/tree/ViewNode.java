@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.util.Iterator;
 
 /**
  * <p>
@@ -46,6 +45,7 @@ public class ViewNode extends DefaultConfigurationNode
      *
      * @param attr the attribute node to be added
      */
+    @Override
     public void addAttribute(ConfigurationNode attr)
     {
         ConfigurationNode parent = null;
@@ -68,6 +68,7 @@ public class ViewNode extends DefaultConfigurationNode
      *
      * @param child the child node to be added
      */
+    @Override
     public void addChild(ConfigurationNode child)
     {
         ConfigurationNode parent = null;
@@ -93,9 +94,9 @@ public class ViewNode extends DefaultConfigurationNode
     {
         if (source != null)
         {
-            for (Iterator it = source.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode attr : source.getAttributes())
             {
-                addAttribute((ConfigurationNode) it.next());
+                addAttribute(attr);
             }
         }
     }
@@ -109,9 +110,9 @@ public class ViewNode extends DefaultConfigurationNode
     {
         if (source != null)
         {
-            for (Iterator it = source.getChildren().iterator(); it.hasNext();)
+            for (ConfigurationNode child : source.getChildren())
             {
-                addChild((ConfigurationNode) it.next());
+                addChild(child);
             }
         }
     }
