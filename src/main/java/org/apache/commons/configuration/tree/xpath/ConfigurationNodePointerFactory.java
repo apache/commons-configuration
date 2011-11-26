@@ -24,11 +24,13 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
 
 /**
- * Implementation of the <code>NodePointerFactory</code> interface for
+ * Implementation of the {@code NodePointerFactory} interface for
  * configuration nodes.
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class ConfigurationNodePointerFactory implements NodePointerFactory
