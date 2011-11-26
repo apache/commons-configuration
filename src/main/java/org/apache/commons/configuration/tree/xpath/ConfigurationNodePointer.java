@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -30,14 +29,16 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 
 /**
  * <p>
- * A specific <code>NodePointer</code> implementation for configuration nodes.
+ * A specific {@code NodePointer} implementation for configuration nodes.
  * </p>
  * <p>
  * This is needed for queries using JXPath.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 class ConfigurationNodePointer extends NodePointer
@@ -51,7 +52,7 @@ class ConfigurationNodePointer extends NodePointer
     private ConfigurationNode node;
 
     /**
-     * Creates a new instance of <code>ConfigurationNodePointer</code>.
+     * Creates a new instance of {@code ConfigurationNodePointer}.
      *
      * @param node the node
      * @param locale the locale
@@ -63,7 +64,7 @@ class ConfigurationNodePointer extends NodePointer
     }
 
     /**
-     * Creates a new instance of <code>ConfigurationNodePointer</code> and
+     * Creates a new instance of {@code ConfigurationNodePointer} and
      * initializes it with its parent pointer.
      *
      * @param parent the parent pointer
@@ -81,6 +82,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return a flag if this node is a leaf
      */
+    @Override
     public boolean isLeaf()
     {
         return node.getChildrenCount() < 1;
@@ -91,6 +93,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the collection flag
      */
+    @Override
     public boolean isCollection()
     {
         return false;
@@ -101,6 +104,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the node's length
      */
+    @Override
     public int getLength()
     {
         return 1;
@@ -112,6 +116,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the attribute flag
      */
+    @Override
     public boolean isAttribute()
     {
         return node.isAttribute();
@@ -122,6 +127,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the name
      */
+    @Override
     public QName getName()
     {
         return new QName(null, node.getName());
@@ -133,6 +139,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the base value
      */
+    @Override
     public Object getBaseValue()
     {
         return node;
@@ -143,6 +150,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the immediate node
      */
+    @Override
     public Object getImmediateNode()
     {
         return node;
@@ -153,6 +161,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @return the represented node's value
      */
+    @Override
     public Object getValue()
     {
         return node.getValue();
@@ -163,6 +172,7 @@ class ConfigurationNodePointer extends NodePointer
      *
      * @param value the new value
      */
+    @Override
     public void setValue(Object value)
     {
         node.setValue(value);
@@ -175,6 +185,7 @@ class ConfigurationNodePointer extends NodePointer
      * @param pointer2 another pointer
      * @return a flag, which pointer should be sorted first
      */
+    @Override
     public int compareChildNodePointers(NodePointer pointer1,
             NodePointer pointer2)
     {
@@ -194,11 +205,10 @@ class ConfigurationNodePointer extends NodePointer
         else
         {
             // sort based on the occurrence in the sub node list
-            List subNodes = node1.isAttribute() ? node.getAttributes() : node
+            List<ConfigurationNode> subNodes = node1.isAttribute() ? node.getAttributes() : node
                     .getChildren();
-            for (Iterator it = subNodes.iterator(); it.hasNext();)
+            for (ConfigurationNode child : subNodes)
             {
-                ConfigurationNode child = (ConfigurationNode) it.next();
                 if (child == node1)
                 {
                     return -1;
@@ -218,6 +228,7 @@ class ConfigurationNodePointer extends NodePointer
      * @param name the attribute name
      * @return the iterator for the attributes
      */
+    @Override
     public NodeIterator attributeIterator(QName name)
     {
         return new ConfigurationNodeIteratorAttribute(this, name);
@@ -231,6 +242,7 @@ class ConfigurationNodePointer extends NodePointer
      * @param reverse the reverse flag
      * @param startWith the start value of the iteration
      */
+    @Override
     public NodeIterator childIterator(NodeTest test, boolean reverse,
             NodePointer startWith)
     {
@@ -245,6 +257,7 @@ class ConfigurationNodePointer extends NodePointer
      * @param test the test object
      * @return a flag if this node corresponds to the test
      */
+    @Override
     public boolean testNode(NodeTest test)
     {
         if (test instanceof NodeTypeTest
