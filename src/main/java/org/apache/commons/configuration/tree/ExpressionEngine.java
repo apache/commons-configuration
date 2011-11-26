@@ -28,13 +28,13 @@ import java.util.List;
  * property to a single or a set of configuration nodes. Thus it defines the way
  * how properties are addressed in this configuration. Methods of a
  * configuration that have to handle property key (e.g.
- * <code>getProperty()</code> or <code>addProperty()</code> do not interpret
+ * {@code getProperty()} or {@code addProperty()} do not interpret
  * the passed in keys on their own, but delegate this task to an associated
  * expression engine. This expression engine will then find out, which
  * configuration nodes are addressed by the key.
  * </p>
  * <p>
- * Seperating the task of evaluating property keys from the configuration object
+ * Separating the task of evaluating property keys from the configuration object
  * has the advantage that many different expression languages (i.e. ways for
  * querying or setting properties) can be supported. Just set a suitable
  * implementation of this interface as the configuration's expression engine,
@@ -42,7 +42,10 @@ import java.util.List;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
 public interface ExpressionEngine
 {
@@ -59,13 +62,13 @@ public interface ExpressionEngine
      * @return a list with the nodes that are matched by the key (should never
      * be <b>null</b>)
      */
-    List query(ConfigurationNode root, String key);
+    List<ConfigurationNode> query(ConfigurationNode root, String key);
 
     /**
      * Returns the key for the specified node in the expression language
      * supported by an implementation. This method is called whenever a property
      * key for a node has to be constructed, e.g. by the
-     * <code>{@link org.apache.commons.configuration.Configuration#getKeys() getKeys()}</code>
+     * {@link org.apache.commons.configuration.Configuration#getKeys() getKeys()}
      * method.
      *
      * @param node the node, for which the key must be constructed
