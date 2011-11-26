@@ -22,7 +22,7 @@ package org.apache.commons.configuration.tree;
  * structure.
  * </p>
  * <p>
- * The <code>ConfigurationNode</code> interface defines a <code>visit()</code>,
+ * The {@code ConfigurationNode} interface defines a {@code visit()},
  * which simplifies traversal of a complex node hierarchy. A configuration node
  * implementation must provide a way of visiting all nodes in the current
  * hierarchy. This is a typical application of the GoF <em>Visitor</em>
@@ -31,7 +31,10 @@ package org.apache.commons.configuration.tree;
  *
  * @since 1.3
  * @see ConfigurationNode
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
 public interface ConfigurationNodeVisitor
 {
