@@ -16,16 +16,16 @@
  */
 package org.apache.commons.configuration.resolver;
 
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.EntityResolver;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import java.io.InputStream;
-import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * The DefaultEntityResolver used by XML Configurations.
@@ -38,23 +38,23 @@ import java.util.HashMap;
 public class DefaultEntityResolver implements EntityResolver, EntityRegistry
 {
     /** Stores a map with the registered public IDs.*/
-    private Map registeredEntities = new HashMap();
+    private Map<String, URL> registeredEntities = new HashMap<String, URL>();
 
     /**
      * <p>
      * Registers the specified URL for the specified public identifier.
      * </p>
      * <p>
-     * This implementation maps <code>PUBLICID</code>'s to URLs (from which
+     * This implementation maps {@code PUBLICID}'s to URLs (from which
      * the resource will be loaded). A common use case for this method is to
      * register local URLs (possibly computed at runtime by a class loader) for
      * DTDs and Schemas. This allows the performance advantage of using a local
-     * version without having to ensure every <code>SYSTEM</code> URI on every
+     * version without having to ensure every {@code SYSTEM} URI on every
      * processed XML document is local. This implementation provides only basic
      * functionality. If more sophisticated features are required, either calling
-     * <code>XMLConfiguration.setDocumentBuilder(DocumentBuilder)<code> to set a custom
-     * <code>DocumentBuilder</code> (which also can be initialized with a
-     * custom <code>EntityResolver</code>) or creating a custom entity resolver
+     * {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
+     * {@code DocumentBuilder} (which also can be initialized with a
+     * custom {@code EntityResolver}) or creating a custom entity resolver
      * and registering it with the XMLConfiguration is recommended.
      * </p>
      *
@@ -73,7 +73,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
 
     /**
      * Resolves the requested external entity. This is the default
-     * implementation of the <code>EntityResolver</code> interface. It checks
+     * implementation of the {@code EntityResolver} interface. It checks
      * the passed in public ID against the registered entity IDs and uses a
      * local URL if possible.
      *
@@ -119,11 +119,11 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
 
     /**
      * Returns a map with the entity IDs that have been registered using the
-     * <code>registerEntityId()</code> method.
+     * {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */
-    public Map getRegisteredEntities()
+    public Map<String, URL> getRegisteredEntities()
     {
         return registeredEntities;
     }
