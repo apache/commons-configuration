@@ -71,18 +71,18 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>The parsed document will be stored keeping its structure. The class also
  * tries to preserve as much information from the loaded XML document as
  * possible, including comments and processing instructions. These will be
- * contained in documents created by the <code>save()</code> methods, too.</p>
+ * contained in documents created by the {@code save()} methods, too.</p>
  *
  * <p>Like other file based configuration classes this class maintains the name
  * and path to the loaded configuration file. These properties can be altered
- * using several setter methods, but they are not modified by <code>save()</code>
- * and <code>load()</code> methods. If XML documents contain relative paths to
+ * using several setter methods, but they are not modified by {@code save()}
+ * and {@code load()} methods. If XML documents contain relative paths to
  * other documents (e.g. to a DTD), these references are resolved based on the
  * path set for this configuration.</p>
  *
- * <p>By inheriting from <code>{@link AbstractConfiguration}</code> this class
+ * <p>By inheriting from {@link AbstractConfiguration} this class
  * provides some extended functionality, e.g. interpolation of property values.
- * Like in <code>{@link PropertiesConfiguration}</code> property values can
+ * Like in {@link PropertiesConfiguration} property values can
  * contain delimiter characters (the comma ',' per default) and are then split
  * into multiple values. This works for XML attributes and text content of
  * elements as well. The delimiter can be escaped by a backslash. As an example
@@ -97,10 +97,10 @@ import org.xml.sax.helpers.DefaultHandler;
  * &lt;/config&gt;
  * </pre>
  * </p>
- * <p>Here the content of the <code>array</code> element will be split at
- * the commas, so the <code>array</code> key will be assigned 4 values. In the
- * <code>scalar</code> property and the <code>text</code> attribute of the
- * <code>cite</code> element the comma is escaped, so that no splitting is
+ * <p>Here the content of the {@code array} element will be split at
+ * the commas, so the {@code array} key will be assigned 4 values. In the
+ * {@code scalar} property and the {@code text} attribute of the
+ * {@code cite} element the comma is escaped, so that no splitting is
  * performed.</p>
  *
  * <p>The configuration API allows setting multiple values for a single attribute,
@@ -115,7 +115,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>Because in XML such a constellation is not directly supported (an attribute
  * can appear only once for a single element), the values are concatenated to a
  * single value. If delimiter parsing is enabled (refer to the
- * <code>{@link #setDelimiterParsingDisabled(boolean)}</code> method), the
+ * {@link #setDelimiterParsingDisabled(boolean)} method), the
  * current list delimiter character will be used as separator. Otherwise the
  * pipe symbol ("|") will be used for this purpose. No matter which character is
  * used as delimiter, it can always be escaped with a backslash. A backslash
@@ -140,21 +140,21 @@ import org.xml.sax.helpers.DefaultHandler;
  *   &lt;indent&gt;    &lt;/indent&gt;
  * </pre></p>
  *
- * <p>Per default the spaces in the <code>indent</code> element will be trimmed
- * resulting in an empty element. To tell <code>XMLConfiguration</code> that
- * spaces are relevant the <code>xml:space</code> attribute can be used, which is
+ * <p>Per default the spaces in the {@code indent} element will be trimmed
+ * resulting in an empty element. To tell {@code XMLConfiguration} that
+ * spaces are relevant the {@code xml:space} attribute can be used, which is
  * defined in the <a href="http://www.w3.org/TR/REC-xml/#sec-white-space">XML
  * specification</a>. This will look as follows:
  * <pre>
  *   &lt;indent <strong>xml:space=&quot;preserve&quot;</strong>&gt;    &lt;/indent&gt;
  * </pre>
- * The value of the <code>indent</code> property will now contain the spaces.</p>
+ * The value of the {@code indent} property will now contain the spaces.</p>
  *
- * <p><code>XMLConfiguration</code> implements the <code>{@link FileConfiguration}</code>
+ * <p>{@code XMLConfiguration} implements the {@link FileConfiguration}
  * interface and thus provides full support for loading XML documents from
  * different sources like files, URLs, or streams. A full description of these
  * features can be found in the documentation of
- * <code>{@link AbstractFileConfiguration}</code>.</p>
+ * {@link AbstractFileConfiguration}.</p>
  *
  * <p><em>Note:</em>Configuration objects of this type can be read concurrently
  * by multiple threads. However if one of these threads modifies the object,
@@ -163,8 +163,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible
- * @author Oliver Heger
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     implements EntityResolver, EntityRegistry
@@ -222,7 +221,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     private EntityResolver entityResolver = new DefaultEntityResolver();
 
     /**
-     * Creates a new instance of <code>XMLConfiguration</code>.
+     * Creates a new instance of {@code XMLConfiguration}.
      */
     public XMLConfiguration()
     {
@@ -231,10 +230,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfiguration</code> and copies the
+     * Creates a new instance of {@code XMLConfiguration} and copies the
      * content of the passed in configuration into this object. Note that only
      * the data of the passed in configuration will be copied. If, for instance,
-     * the other configuration is a <code>XMLConfiguration</code>, too,
+     * the other configuration is a {@code XMLConfiguration}, too,
      * things like comments or processing instructions will be lost.
      *
      * @param c the configuration to copy
@@ -249,7 +248,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfiguration</code>. The
+     * Creates a new instance of{@code XMLConfiguration}. The
      * configuration is loaded from the specified file
      *
      * @param fileName the name of the file to load
@@ -262,7 +261,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfiguration</code>.
+     * Creates a new instance of {@code XMLConfiguration}.
      * The configuration is loaded from the specified file.
      *
      * @param file the file
@@ -275,7 +274,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates a new instance of <code>XMLConfiguration</code>.
+     * Creates a new instance of {@code XMLConfiguration}.
      * The configuration is loaded from the specified URL.
      *
      * @param url the URL
@@ -312,9 +311,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * configuration object is stored in an XML file. Note that setting the name
      * of the root element works only if this configuration has been newly
      * created. If the configuration was loaded from an XML file, the name
-     * cannot be changed and an <code>UnsupportedOperationException</code>
+     * cannot be changed and an {@code UnsupportedOperationException}
      * exception is thrown. Whether this configuration has been loaded from an
-     * XML document or not can be found out using the <code>getDocument()</code>
+     * XML document or not can be found out using the {@code getDocument()}
      * method.
      *
      * @param name the name of the root element
@@ -331,11 +330,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Returns the <code>DocumentBuilder</code> object that is used for
+     * Returns the {@code DocumentBuilder} object that is used for
      * loading documents. If no specific builder has been set, this method
      * returns <b>null</b>.
      *
-     * @return the <code>DocumentBuilder</code> for loading new documents
+     * @return the {@code DocumentBuilder} for loading new documents
      * @since 1.2
      */
     public DocumentBuilder getDocumentBuilder()
@@ -344,7 +343,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Sets the <code>DocumentBuilder</code> object to be used for loading
+     * Sets the {@code DocumentBuilder} object to be used for loading
      * documents. This method makes it possible to specify the exact document
      * builder. So an application can create a builder, configure it for its
      * special needs, and then pass it to this method.
@@ -424,7 +423,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /**
      * Sets the value of the validating flag. This flag determines whether
      * DTD/Schema validation should be performed when loading XML documents. This
-     * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
+     * flag is evaluated only if no custom {@code DocumentBuilder} was set.
      *
      * @param validating the validating flag
      * @since 1.2
@@ -452,7 +451,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /**
      * Sets the value of the schemaValidation flag. This flag determines whether
      * DTD or Schema validation should be used. This
-     * flag is evaluated only if no custom <code>DocumentBuilder</code> was set.
+     * flag is evaluated only if no custom {@code DocumentBuilder} was set.
      * If set to true the XML document must contain a schemaLocation definition
      * that provides resolvable hints to the required schemas.
      *
@@ -527,7 +526,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * </p>
      * <p>
      * Note that in this mode multiple attribute values cannot be handled
-     * correctly. It is possible to create a <code>XMLConfiguration</code>
+     * correctly. It is possible to create a {@code XMLConfiguration}
      * object, add multiple values to an attribute and save it. When the
      * configuration is loaded again and attribute splitting is disabled, the
      * attribute will only have a single value, which is the concatenation of
@@ -539,9 +538,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * this method must be called before the configuration is loaded. So it
      * can't be used together with one of the constructors expecting the
      * specification of the file to load. Instead the default constructor has to
-     * be used, then <code>setAttributeSplittingDisabled(false)</code> has to be
+     * be used, then {@code setAttributeSplittingDisabled(false)} has to be
      * called, and finally the configuration can be loaded using one of its
-     * <code>load()</code> methods.
+     * {@code load()} methods.
      * </p>
      *
      * @param attributeSplittingDisabled <b>true</b> for disabling attribute
@@ -570,6 +569,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * Removes all properties from this configuration. If this configuration
      * was loaded from a file, the associated DOM document is also cleared.
      */
+    @Override
     public void clear()
     {
         super.clear();
@@ -613,7 +613,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         boolean trimFlag = shouldTrim(element, trim);
         processAttributes(node, element, elemRefs);
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
         {
@@ -662,7 +662,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                List values;
+                List<String> values;
                 if (isAttributeSplittingDisabled())
                 {
                     values = Collections.singletonList(attr.getValue());
@@ -674,11 +674,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                                     : getListDelimiter());
                 }
 
-                for (Iterator it = values.iterator(); it.hasNext();)
+                for (String value : values)
                 {
                     Node child = new XMLNode(attr.getName(), elemRefs ? element
                             : null);
-                    child.setValue(it.next());
+                    child.setValue(value);
                     node.addAttribute(child);
                 }
             }
@@ -697,10 +697,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         if (child.getValue() != null)
         {
-            List values;
+            List<String> values;
             if (isDelimiterParsingDisabled())
             {
-                values = new ArrayList();
+                values = new ArrayList<String>();
                 values.add(child.getValue().toString());
             }
             else
@@ -711,15 +711,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
             if (values.size() > 1)
             {
-                Iterator it = values.iterator();
+                Iterator<String> it = values.iterator();
                 // Create new node for the original child's first value
                 Node c = createNode(child.getName());
                 c.setValue(it.next());
                 // Copy original attributes to the new node
-                for (Iterator itAttrs = child.getAttributes().iterator(); itAttrs
-                        .hasNext();)
+                for (ConfigurationNode ndAttr : child.getAttributes())
                 {
-                    Node ndAttr = (Node) itAttrs.next();
                     ndAttr.setReference(null);
                     c.addAttribute(ndAttr);
                 }
@@ -745,7 +743,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Checks whether the content of the current XML element should be trimmed.
-     * This method checks whether a <code>xml:space</code> attribute is
+     * This method checks whether a {@code xml:space} attribute is
      * present and evaluates its value. See <a
      * href="http://www.w3.org/TR/REC-xml/#sec-white-space">
      * http://www.w3.org/TR/REC-xml/#sec-white-space</a> for more details.
@@ -769,14 +767,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates the <code>DocumentBuilder</code> to be used for loading files.
+     * Creates the {@code DocumentBuilder} to be used for loading files.
      * This implementation checks whether a specific
-     * <code>DocumentBuilder</code> has been set. If this is the case, this
+     * {@code DocumentBuilder} has been set. If this is the case, this
      * one is used. Otherwise a default builder is created. Depending on the
      * value of the validating flag this builder will be a validating or a non
-     * validating <code>DocumentBuilder</code>.
+     * validating {@code DocumentBuilder}.
      *
-     * @return the <code>DocumentBuilder</code> for loading configuration
+     * @return the {@code DocumentBuilder} for loading configuration
      * files
      * @throws ParserConfigurationException if an error occurs
      * @since 1.2
@@ -810,6 +808,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 // register an error handler which detects validation errors
                 result.setErrorHandler(new DefaultHandler()
                 {
+                    @Override
                     public void error(SAXParseException ex) throws SAXException
                     {
                         throw ex;
@@ -886,11 +885,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Creates a new node object. This implementation returns an instance of the
-     * <code>XMLNode</code> class.
+     * {@code XMLNode} class.
      *
      * @param name the node's name
      * @return the new node
      */
+    @Override
     protected Node createNode(String name)
     {
         return new XMLNode(name, null);
@@ -902,6 +902,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param in the input stream
      * @throws ConfigurationException if an error occurs
      */
+    @Override
     public void load(InputStream in) throws ConfigurationException
     {
         load(new InputSource(in));
@@ -909,7 +910,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Load the configuration from the given reader.
-     * Note that the <code>clear()</code> method is not called, so
+     * Note that the {@code clear()} method is not called, so
      * the properties contained in the loaded file will be added to the
      * actual set of properties.
      *
@@ -1057,7 +1058,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @return the copy
      */
-    public Object clone()
+    @Override
+    public XMLConfiguration clone()
     {
         XMLConfiguration copy = (XMLConfiguration) super.clone();
 
@@ -1072,10 +1074,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Creates the file configuration delegate for this object. This implementation
-     * will return an instance of a class derived from <code>FileConfigurationDelegate</code>
-     * that deals with some specialities of <code>XMLConfiguration</code>.
+     * will return an instance of a class derived from {@code FileConfigurationDelegate}
+     * that deals with some specialties of {@code XMLConfiguration}.
      * @return the delegate for this object
      */
+    @Override
     protected FileConfigurationDelegate createDelegate()
     {
         return new XMLFileConfigurationDelegate();
@@ -1084,38 +1087,37 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /**
      * Adds a collection of nodes directly to this configuration. This
      * implementation ensures that the nodes to be added are of the correct node
-     * type (they have to be converted to <code>XMLNode</code> if necessary).
+     * type (they have to be converted to {@code XMLNode} if necessary).
      *
      * @param key the key where the nodes are to be added
      * @param nodes the collection with the new nodes
      * @since 1.5
      */
-    public void addNodes(String key, Collection nodes)
+    @Override
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
-        Collection xmlNodes;
-
         if (nodes != null && !nodes.isEmpty())
         {
-            xmlNodes = new ArrayList(nodes.size());
-            for (Iterator it = nodes.iterator(); it.hasNext();)
+            Collection<XMLNode> xmlNodes;
+            xmlNodes = new ArrayList<XMLNode>(nodes.size());
+            for (ConfigurationNode node : nodes)
             {
-                xmlNodes.add(convertToXMLNode((ConfigurationNode) it.next()));
+                xmlNodes.add(convertToXMLNode(node));
             }
+            super.addNodes(key, xmlNodes);
         }
         else
         {
-            xmlNodes = nodes;
+            super.addNodes(key, nodes);
         }
-
-        super.addNodes(key, xmlNodes);
     }
 
     /**
-     * Converts the specified node into a <code>XMLNode</code> if necessary.
+     * Converts the specified node into a {@code XMLNode} if necessary.
      * This is required for nodes that are directly added, e.g. by
-     * <code>addNodes()</code>. If the passed in node is already an instance
-     * of <code>XMLNode</code>, it is directly returned, and conversion
-     * stops. Otherwise a new <code>XMLNode</code> is created, and the
+     * {@code addNodes()}. If the passed in node is already an instance
+     * of {@code XMLNode}, it is directly returned, and conversion
+     * stops. Otherwise a new {@code XMLNode} is created, and the
      * children are also converted.
      *
      * @param node the node to be converted
@@ -1131,13 +1133,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         XMLNode nd = (XMLNode) createNode(node.getName());
         nd.setValue(node.getValue());
         nd.setAttribute(node.isAttribute());
-        for (Iterator it = node.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode child : node.getChildren())
         {
-            nd.addChild(convertToXMLNode((ConfigurationNode) it.next()));
+            nd.addChild(convertToXMLNode(child));
         }
-        for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+        for (ConfigurationNode attr : node.getAttributes())
         {
-            nd.addAttribute(convertToXMLNode((ConfigurationNode) it.next()));
+            nd.addAttribute(convertToXMLNode(attr));
         }
         return nd;
     }
@@ -1147,30 +1149,30 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * Registers the specified DTD URL for the specified public identifier.
      * </p>
      * <p>
-     * <code>XMLConfiguration</code> contains an internal
-     * <code>EntityResolver</code> implementation. This maps
-     * <code>PUBLICID</code>'s to URLs (from which the resource will be
+     * {@code XMLConfiguration} contains an internal
+     * {@code EntityResolver} implementation. This maps
+     * {@code PUBLICID}'s to URLs (from which the resource will be
      * loaded). A common use case for this method is to register local URLs
      * (possibly computed at runtime by a class loader) for DTDs. This allows
      * the performance advantage of using a local version without having to
-     * ensure every <code>SYSTEM</code> URI on every processed XML document is
+     * ensure every {@code SYSTEM} URI on every processed XML document is
      * local. This implementation provides only basic functionality. If more
      * sophisticated features are required, using
      * {@link #setDocumentBuilder(DocumentBuilder)} to set a custom
-     * <code>DocumentBuilder</code> (which also can be initialized with a
-     * custom <code>EntityResolver</code>) is recommended.
+     * {@code DocumentBuilder} (which also can be initialized with a
+     * custom {@code EntityResolver}) is recommended.
      * </p>
      * <p>
      * <strong>Note:</strong> This method will have no effect when a custom
-     * <code>DocumentBuilder</code> has been set. (Setting a custom
-     * <code>DocumentBuilder</code> overrides the internal implementation.)
+     * {@code DocumentBuilder} has been set. (Setting a custom
+     * {@code DocumentBuilder} overrides the internal implementation.)
      * </p>
      * <p>
      * <strong>Note:</strong> This method must be called before the
      * configuration is loaded. So the default constructor of
-     * <code>XMLConfiguration</code> should be used, the location of the
-     * configuration file set, <code>registerEntityId()</code> called, and
-     * finally the <code>load()</code> method can be invoked.
+     * {@code XMLConfiguration} should be used, the location of the
+     * configuration file set, {@code registerEntityId()} called, and
+     * finally the {@code load()} method can be invoked.
      * </p>
      *
      * @param publicId Public identifier of the DTD to be resolved
@@ -1188,7 +1190,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Resolves the requested external entity. This is the default
-     * implementation of the <code>EntityResolver</code> interface. It checks
+     * implementation of the {@code EntityResolver} interface. It checks
      * the passed in public ID against the registered entity IDs and uses a
      * local URL if possible.
      *
@@ -1199,6 +1201,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @since 1.5
      * @deprecated Use getEntityResolver().resolveEntity()
      */
+    @Deprecated
     public InputSource resolveEntity(String publicId, String systemId)
             throws SAXException
     {
@@ -1214,21 +1217,21 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /**
      * Returns a map with the entity IDs that have been registered using the
-     * <code>registerEntityId()</code> method.
+     * {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */
-    public Map getRegisteredEntities()
+    public Map<String, URL> getRegisteredEntities()
     {
         if (entityResolver instanceof EntityRegistry)
         {
             return ((EntityRegistry) entityResolver).getRegisteredEntities();
         }
-        return new HashMap();
+        return new HashMap<String, URL>();
     }
 
     /**
-     * A specialized <code>Node</code> class that is connected with an XML
+     * A specialized {@code Node} class that is connected with an XML
      * element. Changes on a node are also performed on the associated element.
      */
     class XMLNode extends Node
@@ -1239,7 +1242,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         private static final long serialVersionUID = -4133988932174596562L;
 
         /**
-         * Creates a new instance of <code>XMLNode</code> and initializes it
+         * Creates a new instance of {@code XMLNode} and initializes it
          * with a name and the corresponding XML element.
          *
          * @param name the node's name
@@ -1257,6 +1260,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          *
          * @param value the node's new value
          */
+        @Override
         public void setValue(Object value)
         {
             super.setValue(value);
@@ -1277,6 +1281,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         /**
          * Updates the associated XML elements when a node is removed.
          */
+        @Override
         protected void removeReference()
         {
             if (getReference() != null)
@@ -1363,7 +1368,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             Element elem = (Element) getReference();
             // Find all Text nodes
             NodeList children = elem.getChildNodes();
-            Collection textNodes = new ArrayList();
+            Collection<org.w3c.dom.Node> textNodes = new ArrayList<org.w3c.dom.Node>();
             for (int i = 0; i < children.getLength(); i++)
             {
                 org.w3c.dom.Node nd = children.item(i);
@@ -1388,16 +1393,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             }
 
             // Remove all but the first Text node
-            for (Iterator it = textNodes.iterator(); it.hasNext();)
+            for (org.w3c.dom.Node tn : textNodes)
             {
-                elem.removeChild((org.w3c.dom.Node) it.next());
+                elem.removeChild(tn);
             }
             return result;
         }
     }
 
     /**
-     * A concrete <code>BuilderVisitor</code> that can construct XML
+     * A concrete {@code BuilderVisitor} that can construct XML
      * documents.
      */
     static class XMLBuilderVisitor extends BuilderVisitor
@@ -1413,7 +1418,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         private boolean isAttributeSplittingDisabled;
 
         /**
-         * Creates a new instance of <code>XMLBuilderVisitor</code>
+         * Creates a new instance of {@code XMLBuilderVisitor}.
          *
          * @param doc the document to be created
          * @param listDelimiter the delimiter for attribute properties with multiple values
@@ -1446,6 +1451,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param sibling2 the second sibling
          * @return the new node
          */
+        @Override
         protected Object insert(Node newNode, Node parent, Node sibling1, Node sibling2)
         {
             if (newNode.isAttribute())
@@ -1499,12 +1505,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (node != null && elem != null)
             {
                 boolean hasAttribute = false;
-                List attrs = node.getAttributes(name);
-                StringBuffer buf = new StringBuffer();
+                List<ConfigurationNode> attrs = node.getAttributes(name);
+                StringBuilder buf = new StringBuilder();
                 char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
-                for (Iterator it = attrs.iterator(); it.hasNext();)
+                for (ConfigurationNode attr : attrs)
                 {
-                    Node attr = (Node) it.next();
                     if (attr.getValue() != null)
                     {
                         hasAttribute = true;
@@ -1567,12 +1572,13 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * A special implementation of the <code>FileConfiguration</code> interface that is
-     * used internally to implement the <code>FileConfiguration</code> methods
-     * for <code>XMLConfiguration</code>, too.
+     * A special implementation of the {@code FileConfiguration} interface that is
+     * used internally to implement the {@code FileConfiguration} methods
+     * for {@code XMLConfiguration}, too.
      */
     private class XMLFileConfigurationDelegate extends FileConfigurationDelegate
     {
+        @Override
         public void load(InputStream in) throws ConfigurationException
         {
             XMLConfiguration.this.load(in);
