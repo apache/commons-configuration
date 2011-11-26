@@ -50,7 +50,7 @@ public final class TreeUtils
     private static void printTree(PrintStream stream, String indent, ConfigurationNode result)
     {
         StringBuffer buffer = new StringBuffer(indent).append("<").append(result.getName());
-        Iterator iter = result.getAttributes().iterator();
+        Iterator<ConfigurationNode> iter = result.getAttributes().iterator();
         while (iter.hasNext())
         {
             ConfigurationNode node = (ConfigurationNode) iter.next();
