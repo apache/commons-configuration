@@ -18,16 +18,19 @@ package org.apache.commons.configuration.tree;
 
 /**
  * <p>
- * A simple adapter class that simplyfies writing custom node visitor
+ * A simple adapter class that simplifies writing custom node visitor
  * implementations.
  * </p>
  * <p>
  * This class provides dummy implementations for the methods defined in the
- * <code>ConfigurationNodeVisitor</code> interface. Derived classes only need
+ * {@code ConfigurationNodeVisitor} interface. Derived classes only need
  * to override the methods they really need.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
 public class ConfigurationNodeVisitorAdapter implements
         ConfigurationNodeVisitor
