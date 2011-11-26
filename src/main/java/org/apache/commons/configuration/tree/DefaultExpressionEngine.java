@@ -17,7 +17,6 @@
 package org.apache.commons.configuration.tree;
 
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
- * A default implementation of the <code>ExpressionEngine</code> interface
+ * A default implementation of the {@code ExpressionEngine} interface
  * providing the &quot;native&quote; expression language for hierarchical
  * configurations.
  * </p>
@@ -43,7 +42,7 @@ import org.apache.commons.lang.StringUtils;
  * <code>[@&lt;attributeName&gt;]</code>.</li>
  * <li>If there are multiple child or attribute nodes with the same name, a
  * specific node can be selected using a numerical index. By default indices are
- * written in paranthesis.</li>
+ * written in parenthesis.</li>
  * </ul>
  * </p>
  * <p>
@@ -85,24 +84,26 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * <p>
  * If this document is parsed and stored in a hierarchical configuration object,
- * for instance the key <code>tables.table(0).name</code> can be used to find
- * out the name of the first table. In opposite <code>tables.table.name</code>
- * would return a collection with the names of all available tables. Similarily
- * the key <code>tables.table(1).fields.field.name</code> returns a collection
+ * for instance the key {@code tables.table(0).name} can be used to find
+ * out the name of the first table. In opposite {@code tables.table.name}
+ * would return a collection with the names of all available tables. Similarly
+ * the key {@code tables.table(1).fields.field.name} returns a collection
  * with the names of all fields of the second table. If another index is added
- * after the <code>field</code> element, a single field can be accessed:
- * <code>tables.table(1).fields.field(0).name</code>. The key
- * <code>tables.table(0)[@type]</code> would select the type attribute of the
+ * after the {@code field} element, a single field can be accessed:
+ * {@code tables.table(1).fields.field(0).name}. The key
+ * {@code tables.table(0)[@type]} would select the type attribute of the
  * first table.
  * </p>
  * <p>
  * This example works with the default values for delimiters and index markers.
  * It is also possible to set custom values for these properties so that you can
- * adapt a <code>DefaultExpressionEngine</code> to your personal needs.
+ * adapt a {@code DefaultExpressionEngine} to your personal needs.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class DefaultExpressionEngine implements ExpressionEngine
@@ -262,7 +263,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * Sets the property delmiter. This string is used to split the parts of a
+     * Sets the property delimiter. This string is used to split the parts of a
      * property key.
      *
      * @param propertyDelimiter the property delimiter
@@ -280,9 +281,9 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param key the key
      * @return a list with the matching nodes
      */
-    public List query(ConfigurationNode root, String key)
+    public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
-        List nodes = new LinkedList();
+        List<ConfigurationNode> nodes = new LinkedList<ConfigurationNode>();
         findNodesForKey(new DefaultConfigurationKey(this, key).iterator(),
                 root, nodes);
         return nodes;
@@ -331,7 +332,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * To be able to deal with the structure supported by hierarchical
      * configuration implementations the passed in key is of importance,
      * especially the indices it might contain. The following example should
-     * clearify this: Suppose the actual node structure looks like the
+     * clarify this: Suppose the actual node structure looks like the
      * following:
      * </p>
      * <p>
@@ -354,7 +355,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * <p>
      * In this example a database structure is defined, e.g. all fields of the
      * first table could be accessed using the key
-     * <code>tables.table(0).fields.field.name</code>. If now properties are
+     * {@code tables.table(0).fields.field.name}. If now properties are
      * to be added, it must be exactly specified at which position in the
      * hierarchy the new property is to be inserted. So to add a new field name
      * to a table it is not enough to say just
@@ -368,20 +369,20 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * The statement given above contains some ambiguity. For instance it is not
      * clear, to which table the new field should be added. If this method finds
      * such an ambiguity, it is resolved by following the last valid path. Here
-     * this would be the last table. The same is true for the <code>field</code>;
+     * this would be the last table. The same is true for the {@code field};
      * because there are multiple fields and no explicit index is provided, a
-     * new <code>name</code> property would be added to the last field - which
-     * is propably not what was desired.
+     * new {@code name} property would be added to the last field - which
+     * is probably not what was desired.
      * </p>
      * <p>
      * To make things clear explicit indices should be provided whenever
      * possible. In the example above the exact table could be specified by
-     * providing an index for the <code>table</code> element as in
-     * <code>tables.table(1).fields</code>. By specifying an index it can
+     * providing an index for the {@code table} element as in
+     * {@code tables.table(1).fields}. By specifying an index it can
      * also be expressed that at a given position in the configuration tree a
      * new branch should be added. In the example above we did not want to add
-     * an additional <code>name</code> element to the last field of the table,
-     * but we want a complete new <code>field</code> element. This can be
+     * an additional {@code name} element to the last field of the table,
+     * but we want a complete new {@code field} element. This can be
      * achieved by specifying an invalid index (like -1) after the element where
      * a new branch should be created. Given this our example would run:
      * </p>
@@ -392,7 +393,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * </p>
      * <p>
      * With this notation it is possible to add new branches everywhere. We
-     * could for instance create a new <code>table</code> element by
+     * could for instance create a new {@code table} element by
      * specifying
      * </p>
      * <p>
@@ -401,7 +402,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * </pre>
      * </p>
      * <p>
-     * (Note that because after the <code>table</code> element a new branch is
+     * (Note that because after the {@code table} element a new branch is
      * created indices in following elements are not relevant; the branch is new
      * so there cannot be any ambiguities.)
      * </p>
@@ -450,7 +451,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param nodes here the found nodes are stored
      */
     protected void findNodesForKey(DefaultConfigurationKey.KeyIterator keyPart,
-            ConfigurationNode node, Collection nodes)
+            ConfigurationNode node, Collection<ConfigurationNode> nodes)
     {
         if (!keyPart.hasNext())
         {
@@ -514,7 +515,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * Called by <code>findNodesForKey()</code> to process the sub nodes of
+     * Called by {@code findNodesForKey()} to process the sub nodes of
      * the current node depending on the type of the current key part (children,
      * attributes, or both).
      *
@@ -523,7 +524,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
      * @param nodes the target collection
      */
     private void processSubNodes(DefaultConfigurationKey.KeyIterator keyPart,
-            List subNodes, Collection nodes)
+            List<ConfigurationNode> subNodes, Collection<ConfigurationNode> nodes)
     {
         if (keyPart.hasIndex())
         {
@@ -536,10 +537,10 @@ public class DefaultExpressionEngine implements ExpressionEngine
         }
         else
         {
-            for (Iterator it = subNodes.iterator(); it.hasNext();)
+            for (ConfigurationNode node : subNodes)
             {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), (ConfigurationNode) it.next(), nodes);
+                        .clone(), node, nodes);
             }
         }
     }
