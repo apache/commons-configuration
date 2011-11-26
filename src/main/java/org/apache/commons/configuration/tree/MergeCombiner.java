@@ -16,14 +16,14 @@
  */
 package org.apache.commons.configuration.tree;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * <p>
- * A specialized implementation of the <code>NodeCombiner</code> interface
+ * A specialized implementation of the {@code NodeCombiner} interface
  * that performs a merge from two passed in node hierarchies.
  * </p>
  * <p>
@@ -52,6 +52,7 @@ public class MergeCombiner extends NodeCombiner
      * @return the union node
      */
 
+    @Override
     public ConfigurationNode combine(ConfigurationNode node1, ConfigurationNode node2)
     {
         ViewNode result = createViewNode();
@@ -60,10 +61,9 @@ public class MergeCombiner extends NodeCombiner
         addAttributes(result, node1, node2);
 
         // Check if nodes can be combined
-        List children2 = new LinkedList(node2.getChildren());
-        for (Iterator it = node1.getChildren().iterator(); it.hasNext();)
+        List<ConfigurationNode> children2 = new LinkedList<ConfigurationNode>(node2.getChildren());
+        for (ConfigurationNode child1 : node1.getChildren())
         {
-            ConfigurationNode child1 = (ConfigurationNode) it.next();
             ConfigurationNode child2 = canCombine(node1, node2, child1, children2);
             if (child2 != null)
             {
@@ -77,9 +77,9 @@ public class MergeCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (Iterator it = children2.iterator(); it.hasNext();)
+        for (ConfigurationNode c : children2)
         {
-            result.addChild((ConfigurationNode) it.next());
+            result.addChild(c);
         }
         return result;
     }
@@ -98,9 +98,8 @@ public class MergeCombiner extends NodeCombiner
             ConfigurationNode node2)
     {
         result.appendAttributes(node1);
-        for (Iterator it = node2.getAttributes().iterator(); it.hasNext();)
+        for (ConfigurationNode attr : node2.getAttributes())
         {
-            ConfigurationNode attr = (ConfigurationNode) it.next();
             if (node1.getAttributeCount(attr.getName()) == 0)
             {
                 result.addAttribute(attr);
@@ -119,23 +118,23 @@ public class MergeCombiner extends NodeCombiner
      * @return a child of the second node, with which a combination is possible
      */
     protected ConfigurationNode canCombine(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child, List children2)
+            ConfigurationNode node2, ConfigurationNode child, List<ConfigurationNode> children2)
     {
-        List attrs1 = child.getAttributes();
-        List nodes = new ArrayList();
+        List<ConfigurationNode> attrs1 = child.getAttributes();
+        List<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
 
-        List children = node2.getChildren(child.getName());
-        Iterator it = children.iterator();
+        List<ConfigurationNode> children = node2.getChildren(child.getName());
+        Iterator<ConfigurationNode> it = children.iterator();
         while (it.hasNext())
         {
-            ConfigurationNode node = (ConfigurationNode) it.next();
-            Iterator iter = attrs1.iterator();
+            ConfigurationNode node = it.next();
+            Iterator<ConfigurationNode> iter = attrs1.iterator();
             while (iter.hasNext())
             {
-                ConfigurationNode attr1 = (ConfigurationNode) iter.next();
-                List list2 = node.getAttributes(attr1.getName());
+                ConfigurationNode attr1 = iter.next();
+                List<ConfigurationNode> list2 = node.getAttributes(attr1.getName());
                 if (list2.size() == 1
-                    && !attr1.getValue().equals(((ConfigurationNode) list2.get(0)).getValue()))
+                    && !attr1.getValue().equals(list2.get(0).getValue()))
                 {
                     node = null;
                     break;
@@ -153,7 +152,7 @@ public class MergeCombiner extends NodeCombiner
         }
         if (nodes.size() > 1 && !isListNode(child))
         {
-            Iterator iter = nodes.iterator();
+            Iterator<ConfigurationNode> iter = nodes.iterator();
             while (iter.hasNext())
             {
                 children2.remove(iter.next());
