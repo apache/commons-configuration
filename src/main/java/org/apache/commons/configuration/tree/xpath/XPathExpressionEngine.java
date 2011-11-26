@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -30,7 +29,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>
- * A specialized implementation of the <code>ExpressionEngine</code> interface
+ * A specialized implementation of the {@code ExpressionEngine} interface
  * that is able to evaluate XPATH expressions.
  * </p>
  * <p>
@@ -42,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
  * <p>
  * For selecting properties arbitrary XPATH expressions can be used, which
  * select single or multiple configuration nodes. The associated
- * <code>Configuration</code> instance will directly pass the specified property
+ * {@code Configuration} instance will directly pass the specified property
  * keys into this engine. If a key is not syntactically correct, an exception
  * will be thrown.
  * </p>
@@ -59,7 +58,7 @@ import org.apache.commons.lang.StringUtils;
  * &quot;/&quot; character or &quot;@&quot; for an attribute) can be specified.</li>
  * </ol>
  * Some examples for valid keys that can be passed into the configuration's
- * <code>addProperty()</code> method follow:
+ * {@code addProperty()} method follow:
  * </p>
  * <p>
  *
@@ -69,8 +68,8 @@ import org.apache.commons.lang.StringUtils;
  *
  * </p>
  * <p>
- * This will add a new <code>type</code> node as a child of the first
- * <code>table</code> element.
+ * This will add a new {@code type} node as a child of the first
+ * {@code table} element.
  * </p>
  * <p>
  *
@@ -81,7 +80,7 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * <p>
  * Similar to the example above, but this time a new attribute named
- * <code>type</code> will be added to the first <code>table</code> element.
+ * {@code type} will be added to the first {@code table} element.
  * </p>
  * <p>
  *
@@ -92,9 +91,9 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * <p>
  * This example shows how a complex path can be added. Parent node is the
- * <code>tables</code> element. Here a new branch consisting of the nodes
- * <code>table</code>, <code>fields</code>, <code>field</code>, and
- * <code>name</code> will be added.
+ * {@code tables} element. Here a new branch consisting of the nodes
+ * {@code table}, {@code fields}, {@code field}, and
+ * {@code name} will be added.
  * </p>
  * <p>
  *
@@ -109,12 +108,12 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * <p>
  * <strong>Note:</strong> This extended syntax for adding properties only works
- * with the <code>addProperty()</code> method. <code>setProperty()</code> does
+ * with the {@code addProperty()} method. {@code setProperty()} does
  * not support creating new nodes this way.
  * </p>
  * <p>
  * From version 1.7 on, it is possible to use regular keys in calls to
- * <code>addProperty()</code> (i.e. keys that do not have to contain a
+ * {@code addProperty()} (i.e. keys that do not have to contain a
  * whitespace as delimiter). In this case the key is evaluated, and the biggest
  * part pointing to an existing node is determined. The remaining part is then
  * added as new path. As an example consider the key
@@ -124,15 +123,15 @@ import org.apache.commons.lang.StringUtils;
  * </pre>
  *
  * If the key does not point to an existing node, the engine will check the
- * paths <code>&quot;tables/table[last()]/fields/field&quot;</code>,
- * <code>&quot;tables/table[last()]/fields&quot;</code>,
- * <code>&quot;tables/table[last()]&quot;</code>, and so on, until a key is
+ * paths {@code "tables/table[last()]/fields/field"},
+ * {@code "tables/table[last()]/fields"},
+ * {@code "tables/table[last()]"}, and so on, until a key is
  * found which points to a node. Let's assume that the last key listed above can
  * be resolved in this way. Then from this key the following key is derived:
- * <code>&quot;tables/table[last()] fields/field/name&quot;</code> by appending
+ * {@code "tables/table[last()] fields/field/name"} by appending
  * the remaining part after a whitespace. This key can now be processed using
  * the original algorithm. Keys of this form can also be used with the
- * <code>setProperty()</code> method. However, it is still recommended to use
+ * {@code setProperty()} method. However, it is still recommended to use
  * the old format because it makes explicit at which position new nodes should
  * be added. For keys without a whitespace delimiter there may be ambiguities.
  * </p>
@@ -169,19 +168,24 @@ public class XPathExpressionEngine implements ExpressionEngine
      * @param key the query to be executed
      * @return a list with the nodes that are selected by the query
      */
-    public List query(ConfigurationNode root, String key)
+    public List<ConfigurationNode> query(ConfigurationNode root, String key)
     {
         if (StringUtils.isEmpty(key))
         {
-            List result = new ArrayList(1);
-            result.add(root);
-            return result;
+            return Collections.singletonList(root);
         }
         else
         {
             JXPathContext context = createContext(root, key);
-            List result = context.selectNodes(key);
-            return (result != null) ? result : Collections.EMPTY_LIST;
+            // This is safe because our node pointer implementations will return
+            // a list of configuration nodes.
+            @SuppressWarnings("unchecked")
+            List<ConfigurationNode> result = context.selectNodes(key);
+            if (result == null)
+            {
+                result = Collections.emptyList();
+            }
+            return result;
         }
     }
 
@@ -189,8 +193,8 @@ public class XPathExpressionEngine implements ExpressionEngine
      * Returns a (canonical) key for the given node based on the parent's key.
      * This implementation will create an XPATH expression that selects the
      * given node (under the assumption that the passed in parent key is valid).
-     * As the <code>nodeKey()</code> implementation of
-     * <code>{@link org.apache.commons.configuration.tree.DefaultExpressionEngine DefaultExpressionEngine}</code>
+     * As the {@code nodeKey()} implementation of
+     * {@link org.apache.commons.configuration.tree.DefaultExpressionEngine DefaultExpressionEngine}
      * this method will not return indices for nodes. So all child nodes of a
      * given parent with the same name will have the same key.
      *
@@ -213,7 +217,7 @@ public class XPathExpressionEngine implements ExpressionEngine
 
         else
         {
-            StringBuffer buf = new StringBuffer(parentKey.length()
+            StringBuilder buf = new StringBuilder(parentKey.length()
                     + node.getName().length() + PATH_DELIMITER.length());
             if (parentKey.length() > 0)
             {
@@ -254,7 +258,7 @@ public class XPathExpressionEngine implements ExpressionEngine
             index = findKeySeparator(addKey);
         }
 
-        List nodes = query(root, addKey.substring(0, index).trim());
+        List<ConfigurationNode> nodes = query(root, addKey.substring(0, index).trim());
         if (nodes.size() != 1)
         {
             throw new IllegalArgumentException(
@@ -262,13 +266,13 @@ public class XPathExpressionEngine implements ExpressionEngine
         }
 
         NodeAddData data = new NodeAddData();
-        data.setParent((ConfigurationNode) nodes.get(0));
+        data.setParent(nodes.get(0));
         initNodeAddData(data, addKey.substring(index).trim());
         return data;
     }
 
     /**
-     * Creates the <code>JXPathContext</code> used for executing a query. This
+     * Creates the {@code JXPathContext} used for executing a query. This
      * method will create a new context and ensure that it is correctly
      * initialized.
      *
@@ -284,8 +288,8 @@ public class XPathExpressionEngine implements ExpressionEngine
     }
 
     /**
-     * Initializes most properties of a <code>NodeAddData</code> object. This
-     * method is called by <code>prepareAdd()</code> after the parent node has
+     * Initializes most properties of a {@code NodeAddData} object. This
+     * method is called by {@code prepareAdd()} after the parent node has
      * been found. Its task is to interpret the passed in path of the new node.
      *
      * @param data the data object to initialize
@@ -373,7 +377,7 @@ public class XPathExpressionEngine implements ExpressionEngine
             String keyExisting = key.substring(0, pos);
             if (!query(root, keyExisting).isEmpty())
             {
-                StringBuffer buf = new StringBuffer(key.length() + 1);
+                StringBuilder buf = new StringBuilder(key.length() + 1);
                 buf.append(keyExisting).append(SPACE);
                 buf.append(key.substring(pos + 1));
                 return buf.toString();
