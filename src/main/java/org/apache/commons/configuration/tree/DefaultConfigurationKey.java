@@ -24,11 +24,11 @@ import org.apache.commons.lang.StringUtils;
 /**
  * <p>
  * A simple class that supports creation of and iteration on configuration keys
- * supported by a <code>{@link DefaultExpressionEngine}</code> object.
+ * supported by a {@link DefaultExpressionEngine} object.
  * </p>
  * <p>
  * For key creation the class works similar to a StringBuffer: There are several
- * <code>appendXXXX()</code> methods with which single parts of a key can be
+ * {@code appendXXXX()} methods with which single parts of a key can be
  * constructed. All these methods return a reference to the actual object so
  * they can be written in a chain. When using this methods the exact syntax for
  * keys need not be known.
@@ -40,13 +40,15 @@ import org.apache.commons.lang.StringUtils;
  * </p>
  * <p>
  * Instances of this class are always associated with an instance of
- * <code>{@link DefaultExpressionEngine}</code>, from which the current
+ * {@link DefaultExpressionEngine}, from which the current
  * delimiters are obtained. So key creation and parsing is specific to this
  * associated expression engine.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class DefaultConfigurationKey
@@ -58,22 +60,22 @@ public class DefaultConfigurationKey
     private DefaultExpressionEngine expressionEngine;
 
     /** Holds a buffer with the so far created key. */
-    private StringBuffer keyBuffer;
+    private StringBuilder keyBuffer;
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationKey</code> and sets
+     * Creates a new instance of {@code DefaultConfigurationKey} and sets
      * the associated expression engine.
      *
      * @param engine the expression engine
      */
     public DefaultConfigurationKey(DefaultExpressionEngine engine)
     {
-        keyBuffer = new StringBuffer(INITIAL_SIZE);
+        keyBuffer = new StringBuilder(INITIAL_SIZE);
         setExpressionEngine(engine);
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationKey</code> and sets
+     * Creates a new instance of {@code DefaultConfigurationKey} and sets
      * the associated expression engine and an initial key.
      *
      * @param engine the expression engine
@@ -82,7 +84,7 @@ public class DefaultConfigurationKey
     public DefaultConfigurationKey(DefaultExpressionEngine engine, String key)
     {
         setExpressionEngine(engine);
-        keyBuffer = new StringBuffer(trim(key));
+        keyBuffer = new StringBuilder(trim(key));
     }
 
     /**
@@ -195,8 +197,8 @@ public class DefaultConfigurationKey
     /**
      * Sets the new length of this configuration key. With this method it is
      * possible to truncate the key, e.g. to return to a state prior calling
-     * some <code>append()</code> methods. The semantic is the same as the
-     * <code>setLength()</code> method of <code>StringBuffer</code>.
+     * some {@code append()} methods. The semantic is the same as the
+     * {@code setLength()} method of {@code StringBuilder}.
      *
      * @param len the new length of the key
      */
@@ -206,12 +208,13 @@ public class DefaultConfigurationKey
     }
 
     /**
-     * Checks if two <code>ConfigurationKey</code> objects are equal. The
+     * Checks if two {@code ConfigurationKey} objects are equal. The
      * method can be called with strings or other objects, too.
      *
      * @param c the object to compare
      * @return a flag if both objects are equal
      */
+    @Override
     public boolean equals(Object c)
     {
         if (c == null)
@@ -227,6 +230,7 @@ public class DefaultConfigurationKey
      *
      * @return the hash code
      */
+    @Override
     public int hashCode()
     {
         return String.valueOf(keyBuffer).hashCode();
@@ -238,6 +242,7 @@ public class DefaultConfigurationKey
      *
      * @return a string for this object
      */
+    @Override
     public String toString()
     {
         return keyBuffer.toString();
@@ -282,7 +287,7 @@ public class DefaultConfigurationKey
         }
         else
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append(getExpressionEngine().getAttributeStart()).append(key);
             if (getExpressionEngine().getAttributeEnd() != null)
             {
@@ -455,7 +460,7 @@ public class DefaultConfigurationKey
      * class implements the normal iterator interface. In addition it provides
      * some specific methods for configuration keys.
      */
-    public class KeyIterator implements Iterator, Cloneable
+    public class KeyIterator implements Iterator<String>, Cloneable
     {
         /** Stores the current key name. */
         private String current;
@@ -477,7 +482,7 @@ public class DefaultConfigurationKey
 
         /**
          * Returns the next key part of this configuration key. This is a short
-         * form of <code>nextKey(false)</code>.
+         * form of {@code nextKey(false)}.
          *
          * @return the next key part
          */
@@ -529,7 +534,7 @@ public class DefaultConfigurationKey
          *
          * @return the next object
          */
-        public Object next()
+        public String next()
         {
             return nextKey();
         }
@@ -545,8 +550,8 @@ public class DefaultConfigurationKey
 
         /**
          * Returns the current key of the iteration (without skipping to the
-         * next element). This is the same key the previous <code>next()</code>
-         * call had returned. (Short form of <code>currentKey(false)</code>.
+         * next element). This is the same key the previous {@code next()}
+         * call had returned. (Short form of {@code currentKey(false)}.
          *
          * @return the current key
          */
@@ -573,7 +578,7 @@ public class DefaultConfigurationKey
 
         /**
          * Returns a flag if the current key is an attribute. This method can be
-         * called after <code>next()</code>.
+         * called after {@code next()}.
          *
          * @return a flag if the current key is an attribute
          */
@@ -587,7 +592,7 @@ public class DefaultConfigurationKey
         /**
          * Returns a flag whether the current key refers to a property (i.e. is
          * no special attribute key). Usually this method will return the
-         * opposite of <code>isAttribute()</code>, but if the delimiters for
+         * opposite of {@code isAttribute()}, but if the delimiters for
          * normal properties and attributes are set to the same string, it is
          * possible that both methods return <b>true</b>.
          *
@@ -602,7 +607,7 @@ public class DefaultConfigurationKey
         /**
          * Returns the index value of the current key. If the current key does
          * not have an index, return value is -1. This method can be called
-         * after <code>next()</code>.
+         * after {@code next()}.
          *
          * @return the index value of the current key
          */
@@ -613,7 +618,7 @@ public class DefaultConfigurationKey
 
         /**
          * Returns a flag if the current key has an associated index. This
-         * method can be called after <code>next()</code>.
+         * method can be called after {@code next()}.
          *
          * @return a flag if the current key has an index
          */
@@ -627,6 +632,7 @@ public class DefaultConfigurationKey
          *
          * @return a clone of this object
          */
+        @Override
         public Object clone()
         {
             try
