@@ -18,7 +18,6 @@ package org.apache.commons.configuration.tree.xpath;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -35,13 +34,15 @@ import org.apache.commons.lang.StringUtils;
  * node.
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
 {
     /**
-     * Creates a new instance of <code>ConfigurationNodeIteratorChildren</code>
+     * Creates a new instance of {@code ConfigurationNodeIteratorChildren}
      * and initializes it.
      *
      * @param parent the parent pointer
@@ -54,7 +55,7 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
     {
         super(parent, reverse);
         ConfigurationNode root = (ConfigurationNode) parent.getNode();
-        List childNodes = createSubNodeList(root, nodeTest);
+        List<ConfigurationNode> childNodes = createSubNodeList(root, nodeTest);
         initSubNodeList(childNodes);
         if (startsWith != null)
         {
@@ -72,9 +73,9 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
      * @param test the test object
      * @return a list with the matching nodes
      */
-    protected List createSubNodeList(ConfigurationNode node, NodeTest test)
+    protected List<ConfigurationNode> createSubNodeList(ConfigurationNode node, NodeTest test)
     {
-        List children = node.getChildren();
+        List<ConfigurationNode> children = node.getChildren();
 
         if (test == null)
         {
@@ -93,10 +94,9 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
                         return children;
                     }
 
-                    List result = new ArrayList();
-                    for (Iterator it = children.iterator(); it.hasNext();)
+                    List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
+                    for (ConfigurationNode child : children)
                     {
-                        ConfigurationNode child = (ConfigurationNode) it.next();
                         if (StringUtils.equals(name.getName(), child.getName()))
                         {
                             result.add(child);
@@ -117,7 +117,7 @@ class ConfigurationNodeIteratorChildren extends ConfigurationNodeIteratorBase
             }
         }
 
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 
     /**
