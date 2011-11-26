@@ -16,7 +16,6 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.util.Iterator;
 
 /**
  * <p>
@@ -27,9 +26,9 @@ import java.util.Iterator;
  * An <em>override combination</em> means that nodes in the first node
  * structure take precedence over nodes in the second, or - in other words -
  * nodes of the second structure are only added to the resulting structure if
- * they do not occure in the first one. This is especially suitable for dealing
+ * they do not occur in the first one. This is especially suitable for dealing
  * with the properties of configurations that are defined in an
- * <code>override</code> section of a configuration definition file (hence the
+ * {@code override} section of a configuration definition file (hence the
  * name).
  * </p>
  * <p>
@@ -38,12 +37,12 @@ import java.util.Iterator;
  * If a node can be found in both structures, it is checked whether a
  * combination (in a recursive way) can be constructed for the two, which will
  * then be added. Per default, nodes are combined, which occur only once in both
- * structures. This test is implemented in the <code>canCombine()</code>
+ * structures. This test is implemented in the {@code canCombine()}
  * method.
  * </p>
  * <p>
- * As is true for the <code>{@link UnionCombiner}</code>, for this combiner
- * list nodes are important. The <code>addListNode()</code> can be called to
+ * As is true for the {@link UnionCombiner}, for this combiner
+ * list nodes are important. The {@code addListNode()} can be called to
  * declare certain nodes as list nodes. This has the effect that these nodes
  * will never be combined.
  * </p>
@@ -63,6 +62,7 @@ public class OverrideCombiner extends NodeCombiner
      * @param node2 the second node
      * @return the resulting combined node structure
      */
+    @Override
     public ConfigurationNode combine(ConfigurationNode node1,
             ConfigurationNode node2)
     {
@@ -70,9 +70,8 @@ public class OverrideCombiner extends NodeCombiner
         result.setName(node1.getName());
 
         // Process nodes from the first structure, which override the second
-        for (Iterator it = node1.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode child : node1.getChildren())
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             ConfigurationNode child2 = canCombine(node1, node2, child);
             if (child2 != null)
             {
@@ -86,9 +85,8 @@ public class OverrideCombiner extends NodeCombiner
 
         // Process nodes from the second structure, which are not contained
         // in the first structure
-        for (Iterator it = node2.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode child : node2.getChildren())
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             if (node1.getChildrenCount(child.getName()) < 1)
             {
                 result.addChild(child);
@@ -117,9 +115,8 @@ public class OverrideCombiner extends NodeCombiner
             ConfigurationNode node2)
     {
         result.appendAttributes(node1);
-        for (Iterator it = node2.getAttributes().iterator(); it.hasNext();)
+        for (ConfigurationNode attr : node2.getAttributes())
         {
-            ConfigurationNode attr = (ConfigurationNode) it.next();
             if (node1.getAttributeCount(attr.getName()) == 0)
             {
                 result.addAttribute(attr);
