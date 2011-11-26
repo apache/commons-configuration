@@ -27,7 +27,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
 /**
  * A specialized node iterator implementation that deals with attribute nodes.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 class ConfigurationNodeIteratorAttribute extends
@@ -37,7 +39,7 @@ class ConfigurationNodeIteratorAttribute extends
     private static final String WILDCARD = "*";
 
     /**
-     * Creates a new instance of <code>ConfigurationNodeIteratorAttribute</code>.
+     * Creates a new instance of {@code ConfigurationNodeIteratorAttribute}.
      * @param parent the parent node pointer
      * @param name the name of the selected attribute
      */
@@ -55,15 +57,15 @@ class ConfigurationNodeIteratorAttribute extends
      * @param name the name of the selected attribute
      * @return a list with the selected attributes
      */
-    protected List createSubNodeList(ConfigurationNode node, QName name)
+    protected List<ConfigurationNode> createSubNodeList(ConfigurationNode node, QName name)
     {
         if (name.getPrefix() != null)
         {
             // namespace prefixes are not supported
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
 
-        List result = new ArrayList();
+        List<ConfigurationNode> result = new ArrayList<ConfigurationNode>();
         if (!WILDCARD.equals(name.getName()))
         {
             result.addAll(node.getAttributes(name.getName()));
