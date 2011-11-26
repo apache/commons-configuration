@@ -34,16 +34,16 @@ public interface EntityRegistry
      * Registers the specified URL for the specified public identifier.
      * </p>
      * <p>
-     * This implementation maps <code>PUBLICID</code>'s to URLs (from which
+     * This implementation maps {@code PUBLICID}'s to URLs (from which
      * the resource will be loaded). A common use case for this method is to
      * register local URLs (possibly computed at runtime by a class loader) for
      * DTDs and Schemas. This allows the performance advantage of using a local
-     * version without having to ensure every <code>SYSTEM</code> URI on every
+     * version without having to ensure every {@code SYSTEM} URI on every
      * processed XML document is local. This implementation provides only basic
      * functionality. If more sophisticated features are required, either calling
-     * <code>XMLConfiguration.setDocumentBuilder(DocumentBuilder)<code> to set a custom
-     * <code>DocumentBuilder</code> (which also can be initialized with a
-     * custom <code>EntityResolver</code>) or creating a custom entity resolver
+     * {@code XMLConfiguration.setDocumentBuilder(DocumentBuilder)} to set a custom
+     * {@code DocumentBuilder} (which also can be initialized with a
+     * custom {@code EntityResolver}) or creating a custom entity resolver
      * and registering it with the XMLConfiguration is recommended.
      * </p>
      *
@@ -55,9 +55,9 @@ public interface EntityRegistry
 
     /**
      * Returns a map with the entity IDs that have been registered using the
-     * <code>registerEntityId()</code> method.
+     * {@code registerEntityId()} method.
      *
      * @return a map with the registered entity IDs
      */
-    Map getRegisteredEntities();
+    Map<String, URL> getRegisteredEntities();
 }
