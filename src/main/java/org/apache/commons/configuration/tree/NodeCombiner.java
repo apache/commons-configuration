@@ -40,7 +40,7 @@ import java.util.Set;
  * Alone from the input structures, the combiner will not always be able to make
  * this decision. So sometimes it may be necessary for the developer to
  * configure the combiner and tell it, which nodes should be treated as list
- * nodes. For this purpose the <code>addListNode()</code> method exists. It
+ * nodes. For this purpose the {@code addListNode()} method exists. It
  * can be passed the name of a node, which should be considered a list node.
  * </p>
  *
@@ -53,14 +53,14 @@ import java.util.Set;
 public abstract class NodeCombiner
 {
     /** Stores a list with node names that are known to be list nodes. */
-    protected Set listNodes;
+    protected Set<String> listNodes;
 
     /**
-     * Creates a new instance of <code>NodeCombiner</code>.
+     * Creates a new instance of {@code NodeCombiner}.
      */
     public NodeCombiner()
     {
-        listNodes = new HashSet();
+        listNodes = new HashSet<String>();
     }
 
     /**
@@ -79,7 +79,7 @@ public abstract class NodeCombiner
      *
      * @return a set with the names of list nodes
      */
-    public Set getListNodes()
+    public Set<String> getListNodes()
     {
         return Collections.unmodifiableSet(listNodes);
     }
@@ -111,9 +111,9 @@ public abstract class NodeCombiner
 
     /**
      * Creates a new view node. This method will be called whenever a new view
-     * node is to be created. It can be overriden to create special view nodes.
+     * node is to be created. It can be overridden to create special view nodes.
      * This base implementation returns a new instance of
-     * <code>{@link ViewNode}</code>.
+     * {@link ViewNode}.
      *
      * @return the new view node
      */
