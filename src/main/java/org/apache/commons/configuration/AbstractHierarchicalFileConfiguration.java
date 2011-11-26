@@ -33,13 +33,14 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 
 /**
  * <p>Base class for implementing file based hierarchical configurations.</p>
  * <p>This class serves an analogous purpose as the
- * <code>{@link AbstractFileConfiguration}</code> class for non hierarchical
+ * {@link AbstractFileConfiguration} class for non hierarchical
  * configurations. It behaves in exactly the same way, so please refer to the
- * documentation of <code>AbstractFileConfiguration</code> for further details.</p>
+ * documentation of {@code AbstractFileConfiguration} for further details.</p>
  *
  * @since 1.2
  *
@@ -52,13 +53,12 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         Reloadable
 {
     /** Stores the delegate used for implementing functionality related to the
-     * <code>FileConfiguration</code> interface.
+     * {@code FileConfiguration} interface.
      */
     private FileConfigurationDelegate delegate;
 
     /**
-     * Creates a new instance of
-     * <code>AbstractHierarchicalFileConfiguration</code>.
+     * Creates a new instance of {@code AbstractHierarchicalFileConfiguration}.
      */
     protected AbstractHierarchicalFileConfiguration()
     {
@@ -67,7 +67,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     /**
      * Creates a new instance of
-     * <code>AbstractHierarchicalFileConfiguration</code> and copies the
+     * {@code AbstractHierarchicalFileConfiguration} and copies the
      * content of the specified configuration into this object.
      *
      * @param c the configuration to copy
@@ -139,6 +139,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         initDelegate(delegate);
     }
 
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         synchronized (delegate.getReloadLock())
@@ -148,6 +149,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
+    @Override
     public void clearProperty(String key)
     {
         synchronized (delegate.getReloadLock())
@@ -157,6 +159,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
+    @Override
     public void clearTree(String key)
     {
         synchronized (delegate.getReloadLock())
@@ -166,6 +169,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         synchronized (delegate.getReloadLock())
@@ -320,7 +324,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
      * Reloads the associated configuration file. This method first clears the
      * content of this configuration, then the associated configuration file is
      * loaded again. Updates on this configuration which have not yet been saved
-     * are lost. Calling this method is like invoking <code>reload()</code>
+     * are lost. Calling this method is like invoking {@code reload()}
      * without checking the reloading strategy.
      *
      * @throws ConfigurationException if an error occurs
@@ -341,11 +345,13 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         delegate.setEncoding(encoding);
     }
 
+    @Override
     public Object getReloadLock()
     {
         return delegate.getReloadLock();
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         reload();
@@ -355,7 +361,8 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
-    public Iterator getKeys()
+    @Override
+    public Iterator<String> getKeys()
     {
         reload();
         synchronized (delegate.getReloadLock())
@@ -364,7 +371,8 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         reload();
         synchronized (delegate.getReloadLock())
@@ -373,6 +381,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         }
     }
 
+    @Override
     public Object getProperty(String key)
     {
         if (reload(true))
@@ -386,6 +395,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
         return null;
     }
 
+    @Override
     public boolean isEmpty()
     {
         reload();
@@ -403,7 +413,8 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
      * @param nodes a collection with the nodes to be added
      * @since 1.5
      */
-    public void addNodes(String key, Collection nodes)
+    @Override
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         synchronized (delegate.getReloadLock())
         {
@@ -419,7 +430,8 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
      * @param key the key
      * @return a list with the selected nodes
      */
-    protected List fetchNodeList(String key)
+    @Override
+    protected List<ConfigurationNode> fetchNodeList(String key)
     {
         reload();
         synchronized (delegate.getReloadLock())
@@ -435,6 +447,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
      * @param event the event describing the change
      * @since 1.5
      */
+    @Override
     protected void subnodeConfigurationChanged(ConfigurationEvent event)
     {
         delegate.possiblySave();
@@ -443,9 +456,9 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
 
     /**
      * Creates the file configuration delegate, i.e. the object that implements
-     * functionality required by the <code>FileConfiguration</code> interface.
+     * functionality required by the {@code FileConfiguration} interface.
      * This base implementation will return an instance of the
-     * <code>FileConfigurationDelegate</code> class. Derived classes may
+     * {@code FileConfigurationDelegate} class. Derived classes may
      * override it to create a different delegate object.
      *
      * @return the file configuration delegate
@@ -541,8 +554,8 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
     }
 
     /**
-     * A special implementation of the <code>FileConfiguration</code> interface that is
-     * used internally to implement the <code>FileConfiguration</code> methods
+     * A special implementation of the {@code FileConfiguration} interface that is
+     * used internally to implement the {@code FileConfiguration} methods
      * for hierarchical configurations.
      */
     protected class FileConfigurationDelegate extends AbstractFileConfiguration
@@ -557,6 +570,7 @@ implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener,
             AbstractHierarchicalFileConfiguration.this.save(out);
         }
 
+        @Override
         public void clear()
         {
             AbstractHierarchicalFileConfiguration.this.clear();
