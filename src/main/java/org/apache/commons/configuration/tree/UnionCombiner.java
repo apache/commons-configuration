@@ -16,13 +16,12 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * <p>
- * A specialized implementation of the <code>NodeCombiner</code> interface
+ * A specialized implementation of the {@code NodeCombiner} interface
  * that constructs a union from two passed in node hierarchies.
  * </p>
  * <p>
@@ -30,7 +29,7 @@ import java.util.List;
  * resulting structure. Under some circumstances two nodes can be combined
  * rather than adding both. This is the case if both nodes are single children
  * (no lists) of their parents and do not have values. The corresponding check
- * is implemented in the <code>findCombineNode()</code> method.
+ * is implemented in the {@code findCombineNode()} method.
  * </p>
  * <p>
  * Sometimes it is not possible for this combiner to detect whether two nodes
@@ -97,16 +96,16 @@ import java.util.List;
  *
  * </p>
  * <p>
- * i.e. the <code>Tables</code> nodes should be combined, while the
- * <code>Table</code> nodes should both be added to the resulting tree. From
+ * i.e. the {@code Tables} nodes should be combined, while the
+ * {@code Table} nodes should both be added to the resulting tree. From
  * the combiner's point of view there is no difference between the
- * <code>Tables</code> and the <code>Table</code> nodes in the source trees,
- * so the developer has to help out and give a hint that the <code>Table</code>
+ * {@code Tables} and the {@code Table} nodes in the source trees,
+ * so the developer has to help out and give a hint that the {@code Table}
  * nodes belong to a list structure. This can be done using the
- * <code>addListNode()</code> method; this method expects the name of a node,
+ * {@code addListNode()} method; this method expects the name of a node,
  * which should be treated as a list node. So if
- * <code>addListNode("Table");</code> was called, the combiner knows that it
- * must not combine the <code>Table</code> nodes, but add it both to the
+ * {@code addListNode("Table");} was called, the combiner knows that it
+ * must not combine the {@code Table} nodes, but add it both to the
  * resulting tree.
  * </p>
  *
@@ -125,6 +124,7 @@ public class UnionCombiner extends NodeCombiner
      * @param node2 the second source node
      * @return the union node
      */
+    @Override
     public ConfigurationNode combine(ConfigurationNode node1,
             ConfigurationNode node2)
     {
@@ -134,10 +134,9 @@ public class UnionCombiner extends NodeCombiner
         result.appendAttributes(node2);
 
         // Check if nodes can be combined
-        List children2 = new LinkedList(node2.getChildren());
-        for (Iterator it = node1.getChildren().iterator(); it.hasNext();)
+        List<ConfigurationNode> children2 = new LinkedList<ConfigurationNode>(node2.getChildren());
+        for (ConfigurationNode child1 : node1.getChildren())
         {
-            ConfigurationNode child1 = (ConfigurationNode) it.next();
             ConfigurationNode child2 = findCombineNode(node1, node2, child1,
                     children2);
             if (child2 != null)
@@ -152,9 +151,9 @@ public class UnionCombiner extends NodeCombiner
         }
 
         // Add remaining children of node 2
-        for (Iterator it = children2.iterator(); it.hasNext();)
+        for (ConfigurationNode c : children2)
         {
-            result.addChild((ConfigurationNode) it.next());
+            result.addChild(c);
         }
 
         return result;
@@ -162,11 +161,11 @@ public class UnionCombiner extends NodeCombiner
 
     /**
      * <p>
-     * Tries to find a child node of the second source node, with whitch a child
+     * Tries to find a child node of the second source node, with which a child
      * of the first source node can be combined. During combining of the source
      * nodes an iteration over the first source node's children is performed.
      * For each child node it is checked whether a corresponding child node in
-     * the second source node exists. If this is the case, these corresponsing
+     * the second source node exists. If this is the case, these corresponding
      * child nodes are recursively combined and the result is added to the
      * combined node. This method implements the checks whether such a recursive
      * combination is possible. The actual implementation tests the following
@@ -177,12 +176,12 @@ public class UnionCombiner extends NodeCombiner
      * <li>In both the first and the second source node there is only one child
      * node with the given name (no list structures).</li>
      * <li>The given name is not in the list of known list nodes, i.e. it was
-     * not passed to the <code>addListNode()</code> method.</li>
+     * not passed to the {@code addListNode()} method.</li>
      * <li>None of these matching child nodes has a value.</li>
      * </ul>
      * </p>
      * <p>
-     * If all of these tests are successfull, the matching child node of the
+     * If all of these tests are successful, the matching child node of the
      * second source node is returned. Otherwise the result is <b>null</b>.
      * </p>
      *
@@ -194,13 +193,13 @@ public class UnionCombiner extends NodeCombiner
      * if there is none
      */
     protected ConfigurationNode findCombineNode(ConfigurationNode node1,
-            ConfigurationNode node2, ConfigurationNode child, List children)
+            ConfigurationNode node2, ConfigurationNode child, List<ConfigurationNode> children)
     {
         if (child.getValue() == null && !isListNode(child)
                 && node1.getChildrenCount(child.getName()) == 1
                 && node2.getChildrenCount(child.getName()) == 1)
         {
-            ConfigurationNode child2 = (ConfigurationNode) node2.getChildren(
+            ConfigurationNode child2 = node2.getChildren(
                     child.getName()).iterator().next();
             if (child2.getValue() == null)
             {
