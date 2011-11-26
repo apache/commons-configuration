@@ -33,7 +33,9 @@ import org.apache.commons.jxpath.ri.model.NodePointer;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 abstract class ConfigurationNodeIteratorBase implements NodeIterator
@@ -42,7 +44,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     private NodePointer parent;
 
     /** Stores the list with the sub nodes. */
-    private List subNodes;
+    private List<ConfigurationNode> subNodes;
 
     /** Stores the current position. */
     private int position;
@@ -54,7 +56,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
     private boolean reverse;
 
     /**
-     * Creates a new instance of <code>ConfigurationNodeIteratorBase</code>
+     * Creates a new instance of {@code ConfigurationNodeIteratorBase}
      * and initializes it.
      *
      * @param parent the parent pointer
@@ -100,8 +102,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
             return null;
         }
 
-        return createNodePointer((ConfigurationNode) subNodes
-                .get(positionToIndex(getPosition())));
+        return createNodePointer(subNodes.get(positionToIndex(getPosition())));
     }
 
     /**
@@ -149,7 +150,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
      *
      * @param nodes the list with the sub nodes
      */
-    protected void initSubNodeList(List nodes)
+    protected void initSubNodeList(List<ConfigurationNode> nodes)
     {
         subNodes = nodes;
         if (reverse)
@@ -171,7 +172,7 @@ abstract class ConfigurationNodeIteratorBase implements NodeIterator
 
     /**
      * Creates the configuration node pointer for the current position. This
-     * method is called by <code>getNodePointer()</code>. Derived classes
+     * method is called by {@code getNodePointer()}. Derived classes
      * must create the correct pointer object.
      *
      * @param node the current configuration node
