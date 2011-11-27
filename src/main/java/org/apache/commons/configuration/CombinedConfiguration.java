@@ -44,11 +44,11 @@ import org.apache.commons.configuration.tree.ViewNode;
  * </p>
  * <p>
  * This class maintains a list of configuration objects, which can be added
- * using the divers <code>addConfiguration()</code> methods. After that the
+ * using the divers {@code addConfiguration()} methods. After that the
  * configurations can be accessed either by name (if one was provided when the
  * configuration was added) or by index. For the whole set of managed
  * configurations a logical node structure is constructed. For this purpose a
- * <code>{@link org.apache.commons.configuration.tree.NodeCombiner NodeCombiner}</code>
+ * {@link org.apache.commons.configuration.tree.NodeCombiner NodeCombiner}
  * object can be set. This makes it possible to specify different algorithms for
  * the combination process.
  * </p>
@@ -65,23 +65,23 @@ import org.apache.commons.configuration.tree.ViewNode;
  * changed and can invalidate its internal node structure. The next time a
  * property is accessed the node structure will be re-constructed using the
  * current state of the managed configurations. Note that, depending on the used
- * <code>NodeCombiner</code>, this may be a complex operation.
+ * {@code NodeCombiner}, this may be a complex operation.
  * </p>
  * <p>
- * Because of the way a <code>CombinedConfiguration</code> is working it has
+ * Because of the way a {@code CombinedConfiguration} is working it has
  * more or less view character: it provides a logic view on the configurations
  * it contains. In this constellation not all methods defined for hierarchical
  * configurations - especially methods that update the stored properties - can
  * be implemented in a consistent manner. Using such methods (like
- * <code>addProperty()</code>, or <code>clearProperty()</code> on a
- * <code>CombinedConfiguration</code> is not strictly forbidden, however,
- * depending on the current <code>{@link NodeCombiner}</code> and the involved
+ * {@code addProperty()}, or {@code clearProperty()} on a
+ * {@code CombinedConfiguration} is not strictly forbidden, however,
+ * depending on the current {@link NodeCombiner} and the involved
  * properties, the results may be different than expected. Some examples may
  * illustrate this:
  * </p>
  * <p>
  * <ul>
- * <li>Imagine a <code>CombinedConfiguration</code> <em>cc</em> containing
+ * <li>Imagine a {@code CombinedConfiguration} <em>cc</em> containing
  * two child configurations with the following content:
  * <dl>
  * <dt>user.properties</dt>
@@ -104,29 +104,29 @@ import org.apache.commons.configuration.tree.ViewNode;
  *
  * </dd>
  * </dl>
- * As a <code>NodeCombiner</code> a
- * <code>{@link org.apache.commons.configuration.tree.OverrideCombiner OverrideCombiner}</code>
+ * As a {@code NodeCombiner} a
+ * {@link org.apache.commons.configuration.tree.OverrideCombiner OverrideCombiner}
  * is used. This combiner will ensure that defined user settings take precedence
- * over the default values. If the resulting <code>CombinedConfiguration</code>
- * is queried for the background color, <code>blue</code> will be returned
- * because this value is defined in <code>user.properties</code>. Now
- * consider what happens if the key <code>gui.background</code> is removed
- * from the <code>CombinedConfiguration</code>:
+ * over the default values. If the resulting {@code CombinedConfiguration}
+ * is queried for the background color, {@code blue} will be returned
+ * because this value is defined in {@code user.properties}. Now
+ * consider what happens if the key {@code gui.background} is removed
+ * from the {@code CombinedConfiguration}:
  *
  * <pre>cc.clearProperty("gui.background");</pre>
  *
- * Will a <code>cc.containsKey("gui.background")</code> now return <b>false</b>?
- * No, it won't! The <code>clearProperty()</code> operation is executed on the
+ * Will a {@code cc.containsKey("gui.background")} now return <b>false</b>?
+ * No, it won't! The {@code clearProperty()} operation is executed on the
  * node set of the combined configuration, which was constructed from the nodes
  * of the two child configurations. It causes the value of the
  * <em>background</em> node to be cleared, which is also part of the first
  * child configuration. This modification of one of its child configurations
- * causes the <code>CombinedConfiguration</code> to be re-constructed. This
- * time the <code>OverrideCombiner</code> cannot find a
- * <code>gui.background</code> property in the first child configuration, but
+ * causes the {@code CombinedConfiguration} to be re-constructed. This
+ * time the {@code OverrideCombiner} cannot find a
+ * {@code gui.background} property in the first child configuration, but
  * it finds one in the second, and adds it to the resulting combined
  * configuration. So the property is still present (with a different value now).</li>
- * <li><code>addProperty()</code> can also be problematic: Most node
+ * <li>{@code addProperty()} can also be problematic: Most node
  * combiners use special view nodes for linking parts of the original
  * configurations' data together. If new properties are added to such a special
  * node, they do not belong to any of the managed configurations and thus hang
@@ -138,21 +138,21 @@ import org.apache.commons.configuration.tree.ViewNode;
  * </pre>
  *
  * would cause such a hanging property. If now one of the child configurations
- * is changed and the <code>CombinedConfiguration</code> is re-constructed,
+ * is changed and the {@code CombinedConfiguration} is re-constructed,
  * this property will disappear! (Add operations are not problematic if they
  * result in a child configuration being updated. For instance an
- * <code>addProperty("home.url", "localhost");</code> will alter the second
+ * {@code addProperty("home.url", "localhost");} will alter the second
  * child configuration - because the prefix <em>home</em> is here already
- * present; when the <code>CombinedConfiguration</code> is re-constructed,
+ * present; when the {@code CombinedConfiguration} is re-constructed,
  * this change is taken into account.)</li>
  * </ul>
  * Because of such problems it is recommended to perform updates only on the
  * managed child configurations.
  * </p>
  * <p>
- * Whenever the node structure of a <code>CombinedConfiguration</code> becomes
+ * Whenever the node structure of a {@code CombinedConfiguration} becomes
  * invalid (either because one of the contained configurations was modified or
- * because the <code>invalidate()</code> method was directly called) an event
+ * because the {@code invalidate()} method was directly called) an event
  * is generated. So this can be detected by interested event listeners. This
  * also makes it possible to add a combined configuration into another one.
  * </p>
@@ -199,10 +199,10 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     private volatile ConfigurationNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
-    private List configurations;
+    private List<ConfigData> configurations;
 
     /** Stores a map with the named configurations. */
-    private Map namedConfigurations;
+    private Map<String, AbstractConfiguration> namedConfigurations;
 
     /** The default behavior is to ignore exceptions that occur during reload */
     private boolean ignoreReloadExceptions = true;
@@ -220,7 +220,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     private boolean forceReloadCheck;
 
     /**
-     * Creates a new instance of <code>CombinedConfiguration</code> and
+     * Creates a new instance of {@code CombinedConfiguration} and
      * initializes the combiner to be used.
      *
      * @param comb the node combiner (can be <b>null</b>, then a union combiner
@@ -245,7 +245,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     }
 
     /**
-     * Creates a new instance of <code>CombinedConfiguration</code> that uses
+     * Creates a new instance of {@code CombinedConfiguration} that uses
      * a union combiner.
      *
      * @see org.apache.commons.configuration.tree.UnionCombiner
@@ -269,7 +269,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /**
      * Sets the node combiner. This object will be used when the combined node
      * structure is to be constructed. It must not be <b>null</b>, otherwise an
-     * <code>IllegalArgumentException</code> exception is thrown. Changing the
+     * {@code IllegalArgumentException} exception is thrown. Changing the
      * node combiner causes an invalidation of this combined configuration, so
      * that the new combiner immediately takes effect.
      *
@@ -304,7 +304,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * implementations that only check if a reload is required when they are
      * triggered. Per default this mode is disabled. If the force reload check
      * flag is set to <b>true</b>, accessing properties will be less
-     * performant, but reloads on contained configurations will be detected.
+     * efficient, but reloads on contained configurations will be detected.
      *
      * @param forceReloadCheck the value of the flag
      * @since 1.4
@@ -315,7 +315,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     }
 
     /**
-     * Returns the <code>ExpressionEngine</code> for converting flat child
+     * Returns the {@code ExpressionEngine} for converting flat child
      * configurations to hierarchical ones.
      *
      * @return the conversion expression engine
@@ -327,7 +327,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     }
 
     /**
-     * Sets the <code>ExpressionEngine</code> for converting flat child
+     * Sets the {@code ExpressionEngine} for converting flat child
      * configurations to hierarchical ones. When constructing the root node for
      * this combined configuration the properties of all child configurations
      * must be combined to a single hierarchical node structure. In this
@@ -370,12 +370,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /**
      * Adds a new configuration to this combined configuration. It is possible
      * (but not mandatory) to give the new configuration a name. This name must
-     * be unique, otherwise a <code>ConfigurationRuntimeException</code> will
-     * be thrown. With the optional <code>at</code> argument you can specify
+     * be unique, otherwise a {@code ConfigurationRuntimeException} will
+     * be thrown. With the optional {@code at} argument you can specify
      * where in the resulting node structure the content of the added
      * configuration should appear. This is a string that uses dots as property
      * delimiters (independent on the current expression engine). For instance
-     * if you pass in the string <code>&quot;database.tables&quot;</code>,
+     * if you pass in the string {@code "database.tables"},
      * all properties of the added configuration will occur in this branch.
      *
      * @param config the configuration to add (must not be <b>null</b>)
@@ -481,13 +481,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @return A List of all the configurations.
      * @since 1.7
      */
-    public List getConfigurations()
+    public List<AbstractConfiguration> getConfigurations()
     {
-        List list = new ArrayList();
-        Iterator iter = configurations.iterator();
-        while (iter.hasNext())
+        List<AbstractConfiguration> list = new ArrayList<AbstractConfiguration>(configurations.size());
+        for(ConfigData cd : configurations)
         {
-            list.add(((ConfigData) iter.next()).getConfiguration());
+            list.add(cd.getConfiguration());
         }
         return list;
     }
@@ -499,13 +498,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @return A List of all the configuration names.
      * @since 1.7
      */
-    public List getConfigurationNameList()
+    public List<String> getConfigurationNameList()
     {
-        List list = new ArrayList();
-        Iterator iter = configurations.iterator();
-        while (iter.hasNext())
+        List<String> list = new ArrayList<String>(configurations.size());
+        for(ConfigData cd : configurations)
         {
-            list.add(((ConfigData) iter.next()).getName());
+            list.add(cd.getName());
         }
         return list;
     }
@@ -573,7 +571,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @return a set with the names of the contained configurations (never
      * <b>null</b>)
      */
-    public Set getConfigurationNames()
+    public Set<String> getConfigurationNames()
     {
         return namedConfigurations.keySet();
     }
@@ -582,7 +580,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * Invalidates this combined configuration. This means that the next time a
      * property is accessed the combined node structure must be re-constructed.
      * Invalidation of a combined configuration also means that an event of type
-     * <code>EVENT_COMBINED_INVALIDATE</code> is fired. Note that while other
+     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other
      * events most times appear twice (once before and once after an update),
      * this event is only fired once (after update).
      */
@@ -618,6 +616,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      *
      * @return the combined root node
      */
+    @Override
     public ConfigurationNode getRootNode()
     {
         synchronized (getReloadLock())
@@ -634,11 +633,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /**
      * Clears this configuration. All contained configurations will be removed.
      */
+    @Override
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
-        configurations = new ArrayList();
-        namedConfigurations = new HashMap();
+        configurations = new ArrayList<ConfigData>();
+        namedConfigurations = new HashMap<String, AbstractConfiguration>();
         fireEvent(EVENT_CLEAR, null, null, false);
         invalidate();
     }
@@ -652,13 +652,13 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      *
      * @return the copied object
      */
-    public Object clone()
+    @Override
+    public CombinedConfiguration clone()
     {
         CombinedConfiguration copy = (CombinedConfiguration) super.clone();
         copy.clear();
-        for (Iterator it = configurations.iterator(); it.hasNext();)
+        for (ConfigData cd : configurations)
         {
-            ConfigData cd = (ConfigData) it.next();
             copy.addConfiguration((AbstractConfiguration) ConfigurationUtils
                     .cloneConfiguration(cd.getConfiguration()), cd.getName(),
                     cd.getAt());
@@ -675,7 +675,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * <ul>
      * <li>If no node object is found for this key, <b>null</b> is returned.</li>
      * <li>If the key maps to multiple nodes belonging to different
-     * configuration sources, a <code>IllegalArgumentException</code> is
+     * configuration sources, a {@code IllegalArgumentException} is
      * thrown (in this case no unique source can be determined).</li>
      * <li>If exactly one node is found for the key, the (child) configuration
      * object, to which the node belongs is determined and returned.</li>
@@ -698,19 +698,17 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             throw new IllegalArgumentException("Key must not be null!");
         }
 
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
         if (nodes.isEmpty())
         {
             return null;
         }
 
-        Iterator it = nodes.iterator();
-        Configuration source = findSourceConfiguration((ConfigurationNode) it
-                .next());
+        Iterator<ConfigurationNode> it = nodes.iterator();
+        Configuration source = findSourceConfiguration(it.next());
         while (it.hasNext())
         {
-            Configuration src = findSourceConfiguration((ConfigurationNode) it
-                    .next());
+            Configuration src = findSourceConfiguration(it.next());
             if (src != source)
             {
                 throw new IllegalArgumentException("The key " + key
@@ -725,12 +723,13 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * Evaluates the passed in property key and returns a list with the matching
      * configuration nodes. This implementation also evaluates the
      * <em>force reload check</em> flag. If it is set,
-     * <code>performReloadCheck()</code> is invoked.
+     * {@code performReloadCheck()} is invoked.
      *
      * @param key the property key
      * @return a list with the matching configuration nodes
      */
-    protected List fetchNodeList(String key)
+    @Override
+    protected List<ConfigurationNode> fetchNodeList(String key)
     {
         if (isForceReloadCheck())
         {
@@ -743,7 +742,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /**
      * Triggers the contained configurations to perform a reload check if
      * necessary. This method is called when a property of this combined
-     * configuration is accessed and the <code>forceReloadCheck</code> property
+     * configuration is accessed and the {@code forceReloadCheck} property
      * is set to <b>true</b>.
      *
      * @see #setForceReloadCheck(boolean)
@@ -751,14 +750,13 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     protected void performReloadCheck()
     {
-        for (Iterator it = configurations.iterator(); it.hasNext();)
+        for (ConfigData cd : configurations)
         {
             try
             {
                 // simply retrieve a property; this is enough for
                 // triggering a reload
-                ((ConfigData) it.next()).getConfiguration().getProperty(
-                        PROP_RELOAD_CHECK);
+                cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
             }
             catch (Exception ex)
             {
@@ -788,13 +786,12 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
 
         else
         {
-            Iterator it = configurations.iterator();
-            ConfigurationNode node = ((ConfigData) it.next())
-                    .getTransformedRoot();
+            Iterator<ConfigData> it = configurations.iterator();
+            ConfigurationNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
                 node = getNodeCombiner().combine(node,
-                        ((ConfigData) it.next()).getTransformedRoot());
+                        it.next().getTransformedRoot());
             }
             if (getLogger().isDebugEnabled())
             {
@@ -828,9 +825,8 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             }
 
             // Check with the root nodes of the child configurations
-            for (Iterator it = configurations.iterator(); it.hasNext();)
+            for (ConfigData cd : configurations)
             {
-                ConfigData cd = (ConfigData) it.next();
                 if (root == cd.getRootNode())
                 {
                     return cd.getConfiguration();
@@ -854,7 +850,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         private String name;
 
         /** Stores the at information as path of nodes. */
-        private Collection atPath;
+        private Collection<String> atPath;
 
         /** Stores the at string.*/
         private String at;
@@ -863,7 +859,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         private ConfigurationNode rootNode;
 
         /**
-         * Creates a new instance of <code>ConfigData</code> and initializes
+         * Creates a new instance of {@code ConfigData} and initializes
          * it.
          *
          * @param config the configuration
@@ -934,10 +930,10 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             if (atPath != null)
             {
                 // Build the complete path
-                for (Iterator it = atPath.iterator(); it.hasNext();)
+                for (String p : atPath)
                 {
                     ViewNode node = new ViewNode();
-                    node.setName((String) it.next());
+                    node.setName(p);
                     atParent.addChild(node);
                     atParent = node;
                 }
@@ -960,14 +956,14 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
          * @param at the at string
          * @return a collection with the names of the single components
          */
-        private Collection parseAt(String at)
+        private Collection<String> parseAt(String at)
         {
             if (at == null)
             {
                 return null;
             }
 
-            Collection result = new ArrayList();
+            Collection<String> result = new ArrayList<String>();
             DefaultConfigurationKey.KeyIterator it = new DefaultConfigurationKey(
                     AT_ENGINE, at).iterator();
             while (it.hasNext())

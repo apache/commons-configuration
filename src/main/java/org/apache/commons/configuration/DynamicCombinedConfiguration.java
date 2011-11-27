@@ -54,6 +54,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      */
     private static ThreadLocal recursive = new ThreadLocal()
     {
+        @Override
         protected synchronized Object initialValue()
         {
             return Boolean.FALSE;
@@ -134,6 +135,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @return the node combiner
      */
+    @Override
     public NodeCombiner getNodeCombiner()
     {
         return nodeCombiner;
@@ -148,6 +150,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @param nodeCombiner the node combiner
      */
+    @Override
     public void setNodeCombiner(NodeCombiner nodeCombiner)
     {
         if (nodeCombiner == null)
@@ -174,6 +177,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param at the position of this configuration in the combined tree (can be
      * <b>null</b>)
      */
+    @Override
     public void addConfiguration(AbstractConfiguration config, String name,
             String at)
     {
@@ -190,6 +194,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @return the number of contained configurations
      */
+    @Override
     public int getNumberOfConfigurations()
     {
         return configurations.size();
@@ -203,6 +208,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param index the index
      * @return the configuration at this index
      */
+    @Override
     public Configuration getConfiguration(int index)
     {
         ConfigData cd = (ConfigData) configurations.get(index);
@@ -216,6 +222,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param name the name of the configuration
      * @return the configuration with this name
      */
+    @Override
     public Configuration getConfiguration(String name)
     {
         return (Configuration) namedConfigurations.get(name);
@@ -229,6 +236,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return a set with the names of the contained configurations (never
      * <b>null</b>)
      */
+    @Override
     public Set getConfigurationNames()
     {
         return namedConfigurations.keySet();
@@ -241,6 +249,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the removed configuration (<b>null</b> if this configuration
      * was not found)
      */
+    @Override
     public Configuration removeConfiguration(String name)
     {
         Configuration conf = getConfiguration(name);
@@ -257,6 +266,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param config the configuration to be removed
      * @return a flag whether this configuration was found and could be removed
      */
+    @Override
     public boolean removeConfiguration(Configuration config)
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
@@ -277,6 +287,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param index the index
      * @return the removed configuration
      */
+    @Override
     public Configuration removeConfigurationAt(int index)
     {
         ConfigData cd = (ConfigData) configurations.remove(index);
@@ -293,11 +304,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @return the combined root node
      */
+    @Override
     public ConfigurationNode getRootNode()
     {
         return getCurrentConfig().getRootNode();
     }
 
+    @Override
     public void setRootNode(ConfigurationNode rootNode)
     {
         if (configs != null)
@@ -310,11 +323,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         this.getCurrentConfig().addProperty(key, value);
     }
 
+    @Override
     public void clear()
     {
         if (configs != null)
@@ -323,191 +338,229 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    @Override
     public void clearProperty(String key)
     {
         this.getCurrentConfig().clearProperty(key);
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         return this.getCurrentConfig().containsKey(key);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         return this.getCurrentConfig().getBigDecimal(key, defaultValue);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key)
     {
         return this.getCurrentConfig().getBigDecimal(key);
     }
 
+    @Override
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         return this.getCurrentConfig().getBigInteger(key, defaultValue);
     }
 
+    @Override
     public BigInteger getBigInteger(String key)
     {
         return this.getCurrentConfig().getBigInteger(key);
     }
 
+    @Override
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return this.getCurrentConfig().getBoolean(key, defaultValue);
     }
 
+    @Override
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
         return this.getCurrentConfig().getBoolean(key, defaultValue);
     }
 
+    @Override
     public boolean getBoolean(String key)
     {
         return this.getCurrentConfig().getBoolean(key);
     }
 
+    @Override
     public byte getByte(String key, byte defaultValue)
     {
         return this.getCurrentConfig().getByte(key, defaultValue);
     }
 
+    @Override
     public Byte getByte(String key, Byte defaultValue)
     {
         return this.getCurrentConfig().getByte(key, defaultValue);
     }
 
+    @Override
     public byte getByte(String key)
     {
         return this.getCurrentConfig().getByte(key);
     }
 
+    @Override
     public double getDouble(String key, double defaultValue)
     {
         return this.getCurrentConfig().getDouble(key, defaultValue);
     }
 
+    @Override
     public Double getDouble(String key, Double defaultValue)
     {
         return this.getCurrentConfig().getDouble(key, defaultValue);
     }
 
+    @Override
     public double getDouble(String key)
     {
         return this.getCurrentConfig().getDouble(key);
     }
 
+    @Override
     public float getFloat(String key, float defaultValue)
     {
         return this.getCurrentConfig().getFloat(key, defaultValue);
     }
 
+    @Override
     public Float getFloat(String key, Float defaultValue)
     {
         return this.getCurrentConfig().getFloat(key, defaultValue);
     }
 
+    @Override
     public float getFloat(String key)
     {
         return this.getCurrentConfig().getFloat(key);
     }
 
+    @Override
     public int getInt(String key, int defaultValue)
     {
         return this.getCurrentConfig().getInt(key, defaultValue);
     }
 
+    @Override
     public int getInt(String key)
     {
         return this.getCurrentConfig().getInt(key);
     }
 
+    @Override
     public Integer getInteger(String key, Integer defaultValue)
     {
         return this.getCurrentConfig().getInteger(key, defaultValue);
     }
 
+    @Override
     public Iterator getKeys()
     {
         return this.getCurrentConfig().getKeys();
     }
 
+    @Override
     public Iterator getKeys(String prefix)
     {
         return this.getCurrentConfig().getKeys(prefix);
     }
 
+    @Override
     public List getList(String key, List defaultValue)
     {
         return this.getCurrentConfig().getList(key, defaultValue);
     }
 
+    @Override
     public List getList(String key)
     {
         return this.getCurrentConfig().getList(key);
     }
 
+    @Override
     public long getLong(String key, long defaultValue)
     {
         return this.getCurrentConfig().getLong(key, defaultValue);
     }
 
+    @Override
     public Long getLong(String key, Long defaultValue)
     {
         return this.getCurrentConfig().getLong(key, defaultValue);
     }
 
+    @Override
     public long getLong(String key)
     {
         return this.getCurrentConfig().getLong(key);
     }
 
+    @Override
     public Properties getProperties(String key)
     {
         return this.getCurrentConfig().getProperties(key);
     }
 
+    @Override
     public Object getProperty(String key)
     {
         return this.getCurrentConfig().getProperty(key);
     }
 
+    @Override
     public short getShort(String key, short defaultValue)
     {
         return this.getCurrentConfig().getShort(key, defaultValue);
     }
 
+    @Override
     public Short getShort(String key, Short defaultValue)
     {
         return this.getCurrentConfig().getShort(key, defaultValue);
     }
 
+    @Override
     public short getShort(String key)
     {
         return this.getCurrentConfig().getShort(key);
     }
 
+    @Override
     public String getString(String key, String defaultValue)
     {
         return this.getCurrentConfig().getString(key, defaultValue);
     }
 
+    @Override
     public String getString(String key)
     {
         return this.getCurrentConfig().getString(key);
     }
 
+    @Override
     public String[] getStringArray(String key)
     {
         return this.getCurrentConfig().getStringArray(key);
     }
 
+    @Override
     public boolean isEmpty()
     {
         return this.getCurrentConfig().isEmpty();
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         if (configs != null)
@@ -516,16 +569,19 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    @Override
     public Configuration subset(String prefix)
     {
         return this.getCurrentConfig().subset(prefix);
     }
 
+    @Override
     public Node getRoot()
     {
         return this.getCurrentConfig().getRoot();
     }
 
+    @Override
     public void setRoot(Node node)
     {
         if (configs != null)
@@ -538,46 +594,55 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return super.getExpressionEngine();
     }
 
+    @Override
     public void setExpressionEngine(ExpressionEngine expressionEngine)
     {
         super.setExpressionEngine(expressionEngine);
     }
 
+    @Override
     public void addNodes(String key, Collection nodes)
     {
         this.getCurrentConfig().addNodes(key, nodes);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
     {
         return this.getCurrentConfig().configurationAt(key, supportUpdates);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key)
     {
         return this.getCurrentConfig().configurationAt(key);
     }
 
+    @Override
     public List configurationsAt(String key)
     {
         return this.getCurrentConfig().configurationsAt(key);
     }
 
+    @Override
     public void clearTree(String key)
     {
         this.getCurrentConfig().clearTree(key);
     }
 
+    @Override
     public int getMaxIndex(String key)
     {
         return this.getCurrentConfig().getMaxIndex(key);
     }
 
+    @Override
     public Configuration interpolatedConfiguration()
     {
         return this.getCurrentConfig().interpolatedConfiguration();
@@ -606,6 +671,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @throws IllegalArgumentException if the key maps to multiple properties
      * and the source cannot be determined, or if the key is <b>null</b>
      */
+    @Override
     public Configuration getSource(String key)
     {
         if (key == null)
@@ -615,6 +681,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return getCurrentConfig().getSource(key);
     }
 
+    @Override
     public void addConfigurationListener(ConfigurationListener l)
     {
         super.addConfigurationListener(l);
@@ -627,6 +694,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    @Override
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
         Iterator iter = configs.values().iterator();
@@ -638,11 +706,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return super.removeConfigurationListener(l);
     }
 
+    @Override
     public Collection getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
 
+    @Override
     public void clearConfigurationListeners()
     {
         Iterator iter = configs.values().iterator();
@@ -654,6 +724,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         super.clearConfigurationListeners();
     }
 
+    @Override
     public void addErrorListener(ConfigurationErrorListener l)
     {
         Iterator iter = configs.values().iterator();
@@ -665,6 +736,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         super.addErrorListener(l);
     }
 
+    @Override
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
         Iterator iter = configs.values().iterator();
@@ -676,6 +748,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return super.removeErrorListener(l);
     }
 
+    @Override
     public void clearErrorListeners()
     {
         Iterator iter = configs.values().iterator();
@@ -687,6 +760,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         super.clearErrorListeners();
     }
 
+    @Override
     public Collection getErrorListeners()
     {
         return super.getErrorListeners();
@@ -703,9 +777,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      *
      * @return the copied object
      */
-    public Object clone()
+    @Override
+    public DynamicCombinedConfiguration clone()
     {
-        return super.clone();
+        return (DynamicCombinedConfiguration) super.clone();
     }
 
 
@@ -718,6 +793,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * events most times appear twice (once before and once after an update),
      * this event is only fired once (after update).
      */
+    @Override
     public void invalidate()
     {
         getCurrentConfig().invalidate();
@@ -742,6 +818,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @param key The key to resolve.
      * @return The value of the key.
      */
+    @Override
     protected Object resolveContainerStore(String key)
     {
         if (((Boolean) recursive.get()).booleanValue())
