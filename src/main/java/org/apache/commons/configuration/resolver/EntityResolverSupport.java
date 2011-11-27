@@ -34,7 +34,7 @@ public interface EntityResolverSupport
     EntityResolver getEntityResolver();
 
     /**
-     * Set the EntityResolver to assoicate with this class.
+     * Set the EntityResolver to associate with this class.
      * @param resolver The EntityResolver
      */
     void setEntityResolver(EntityResolver resolver);
