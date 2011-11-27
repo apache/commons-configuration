@@ -22,10 +22,12 @@ package org.apache.commons.configuration;
  *
  * <p>This class mimics to be a SAX compliant XML parser. It is able to iterate
  * over the keys in a configuration object and to generate corresponding SAX
- * events. By registering a <code>ContentHandler</code> at an instance
+ * events. By registering a {@code ContentHandler} at an instance
  * it is possible to perform XML processing on a configuration object.</p>
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class BaseConfigurationXMLReader extends ConfigurationXMLReader
@@ -34,7 +36,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
     private Configuration config;
 
     /**
-     * Creates a new instance of <code>BaseConfigurationXMLReader</code>.
+     * Creates a new instance of {@code BaseConfigurationXMLReader}.
      */
     public BaseConfigurationXMLReader()
     {
@@ -42,7 +44,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
     }
 
     /**
-     * Creates a new instance of <code>BaseConfigurationXMLReader</code> and
+     * Creates a new instance of {@code BaseConfigurationXMLReader} and
      * sets the configuration object to be parsed.
      *
      * @param conf the configuration to be parsed
@@ -78,6 +80,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @return the actual configuration
      */
+    @Override
     public Configuration getParsedConfiguration()
     {
         return getConfiguration();
@@ -85,10 +88,11 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
 
     /**
      * The main SAX event generation method. This element uses an internal
-     * <code>HierarchicalConfigurationConverter</code> object to iterate over
+     * {@code HierarchicalConfigurationConverter} object to iterate over
      * all keys in the actual configuration and to generate corresponding SAX
      * events.
      */
+    @Override
     protected void processKeys()
     {
         fireElementStart(getRootName(), null);
@@ -109,6 +113,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          * @param name the element name
          * @param value the element value
          */
+        @Override
         protected void elementStart(String name, Object value)
         {
             fireElementStart(name, null);
@@ -123,6 +128,7 @@ public class BaseConfigurationXMLReader extends ConfigurationXMLReader
          *
          * @param name the element name
          */
+        @Override
         protected void elementEnd(String name)
         {
             fireElementEnd(name);
