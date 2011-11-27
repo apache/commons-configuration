@@ -16,24 +16,24 @@
  */
 package org.apache.commons.configuration.resolver;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.FileNameMap;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Vector;
+
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationUtils;
+import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.xml.resolver.CatalogException;
+import org.apache.xml.resolver.readers.CatalogReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.apache.xml.resolver.CatalogException;
-import org.apache.xml.resolver.readers.CatalogReader;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.configuration.FileSystem;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.ConfigurationUtils;
-import org.apache.commons.lang.text.StrSubstitutor;
-
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.FileNameMap;
-import java.net.URLConnection;
-import java.net.URL;
-import java.util.Vector;
 
 /**
  * Thin wrapper around xml commons CatalogResolver to allow list of catalogs
@@ -147,7 +147,7 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Implements the <code>resolveEntity</code> method
+     * Implements the {@code resolveEntity} method
      * for the SAX interface.
      * <p/>
      * <p>Presented with an optional public identifier and a system
@@ -315,6 +315,7 @@ public class CatalogResolver implements EntityResolver
          * This method always returns a new instance of the underlying catalog class.
          * @return the Catalog.
          */
+        @Override
         public org.apache.xml.resolver.Catalog getPrivateCatalog()
         {
             org.apache.xml.resolver.Catalog catalog = staticCatalog;
@@ -349,6 +350,7 @@ public class CatalogResolver implements EntityResolver
          * always be returned. Otherwise a new catalog will be returned.
          * @return The Catalog.
          */
+        @Override
         public org.apache.xml.resolver.Catalog getCatalog()
         {
             return getPrivateCatalog();
@@ -370,12 +372,15 @@ public class CatalogResolver implements EntityResolver
          * Load the catalogs.
          * @throws IOException if an error occurs.
          */
+        @Override
         public void loadSystemCatalogs() throws IOException
         {
             fs = ((CatalogManager) catalogManager).getFileSystem();
             String base = ((CatalogManager) catalogManager).getBaseDir();
 
-            Vector catalogs = catalogManager.getCatalogFiles();
+            // This is safe because the catalog manager returns a vector of strings.
+            @SuppressWarnings("unchecked")
+            Vector<String> catalogs = catalogManager.getCatalogFiles();
             if (catalogs != null)
             {
                 for (int count = 0; count < catalogs.size(); count++)
@@ -505,6 +510,7 @@ public class CatalogResolver implements EntityResolver
          * @param uriref The URI reference
          * @return The normalized URI reference.
          */
+        @Override
         protected String normalizeURI(String uriref)
         {
             StrSubstitutor substitutor = ((CatalogManager) catalogManager).getStrSubstitutor();
