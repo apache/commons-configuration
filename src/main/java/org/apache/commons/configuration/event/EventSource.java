@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * <p>
@@ -29,8 +29,8 @@ import java.util.LinkedList;
  * <p>
  * This class implements functionality for managing a set of event listeners
  * that can be notified when an event occurs. It can be extended by
- * configuration classes that support the event machanism. In this case these
- * classes only need to call the <code>fireEvent()</code> method when an event
+ * configuration classes that support the event mechanism. In this case these
+ * classes only need to call the {@code fireEvent()} method when an event
  * is to be delivered to the registered listeners.
  * </p>
  * <p>
@@ -38,28 +38,28 @@ import java.util.LinkedList;
  * on a configuration that cause events. The operations are synchronized.
  * </p>
  * <p>
- * With the <code>detailEvents</code> property the number of detail events can
+ * With the {@code detailEvents} property the number of detail events can
  * be controlled. Some methods in configuration classes are implemented in a way
  * that they call other methods that can generate their own events. One example
- * is the <code>setProperty()</code> method that can be implemented as a
- * combination of <code>clearProperty()</code> and <code>addProperty()</code>.
- * With <code>detailEvents</code> set to <b>true</b>, all involved methods
+ * is the {@code setProperty()} method that can be implemented as a
+ * combination of {@code clearProperty()} and {@code addProperty()}.
+ * With {@code detailEvents} set to <b>true</b>, all involved methods
  * will generate events (i.e. listeners will receive property set events,
  * property clear events, and property add events). If this mode is turned off
  * (which is the default), detail events are suppressed, so only property set
  * events will be received. Note that the number of received detail events may
  * differ for different configuration implementations.
- * <code>{@link org.apache.commons.configuration.HierarchicalConfiguration HierarchicalConfiguration}</code>
- * for instance has a custom implementation of <code>setProperty()</code>,
+ * {@link org.apache.commons.configuration.HierarchicalConfiguration HierarchicalConfiguration}
+ * for instance has a custom implementation of {@code setProperty()},
  * which does not generate any detail events.
  * </p>
  * <p>
  * In addition to &quot;normal&quot; events, error events are supported. Such
  * events signal an internal problem that occurred during access of properties.
  * For them a special listener interface exists:
- * <code>{@link ConfigurationErrorListener}</code>. There is another set of
+ * {@link ConfigurationErrorListener}. There is another set of
  * methods dealing with event listeners of this type. The
- * <code>fireError()</code> method can be used by derived classes to send
+ * {@code fireError()} method can be used by derived classes to send
  * notifications about errors to registered observers.
  * </p>
  *
@@ -70,16 +70,16 @@ import java.util.LinkedList;
 public class EventSource
 {
     /** A collection for the registered event listeners. */
-    private Collection listeners;
+    private Collection<ConfigurationListener> listeners;
 
     /** A collection for the registered error listeners.*/
-    private Collection errorListeners;
+    private Collection<ConfigurationErrorListener> errorListeners;
 
     /** A counter for the detail events. */
     private int detailEvents;
 
     /**
-     * Creates a new instance of <code>EventSource</code>.
+     * Creates a new instance of {@code EventSource}.
      */
     public EventSource()
     {
@@ -93,7 +93,8 @@ public class EventSource
      */
     public void addConfigurationListener(ConfigurationListener l)
     {
-        doAddListener(listeners, l);
+        checkListener(l);
+        listeners.add(l);
     }
 
     /**
@@ -105,7 +106,7 @@ public class EventSource
      */
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
-        return doRemoveListener(listeners, l);
+        return listeners.remove(l);
     }
 
     /**
@@ -113,13 +114,13 @@ public class EventSource
      * currently registered at this object.
      *
      * @return a collection with the registered
-     * <code>ConfigurationListener</code>s (this collection is a snapshot
+     * {@code ConfigurationListener}s (this collection is a snapshot
      * of the currently registered listeners; manipulating it has no effect
      * on this event source object)
      */
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
-        return doGetListeners(listeners);
+        return Collections.unmodifiableCollection(new ArrayList<ConfigurationListener>(listeners));
     }
 
     /**
@@ -127,7 +128,7 @@ public class EventSource
      */
     public void clearConfigurationListeners()
     {
-        doClearListeners(listeners);
+        listeners.clear();
     }
 
     /**
@@ -137,17 +138,14 @@ public class EventSource
      */
     public boolean isDetailEvents()
     {
-        synchronized (listeners)
-        {
-            return detailEvents > 0;
-        }
+        return checkDetailEvents(0);
     }
 
     /**
      * Determines whether detail events should be generated. If enabled, some
      * methods can generate multiple update events. Note that this method
      * records the number of calls, i.e. if for instance
-     * <code>setDetailEvents(false)</code> was called three times, you will
+     * {@code setDetailEvents(false)} was called three times, you will
      * have to invoke the method as often to enable the details.
      *
      * @param enable a flag if detail events should be enabled or disabled
@@ -176,7 +174,8 @@ public class EventSource
      */
     public void addErrorListener(ConfigurationErrorListener l)
     {
-        doAddListener(errorListeners, l);
+        checkListener(l);
+        errorListeners.add(l);
     }
 
     /**
@@ -189,7 +188,7 @@ public class EventSource
      */
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
-        return doRemoveListener(errorListeners, l);
+        return errorListeners.remove(l);
     }
 
     /**
@@ -199,7 +198,7 @@ public class EventSource
      */
     public void clearErrorListeners()
     {
-        doClearListeners(errorListeners);
+        errorListeners.clear();
     }
 
     /**
@@ -207,19 +206,19 @@ public class EventSource
      * currently registered at this object.
      *
      * @return a collection with the registered
-     * <code>ConfigurationErrorListener</code>s (this collection is a
+     * {@code ConfigurationErrorListener}s (this collection is a
      * snapshot of the currently registered listeners; it cannot be manipulated)
      * @since 1.4
      */
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
-        return doGetListeners(errorListeners);
+        return Collections.unmodifiableCollection(new ArrayList<ConfigurationErrorListener>(errorListeners));
     }
 
     /**
      * Creates an event object and delivers it to all registered event
      * listeners. The method will check first if sending an event is allowed
-     * (making use of the <code>detailEvents</code> property), and if
+     * (making use of the {@code detailEvents} property), and if
      * listeners are registered.
      *
      * @param type the event's type
@@ -229,31 +228,24 @@ public class EventSource
      */
     protected void fireEvent(int type, String propName, Object propValue, boolean before)
     {
-        Collection listenersToCall = null;
-
-        synchronized (listeners)
+        if (checkDetailEvents(-1))
         {
-            if (detailEvents >= 0 && listeners.size() > 0)
+            Iterator<ConfigurationListener> it = listeners.iterator();
+            if (it.hasNext())
             {
-                // Copy listeners to another collection so that manipulating
-                // the listener list during event delivery won't cause problems
-                listenersToCall = new ArrayList(listeners);
-            }
-        }
-
-        if (listenersToCall != null)
-        {
-            ConfigurationEvent event = createEvent(type, propName, propValue, before);
-            for (Iterator it = listenersToCall.iterator(); it.hasNext();)
-            {
-                ((ConfigurationListener) it.next()).configurationChanged(event);
+                ConfigurationEvent event =
+                        createEvent(type, propName, propValue, before);
+                while (it.hasNext())
+                {
+                    it.next().configurationChanged(event);
+                }
             }
         }
     }
 
     /**
-     * Creates a <code>ConfigurationEvent</code> object based on the passed in
-     * parameters. This is called by <code>fireEvent()</code> if it decides
+     * Creates a {@code ConfigurationEvent} object based on the passed in
+     * parameters. This is called by {@code fireEvent()} if it decides
      * that an event needs to be generated.
      *
      * @param type the event's type
@@ -274,42 +266,32 @@ public class EventSource
      * @param type the event's type
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the <code>Throwable</code> object that caused this error event
+     * @param ex the {@code Throwable} object that caused this error event
      * @since 1.4
      */
     protected void fireError(int type, String propName, Object propValue, Throwable ex)
     {
-        Collection listenersToCall = null;
-
-        synchronized (errorListeners)
+        Iterator<ConfigurationErrorListener> it = errorListeners.iterator();
+        if (it.hasNext())
         {
-            if (errorListeners.size() > 0)
+            ConfigurationErrorEvent event =
+                    createErrorEvent(type, propName, propValue, ex);
+            while (it.hasNext())
             {
-                // Copy listeners to another collection so that manipulating
-                // the listener list during event delivery won't cause problems
-                listenersToCall = new ArrayList(errorListeners);
-            }
-        }
-
-        if (listenersToCall != null)
-        {
-            ConfigurationErrorEvent event = createErrorEvent(type, propName, propValue, ex);
-            for (Iterator it = listenersToCall.iterator(); it.hasNext();)
-            {
-                ((ConfigurationErrorListener) it.next()).configurationError(event);
+                it.next().configurationError(event);
             }
         }
     }
 
     /**
-     * Creates a <code>ConfigurationErrorEvent</code> object based on the
-     * passed in parameters. This is called by <code>fireError()</code> if it
+     * Creates a {@code ConfigurationErrorEvent} object based on the
+     * passed in parameters. This is called by {@code fireError()} if it
      * decides that an event needs to be generated.
      *
      * @param type the event's type
      * @param propName the name of the affected property (can be <b>null</b>)
      * @param propValue the value of the affected property (can be <b>null</b>)
-     * @param ex the <code>Throwable</code> object that caused this error
+     * @param ex the {@code Throwable} object that caused this error
      * event
      * @return the event object
      * @since 1.4
@@ -320,15 +302,16 @@ public class EventSource
     }
 
     /**
-     * Overrides the <code>clone()</code> method to correctly handle so far
+     * Overrides the {@code clone()} method to correctly handle so far
      * registered event listeners. This implementation ensures that the clone
      * will have empty event listener lists, i.e. the listeners registered at an
-     * <code>EventSource</code> object will not be copied.
+     * {@code EventSource} object will not be copied.
      *
      * @return the cloned object
      * @throws CloneNotSupportedException if cloning is not allowed
      * @since 1.4
      */
+    @Override
     protected Object clone() throws CloneNotSupportedException
     {
         EventSource copy = (EventSource) super.clone();
@@ -337,64 +320,17 @@ public class EventSource
     }
 
     /**
-     * Adds a new listener object to a listener collection. This is done in a
-     * synchronized block. The listener must not be <b>null</b>.
+     * Checks whether the specified event listener is not <b>null</b>. If this
+     * is the case, an {@code IllegalArgumentException} exception is thrown.
      *
-     * @param listeners the collection with the listeners
-     * @param l the listener object
+     * @param l the listener to be checked
+     * @throws IllegalArgumentException if the listener is <b>null</b>
      */
-    private static void doAddListener(Collection listeners, Object l)
+    private static void checkListener(Object l)
     {
         if (l == null)
         {
             throw new IllegalArgumentException("Listener must not be null!");
-        }
-        synchronized (listeners)
-        {
-            listeners.add(l);
-        }
-    }
-
-    /**
-     * Removes an event listener from a listener collection. This is done in a
-     * synchronized block.
-     *
-     * @param listeners the collection with the listeners
-     * @param l the listener object
-     * @return a flag whether the listener could be found and removed
-     */
-    private static boolean doRemoveListener(Collection listeners, Object l)
-    {
-        synchronized (listeners)
-        {
-            return listeners.remove(l);
-        }
-    }
-
-    /**
-     * Removes all entries from the given list of event listeners.
-     *
-     * @param listeners the collection with the listeners
-     */
-    private static void doClearListeners(Collection listeners)
-    {
-        synchronized (listeners)
-        {
-            listeners.clear();
-        }
-    }
-
-    /**
-     * Returns an unmodifiable snapshot of the given event listener collection.
-     *
-     * @param listeners the collection with the listeners
-     * @return a snapshot of the listeners collection
-     */
-    private static Collection doGetListeners(Collection listeners)
-    {
-        synchronized (listeners)
-        {
-            return Collections.unmodifiableCollection(new ArrayList(listeners));
         }
     }
 
@@ -403,7 +339,23 @@ public class EventSource
      */
     private void initListeners()
     {
-        listeners = new LinkedList();
-        errorListeners = new LinkedList();
+        listeners = new CopyOnWriteArrayList<ConfigurationListener>();
+        errorListeners = new CopyOnWriteArrayList<ConfigurationErrorListener>();
+    }
+
+    /**
+     * Helper method for checking the current counter for detail events. This
+     * method checks whether the counter is greater than the passed in limit.
+     *
+     * @param limit the limit to be compared to
+     * @return <b>true</b> if the counter is greater than the limit,
+     *         <b>false</b> otherwise
+     */
+    private boolean checkDetailEvents(int limit)
+    {
+        synchronized (listeners)
+        {
+            return detailEvents > limit;
+        }
     }
 }
