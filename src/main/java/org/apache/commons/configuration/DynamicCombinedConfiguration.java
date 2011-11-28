@@ -52,23 +52,25 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /**
      * Prevent recursion while resolving unprefixed properties.
      */
-    private static ThreadLocal recursive = new ThreadLocal()
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
     {
         @Override
-        protected synchronized Object initialValue()
+        protected synchronized Boolean initialValue()
         {
             return Boolean.FALSE;
         }
     };
 
     /** The CombinedConfigurations */
-    private Map configs = new HashMap();
+    private Map<String, CombinedConfiguration> configs =
+            new HashMap<String, CombinedConfiguration>();
 
     /** Stores a list with the contained configurations. */
-    private List configurations = new ArrayList();
+    private List<ConfigData> configurations = new ArrayList<ConfigData>();
 
     /** Stores a map with the named configurations. */
-    private Map namedConfigurations = new HashMap();
+    private Map<String, AbstractConfiguration> namedConfigurations =
+            new HashMap<String, AbstractConfiguration>();
 
     /** The key pattern for the CombinedConfiguration map */
     private String keyPattern;
@@ -83,7 +85,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
 
     /**
-     * Creates a new instance of <code>CombinedConfiguration</code> and
+     * Creates a new instance of {@code DynamicCombinedConfiguration} and
      * initializes the combiner to be used.
      *
      * @param comb the node combiner (can be <b>null</b>, then a union combiner
@@ -98,7 +100,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     /**
-     * Creates a new instance of <code>CombinedConfiguration</code> that uses
+     * Creates a new instance of {@code DynamicCombinedConfiguration} that uses
      * a union combiner.
      *
      * @see org.apache.commons.configuration.tree.UnionCombiner
@@ -144,7 +146,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /**
      * Sets the node combiner. This object will be used when the combined node
      * structure is to be constructed. It must not be <b>null</b>, otherwise an
-     * <code>IllegalArgumentException</code> exception is thrown. Changing the
+     * {@code IllegalArgumentException} exception is thrown. Changing the
      * node combiner causes an invalidation of this combined configuration, so
      * that the new combiner immediately takes effect.
      *
@@ -164,12 +166,12 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     /**
      * Adds a new configuration to this combined configuration. It is possible
      * (but not mandatory) to give the new configuration a name. This name must
-     * be unique, otherwise a <code>ConfigurationRuntimeException</code> will
-     * be thrown. With the optional <code>at</code> argument you can specify
+     * be unique, otherwise a {@code ConfigurationRuntimeException} will
+     * be thrown. With the optional {@code at} argument you can specify
      * where in the resulting node structure the content of the added
      * configuration should appear. This is a string that uses dots as property
      * delimiters (independent on the current expression engine). For instance
-     * if you pass in the string <code>&quot;database.tables&quot;</code>,
+     * if you pass in the string {@code "database.tables"},
      * all properties of the added configuration will occur in this branch.
      *
      * @param config the configuration to add (must not be <b>null</b>)
@@ -211,7 +213,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = (ConfigData) configurations.get(index);
+        ConfigData cd = configurations.get(index);
         return cd.getConfiguration();
     }
 
@@ -225,7 +227,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(String name)
     {
-        return (Configuration) namedConfigurations.get(name);
+        return namedConfigurations.get(name);
     }
 
     /**
@@ -237,7 +239,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * <b>null</b>)
      */
     @Override
-    public Set getConfigurationNames()
+    public Set<String> getConfigurationNames()
     {
         return namedConfigurations.keySet();
     }
@@ -271,7 +273,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (((ConfigData) configurations.get(index)).getConfiguration() == config)
+            if (configurations.get(index).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
 
@@ -290,7 +292,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData cd = (ConfigData) configurations.remove(index);
+        ConfigData cd = configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -465,25 +467,25 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return this.getCurrentConfig().getKeys();
     }
 
     @Override
-    public Iterator getKeys(String prefix)
+    public Iterator<String> getKeys(String prefix)
     {
         return this.getCurrentConfig().getKeys(prefix);
     }
 
     @Override
-    public List getList(String key, List defaultValue)
+    public List<Object> getList(String key, List<Object> defaultValue)
     {
         return this.getCurrentConfig().getList(key, defaultValue);
     }
 
     @Override
-    public List getList(String key)
+    public List<Object> getList(String key)
     {
         return this.getCurrentConfig().getList(key);
     }
@@ -607,7 +609,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void addNodes(String key, Collection nodes)
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         this.getCurrentConfig().addNodes(key, nodes);
     }
@@ -625,7 +627,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public List configurationsAt(String key)
+    public List<HierarchicalConfiguration> configurationsAt(String key)
     {
         return this.getCurrentConfig().configurationsAt(key);
     }
@@ -656,7 +658,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * <ul>
      * <li>If no node object is found for this key, <b>null</b> is returned.</li>
      * <li>If the key maps to multiple nodes belonging to different
-     * configuration sources, a <code>IllegalArgumentException</code> is
+     * configuration sources, a {@code IllegalArgumentException} is
      * thrown (in this case no unique source can be determined).</li>
      * <li>If exactly one node is found for the key, the (child) configuration
      * object, to which the node belongs is determined and returned.</li>
@@ -686,28 +688,24 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         super.addConfigurationListener(l);
 
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.addConfigurationListener(l);
+            cc.addConfigurationListener(l);
         }
     }
 
     @Override
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.removeConfigurationListener(l);
+            cc.removeConfigurationListener(l);
         }
         return super.removeConfigurationListener(l);
     }
 
     @Override
-    public Collection getConfigurationListeners()
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
@@ -715,11 +713,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public void clearConfigurationListeners()
     {
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.clearConfigurationListeners();
+            cc.clearConfigurationListeners();
         }
         super.clearConfigurationListeners();
     }
@@ -727,11 +723,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public void addErrorListener(ConfigurationErrorListener l)
     {
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.addErrorListener(l);
+            cc.addErrorListener(l);
         }
         super.addErrorListener(l);
     }
@@ -739,11 +733,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.removeErrorListener(l);
+            cc.removeErrorListener(l);
         }
         return super.removeErrorListener(l);
     }
@@ -751,22 +743,18 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public void clearErrorListeners()
     {
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-            CombinedConfiguration config = (CombinedConfiguration) iter.next();
-            config.clearErrorListeners();
+            cc.clearErrorListeners();
         }
         super.clearErrorListeners();
     }
 
     @Override
-    public Collection getErrorListeners()
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return super.getErrorListeners();
     }
-
-
 
     /**
      * Returns a copy of this object. This implementation performs a deep clone,
@@ -783,13 +771,11 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         return (DynamicCombinedConfiguration) super.clone();
     }
 
-
-
     /**
      * Invalidates the current combined configuration. This means that the next time a
      * property is accessed the combined node structure must be re-constructed.
      * Invalidation of a combined configuration also means that an event of type
-     * <code>EVENT_COMBINED_INVALIDATE</code> is fired. Note that while other
+     * {@code EVENT_COMBINED_INVALIDATE} is fired. Note that while other
      * events most times appear twice (once before and once after an update),
      * this event is only fired once (after update).
      */
@@ -805,11 +791,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         {
             return;
         }
-        Iterator iter = configs.values().iterator();
-        while (iter.hasNext())
+        for (CombinedConfiguration cc : configs.values())
         {
-           CombinedConfiguration config = (CombinedConfiguration) iter.next();
-           config.invalidate();
+            cc.invalidate();
         }
     }
 
@@ -842,7 +826,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         CombinedConfiguration config;
         synchronized (getNodeCombiner())
         {
-            config = (CombinedConfiguration) configs.get(key);
+            config = configs.get(key);
             if (config == null)
             {
                 config = new CombinedConfiguration(getNodeCombiner());
@@ -859,23 +843,17 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                 config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                 config.setConversionExpressionEngine(getConversionExpressionEngine());
                 config.setListDelimiter(getListDelimiter());
-                Iterator iter = getErrorListeners().iterator();
-                while (iter.hasNext())
+                for (ConfigurationErrorListener listener : getErrorListeners())
                 {
-                    ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                     config.addErrorListener(listener);
                 }
-                iter = getConfigurationListeners().iterator();
-                while (iter.hasNext())
+                for (ConfigurationListener listener : getConfigurationListeners())
                 {
-                    ConfigurationListener listener = (ConfigurationListener) iter.next();
                     config.addConfigurationListener(listener);
                 }
                 config.setForceReloadCheck(isForceReloadCheck());
-                iter = configurations.iterator();
-                while (iter.hasNext())
+                for (ConfigData data : configurations)
                 {
-                    ConfigData data = (ConfigData) iter.next();
                     config.addConfiguration(data.getConfiguration(), data.getName(),
                             data.getAt());
                 }
@@ -903,8 +881,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         /** Stores the at string.*/
         private String at;
 
-                /**
-         * Creates a new instance of <code>ConfigData</code> and initializes
+        /**
+         * Creates a new instance of {@code ConfigData} and initializes
          * it.
          *
          * @param config the configuration
@@ -918,7 +896,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             this.at = at;
         }
 
-                /**
+        /**
          * Returns the stored configuration.
          *
          * @return the configuration
