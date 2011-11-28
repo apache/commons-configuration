@@ -42,7 +42,7 @@ public interface ConfigurationErrorListener
     /**
      * Notifies this listener that in an observed configuration an error
      * occurred. All information available about this error, including the
-     * causing <code>Throwable</code> object, can be obtained from the passed
+     * causing {@code Throwable} object, can be obtained from the passed
      * in event object.
      *
      * @param event the event object with information about the error

@@ -23,8 +23,8 @@ package org.apache.commons.configuration.event;
  * </p>
  * <p>
  * Some configuration implementations (e.g.
- * <code>{@link org.apache.commons.configuration.DatabaseConfiguration}</code>
- * or <code>{@link org.apache.commons.configuration.JNDIConfiguration}</code>
+ * {@link org.apache.commons.configuration.DatabaseConfiguration}
+ * or {@link org.apache.commons.configuration.JNDIConfiguration}
  * use an underlying storage that can throw an exception on each property
  * access. In earlier versions of this library such exceptions were logged and
  * then silently ignored. This makes it impossible for a client to find out that
@@ -38,9 +38,9 @@ package org.apache.commons.configuration.event;
  * internal errors related to the source configuration object.
  * </p>
  * <p>
- * By inheriting from <code>ConfigurationEvent</code> this event class
+ * By inheriting from {@code ConfigurationEvent} this event class
  * supports all properties that describe an operation on a configuration
- * instance. In addition a <code>Throwable</code> object is available
+ * instance. In addition a {@code Throwable} object is available
  * representing the occurred error. The event's type determines the operation
  * that caused the error. Note that depending on the event type and the occurred
  * exception not all of the other properties (e.g. name of the affected property
@@ -65,7 +65,7 @@ public class ConfigurationErrorEvent extends ConfigurationEvent
     private Throwable cause;
 
     /**
-     * Creates a new instance of <code>ConfigurationErrorEvent</code> and
+     * Creates a new instance of {@code ConfigurationErrorEvent} and
      * initializes it.
      *
      * @param source the event source
@@ -82,7 +82,7 @@ public class ConfigurationErrorEvent extends ConfigurationEvent
     }
 
     /**
-     * Returns the cause of this error event. This is the <code>Throwable</code>
+     * Returns the cause of this error event. This is the {@code Throwable}
      * object that caused this event to be fired.
      *
      * @return the cause of this error event
