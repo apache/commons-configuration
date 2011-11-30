@@ -30,14 +30,16 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
 /**
- * <p>A base class for &quot;faked&quot; <code>XMLReader</code> classes
+ * <p>A base class for &quot;faked&quot; {@code XMLReader} classes
  * that transform a configuration object in a set of SAX parsing events.</p>
  * <p>This class provides dummy implementations for most of the methods
- * defined in the <code>XMLReader</code> interface that are not used for this
+ * defined in the {@code XMLReader} interface that are not used for this
  * special purpose. There will be concrete sub classes that process specific
  * configuration classes.</p>
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public abstract class ConfigurationXMLReader implements XMLReader
@@ -61,7 +63,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     private String rootName;
 
     /**
-     * Creates a new instance of <code>ConfigurationXMLReader</code>.
+     * Creates a new instance of {@code ConfigurationXMLReader}.
      */
     protected ConfigurationXMLReader()
     {
@@ -83,7 +85,7 @@ public abstract class ConfigurationXMLReader implements XMLReader
     }
 
     /**
-     * Parses the acutal configuration object. The passed input source will be
+     * Parses the actual configuration object. The passed input source will be
      * ignored.
      *
      * @param input the input source (ignored)
@@ -349,9 +351,9 @@ public abstract class ConfigurationXMLReader implements XMLReader
 
     /**
      * Processes all keys stored in the actual configuration. This method is
-     * called by <code>parseConfiguration()</code> to start the main parsing
-     * process. <code>parseConfiguration()</code> calls the content handler's
-     * <code>startDocument()</code> and <code>endElement()</code> methods
+     * called by {@code parseConfiguration()} to start the main parsing
+     * process. {@code parseConfiguration()} calls the content handler's
+     * {@code startDocument()} and {@code endElement()} methods
      * and cares for exception handling. The remaining actions are left to this
      * method that must be implemented in a concrete sub class.
      *
