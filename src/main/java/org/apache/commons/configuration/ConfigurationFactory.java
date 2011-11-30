@@ -22,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
@@ -52,10 +51,10 @@ import org.xml.sax.SAXException;
  * </p>
  * <p>
  * <em>Note:</em> Almost all of the features provided by this class and many
- * more are also available for the <code>{@link DefaultConfigurationBuilder}</code>
- * class. <code>DefaultConfigurationBuilder</code> also has a more robust
+ * more are also available for the {@link DefaultConfigurationBuilder}
+ * class. {@code DefaultConfigurationBuilder} also has a more robust
  * merge algorithm for constructing combined configurations. So it is
- * recommended to use this class instead of <code>ConfigurationFactory</code>.
+ * recommended to use this class instead of {@code ConfigurationFactory}.
  * </p>
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
@@ -65,6 +64,7 @@ import org.xml.sax.SAXException;
  * provides the same features as ConfigurationFactory plus some more; it can
  * also process the same configuration definition files.
  */
+@Deprecated
 public class ConfigurationFactory
 {
     /** Constant for the root element in the info file.*/
@@ -100,7 +100,7 @@ public class ConfigurationFactory
     /**
      * The implicit base path for included files. This path is determined by
      * the configuration to load and used unless no other base path was
-     * explicitely specified.
+     * explicitly specified.
      */
     private String implicitBasePath;
 
@@ -270,7 +270,7 @@ public class ConfigurationFactory
      */
     protected void enableDigesterSubstitutor(Digester digester)
     {
-        Map systemProperties = System.getProperties();
+        Properties systemProperties = System.getProperties();
         MultiVariableExpander expander = new MultiVariableExpander();
         expander.addSource("$", systemProperties);
 
@@ -477,14 +477,14 @@ public class ConfigurationFactory
     public class DigesterConfigurationFactory extends AbstractObjectCreationFactory
     {
         /** Actual class to use. */
-        private Class clazz;
+        private Class<?> clazz;
 
         /**
-         * Creates a new instance of <code>DigesterConfigurationFactory</code>.
+         * Creates a new instance of {@code DigesterConfigurationFactory}.
          *
          * @param clazz the class which we should instantiate
          */
-        public DigesterConfigurationFactory(Class clazz)
+        public DigesterConfigurationFactory(Class<?> clazz)
         {
             this.clazz = clazz;
         }
@@ -496,6 +496,7 @@ public class ConfigurationFactory
          * @return the new object
          * @throws Exception if object creation fails
          */
+        @Override
         public Object createObject(Attributes attribs) throws Exception
         {
             return clazz.newInstance();
@@ -515,7 +516,7 @@ public class ConfigurationFactory
          *
          * @param clazz The class which we should instantiate.
          */
-        public FileConfigurationFactory(Class clazz)
+        public FileConfigurationFactory(Class<?> clazz)
         {
             super(clazz);
         }
@@ -527,6 +528,7 @@ public class ConfigurationFactory
          * @return the new object
          * @throws Exception Couldn't instantiate the requested object.
          */
+        @Override
         public Object createObject(Attributes attributes) throws Exception
         {
             FileConfiguration conf = createConfiguration(attributes);
@@ -535,7 +537,7 @@ public class ConfigurationFactory
         }
 
         /**
-         * Creates the object, a <code>FileConfiguration</code>.
+         * Creates the object, a {@code FileConfiguration}.
          *
          * @param attributes the actual attributes
          * @return the file configuration
@@ -556,7 +558,7 @@ public class ConfigurationFactory
     public class PropertiesConfigurationFactory extends FileConfigurationFactory
     {
         /**
-         * Creates a new instance of <code>PropertiesConfigurationFactory</code>.
+         * Creates a new instance of {@code PropertiesConfigurationFactory}.
          */
         public PropertiesConfigurationFactory()
         {
@@ -565,14 +567,15 @@ public class ConfigurationFactory
 
         /**
          * Creates the new configuration object. Based on the file name
-         * provided in the attributes either a <code>PropertiesConfiguration</code>
-         * or a <code>XMLPropertiesConfiguration</code> object will be
+         * provided in the attributes either a {@code PropertiesConfiguration}
+         * or a {@code XMLPropertiesConfiguration} object will be
          * returned.
          *
          * @param attributes the attributes
          * @return the new configuration object
          * @throws Exception if an error occurs
          */
+        @Override
         protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
         {
             String filename = attributes.getValue(ATTR_FILENAME);
@@ -597,7 +600,7 @@ public class ConfigurationFactory
     public class PropertyListConfigurationFactory extends FileConfigurationFactory
     {
         /**
-         * Creates a new instance of <code>PropertyListConfigurationFactory</code>.
+         * Creates a new instance of PropertyListConfigurationFactory</code>.
          */
         public PropertyListConfigurationFactory()
         {
@@ -606,14 +609,15 @@ public class ConfigurationFactory
 
         /**
          * Creates the new configuration object. Based on the file name
-         * provided in the attributes either a <code>XMLPropertyListConfiguration</code>
-         * or a <code>PropertyListConfiguration</code> object will be
+         * provided in the attributes either a {@code XMLPropertyListConfiguration}
+         * or a {@code PropertyListConfiguration} object will be
          * returned.
          *
          * @param attributes the attributes
          * @return the new configuration object
          * @throws Exception if an error occurs
          */
+        @Override
         protected FileConfiguration createConfiguration(Attributes attributes) throws Exception
         {
             String filename = attributes.getValue(ATTR_FILENAME);
@@ -636,7 +640,7 @@ public class ConfigurationFactory
     private class JNDIConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
-         * Creates a new instance of <code>JNDIConfigurationFactory</code>.
+         * Creates a new instance of {@code JNDIConfigurationFactory}.
          */
         public JNDIConfigurationFactory()
         {
@@ -651,7 +655,7 @@ public class ConfigurationFactory
     private class SystemConfigurationFactory extends DigesterConfigurationFactory
     {
         /**
-         * Creates a new instance of <code>SystemConfigurationFactory</code>.
+         * Creates a new instance of {@code SystemConfigurationFactory}.
          */
         public SystemConfigurationFactory()
         {
@@ -672,7 +676,7 @@ public class ConfigurationFactory
         private String at;
 
         /**
-         * Returns the value of the <code>at</code> attribute.
+         * Returns the value of the {@code at} attribute.
          *
          * @return the at attribute
          */
@@ -682,7 +686,7 @@ public class ConfigurationFactory
         }
 
         /**
-         * Sets the value of the <code>at</code> attribute.
+         * Sets the value of the {@code at} attribute.
          *
          * @param string the attribute value
          */
@@ -703,8 +707,8 @@ public class ConfigurationFactory
 
         /**
          * Sets the configuration object. Note: Normally this method should be
-         * named <code>setConfiguration()</code>, but the name
-         * <code>addConfiguration()</code> is required by some of the digester
+         * named {@code setConfiguration()}, but the name
+         * {@code addConfiguration()} is required by some of the digester
          * rules.
          *
          * @param config the configuration to set
@@ -725,15 +729,15 @@ public class ConfigurationFactory
         private CompositeConfiguration config;
 
         /** Stores a collection with the configs from the additional section.*/
-        private Collection additionalConfigs;
+        private Collection<AdditionalConfigurationData> additionalConfigs;
 
         /**
-         * Creates a new instance of <code>ConfigurationBuilder</code>.
+         * Creates a new instance of {@code ConfigurationBuilder}.
          */
         public ConfigurationBuilder()
         {
             config = new CompositeConfiguration();
-            additionalConfigs = new LinkedList();
+            additionalConfigs = new LinkedList<AdditionalConfigurationData>();
         }
 
         /**
@@ -781,21 +785,19 @@ public class ConfigurationFactory
         /**
          * Creates a configuration object with the union of all properties
          * defined in the <code>&lt;additional&gt;</code> section. This
-         * implementation returns a <code>HierarchicalConfiguration</code>
+         * implementation returns a {@code HierarchicalConfiguration}
          * object.
          *
          * @param configs a collection with
-         * <code>AdditionalConfigurationData</code> objects
+         * {@code AdditionalConfigurationData} objects
          * @return the union configuration (can be <b>null</b>)
          */
-        protected Configuration createAdditionalConfiguration(Collection configs)
+        protected Configuration createAdditionalConfiguration(Collection<AdditionalConfigurationData> configs)
         {
             HierarchicalConfiguration result = new HierarchicalConfiguration();
 
-            for (Iterator it = configs.iterator(); it.hasNext();)
+            for (AdditionalConfigurationData cdata : configs)
             {
-                AdditionalConfigurationData cdata =
-                (AdditionalConfigurationData) it.next();
                 result.addNodes(cdata.getAt(),
                 createRootNode(cdata).getChildren());
             }
@@ -827,9 +829,9 @@ public class ConfigurationFactory
     }
 
     /**
-     * A special implementation of Digester's <code>CallMethodRule</code> that
-     * is internally used for calling a file configuration's <code>load()</code>
-     * method. This class difers from its ancestor that it catches all occuring
+     * A special implementation of Digester's {@code CallMethodRule} that
+     * is internally used for calling a file configuration's {@code load()}
+     * method. This class differs from its ancestor that it catches all occurring
      * exceptions when the specified method is called. It then checks whether
      * for the corresponding configuration the optional attribute is set. If
      * this is the case, the exception will simply be ignored.
@@ -842,7 +844,7 @@ public class ConfigurationFactory
         private boolean optional;
 
         /**
-         * Creates a new instance of <code>CallOptionalMethodRule</code> and
+         * Creates a new instance of {@code CallOptionalMethodRule} and
          * sets the name of the method to invoke.
          *
          * @param methodName the name of the method
@@ -858,6 +860,7 @@ public class ConfigurationFactory
          * @param attrs the attributes
          * @throws Exception if an error occurs
          */
+        @Override
         public void begin(Attributes attrs) throws Exception
         {
             optional = attrs.getValue(ATTR_OPTIONAL) != null
@@ -872,6 +875,7 @@ public class ConfigurationFactory
          *
          * @throws Exception if an error occurs
          */
+        @Override
         public void end() throws Exception
         {
             try
