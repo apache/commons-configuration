@@ -40,13 +40,15 @@ import java.util.Map;
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public interface BeanDeclaration
 {
     /**
-     * Returns the name of the <code>BeanFactory</code> that should be used
+     * Returns the name of the {@code BeanFactory} that should be used
      * for creating the bean instance. This can be <b>null</b>, then a default
      * factory will be used.
      *
@@ -81,20 +83,20 @@ public interface BeanDeclaration
      *
      * @return a map with properties to be initialized
      */
-    Map getBeanProperties();
+    Map<String, Object> getBeanProperties();
 
     /**
      * Returns a map with declarations for beans that should be set as
      * properties of the newly created bean. This allows for complex
-     * initialization szenarios: a bean for a bean that contains complex
+     * initialization scenarios: a bean for a bean that contains complex
      * properties (e.g. other beans) can have nested declarations for defining
      * these complex properties. The returned map's key are the names of the
-     * properties to initialze. The values are <code>BeanDeclaration</code>
-     * implementations. They will be treated like this declaration (in a
-     * recursive manner), and the resulting beans are assigned to the
-     * corresponding properties.
+     * properties to initialize. The values are either {@code BeanDeclaration}
+     * implementations or collections thereof. They will be treated like this
+     * declaration (in a* recursive manner), and the resulting beans are
+     * assigned to the corresponding properties.
      *
      * @return a map with nested bean declarations
      */
-    Map getNestedBeanDeclarations();
+    Map<String, Object> getNestedBeanDeclarations();
 }
