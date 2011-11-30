@@ -92,10 +92,9 @@ public final class ConfigurationUtils
      */
     public static void dump(Configuration configuration, PrintWriter out)
     {
-        Iterator keys = configuration.getKeys();
-        while (keys.hasNext())
+        for (Iterator<String> keys = configuration.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = configuration.getProperty(key);
             out.print(key);
             out.print("=");
@@ -129,9 +128,9 @@ public final class ConfigurationUtils
      * configuration. Properties in the target configuration are replaced with
      * the properties with the same key in the source configuration.</p>
      * <p><em>Note:</em> This method is not able to handle some specifics of
-     * configurations derived from <code>AbstractConfiguration</code> (e.g.
+     * configurations derived from {@code AbstractConfiguration} (e.g.
      * list delimiters). For a full support of all of these features the
-     * <code>copy()</code> method of <code>AbstractConfiguration</code> should
+     * {@code copy()} method of {@code AbstractConfiguration} should
      * be used. In a future release this method might become deprecated.</p>
      *
      * @param source the source configuration
@@ -140,10 +139,9 @@ public final class ConfigurationUtils
      */
     public static void copy(Configuration source, Configuration target)
     {
-        Iterator keys = source.getKeys();
-        while (keys.hasNext())
+        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             target.setProperty(key, source.getProperty(key));
         }
     }
@@ -153,9 +151,9 @@ public final class ConfigurationUtils
      * configuration. Properties in the source configuration are appended to
      * the properties with the same key in the target configuration.</p>
      * <p><em>Note:</em> This method is not able to handle some specifics of
-     * configurations derived from <code>AbstractConfiguration</code> (e.g.
+     * configurations derived from {@code AbstractConfiguration} (e.g.
      * list delimiters). For a full support of all of these features the
-     * <code>copy()</code> method of <code>AbstractConfiguration</code> should
+     * {@code copy()} method of {@code AbstractConfiguration} should
      * be used. In a future release this method might become deprecated.</p>
      *
      * @param source the source configuration
@@ -164,10 +162,9 @@ public final class ConfigurationUtils
      */
     public static void append(Configuration source, Configuration target)
     {
-        Iterator keys = source.getKeys();
-        while (keys.hasNext())
+        for (Iterator<String> keys = source.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             target.addProperty(key, source.getProperty(key));
         }
     }
@@ -189,23 +186,23 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Converts the passed in <code>Configuration</code> object to a
-     * hierarchical one using the specified <code>ExpressionEngine</code>. This
+     * Converts the passed in {@code Configuration} object to a
+     * hierarchical one using the specified {@code ExpressionEngine}. This
      * conversion works by adding the keys found in the configuration to a newly
      * created hierarchical configuration. When adding new keys to a
      * hierarchical configuration the keys are interpreted by its
-     * <code>ExpressionEngine</code>. If they contain special characters (e.g.
+     * {@code ExpressionEngine}. If they contain special characters (e.g.
      * brackets) that are treated in a special way by the default expression
      * engine, it may be necessary using a specific engine that can deal with
      * such characters. Otherwise <b>null</b> can be passed in for the
-     * <code>ExpressionEngine</code>; then the default expression engine is
+     * {@code ExpressionEngine}; then the default expression engine is
      * used. If the passed in configuration is already hierarchical, it is
-     * directly returned. (However, the <code>ExpressionEngine</code> is set if
+     * directly returned. (However, the {@code ExpressionEngine} is set if
      * it is not <b>null</b>.) Otherwise all properties are copied into a new
      * hierarchical configuration.
      *
      * @param conf the configuration to convert
-     * @param engine the <code>ExpressionEngine</code> for the hierarchical
+     * @param engine the {@code ExpressionEngine} for the hierarchical
      *        configuration or <b>null</b> for the default
      * @return the new hierarchical configuration (the result is <b>null</b> if
      *         and only if the passed in configuration is <b>null</b>)
@@ -260,8 +257,8 @@ public final class ConfigurationUtils
 
     /**
      * Clones the given configuration object if this is possible. If the passed
-     * in configuration object implements the <code>Cloneable</code>
-     * interface, its <code>clone()</code> method will be invoked. Otherwise
+     * in configuration object implements the {@code Cloneable}
+     * interface, its {@code clone()} method will be invoked. Otherwise
      * an exception will be thrown.
      *
      * @param config the configuration object to be cloned (can be <b>null</b>)
@@ -295,8 +292,8 @@ public final class ConfigurationUtils
      * An internally used helper method for cloning objects. This implementation
      * is not very sophisticated nor efficient. Maybe it can be replaced by an
      * implementation from Commons Lang later. The method checks whether the
-     * passed in object implements the <code>Cloneable</code> interface. If
-     * this is the case, the <code>clone()</code> method is invoked by
+     * passed in object implements the {@code Cloneable} interface. If
+     * this is the case, the {@code clone()} method is invoked by
      * reflection. Errors that occur during the cloning process are re-thrown as
      * runtime exceptions.
      *
@@ -310,8 +307,8 @@ public final class ConfigurationUtils
         {
             try
             {
-                Method m = obj.getClass().getMethod(METHOD_CLONE, null);
-                return m.invoke(obj, null);
+                Method m = obj.getClass().getMethod(METHOD_CLONE);
+                return m.invoke(obj);
             }
             catch (NoSuchMethodException nmex)
             {
@@ -353,7 +350,7 @@ public final class ConfigurationUtils
     /**
      * Helper method for constructing a file object from a base path and a
      * file name. This method is called if the base path passed to
-     * <code>getURL()</code> does not seem to be a valid URL.
+     * {@code getURL()} does not seem to be a valid URL.
      *
      * @param basePath the base path
      * @param fileName the file name
@@ -375,7 +372,7 @@ public final class ConfigurationUtils
         }
         else
         {
-            StringBuffer fName = new StringBuffer();
+            StringBuilder fName = new StringBuilder();
             fName.append(basePath);
 
             // My best friend. Paranoia.
@@ -446,7 +443,7 @@ public final class ConfigurationUtils
     {
         if (LOG.isDebugEnabled())
         {
-            StringBuffer buf = new StringBuffer();
+            StringBuilder buf = new StringBuilder();
             buf.append("ConfigurationUtils.locate(): base is ").append(base);
             buf.append(", name is ").append(name);
             LOG.debug(buf.toString());
@@ -631,7 +628,7 @@ public final class ConfigurationUtils
      * further checks are performed whether the base path and file name can be
      * combined to a valid URL or a valid file name. <em>Note:</em> The test
      * if the passed in file name is absolute is performed using
-     * <code>java.io.File.isAbsolute()</code>. If the file name starts with a
+     * {@code java.io.File.isAbsolute()}. If the file name starts with a
      * slash, this method will return <b>true</b> on Unix, but <b>false</b> on
      * Windows. So to ensure correct behavior for relative file names on all
      * platforms you should never let relative paths start with a slash. E.g.
@@ -685,7 +682,7 @@ public final class ConfigurationUtils
     /**
      * Tries to convert the specified URL to a file object. If this fails,
      * <b>null</b> is returned. Note: This code has been copied from the
-     * <code>FileUtils</code> class from <em>Commons IO</em>.
+     * {@code FileUtils} class from <em>Commons IO</em>.
      *
      * @param url the URL
      * @return the resulting file object
@@ -732,16 +729,16 @@ public final class ConfigurationUtils
     /**
      * Enables runtime exceptions for the specified configuration object. This
      * method can be used for configuration implementations that may face errors
-     * on normal property access, e.g. <code>DatabaseConfiguration</code> or
-     * <code>JNDIConfiguration</code>. Per default such errors are simply
+     * on normal property access, e.g. {@code DatabaseConfiguration} or
+     * {@code JNDIConfiguration}. Per default such errors are simply
      * logged and then ignored. This implementation will register a special
-     * <code>{@link ConfigurationErrorListener}</code> that throws a runtime
-     * exception (namely a <code>ConfigurationRuntimeException</code>) on
+     * {@link ConfigurationErrorListener} that throws a runtime
+     * exception (namely a {@code ConfigurationRuntimeException}) on
      * each received error event.
      *
      * @param src the configuration, for which runtime exceptions are to be
      * enabled; this configuration must be derived from
-     * <code>{@link EventSource}</code>
+     * {@link EventSource}
      */
     public static void enableRuntimeExceptions(Configuration src)
     {
