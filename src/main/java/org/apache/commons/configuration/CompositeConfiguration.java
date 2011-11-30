@@ -20,9 +20,11 @@ package org.apache.commons.configuration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Set;
 
 /**
  * This Configuration class allows you to add multiple different types of Configuration
@@ -39,7 +41,7 @@ public class CompositeConfiguration extends AbstractConfiguration
 implements Cloneable
 {
     /** List holding all the configuration */
-    private List configList = new LinkedList();
+    private List<Configuration> configList = new LinkedList<Configuration>();
 
     /**
      * Configuration that holds in memory stuff.  Inserted as first so any
@@ -76,7 +78,7 @@ implements Cloneable
      *
      * @param configurations the collection of configurations to add
      */
-    public CompositeConfiguration(Collection configurations)
+    public CompositeConfiguration(Collection<? extends Configuration> configurations)
     {
         this(new BaseConfiguration(), configurations);
     }
@@ -88,16 +90,16 @@ implements Cloneable
      * @param inMemoryConfiguration the in memory configuration to use
      * @param configurations        the collection of configurations to add
      */
-    public CompositeConfiguration(Configuration inMemoryConfiguration, Collection configurations)
+    public CompositeConfiguration(Configuration inMemoryConfiguration,
+            Collection<? extends Configuration> configurations)
     {
         this(inMemoryConfiguration);
 
         if (configurations != null)
         {
-            Iterator it = configurations.iterator();
-            while (it.hasNext())
+            for (Configuration c : configurations)
             {
-                addConfiguration((Configuration) it.next());
+                addConfiguration(c);
             }
         }
     }
@@ -114,7 +116,7 @@ implements Cloneable
             // As the inMemoryConfiguration contains all manually added keys,
             // we must make sure that it is always last. "Normal", non composed
             // configuration add their keys at the end of the configuration and
-            // we want to mimic this behaviour.
+            // we want to mimic this behavior.
             configList.add(configList.indexOf(inMemoryConfiguration), config);
 
             if (config instanceof AbstractConfiguration)
@@ -152,6 +154,7 @@ implements Cloneable
     /**
      * Remove all configuration reinitialize the in memory configuration.
      */
+    @Override
     public void clear()
     {
         configList.clear();
@@ -169,6 +172,7 @@ implements Cloneable
      * @param key The Key to add the property to.
      * @param token The Value to add.
      */
+    @Override
     protected void addPropertyDirect(String key, Object token)
     {
         inMemoryConfiguration.addProperty(key, token);
@@ -184,9 +188,8 @@ implements Cloneable
     public Object getProperty(String key)
     {
         Configuration firstMatchingConfiguration = null;
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
             {
                 firstMatchingConfiguration = config;
@@ -204,42 +207,29 @@ implements Cloneable
         }
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        List keys = new ArrayList();
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        Set<String> keys = new LinkedHashSet<String>();
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
-
-            Iterator j = config.getKeys();
-            while (j.hasNext())
+            for (Iterator<String> it = config.getKeys(); it.hasNext();)
             {
-                String key = (String) j.next();
-                if (!keys.contains(key))
-                {
-                    keys.add(key);
-                }
+                keys.add(it.next());
             }
         }
 
         return keys.iterator();
     }
 
-    public Iterator getKeys(String key)
+    @Override
+    public Iterator<String> getKeys(String key)
     {
-        List keys = new ArrayList();
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        Set<String> keys = new LinkedHashSet<String>();
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
-
-            Iterator j = config.getKeys(key);
-            while (j.hasNext())
+            for (Iterator<String> it = config.getKeys(key); it.hasNext();)
             {
-                String newKey = (String) j.next();
-                if (!keys.contains(newKey))
-                {
-                    keys.add(newKey);
-                }
+                keys.add(it.next());
             }
         }
 
@@ -248,33 +238,30 @@ implements Cloneable
 
     public boolean isEmpty()
     {
-        boolean isEmpty = true;
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (!config.isEmpty())
             {
                 return false;
             }
         }
 
-        return isEmpty;
+        return true;
     }
 
+    @Override
     protected void clearPropertyDirect(String key)
     {
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             config.clearProperty(key);
         }
     }
 
     public boolean containsKey(String key)
     {
-        for (Iterator i = configList.iterator(); i.hasNext();)
+        for (Configuration config : configList)
         {
-            Configuration config = (Configuration) i.next();
             if (config.containsKey(key))
             {
                 return true;
@@ -283,15 +270,16 @@ implements Cloneable
         return false;
     }
 
-    public List getList(String key, List defaultValue)
+    @Override
+    public List<Object> getList(String key, List<Object> defaultValue)
     {
-        List list = new ArrayList();
+        List<Object> list = new ArrayList<Object>();
 
         // add all elements from the first configuration containing the requested key
-        Iterator it = configList.iterator();
+        Iterator<Configuration> it = configList.iterator();
         while (it.hasNext() && list.isEmpty())
         {
-            Configuration config = (Configuration) it.next();
+            Configuration config = it.next();
             if (config != inMemoryConfiguration && config.containsKey(key))
             {
                 appendListProperty(list, config, key);
@@ -306,7 +294,7 @@ implements Cloneable
             return defaultValue;
         }
 
-        ListIterator lit = list.listIterator();
+        ListIterator<Object> lit = list.listIterator();
         while (lit.hasNext())
         {
             lit.set(interpolate(lit.next()));
@@ -315,9 +303,10 @@ implements Cloneable
         return list;
     }
 
+    @Override
     public String[] getStringArray(String key)
     {
-        List list = getList(key);
+        List<Object> list = getList(key);
 
         // transform property values into strings
         String[] tokens = new String[list.size()];
@@ -362,6 +351,7 @@ implements Cloneable
      * @return the copy
      * @since 1.3
      */
+    @Override
     public Object clone()
     {
         try
@@ -369,14 +359,13 @@ implements Cloneable
             CompositeConfiguration copy = (CompositeConfiguration) super
                     .clone();
             copy.clearConfigurationListeners();
-            copy.configList = new LinkedList();
+            copy.configList = new LinkedList<Configuration>();
             copy.inMemoryConfiguration = ConfigurationUtils
                     .cloneConfiguration(getInMemoryConfiguration());
             copy.configList.add(copy.inMemoryConfiguration);
 
-            for (int i = 0; i < getNumberOfConfigurations(); i++)
+            for (Configuration config : configList)
             {
-                Configuration config = getConfiguration(i);
                 if (config != getInMemoryConfiguration())
                 {
                     copy.addConfiguration(ConfigurationUtils
@@ -401,6 +390,7 @@ implements Cloneable
      * @param delimiterParsingDisabled the new value of the flag
      * @since 1.4
      */
+    @Override
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {
         ((BaseConfiguration) getInMemoryConfiguration())
@@ -415,6 +405,7 @@ implements Cloneable
      * @param listDelimiter the new list delimiter character
      * @since 1.4
      */
+    @Override
     public void setListDelimiter(char listDelimiter)
     {
         ((BaseConfiguration) getInMemoryConfiguration())
@@ -435,7 +426,7 @@ implements Cloneable
      * <li>If none of the child configurations contain the key, <b>null</b> is
      * returned.</li>
      * <li>If the key is contained in multiple child configurations or if the
-     * key is <b>null</b>, a <code>IllegalArgumentException</code> is thrown.
+     * key is <b>null</b>, a {@code IllegalArgumentException} is thrown.
      * In this case the source configuration cannot be determined.</li>
      * </ul>
      *
@@ -453,9 +444,8 @@ implements Cloneable
         }
 
         Configuration source = null;
-        for (Iterator it = configList.iterator(); it.hasNext();)
+        for (Configuration conf : configList)
         {
-            Configuration conf = (Configuration) it.next();
             if (conf.containsKey(key))
             {
                 if (source != null)
@@ -472,14 +462,14 @@ implements Cloneable
 
     /**
      * Adds the value of a property to the given list. This method is used by
-     * <code>getList()</code> for gathering property values from the child
+     * {@code getList()} for gathering property values from the child
      * configurations.
      *
      * @param dest the list for collecting the data
      * @param config the configuration to query
      * @param key the key of the property
      */
-    private static void appendListProperty(List dest, Configuration config,
+    private static void appendListProperty(List<Object> dest, Configuration config,
             String key)
     {
         Object value = config.getProperty(key);
@@ -487,7 +477,8 @@ implements Cloneable
         {
             if (value instanceof Collection)
             {
-                dest.addAll((Collection) value);
+                Collection<?> col = (Collection<?>) value;
+                dest.addAll(col);
             }
             else
             {
