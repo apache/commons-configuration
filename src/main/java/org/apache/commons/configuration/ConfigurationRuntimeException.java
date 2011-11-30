@@ -25,7 +25,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class ConfigurationRuntimeException extends NestableRuntimeException
 {
@@ -35,7 +35,7 @@ public class ConfigurationRuntimeException extends NestableRuntimeException
     private static final long serialVersionUID = -7838702245512140996L;
 
     /**
-     * Constructs a new <code>ConfigurationRuntimeException</code> without
+     * Constructs a new {@code ConfigurationRuntimeException} without
      * specified detail message.
      */
     public ConfigurationRuntimeException()
@@ -44,7 +44,7 @@ public class ConfigurationRuntimeException extends NestableRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConfigurationRuntimeException</code> with
+     * Constructs a new {@code ConfigurationRuntimeException} with
      * specified detail message.
      *
      * @param message  the error message
@@ -55,8 +55,8 @@ public class ConfigurationRuntimeException extends NestableRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConfigurationRuntimeException</code> with
-     * specified nested <code>Throwable</code>.
+     * Constructs a new {@code ConfigurationRuntimeException} with
+     * specified nested {@code Throwable}.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
@@ -66,8 +66,8 @@ public class ConfigurationRuntimeException extends NestableRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConfigurationRuntimeException</code> with
-     * specified detail message and nested <code>Throwable</code>.
+     * Constructs a new {@code ConfigurationRuntimeException} with
+     * specified detail message and nested {@code Throwable}.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
