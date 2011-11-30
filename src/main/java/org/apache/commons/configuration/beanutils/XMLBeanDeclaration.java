@@ -16,28 +16,28 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertyConverter;
 import org.apache.commons.configuration.SubnodeConfiguration;
-import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 
 /**
  * <p>
- * An implementation of the <code>BeanDeclaration</code> interface that is
+ * An implementation of the {@code BeanDeclaration} interface that is
  * suitable for XML configuration files.
  * </p>
  * <p>
  * This class defines the standard layout of a bean declaration in an XML
  * configuration file. Such a declaration must look like the following example
- * fragement:
+ * fragment:
  * </p>
  * <p>
  *
@@ -54,27 +54,27 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * </p>
  * <p>
  * The bean declaration can be contained in an arbitrary element. Here it is the
- * <code>&lt;personBean&gt;</code> element. In the attributes of this element
+ * {@code personBean} element. In the attributes of this element
  * there can occur some reserved attributes, which have the following meaning:
  * <dl>
- * <dt><code>config-class</code></dt>
+ * <dt>{@code config-class}</dt>
  * <dd>Here the full qualified name of the bean's class can be specified. An
  * instance of this class will be created. If this attribute is not specified,
  * the bean class must be provided in another way, e.g. as the
- * <code>defaultClass</code> passed to the <code>BeanHelper</code> class.</dd>
- * <dt><code>config-factory</code></dt>
+ * {@code defaultClass} passed to the {@code BeanHelper} class.</dd>
+ * <dt>{@code config-factory}</dt>
  * <dd>This attribute can contain the name of the
- * <code>{@link BeanFactory}</code> that should be used for creating the bean.
+ * {@link BeanFactory} that should be used for creating the bean.
  * If it is defined, a factory with this name must have been registered at the
- * <code>BeanHelper</code> class. If this attribute is missing, the default
+ * {@code BeanHelper} class. If this attribute is missing, the default
  * bean factory will be used.</dd>
- * <dt><code>config-factoryParam</code></dt>
+ * <dt>{@code config-factoryParam}</dt>
  * <dd>With this attribute a parameter can be specified that will be passed to
  * the bean factory. This may be useful for custom bean factories.</dd>
  * </dl>
  * </p>
  * <p>
- * All further attributes starting with the <code>config-</code> prefix are
+ * All further attributes starting with the {@code config-} prefix are
  * considered as meta data and will be ignored. All other attributes are treated
  * as properties of the bean to be created, i.e. corresponding setter methods of
  * the bean will be invoked with the values specified here.
@@ -90,18 +90,20 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * nested elements for complex bean properties.
  * </p>
  * <p>
- * A <code>XMLBeanDeclaration</code> object is usually created from a
- * <code>HierarchicalConfiguration</code>. From this it will derive a
- * <code>SubnodeConfiguration</code>, which is used to access the needed
+ * A {@code XMLBeanDeclaration} object is usually created from a
+ * {@code HierarchicalConfiguration}. From this it will derive a
+ * {@code SubnodeConfiguration}, which is used to access the needed
  * properties. This subnode configuration can be obtained using the
- * <code>{@link #getConfiguration()}</code> method. All of its properties can
+ * {@link #getConfiguration()} method. All of its properties can
  * be accessed in the usual way. To ensure that the property keys used by this
  * class are understood by the configuration, the default expression engine will
  * be set.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class XMLBeanDeclaration implements BeanDeclaration
@@ -129,13 +131,13 @@ public class XMLBeanDeclaration implements BeanDeclaration
     private ConfigurationNode node;
 
     /**
-     * Creates a new instance of <code>XMLBeanDeclaration</code> and
+     * Creates a new instance of {@code XMLBeanDeclaration} and
      * initializes it from the given configuration. The passed in key points to
      * the bean declaration.
      *
      * @param config the configuration
      * @param key the key to the bean declaration (this key must point to
-     * exactly one bean declaration or a <code>IllegalArgumentException</code>
+     * exactly one bean declaration or a {@code IllegalArgumentException}
      * exception will be thrown)
      */
     public XMLBeanDeclaration(HierarchicalConfiguration config, String key)
@@ -144,14 +146,14 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Creates a new instance of <code>XMLBeanDeclaration</code> and
+     * Creates a new instance of {@code XMLBeanDeclaration} and
      * initializes it from the given configuration. The passed in key points to
      * the bean declaration. If the key does not exist and the boolean argument
      * is <b>true</b>, the declaration is initialized with an empty
      * configuration. It is possible to create objects from such an empty
      * declaration if a default class is provided. If the key on the other hand
      * has multiple values or is undefined and the boolean argument is <b>false</b>,
-     * a <code>IllegalArgumentException</code> exception will be thrown.
+     * a {@code IllegalArgumentException} exception will be thrown.
      *
      * @param config the configuration
      * @param key the key to the bean declaration
@@ -187,7 +189,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Creates a new instance of <code>XMLBeanDeclaration</code> and
+     * Creates a new instance of {@code XMLBeanDeclaration} and
      * initializes it from the given configuration. The configuration's root
      * node must contain the bean declaration.
      *
@@ -199,7 +201,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Creates a new instance of <code>XMLBeanDeclaration</code> and
+     * Creates a new instance of {@code XMLBeanDeclaration} and
      * initializes it with the configuration node that contains the bean
      * declaration.
      *
@@ -246,7 +248,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
     /**
      * Returns the name of the bean factory. This information is fetched from
-     * the <code>config-factory</code> attribute.
+     * the {@code config-factory} attribute.
      *
      * @return the name of the bean factory
      */
@@ -257,7 +259,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
     /**
      * Returns a parameter for the bean factory. This information is fetched
-     * from the <code>config-factoryParam</code> attribute.
+     * from the {@code config-factoryParam} attribute.
      *
      * @return the parameter for the bean factory
      */
@@ -268,7 +270,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
     /**
      * Returns the name of the class of the bean to be created. This information
-     * is obtained from the <code>config-class</code> attribute.
+     * is obtained from the {@code config-class} attribute.
      *
      * @return the name of the bean's class
      */
@@ -283,12 +285,11 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return a map with the bean's properties
      */
-    public Map getBeanProperties()
+    public Map<String, Object> getBeanProperties()
     {
-        Map props = new HashMap();
-        for (Iterator it = getNode().getAttributes().iterator(); it.hasNext();)
+        Map<String, Object> props = new HashMap<String, Object>();
+        for (ConfigurationNode attr : getNode().getAttributes())
         {
-            ConfigurationNode attr = (ConfigurationNode) it.next();
             if (!isReservedNode(attr))
             {
                 props.put(attr.getName(), interpolate(attr .getValue()));
@@ -305,26 +306,28 @@ public class XMLBeanDeclaration implements BeanDeclaration
      *
      * @return a map with bean declarations for complex properties
      */
-    public Map getNestedBeanDeclarations()
+    public Map<String, Object> getNestedBeanDeclarations()
     {
-        Map nested = new HashMap();
-        for (Iterator it = getNode().getChildren().iterator(); it.hasNext();)
+        Map<String, Object> nested = new HashMap<String, Object>();
+        for (ConfigurationNode child : getNode().getChildren())
         {
-            ConfigurationNode child = (ConfigurationNode) it.next();
             if (!isReservedNode(child))
             {
                 if (nested.containsKey(child.getName()))
                 {
                     Object obj = nested.get(child.getName());
-                    List list;
+                    List<BeanDeclaration> list;
                     if (obj instanceof List)
                     {
-                        list = (List) obj;
+                        // Safe because we created the lists ourselves.
+                        @SuppressWarnings("unchecked")
+                        List<BeanDeclaration> tmpList = (List<BeanDeclaration>) obj;
+                        list = tmpList;
                     }
                     else
                     {
-                        list = new ArrayList();
-                        list.add(obj);
+                        list = new ArrayList<BeanDeclaration>();
+                        list.add((BeanDeclaration) obj);
                         nested.put(child.getName(), list);
                     }
                     list.add(createBeanDeclaration(child));
@@ -372,29 +375,29 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Creates a new <code>BeanDeclaration</code> for a child node of the
+     * Creates a new {@code BeanDeclaration} for a child node of the
      * current configuration node. This method is called by
-     * <code>getNestedBeanDeclarations()</code> for all complex sub properties
+     * {@code getNestedBeanDeclarations()} for all complex sub properties
      * detected by this method. Derived classes can hook in if they need a
      * specific initialization. This base implementation creates a
-     * <code>XMLBeanDeclaration</code> that is properly initialized from the
+     * {@code XMLBeanDeclaration} that is properly initialized from the
      * passed in node.
      *
-     * @param node the child node, for which a <code>BeanDeclaration</code> is
+     * @param node the child node, for which a {@code BeanDeclaration} is
      *        to be created
-     * @return the <code>BeanDeclaration</code> for this child node
+     * @return the {@code BeanDeclaration} for this child node
      * @since 1.6
      */
     protected BeanDeclaration createBeanDeclaration(ConfigurationNode node)
     {
-        List list = getConfiguration().configurationsAt(node.getName());
+        List<HierarchicalConfiguration> list = getConfiguration().configurationsAt(node.getName());
         if (list.size() == 1)
         {
             return new XMLBeanDeclaration((SubnodeConfiguration) list.get(0), node);
         }
         else
         {
-            Iterator iter = list.iterator();
+            Iterator<HierarchicalConfiguration> iter = list.iterator();
             while (iter.hasNext())
             {
                 SubnodeConfiguration config = (SubnodeConfiguration) iter.next();
