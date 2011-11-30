@@ -55,17 +55,17 @@ import org.xml.sax.EntityResolver;
  * configuration sources and combining the results into a single configuration
  * object. The sources to be loaded are defined in an XML document that can
  * contain certain tags representing the different supported configuration
- * classes. If such a tag is found, the corresponding <code>Configuration</code>
+ * classes. If such a tag is found, the corresponding {@code Configuration}
  * class is instantiated and initialized using the classes of the
- * <code>beanutils</code> package (namely
- * <code>{@link org.apache.commons.configuration.beanutils.XMLBeanDeclaration XMLBeanDeclaration}</code>
+ * {@code beanutils} package (namely
+ * {@link org.apache.commons.configuration.beanutils.XMLBeanDeclaration XMLBeanDeclaration}
  * will be used to extract the configuration's initialization parameters, which
  * allows for complex initialization scenarios).
  * </p>
  * <p>
  * It is also possible to add custom tags to the configuration definition file.
- * For this purpose register your own <code>ConfigurationProvider</code>
- * implementation for your tag using the <code>addConfigurationProvider()</code>
+ * For this purpose register your own {@code ConfigurationProvider}
+ * implementation for your tag using the {@code addConfigurationProvider()}
  * method. This provider will then be called when the corresponding custom tag
  * is detected. For the default configuration classes providers are already
  * registered.
@@ -91,7 +91,7 @@ import org.xml.sax.EntityResolver;
  *
  * </p>
  * <p>
- * The name of the root element (here <code>configuration</code>) is
+ * The name of the root element (here {@code configuration}) is
  * arbitrary. The optional systemProperties attribute identifies the path to
  * a property file containing properties that should be added to the system
  * properties. If specified on the root element, the system properties are
@@ -109,8 +109,8 @@ import org.xml.sax.EntityResolver;
  * </p>
  * <p>
  * Each configuration declaration consists of a tag whose name is associated
- * with a <code>ConfigurationProvider</code>. This can be one of the
- * predefined tags like <code>properties</code>, or <code>xml</code>, or
+ * with a {@code ConfigurationProvider}. This can be one of the
+ * predefined tags like {@code properties}, or {@code xml}, or
  * a custom tag, for which a configuration provider was registered. Attributes
  * and sub elements with specific initialization parameters can be added. There
  * are some reserved attributes with a special meaning that can be used in every
@@ -123,23 +123,23 @@ import org.xml.sax.EntityResolver;
  * <th>Meaning</th>
  * </tr>
  * <tr>
- * <td valign="top"><code>config-name</code></td>
+ * <td valign="top">{@code config-name}</td>
  * <td>Allows to specify a name for this configuration. This name can be used
  * to obtain a reference to the configuration from the resulting combined
  * configuration (see below).</td>
  * </tr>
  * <tr>
- * <td valign="top"><code>config-at</code></td>
+ * <td valign="top">{@code config-at}</td>
  * <td>With this attribute an optional prefix can be specified for the
  * properties of the corresponding configuration.</td>
  * </tr>
  * <tr>
- * <td valign="top"><code>config-optional</code></td>
+ * <td valign="top">{@code config-optional}</td>
  * <td>Declares a configuration as optional. This means that errors that occur
  * when creating the configuration are ignored. (However
- * <code>{@link org.apache.commons.configuration.event.ConfigurationErrorListener}</code>s
+ * {@link org.apache.commons.configuration.event.ConfigurationErrorListener}s
  * registered at the builder instance will get notified about this error: they
- * receive an event of type <code>EVENT_ERR_LOAD_OPTIONAL</code>. The key
+ * receive an event of type {@code EVENT_ERR_LOAD_OPTIONAL}. The key
  * property of this event contains the name of the optional configuration source
  * that caused this problem.)</td>
  * </tr>
@@ -148,15 +148,15 @@ import org.xml.sax.EntityResolver;
  * <p>
  * The optional <em>header</em> section can contain some meta data about the
  * created configuration itself. For instance, it is possible to set further
- * properties of the <code>NodeCombiner</code> objects used for constructing
+ * properties of the {@code NodeCombiner} objects used for constructing
  * the resulting configuration.
  * </p>
  * <p>
  * The default configuration object returned by this builder is an instance of the
- * <code>{@link CombinedConfiguration}</code> class. The return value of the
- * <code>getConfiguration()</code> method can be casted to this type, and the
- * <code>getConfiguration(boolean)</code> method directly declares
- * <code>CombinedConfiguration</code> as return type. This allows for
+ * {@link CombinedConfiguration} class. The return value of the
+ * {@code getConfiguration()} method can be casted to this type, and the
+ * {@code getConfiguration(boolean)} method directly declares
+ * {@code CombinedConfiguration} as return type. This allows for
  * convenient access to the configuration objects maintained by the combined
  * configuration (e.g. for updates of single configuration objects). It has also
  * the advantage that the properties stored in all declared configuration
@@ -196,17 +196,17 @@ import org.xml.sax.EntityResolver;
  * <p>
  * All declared override configurations are directly added to the resulting
  * combined configuration. If they are given names (using the
- * <code>config-name</code> attribute), they can directly be accessed using
- * the <code>getConfiguration(String)</code> method of
- * <code>CombinedConfiguration</code>. The additional configurations are
+ * {@code config-name} attribute), they can directly be accessed using
+ * the {@code getConfiguration(String)} method of
+ * {@code CombinedConfiguration}. The additional configurations are
  * altogether added to another combined configuration, which uses a union
  * combiner. Then this union configuration is added to the resulting combined
- * configuration under the name defined by the <code>ADDITIONAL_NAME</code>
+ * configuration under the name defined by the {@code ADDITIONAL_NAME}
  * constant.
  * </p>
  * <p>
  * Implementation note: This class is not thread-safe. Especially the
- * <code>getConfiguration()</code> methods should be called by a single thread
+ * {@code getConfiguration()} methods should be called by a single thread
  * only.
  * </p>
  *
@@ -221,7 +221,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 {
     /**
      * Constant for the name of the additional configuration. If the
-     * configuration definition file contains an <code>additional</code>
+     * configuration definition file contains an {@code additional}
      * section, a special union configuration is created and added under this
      * name to the resulting combined configuration.
      */
@@ -418,13 +418,13 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private CombinedConfiguration constructedConfiguration;
 
     /** Stores a map with the registered configuration providers. */
-    private Map providers;
+    private Map<String, ConfigurationProvider> providers;
 
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code>. A
+     * Creates a new instance of {@code DefaultConfigurationBuilder}. A
      * configuration definition file is not yet loaded. Use the diverse setter
      * methods provided by file based configurations to specify the
      * configuration definition file.
@@ -432,7 +432,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     public DefaultConfigurationBuilder()
     {
         super();
-        providers = new HashMap();
+        providers = new HashMap<String, ConfigurationProvider>();
         registerDefaultProviders();
         registerBeanFactory();
         setLogger(LogFactory.getLog(getClass()));
@@ -440,7 +440,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * Creates a new instance of {@code DefaultConfigurationBuilder} and
      * sets the specified configuration definition file.
      *
      * @param file the configuration definition file
@@ -452,7 +452,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * Creates a new instance of {@code DefaultConfigurationBuilder} and
      * sets the specified configuration definition file.
      *
      * @param fileName the name of the configuration definition file
@@ -466,7 +466,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Creates a new instance of <code>DefaultConfigurationBuilder</code> and
+     * Creates a new instance of {@code DefaultConfigurationBuilder} and
      * sets the specified configuration definition file.
      *
      * @param url the URL to the configuration definition file
@@ -596,11 +596,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         CombinedConfiguration result = createResultConfiguration();
         constructedConfiguration = result;
 
-        List overrides = fetchTopLevelOverrideConfigs();
+        List<SubnodeConfiguration> overrides = fetchTopLevelOverrideConfigs();
         overrides.addAll(fetchChildConfigs(KEY_OVERRIDE));
         initCombinedConfiguration(result, overrides, KEY_OVERRIDE_LIST);
 
-        List additionals = fetchChildConfigs(KEY_UNION);
+        List<SubnodeConfiguration> additionals = fetchChildConfigs(KEY_UNION);
         if (!additionals.isEmpty())
         {
             CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
@@ -614,9 +614,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /**
      * Creates the resulting combined configuration. This method is called by
-     * <code>getConfiguration()</code>. It checks whether the
-     * <code>header</code> section of the configuration definition file
-     * contains a <code>result</code> element. If this is the case, it will be
+     * {@code getConfiguration()}. It checks whether the
+     * {@code header} section of the configuration definition file
+     * contains a {@code result} element. If this is the case, it will be
      * used to initialize the properties of the newly created configuration
      * object.
      *
@@ -640,15 +640,15 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Creates the <code>CombinedConfiguration</code> for the configuration
+     * Creates the {@code CombinedConfiguration} for the configuration
      * sources in the <code>&lt;additional&gt;</code> section. This method is
      * called when the builder constructs the final configuration. It creates a
-     * new <code>CombinedConfiguration</code> and initializes some properties
+     * new {@code CombinedConfiguration} and initializes some properties
      * from the result configuration.
      *
      * @param resultConfig the result configuration (this is the configuration
      *        that will be returned by the builder)
-     * @return the <code>CombinedConfiguration</code> for the additional
+     * @return the {@code CombinedConfiguration} for the additional
      *         configuration sources
      * @since 1.7
      */
@@ -677,18 +677,17 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @throws ConfigurationException if an error occurs
      */
     protected void initCombinedConfiguration(CombinedConfiguration config,
-            List containedConfigs, String keyListNodes) throws ConfigurationException
+            List<? extends HierarchicalConfiguration> containedConfigs,
+            String keyListNodes) throws ConfigurationException
     {
-        List listNodes = getList(keyListNodes);
-        for (Iterator it = listNodes.iterator(); it.hasNext();)
+        List<Object> listNodes = getList(keyListNodes);
+        for (Object listNode : listNodes)
         {
-            config.getNodeCombiner().addListNode((String) it.next());
+            config.getNodeCombiner().addListNode((String) listNode);
         }
 
-        for (Iterator it = containedConfigs.iterator(); it.hasNext();)
+        for (HierarchicalConfiguration conf : containedConfigs)
         {
-            HierarchicalConfiguration conf = (HierarchicalConfiguration) it
-                    .next();
             ConfigurationDeclaration decl = new ConfigurationDeclaration(this,
                     conf);
             if (getLogger().isDebugEnabled())
@@ -725,10 +724,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     protected void registerConfiguredProviders() throws ConfigurationException
     {
-        List nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        List<HierarchicalConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
+        for (HierarchicalConfiguration config : nodes)
         {
-            HierarchicalConfiguration config = (HierarchicalConfiguration) it.next();
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_PROVIDER_KEY);
             addConfigurationProvider(key, (ConfigurationProvider) BeanHelper
@@ -743,10 +741,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     protected void registerConfiguredLookups() throws ConfigurationException
     {
-        List nodes = configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        List<HierarchicalConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_LOOKUPS);
+        for (HierarchicalConfiguration config : nodes)
         {
-            HierarchicalConfiguration config = (HierarchicalConfiguration) it.next();
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
             StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
@@ -810,6 +807,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @param value the value to be interpolated
      * @return the interpolated value
      */
+    @Override
     protected Object interpolate(Object value)
     {
         Object result = super.interpolate(value);
@@ -818,14 +816,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             result = constructedConfiguration.interpolate(result);
         }
         return result;
-    }
-
-    protected void fireError(int type, String propName, Object propValue,
-            Throwable ex)
-    {
-        // This method is only overridden to fix a mysterious MethodNotFound
-        // error in the test cases when run under a JDK 1.3.
-        super.fireError(type, propName, propValue, ex);
     }
 
     /**
@@ -851,40 +841,40 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * Returns a list with {@code SubnodeConfiguration} objects for the
      * child nodes of the specified configuration node.
      *
      * @param node the start node
      * @return a list with subnode configurations for the node's children
      */
-    private List fetchChildConfigs(ConfigurationNode node)
+    private List<SubnodeConfiguration> fetchChildConfigs(ConfigurationNode node)
     {
-        List children = node.getChildren();
-        List result = new ArrayList(children.size());
-        for (Iterator it = children.iterator(); it.hasNext();)
+        List<ConfigurationNode> children = node.getChildren();
+        List<SubnodeConfiguration> result = new ArrayList<SubnodeConfiguration>(children.size());
+        for (ConfigurationNode child : children)
         {
-            result.add(createSubnodeConfiguration((Node) it.next()));
+            result.add(createSubnodeConfiguration(child));
         }
         return result;
     }
 
     /**
-     * Returns a list with <code>SubnodeConfiguration</code> objects for the
+     * Returns a list with {@code SubnodeConfiguration} objects for the
      * child nodes of the node specified by the given key.
      *
      * @param key the key (must define exactly one node)
      * @return a list with subnode configurations for the node's children
      */
-    private List fetchChildConfigs(String key)
+    private List<SubnodeConfiguration> fetchChildConfigs(String key)
     {
-        List nodes = fetchNodeList(key);
+        List<ConfigurationNode> nodes = fetchNodeList(key);
         if (nodes.size() > 0)
         {
-            return fetchChildConfigs((ConfigurationNode) nodes.get(0));
+            return fetchChildConfigs(nodes.get(0));
         }
         else
         {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
     }
 
@@ -898,13 +888,12 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @return a list with subnode configurations for the top level override
      * configurations
      */
-    private List fetchTopLevelOverrideConfigs()
+    private List<SubnodeConfiguration> fetchTopLevelOverrideConfigs()
     {
-        List configs = fetchChildConfigs(getRootNode());
-        for (Iterator it = configs.iterator(); it.hasNext();)
+        List<SubnodeConfiguration> configs = fetchChildConfigs(getRootNode());
+        for (Iterator<SubnodeConfiguration> it = configs.iterator(); it.hasNext();)
         {
-            String nodeName = ((SubnodeConfiguration) it.next()).getRootNode()
-                    .getName();
+            String nodeName = it.next().getRootNode().getName();
             for (int i = 0; i < CONFIG_SECTIONS.length; i++)
             {
                 if (CONFIG_SECTIONS[i].equals(nodeName))
@@ -941,49 +930,48 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * </p>
      * <p>
      * Concrete sub classes of this base class are responsible for creating
-     * specific <code>Configuration</code> objects for the tags in the
+     * specific {@code Configuration} objects for the tags in the
      * configuration definition file. The configuration factory will parse the
      * definition file and try to find a matching
-     * <code>ConfigurationProvider</code> for each encountered tag. This
+     * {@code ConfigurationProvider} for each encountered tag. This
      * provider is then asked to create a corresponding
-     * <code>Configuration</code> object. It is up to a concrete
+     * {@code Configuration} object. It is up to a concrete
      * implementation how this object is created and initialized.
      * </p>
      * <p>
      * Note that at the moment only configuration classes derived from
-     * <code>{@link AbstractConfiguration}</code> are supported.
+     * {@link AbstractConfiguration} are supported.
      * </p>
      */
     public static class ConfigurationProvider extends DefaultBeanFactory
     {
         /** Stores the class of the configuration to be created. */
-        private Class configurationClass;
+        private Class<?> configurationClass;
 
         /** Stores the name of the configuration class to be created.*/
         private String configurationClassName;
 
         /**
-         * Creates a new uninitialized instance of
-         * <code>ConfigurationProvider</code>.
+         * Creates a new uninitialized instance of {@code ConfigurationProvider}.
          */
         public ConfigurationProvider()
         {
-            this((Class) null);
+            this((Class<?>) null);
         }
 
         /**
-         * Creates a new instance of <code>ConfigurationProvider</code> and
+         * Creates a new instance of {@code ConfigurationProvider} and
          * sets the class of the configuration created by this provider.
          *
          * @param configClass the configuration class
          */
-        public ConfigurationProvider(Class configClass)
+        public ConfigurationProvider(Class<?> configClass)
         {
             setConfigurationClass(configClass);
         }
 
         /**
-         * Creates a new instance of <code>ConfigurationProvider</code> and
+         * Creates a new instance of {@code ConfigurationProvider} and
          * sets the name of the class of the configuration created by this
          * provider.
          *
@@ -1000,7 +988,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the class of the provided configuration
          */
-        public Class getConfigurationClass()
+        public Class<?> getConfigurationClass()
         {
             return configurationClass;
         }
@@ -1010,7 +998,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @param configurationClass the configuration class
          */
-        public void setConfigurationClass(Class configurationClass)
+        public void setConfigurationClass(Class<?> configurationClass)
         {
             this.configurationClass = configurationClass;
         }
@@ -1041,9 +1029,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Returns the configuration. This method is called to fetch the
          * configuration from the provider. This implementation will call the
-         * inherited <code>{@link
+         * inherited {@link
          * org.apache.commons.configuration.beanutils.DefaultBeanFactory#createBean(Class, BeanDeclaration, Object)
-         * createBean()}</code> method to create a new instance of the
+         * createBean()} method to create a new instance of the
          * configuration class.
          *
          * @param decl the bean declaration with initialization parameters for
@@ -1061,8 +1049,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Returns an uninitialized configuration of the represented type. This
          * method will be called for optional configurations when the
-         * <code>getConfiguration()</code> method caused an error and the
-         * <code>forceCreate</code> attribute is set. A concrete sub class can
+         * {@code getConfiguration()} method caused an error and the
+         * {@code forceCreate} attribute is set. A concrete sub class can
          * here try to create an uninitialized, empty configuration, which may
          * be possible if the error was created during initialization. This base
          * implementation just returns <b>null</b>.
@@ -1087,7 +1075,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the class of the configuration to be created
          * @since 1.4
          */
-        protected synchronized Class fetchConfigurationClass() throws Exception
+        protected synchronized Class<?> fetchConfigurationClass() throws Exception
         {
             if (getConfigurationClass() == null)
             {
@@ -1105,7 +1093,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws ClassNotFoundException if class loading fails
          * @since 1.4
          */
-        protected Class loadClass(String className)
+        protected Class<?> loadClass(String className)
                 throws ClassNotFoundException
         {
             return (className != null) ? Class.forName(className, true,
@@ -1115,16 +1103,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /**
      * <p>
-     * A specialized <code>BeanDeclaration</code> implementation that
+     * A specialized {@code BeanDeclaration} implementation that
      * represents the declaration of a configuration source.
      * </p>
      * <p>
      * Instances of this class are able to extract all information about a
      * configuration source from the configuration definition file. The
      * declaration of a configuration source is very similar to a bean
-     * declaration processed by <code>XMLBeanDeclaration</code>. There are
+     * declaration processed by {@code XMLBeanDeclaration}. There are
      * very few differences, e.g. some reserved attributes like
-     * <code>optional</code> and <code>at</code> and the fact that a bean
+     * {@code optional} and {@code at} and the fact that a bean
      * factory is never needed.
      * </p>
      */
@@ -1134,7 +1122,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         private DefaultConfigurationBuilder configurationBuilder;
 
         /**
-         * Creates a new instance of <code>ConfigurationDeclaration</code> and
+         * Creates a new instance of {@code ConfigurationDeclaration} and
          * initializes it.
          *
          * @param builder the associated configuration builder
@@ -1158,9 +1146,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
-         * Returns the value of the <code>at</code> attribute.
+         * Returns the value of the {@code at} attribute.
          *
-         * @return the value of the <code>at</code> attribute (can be <b>null</b>)
+         * @return the value of the {@code at} attribute (can be <b>null</b>)
          */
         public String getAt()
         {
@@ -1192,11 +1180,11 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * and added to the resulting combined configuration. This flag is
          * evaluated only for optional configurations whose normal creation has
          * caused an error. If for such a configuration the
-         * <code>forceCreate</code> attribute is set and the corresponding
+         * {@code forceCreate} attribute is set and the corresponding
          * configuration provider supports this mode, an empty configuration
          * will be created and added to the resulting combined configuration.
          *
-         * @return the value of the <code>forceCreate</code> attribute
+         * @return the value of the {@code forceCreate} attribute
          * @since 1.4
          */
         public boolean isForceCreate()
@@ -1211,6 +1199,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the name of the bean factory
          */
+        @Override
         public String getBeanFactoryName()
         {
             return CONFIG_BEAN_FACTORY_NAME;
@@ -1222,6 +1211,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the name of the bean's class
          */
+        @Override
         public String getBeanClassName()
         {
             return null;
@@ -1234,6 +1224,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param nd the node
          * @return a flag whether this node is reserved
          */
+        @Override
         protected boolean isReservedNode(ConfigurationNode nd)
         {
             if (super.isReservedNode(nd))
@@ -1256,6 +1247,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param value the value to be interpolated
          * @return the interpolated value
          */
+        @Override
         protected Object interpolate(Object value)
         {
             return getConfigurationBuilder().interpolate(value);
@@ -1263,7 +1255,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     }
 
     /**
-     * A specialized <code>BeanFactory</code> implementation that handles
+     * A specialized {@code BeanFactory} implementation that handles
      * configuration declarations. This class will retrieve the correct
      * configuration provider and delegate the task of creating the
      * configuration to this object.
@@ -1278,8 +1270,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * the passed in bean declaration is a declaration for a configuration.
          * It will determine the responsible configuration provider and delegate
          * the call to this instance. If creation of the configuration fails
-         * and the <code>optional</code> attribute is set, the exception will
-         * be ignored. If the <code>forceCreate</code> attribute is set, too,
+         * and the {@code optional} attribute is set, the exception will
+         * be ignored. If the {@code forceCreate} attribute is set, too,
          * the provider is asked to create an empty configuration. A return
          * value of <b>null</b> means that no configuration could be created.
          *
@@ -1289,7 +1281,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the newly created configuration
          * @throws Exception if an error occurs
          */
-        public Object createBean(Class beanClass, BeanDeclaration data,
+        public Object createBean(Class<?> beanClass, BeanDeclaration data,
                 Object param) throws Exception
         {
             ConfigurationDeclaration decl = (ConfigurationDeclaration) data;
@@ -1349,7 +1341,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          *
          * @return the default class
          */
-        public Class getDefaultBeanClass()
+        public Class<?> getDefaultBeanClass()
         {
             // Here some valid class must be returned, otherwise BeanHelper
             // will complain that the bean's class cannot be determined
@@ -1365,7 +1357,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     public static class FileConfigurationProvider extends ConfigurationProvider
     {
         /**
-         * Creates a new instance of <code>FileConfigurationProvider</code>.
+         * Creates a new instance of {@code FileConfigurationProvider}.
          */
         public FileConfigurationProvider()
         {
@@ -1373,18 +1365,18 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
-         * Creates a new instance of <code>FileConfigurationProvider</code>
+         * Creates a new instance of {@code FileConfigurationProvider}
          * and sets the configuration class.
          *
          * @param configClass the class for the configurations to be created
          */
-        public FileConfigurationProvider(Class configClass)
+        public FileConfigurationProvider(Class<?> configClass)
         {
             super(configClass);
         }
 
         /**
-         * Creates a new instance of <code>FileConfigurationProvider</code>
+         * Creates a new instance of {@code FileConfigurationProvider}
          * and sets the configuration class name.
          *
          * @param configClassName the name of the configuration to be created
@@ -1396,7 +1388,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         }
 
         /**
-         * Creates the configuration. After that <code>load()</code> will be
+         * Creates the configuration. After that {@code load()} will be
          * called. If this configuration is marked as optional, exceptions will
          * be ignored.
          *
@@ -1404,6 +1396,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration
          * @throws Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1423,9 +1416,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Returns an uninitialized file configuration. This method will be
          * called for optional configurations when the
-         * <code>getConfiguration()</code> method caused an error and the
-         * <code>forceCreate</code> attribute is set. It will create the
-         * configuration of the represented type, but the <code>load()</code>
+         * {@code getConfiguration()} method caused an error and the
+         * {@code forceCreate} attribute is set. It will create the
+         * configuration of the represented type, but the {@code load()}
          * method won't be called. This way non-existing configuration files can
          * be handled gracefully: If loading a the file fails, an empty
          * configuration will be created that is already configured with the
@@ -1437,6 +1430,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1465,6 +1459,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @param data the declaration
          * @throws Exception if an error occurs
          */
+        @Override
         protected void initBeanInstance(Object bean, BeanDeclaration data)
                 throws Exception
         {
@@ -1477,7 +1472,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
     /**
      * A specialized configuration provider for XML configurations. This
-     * implementation acts like a <code>FileConfigurationProvider</code>, but
+     * implementation acts like a {@code FileConfigurationProvider}, but
      * it will copy all entity IDs that have been registered for the
      * configuration builder to the new XML configuration before it is loaded.
      *
@@ -1486,7 +1481,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     public static class XMLConfigurationProvider extends FileConfigurationProvider
     {
         /**
-         * Creates a new instance of <code>XMLConfigurationProvider</code>.
+         * Creates a new instance of {@code XMLConfigurationProvider}.
          */
         public XMLConfigurationProvider()
         {
@@ -1502,6 +1497,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new configuration
          * @throws Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1529,7 +1525,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * A specialized configuration provider for file based configurations that
      * can handle configuration sources whose concrete type depends on the
      * extension of the file to be loaded. One example is the
-     * <code>properties</code> tag: if the file ends with ".xml" a
+     * {@code properties} tag: if the file ends with ".xml" a
      * XMLPropertiesConfiguration object must be created, otherwise a
      * PropertiesConfiguration object.
      */
@@ -1539,7 +1535,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         /**
          * Stores the class to be created when the file extension matches.
          */
-        private Class matchingClass;
+        private Class<?> matchingClass;
 
         /**
          * Stores the name of the class to be created when the file extension
@@ -1551,7 +1547,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * Stores the class to be created when the file extension does not
          * match.
          */
-        private Class defaultClass;
+        private Class<?> defaultClass;
 
         /**
          * Stores the name of the class to be created when the file extension
@@ -1564,16 +1560,16 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
         /**
          * Creates a new instance of
-         * <code>FileExtensionConfigurationProvider</code> and initializes it.
+         * {@code FileExtensionConfigurationProvider} and initializes it.
          *
          * @param matchingClass the class to be created when the file extension
          * matches
          * @param defaultClass the class to be created when the file extension
          * does not match
-         * @param extension the file extension to be checked agains
+         * @param extension the file extension to be checked against
          */
-        public FileExtensionConfigurationProvider(Class matchingClass,
-                Class defaultClass, String extension)
+        public FileExtensionConfigurationProvider(Class<?> matchingClass,
+                Class<?> defaultClass, String extension)
         {
             this.matchingClass = matchingClass;
             this.defaultClass = defaultClass;
@@ -1582,7 +1578,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
         /**
          * Creates a new instance of
-         * <code>FileExtensionConfigurationProvider</code> and initializes it
+         * {@code FileExtensionConfigurationProvider} and initializes it
          * with the names of the classes to be created.
          *
          * @param matchingClassName the name of the class to be created when the
@@ -1608,7 +1604,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
-        protected synchronized Class fetchMatchingClass() throws Exception
+        protected synchronized Class<?> fetchMatchingClass() throws Exception
         {
             if (matchingClass == null)
             {
@@ -1625,7 +1621,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @throws Exception if an error occurs
          * @since 1.4
          */
-        protected synchronized Class fetchDefaultClass() throws Exception
+        protected synchronized Class<?> fetchDefaultClass() throws Exception
         {
             if (defaultClass == null)
             {
@@ -1643,7 +1639,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the new bean
          * @throws Exception if an error occurs
          */
-        protected Object createBeanInstance(Class beanClass,
+        @Override
+        protected Object createBeanInstance(Class<?> beanClass,
                 BeanDeclaration data) throws Exception
         {
             String fileName = ((ConfigurationDeclaration) data)
@@ -1667,7 +1664,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     static class ConfigurationBuilderProvider extends ConfigurationProvider
     {
         /**
-         * Creates a new instance of <code>ConfigurationBuilderProvider</code>.
+         * Creates a new instance of {@code ConfigurationBuilderProvider}.
          */
         public ConfigurationBuilderProvider()
         {
@@ -1682,6 +1679,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @return the configuration
          * @exception Exception if an error occurs
          */
+        @Override
         public AbstractConfiguration getConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1700,6 +1698,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * @exception Exception if an error occurs
          * @since 1.4
          */
+        @Override
         public AbstractConfiguration getEmptyConfiguration(
                 ConfigurationDeclaration decl) throws Exception
         {
@@ -1711,6 +1710,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
          * builder created by this provider inherits the properties from the
          * current configuration builder.
          */
+        @Override
         protected void initBeanInstance(Object bean, BeanDeclaration data)
                 throws Exception
         {
@@ -1743,17 +1743,14 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             child.setLogger(parent.getLogger());
 
             child.clearConfigurationListeners();
-            for (Iterator it = parent.getConfigurationListeners().iterator(); it
-                    .hasNext();)
+            for (ConfigurationListener l : parent.getConfigurationListeners())
             {
-                child.addConfigurationListener((ConfigurationListener) it
-                        .next());
+                child.addConfigurationListener(l);
             }
             child.clearErrorListeners();
-            for (Iterator it = parent.getErrorListeners().iterator(); it
-                    .hasNext();)
+            for (ConfigurationErrorListener l : parent.getErrorListeners())
             {
-                child.addErrorListener((ConfigurationErrorListener) it.next());
+                child.addErrorListener(l);
             }
         }
     }
