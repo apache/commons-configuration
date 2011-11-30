@@ -23,7 +23,7 @@ package org.apache.commons.configuration;
  * </p>
  * <p>
  * This interface defines an abstract way of creating a
- * <code>Configuration</code> object. It does not assume any specific way of
+ * {@code Configuration} object. It does not assume any specific way of
  * how this is done; this is completely in the responsibility of an
  * implementation class. There is just a single method that returns the
  * configuration constructed by this builder.
@@ -37,7 +37,7 @@ public interface ConfigurationBuilder
     /**
      * Returns the configuration provided by this builder. An implementation has
      * to perform all necessary steps for creating and initializing a
-     * <code>Configuration</code> object.
+     * {@code Configuration} object.
      *
      * @return the configuration
      * @throws ConfigurationException if an error occurs
