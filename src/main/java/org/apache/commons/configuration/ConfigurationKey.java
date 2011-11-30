@@ -25,8 +25,8 @@ import java.util.NoSuchElementException;
  * <p>A simple class that supports creation of and iteration on complex
  * configuration keys.</p>
  *
- * <p>For key creation the class works similar to a StringBuffer: There are
- * several <code>appendXXXX()</code> methods with which single parts
+ * <p>For key creation the class works similar to a StringBuilder: There are
+ * several {@code appendXXXX()} methods with which single parts
  * of a key can be constructed. All these methods return a reference to the
  * actual object so they can be written in a chain. When using this methods
  * the exact syntax for keys need not be known.</p>
@@ -35,7 +35,9 @@ import java.util.NoSuchElementException;
  * With such an iterator a key can be tokenized into its single parts. For
  * each part it can be checked whether it has an associated index.</p>
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class ConfigurationKey implements Serializable
@@ -59,7 +61,7 @@ public class ConfigurationKey implements Serializable
     /** Constant for an index end marker.*/
     private static final char INDEX_END = ')';
 
-    /** Constant for the initial StringBuffer size.*/
+    /** Constant for the initial StringBuilder size.*/
     private static final int INITIAL_SIZE = 32;
 
     /**
@@ -68,25 +70,25 @@ public class ConfigurationKey implements Serializable
     private static final long serialVersionUID = -4299732083605277656L;
 
     /** Holds a buffer with the so far created key.*/
-    private StringBuffer keyBuffer;
+    private StringBuilder keyBuffer;
 
     /**
-     * Creates a new, empty instance of <code>ConfigurationKey</code>.
+     * Creates a new, empty instance of {@code ConfigurationKey}.
      */
     public ConfigurationKey()
     {
-        keyBuffer = new StringBuffer(INITIAL_SIZE);
+        keyBuffer = new StringBuilder(INITIAL_SIZE);
     }
 
     /**
-     * Creates a new instance of <code>ConfigurationKey</code> and
+     * Creates a new instance of {@code ConfigurationKey} and
      * initializes it with the given key.
      *
      * @param key the key as a string
      */
     public ConfigurationKey(String key)
     {
-        keyBuffer = new StringBuffer(key);
+        keyBuffer = new StringBuilder(key);
         removeTrailingDelimiter();
     }
 
@@ -168,7 +170,7 @@ public class ConfigurationKey implements Serializable
      */
     public static String constructAttributeKey(String key)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(ATTRIBUTE_START).append(key).append(ATTRIBUTE_END);
         return buf.toString();
     }
@@ -231,6 +233,7 @@ public class ConfigurationKey implements Serializable
      *
      * @return a string for this object
      */
+    @Override
     public String toString()
     {
         return keyBuffer.toString();
@@ -260,8 +263,8 @@ public class ConfigurationKey implements Serializable
     /**
      * Sets the new length of this configuration key. With this method it is
      * possible to truncate the key, e.g. to return to a state prior calling
-     * some <code>append()</code> methods. The semantic is the same as
-     * the <code>setLength()</code> method of <code>StringBuffer</code>.
+     * some {@code append()} methods. The semantic is the same as
+     * the {@code setLength()} method of {@code StringBuilder}.
      *
      * @param len the new length of the key
      */
@@ -271,12 +274,13 @@ public class ConfigurationKey implements Serializable
     }
 
     /**
-     * Checks if two <code>ConfigurationKey</code> objects are equal. The
+     * Checks if two {@code ConfigurationKey} objects are equal. The
      * method can be called with strings or other objects, too.
      *
      * @param c the object to compare
      * @return a flag if both objects are equal
      */
+    @Override
     public boolean equals(Object c)
     {
         if (c == null)
@@ -292,6 +296,7 @@ public class ConfigurationKey implements Serializable
      *
      * @return the hash code
      */
+    @Override
     public int hashCode()
     {
         return String.valueOf(keyBuffer).hashCode();
@@ -338,8 +343,8 @@ public class ConfigurationKey implements Serializable
      * Returns the &quot;difference key&quot; to a given key. This value
      * is the part of the passed in key that differs from this key. There is
      * the following relation:
-     * <code>other = key.commonKey(other) + key.differenceKey(other)</code>
-     * for an arbitrary configuration key <code>key</code>.
+     * {@code other = key.commonKey(other) + key.differenceKey(other)}
+     * for an arbitrary configuration key {@code key}.
      *
      * @param other the key for which the difference is to be calculated
      * @return the difference key
@@ -387,7 +392,7 @@ public class ConfigurationKey implements Serializable
      * This class implements the normal iterator interface. In addition it
      * provides some specific methods for configuration keys.
      */
-    public class KeyIterator implements Iterator, Cloneable
+    public class KeyIterator implements Iterator<String>, Cloneable
     {
         /** Stores the current key name.*/
         private String current;
@@ -443,7 +448,7 @@ public class ConfigurationKey implements Serializable
          */
         private String nextKeyPart()
         {
-            StringBuffer key = new StringBuffer(INITIAL_SIZE);
+            StringBuilder key = new StringBuilder(INITIAL_SIZE);
             int idx = startIndex;
             int endIdx = keyBuffer.toString().indexOf(ATTRIBUTE_START,
                     startIndex);
@@ -482,7 +487,7 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Returns the next key part of this configuration key. This is a short
-         * form of <code>nextKey(false)</code>.
+         * form of {@code nextKey(false)}.
          *
          * @return the next key part
          */
@@ -581,7 +586,7 @@ public class ConfigurationKey implements Serializable
          *
          * @return the next object
          */
-        public Object next()
+        public String next()
         {
             return nextKey();
         }
@@ -597,8 +602,8 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Returns the current key of the iteration (without skipping to the
-         * next element). This is the same key the previous <code>next()</code>
-         * call had returned. (Short form of <code>currentKey(false)</code>.
+         * next element). This is the same key the previous {@code next()}
+         * call had returned. (Short form of {@code currentKey(false)}.
          *
          * @return the current key
          */
@@ -624,7 +629,7 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Returns a flag if the current key is an attribute. This method can
-         * be called after <code>next()</code>.
+         * be called after {@code next()}.
          *
          * @return a flag if the current key is an attribute
          */
@@ -636,7 +641,7 @@ public class ConfigurationKey implements Serializable
         /**
          * Returns the index value of the current key. If the current key does
          * not have an index, return value is -1. This method can be called
-         * after <code>next()</code>.
+         * after {@code next()}.
          *
          * @return the index value of the current key
          */
@@ -647,7 +652,7 @@ public class ConfigurationKey implements Serializable
 
         /**
          * Returns a flag if the current key has an associated index.
-         * This method can be called after <code>next()</code>.
+         * This method can be called after {@code next()}.
          *
          * @return a flag if the current key has an index
          */
@@ -661,6 +666,7 @@ public class ConfigurationKey implements Serializable
          *
          * @return a clone of this object
          */
+        @Override
         public Object clone()
         {
             try
