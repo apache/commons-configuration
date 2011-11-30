@@ -23,7 +23,7 @@ package org.apache.commons.configuration;
  * @since 1.0
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class ConversionException extends ConfigurationRuntimeException
 {
@@ -33,7 +33,7 @@ public class ConversionException extends ConfigurationRuntimeException
     private static final long serialVersionUID = -5167943099293540392L;
 
     /**
-     * Constructs a new <code>ConversionException</code> without specified
+     * Constructs a new {@code ConversionException} without specified
      * detail message.
      */
     public ConversionException()
@@ -42,7 +42,7 @@ public class ConversionException extends ConfigurationRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConversionException</code> with specified
+     * Constructs a new {@code ConversionException} with specified
      * detail message.
      *
      * @param message  the error message
@@ -53,8 +53,8 @@ public class ConversionException extends ConfigurationRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConversionException</code> with specified
-     * nested <code>Throwable</code>.
+     * Constructs a new {@code ConversionException} with specified
+     * nested {@code Throwable}.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
@@ -64,8 +64,8 @@ public class ConversionException extends ConfigurationRuntimeException
     }
 
     /**
-     * Constructs a new <code>ConversionException</code> with specified
-     * detail message and nested <code>Throwable</code>.
+     * Constructs a new {@code ConversionException} with specified
+     * detail message and nested {@code Throwable}.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
