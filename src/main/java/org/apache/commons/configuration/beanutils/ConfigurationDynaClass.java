@@ -30,11 +30,11 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * The <tt>ConfigurationDynaClass</tt> dynamically determines properties for
- * a <code>ConfigurationDynaBean</code> from a wrapped configuration-collection
+ * a {@code ConfigurationDynaBean} from a wrapped configuration-collection
  * {@link org.apache.commons.configuration.Configuration} instance.
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.0-rc1
  */
 public class ConfigurationDynaClass implements DynaClass
@@ -46,9 +46,9 @@ public class ConfigurationDynaClass implements DynaClass
     private Configuration configuration;
 
     /**
-     * Construct an instance of a <code>ConfigurationDynaClass</code>
-     * wrapping the specified <code>Configuration</code> instance.
-     * @param configuration <code>Configuration</code> instance.
+     * Construct an instance of a {@code ConfigurationDynaClass}
+     * wrapping the specified {@code Configuration} instance.
+     * @param configuration {@code Configuration} instance.
      */
     public ConfigurationDynaClass(Configuration configuration)
     {
@@ -79,7 +79,7 @@ public class ConfigurationDynaClass implements DynaClass
         }
         else
         {
-            Class type = value.getClass();
+            Class<?> type = value.getClass();
 
             if (type == Byte.class)
             {
@@ -125,11 +125,11 @@ public class ConfigurationDynaClass implements DynaClass
             log.trace("getDynaProperties()");
         }
 
-        Iterator keys = configuration.getKeys();
-        List properties = new ArrayList();
+        Iterator<String> keys = configuration.getKeys();
+        List<DynaProperty> properties = new ArrayList<DynaProperty>();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             DynaProperty property = getDynaProperty(key);
             properties.add(property);
         }
