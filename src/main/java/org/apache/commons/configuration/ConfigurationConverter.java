@@ -17,11 +17,11 @@
 
 package org.apache.commons.configuration;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Vector;
 
 import org.apache.commons.collections.ExtendedProperties;
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * ExtendedProperties and standard Properties.
  *
  * @author <a href="mailto:mpoeschl@marmot.at">Martin Poeschl</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public final class ConfigurationConverter
 {
@@ -75,17 +75,15 @@ public final class ConfigurationConverter
     {
         ExtendedProperties props = new ExtendedProperties();
 
-        Iterator keys = config.getKeys();
-
-        while (keys.hasNext())
+        for (Iterator<String> keys = config.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object property = config.getProperty(key);
 
             // turn lists into vectors
             if (property instanceof List)
             {
-                property = new Vector((List) property);
+                property = new ArrayList<Object>((List<?>) property);
             }
 
             props.setProperty(key, property);
@@ -109,11 +107,10 @@ public final class ConfigurationConverter
         char delimiter = (config instanceof AbstractConfiguration)
             ? ((AbstractConfiguration) config).getListDelimiter() : ',';
 
-        Iterator keys = config.getKeys();
-        while (keys.hasNext())
+        for (Iterator<String> keys = config.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
-            List list = config.getList(key);
+            String key = keys.next();
+            List<Object> list = config.getList(key);
 
             // turn the list into a string
             props.setProperty(key, StringUtils.join(list.iterator(), delimiter));
@@ -128,7 +125,7 @@ public final class ConfigurationConverter
      * @param config Configuration object to convert
      * @return Map created from the Configuration
      */
-    public static Map getMap(Configuration config)
+    public static Map<Object, Object> getMap(Configuration config)
     {
         return new ConfigurationMap(config);
     }
