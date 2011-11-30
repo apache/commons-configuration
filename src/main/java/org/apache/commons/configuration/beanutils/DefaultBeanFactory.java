@@ -18,22 +18,24 @@ package org.apache.commons.configuration.beanutils;
 
 /**
  * <p>
- * The default implementation of the <code>BeanFactory</code> interface.
+ * The default implementation of the {@code BeanFactory} interface.
  * </p>
  * <p>
  * This class creates beans of arbitrary types using reflection. Each time the
- * <code>createBean()</code> method is invoked, a new bean instance is
+ * {@code createBean()} method is invoked, a new bean instance is
  * created. A default bean class is not supported.
  * </p>
  * <p>
  * An instance of this factory class will be set as the default bean factory for
- * the <code>{@link BeanHelper}</code> class. This means that if not bean
- * factory is specified in a <code>{@link BeanDeclaration}</code>, this
+ * the {@link BeanHelper} class. This means that if not bean
+ * factory is specified in a {@link BeanDeclaration}, this
  * default instance will be used.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class DefaultBeanFactory implements BeanFactory
@@ -43,8 +45,8 @@ public class DefaultBeanFactory implements BeanFactory
 
     /**
      * Creates a new bean instance. This implementation delegates to the
-     * protected methods <code>createBeanInstance()</code> and
-     * <code>initBeanInstance()</code> for creating and initializing the bean.
+     * protected methods {@code createBeanInstance()} and
+     * {@code initBeanInstance()} for creating and initializing the bean.
      * This makes it easier for derived classes that need to change specific
      * functionality of the base class.
      *
@@ -55,7 +57,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    public Object createBean(Class beanClass, BeanDeclaration data,
+    public Object createBean(Class<?> beanClass, BeanDeclaration data,
             Object parameter) throws Exception
     {
         Object result = createBeanInstance(beanClass, data);
@@ -69,14 +71,14 @@ public class DefaultBeanFactory implements BeanFactory
      *
      * @return the default bean class
      */
-    public Class getDefaultBeanClass()
+    public Class<?> getDefaultBeanClass()
     {
         return null;
     }
 
     /**
      * Creates the bean instance. This method is called by
-     * <code>createBean()</code>. It uses reflection to create a new instance
+     * {@code createBean()}. It uses reflection to create a new instance
      * of the specified class.
      *
      * @param beanClass the class of the bean to be created
@@ -84,7 +86,7 @@ public class DefaultBeanFactory implements BeanFactory
      * @return the new bean instance
      * @throws Exception if an error occurs
      */
-    protected Object createBeanInstance(Class beanClass, BeanDeclaration data)
+    protected Object createBeanInstance(Class<?> beanClass, BeanDeclaration data)
             throws Exception
     {
         return beanClass.newInstance();
@@ -92,9 +94,9 @@ public class DefaultBeanFactory implements BeanFactory
 
     /**
      * Initializes the newly created bean instance. This method is called by
-     * <code>createBean()</code>. It calls the
-     * <code>{@link BeanHelper#initBean(Object, BeanDeclaration) initBean()}</code>
-     * of <code>{@link BeanHelper}</code> for performing the initialization.
+     * {@code createBean()}. It calls the
+     * {@link BeanHelper#initBean(Object, BeanDeclaration) initBean()}
+     * of {@link BeanHelper} for performing the initialization.
      *
      * @param bean the newly created bean instance
      * @param data the bean declaration object
