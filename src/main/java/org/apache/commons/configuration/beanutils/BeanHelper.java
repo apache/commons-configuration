@@ -21,7 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -45,21 +44,24 @@ import org.apache.commons.lang.ClassUtils;
  * </p>
  * <p>
  * This class also supports the registration of custom bean factories.
- * Implementations of the <code>{@link BeanFactory}</code> interface can be
- * registered under a symbolic name using the <code>registerBeanFactory()</code>
+ * Implementations of the {@link BeanFactory} interface can be
+ * registered under a symbolic name using the {@code registerBeanFactory()}
  * method. In the configuration file the name of the bean factory can be
  * specified in the bean declaration. Then this factory will be used to create
  * the bean.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public final class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static Map beanFactories = Collections.synchronizedMap(new HashMap());
+    private static Map<String, BeanFactory> beanFactories = Collections
+            .synchronizedMap(new HashMap<String, BeanFactory>());
 
     /**
      * Stores the default bean factory, which will be used if no other factory
@@ -108,7 +110,7 @@ public final class BeanHelper
      */
     public static BeanFactory deregisterBeanFactory(String name)
     {
-        return (BeanFactory) beanFactories.remove(name);
+        return beanFactories.remove(name);
     }
 
     /**
@@ -116,7 +118,7 @@ public final class BeanHelper
      *
      * @return a set with the names of the registered bean factories
      */
-    public static Set registeredFactoryNames()
+    public static Set<String> registeredFactoryNames()
     {
         return beanFactories.keySet();
     }
@@ -163,23 +165,29 @@ public final class BeanHelper
     {
         initBeanProperties(bean, data);
 
-        Map nestedBeans = data.getNestedBeanDeclarations();
+        Map<String, Object> nestedBeans = data.getNestedBeanDeclarations();
         if (nestedBeans != null)
         {
             if (bean instanceof Collection)
             {
-                Collection coll = (Collection) bean;
+                // This is safe because the collection stores the values of the
+                // nested beans.
+                @SuppressWarnings("unchecked")
+                Collection<Object> coll = (Collection<Object>) bean;
                 if (nestedBeans.size() == 1)
                 {
-                    Map.Entry e = (Map.Entry) nestedBeans.entrySet().iterator().next();
-                    String propName = (String) e.getKey();
-                    Class defaultClass = getDefaultClass(bean, propName);
+                    Map.Entry<String, Object> e = nestedBeans.entrySet().iterator().next();
+                    String propName = e.getKey();
+                    Class<?> defaultClass = getDefaultClass(bean, propName);
                     if (e.getValue() instanceof List)
                     {
-                        Iterator iter = ((List) e.getValue()).iterator();
-                        while (iter.hasNext())
+                        // This is safe, provided that the bean declaration is implemented
+                        // correctly.
+                        @SuppressWarnings("unchecked")
+                        List<BeanDeclaration> decls = (List<BeanDeclaration>) e.getValue();
+                        for (BeanDeclaration decl : decls)
                         {
-                            coll.add(createBean((BeanDeclaration) iter.next(), defaultClass));
+                            coll.add(createBean(decl, defaultClass));
                         }
                     }
                     else
@@ -191,11 +199,10 @@ public final class BeanHelper
             }
             else
             {
-                for (Iterator it = nestedBeans.entrySet().iterator(); it.hasNext();)
+                for (Map.Entry<String, Object> e : nestedBeans.entrySet())
                 {
-                    Map.Entry e = (Map.Entry) it.next();
-                    String propName = (String) e.getKey();
-                    Class defaultClass = getDefaultClass(bean, propName);
+                    String propName = e.getKey();
+                    Class<?> defaultClass = getDefaultClass(bean, propName);
                     initProperty(bean, propName, createBean(
                         (BeanDeclaration) e.getValue(), defaultClass));
                 }
@@ -213,13 +220,12 @@ public final class BeanHelper
     public static void initBeanProperties(Object bean, BeanDeclaration data)
             throws ConfigurationRuntimeException
     {
-        Map properties = data.getBeanProperties();
+        Map<String, Object> properties = data.getBeanProperties();
         if (properties != null)
         {
-            for (Iterator it = properties.entrySet().iterator(); it.hasNext();)
+            for (Map.Entry<String, Object> e : properties.entrySet())
             {
-                Map.Entry e = (Map.Entry) it.next();
-                String propName = (String) e.getKey();
+                String propName = e.getKey();
                 initProperty(bean, propName, e.getValue());
             }
         }
@@ -231,7 +237,7 @@ public final class BeanHelper
      * @param propName The name of the property.
      * @return The class associated with the property or null.
      */
-    private static Class getDefaultClass(Object bean, String propName)
+    private static Class<?> getDefaultClass(Object bean, String propName)
     {
         try
         {
@@ -315,7 +321,7 @@ public final class BeanHelper
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data, Class defaultClass,
+    public static Object createBean(BeanDeclaration data, Class<?> defaultClass,
             Object param) throws ConfigurationRuntimeException
     {
         if (data == null)
@@ -338,15 +344,15 @@ public final class BeanHelper
 
     /**
      * Returns a bean instance for the specified declaration. This method is a
-     * short cut for <code>createBean(data, null, null);</code>.
+     * short cut for {@code createBean(data, null, null);}.
      *
      * @param data the bean declaration
-     * @param defaultClass the class to be used when in the declation no class
+     * @param defaultClass the class to be used when in the declaration no class
      * is specified
      * @return the new bean
      * @throws ConfigurationRuntimeException if an error occurs
      */
-    public static Object createBean(BeanDeclaration data, Class defaultClass)
+    public static Object createBean(BeanDeclaration data, Class<?> defaultClass)
             throws ConfigurationRuntimeException
     {
         return createBean(data, defaultClass, null);
@@ -354,7 +360,7 @@ public final class BeanHelper
 
     /**
      * Returns a bean instance for the specified declaration. This method is a
-     * short cut for <code>createBean(data, null);</code>.
+     * short cut for {@code createBean(data, null);}.
      *
      * @param data the bean declaration
      * @return the new bean
@@ -367,7 +373,7 @@ public final class BeanHelper
     }
 
     /**
-     * Returns a <code>java.lang.Class</code> object for the specified name.
+     * Returns a {@code java.lang.Class} object for the specified name.
      * Because class loading can be tricky in some environments the code for
      * retrieving a class by its name was extracted into this helper method. So
      * if changes are necessary, they can be made at a single place.
@@ -377,7 +383,7 @@ public final class BeanHelper
      * @return the class object for the specified name
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    static Class loadClass(String name, Class callingClass)
+    static Class<?> loadClass(String name, Class<?> callingClass)
             throws ClassNotFoundException
     {
         return ClassUtils.getClass(name);
@@ -396,8 +402,8 @@ public final class BeanHelper
      * @return the class of the bean to be created
      * @throws ConfigurationRuntimeException if the class cannot be determined
      */
-    private static Class fetchBeanClass(BeanDeclaration data,
-            Class defaultClass, BeanFactory factory)
+    private static Class<?> fetchBeanClass(BeanDeclaration data,
+            Class<?> defaultClass, BeanFactory factory)
             throws ConfigurationRuntimeException
     {
         String clsName = data.getBeanClassName();
@@ -418,7 +424,7 @@ public final class BeanHelper
             return defaultClass;
         }
 
-        Class clazz = factory.getDefaultBeanClass();
+        Class<?> clazz = factory.getDefaultBeanClass();
         if (clazz == null)
         {
             throw new ConfigurationRuntimeException(
