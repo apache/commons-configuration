@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.logging.LogFactory;
@@ -73,16 +74,16 @@ import org.apache.commons.logging.LogFactory;
  * String value2 = conf.getString("key2");
  * </pre>
  * The configuration can be instructed to perform commits after database updates.
- * This is achieved by setting the <code>commits</code> parameter of the
+ * This is achieved by setting the {@code commits} parameter of the
  * constructors to <b>true</b>. If commits should not be performed (which is the
  * default behavior), it should be ensured that the connections returned by the
- * <code>DataSource</code> are in auto-commit mode.
+ * {@code DataSource} are in auto-commit mode.
  *
  * <h1>Note: Like JDBC itself, protection against SQL injection is left to the user.</h1>
  * @since 1.0
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
@@ -125,10 +126,10 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates a new instance of <code>DatabaseConfiguration</code> that operates on
+     * Creates a new instance of {@code DatabaseConfiguration} that operates on
      * a database table containing multiple configurations.
      *
-     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param datasource the {@code DataSource} to connect to the database
      * @param table the name of the table containing the configurations
      * @param nameColumn the column containing the name of the configuration
      * @param keyColumn the column containing the keys of the configuration
@@ -166,10 +167,10 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates a new instance of <code>DatabaseConfiguration</code> that
+     * Creates a new instance of {@code DatabaseConfiguration} that
      * operates on a database table containing a single configuration only.
      *
-     * @param datasource the <code>DataSource</code> to connect to the database
+     * @param datasource the {@code DataSource} to connect to the database
      * @param table the name of the table containing the configurations
      * @param keyColumn the column containing the keys of the configuration
      * @param valueColumn the column containing the values of the configuration
@@ -196,9 +197,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Returns the value of the specified property. If this causes a database
      * error, an error event will be generated of type
-     * <code>EVENT_READ_PROPERTY</code> with the causing exception. The
-     * event's <code>propertyName</code> is set to the passed in property key,
-     * the <code>propertyValue</code> is undefined.
+     * {@code EVENT_READ_PROPERTY} with the causing exception. The
+     * event's {@code propertyName} is set to the passed in property key,
+     * the {@code propertyValue} is undefined.
      *
      * @param key the key of the desired property
      * @return the value of this property
@@ -208,7 +209,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         Object result = null;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT * FROM ");
+        StringBuilder query = new StringBuilder("SELECT * FROM ");
         query.append(table).append(" WHERE ");
         query.append(keyColumn).append("=?");
         if (nameColumn != null)
@@ -233,7 +234,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
             ResultSet rs = pstmt.executeQuery();
 
-            List results = new ArrayList();
+            List<Object> results = new ArrayList<Object>();
             while (rs.next())
             {
                 Object value = rs.getObject(valueColumn);
@@ -243,8 +244,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 }
                 else
                 {
-                    // Split value if it containts the list delimiter
-                    Iterator it = PropertyConverter.toIterator(value, getListDelimiter());
+                    // Split value if it contains the list delimiter
+                    Iterator<?> it = PropertyConverter.toIterator(value, getListDelimiter());
                     while (it.hasNext())
                     {
                         results.add(it.next());
@@ -271,18 +272,19 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
     /**
      * Adds a property to this configuration. If this causes a database error,
-     * an error event will be generated of type <code>EVENT_ADD_PROPERTY</code>
-     * with the causing exception. The event's <code>propertyName</code> is
-     * set to the passed in property key, the <code>propertyValue</code>
+     * an error event will be generated of type {@code EVENT_ADD_PROPERTY}
+     * with the causing exception. The event's {@code propertyName} is
+     * set to the passed in property key, the {@code propertyValue}
      * points to the passed in value.
      *
      * @param key the property key
      * @param obj the value of the property to add
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         // build the query
-        StringBuffer query = new StringBuffer("INSERT INTO " + table);
+        StringBuilder query = new StringBuilder("INSERT INTO " + table);
         if (nameColumn != null)
         {
             query.append(" (" + nameColumn + ", " + keyColumn + ", " + valueColumn + ") VALUES (?, ?, ?)");
@@ -327,14 +329,15 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * Adds a property to this configuration. This implementation will
      * temporarily disable list delimiter parsing, so that even if the value
      * contains the list delimiter, only a single record will be written into
-     * the managed table. The implementation of <code>getProperty()</code>
+     * the managed table. The implementation of {@code getProperty()}
      * will take care about delimiters. So list delimiters are fully supported
-     * by <code>DatabaseConfiguration</code>, but internally treated a bit
+     * by {@code DatabaseConfiguration}, but internally treated a bit
      * differently.
      *
      * @param key the key of the new property
      * @param value the value to be added
      */
+    @Override
     public void addProperty(String key, Object value)
     {
         boolean parsingFlag = isDelimiterParsingDisabled();
@@ -355,9 +358,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
     /**
      * Checks if this configuration is empty. If this causes a database error,
-     * an error event will be generated of type <code>EVENT_READ_PROPERTY</code>
-     * with the causing exception. Both the event's <code>propertyName</code>
-     * and <code>propertyValue</code> will be undefined.
+     * an error event will be generated of type {@code EVENT_READ_PROPERTY}
+     * with the causing exception. Both the event's {@code propertyName}
+     * and {@code propertyValue} will be undefined.
      *
      * @return a flag whether this configuration is empty.
      */
@@ -366,7 +369,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         boolean empty = true;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT count(*) FROM " + table);
+        StringBuilder query = new StringBuilder("SELECT count(*) FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");
@@ -409,9 +412,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Checks whether this configuration contains the specified key. If this
      * causes a database error, an error event will be generated of type
-     * <code>EVENT_READ_PROPERTY</code> with the causing exception. The
-     * event's <code>propertyName</code> will be set to the passed in key, the
-     * <code>propertyValue</code> will be undefined.
+     * {@code EVENT_READ_PROPERTY} with the causing exception. The
+     * event's {@code propertyName} will be set to the passed in key, the
+     * {@code propertyValue} will be undefined.
      *
      * @param key the key to be checked
      * @return a flag whether this key is defined
@@ -421,7 +424,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         boolean found = false;
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
+        StringBuilder query = new StringBuilder("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
         if (nameColumn != null)
         {
             query.append(" AND " + nameColumn + "=?");
@@ -462,16 +465,17 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Removes the specified value from this configuration. If this causes a
      * database error, an error event will be generated of type
-     * <code>EVENT_CLEAR_PROPERTY</code> with the causing exception. The
-     * event's <code>propertyName</code> will be set to the passed in key, the
-     * <code>propertyValue</code> will be undefined.
+     * {@code EVENT_CLEAR_PROPERTY} with the causing exception. The
+     * event's {@code propertyName} will be set to the passed in key, the
+     * {@code propertyValue} will be undefined.
      *
      * @param key the key of the property to be removed
      */
+    @Override
     protected void clearPropertyDirect(String key)
     {
         // build the query
-        StringBuffer query = new StringBuffer("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
+        StringBuilder query = new StringBuilder("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
         if (nameColumn != null)
         {
             query.append(" AND " + nameColumn + "=?");
@@ -509,15 +513,16 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /**
      * Removes all entries from this configuration. If this causes a database
      * error, an error event will be generated of type
-     * <code>EVENT_CLEAR</code> with the causing exception. Both the
-     * event's <code>propertyName</code> and the <code>propertyValue</code>
+     * {@code EVENT_CLEAR} with the causing exception. Both the
+     * event's {@code propertyName} and the {@code propertyValue}
      * will be undefined.
      */
+    @Override
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
         // build the query
-        StringBuffer query = new StringBuffer("DELETE FROM " + table);
+        StringBuilder query = new StringBuilder("DELETE FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");
@@ -556,18 +561,18 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * Returns an iterator with the names of all properties contained in this
      * configuration. If this causes a database
      * error, an error event will be generated of type
-     * <code>EVENT_READ_PROPERTY</code> with the causing exception. Both the
-     * event's <code>propertyName</code> and the <code>propertyValue</code>
+     * {@code EVENT_READ_PROPERTY} with the causing exception. Both the
+     * event's {@code propertyName} and the {@code propertyValue}
      * will be undefined.
      * @return an iterator with the contained keys (an empty iterator in case
      * of an error)
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        Collection keys = new ArrayList();
+        Collection<String> keys = new ArrayList<String>();
 
         // build the query
-        StringBuffer query = new StringBuffer("SELECT DISTINCT " + keyColumn + " FROM " + table);
+        StringBuilder query = new StringBuilder("SELECT DISTINCT " + keyColumn + " FROM " + table);
         if (nameColumn != null)
         {
             query.append(" WHERE " + nameColumn + "=?");
@@ -608,7 +613,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns the used <code>DataSource</code> object.
+     * Returns the used {@code DataSource} object.
      *
      * @return the data source
      * @since 1.4
@@ -619,23 +624,24 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns a <code>Connection</code> object. This method is called when
+     * Returns a {@code Connection} object. This method is called when
      * ever the database is to be accessed. This implementation returns a
-     * connection from the current <code>DataSource</code>.
+     * connection from the current {@code DataSource}.
      *
-     * @return the <code>Connection</code> object to be used
+     * @return the {@code Connection} object to be used
      * @throws SQLException if an error occurs
      * @since 1.4
      * @deprecated Use a custom data source to change the connection used by the
      * class. To be removed in Commons Configuration 2.0
      */
+    @Deprecated
     protected Connection getConnection() throws SQLException
     {
         return getDatasource().getConnection();
     }
 
     /**
-     * Close a <code>Connection</code> and, <code>Statement</code>.
+     * Close a {@code Connection} and, {@code Statement}.
      * Avoid closing if null and hide any SQLExceptions that occur.
      *
      * @param conn The database connection to close
