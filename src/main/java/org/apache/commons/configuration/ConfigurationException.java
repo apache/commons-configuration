@@ -24,7 +24,7 @@ import org.apache.commons.lang.exception.NestableException;
  * object.
  *
  * @author Eric Pugh
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class ConfigurationException extends NestableException
 {
@@ -34,7 +34,7 @@ public class ConfigurationException extends NestableException
     private static final long serialVersionUID = -1316746661346991484L;
 
     /**
-     * Constructs a new <code>ConfigurationException</code> without specified
+     * Constructs a new {@code ConfigurationException} without specified
      * detail message.
      */
     public ConfigurationException()
@@ -43,7 +43,7 @@ public class ConfigurationException extends NestableException
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
+     * Constructs a new {@code ConfigurationException} with specified
      * detail message.
      *
      * @param message  the error message
@@ -54,8 +54,8 @@ public class ConfigurationException extends NestableException
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
-     * nested <code>Throwable</code>.
+     * Constructs a new {@code ConfigurationException} with specified
+     * nested {@code Throwable}.
      *
      * @param cause  the exception or error that caused this exception to be thrown
      */
@@ -65,8 +65,8 @@ public class ConfigurationException extends NestableException
     }
 
     /**
-     * Constructs a new <code>ConfigurationException</code> with specified
-     * detail message and nested <code>Throwable</code>.
+     * Constructs a new {@code ConfigurationException} with specified
+     * detail message and nested {@code Throwable}.
      *
      * @param message  the error message
      * @param cause    the exception or error that caused this exception to be thrown
