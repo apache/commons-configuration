@@ -33,14 +33,16 @@ package org.apache.commons.configuration.beanutils;
  * <p>
  * The interface itself is quite simple. There is a single method for creating a
  * bean of a given class. All necessary parameters are obtained from an also
- * passed in <code>{@link BeanDeclaration}</code> object. It is also possible
+ * passed in {@link BeanDeclaration} object. It is also possible
  * (but optional) for a bean factory to declare the default class of the bean it
  * creates. Then it is not necessary to specify a bean class in the bean
  * declaration.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public interface BeanFactory
@@ -60,7 +62,7 @@ public interface BeanFactory
      * beans will catch this unspecific exception and wrap it in a configuration
      * exception)
      */
-    Object createBean(Class beanClass, BeanDeclaration data, Object param)
+    Object createBean(Class<?> beanClass, BeanDeclaration data, Object param)
             throws Exception;
 
     /**
@@ -72,5 +74,5 @@ public interface BeanFactory
      * @return the default class of this factory or <b>null</b> if there is
      * none
      */
-    Class getDefaultBeanClass();
+    Class<?> getDefaultBeanClass();
 }
