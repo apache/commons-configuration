@@ -24,29 +24,29 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * <p>The <code>ConfigurationMap</code> wraps a
+ * <p>The {@code ConfigurationMap} wraps a
  * configuration-collection
  * {@link org.apache.commons.configuration.Configuration}
- * instance to provide a <code>Map</code> interface.</p>
+ * instance to provide a {@code Map} interface.</p>
  *
  * <p><em>Note:</em> This implementation is incomplete.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.0
  */
-public class ConfigurationMap extends AbstractMap
+public class ConfigurationMap extends AbstractMap<Object, Object>
 {
     /**
-     * The <code>Configuration</code> wrapped by this class.
+     * The {@code Configuration} wrapped by this class.
      */
     private Configuration configuration;
 
     /**
-     * Creates a new instance of a <code>ConfigurationMap</code>
-     * that wraps the specified <code>Configuration</code>
+     * Creates a new instance of a {@code ConfigurationMap}
+     * that wraps the specified {@code Configuration}
      * instance.
-     * @param configuration <code>Configuration</code>
+     * @param configuration {@code Configuration}
      * instance.
      */
     public ConfigurationMap(Configuration configuration)
@@ -55,7 +55,7 @@ public class ConfigurationMap extends AbstractMap
     }
 
     /**
-     * Returns the wrapped <code>Configuration</code> object.
+     * Returns the wrapped {@code Configuration} object.
      *
      * @return the wrapped configuration
      * @since 1.2
@@ -71,7 +71,8 @@ public class ConfigurationMap extends AbstractMap
      * @return a set with the contained entries
      * @see java.util.Map#entrySet()
      */
-    public Set entrySet()
+    @Override
+    public Set<Map.Entry<Object, Object>> entrySet()
     {
         return new ConfigurationSet(configuration);
     }
@@ -85,6 +86,7 @@ public class ConfigurationMap extends AbstractMap
      * @return the old value of this key or <b>null</b> if it is new
      * @see java.util.Map#put(java.lang.Object, java.lang.Object)
      */
+    @Override
     public Object put(Object key, Object value)
     {
         String strKey = String.valueOf(key);
@@ -101,6 +103,7 @@ public class ConfigurationMap extends AbstractMap
      * @return the value of this key
      * @see java.util.Map#get(java.lang.Object)
      */
+    @Override
     public Object get(Object key)
     {
         return configuration.getProperty(String.valueOf(key));
@@ -109,7 +112,7 @@ public class ConfigurationMap extends AbstractMap
     /**
      * Set of entries in the map.
      */
-    static class ConfigurationSet extends AbstractSet
+    static class ConfigurationSet extends AbstractSet<Map.Entry<Object, Object>>
     {
         /** The configuration mapped to this entry set. */
         private Configuration configuration;
@@ -117,7 +120,7 @@ public class ConfigurationMap extends AbstractMap
         /**
          * A Map entry in the ConfigurationMap.
          */
-        private final class Entry implements Map.Entry
+        private final class Entry implements Map.Entry<Object, Object>
         {
             /** The key of the map entry. */
             private Object key;
@@ -148,10 +151,10 @@ public class ConfigurationMap extends AbstractMap
         /**
          * Iterator over the entries in the ConfigurationMap.
          */
-        private final class ConfigurationSetIterator implements Iterator
+        private final class ConfigurationSetIterator implements Iterator<Map.Entry<Object, Object>>
         {
             /** An iterator over the keys in the configuration. */
-            private Iterator keys;
+            private Iterator<String> keys;
 
             private ConfigurationSetIterator()
             {
@@ -163,7 +166,7 @@ public class ConfigurationMap extends AbstractMap
                 return keys.hasNext();
             }
 
-            public Object next()
+            public Map.Entry<Object, Object> next()
             {
                 return new Entry(keys.next());
             }
@@ -182,11 +185,12 @@ public class ConfigurationMap extends AbstractMap
         /**
          * @see java.util.Collection#size()
          */
+        @Override
         public int size()
         {
             // Ouch. Now _that_ one is expensive...
             int count = 0;
-            for (Iterator iterator = configuration.getKeys(); iterator.hasNext();)
+            for (Iterator<String> iterator = configuration.getKeys(); iterator.hasNext();)
             {
                 iterator.next();
                 count++;
@@ -197,7 +201,8 @@ public class ConfigurationMap extends AbstractMap
         /**
          * @see java.util.Collection#iterator()
          */
-        public Iterator iterator()
+        @Override
+        public Iterator<Map.Entry<Object, Object>> iterator()
         {
             return new ConfigurationSetIterator();
         }
