@@ -19,7 +19,6 @@ package org.apache.commons.configuration.beanutils;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.beanutils.DynaBean;
@@ -37,8 +36,8 @@ import org.apache.commons.logging.LogFactory;
  * implements a {@link java.util.Map} interface so that it can be used in
  * JSP 2.0 Expression Language expressions.
  *
- * <p>The <code>ConfigurationDynaBean</code> maps nested and mapped properties
- * to the appropriate <code>Configuration</code> subset using the
+ * <p>The {@code ConfigurationDynaBean} maps nested and mapped properties
+ * to the appropriate {@code Configuration} subset using the
  * {@link org.apache.commons.configuration.Configuration#subset}
  * method. Similarly, indexed properties reference lists of configuration
  * properties using the
@@ -63,7 +62,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
     /**
-     * Creates a new instance of <code>ConfigurationDynaBean</code> and sets
+     * Creates a new instance of {@code ConfigurationDynaBean} and sets
      * the configuration this bean is associated with.
      *
      * @param configuration the configuration
@@ -91,11 +90,10 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
         if (value instanceof Collection)
         {
-            Collection collection = (Collection) value;
-            Iterator iterator = collection.iterator();
-            while (iterator.hasNext())
+            Collection<?> collection = (Collection<?>) value;
+            for (Object v : collection)
             {
-                getConfiguration().addProperty(name, iterator.next());
+                getConfiguration().addProperty(name, v);
             }
         }
         else if (value.getClass().isArray())
@@ -162,7 +160,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
                     + "' is not indexed.");
         }
 
-        List list = getConfiguration().getList(name);
+        List<Object> list = getConfiguration().getList(name);
         return list.get(index);
     }
 
@@ -200,7 +198,10 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
         if (property instanceof List)
         {
-            List list = (List) property;
+            // This is safe because multiple values of a configuration property
+            // are always stored as lists of type Object.
+            @SuppressWarnings("unchecked")
+            List<Object> list = (List<Object>) property;
             list.set(index, value);
             getConfiguration().setProperty(name, list);
         }
