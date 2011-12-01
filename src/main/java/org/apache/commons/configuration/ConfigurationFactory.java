@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.Properties;
+import java.util.Map;
 
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
@@ -270,7 +270,7 @@ public class ConfigurationFactory
      */
     protected void enableDigesterSubstitutor(Digester digester)
     {
-        Properties systemProperties = System.getProperties();
+        Map<Object, Object> systemProperties = System.getProperties();
         MultiVariableExpander expander = new MultiVariableExpander();
         expander.addSource("$", systemProperties);
 
