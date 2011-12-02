@@ -270,7 +270,12 @@ public class ConfigurationFactory
      */
     protected void enableDigesterSubstitutor(Digester digester)
     {
-        Map<Object, Object> systemProperties = System.getProperties();
+        // This is ugly, but it is safe because the Properties object returned
+        // by System.getProperties() (which is actually a Map<Object, Object>)
+        // contains only String keys.
+        @SuppressWarnings("unchecked")
+        Map<String, Object> systemProperties =
+                (Map<String, Object>) (Object) System.getProperties();
         MultiVariableExpander expander = new MultiVariableExpander();
         expander.addSource("$", systemProperties);
 
