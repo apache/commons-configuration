@@ -83,7 +83,7 @@ import org.apache.commons.lang.StringUtils;
  * <tt>org.apache.commons.configuration.format.date</tt>.
  *
  * @author <a href="ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class DataConfiguration extends AbstractConfiguration implements Serializable
@@ -103,7 +103,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     protected Configuration configuration;
 
     /**
-     * Creates a new instance of <code>DataConfiguration</code> and sets the
+     * Creates a new instance of {@code DataConfiguration} and sets the
      * wrapped configuration.
      *
      * @param configuration the wrapped configuration
@@ -128,6 +128,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration.getProperty(key);
     }
 
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         if (configuration instanceof AbstractConfiguration)
@@ -140,6 +141,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         getConfiguration().addProperty(key, value);
@@ -155,17 +157,19 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration.containsKey(key);
     }
 
+    @Override
     public void clearProperty(String key)
     {
         configuration.clearProperty(key);
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         configuration.setProperty(key, value);
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return configuration.getKeys();
     }
@@ -187,9 +191,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public Object get(Class cls, String key)
+    public <T> T get(Class<T> cls, String key)
     {
-        Object value = get(cls, key, null);
+        T value = get(cls, key, null);
         if (value != null)
         {
             return value;
@@ -209,7 +213,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * configuration key. If the key doesn't map to an existing object, the
      * default value is returned.
      *
-     * @param cls          the target type of the value
+     * @param <T>          the target type of the value
+     * @param cls          the target class of the value
      * @param key          the key of the value
      * @param defaultValue the default value
      *
@@ -219,7 +224,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public Object get(Class cls, String key, Object defaultValue)
+    public <T> T get(Class<T> cls, String key, T defaultValue)
     {
         Object value = resolveContainerStore(key);
 
@@ -227,23 +232,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         {
             return defaultValue;
         }
+
+        if (Date.class.equals(cls) || Calendar.class.equals(cls))
+        {
+            return convert(cls, key, interpolate(value), new String[] { getDefaultDateFormat() });
+        }
         else
         {
-            try
-            {
-                if (Date.class.equals(cls) || Calendar.class.equals(cls))
-                {
-                    return PropertyConverter.to(cls, interpolate(value), new String[] {getDefaultDateFormat()});
-                }
-                else
-                {
-                    return PropertyConverter.to(cls, interpolate(value), null);
-                }
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a " + cls, e);
-            }
+            return convert(cls, key, interpolate(value), null);
         }
     }
 
@@ -251,7 +247,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * Get a list of typed objects associated with the given configuration key.
      * If the key doesn't map to an existing object, an empty list is returned.
      *
-     * @param cls the type expected for the elements of the list
+     * @param <T> the type expected for the elements of the list
+     * @param cls the class expected for the elements of the list
      * @param key The configuration key.
      * @return The associated list if the key is found.
      *
@@ -260,9 +257,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public List getList(Class cls, String key)
+    public <T> List<T> getList(Class<T> cls, String key)
     {
-        return getList(cls, key, new ArrayList());
+        return getList(cls, key, new ArrayList<T>());
     }
 
     /**
@@ -270,7 +267,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * If the key doesn't map to an existing object, the default value is
      * returned.
      *
-     * @param cls the      type expected for the elements of the list
+     * @param <T>          the type expected for the elements of the list
+     * @param cls          the class expected for the elements of the list
      * @param key          the configuration key.
      * @param defaultValue the default value.
      * @return The associated List.
@@ -280,12 +278,12 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public List getList(Class cls, String key, List defaultValue)
+    public <T> List<T> getList(Class<T> cls, String key, List<T> defaultValue)
     {
         Object value = getProperty(key);
-        Class valueClass = value != null ? value.getClass() : null;
+        Class<?> valueClass = value != null ? value.getClass() : null;
 
-        List list;
+        List<T> list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -294,7 +292,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
         else
         {
-            list = new ArrayList();
+            list = new ArrayList<T>();
 
             Object[] params = null;
             if (cls.equals(Date.class) || cls.equals(Calendar.class))
@@ -302,52 +300,44 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
                 params = new Object[] {getDefaultDateFormat()};
             }
 
-            try
+            if (valueClass.isArray())
             {
-                if (valueClass.isArray())
-                {
-                    // get the class of the objects contained in the array
-                    Class arrayType = valueClass.getComponentType();
-                    int length = Array.getLength(value);
+                // get the class of the objects contained in the array
+                Class<?> arrayType = valueClass.getComponentType();
+                int length = Array.getLength(value);
 
-                    if (arrayType.equals(cls)
-                            || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
-                    {
-                        // the value is an array of the specified type, or an array
-                        // of the primitive type derived from the specified type
-                        for (int i = 0; i < length; i++)
-                        {
-                            list.add(Array.get(value, i));
-                        }
-                    }
-                    else
-                    {
-                        // attempt to convert the elements of the array
-                        for (int i = 0; i < length; i++)
-                        {
-                            list.add(PropertyConverter.to(cls, interpolate(Array.get(value, i)), params));
-                        }
-                    }
-                }
-                else if (value instanceof Collection)
+                if (arrayType.equals(cls)
+                        || (arrayType.isPrimitive() && cls.equals(ClassUtils.primitiveToWrapper(arrayType))))
                 {
-                    Collection values = (Collection) value;
-
-                    Iterator it = values.iterator();
-                    while (it.hasNext())
+                    // the value is an array of the specified type, or an array
+                    // of the primitive type derived from the specified type
+                    for (int i = 0; i < length; i++)
                     {
-                        list.add(PropertyConverter.to(cls, interpolate(it.next()), params));
+                        list.add(cls.cast(Array.get(value, i)));
                     }
                 }
                 else
                 {
-                    // attempt to convert a single value
-                    list.add(PropertyConverter.to(cls, interpolate(value), params));
+                    // attempt to convert the elements of the array
+                    for (int i = 0; i < length; i++)
+                    {
+                        list.add(convert(cls, key, interpolate(Array.get(value, i)), params));
+                    }
                 }
             }
-            catch (ConversionException e)
+            else if (value instanceof Collection)
             {
-                throw new ConversionException("'" + key + "' doesn't map to a list of " + cls, e);
+                Collection<?> values = (Collection<?>) value;
+
+                for (Object o : values)
+                {
+                    list.add(convert(cls, key, interpolate(o), params));
+                }
+            }
+            else
+            {
+                // attempt to convert a single value
+                list.add(convert(cls, key, interpolate(value), params));
             }
         }
 
@@ -367,7 +357,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public Object getArray(Class cls, String key)
+    public Object getArray(Class<?> cls, String key)
     {
         return getArray(cls, key, Array.newInstance(cls, 0));
     }
@@ -387,7 +377,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    public Object getArray(Class cls, String key, Object defaultValue)
+    public Object getArray(Class<?> cls, String key, Object defaultValue)
     {
         // check the type of the default value
         if (defaultValue != null
@@ -406,7 +396,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             return getPrimitiveArray(cls, key, defaultValue);
         }
 
-        List list = getList(cls, key);
+        List<?> list = getList(cls, key);
         if (list.isEmpty())
         {
             return defaultValue;
@@ -431,10 +421,10 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      *
      * @since 1.5
      */
-    private Object getPrimitiveArray(Class cls, String key, Object defaultValue)
+    private Object getPrimitiveArray(Class<?> cls, String key, Object defaultValue)
     {
         Object value = getProperty(key);
-        Class valueClass = value != null ? value.getClass() : null;
+        Class<?> valueClass = value != null ? value.getClass() : null;
 
         Object array;
 
@@ -448,7 +438,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             if (valueClass.isArray())
             {
                 // get the class of the objects contained in the array
-                Class arrayType = valueClass.getComponentType();
+                Class<?> arrayType = valueClass.getComponentType();
                 int length = Array.getLength(value);
 
                 if (arrayType.equals(cls))
@@ -474,32 +464,31 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             }
             else if (value instanceof Collection)
             {
-                Collection values = (Collection) value;
+                Collection<?> values = (Collection<?>) value;
 
                 array = Array.newInstance(cls, values.size());
 
-                Iterator it = values.iterator();
                 int i = 0;
-                while (it.hasNext())
+                for (Object o : values)
                 {
-                    Array.set(array, i++, PropertyConverter.to(cls, interpolate(it.next()), null));
+                    // This is safe because PropertyConverter can handle
+                    // conversion to wrapper classes correctly.
+                    @SuppressWarnings("unchecked")
+                    Object convertedValue = convert(ClassUtils.primitiveToWrapper(cls), key, interpolate(o), null);
+                    Array.set(array, i++, convertedValue);
                 }
             }
             else
             {
-                try
-                {
-                    // attempt to convert a single value
-                    Object convertedValue = PropertyConverter.to(cls, interpolate(value), null);
+                // attempt to convert a single value
+                // This is safe because PropertyConverter can handle
+                // conversion to wrapper classes correctly.
+                @SuppressWarnings("unchecked")
+                Object convertedValue = convert(ClassUtils.primitiveToWrapper(cls), key, interpolate(value), null);
 
-                    // create an array of one element
-                    array = Array.newInstance(cls, 1);
-                    Array.set(array, 0, convertedValue);
-                }
-                catch (ConversionException e)
-                {
-                    throw new ConversionException('\'' + key + "' doesn't map to an array of " + cls, e);
-                }
+                // create an array of one element
+                array = Array.newInstance(cls, 1);
+                Array.set(array, 0, convertedValue);
             }
         }
 
@@ -517,9 +506,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of booleans.
      */
-    public List getBooleanList(String key)
+    public List<Boolean> getBooleanList(String key)
     {
-        return getBooleanList(key, new ArrayList());
+        return getBooleanList(key, new ArrayList<Boolean>());
     }
 
     /**
@@ -534,7 +523,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of booleans.
      */
-    public List getBooleanList(String key, List defaultValue)
+    public List<Boolean> getBooleanList(String key, List<Boolean> defaultValue)
     {
          return getList(Boolean.class, key, defaultValue);
     }
@@ -582,9 +571,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of bytes.
      */
-    public List getByteList(String key)
+    public List<Byte> getByteList(String key)
     {
-        return getByteList(key, new ArrayList());
+        return getByteList(key, new ArrayList<Byte>());
     }
 
     /**
@@ -599,7 +588,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of bytes.
      */
-    public List getByteList(String key, List defaultValue)
+    public List<Byte> getByteList(String key, List<Byte> defaultValue)
     {
         return getList(Byte.class, key, defaultValue);
     }
@@ -647,9 +636,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of shorts.
      */
-    public List getShortList(String key)
+    public List<Short> getShortList(String key)
     {
-        return getShortList(key, new ArrayList());
+        return getShortList(key, new ArrayList<Short>());
     }
 
     /**
@@ -664,7 +653,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of shorts.
      */
-    public List getShortList(String key, List defaultValue)
+    public List<Short> getShortList(String key, List<Short> defaultValue)
     {
         return getList(Short.class, key, defaultValue);
     }
@@ -713,9 +702,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of integers.
      */
-    public List getIntegerList(String key)
+    public List<Integer> getIntegerList(String key)
     {
-        return getIntegerList(key, new ArrayList());
+        return getIntegerList(key, new ArrayList<Integer>());
     }
 
     /**
@@ -730,7 +719,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of integers.
      */
-    public List getIntegerList(String key, List defaultValue)
+    public List<Integer> getIntegerList(String key, List<Integer> defaultValue)
     {
         return getList(Integer.class, key, defaultValue);
     }
@@ -778,9 +767,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of longs.
      */
-    public List getLongList(String key)
+    public List<Long> getLongList(String key)
     {
-        return getLongList(key, new ArrayList());
+        return getLongList(key, new ArrayList<Long>());
     }
 
     /**
@@ -795,7 +784,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of longs.
      */
-    public List getLongList(String key, List defaultValue)
+    public List<Long> getLongList(String key, List<Long> defaultValue)
     {
         return getList(Long.class, key, defaultValue);
     }
@@ -843,9 +832,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of floats.
      */
-    public List getFloatList(String key)
+    public List<Float> getFloatList(String key)
     {
-        return getFloatList(key, new ArrayList());
+        return getFloatList(key, new ArrayList<Float>());
     }
 
     /**
@@ -860,7 +849,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of floats.
      */
-    public List getFloatList(String key, List defaultValue)
+    public List<Float> getFloatList(String key, List<Float> defaultValue)
     {
         return getList(Float.class, key, defaultValue);
     }
@@ -909,9 +898,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of doubles.
      */
-    public List getDoubleList(String key)
+    public List<Double> getDoubleList(String key)
     {
-        return getDoubleList(key, new ArrayList());
+        return getDoubleList(key, new ArrayList<Double>());
     }
 
     /**
@@ -926,7 +915,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of doubles.
      */
-    public List getDoubleList(String key, List defaultValue)
+    public List<Double> getDoubleList(String key, List<Double> defaultValue)
     {
         return getList(Double.class, key, defaultValue);
     }
@@ -974,9 +963,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigIntegers.
      */
-    public List getBigIntegerList(String key)
+    public List<BigInteger> getBigIntegerList(String key)
     {
-        return getBigIntegerList(key, new ArrayList());
+        return getBigIntegerList(key, new ArrayList<BigInteger>());
     }
 
     /**
@@ -991,7 +980,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigIntegers.
      */
-    public List getBigIntegerList(String key, List defaultValue)
+    public List<BigInteger> getBigIntegerList(String key, List<BigInteger> defaultValue)
     {
         return getList(BigInteger.class, key, defaultValue);
     }
@@ -1039,9 +1028,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigDecimals.
      */
-    public List getBigDecimalList(String key)
+    public List<BigDecimal> getBigDecimalList(String key)
     {
-        return getBigDecimalList(key, new ArrayList());
+        return getBigDecimalList(key, new ArrayList<BigDecimal>());
     }
 
     /**
@@ -1056,7 +1045,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of BigDecimals.
      */
-    public List getBigDecimalList(String key, List defaultValue)
+    public List<BigDecimal> getBigDecimalList(String key, List<BigDecimal> defaultValue)
     {
         return getList(BigDecimal.class, key, defaultValue);
     }
@@ -1135,9 +1124,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of URLs.
      */
-    public List getURLList(String key)
+    public List<URL> getURLList(String key)
     {
-        return getURLList(key, new ArrayList());
+        return getURLList(key, new ArrayList<URL>());
     }
 
     /**
@@ -1152,7 +1141,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of URLs.
      */
-    public List getURLList(String key, List defaultValue)
+    public List<URL> getURLList(String key, List<URL> defaultValue)
     {
         return getList(URL.class, key, defaultValue);
     }
@@ -1286,23 +1275,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             }
         }
     }
-
-    /**
-     * Get a list of Dates associated with the given configuration key.
-     * If the property is a list of Strings, they will be parsed with the
-     * format defined by the user in the {@link #DATE_FORMAT_KEY} property,
-     * or if it's not defined with the {@link #DEFAULT_DATE_FORMAT} pattern.
-     * If the key doesn't map to an existing object an empty list is returned.
-     *
-     * @param key The configuration key.
-     * @return The associated Date list if the key is found.
-     *
-     * @throws ConversionException is thrown if the key maps to an
-     *         object that is not a list of Dates.
-     */
-    public List getDateList(String key)
+    public List<Date> getDateList(String key)
     {
-        return getDateList(key, new ArrayList());
+        return getDateList(key, new ArrayList<Date>());
     }
 
     /**
@@ -1318,9 +1293,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Dates.
      */
-    public List getDateList(String key, String format)
+    public List<Date> getDateList(String key, String format)
     {
-        return getDateList(key, new ArrayList(), format);
+        return getDateList(key, new ArrayList<Date>(), format);
     }
 
     /**
@@ -1338,7 +1313,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Dates.
      */
-    public List getDateList(String key, List defaultValue)
+    public List<Date> getDateList(String key, List<Date> defaultValue)
     {
         return getDateList(key, defaultValue, getDefaultDateFormat());
     }
@@ -1357,11 +1332,11 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Dates.
      */
-    public List getDateList(String key, List defaultValue, String format)
+    public List<Date> getDateList(String key, List<Date> defaultValue, String format)
     {
         Object value = getProperty(key);
 
-        List list;
+        List<Date> list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1369,36 +1344,28 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
         else if (value.getClass().isArray())
         {
-            list = new ArrayList();
+            list = new ArrayList<Date>();
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(PropertyConverter.toDate(interpolate(Array.get(value, i)), format));
+                list.add(convert(Date.class, key, interpolate(Array.get(value, i)), new String[] { format }));
             }
         }
         else if (value instanceof Collection)
         {
-            Collection values = (Collection) value;
-            list = new ArrayList();
+            Collection<?> values = (Collection<?>) value;
+            list = new ArrayList<Date>();
 
-            Iterator it = values.iterator();
-            while (it.hasNext())
+            for (Object o : values)
             {
-                list.add(PropertyConverter.toDate(interpolate(it.next()), format));
+                list.add(convert(Date.class, key, interpolate(o), new String[] { format }));
             }
         }
         else
         {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toDate(interpolate(value), format));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of Dates", e);
-            }
+            // attempt to convert a single value
+            list = new ArrayList<Date>();
+            list.add(convert(Date.class, key, interpolate(value), new String[] { format }));
         }
 
         return list;
@@ -1475,14 +1442,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date[] getDateArray(String key, Date[] defaultValue, String format)
     {
-        List list = getDateList(key, format);
+        List<Date> list = getDateList(key, format);
         if (list.isEmpty())
         {
             return defaultValue;
         }
         else
         {
-            return (Date[]) list.toArray(new Date[list.size()]);
+            return list.toArray(new Date[list.size()]);
         }
     }
 
@@ -1599,9 +1566,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Calendars.
      */
-    public List getCalendarList(String key)
+    public List<Calendar> getCalendarList(String key)
     {
-        return getCalendarList(key, new ArrayList());
+        return getCalendarList(key, new ArrayList<Calendar>());
     }
 
     /**
@@ -1617,9 +1584,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Calendars.
      */
-    public List getCalendarList(String key, String format)
+    public List<Calendar> getCalendarList(String key, String format)
     {
-        return getCalendarList(key, new ArrayList(), format);
+        return getCalendarList(key, new ArrayList<Calendar>(), format);
     }
 
     /**
@@ -1637,7 +1604,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Calendars.
      */
-    public List getCalendarList(String key, List defaultValue)
+    public List<Calendar> getCalendarList(String key, List<Calendar> defaultValue)
     {
         return getCalendarList(key, defaultValue, getDefaultDateFormat());
     }
@@ -1656,11 +1623,11 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Calendars.
      */
-    public List getCalendarList(String key, List defaultValue, String format)
+    public List<Calendar> getCalendarList(String key, List<Calendar> defaultValue, String format)
     {
         Object value = getProperty(key);
 
-        List list;
+        List<Calendar> list;
 
         if (value == null || (value instanceof String && StringUtils.isEmpty((String) value)))
         {
@@ -1668,36 +1635,28 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
         else if (value.getClass().isArray())
         {
-            list = new ArrayList();
+            list = new ArrayList<Calendar>();
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(PropertyConverter.toCalendar(interpolate(Array.get(value, i)), format));
+                list.add(convert(Calendar.class, key, interpolate(Array.get(value, i)), new String[] { format }));
             }
         }
         else if (value instanceof Collection)
         {
-            Collection values = (Collection) value;
-            list = new ArrayList();
+            Collection<?> values = (Collection<?>) value;
+            list = new ArrayList<Calendar>();
 
-            Iterator it = values.iterator();
-            while (it.hasNext())
+            for (Object o : values)
             {
-                list.add(PropertyConverter.toCalendar(interpolate(it.next()), format));
+                list.add(convert(Calendar.class, key, interpolate(o), new String[] { format }));
             }
         }
         else
         {
-            try
-            {
-                // attempt to convert a single value
-                list = new ArrayList();
-                list.add(PropertyConverter.toCalendar(interpolate(value), format));
-            }
-            catch (ConversionException e)
-            {
-                throw new ConversionException('\'' + key + "' doesn't map to a list of Calendars", e);
-            }
+            // attempt to convert a single value
+            list = new ArrayList<Calendar>();
+            list.add(convert(Calendar.class, key, interpolate(value), new String[] { format }));
         }
 
         return list;
@@ -1774,14 +1733,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar[] getCalendarArray(String key, Calendar[] defaultValue, String format)
     {
-        List list = getCalendarList(key, format);
+        List<Calendar> list = getCalendarList(key, format);
         if (list.isEmpty())
         {
             return defaultValue;
         }
         else
         {
-            return (Calendar[]) list.toArray(new Calendar[list.size()]);
+            return list.toArray(new Calendar[list.size()]);
         }
     }
 
@@ -1837,9 +1796,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Locales.
      */
-    public List getLocaleList(String key)
+    public List<Locale> getLocaleList(String key)
     {
-        return getLocaleList(key, new ArrayList());
+        return getLocaleList(key, new ArrayList<Locale>());
     }
 
     /**
@@ -1854,7 +1813,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Locales.
      */
-    public List getLocaleList(String key, List defaultValue)
+    public List<Locale> getLocaleList(String key, List<Locale> defaultValue)
     {
         return getList(Locale.class, key, defaultValue);
     }
@@ -1933,9 +1892,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Colors.
      */
-    public List getColorList(String key)
+    public List<Color> getColorList(String key)
     {
-        return getColorList(key, new ArrayList());
+        return getColorList(key, new ArrayList<Color>());
     }
 
     /**
@@ -1950,7 +1909,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * @throws ConversionException is thrown if the key maps to an
      *         object that is not a list of Colors.
      */
-    public List getColorList(String key, List defaultValue)
+    public List<Color> getColorList(String key, List<Color> defaultValue)
     {
         return getList(Color.class, key, defaultValue);
     }
@@ -1988,4 +1947,32 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return (Color[]) getArray(Color.class, key, defaultValue);
     }
 
+    /**
+     * Helper method for performing a type conversion using the
+     * {@code PropertyConverter} class.
+     *
+     * @param <T> the target type of the conversion
+     * @param cls the target class of the conversion
+     * @param key the configuration key
+     * @param value the value to be converted
+     * @param params additional parameters
+     * @throws ConversionException if the value is not compatible with the
+     *         requested type
+     */
+    private static <T> T convert(Class<T> cls, String key, Object value,
+            Object[] params)
+    {
+        try
+        {
+            Object result = PropertyConverter.to(cls, value, params);
+            // Will not throw a ClassCastException because PropertyConverter
+            // would have thrown a ConversionException if conversion had failed.
+            return cls.cast(result);
+        }
+        catch (ConversionException e)
+        {
+            throw new ConversionException('\'' + key + "' doesn't map to a "
+                    + cls, e);
+        }
+    }
 }
