@@ -39,7 +39,7 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
     private final Object reloadLock;
 
     /**
-     * Creates a new instance of <code>HierarchicalReloadableConfiguration</code>.
+     * Creates a new instance of {@code HierarchicalReloadableConfiguration}.
      */
     public HierarchicalReloadableConfiguration()
     {
@@ -48,9 +48,8 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
     }
 
     /**
-     * Creates a new instance of
-     * <code>HierarchicalReloadableConfiguration</code> and initializes it with
-     * the given lock object.
+     * Creates a new instance of {@code HierarchicalReloadableConfiguration} and
+     * initializes it with the given lock object.
      *
      * @param lock the lock object
      */
@@ -61,7 +60,7 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
     }
 
     /**
-     * Creates a new instance of <code>HierarchicalConfiguration</code> and
+     * Creates a new instance of {@code HierarchicalReloadableConfiguration} and
      * copies all data contained in the specified configuration into the new
      * one.
      *
@@ -74,6 +73,7 @@ public class HierarchicalReloadableConfiguration extends HierarchicalConfigurati
         reloadLock = new Lock(LOCK_NAME);
     }
 
+    @Override
     public Object getReloadLock()
     {
         return reloadLock;
