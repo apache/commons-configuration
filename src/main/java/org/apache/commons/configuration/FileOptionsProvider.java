@@ -24,6 +24,7 @@ import java.util.Map;
  * @since 1.7
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * @version $Id:$
  */
 public interface FileOptionsProvider
 {
@@ -70,5 +71,5 @@ public interface FileOptionsProvider
      *
      * @return Options to be used for this file.
      */
-    Map getOptions();
+    Map<String, Object> getOptions();
 }
