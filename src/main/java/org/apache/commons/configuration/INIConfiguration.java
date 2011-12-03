@@ -43,17 +43,17 @@ import java.util.TreeSet;
  * </p>
  *
  * <p>
- * A typcial ini file could look something like:
+ * A typical ini file could look something like:
  * </p>
- * <code>
- * [section1]<br>
- * ; this is a comment!<br>
- * var1 = foo<br>
- * var2 = bar<br>
- *<br>
- * [section2]<br>
- * var1 = doo<br>
- * </code>
+ * <pre>
+ * [section1]
+ * ; this is a comment!
+ * var1 = foo
+ * var2 = bar
+ *
+ * [section2]
+ * var1 = doo
+ * </pre>
  *
  * <p>
  * The format of ini files is fairly straight forward and is composed of three
@@ -63,7 +63,7 @@ import java.util.TreeSet;
  * starting with a section declaration. A section declaration starts with a '['
  * and ends with a ']'. Sections occur on one line only.</li>
  * <li><b>Parameters:</b> Items in a section are known as parameters.
- * Parameters have a typical <code>key = value</code> format.</li>
+ * Parameters have a typical {@code key = value} format.</li>
  * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.
  * </li>
  * </ul>
@@ -82,7 +82,7 @@ import java.util.TreeSet;
  * signifier.</li>
  * <li><b>Key value separtor:</b> The ':' character is also accepted in place
  * of '=' to separate keys and values in parameters, for example
- * <code>var1 : foo</code>.</li>
+ * {@code var1 : foo}.</li>
  * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed ,
  * this configuration does however support it. In the event of a duplicate
  * section, the two section's values are merged.</li>
@@ -100,51 +100,51 @@ import java.util.TreeSet;
  * <p>
  * In all instances, a parameter's key is prepended with its section name and a
  * '.' (period). Thus a parameter named "var1" in "section1" will have the key
- * <code>section1.var1</code> in this configuration. Thus, a section's
- * parameters can easily be retrieved using the <code>subset</code> method
+ * {@code section1.var1} in this configuration. Thus, a section's
+ * parameters can easily be retrieved using the {@code subset} method
  * using the section name as the prefix.
  * </p>
  * <p>
  * <h3>Implementation Details:</h3>
  * Consider the following ini file:<br>
- * <code>
- *  default = ok<br>
- *  <br>
- *  [section1]<br>
- *  var1 = foo<br>
- *  var2 = doodle<br>
- *   <br>
- *  [section2]<br>
- *  ; a comment<br>
- *  var1 = baz<br>
- *  var2 = shoodle<br>
- *  bad =<br>
- *  = worse<br>
- *  <br>
- *  [section3]<br>
- *  # another comment<br>
- *  var1 : foo<br>
- *  var2 : bar<br>
- *  var5 : test1<br>
- *  <br>
- *  [section3]<br>
- *  var3 = foo<br>
- *  var4 = bar<br>
- *  var5 = test2<br>
- *  </code>
+ * <pre>
+ *  default = ok
+ *
+ *  [section1]
+ *  var1 = foo
+ *  var2 = doodle
+ *
+ *  [section2]
+ *  ; a comment
+ *  var1 = baz
+ *  var2 = shoodle
+ *  bad =
+ *  = worse
+ *
+ *  [section3]
+ *  # another comment
+ *  var1 : foo
+ *  var2 : bar
+ *  var5 : test1
+ *
+ *  [section3]
+ *  var3 = foo
+ *  var4 = bar
+ *  var5 = test2
+ *  </pre>
  * </p>
  * <p>
  * This ini file will be parsed without error. Note:
  * <ul>
  * <li>The parameter named "default" is added to the global section, it's value
- * is accessed simply using <code>getProperty("default")</code>.</li>
+ * is accessed simply using {@code getProperty("default")}.</li>
  * <li>Section 1's parameters can be accessed using
- * <code>getProperty("section1.var1")</code>.</li>
+ * {@code getProperty("section1.var1")}.</li>
  * <li>The parameter named "bad" simply adds the parameter with an empty value.
  * </li>
  * <li>The empty key with value "= worse" is added using an empty key. This key
  * is still added to section 2 and the value can be accessed using
- * <code>getProperty("section2.")</code>, notice the period '.' following the
+ * {@code getProperty("section2.")}, notice the period '.' following the
  * section name.</li>
  * <li>Section three uses both '=' and ':' to separate keys and values.</li>
  * <li>Section 3 has a duplicate key named "var5". The value for this key is
@@ -153,7 +153,7 @@ import java.util.TreeSet;
  * </p>
  * <p>
  * The set of sections in this configuration can be retrieved using the
- * <code>getSections</code> method.
+ * {@code getSections} method.
  * </p>
  * <p>
  * <em>Note:</em> Configuration objects of this type can be read concurrently
@@ -167,6 +167,7 @@ import java.util.TreeSet;
  * @deprecated This class has been replaced by HierarchicalINIConfiguration,
  * which provides a superset of the functionality offered by this class.
  */
+@Deprecated
 public class INIConfiguration extends AbstractFileConfiguration
 {
     /**
@@ -230,27 +231,27 @@ public class INIConfiguration extends AbstractFileConfiguration
     public void save(Writer writer) throws ConfigurationException
     {
         PrintWriter out = new PrintWriter(writer);
-        Iterator it = getSections().iterator();
+        Iterator<String> it = getSections().iterator();
         while (it.hasNext())
         {
-            String section = (String) it.next();
+            String section = it.next();
             out.print("[");
             out.print(section);
             out.print("]");
             out.println();
 
             Configuration subset = subset(section);
-            Iterator keys = subset.getKeys();
+            Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {
-                    Iterator values = ((Collection) value).iterator();
+                    Iterator<?> values = ((Collection<?>) value).iterator();
                     while (values.hasNext())
                     {
-                        value = (Object) values.next();
+                        value = values.next();
                         out.print(key);
                         out.print(" = ");
                         out.print(formatValue(value.toString()));
@@ -274,7 +275,7 @@ public class INIConfiguration extends AbstractFileConfiguration
 
     /**
      * Load the configuration from the given reader. Note that the
-     * <code>clear</code> method is not called so the configuration read in
+     * {@code clear()} method is not called so the configuration read in
      * will be merged with the current configuration.
      *
      * @param reader The reader to read the configuration from.
@@ -354,7 +355,7 @@ public class INIConfiguration extends AbstractFileConfiguration
 
         int i = quoted ? 1 : 0;
 
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         while (i < value.length() && !stop)
         {
             char c = value.charAt(i);
@@ -472,14 +473,14 @@ public class INIConfiguration extends AbstractFileConfiguration
      *
      * @return a set containing the sections.
      */
-    public Set getSections()
+    public Set<String> getSections()
     {
-        Set sections = new TreeSet();
+        Set<String> sections = new TreeSet<String>();
 
-        Iterator keys = getKeys();
+        Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             int index = key.indexOf(".");
             if (index >= 0)
             {
