@@ -48,17 +48,17 @@ import org.apache.commons.configuration.tree.ViewNode;
  * parsed and modified by both humans and computers.
  * </p>
  * <p>
- * A typcial ini file could look something like:
+ * A typical ini file could look something like:
  * </p>
- * <code>
- * [section1]<br>
- * ; this is a comment!<br>
- * var1 = foo<br>
- * var2 = bar<br>
- * <br>
- * [section2]<br>
- * var1 = doo<br>
- * </code>
+ * <pre>
+ * [section1]
+ * ; this is a comment!
+ * var1 = foo
+ * var2 = bar
+ *
+ * [section2]
+ * var1 = doo
+ * </pre>
  * <p>
  * The format of ini files is fairly straight forward and is composed of three
  * components:<br>
@@ -67,7 +67,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * with a section declaration. A section declaration starts with a '[' and ends
  * with a ']'. Sections occur on one line only.</li>
  * <li><b>Parameters:</b> Items in a section are known as parameters. Parameters
- * have a typical <code>key = value</code> format.</li>
+ * have a typical {@code key = value} format.</li>
  * <li><b>Comments:</b> Lines starting with a ';' are assumed to be comments.</li>
  * </ul>
  * </p>
@@ -81,9 +81,9 @@ import org.apache.commons.configuration.tree.ViewNode;
  * <ul>
  * <li><b>Comments:</b> The '#' character is also accepted as a comment
  * signifier.</li>
- * <li><b>Key value separtor:</b> The ':' character is also accepted in place of
+ * <li><b>Key value separator:</b> The ':' character is also accepted in place of
  * '=' to separate keys and values in parameters, for example
- * <code>var1 : foo</code>.</li>
+ * {@code var1 : foo}.</li>
  * <li><b>Duplicate sections:</b> Typically duplicate sections are not allowed,
  * this configuration does however support this feature. In the event of a duplicate
  * section, the two section's values are merged so that there is only a single
@@ -103,53 +103,53 @@ import org.apache.commons.configuration.tree.ViewNode;
  * <p>
  * In all instances, a parameter's key is prepended with its section name and a
  * '.' (period). Thus a parameter named "var1" in "section1" will have the key
- * <code>section1.var1</code> in this configuration. (This is the default
+ * {@code section1.var1} in this configuration. (This is the default
  * behavior. Because this is a hierarchical configuration you can change this by
  * setting a different {@link org.apache.commons.configuration.tree.ExpressionEngine}.)
  * </p>
  * <p>
  * <h3>Implementation Details:</h3> Consider the following ini file:<br>
- * <code>
- *  default = ok<br>
- *  <br>
- *  [section1]<br>
- *  var1 = foo<br>
- *  var2 = doodle<br>
- *   <br>
- *  [section2]<br>
- *  ; a comment<br>
- *  var1 = baz<br>
- *  var2 = shoodle<br>
- *  bad =<br>
- *  = worse<br>
- *  <br>
- *  [section3]<br>
- *  # another comment<br>
- *  var1 : foo<br>
- *  var2 : bar<br>
- *  var5 : test1<br>
- *  <br>
- *  [section3]<br>
- *  var3 = foo<br>
- *  var4 = bar<br>
- *  var5 = test2<br>
- *  <br>
- *  [sectionSeparators]<br>
- *  passwd : abc=def<br>
+ * <pre>
+ *  default = ok
+ *
+ *  [section1]
+ *  var1 = foo
+ *  var2 = doodle
+ *
+ *  [section2]
+ *  ; a comment
+ *  var1 = baz
+ *  var2 = shoodle
+ *  bad =
+ *  = worse
+ *
+ *  [section3]
+ *  # another comment
+ *  var1 : foo
+ *  var2 : bar
+ *  var5 : test1
+ *
+ *  [section3]
+ *  var3 = foo
+ *  var4 = bar
+ *  var5 = test2
+ *
+ *  [sectionSeparators]
+ *  passwd : abc=def
  *  a:b = "value"
- *  </code>
+ *  </pre>
  * </p>
  * <p>
  * This ini file will be parsed without error. Note:
  * <ul>
  * <li>The parameter named "default" is added to the global section, it's value
- * is accessed simply using <code>getProperty("default")</code>.</li>
+ * is accessed simply using {@code getProperty("default")}.</li>
  * <li>Section 1's parameters can be accessed using
- * <code>getProperty("section1.var1")</code>.</li>
+ * {@code getProperty("section1.var1")}.</li>
  * <li>The parameter named "bad" simply adds the parameter with an empty value.</li>
  * <li>The empty key with value "= worse" is added using a key consisting of a
  * single space character. This key is still added to section 2 and the value
- * can be accessed using <code>getProperty("section2. ")</code>, notice the
+ * can be accessed using {@code getProperty("section2. ")}, notice the
  * period '.' and the space following the section name.</li>
  * <li>Section three uses both '=' and ':' to separate keys and values.</li>
  * <li>Section 3 has a duplicate key named "var5". The value for this key is
@@ -158,11 +158,11 @@ import org.apache.commons.configuration.tree.ViewNode;
  * configuration deals with multiple occurrences of separator characters. Per
  * default the first separator character in a line is detected and used to
  * split the key from the value. Therefore the first property definition in this
- * section has the key <code>passwd</code> and the value <code>abc=def</code>.
+ * section has the key {@code passwd} and the value {@code abc=def}.
  * This default behavior can be changed by using quotes. If there is a separator
  * character before the first quote character (ignoring whitespace), this
  * character is used as separator. Thus the second property definition in the
- * section has the key <code>a:b</code> and the value <code>value</code>.</li>
+ * section has the key {@code a:b} and the value {@code value}.</li>
  * </ul>
  * </p>
  * <p>
@@ -176,7 +176,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * This explains how the keys for the properties can be constructed. You can
  * also use other methods of {@link HierarchicalConfiguration} for querying or
  * manipulating the hierarchy of configuration nodes, for instance the
- * <code>configurationAt()</code> method for obtaining the data of a specific
+ * {@code configurationAt()} method for obtaining the data of a specific
  * section. However, be careful that the storage scheme described above is not
  * violated (e.g. by adding multiple levels of nodes or inserting duplicate
  * section nodes). Otherwise, the special methods for ini configurations may not
@@ -184,9 +184,9 @@ import org.apache.commons.configuration.tree.ViewNode;
  * </p>
  * <p>
  * The set of sections in this configuration can be retrieved using the
- * <code>getSections()</code> method. For obtaining a
- * <code>SubnodeConfiguration</code> with the content of a specific section the
- * <code>getSection()</code> method can be used.
+ * {@code getSections()} method. For obtaining a
+ * {@code SubnodeConfiguration} with the content of a specific section the
+ * {@code getSection()} method can be used.
  * </p>
  * <p>
  * <em>Note:</em> Configuration objects of this type can be read concurrently by
@@ -286,10 +286,10 @@ public class HierarchicalINIConfiguration extends
     public void save(Writer writer) throws ConfigurationException
     {
         PrintWriter out = new PrintWriter(writer);
-        Iterator it = getSections().iterator();
+        Iterator<String> it = getSections().iterator();
         while (it.hasNext())
         {
-            String section = (String) it.next();
+            String section = it.next();
             Configuration subset;
             if (section != null)
             {
@@ -304,14 +304,14 @@ public class HierarchicalINIConfiguration extends
                 subset = getSection(null);
             }
 
-            Iterator keys = subset.getKeys();
+            Iterator<String> keys = subset.getKeys();
             while (keys.hasNext())
             {
-                String key = (String) keys.next();
+                String key = keys.next();
                 Object value = subset.getProperty(key);
                 if (value instanceof Collection)
                 {
-                    Iterator values = ((Collection) value).iterator();
+                    Iterator<?> values = ((Collection<?>) value).iterator();
                     while (values.hasNext())
                     {
                         value = (Object) values.next();
@@ -338,7 +338,7 @@ public class HierarchicalINIConfiguration extends
 
     /**
      * Load the configuration from the given reader. Note that the
-     * <code>clear</code> method is not called so the configuration read in will
+     * {@code clear()} method is not called so the configuration read in will
      * be merged with the current configuration.
      *
      * @param reader The reader to read the configuration from.
@@ -423,7 +423,7 @@ public class HierarchicalINIConfiguration extends
      */
     private static String parseValue(String val, BufferedReader reader) throws IOException
     {
-        StringBuffer propertyValue = new StringBuffer();
+        StringBuilder propertyValue = new StringBuilder();
         boolean lineContinues;
         String value = val.trim();
 
@@ -437,7 +437,7 @@ public class HierarchicalINIConfiguration extends
 
             int i = quoted ? 1 : 0;
 
-            StringBuffer result = new StringBuffer();
+            StringBuilder result = new StringBuilder();
             char lastChar = 0;
             while (i < value.length() && !stop)
             {
@@ -693,7 +693,7 @@ public class HierarchicalINIConfiguration extends
      * Determine if the given line is a section.
      *
      * @param line The line to check.
-     * @return true if the line contains a secion
+     * @return true if the line contains a section
      */
     protected boolean isSectionLine(String line)
     {
@@ -710,15 +710,14 @@ public class HierarchicalINIConfiguration extends
      *
      * @return a set containing the sections.
      */
-    public Set getSections()
+    public Set<String> getSections()
     {
-        Set sections = new LinkedHashSet();
+        Set<String> sections = new LinkedHashSet<String>();
         boolean globalSection = false;
         boolean inSection = false;
 
-        for (Iterator it = getRootNode().getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode node : getRootNode().getChildren())
         {
-            ConfigurationNode node = (ConfigurationNode) it.next();
             if (isSectionNode(node))
             {
                 inSection = true;
@@ -750,8 +749,8 @@ public class HierarchicalINIConfiguration extends
      * <li>If section is contained multiple times in the configuration, the
      * configuration returned by this method is initialized with the first
      * occurrence of the section. (This can only happen if
-     * <code>addProperty()</code> has been used in a way that does not conform
-     * to the storage scheme used by <code>HierarchicalINIConfiguration</code>.
+     * {@code addProperty()} has been used in a way that does not conform
+     * to the storage scheme used by {@code HierarchicalINIConfiguration}.
      * If used correctly, there will not be duplicate sections.)</li>
      * <li>There is special support for the global section: Passing in
      * <b>null</b> as section name returns a configuration with the content of
@@ -795,10 +794,10 @@ public class HierarchicalINIConfiguration extends
      */
     private ConfigurationNode getSectionNode(String sectionName)
     {
-        List nodes = getRootNode().getChildren(sectionName);
+        List<ConfigurationNode> nodes = getRootNode().getChildren(sectionName);
         if (!nodes.isEmpty())
         {
-            return (ConfigurationNode) nodes.get(0);
+            return nodes.get(0);
         }
 
         ConfigurationNode node = createNode(sectionName);
@@ -817,9 +816,8 @@ public class HierarchicalINIConfiguration extends
     {
         ViewNode parent = new ViewNode();
 
-        for (Iterator it = getRootNode().getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode node : getRootNode().getChildren())
         {
-            ConfigurationNode node = (ConfigurationNode) it.next();
             if (!isSectionNode(node))
             {
                 synchronized (node)
