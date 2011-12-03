@@ -17,12 +17,12 @@
 
 package org.apache.commons.configuration;
 
-import java.net.URL;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.OutputStream;
-import java.io.Writer;
 import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.net.URL;
 
 import org.apache.commons.configuration.reloading.ReloadingStrategy;
 
@@ -30,7 +30,7 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
  * A persistent configuration loaded and saved to a file.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.0-rc2
  */
 public interface FileConfiguration extends Configuration
@@ -85,7 +85,7 @@ public interface FileConfiguration extends Configuration
      * encoding. If the encoding is null the default encoding is used.
      *
      * @param in the input stream
-     * @param encoding the encoding used. <code>null</code> to use the default encoding
+     * @param encoding the encoding used. {@code null} to use the default encoding
      *
      * @throws ConfigurationException if an error occurs during the load operation
      */
@@ -182,11 +182,11 @@ public interface FileConfiguration extends Configuration
      * source is by setting its base path and its file name. This method returns
      * this base path. The concrete value returned by this method depends on the
      * way the location of the configuration file was set. If methods like
-     * <code>setFile()</code> or <code>setURL()</code> were used, the base
+     * {@code setFile()} or {@code setURL()} were used, the base
      * path typically points to the parent directory of the configuration file
-     * (e.g. for the URL <code>file:/temp/test.properties</code> the base path
-     * will be <code>file:/temp/</code>). If the base path was explictly set
-     * using <code>setBasePath()</code>, this method will return the exact
+     * (e.g. for the URL {@code file:/temp/test.properties} the base path
+     * will be {@code file:/temp/}). If the base path was explicitly set
+     * using {@code setBasePath()}, this method will return the exact
      * value specified here without further modifications.
      *
      * @return the base path
@@ -195,11 +195,11 @@ public interface FileConfiguration extends Configuration
     String getBasePath();
 
     /**
-     * Sets the base path. The methods <code>setBasePath()</code> and
-     * <code>setFileName()</code> can be used together to specify the location
+     * Sets the base path. The methods {@code setBasePath()} and
+     * {@code setFileName()} can be used together to specify the location
      * of the configuration file to be loaded. If relative file names are to
      * be resolved (e.g. for the include files supported by
-     * <code>PropertiesConfiguration</code>), this base path will be used.
+     * {@code PropertiesConfiguration}), this base path will be used.
      *
      * @param basePath the base path.
      */
@@ -234,9 +234,9 @@ public interface FileConfiguration extends Configuration
     void setURL(URL url);
 
     /**
-     * Enable or disable the automatical saving of modified properties to the disk.
+     * Enable or disable the automatically saving of modified properties to the disk.
      *
-     * @param autoSave <code>true</code> to enable, <code>false</code> to disable
+     * @param autoSave {@code true} to enable, {@code false} to disable
      * @since 1.1
      */
     void setAutoSave(boolean autoSave);
@@ -244,7 +244,7 @@ public interface FileConfiguration extends Configuration
     /**
      * Tells if properties are automatically saved to the disk.
      *
-     * @return <code>true</code> if auto-saving is enabled, <code>false</code> otherwise
+     * @return {@code true} if auto-saving is enabled, {@code false} otherwise
      * @since 1.1
      */
     boolean isAutoSave();
