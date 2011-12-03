@@ -17,9 +17,8 @@
 
 package org.apache.commons.configuration;
 
-import java.util.Iterator;
-
 import org.apache.commons.configuration.HierarchicalConfiguration.Node;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -27,15 +26,16 @@ import org.xml.sax.helpers.AttributesImpl;
  * <p>A specialized SAX2 XML parser that "parses" hierarchical
  * configuration objects.</p>
  * <p>This class mimics to be a SAX conform XML parser. Instead of parsing
- * XML documents it processes a <code>Configuration</code> object and
+ * XML documents it processes a {@code Configuration} object and
  * generates SAX events for the single properties defined there. This enables
  * the whole world of XML processing for configuration objects.</p>
- * <p>The <code>HierarchicalConfiguration</code> object to be parsed can be
- * specified using a constructor or the <code>setConfiguration()</code> method.
- * This object will be processed by the <code>parse()</code> methods. Note
+ * <p>The {@code HierarchicalConfiguration} object to be parsed can be
+ * specified using a constructor or the {@code setConfiguration()} method.
+ * This object will be processed by the {@code parse()} methods. Note
  * that these methods ignore their argument.</p>
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  */
 public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
@@ -44,8 +44,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
     private HierarchicalConfiguration configuration;
 
     /**
-     * Creates a new instance of
-     * <code>HierarchicalConfigurationXMLReader</code>.
+     * Creates a new instance of {@code HierarchicalConfigurationXMLReader}.
      */
     public HierarchicalConfigurationXMLReader()
     {
@@ -53,9 +52,8 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
     }
 
     /**
-     * Creates a new instance of
-     * <code>HierarchicalConfigurationXMLReader</code> and sets the
-     * configuration to be parsed.
+     * Creates a new instance of {@code HierarchicalConfigurationXMLReader} and
+     * sets the configuration to be parsed.
      *
      * @param config the configuration object
      */
@@ -90,6 +88,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      *
      * @return the actual configuration object
      */
+    @Override
     public Configuration getParsedConfiguration()
     {
         return getConfiguration();
@@ -98,6 +97,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
     /**
      * Processes the actual configuration object to generate SAX parsing events.
      */
+    @Override
     protected void processKeys()
     {
         getConfiguration().getRoot().visit(new SAXVisitor(), null);
@@ -119,6 +119,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param node the actual node
          * @param key the key of this node
          */
+        @Override
         public void visitAfterChildren(Node node, ConfigurationKey key)
         {
             if (!isAttributeNode(node))
@@ -133,6 +134,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param node the actual node
          * @param key the key of this node
          */
+        @Override
         public void visitBeforeChildren(Node node, ConfigurationKey key)
         {
             if (!isAttributeNode(node))
@@ -152,6 +154,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          *
          * @return a flag if iteration should be stopped
          */
+        @Override
         public boolean terminate()
         {
             return getException() != null;
@@ -167,9 +170,8 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
         {
             AttributesImpl attrs = new AttributesImpl();
 
-            for (Iterator it = node.getAttributes().iterator(); it.hasNext();)
+            for (ConfigurationNode child : node.getAttributes())
             {
-                Node child = (Node) it.next();
                 if (child.getValue() != null)
                 {
                     String attr = child.getName();
