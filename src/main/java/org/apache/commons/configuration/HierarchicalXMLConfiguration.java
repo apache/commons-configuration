@@ -23,16 +23,16 @@ package org.apache.commons.configuration;
  *
  * <p>The parsed document will be stored keeping its structure. The contained
  * properties can be accessed using all methods supported by the base class
- * <code>HierarchicalConfiguration</code>.
+ * {@code HierarchicalConfiguration}.
  *
  * @since commons-configuration 1.0
  *
  * @author J&ouml;rg Schaible
- * @author Oliver Heger
- * @version $Revision$, $Date$
- * @deprecated This class is deprecated. Use <code>XMLConfiguration</code>
+ * @version $Id$
+ * @deprecated This class is deprecated. Use {@code XMLConfiguration}
  * instead, which supports all features this class had offered before.
  */
+@Deprecated
 public class HierarchicalXMLConfiguration extends XMLConfiguration
 {
     /**
