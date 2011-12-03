@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -55,7 +56,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     private Context baseContext;
 
     /** The Set of keys that have been virtually cleared. */
-    private Set clearedProperties = new HashSet();
+    private Set<String> clearedProperties = new HashSet<String>();
 
     /**
      * Creates a JNDIConfiguration using the default initial context as the
@@ -118,10 +119,10 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param processedCtx a set with the so far processed objects
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(Set keys, Context context, String prefix, Set processedCtx) throws NamingException
+    private void recursiveGetKeys(Set<String> keys, Context context, String prefix, Set<Context> processedCtx) throws NamingException
     {
         processedCtx.add(context);
-        NamingEnumeration elements = null;
+        NamingEnumeration<NameClassPair> elements = null;
 
         try
         {
@@ -130,12 +131,12 @@ public class JNDIConfiguration extends AbstractConfiguration
             // iterates through the context's elements
             while (elements.hasMore())
             {
-                NameClassPair nameClassPair = (NameClassPair) elements.next();
+                NameClassPair nameClassPair = elements.next();
                 String name = nameClassPair.getName();
                 Object object = context.lookup(name);
 
                 // build the key
-                StringBuffer key = new StringBuffer();
+                StringBuilder key = new StringBuilder();
                 key.append(prefix);
                 if (key.length() > 0)
                 {
@@ -175,7 +176,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @return an iterator with all keys
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return getKeys("");
     }
@@ -187,17 +188,13 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param prefix the prefix
      * @return an iterator with the selected keys
      */
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         // build the path
         String[] splitPath = StringUtils.split(prefix, ".");
 
-        List path = new ArrayList();
-
-        for (int i = 0; i < splitPath.length; i++)
-        {
-            path.add(splitPath[i]);
-        }
+        List<String> path = Arrays.asList(splitPath);
 
         try
         {
@@ -205,10 +202,10 @@ public class JNDIConfiguration extends AbstractConfiguration
             Context context = getContext(path, getBaseContext());
 
             // return all the keys under the context found
-            Set keys = new HashSet();
+            Set<String> keys = new HashSet<String>();
             if (context != null)
             {
-                recursiveGetKeys(keys, context, prefix, new HashSet());
+                recursiveGetKeys(keys, context, prefix, new HashSet<Context>());
             }
             else if (containsKey(prefix))
             {
@@ -221,12 +218,12 @@ public class JNDIConfiguration extends AbstractConfiguration
         catch (NameNotFoundException e)
         {
             // expected exception, no need to log it
-            return new ArrayList().iterator();
+            return new ArrayList<String>().iterator();
         }
         catch (NamingException e)
         {
             fireError(EVENT_READ_PROPERTY, null, null, e);
-            return new ArrayList().iterator();
+            return new ArrayList<String>().iterator();
         }
     }
 
@@ -240,7 +237,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return The context at that key's location in the JNDI tree, or null if not found
      * @throws NamingException if JNDI has an issue
      */
-    private Context getContext(List path, Context context) throws NamingException
+    private Context getContext(List<String> path, Context context) throws NamingException
     {
         // return the current context if the path is empty
         if (path == null || path.isEmpty())
@@ -248,17 +245,17 @@ public class JNDIConfiguration extends AbstractConfiguration
             return context;
         }
 
-        String key = (String) path.get(0);
+        String key = path.get(0);
 
         // search a context matching the key in the context's elements
-        NamingEnumeration elements = null;
+        NamingEnumeration<NameClassPair> elements = null;
 
         try
         {
             elements = context.list("");
             while (elements.hasMore())
             {
-                NameClassPair nameClassPair = (NameClassPair) elements.next();
+                NameClassPair nameClassPair = elements.next();
                 String name = nameClassPair.getName();
                 Object object = context.lookup(name);
 
@@ -291,7 +288,7 @@ public class JNDIConfiguration extends AbstractConfiguration
     {
         try
         {
-            NamingEnumeration enumeration = null;
+            NamingEnumeration<NameClassPair> enumeration = null;
 
             try
             {
@@ -322,6 +319,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param value the value
      * @throws UnsupportedOperationException
      */
+    @Override
     public void setProperty(String key, Object value)
     {
         throw new UnsupportedOperationException("This operation is not supported");
@@ -332,6 +330,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @param key the key of the property to remove
      */
+    @Override
     public void clearProperty(String key)
     {
         clearedProperties.add(key);
@@ -433,6 +432,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param obj the value
      * @throws UnsupportedOperationException
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("This operation is not supported");
