@@ -16,21 +16,22 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.NoOpLog;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.File;
-import java.net.URL;
-import java.net.MalformedURLException;
 
 /**
  * Abstract layer to allow various types of file systems.
  * @since 1.7
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * @version $Id:$
  */
 public abstract class FileSystem
 {
@@ -84,7 +85,7 @@ public abstract class FileSystem
 
             try
             {
-                Class clazz = Class.forName(fsClassName);
+                Class<?> clazz = Class.forName(fsClassName);
                 if (FileSystem.class.isAssignableFrom(clazz))
                 {
                     fileSystem = (FileSystem) clazz.newInstance();
