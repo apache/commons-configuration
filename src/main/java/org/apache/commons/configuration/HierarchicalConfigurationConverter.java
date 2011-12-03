@@ -34,12 +34,13 @@ import java.util.Set;
  * the keys in the original configuration.</p>
  * <p>Concrete sub classes will implement event handlers that generate SAX
  * events for XML processing or construct a
- * <code>HierarchicalConfiguration</code> root node. All in all with this class
+ * {@code HierarchicalConfiguration} root node. All in all with this class
  * it is possible to treat a default configuration as if it was a hierarchical
  * configuration, which can be sometimes useful.</p>
  * @see HierarchicalConfiguration
  *
- * @author <a href="mailto:oliver.heger@t-online.de">Oliver Heger</a>
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  */
 abstract class HierarchicalConfigurationConverter
@@ -48,8 +49,8 @@ abstract class HierarchicalConfigurationConverter
      * Processes the specified configuration object. This method implements
      * the iteration over the configuration's keys. All defined keys are
      * translated into a set of element start and end events represented by
-     * calls to the <code>elementStart()</code> and
-     * <code>elementEnd()</code> methods.
+     * calls to the {@code elementStart()} and
+     * {@code elementEnd()} methods.
      *
      * @param config the configuration to be processed
      */
@@ -59,11 +60,11 @@ abstract class HierarchicalConfigurationConverter
         {
             ConfigurationKey keyEmpty = new ConfigurationKey();
             ConfigurationKey keyLast = keyEmpty;
-            Set keySet = new HashSet();
+            Set<String> keySet = new HashSet<String>();
 
-            for (Iterator it = config.getKeys(); it.hasNext();)
+            for (Iterator<String> it = config.getKeys(); it.hasNext();)
             {
-                String key = (String) it.next();
+                String key = it.next();
                 if (keySet.contains(key))
                 {
                     // this key has already been processed by openElements
@@ -94,7 +95,7 @@ abstract class HierarchicalConfigurationConverter
 
     /**
      * An event handler method that is called when an element ends. For each
-     * call of <code>elementStart()</code> there will be a corresponding call
+     * call of {@code elementStart()} there will be a corresponding call
      * of this method. Concrete sub classes must implement it to perform a
      * proper event handling.
      *
@@ -115,7 +116,7 @@ abstract class HierarchicalConfigurationConverter
     protected void closeElements(ConfigurationKey keyLast, ConfigurationKey keyAct)
     {
         ConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
-        Iterator it = reverseIterator(keyDiff);
+        Iterator<String> it = reverseIterator(keyDiff);
         if (it.hasNext())
         {
             // Skip first because it has already been closed by fireValue()
@@ -136,9 +137,9 @@ abstract class HierarchicalConfigurationConverter
      * @param key the key
      * @return a reverse iterator for the parts of this key
      */
-    protected Iterator reverseIterator(ConfigurationKey key)
+    protected Iterator<String> reverseIterator(ConfigurationKey key)
     {
-        List list = new ArrayList();
+        List<String> list = new ArrayList<String>();
         for (ConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
         {
             list.add(it.nextKey());
@@ -160,7 +161,7 @@ abstract class HierarchicalConfigurationConverter
      * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set keySet)
+    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set<String> keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
         ConfigurationKey k = keyLast.commonKey(keyAct);
@@ -184,11 +185,12 @@ abstract class HierarchicalConfigurationConverter
      */
     protected void fireValue(String name, Object value)
     {
-        if (value != null && value instanceof Collection)
+        if (value instanceof Collection)
         {
-            for (Iterator it = ((Collection) value).iterator(); it.hasNext();)
+            Collection<?> valueCol = (Collection<?>) value;
+            for (Object v : valueCol)
             {
-                fireValue(name, it.next());
+                fireValue(name, v);
             }
         }
         else
