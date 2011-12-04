@@ -28,21 +28,21 @@ import org.apache.commons.lang.text.StrLookup;
  * objects.
  * </p>
  * <p>
- * Each instance of <code>AbstractConfiguration</code> is associated with an
+ * Each instance of {@code AbstractConfiguration} is associated with an
  * object of this class. All interpolation tasks are delegated to this object.
  * </p>
  * <p>
- * <code>ConfigurationInterpolator</code> works together with the
- * <code>StrSubstitutor</code> class from <a
+ * {@code ConfigurationInterpolator} works together with the
+ * {@code StrSubstitutor} class from <a
  * href="http://commons.apache.org/lang">Commons Lang</a>. By extending
- * <code>StrLookup</code> it is able to provide values for variables that
+ * {@code StrLookup} it is able to provide values for variables that
  * appear in expressions.
  * </p>
  * <p>
  * The basic idea of this class is that it can maintain a set of primitive
- * <code>StrLookup</code> objects, each of which is identified by a special
+ * {@code StrLookup} objects, each of which is identified by a special
  * prefix. The variables to be processed have the form
- * <code>${prefix:name}</code>. <code>ConfigurationInterpolator</code> will
+ * <code>${prefix:name}</code>. {@code ConfigurationInterpolator} will
  * extract the prefix and determine, which primitive lookup object is registered
  * for it. Then the name of the variable is passed to this object to obtain the
  * actual value. It is also possible to define a default lookup object, which
@@ -52,8 +52,8 @@ import org.apache.commons.lang.text.StrLookup;
  * <p>
  * When a new instance of this class is created it is initialized with a default
  * set of primitive lookup objects. This set can be customized using the static
- * methods <code>registerGlobalLookup()</code> and
- * <code>deregisterGlobalLookup()</code>. Per default it contains the
+ * methods {@code registerGlobalLookup()} and
+ * {@code deregisterGlobalLookup()}. Per default it contains the
  * following standard lookup objects:
  * </p>
  * <p>
@@ -69,22 +69,22 @@ import org.apache.commons.lang.text.StrLookup;
  * </tr>
  * <tr>
  * <td valign="top">const</td>
- * <td>The <code>const</code> prefix indicates that a variable is to be
+ * <td>The {@code const} prefix indicates that a variable is to be
  * interpreted as a constant member field of a class (i.e. a field with the
  * <b>static final</b> modifiers). The name of the variable must be of the form
- * <code>&lt;full qualified class name&gt;.&lt;field name&gt;</code>, e.g.
- * <code>org.apache.commons.configuration.interpol.ConfigurationInterpolator.PREFIX_CONSTANTS
- * </code>.</td>
+ * {@code <full qualified class name>.<field name>}, e.g.
+ * {@code org.apache.commons.configuration.interpol.ConfigurationInterpolator.PREFIX_CONSTANTS}.
+ * </td>
  * </tr>
  * </table>
  * </p>
  * <p>
  * After an instance has been created the current set of lookup objects can be
- * modified using the <code>registerLookup()</code> and
- * <code>deregisterLookup()</code> methods. The default lookup object (that is
+ * modified using the {@code registerLookup()} and
+ * {@code deregisterLookup()} methods. The default lookup object (that is
  * invoked for variables without a prefix) can be set with the
- * <code>setDefaultLookup()</code> method. (If a
- * <code>ConfigurationInterpolator</code> instance is created by a
+ * {@code setDefaultLookup()} method. (If a
+ * {@code ConfigurationInterpolator} instance is created by a
  * configuration object, this lookup points to the configuration itself, so that
  * variables are resolved using the configuration's properties. This ensures
  * backward compatibility to earlier version of Commons Configuration.)
@@ -93,7 +93,7 @@ import org.apache.commons.lang.text.StrLookup;
  * Implementation node: Instances of this class are not thread-safe related to
  * modifications of their current set of registered lookup objects. It is
  * intended that each instance is associated with a single
- * <code>Configuration</code> object and used for its interpolation tasks.
+ * {@code Configuration} object and used for its interpolation tasks.
  * </p>
  *
  * @version $Id$
@@ -127,10 +127,10 @@ public class ConfigurationInterpolator extends StrLookup
     private static final char PREFIX_SEPARATOR = ':';
 
     /** A map with the globally registered lookup objects. */
-    private static Map globalLookups;
+    private static Map<String, StrLookup> globalLookups;
 
     /** A map with the locally registered lookup objects. */
-    private Map localLookups;
+    private Map<String, StrLookup> localLookups;
 
     /** Stores the default lookup object. */
     private StrLookup defaultLookup;
@@ -139,13 +139,13 @@ public class ConfigurationInterpolator extends StrLookup
     private ConfigurationInterpolator parentInterpolator;
 
     /**
-     * Creates a new instance of <code>ConfigurationInterpolator</code>.
+     * Creates a new instance of {@code ConfigurationInterpolator}.
      */
     public ConfigurationInterpolator()
     {
         synchronized (globalLookups)
         {
-            localLookups = new HashMap(globalLookups);
+            localLookups = new HashMap<String, StrLookup>(globalLookups);
         }
     }
 
@@ -241,7 +241,7 @@ public class ConfigurationInterpolator extends StrLookup
      *
      * @return a set with the registered variable prefixes
      */
-    public Set prefixSet()
+    public Set<String> prefixSet()
     {
         return localLookups.keySet();
     }
@@ -280,6 +280,7 @@ public class ConfigurationInterpolator extends StrLookup
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
+    @Override
     public String lookup(String var)
     {
         if (var == null)
@@ -314,7 +315,7 @@ public class ConfigurationInterpolator extends StrLookup
      * Returns the lookup object to be used for variables without a prefix. This
      * implementation will check whether a default lookup object was set. If
      * this is the case, it will be returned. Otherwise a <b>null</b> lookup
-     * object will be returned (never <code>null</code>).
+     * object will be returned (never <b>null</b>).
      *
      * @return the lookup object to be used for variables without a prefix
      */
@@ -325,16 +326,16 @@ public class ConfigurationInterpolator extends StrLookup
 
     /**
      * Obtains the lookup object for the specified prefix. This method is called
-     * by the <code>lookup()</code> method. This implementation will check
+     * by the {@code lookup()} method. This implementation will check
      * whether a lookup object is registered for the given prefix. If not, a
-     * <b>null</b> lookup object will be returned (never <code>null</code>).
+     * <b>null</b> lookup object will be returned (never <b>null</b>).
      *
      * @param prefix the prefix
      * @return the lookup object to be used for this prefix
      */
     protected StrLookup fetchLookupForPrefix(String prefix)
     {
-        StrLookup lookup = (StrLookup) localLookups.get(prefix);
+        StrLookup lookup = localLookups.get(prefix);
         if (lookup == null)
         {
             lookup = StrLookup.noneLookup();
@@ -357,7 +358,7 @@ public class ConfigurationInterpolator extends StrLookup
      * Sets the parent interpolator. This object is used if the interpolation is nested
      * hierarchically and the current interpolation object cannot resolve a variable.
      *
-     * @param parentInterpolator the parent interpolator object or <code>null</code>
+     * @param parentInterpolator the parent interpolator object or <b>null</b>
      * @since upcoming
      */
     public void setParentInterpolator(ConfigurationInterpolator parentInterpolator)
@@ -369,7 +370,7 @@ public class ConfigurationInterpolator extends StrLookup
      * Requests the parent interpolator. This object is used if the interpolation is nested
      * hierarchically and the current interpolation
      *
-     * @return the parent interpolator or <code>null</code>
+     * @return the parent interpolator or <b>null</b>
      * @since upcoming
      */
     public ConfigurationInterpolator getParentInterpolator()
@@ -380,7 +381,7 @@ public class ConfigurationInterpolator extends StrLookup
     // static initializer, sets up the map with the standard lookups
     static
     {
-        globalLookups = new HashMap();
+        globalLookups = new HashMap<String, StrLookup>();
         globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
         globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
         globalLookups.put(PREFIX_ENVIRONMENT, new EnvironmentLookup());
