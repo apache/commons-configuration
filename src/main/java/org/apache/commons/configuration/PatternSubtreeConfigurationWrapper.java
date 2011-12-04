@@ -45,9 +45,10 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     /**
      * Prevent recursion while resolving unprefixed properties.
      */
-    private static ThreadLocal recursive = new ThreadLocal()
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
     {
-        protected synchronized Object initialValue()
+        @Override
+        protected synchronized Boolean initialValue()
         {
             return Boolean.FALSE;
         }
@@ -78,221 +79,265 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         this.init = true;
     }
 
+    @Override
     public Object getReloadLock()
     {
         return config.getReloadLock();
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         config.addProperty(makePath(key), value);
     }
 
+    @Override
     public void clear()
     {
         getConfig().clear();
     }
 
+    @Override
     public void clearProperty(String key)
     {
         config.clearProperty(makePath(key));
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         return config.containsKey(makePath(key));
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         return config.getBigDecimal(makePath(key), defaultValue);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key)
     {
         return config.getBigDecimal(makePath(key));
     }
 
+    @Override
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         return config.getBigInteger(makePath(key), defaultValue);
     }
 
+    @Override
     public BigInteger getBigInteger(String key)
     {
         return config.getBigInteger(makePath(key));
     }
 
+    @Override
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return config.getBoolean(makePath(key), defaultValue);
     }
 
+    @Override
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
         return config.getBoolean(makePath(key), defaultValue);
     }
 
+    @Override
     public boolean getBoolean(String key)
     {
         return config.getBoolean(makePath(key));
     }
 
+    @Override
     public byte getByte(String key, byte defaultValue)
     {
         return config.getByte(makePath(key), defaultValue);
     }
 
+    @Override
     public Byte getByte(String key, Byte defaultValue)
     {
         return config.getByte(makePath(key), defaultValue);
     }
 
+    @Override
     public byte getByte(String key)
     {
         return config.getByte(makePath(key));
     }
 
+    @Override
     public double getDouble(String key, double defaultValue)
     {
         return config.getDouble(makePath(key), defaultValue);
     }
 
+    @Override
     public Double getDouble(String key, Double defaultValue)
     {
         return config.getDouble(makePath(key), defaultValue);
     }
 
+    @Override
     public double getDouble(String key)
     {
         return config.getDouble(makePath(key));
     }
 
+    @Override
     public float getFloat(String key, float defaultValue)
     {
         return config.getFloat(makePath(key), defaultValue);
     }
 
+    @Override
     public Float getFloat(String key, Float defaultValue)
     {
         return config.getFloat(makePath(key), defaultValue);
     }
 
+    @Override
     public float getFloat(String key)
     {
         return config.getFloat(makePath(key));
     }
 
+    @Override
     public int getInt(String key, int defaultValue)
     {
         return config.getInt(makePath(key), defaultValue);
     }
 
+    @Override
     public int getInt(String key)
     {
         return config.getInt(makePath(key));
     }
 
+    @Override
     public Integer getInteger(String key, Integer defaultValue)
     {
         return config.getInteger(makePath(key), defaultValue);
     }
 
-    public Iterator getKeys()
+    @Override
+    public Iterator<String> getKeys()
     {
         return config.getKeys(makePath());
     }
 
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         return config.getKeys(makePath(prefix));
     }
 
-    public List getList(String key, List defaultValue)
+    @Override
+    public List<Object> getList(String key, List<Object> defaultValue)
     {
         return config.getList(makePath(key), defaultValue);
     }
 
-    public List getList(String key)
+    @Override
+    public List<Object> getList(String key)
     {
         return config.getList(makePath(key));
     }
 
+    @Override
     public long getLong(String key, long defaultValue)
     {
         return config.getLong(makePath(key), defaultValue);
     }
 
+    @Override
     public Long getLong(String key, Long defaultValue)
     {
         return config.getLong(makePath(key), defaultValue);
     }
 
+    @Override
     public long getLong(String key)
     {
         return config.getLong(makePath(key));
     }
 
+    @Override
     public Properties getProperties(String key)
     {
         return config.getProperties(makePath(key));
     }
 
+    @Override
     public Object getProperty(String key)
     {
         return config.getProperty(makePath(key));
     }
 
+    @Override
     public short getShort(String key, short defaultValue)
     {
         return config.getShort(makePath(key), defaultValue);
     }
 
+    @Override
     public Short getShort(String key, Short defaultValue)
     {
         return config.getShort(makePath(key), defaultValue);
     }
 
+    @Override
     public short getShort(String key)
     {
         return config.getShort(makePath(key));
     }
 
+    @Override
     public String getString(String key, String defaultValue)
     {
         return config.getString(makePath(key), defaultValue);
     }
 
+    @Override
     public String getString(String key)
     {
         return config.getString(makePath(key));
     }
 
+    @Override
     public String[] getStringArray(String key)
     {
         return config.getStringArray(makePath(key));
     }
 
+    @Override
     public boolean isEmpty()
     {
         return getConfig().isEmpty();
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         getConfig().setProperty(key, value);
     }
 
+    @Override
     public Configuration subset(String prefix)
     {
         return getConfig().subset(prefix);
     }
 
+    @Override
     public Node getRoot()
     {
         return getConfig().getRoot();
     }
 
+    @Override
     public void setRoot(Node node)
     {
         if (init)
@@ -305,11 +350,13 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public ConfigurationNode getRootNode()
     {
         return getConfig().getRootNode();
     }
 
+    @Override
     public void setRootNode(ConfigurationNode rootNode)
     {
         if (init)
@@ -322,11 +369,13 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return config.getExpressionEngine();
     }
 
+    @Override
     public void setExpressionEngine(ExpressionEngine expressionEngine)
     {
         if (init)
@@ -339,71 +388,85 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         }
     }
 
-    public void addNodes(String key, Collection nodes)
+    @Override
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         getConfig().addNodes(key, nodes);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
     {
         return config.configurationAt(makePath(key), supportUpdates);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key)
     {
         return config.configurationAt(makePath(key));
     }
 
-    public List configurationsAt(String key)
+    @Override
+    public List<HierarchicalConfiguration> configurationsAt(String key)
     {
         return config.configurationsAt(makePath(key));
     }
 
+    @Override
     public void clearTree(String key)
     {
         config.clearTree(makePath(key));
     }
 
+    @Override
     public int getMaxIndex(String key)
     {
         return config.getMaxIndex(makePath(key));
     }
 
+    @Override
     public Configuration interpolatedConfiguration()
     {
         return getConfig().interpolatedConfiguration();
     }
 
+    @Override
     public void addConfigurationListener(ConfigurationListener l)
     {
         getConfig().addConfigurationListener(l);
     }
 
+    @Override
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
         return getConfig().removeConfigurationListener(l);
     }
 
-    public Collection getConfigurationListeners()
+    @Override
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return getConfig().getConfigurationListeners();
     }
 
+    @Override
     public void clearConfigurationListeners()
     {
         getConfig().clearConfigurationListeners();
     }
 
+    @Override
     public void addErrorListener(ConfigurationErrorListener l)
     {
         getConfig().addErrorListener(l);
     }
 
+    @Override
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
         return getConfig().removeErrorListener(l);
     }
 
+    @Override
     public void clearErrorListeners()
     {
         getConfig().clearErrorListeners();
@@ -419,14 +482,16 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         config.load(reader);
     }
 
-    public Collection getErrorListeners()
+    @Override
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return getConfig().getErrorListeners();
     }
 
+    @Override
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean) recursive.get()).booleanValue())
+        if (recursive.get().booleanValue())
         {
             return null;
         }
