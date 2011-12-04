@@ -82,10 +82,10 @@ public class SystemConfiguration extends MapConfiguration
      */
     public static void setSystemProperties(PropertiesConfiguration systemConfig)
     {
-        Iterator iter = systemConfig.getKeys();
+        Iterator<String> iter = systemConfig.getKeys();
         while (iter.hasNext())
         {
-            String key = (String) iter.next();
+            String key = iter.next();
             String value = (String) systemConfig.getProperty(key);
             if (log.isDebugEnabled())
             {
