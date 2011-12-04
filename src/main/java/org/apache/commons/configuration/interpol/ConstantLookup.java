@@ -34,7 +34,7 @@ import org.apache.commons.logging.LogFactory;
  * Sometimes it is necessary in a configuration file to refer to a constant
  * defined in a class. This can be done with this lookup implementation.
  * Variable names passed in must be of the form
- * <code>mypackage.MyClass.FIELD</code>. The <code>lookup()</code> method
+ * {@code mypackage.MyClass.FIELD}. The {@code lookup()} method
  * will split the passed in string at the last dot, separating the fully
  * qualified class name and the name of the constant (i.e. <strong>static final</strong>)
  * member field. Then the class is loaded and the field's value is obtained
@@ -58,7 +58,7 @@ public class ConstantLookup extends StrLookup
     private static final char FIELD_SEPRATOR = '.';
 
     /** An internally used cache for already retrieved values. */
-    private static Map constantCache = new HashMap();
+    private static Map<String, String> constantCache = new HashMap<String, String>();
 
     /** The logger. */
     private Log log = LogFactory.getLog(getClass());
@@ -68,13 +68,14 @@ public class ConstantLookup extends StrLookup
      * interpreted as the name of a <b>static final</b> member field of a
      * class. If the value has already been obtained, it can be retrieved from
      * an internal cache. Otherwise this method will invoke the
-     * <code>resolveField()</code> method and pass in the name of the class
+     * {@code resolveField()} method and pass in the name of the class
      * and the field.
      *
      * @param var the name of the variable to be resolved
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
+    @Override
     public String lookup(String var)
     {
         if (var == null)
@@ -85,7 +86,7 @@ public class ConstantLookup extends StrLookup
         String result;
         synchronized (constantCache)
         {
-            result = (String) constantCache.get(var);
+            result = constantCache.get(var);
         }
         if (result != null)
         {
@@ -134,8 +135,8 @@ public class ConstantLookup extends StrLookup
 
     /**
      * Determines the value of the specified constant member field of a class.
-     * This implementation will call <code>fetchClass()</code> to obtain the
-     * <code>java.lang.Class</code> object for the target class. Then it will
+     * This implementation will call {@code fetchClass()} to obtain the
+     * {@code java.lang.Class} object for the target class. Then it will
      * use reflection to obtain the field's value. For this to work the field
      * must be accessable.
      *
@@ -147,7 +148,7 @@ public class ConstantLookup extends StrLookup
     protected Object resolveField(String className, String fieldName)
             throws Exception
     {
-        Class clazz = fetchClass(className);
+        Class<?> clazz = fetchClass(className);
         Field field = clazz.getField(fieldName);
         return field.get(null);
     }
@@ -155,7 +156,7 @@ public class ConstantLookup extends StrLookup
     /**
      * Loads the class with the specified name. If an application has special
      * needs regarding the class loaders to be used, it can hook in here. This
-     * implementation delegates to the <code>getClass()</code> method of
+     * implementation delegates to the {@code getClass()} method of
      * Commons Lang's
      * <code><a href="http://commons.apache.org/lang/api-release/org/apache/commons/lang/ClassUtils.html">
      * ClassUtils</a></code>.
@@ -164,7 +165,7 @@ public class ConstantLookup extends StrLookup
      * @return the corresponding class object
      * @throws ClassNotFoundException if the class cannot be loaded
      */
-    protected Class fetchClass(String className) throws ClassNotFoundException
+    protected Class<?> fetchClass(String className) throws ClassNotFoundException
     {
         return ClassUtils.getClass(className);
     }
