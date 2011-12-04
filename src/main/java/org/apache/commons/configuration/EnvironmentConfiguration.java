@@ -17,6 +17,8 @@
 
 package org.apache.commons.configuration;
 
+import java.util.HashMap;
+
 /**
  * <p>A Configuration implementation that reads the platform specific
  * environment variables using the map returned by {@link System#getenv()}.</p>
@@ -27,7 +29,7 @@ package org.apache.commons.configuration;
  * {@link UnsupportedOperationException}</p>
  *
  * <p>Usage of this class is easy: After an instance has been created the get
- * methods provided by the <code>Configuration</code> interface can be used
+ * methods provided by the {@code Configuration} interface can be used
  * for querying environment variables, e.g.:</p>
  *
  * <pre>
@@ -36,6 +38,7 @@ package org.apache.commons.configuration;
  * </pre>
  *
  * @author <a href="mailto:nicolas.deloof@gmail.com">Nicolas De Loof</a>
+ * @version $Id$
  * @since 1.5
  */
 public class EnvironmentConfiguration extends MapConfiguration
@@ -47,7 +50,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      */
     public EnvironmentConfiguration()
     {
-        super(System.getenv());
+        super(new HashMap<String, Object>(System.getenv()));
     }
 
     /**
@@ -57,6 +60,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * @param key the key of the property to be added
      * @param value the property value
      */
+    @Override
     protected void addPropertyDirect(String key, Object value)
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
@@ -68,6 +72,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      *
      * @param key the key of the property to be removed
      */
+    @Override
     public void clearProperty(String key)
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
@@ -78,6 +83,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * configuration is read-only, this operation is not allowed and will cause
      * an exception.
      */
+    @Override
     public void clear()
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");

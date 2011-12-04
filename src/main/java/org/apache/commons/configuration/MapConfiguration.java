@@ -18,41 +18,43 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * <p>
  * A Map based Configuration.
  * </p>
  * <p>
- * This implementation of the <code>Configuration</code> interface is
- * initialized with a <code>java.util.Map</code>. The methods of the
- * <code>Configuration</code> interface are implemented on top of the content of
+ * This implementation of the {@code Configuration} interface is
+ * initialized with a {@code java.util.Map}. The methods of the
+ * {@code Configuration} interface are implemented on top of the content of
  * this map. The following storage scheme is used:
  * </p>
  * <p>
  * Property keys are directly mapped to map keys, i.e. the
- * <code>getProperty()</code> method directly performs a <code>get()</code> on
- * the map. Analogously, <code>setProperty()</code> or
- * <code>addProperty()</code> operations write new data into the map. If a value
- * is added to an existing property, a <code>java.util.List</code> is created,
+ * {@code getProperty()} method directly performs a {@code get()} on
+ * the map. Analogously, {@code setProperty()} or
+ * {@code addProperty()} operations write new data into the map. If a value
+ * is added to an existing property, a {@code java.util.List} is created,
  * which stores the values of this property.
  * </p>
  * <p>
  * An important use case of this class is to treat a map as a
- * <code>Configuration</code> allowing access to its data through the richer
+ * {@code Configuration} allowing access to its data through the richer
  * interface. This can be a bit problematic in some cases because the map may
  * contain values that need not adhere to the default storage scheme used by
  * typical configuration implementations, e.g. regarding lists. In such cases
  * care must be taken when manipulating the data through the
- * <code>Configuration</code> interface, e.g. by calling
- * <code>addProperty()</code>; results may be different than expected.
+ * {@code Configuration} interface, e.g. by calling
+ * {@code addProperty()}; results may be different than expected.
  * </p>
  * <p>
  * An important point is the handling of list delimiters: If delimiter parsing
- * is enabled (which it is per default), <code>getProperty()</code> checks
+ * is enabled (which it is per default), {@code getProperty()} checks
  * whether the value of a property is a string and whether it contains the list
  * delimiter character. If this is the case, the value is split at the delimiter
  * resulting in a list. This split operation typically also involves trimming
@@ -68,19 +70,27 @@ import java.util.Map;
  * contain the list delimiter character.
  * </p>
  * <p>
- * As the underlying <code>Map</code> is directly used as store of the property
- * values, the thread-safety of this <code>Configuration</code> implementation
+ * As the underlying {@code Map} is directly used as store of the property
+ * values, the thread-safety of this {@code Configuration} implementation
  * depends on the map passed to the constructor.
+ * </p>
+ * <p>
+ * Notes about type safety: For properties with multiple values this implementation
+ * creates lists of type {@code Object} and stores them. If a property is assigned
+ * another value, the value is added to the list. This can cause problems if the
+ * map passed to the constructor already contains lists of other types. This
+ * should be avoided, otherwise it cannot be guaranteed that the application
+ * might throw {@code ClassCastException} exceptions later.
  * </p>
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class MapConfiguration extends AbstractConfiguration implements Cloneable
 {
     /** The Map decorated by this configuration. */
-    protected Map map;
+    protected Map<String, Object> map;
 
     /** A flag whether trimming of property values should be disabled.*/
     private boolean trimmingDisabled;
@@ -92,9 +102,26 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *
      * @param map the map
      */
-    public MapConfiguration(Map map)
+    public MapConfiguration(Map<String, Object> map)
     {
         this.map = map;
+    }
+
+    /**
+     * Creates a new instance of {@code MapConfiguration} and initializes its
+     * content from the specified {@code Properties} object. The resulting
+     * configuration is not connected to the {@code Properties} object, but all
+     * keys which are strings are copied (keys of other types are ignored).
+     *
+     * @param props the {@code Properties} object defining the content of this
+     *        configuration
+     * @throws NullPointerException if the {@code Properties} object is
+     *         <b>null</b>
+     * @since 1.8
+     */
+    public MapConfiguration(Properties props)
+    {
+        map = convertPropertiesToMap(props);
     }
 
     /**
@@ -102,7 +129,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      *
      * @return the map this configuration is based onto
      */
-    public Map getMap()
+    public Map<String, Object> getMap()
     {
         return map;
     }
@@ -138,7 +165,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         Object value = map.get(key);
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))
         {
-            List list = PropertyConverter.split((String) value, getListDelimiter(), !isTrimmingDisabled());
+            List<String> list = PropertyConverter.split((String) value, getListDelimiter(), !isTrimmingDisabled());
             return list.size() > 1 ? list : list.get(0);
         }
         else
@@ -147,6 +174,7 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         }
     }
 
+    @Override
     protected void addPropertyDirect(String key, Object value)
     {
         Object previousValue = getProperty(key);
@@ -158,12 +186,13 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         else if (previousValue instanceof List)
         {
             // the value is added to the existing list
-            ((List) previousValue).add(value);
+            // Note: This is problematic. See header comment!
+            ((List<Object>) previousValue).add(value);
         }
         else
         {
             // the previous value is replaced by a list containing the previous value and the new value
-            List list = new ArrayList();
+            List<Object> list = new ArrayList<Object>();
             list.add(previousValue);
             list.add(value);
 
@@ -181,12 +210,13 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         return map.containsKey(key);
     }
 
+    @Override
     protected void clearPropertyDirect(String key)
     {
         map.remove(key);
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return map.keySet().iterator();
     }
@@ -198,13 +228,17 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
      * @return the copy
      * @since 1.3
      */
+    @Override
     public Object clone()
     {
         try
         {
             MapConfiguration copy = (MapConfiguration) super.clone();
             copy.clearConfigurationListeners();
-            copy.map = (Map) ConfigurationUtils.clone(map);
+            // Safe because ConfigurationUtils returns a map of the same types.
+            @SuppressWarnings("unchecked")
+            Map<String, Object> clonedMap = (Map<String, Object>) ConfigurationUtils.clone(map);
+            copy.map = clonedMap;
             return copy;
         }
         catch (CloneNotSupportedException cex)
@@ -212,5 +246,25 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
             // cannot happen
             throw new ConfigurationRuntimeException(cex);
         }
+    }
+
+    /**
+     * Helper method for copying all string keys from the given
+     * {@code Properties} object to a newly created map.
+     *
+     * @param props the {@code Properties} to be copied
+     * @return a newly created map with all string keys of the properties
+     */
+    private static Map<String, Object> convertPropertiesToMap(Properties props)
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        for (Map.Entry<Object, Object> e : props.entrySet())
+        {
+            if (e.getKey() instanceof String)
+            {
+                map.put((String) e.getKey(), e.getValue());
+            }
+        }
+        return map;
     }
 }
