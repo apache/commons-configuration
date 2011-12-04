@@ -26,11 +26,11 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
  * every key from the parent Configuration that starts with prefix. The prefix
  * is removed from the keys in the subset.</p>
  * <p>It is usually not necessary to use this class directly. Instead the
- * <code>{@link Configuration#subset(String)}</code> method should be used,
+ * {@link Configuration#subset(String)} method should be used,
  * which will return a correctly initialized instance.</p>
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class SubsetConfiguration extends AbstractConfiguration
 {
@@ -148,6 +148,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         this.prefix = prefix;
     }
 
+    @Override
     public Configuration subset(String prefix)
     {
         return parent.subset(getParentKey(prefix));
@@ -163,11 +164,13 @@ public class SubsetConfiguration extends AbstractConfiguration
         return parent.containsKey(getParentKey(key));
     }
 
+    @Override
     public void addPropertyDirect(String key, Object value)
     {
         parent.addProperty(getParentKey(key), value);
     }
 
+    @Override
     protected void clearPropertyDirect(String key)
     {
         parent.clearProperty(getParentKey(key));
@@ -178,16 +181,18 @@ public class SubsetConfiguration extends AbstractConfiguration
         return parent.getProperty(getParentKey(key));
     }
 
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return new SubsetIterator(parent.getKeys(prefix));
     }
 
+    @Override
     protected Object interpolate(Object base)
     {
         if (delimiter == null && "".equals(prefix))
@@ -207,6 +212,7 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
     }
 
+    @Override
     protected String interpolate(String base)
     {
         return super.interpolate(base);
@@ -215,8 +221,9 @@ public class SubsetConfiguration extends AbstractConfiguration
     /**
      * {@inheritDoc}
      *
-     * Change the behaviour of the parent configuration if it supports this feature.
+     * Change the behavior of the parent configuration if it supports this feature.
      */
+    @Override
     public void setThrowExceptionOnMissing(boolean throwExceptionOnMissing)
     {
         if (parent instanceof AbstractConfiguration)
@@ -234,6 +241,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      *
      * The subset inherits this feature from its parent if it supports this feature.
      */
+    @Override
     public boolean isThrowExceptionOnMissing()
     {
         if (parent instanceof AbstractConfiguration)
@@ -253,6 +261,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @return the list delimiter
      * @since 1.4
      */
+    @Override
     public char getListDelimiter()
     {
         return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
@@ -267,6 +276,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param delim the new list delimiter
      * @since 1.4
      */
+    @Override
     public void setListDelimiter(char delim)
     {
         if (parent instanceof AbstractConfiguration)
@@ -288,6 +298,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @return the delimiter parsing disabled flag
      * @since 1.4
      */
+    @Override
     public boolean isDelimiterParsingDisabled()
     {
         return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
@@ -303,6 +314,7 @@ public class SubsetConfiguration extends AbstractConfiguration
      * @param delimiterParsingDisabled the delimiter parsing disabled flag
      * @since 1.4
      */
+    @Override
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {
         if (parent instanceof AbstractConfiguration)
@@ -318,23 +330,23 @@ public class SubsetConfiguration extends AbstractConfiguration
 
 
     /**
-     * A specialized iterator to be returned by the <code>getKeys()</code>
+     * A specialized iterator to be returned by the {@code getKeys()}
      * methods. This implementation wraps an iterator from the parent
      * configuration. The keys returned by this iterator are correspondingly
      * transformed.
      */
-    private class SubsetIterator implements Iterator
+    private class SubsetIterator implements Iterator<String>
     {
         /** Stores the wrapped iterator. */
-        private final Iterator parentIterator;
+        private final Iterator<String> parentIterator;
 
         /**
-         * Creates a new instance of <code>SubsetIterator</code> and
+         * Creates a new instance of {@code SubsetIterator} and
          * initializes it with the parent iterator.
          *
          * @param it the iterator of the parent configuration
          */
-        public SubsetIterator(Iterator it)
+        public SubsetIterator(Iterator<String> it)
         {
             parentIterator = it;
         }
@@ -357,9 +369,9 @@ public class SubsetConfiguration extends AbstractConfiguration
          *
          * @return the next element
          */
-        public Object next()
+        public String next()
         {
-            return getChildKey((String) parentIterator.next());
+            return getChildKey(parentIterator.next());
         }
 
         /**
