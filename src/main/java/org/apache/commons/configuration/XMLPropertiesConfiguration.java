@@ -24,12 +24,12 @@ import java.io.Writer;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
-
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -54,7 +54,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * The Java 5.0 runtime is not required to use this class. The default encoding
  * for this configuration format is UTF-8. Note that unlike
- * <code>PropertiesConfiguration</code>, <code>XMLPropertiesConfiguration</code>
+ * {@code PropertiesConfiguration}, {@code XMLPropertiesConfiguration}
  * does not support includes.
  *
  * <em>Note:</em>Configuration objects of this type can be read concurrently
@@ -63,7 +63,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @author Emmanuel Bourg
  * @author Alistair Young
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class XMLPropertiesConfiguration extends PropertiesConfiguration
@@ -129,6 +129,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         super(url);
     }
 
+    @Override
     public void load(Reader in) throws ConfigurationException
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -158,6 +159,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         // todo: support included properties ?
     }
 
+    @Override
     public void save(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
@@ -172,15 +174,15 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
             writer.println("  <comment>" + StringEscapeUtils.escapeXml(getHeader()) + "</comment>");
         }
 
-        Iterator keys = getKeys();
+        Iterator<String> keys = getKeys();
         while (keys.hasNext())
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             Object value = getProperty(key);
 
             if (value instanceof List)
             {
-                writeProperty(writer, key, (List) value);
+                writeProperty(writer, key, (List<?>) value);
             }
             else
             {
@@ -225,11 +227,11 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
      * @param key the key of the property
      * @param values a list with all property values
      */
-    private void writeProperty(PrintWriter out, String key, List values)
+    private void writeProperty(PrintWriter out, String key, List<?> values)
     {
-        for (int i = 0; i < values.size(); i++)
+        for (Object value : values)
         {
-            writeProperty(out, key, values.get(i));
+            writeProperty(out, key, value);
         }
     }
 
@@ -245,7 +247,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         private String key;
 
         /** The value of the current entry being parsed. */
-        private StringBuffer value = new StringBuffer();
+        private StringBuilder value = new StringBuilder();
 
         /** Indicates that a comment is being parsed. */
         private boolean inCommentElement;
@@ -253,6 +255,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         /** Indicates that an entry is being parsed. */
         private boolean inEntryElement;
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attrs)
         {
             if ("comment".equals(qName))
@@ -267,6 +270,7 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
             }
         }
 
+        @Override
         public void endElement(String uri, String localName, String qName)
         {
             if (inCommentElement)
@@ -284,9 +288,10 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
             }
 
             // Clear the element value buffer
-            value = new StringBuffer();
+            value = new StringBuilder();
         }
 
+        @Override
         public void characters(char[] chars, int start, int length)
         {
             /**
