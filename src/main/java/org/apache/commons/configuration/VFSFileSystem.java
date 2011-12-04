@@ -16,34 +16,34 @@
  */
 package org.apache.commons.configuration;
 
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileName;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileType;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.FileSystemConfigBuilder;
-import org.apache.commons.vfs2.provider.UriParser;
-
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLStreamHandler;
-import java.net.MalformedURLException;
-import java.net.URLConnection;
-import java.util.Map;
-import java.util.Iterator;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.util.Map;
+
+import org.apache.commons.vfs2.FileContent;
+import org.apache.commons.vfs2.FileName;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemConfigBuilder;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.FileType;
+import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.provider.UriParser;
 
 /**
  * FileSystem that uses Commons VFS
  * @since 1.7
  * @author <a
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * @version $Id$
  */
 public class VFSFileSystem extends DefaultFileSystem
 {
@@ -51,6 +51,7 @@ public class VFSFileSystem extends DefaultFileSystem
     {
     }
 
+    @Override
     public InputStream getInputStream(String basePath, String fileName)
         throws ConfigurationException
     {
@@ -90,6 +91,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         FileObject file;
@@ -117,6 +119,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public OutputStream getOutputStream(URL url) throws ConfigurationException
     {
         try
@@ -144,6 +147,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public String getPath(File file, URL url, String basePath, String fileName)
     {
         if (file != null)
@@ -185,6 +189,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public String getBasePath(String path)
     {
         if (UriParser.extractScheme(path) == null)
@@ -204,6 +209,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public String getFileName(String path)
     {
         if (UriParser.extractScheme(path) == null)
@@ -223,6 +229,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public URL getURL(String basePath, String file) throws MalformedURLException
     {
         if ((basePath != null && UriParser.extractScheme(basePath) == null)
@@ -255,6 +262,7 @@ public class VFSFileSystem extends DefaultFileSystem
         }
     }
 
+    @Override
     public URL locateFromURL(String basePath, String fileName)
     {
         String fileScheme = UriParser.extractScheme(fileName);
@@ -323,19 +331,17 @@ public class VFSFileSystem extends DefaultFileSystem
         FileOptionsProvider provider = getFileOptionsProvider();
         if (provider != null)
         {
-            Map map = provider.getOptions();
+            Map<String, Object> map = provider.getOptions();
             if (map == null)
             {
                 return null;
             }
-            Iterator iter = map.entrySet().iterator();
             int count = 0;
-            while (iter.hasNext())
+            for (Map.Entry<String, Object> entry : map.entrySet())
             {
-                Map.Entry entry = (Map.Entry) iter.next();
                 try
                 {
-                    String key = (String) entry.getKey();
+                    String key = entry.getKey();
                     if (FileOptionsProvider.CURRENT_USER.equals(key))
                     {
                         key = "creatorName";
@@ -362,7 +368,7 @@ public class VFSFileSystem extends DefaultFileSystem
                              String key, Object value)
     {
         String methodName = "set" + key.substring(0, 1).toUpperCase() + key.substring(1);
-        Class[] paramTypes = new Class[2];
+        Class<?>[] paramTypes = new Class<?>[2];
         paramTypes[0] = FileSystemOptions.class;
         paramTypes[1] = value.getClass();
 
@@ -394,6 +400,7 @@ public class VFSFileSystem extends DefaultFileSystem
             this.protocol = file.getScheme();
         }
 
+        @Override
         protected URLConnection openConnection(URL url) throws IOException
         {
             throw new IOException("VFS URLs can only be used with VFS APIs");
