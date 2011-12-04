@@ -18,12 +18,11 @@ package org.apache.commons.configuration;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.reloading.Reloadable;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 
 /**
  * <p>
@@ -35,16 +34,16 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * configuration node of this configuration. This node becomes the root node of
  * the subnode configuration. All property accessor methods are evaluated
  * relative to this root node. A good use case for a
- * <code>SubnodeConfiguration</code> is when multiple properties from a
+ * {@code SubnodeConfiguration} is when multiple properties from a
  * specific sub tree of the whole configuration need to be accessed. Then a
- * <code>SubnodeConfiguration</code> can be created with the parent node of
+ * {@code SubnodeConfiguration} can be created with the parent node of
  * the affected sub tree as root node. This allows for simpler property keys and
  * is also more efficient.
  * </p>
  * <p>
  * A subnode configuration and its parent configuration operate on the same
  * hierarchy of configuration nodes. So if modifications are performed at the
- * subnode configuration, these changes are immideately visible in the parent
+ * subnode configuration, these changes are immediately visible in the parent
  * configuration. Analogously will updates of the parent configuration affect
  * the subnode configuration if the sub tree spanned by the subnode
  * configuration's root node is involved.
@@ -64,7 +63,7 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * To solve these problems and make a subnode configuration aware of
  * such structural changes of its parent, it is possible to associate a
  * subnode configuration with a configuration key. This can be done by calling
- * the <code>setSubnodeKey()</code> method. If here a key is set, the subnode
+ * the {@code setSubnodeKey()} method. If here a key is set, the subnode
  * configuration will evaluate it on each access, thus ensuring that it is
  * always in sync with its parent. In this mode the subnode configuration really
  * behaves like a live-view on its parent. The price for this is a decreased
@@ -73,8 +72,8 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * instance a subnode configuration is only used for a temporary convenient
  * access to a complex configuration, there is no need to make it aware for
  * structural changes of its parent. If a subnode configuration is created
- * using the <code>{@link HierarchicalConfiguration#configurationAt(String, boolean)
- * configurationAt()}</code> method of <code>HierarchicalConfiguration</code>
+ * using the {@link HierarchicalConfiguration#configurationAt(String, boolean)
+ * configurationAt()} method of {@code HierarchicalConfiguration}
  * (which should be the preferred way), with an additional boolean parameter it
  * can be specified whether the resulting subnode configuration should be
  * aware of structural changes or not. Then the configuration key will be
@@ -94,7 +93,7 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * <p>
  * When a subnode configuration is created, it inherits the settings of its
  * parent configuration, e.g. some flags like the
- * <code>throwExceptionOnMissing</code> flag or the settings for handling list
+ * {@code throwExceptionOnMissing} flag or the settings for handling list
  * delimiters) or the expression engine. If these settings are changed later in
  * either the subnode or the parent configuration, the changes are not visible
  * for each other. So you could create a subnode configuration, change its
@@ -102,17 +101,19 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * </p>
  * <p>
  * From its purpose this class is quite similar to
- * <code>{@link SubsetConfiguration}</code>. The difference is that a subset
+ * {@link SubsetConfiguration}. The difference is that a subset
  * configuration of a hierarchical configuration may combine multiple
  * configuration nodes from different sub trees of the configuration, while all
  * nodes in a subnode configuration belong to the same sub tree. If an
  * application can live with this limitation, it is recommended to use this
- * class instead of <code>SubsetConfiguration</code> because creating a subset
+ * class instead of {@code SubsetConfiguration} because creating a subset
  * configuration is more expensive than creating a subnode configuration.
  * </p>
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
@@ -129,7 +130,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     private String subnodeKey;
 
     /**
-     * Creates a new instance of <code>SubnodeConfiguration</code> and
+     * Creates a new instance of {@code SubnodeConfiguration} and
      * initializes it with the parent configuration and the new root node.
      *
      * @param parent the parent configuration
@@ -200,13 +201,14 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * @since 1.5
      * @see #setSubnodeKey(String)
      */
+    @Override
     public ConfigurationNode getRootNode()
     {
         if (getSubnodeKey() != null)
         {
             try
             {
-                List nodes = getParent().fetchNodeList(getSubnodeKey());
+                List<ConfigurationNode> nodes = getParent().fetchNodeList(getSubnodeKey());
                 if (nodes.size() != 1)
                 {
                     // key is invalid, so detach this subnode configuration
@@ -214,8 +216,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
                 }
                 else
                 {
-                    ConfigurationNode currentRoot = (ConfigurationNode) nodes
-                            .get(0);
+                    ConfigurationNode currentRoot = nodes.get(0);
                     if (currentRoot != super.getRootNode())
                     {
                         // the root node was changed due to a change of the
@@ -242,12 +243,13 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     /**
      * Returns a hierarchical configuration object for the given sub node.
      * This implementation will ensure that the returned
-     * <code>SubnodeConfiguration</code> object will have the same parent than
+     * {@code SubnodeConfiguration} object will have the same parent than
      * this object.
      *
      * @param node the sub node, for which the configuration is to be created
      * @return a hierarchical configuration for this sub node
      */
+    @Override
     protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
     {
         SubnodeConfiguration result = new SubnodeConfiguration(getParent(), node);
@@ -270,6 +272,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * @return a hierarchical configuration for this sub node
      * @since 1.5
      */
+    @Override
     protected SubnodeConfiguration createSubnodeConfiguration(
             ConfigurationNode node, String subnodeKey)
     {
@@ -279,7 +282,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
         {
             // construct the correct subnode key
             // determine path to root node
-            List lstPathToRoot = new ArrayList();
+            List<ConfigurationNode> lstPathToRoot = new ArrayList<ConfigurationNode>();
             ConfigurationNode top = super.getRootNode();
             ConfigurationNode nd = node;
             while (nd != top)
@@ -291,10 +294,9 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
             // construct the keys for the nodes on this path
             Collections.reverse(lstPathToRoot);
             String key = getSubnodeKey();
-            for (Iterator it = lstPathToRoot.iterator(); it.hasNext();)
+            for (ConfigurationNode pathNode : lstPathToRoot)
             {
-                key = getParent().getExpressionEngine().nodeKey(
-                        (ConfigurationNode) it.next(), key);
+                key = getParent().getExpressionEngine().nodeKey(pathNode, key);
             }
             result.setSubnodeKey(key);
         }
@@ -308,6 +310,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * @param name the node's name
      * @return the new node
      */
+    @Override
     protected Node createNode(String name)
     {
         return getParent().createNode(name);
@@ -334,6 +337,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      *
      * @return the new interpolator
      */
+    @Override
     protected ConfigurationInterpolator createInterpolator()
     {
         ConfigurationInterpolator interpolator = super.createInterpolator();
