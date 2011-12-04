@@ -25,11 +25,11 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
@@ -65,16 +65,18 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     /**
      * Prevent recursion while resolving unprefixed properties.
      */
-    private static ThreadLocal recursive = new ThreadLocal()
+    private static ThreadLocal<Boolean> recursive = new ThreadLocal<Boolean>()
     {
-        protected synchronized Object initialValue()
+        @Override
+        protected synchronized Boolean initialValue()
         {
             return Boolean.FALSE;
         }
     };
 
     /** Map of configurations */
-    private final Map configurationsMap = new HashMap();
+    private final ConcurrentMap<String, XMLConfiguration> configurationsMap =
+            new ConcurrentHashMap<String, XMLConfiguration>();
 
     /** key pattern for configurationsMap */
     private String pattern;
@@ -172,11 +174,13 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.attributeSplittingDisabled = attributeSplittingDisabled;
     }
 
+    @Override
     public ReloadingStrategy getReloadingStrategy()
     {
         return fileStrategy;
     }
 
+    @Override
     public void setReloadingStrategy(ReloadingStrategy strategy)
     {
         this.fileStrategy = strategy;
@@ -202,201 +206,241 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.ignoreException = ignoreException;
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         this.getConfiguration().addProperty(key, value);
     }
 
+    @Override
     public void clear()
     {
         this.getConfiguration().clear();
     }
 
+    @Override
     public void clearProperty(String key)
     {
         this.getConfiguration().clearProperty(key);
     }
 
+    @Override
     public boolean containsKey(String key)
     {
         return this.getConfiguration().containsKey(key);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key, BigDecimal defaultValue)
     {
         return this.getConfiguration().getBigDecimal(key, defaultValue);
     }
 
+    @Override
     public BigDecimal getBigDecimal(String key)
     {
         return this.getConfiguration().getBigDecimal(key);
     }
 
+    @Override
     public BigInteger getBigInteger(String key, BigInteger defaultValue)
     {
         return this.getConfiguration().getBigInteger(key, defaultValue);
     }
 
+    @Override
     public BigInteger getBigInteger(String key)
     {
         return this.getConfiguration().getBigInteger(key);
     }
 
+    @Override
     public boolean getBoolean(String key, boolean defaultValue)
     {
         return this.getConfiguration().getBoolean(key, defaultValue);
     }
 
+    @Override
     public Boolean getBoolean(String key, Boolean defaultValue)
     {
         return this.getConfiguration().getBoolean(key, defaultValue);
     }
 
+    @Override
     public boolean getBoolean(String key)
     {
         return this.getConfiguration().getBoolean(key);
     }
 
+    @Override
     public byte getByte(String key, byte defaultValue)
     {
         return this.getConfiguration().getByte(key, defaultValue);
     }
 
+    @Override
     public Byte getByte(String key, Byte defaultValue)
     {
         return this.getConfiguration().getByte(key, defaultValue);
     }
 
+    @Override
     public byte getByte(String key)
     {
         return this.getConfiguration().getByte(key);
     }
 
+    @Override
     public double getDouble(String key, double defaultValue)
     {
         return this.getConfiguration().getDouble(key, defaultValue);
     }
 
+    @Override
     public Double getDouble(String key, Double defaultValue)
     {
         return this.getConfiguration().getDouble(key, defaultValue);
     }
 
+    @Override
     public double getDouble(String key)
     {
         return this.getConfiguration().getDouble(key);
     }
 
+    @Override
     public float getFloat(String key, float defaultValue)
     {
         return this.getConfiguration().getFloat(key, defaultValue);
     }
 
+    @Override
     public Float getFloat(String key, Float defaultValue)
     {
         return this.getConfiguration().getFloat(key, defaultValue);
     }
 
+    @Override
     public float getFloat(String key)
     {
         return this.getConfiguration().getFloat(key);
     }
 
+    @Override
     public int getInt(String key, int defaultValue)
     {
         return this.getConfiguration().getInt(key, defaultValue);
     }
 
+    @Override
     public int getInt(String key)
     {
         return this.getConfiguration().getInt(key);
     }
 
+    @Override
     public Integer getInteger(String key, Integer defaultValue)
     {
         return this.getConfiguration().getInteger(key, defaultValue);
     }
 
-    public Iterator getKeys()
+    @Override
+    public Iterator<String> getKeys()
     {
         return this.getConfiguration().getKeys();
     }
 
-    public Iterator getKeys(String prefix)
+    @Override
+    public Iterator<String> getKeys(String prefix)
     {
         return this.getConfiguration().getKeys(prefix);
     }
 
-    public List getList(String key, List defaultValue)
+    @Override
+    public List<Object> getList(String key, List<Object> defaultValue)
     {
         return this.getConfiguration().getList(key, defaultValue);
     }
 
-    public List getList(String key)
+    @Override
+    public List<Object> getList(String key)
     {
         return this.getConfiguration().getList(key);
     }
 
+    @Override
     public long getLong(String key, long defaultValue)
     {
         return this.getConfiguration().getLong(key, defaultValue);
     }
 
+    @Override
     public Long getLong(String key, Long defaultValue)
     {
         return this.getConfiguration().getLong(key, defaultValue);
     }
 
+    @Override
     public long getLong(String key)
     {
         return this.getConfiguration().getLong(key);
     }
 
+    @Override
     public Properties getProperties(String key)
     {
         return this.getConfiguration().getProperties(key);
     }
 
+    @Override
     public Object getProperty(String key)
     {
         return this.getConfiguration().getProperty(key);
     }
 
+    @Override
     public short getShort(String key, short defaultValue)
     {
         return this.getConfiguration().getShort(key, defaultValue);
     }
 
+    @Override
     public Short getShort(String key, Short defaultValue)
     {
         return this.getConfiguration().getShort(key, defaultValue);
     }
 
+    @Override
     public short getShort(String key)
     {
         return this.getConfiguration().getShort(key);
     }
 
+    @Override
     public String getString(String key, String defaultValue)
     {
         return this.getConfiguration().getString(key, defaultValue);
     }
 
+    @Override
     public String getString(String key)
     {
         return this.getConfiguration().getString(key);
     }
 
+    @Override
     public String[] getStringArray(String key)
     {
         return this.getConfiguration().getStringArray(key);
     }
 
+    @Override
     public boolean isEmpty()
     {
         return this.getConfiguration().isEmpty();
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         if (init)
@@ -405,21 +449,25 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public Configuration subset(String prefix)
     {
         return this.getConfiguration().subset(prefix);
     }
 
+    @Override
     public Object getReloadLock()
     {
         return this.getConfiguration().getReloadLock();
     }
 
+    @Override
     public Node getRoot()
     {
         return this.getConfiguration().getRoot();
     }
 
+    @Override
     public void setRoot(Node node)
     {
         if (init)
@@ -432,11 +480,13 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public ConfigurationNode getRootNode()
     {
         return this.getConfiguration().getRootNode();
     }
 
+    @Override
     public void setRootNode(ConfigurationNode rootNode)
     {
         if (init)
@@ -449,87 +499,104 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return super.getExpressionEngine();
     }
 
+    @Override
     public void setExpressionEngine(ExpressionEngine expressionEngine)
     {
         super.setExpressionEngine(expressionEngine);
     }
 
-    public void addNodes(String key, Collection nodes)
+    @Override
+    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         this.getConfiguration().addNodes(key, nodes);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key, boolean supportUpdates)
     {
         return this.getConfiguration().configurationAt(key, supportUpdates);
     }
 
+    @Override
     public SubnodeConfiguration configurationAt(String key)
     {
         return this.getConfiguration().configurationAt(key);
     }
 
-    public List configurationsAt(String key)
+    @Override
+    public List<HierarchicalConfiguration> configurationsAt(String key)
     {
         return this.getConfiguration().configurationsAt(key);
     }
 
+    @Override
     public void clearTree(String key)
     {
         this.getConfiguration().clearTree(key);
     }
 
+    @Override
     public int getMaxIndex(String key)
     {
         return this.getConfiguration().getMaxIndex(key);
     }
 
+    @Override
     public Configuration interpolatedConfiguration()
     {
         return this.getConfiguration().interpolatedConfiguration();
     }
 
+    @Override
     public void addConfigurationListener(ConfigurationListener l)
     {
         super.addConfigurationListener(l);
     }
 
+    @Override
     public boolean removeConfigurationListener(ConfigurationListener l)
     {
         return super.removeConfigurationListener(l);
     }
 
-    public Collection getConfigurationListeners()
+    @Override
+    public Collection<ConfigurationListener> getConfigurationListeners()
     {
         return super.getConfigurationListeners();
     }
 
+    @Override
     public void clearConfigurationListeners()
     {
         super.clearConfigurationListeners();
     }
 
+    @Override
     public void addErrorListener(ConfigurationErrorListener l)
     {
         super.addErrorListener(l);
     }
 
+    @Override
     public boolean removeErrorListener(ConfigurationErrorListener l)
     {
         return super.removeErrorListener(l);
     }
 
+    @Override
     public void clearErrorListeners()
     {
         super.clearErrorListeners();
     }
 
-    public Collection getErrorListeners()
+    @Override
+    public Collection<ConfigurationErrorListener> getErrorListeners()
     {
         return super.getErrorListeners();
     }
@@ -550,87 +617,97 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    @Override
     public void load() throws ConfigurationException
     {
         this.getConfiguration();
     }
 
+    @Override
     public void load(String fileName) throws ConfigurationException
     {
         this.getConfiguration().load(fileName);
     }
 
+    @Override
     public void load(File file) throws ConfigurationException
     {
         this.getConfiguration().load(file);
     }
 
+    @Override
     public void load(URL url) throws ConfigurationException
     {
         this.getConfiguration().load(url);
     }
 
+    @Override
     public void load(InputStream in) throws ConfigurationException
     {
         this.getConfiguration().load(in);
     }
 
+    @Override
     public void load(InputStream in, String encoding) throws ConfigurationException
     {
         this.getConfiguration().load(in, encoding);
     }
 
+    @Override
     public void save() throws ConfigurationException
     {
         this.getConfiguration().save();
     }
 
+    @Override
     public void save(String fileName) throws ConfigurationException
     {
         this.getConfiguration().save(fileName);
     }
 
+    @Override
     public void save(File file) throws ConfigurationException
     {
         this.getConfiguration().save(file);
     }
 
+    @Override
     public void save(URL url) throws ConfigurationException
     {
         this.getConfiguration().save(url);
     }
 
+    @Override
     public void save(OutputStream out) throws ConfigurationException
     {
         this.getConfiguration().save(out);
     }
 
+    @Override
     public void save(OutputStream out, String encoding) throws ConfigurationException
     {
         this.getConfiguration().save(out, encoding);
     }
 
+    @Override
     public void configurationChanged(ConfigurationEvent event)
     {
         if (event.getSource() instanceof XMLConfiguration)
         {
-            Iterator iter = getConfigurationListeners().iterator();
-            while (iter.hasNext())
+            for (ConfigurationListener listener : getConfigurationListeners())
             {
-                ConfigurationListener listener = (ConfigurationListener) iter.next();
                 listener.configurationChanged(event);
             }
         }
     }
 
+    @Override
     public void configurationError(ConfigurationErrorEvent event)
     {
         if (event.getSource() instanceof XMLConfiguration)
         {
-            Iterator iter = getErrorListeners().iterator();
-            while (iter.hasNext())
+            for (ConfigurationErrorListener listener : getErrorListeners())
             {
-                ConfigurationErrorListener listener = (ConfigurationErrorListener) iter.next();
                 listener.configurationError(event);
             }
         }
@@ -649,9 +726,10 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      * @param key The key to resolve.
      * @return The value of the key.
      */
+    @Override
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean) recursive.get()).booleanValue())
+        if (recursive.get().booleanValue())
         {
             return null;
         }
@@ -672,10 +750,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     public void removeConfiguration()
     {
         String path = getSubstitutor().replace(pattern);
-        synchronized (configurationsMap)
-        {
-            configurationsMap.remove(path);
-        }
+        configurationsMap.remove(path);
     }
 
     /**
@@ -691,34 +766,32 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             throw new ConfigurationRuntimeException("File pattern must be defined");
         }
         String path = localSubst.replace(pattern);
-        synchronized (configurationsMap)
+
+        if (configurationsMap.containsKey(path))
         {
-            if (configurationsMap.containsKey(path))
-            {
-                return (AbstractHierarchicalFileConfiguration) configurationsMap.get(path);
-            }
+            return configurationsMap.get(path);
         }
 
         if (path.equals(pattern))
         {
             XMLConfiguration configuration = new XMLConfiguration()
             {
+                @Override
                 public void load() throws ConfigurationException
                 {
                 }
+                @Override
                 public void save() throws ConfigurationException
                 {
                 }
             };
-            synchronized (configurationsMap)
-            {
-                configurationsMap.put(pattern, configuration);
-            }
+
+            configurationsMap.putIfAbsent(pattern, configuration);
+
             return configuration;
         }
 
         XMLConfiguration configuration = new XMLConfiguration();
-
         if (loggerName != null)
         {
             Log log = LogFactory.getLog(loggerName);
@@ -737,14 +810,13 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             configuration.setReloadingStrategy(strategy);
         }
         configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        configuration.setAttributeSplittingDisabled(isAttributeSplittingDisabled());
         configuration.setValidating(validating);
         configuration.setSchemaValidation(schemaValidation);
         configuration.setEntityResolver(entityResolver);
-        configuration.setAttributeSplittingDisabled(attributeSplittingDisabled);
         configuration.setListDelimiter(getListDelimiter());
         configuration.addConfigurationListener(this);
         configuration.addErrorListener(this);
-
         try
         {
             configuration.load();
@@ -756,15 +828,8 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
                 throw new ConfigurationRuntimeException(ce);
             }
         }
-        synchronized (configurationsMap)
-        {
-            if (!configurationsMap.containsKey(path))
-            {
-                configurationsMap.put(path, configuration);
-            }
-        }
-
-        return configuration;
+        configurationsMap.putIfAbsent(path, configuration);
+        return configurationsMap.get(path);
     }
 
     private boolean isThrowable(Throwable throwable)
@@ -801,7 +866,6 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         {
             return null;
         }
-
     }
 
 }
