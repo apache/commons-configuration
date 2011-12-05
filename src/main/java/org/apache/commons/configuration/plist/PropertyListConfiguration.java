@@ -25,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -78,7 +80,7 @@ import org.apache.commons.lang.StringUtils;
  * @since 1.2
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
@@ -137,7 +139,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     }
 
     /**
-     * Creates a new instance of <code>PropertyListConfiguration</code> and
+     * Creates a new instance of {@code PropertyListConfiguration} and
      * copies the content of the specified configuration into this object.
      *
      * @param c the configuration to copy
@@ -181,6 +183,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         super(url);
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
@@ -205,6 +208,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         if (value instanceof byte[])
@@ -243,7 +247,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, Node node)
+    private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
     {
         String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
@@ -252,7 +256,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.print(padding + quoteString(node.getName()) + " = ");
         }
 
-        List children = new ArrayList(node.getChildren());
+        List<ConfigurationNode> children = new ArrayList<ConfigurationNode>(node.getChildren());
         if (!children.isEmpty())
         {
             // skip a line, except for the root dictionary
@@ -264,10 +268,10 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.println(padding + "{");
 
             // display the children
-            Iterator it = children.iterator();
+            Iterator<ConfigurationNode> it = children.iterator();
             while (it.hasNext())
             {
-                Node child = (Node) it.next();
+                ConfigurationNode child = it.next();
 
                 printNode(out, indentLevel + 1, child);
 
@@ -288,7 +292,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.print(padding + "}");
 
             // line feed if the dictionary is not in an array
-            if (node.getParent() != null)
+            if (node.getParentNode() != null)
             {
                 out.println();
             }
@@ -322,7 +326,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         if (value instanceof List)
         {
             out.print("( ");
-            Iterator it = ((List) value).iterator();
+            Iterator<?> it = ((List<?>) value).iterator();
             while (it.hasNext())
             {
                 printValue(out, indentLevel + 1, it.next());
@@ -344,10 +348,10 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             out.println(padding + "{");
 
             Configuration config = (Configuration) value;
-            Iterator it = config.getKeys();
+            Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {
-                String key = (String) it.next();
+                String key = it.next();
                 Node node = new Node(key);
                 node.setValue(config.getProperty(key));
 
@@ -359,7 +363,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         else if (value instanceof Map)
         {
             // display a Map as a dictionary
-            Map map = (Map) value;
+            Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -422,7 +426,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
 
     /**
      * Parses a date in a format like
-     * <code>&lt;*D2002-03-22 11:30:00 +0100&gt;</code>.
+     * {@code <*D2002-03-22 11:30:00 +0100>}.
      *
      * @param s the string with the date to be parsed
      * @return the parsed date
@@ -434,9 +438,9 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         cal.clear();
         int index = 0;
 
-        for (int i = 0; i < DATE_PARSERS.length; i++)
+        for (DateComponentParser parser : DATE_PARSERS)
         {
-            index += DATE_PARSERS[i].parseComponent(s, index, cal);
+            index += parser.parseComponent(s, index, cal);
         }
 
         return cal.getTime();
@@ -451,7 +455,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      */
     static String formatDate(Calendar cal)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         for (int i = 0; i < DATE_PARSERS.length; i++)
         {
@@ -475,8 +479,29 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     }
 
     /**
+     * Transform a map of arbitrary types into a map with string keys and object
+     * values. All keys of the source map which are not of type String are
+     * dropped.
+     *
+     * @param src the map to be converted
+     * @return the resulting map
+     */
+    private static Map<String, Object> transformMap(Map<?, ?> src)
+    {
+        Map<String, Object> dest = new HashMap<String, Object>();
+        for (Map.Entry<?, ?> e : src.entrySet())
+        {
+            if (e.getKey() instanceof String)
+            {
+                dest.put((String) e.getKey(), e.getValue());
+            }
+        }
+        return dest;
+    }
+
+    /**
      * A helper class for parsing and formatting date literals. Usually we would
-     * use <code>SimpleDateFormat</code> for this purpose, but in Java 1.3 the
+     * use {@code SimpleDateFormat} for this purpose, but in Java 1.3 the
      * functionality of this class is limited. So we have a hierarchy of parser
      * classes instead that deal with the different components of a date
      * literal.
@@ -502,10 +527,10 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
          * @param buf the target buffer
          * @param cal the calendar with the current date
          */
-        public abstract void formatComponent(StringBuffer buf, Calendar cal);
+        public abstract void formatComponent(StringBuilder buf, Calendar cal);
 
         /**
-         * Checks whether the given string has at least <code>length</code>
+         * Checks whether the given string has at least {@code length}
          * characters starting from the given parsing position. If this is not
          * the case, an exception will be thrown.
          *
@@ -533,7 +558,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
          * @param num the number to add
          * @param length the required length
          */
-        protected void padNum(StringBuffer buf, int num, int length)
+        protected void padNum(StringBuilder buf, int num, int length)
         {
             buf.append(StringUtils.leftPad(String.valueOf(num), length,
                     PAD_CHAR));
@@ -557,7 +582,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         private int offset;
 
         /**
-         * Creates a new instance of <code>DateFieldParser</code>.
+         * Creates a new instance of {@code DateFieldParser}.
          *
          * @param calFld the calendar field code
          * @param len the length of this field
@@ -568,7 +593,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
 
         /**
-         * Creates a new instance of <code>DateFieldParser</code> and fully
+         * Creates a new instance of {@code DateFieldParser} and fully
          * initializes it.
          *
          * @param calFld the calendar field code
@@ -582,11 +607,13 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             offset = ofs;
         }
 
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        @Override
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             padNum(buf, cal.get(calendarField) + offset, length);
         }
 
+        @Override
         public int parseComponent(String s, int index, Calendar cal)
                 throws ParseException
         {
@@ -616,7 +643,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         private String separator;
 
         /**
-         * Creates a new instance of <code>DateSeparatorParser</code> and sets
+         * Creates a new instance of {@code DateSeparatorParser} and sets
          * the separator string.
          *
          * @param sep the separator string
@@ -626,11 +653,13 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             separator = sep;
         }
 
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        @Override
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             buf.append(separator);
         }
 
+        @Override
         public int parseComponent(String s, int index, Calendar cal)
                 throws ParseException
         {
@@ -650,7 +679,8 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
      */
     private static class DateTimeZoneParser extends DateComponentParser
     {
-        public void formatComponent(StringBuffer buf, Calendar cal)
+        @Override
+        public void formatComponent(StringBuilder buf, Calendar cal)
         {
             TimeZone tz = cal.getTimeZone();
             int ofs = tz.getRawOffset() / MILLIS_PER_MINUTE;
@@ -669,6 +699,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             padNum(buf, min, 2);
         }
 
+        @Override
         public int parseComponent(String s, int index, Calendar cal)
                 throws ParseException
         {
