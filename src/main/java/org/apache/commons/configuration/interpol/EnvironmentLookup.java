@@ -35,7 +35,7 @@ import org.apache.commons.lang.text.StrLookup;
  *
  * </p>
  * <p>
- * <code>EnvironmentLookup</code> is one of the standard lookups that is
+ * {@code EnvironmentLookup} is one of the standard lookups that is
  * registered per default for each configuration.
  * </p>
  *
@@ -47,16 +47,17 @@ import org.apache.commons.lang.text.StrLookup;
  */
 public class EnvironmentLookup extends StrLookup
 {
-    /** Stores the underlying <code>EnvironmentConfiguration</code>. */
+    /** Stores the underlying {@code EnvironmentConfiguration}. */
     private final EnvironmentConfiguration environmentConfig = new EnvironmentConfiguration();
 
     /**
      * Performs a lookup for the specified variable. This implementation
-     * directly delegates to a <code>EnvironmentConfiguration</code>.
+     * directly delegates to a {@code EnvironmentConfiguration}.
      *
      * @param key the key to lookup
      * @return the value of this key or <b>null</b> if it cannot be resolved
      */
+    @Override
     public String lookup(String key)
     {
         return environmentConfig.getString(key);
