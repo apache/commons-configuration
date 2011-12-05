@@ -16,19 +16,18 @@
  */
 package org.apache.commons.configuration.interpol;
 
-import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.lang.text.StrSubstitutor;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.ClassUtils;
+import java.util.ArrayList;
+
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-import org.apache.commons.jexl.JexlHelper;
-import org.apache.commons.jexl.JexlContext;
 import org.apache.commons.jexl.Expression;
 import org.apache.commons.jexl.ExpressionFactory;
-
-import java.util.Iterator;
-import java.util.ArrayList;
+import org.apache.commons.jexl.JexlContext;
+import org.apache.commons.jexl.JexlHelper;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang.text.StrSubstitutor;
 
 /**
  * Lookup that allows expressions to be evaluated.
@@ -143,12 +142,12 @@ public class ExprLookup extends StrLookup
      * Add the Variables that will be accessible within expressions.
      * @param list The list of Variables.
      */
+    // It should be safe to put data in the JEXL context the way we do it here
+    @SuppressWarnings("unchecked")
     public void setVariables(Variables list)
     {
-        Iterator iter = list.iterator();
-        while (iter.hasNext())
+        for (Variable var : list)
         {
-            Variable var = (Variable) iter.next();
             context.getVars().put(var.getName(), var.getValue());
         }
     }
@@ -163,7 +162,7 @@ public class ExprLookup extends StrLookup
     }
 
     /**
-     * Set the configuration to be used to interpolate subordinate expressiosn.
+     * Set the configuration to be used to interpolate subordinate expressions.
      * @param config The Configuration.
      */
     public void setConfiguration(AbstractConfiguration config)
@@ -176,6 +175,7 @@ public class ExprLookup extends StrLookup
      * @param var The expression.
      * @return The String result of the expression.
      */
+    @Override
     public String lookup(String var)
     {
         ConfigurationInterpolator interp = configuration.getInterpolator();
@@ -201,8 +201,13 @@ public class ExprLookup extends StrLookup
      * List wrapper used to allow the Variables list to be created as beans in
      * DefaultConfigurationBuilder.
      */
-    public static class Variables extends ArrayList
+    public static class Variables extends ArrayList<Variable>
     {
+        /**
+         * The serial version UID.
+         */
+        private static final long serialVersionUID = 20111205L;
+
         /*
         public void setVariable(Variable var)
         {
@@ -213,7 +218,7 @@ public class ExprLookup extends StrLookup
         {
             if (size() > 0)
             {
-                return (Variable) get(size() - 1);
+                return get(size() - 1);
             }
             else
             {
@@ -271,7 +276,7 @@ public class ExprLookup extends StrLookup
                 }
                 String val = (String) value;
                 String name = StringUtils.removeStartIgnoreCase(val, CLASS);
-                Class clazz = ClassUtils.getClass(name);
+                Class<?> clazz = ClassUtils.getClass(name);
                 if (name.length() == val.length())
                 {
                     this.value = clazz.newInstance();
