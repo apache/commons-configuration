@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
@@ -117,7 +119,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @since 1.2
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfiguration
 {
@@ -140,7 +142,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     }
 
     /**
-     * Creates a new instance of <code>XMLPropertyListConfiguration</code> and
+     * Creates a new instance of {@code XMLPropertyListConfiguration} and
      * copies the content of the specified configuration into this object.
      *
      * @param configuration the configuration to copy
@@ -185,6 +187,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         super(url);
     }
 
+    @Override
     public void setProperty(String key, Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
@@ -209,6 +212,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
+    @Override
     public void addProperty(String key, Object value)
     {
         if (value instanceof byte[])
@@ -285,7 +289,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     /**
      * Append a node to the writer, indented according to a specific level.
      */
-    private void printNode(PrintWriter out, int indentLevel, Node node)
+    private void printNode(PrintWriter out, int indentLevel, ConfigurationNode node)
     {
         String padding = StringUtils.repeat(" ", indentLevel * INDENT_SIZE);
 
@@ -294,15 +298,15 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             out.println(padding + "<key>" + StringEscapeUtils.escapeXml(node.getName()) + "</key>");
         }
 
-        List children = node.getChildren();
+        List<ConfigurationNode> children = node.getChildren();
         if (!children.isEmpty())
         {
             out.println(padding + "<dict>");
 
-            Iterator it = children.iterator();
+            Iterator<ConfigurationNode> it = children.iterator();
             while (it.hasNext())
             {
-                Node child = (Node) it.next();
+                ConfigurationNode child = it.next();
                 printNode(out, indentLevel + 1, child);
 
                 if (it.hasNext())
@@ -367,7 +371,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else if (value instanceof List)
         {
             out.println(padding + "<array>");
-            Iterator it = ((List) value).iterator();
+            Iterator<?> it = ((List<?>) value).iterator();
             while (it.hasNext())
             {
                 printValue(out, indentLevel + 1, it.next());
@@ -384,11 +388,11 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             out.println(padding + "<dict>");
 
             Configuration config = (Configuration) value;
-            Iterator it = config.getKeys();
+            Iterator<String> it = config.getKeys();
             while (it.hasNext())
             {
                 // create a node for each property
-                String key = (String) it.next();
+                String key = it.next();
                 Node node = new Node(key);
                 node.setValue(config.getProperty(key));
 
@@ -405,7 +409,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else if (value instanceof Map)
         {
             // display a Map as a dictionary
-            Map map = (Map) value;
+            Map<String, Object> map = transformMap((Map<?, ?>) value);;
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -432,15 +436,36 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     }
 
     /**
+     * Transform a map of arbitrary types into a map with string keys and object
+     * values. All keys of the source map which are not of type String are
+     * dropped.
+     *
+     * @param src the map to be converted
+     * @return the resulting map
+     */
+    private static Map<String, Object> transformMap(Map<?, ?> src)
+    {
+        Map<String, Object> dest = new HashMap<String, Object>();
+        for (Map.Entry<?, ?> e : src.entrySet())
+        {
+            if (e.getKey() instanceof String)
+            {
+                dest.put((String) e.getKey(), e.getValue());
+            }
+        }
+        return dest;
+    }
+
+    /**
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
     private static class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
-        private StringBuffer buffer = new StringBuffer();
+        private StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
-        private List stack = new ArrayList();
+        private List<Node> stack = new ArrayList<Node>();
 
         public XMLPropertyListHandler(Node root)
         {
@@ -454,7 +479,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         {
             if (!stack.isEmpty())
             {
-                return (Node) stack.get(stack.size() - 1);
+                return stack.get(stack.size() - 1);
             }
             else
             {
@@ -469,7 +494,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         {
             if (!stack.isEmpty())
             {
-                return (Node) stack.remove(stack.size() - 1);
+                return stack.remove(stack.size() - 1);
             }
             else
             {
@@ -485,6 +510,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             stack.add(node);
         }
 
+        @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException
         {
             if ("array".equals(qName))
@@ -508,6 +534,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
         }
 
+        @Override
         public void endElement(String uri, String localName, String qName) throws SAXException
         {
             if ("key".equals(qName))
@@ -570,6 +597,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             buffer.setLength(0);
         }
 
+        @Override
         public void characters(char[] ch, int start, int length) throws SAXException
         {
             buffer.append(ch, start, length);
@@ -614,12 +642,14 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             else if (getValue() instanceof Collection)
             {
-                Collection collection = (Collection) getValue();
+                // This is safe because we create the collections ourselves
+                @SuppressWarnings("unchecked")
+                Collection<Object> collection = (Collection<Object>) getValue();
                 collection.add(value);
             }
             else
             {
-                List list = new ArrayList();
+                List<Object> list = new ArrayList<Object>();
                 list.add(getValue());
                 list.add(value);
                 setValue(list);
@@ -730,13 +760,14 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         private static final long serialVersionUID = 5586544306664205835L;
 
         /** The list of values in the array. */
-        private List list = new ArrayList();
+        private List<Object> list = new ArrayList<Object>();
 
         /**
          * Add an object to the array.
          *
          * @param value the value to be added
          */
+        @Override
         public void addValue(Object value)
         {
             list.add(value);
@@ -747,6 +778,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          *
          * @return the {@link List} of values
          */
+        @Override
         public Object getValue()
         {
             return list;
