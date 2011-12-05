@@ -23,8 +23,7 @@ import org.apache.commons.configuration.FileConfiguration;
  * A strategy to decide if a configuration should be reloaded.
  *
  * @author Emmanuel Bourg
- * @author Olivier Heger
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public interface ReloadingStrategy

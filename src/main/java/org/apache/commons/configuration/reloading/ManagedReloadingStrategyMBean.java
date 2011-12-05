@@ -21,6 +21,7 @@ package org.apache.commons.configuration.reloading;
  * MBean definition for managing configuration reload.
  *
  * @author Nicolas De Loof
+ * @version $Id$
  */
 public interface ManagedReloadingStrategyMBean
 {

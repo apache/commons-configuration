@@ -23,7 +23,7 @@ import org.apache.commons.configuration.FileConfiguration;
  * A strategy that never triggers a reloading.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class InvariantReloadingStrategy implements ReloadingStrategy

@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * <p>This strategy only works with FileConfiguration instances.</p>
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class FileChangedReloadingStrategy implements ReloadingStrategy

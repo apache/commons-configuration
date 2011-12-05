@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
  * JMX management.
  *
  * @author Nicolas De loof
+ * @version $Id$
  */
 public class ManagedReloadingStrategy implements ReloadingStrategy,
         ManagedReloadingStrategyMBean
@@ -56,7 +57,7 @@ public class ManagedReloadingStrategy implements ReloadingStrategy,
 
     /**
      * Checks whether reloading is required. This implementation checks whether
-     * the <code>refresh()</code> method has been invokded.
+     * the {@code refresh()} method has been invoked.
      *
      * @return a flag whether reloading is required
      * @see org.apache.commons.configuration.reloading.ReloadingStrategy#reloadingRequired()
