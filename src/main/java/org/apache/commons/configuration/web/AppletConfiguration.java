@@ -27,7 +27,7 @@ import java.util.Iterator;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class AppletConfiguration extends BaseWebConfiguration
@@ -51,7 +51,7 @@ public class AppletConfiguration extends BaseWebConfiguration
         return handleDelimiters(applet.getParameter(key));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         String[][] paramsInfo = applet.getParameterInfo();
         String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];
