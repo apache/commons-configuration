@@ -18,7 +18,9 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
+
 import javax.servlet.FilterConfig;
 
 /**
@@ -27,7 +29,7 @@ import javax.servlet.FilterConfig;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class ServletFilterConfiguration extends BaseWebConfiguration
@@ -50,8 +52,12 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
         return handleDelimiters(config.getInitParameter(key));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        return Collections.list(config.getInitParameterNames()).iterator();
+        // According to the documentation of getInitParameterNames() the
+        // enumeration is of type String.
+        @SuppressWarnings("unchecked")
+        Enumeration<String> en = config.getInitParameterNames();
+        return Collections.list(en).iterator();
     }
 }
