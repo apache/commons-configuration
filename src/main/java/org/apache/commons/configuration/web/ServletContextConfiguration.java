@@ -18,7 +18,9 @@
 package org.apache.commons.configuration.web;
 
 import java.util.Collections;
+import java.util.Enumeration;
 import java.util.Iterator;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
@@ -28,7 +30,7 @@ import javax.servlet.ServletContext;
  * throw an UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class ServletContextConfiguration extends BaseWebConfiguration
@@ -63,8 +65,12 @@ public class ServletContextConfiguration extends BaseWebConfiguration
         return handleDelimiters(context.getInitParameter(key));
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        return Collections.list(context.getInitParameterNames()).iterator();
+        // According to the documentation of getInitParameterNames() the
+        // enumeration is of type String.
+        @SuppressWarnings("unchecked")
+        Enumeration<String> en = context.getInitParameterNames();
+        return Collections.list(en).iterator();
     }
 }
