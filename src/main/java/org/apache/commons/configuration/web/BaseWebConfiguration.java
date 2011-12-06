@@ -28,10 +28,12 @@ import org.apache.commons.configuration.PropertyConverter;
  * <p>
  * This class implements common functionality used by all web based
  * configurations. E.g. some methods are not supported by configurations of this
- * type, so they throw a <code>UnsupportedOperationException</code> exception.
+ * type, so they throw a {@code UnsupportedOperationException} exception.
  * </p>
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  * @since 1.2
  */
@@ -39,7 +41,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
 {
     /**
      * Checks if this configuration is empty. This implementation makes use of
-     * the <code>getKeys()</code> method (which must be defined by concrete
+     * the {@code getKeys()} method (which must be defined by concrete
      * sub classes) to find out whether properties exist.
      *
      * @return a flag whether this configuration is empty
@@ -68,6 +70,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException because this operation is not
      * allowed
      */
+    @Override
     public void clearProperty(String key)
     {
         throw new UnsupportedOperationException("Read only configuration");
@@ -82,6 +85,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException because this operation is not
      * allowed
      */
+    @Override
     protected void addPropertyDirect(String key, Object obj)
     {
         throw new UnsupportedOperationException("Read only configuration");
@@ -99,7 +103,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
     {
         if (!isDelimiterParsingDisabled() && value instanceof String)
         {
-            List list = PropertyConverter.split((String) value,
+            List<String> list = PropertyConverter.split((String) value,
                     getListDelimiter());
             value = list.size() > 1 ? list : list.get(0);
         }
