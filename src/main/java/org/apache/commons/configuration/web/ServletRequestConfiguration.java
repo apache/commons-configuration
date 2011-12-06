@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 
@@ -30,7 +31,7 @@ import javax.servlet.ServletRequest;
  * UnsupportedOperationException.
  *
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
- * @version $Revision$, $Date$
+ * @version $Id$
  * @since 1.1
  */
 public class ServletRequestConfiguration extends BaseWebConfiguration
@@ -63,13 +64,13 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         else
         {
             // ensure that escape characters in all list elements are removed
-            List result = new ArrayList(values.length);
+            List<Object> result = new ArrayList<Object>(values.length);
             for (int i = 0; i < values.length; i++)
             {
                 Object val = handleDelimiters(values[i]);
                 if (val instanceof Collection)
                 {
-                    result.addAll((Collection) val);
+                    result.addAll((Collection<?>) val);
                 }
                 else
                 {
@@ -80,8 +81,11 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         }
     }
 
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
-        return request.getParameterMap().keySet().iterator();
+        // According to the documentation of getParameterMap(), keys are Strings.
+        @SuppressWarnings("unchecked")
+        Map<String, ?> parameterMap = request.getParameterMap();
+        return parameterMap.keySet().iterator();
     }
 }
