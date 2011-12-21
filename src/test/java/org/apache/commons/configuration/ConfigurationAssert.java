@@ -54,26 +54,26 @@ public class ConfigurationAssert
     public static void assertEquals(Configuration expected, Configuration actual)
     {
         // check that the actual configuration contains all the properties of the expected configuration
-        for (Iterator it = expected.getKeys(); it.hasNext();)
+        for (Iterator<String> it = expected.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             Assert.assertTrue("The actual configuration doesn't contain the expected key '" + key + "'", actual.containsKey(key));
             Assert.assertEquals("Value of the '" + key + "' property", expected.getProperty(key), actual.getProperty(key));
         }
 
         // check that the actual configuration has no extra properties
-        for (Iterator it = actual.getKeys(); it.hasNext();)
+        for (Iterator<String> it = actual.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             Assert.assertTrue("The actual configuration contains an extra key '" + key + "'", expected.containsKey(key));
         }
     }
 
     /**
-     * Returns a <code>File</code> object for the specified test file.
+     * Returns a {@code File} object for the specified test file.
      *
      * @param name the name of the test file
-     * @return a <code>File</code> object pointing to that test file
+     * @return a {@code File} object pointing to that test file
      */
     public static File getTestFile(String name)
     {
@@ -81,10 +81,10 @@ public class ConfigurationAssert
     }
 
     /**
-     * Returns a <code>File</code> object for the specified out file.
+     * Returns a {@code File} object for the specified out file.
      *
      * @param name the name of the out file
-     * @return a <code>File</code> object pointing to that out file
+     * @return a {@code File} object pointing to that out file
      */
     public static File getOutFile(String name)
     {
