@@ -16,10 +16,11 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import java.awt.event.KeyEvent;
 import java.util.List;
-
-import junit.framework.Assert;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.text.StrLookup;
@@ -29,7 +30,9 @@ import org.apache.commons.lang.text.StrLookup;
  * interpolation. It can be used for running these tests on different
  * configuration implementations.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class InterpolationTestHelper
@@ -47,19 +50,19 @@ public class InterpolationTestHelper
         config.setProperty("dbFailedInterpolate", unInterpolatedValue);
         String dbProp = "/home/applicationRoot/db/hypersonic";
 
-        Assert.assertEquals("Checking interpolated variable", dbProp, config
+        assertEquals("Checking interpolated variable", dbProp, config
                 .getString("db"));
-        Assert.assertEquals("lookup fails, leave variable as is", config
+        assertEquals("lookup fails, leave variable as is", config
                 .getString("dbFailedInterpolate"), unInterpolatedValue);
 
         config.setProperty("arrayInt", "${applicationRoot}/1");
         String[] arrayInt = config.getStringArray("arrayInt");
-        Assert.assertEquals("check first entry was interpolated",
+        assertEquals("check first entry was interpolated",
                 "/home/applicationRoot/1", arrayInt[0]);
 
         config.addProperty("path", "/temp,C:\\Temp,/usr/local/tmp");
         config.setProperty("path.current", "${path}");
-        Assert.assertEquals("Interpolation with multi-valued property",
+        assertEquals("Interpolation with multi-valued property",
                 "/temp", config.getString("path.current"));
     }
 
@@ -82,8 +85,7 @@ public class InterpolationTestHelper
 
         String expectedValue = "/base-level/first-level/second-level/third-level";
 
-        Assert
-                .assertEquals(config.getString("test.third-level"),
+        assertEquals(config.getString("test.third-level"),
                         expectedValue);
     }
 
@@ -101,8 +103,7 @@ public class InterpolationTestHelper
         try
         {
             config.getString("test.a");
-            Assert
-                    .fail("IllegalStateException should have been thrown for looped property references");
+            fail("IllegalStateException should have been thrown for looped property references");
         }
         catch (IllegalStateException e)
         {
@@ -120,12 +121,12 @@ public class InterpolationTestHelper
     {
         config.addProperty("test.a", new Integer(42));
         config.addProperty("test.b", "${test.a}");
-        Assert.assertEquals("Wrong interpolated value", 42, config
+        assertEquals("Wrong interpolated value", 42, config
                 .getInt("test.b"));
         Configuration subset = config.subset("test");
-        Assert.assertEquals("Wrong string property", "42", subset
+        assertEquals("Wrong string property", "42", subset
                 .getString("b"));
-        Assert.assertEquals("Wrong int property", 42, subset.getInt("b"));
+        assertEquals("Wrong int property", 42, subset.getInt("b"));
     }
 
     /**
@@ -136,7 +137,7 @@ public class InterpolationTestHelper
     public static void testInterpolationUnknownProperty(Configuration config)
     {
         config.addProperty("test.interpol", "${unknown.property}");
-        Assert.assertEquals("Wrong interpolated unknown property",
+        assertEquals("Wrong interpolated unknown property",
                 "${unknown.property}", config.getString("test.interpol"));
     }
 
@@ -156,7 +157,7 @@ public class InterpolationTestHelper
 
         for (int i = 0; i < sysProperties.length; i++)
         {
-            Assert.assertEquals("Wrong value for system property "
+            assertEquals("Wrong value for system property "
                     + sysProperties[i], System.getProperty(sysProperties[i]),
                     config.getString("prop" + i));
         }
@@ -171,9 +172,9 @@ public class InterpolationTestHelper
     {
         config.addProperty("key.code",
                 "${const:java.awt.event.KeyEvent.VK_CANCEL}");
-        Assert.assertEquals("Wrong value of constant variable",
+        assertEquals("Wrong value of constant variable",
                 KeyEvent.VK_CANCEL, config.getInt("key.code"));
-        Assert.assertEquals("Wrong value when fetching constant from cache",
+        assertEquals("Wrong value when fetching constant from cache",
                 KeyEvent.VK_CANCEL, config.getInt("key.code"));
     }
 
@@ -187,7 +188,7 @@ public class InterpolationTestHelper
     {
         config.addProperty("var", "x");
         config.addProperty("escVar", "Use the variable $${${var}}.");
-        Assert.assertEquals("Wrong escaped variable", "Use the variable ${x}.",
+        assertEquals("Wrong escaped variable", "Use the variable ${x}.",
                 config.getString("escVar"));
     }
 
@@ -202,12 +203,13 @@ public class InterpolationTestHelper
         ConfigurationInterpolator interpol = config.getInterpolator();
         interpol.registerLookup("echo", new StrLookup()
         {
+            @Override
             public String lookup(String varName)
             {
                 return "Value of variable " + varName;
             }
         });
-        Assert.assertEquals("Wrong value of echo variable",
+        assertEquals("Wrong value of echo variable",
                 "Value of variable testVar", config.getString("var"));
     }
 
@@ -233,22 +235,21 @@ public class InterpolationTestHelper
         config.addProperty("inttest.list", "${inttest.value}");
 
         Configuration c = config.interpolatedConfiguration();
-        Assert.assertEquals("Property not replaced",
+        assertEquals("Property not replaced",
                 "/home/applicationRoot/db/hypersonic", c.getProperty("db"));
-        Assert.assertEquals("Const variable not replaced", KeyEvent.VK_CANCEL,
+        assertEquals("Const variable not replaced", KeyEvent.VK_CANCEL,
                 c.getInt("intkey.code"));
-        Assert.assertEquals("Sys property not replaced", System
+        assertEquals("Sys property not replaced", System
                 .getProperty("java.version"), c.getProperty("inttest.sysprop"));
-        Assert.assertEquals("Delimiter value not replaced", "3,1415", c
+        assertEquals("Delimiter value not replaced", "3,1415", c
                 .getProperty("inttest.value"));
-        List lst = (List) c.getProperty("inttest.list");
-        Assert.assertEquals("Wrong number of list elements", 2, lst.size());
-        Assert.assertEquals("List element 0 not replaced",
+        List<?> lst = (List<?>) c.getProperty("inttest.list");
+        assertEquals("Wrong number of list elements", 2, lst.size());
+        assertEquals("List element 0 not replaced",
                 "/home/applicationRoot/db/hypersonic", lst.get(0));
-        Assert
-                .assertEquals("List element 1 not replaced", "3,1415", lst
+        assertEquals("List element 1 not replaced", "3,1415", lst
                         .get(1));
-        Assert.assertEquals("Unresolvable variable not found",
+        assertEquals("Unresolvable variable not found",
                 "${unknown.property}", c.getProperty("inttest.interpol"));
 
         return c;
