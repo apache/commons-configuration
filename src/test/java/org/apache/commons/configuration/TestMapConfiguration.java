@@ -17,18 +17,23 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.junit.Test;
 
 /**
  * Tests for MapConfiguration.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestMapConfiguration extends TestAbstractConfiguration
 {
@@ -41,9 +46,10 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     /** The trimmed test value.*/
     private static final String TRIM_VALUE = SPACE_VALUE.trim();
 
+    @Override
     protected AbstractConfiguration getConfiguration()
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put(KEY, "value1");
         map.put("key2", "value2");
         map.put("list", "value1, value2");
@@ -52,19 +58,22 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         return new MapConfiguration(map);
     }
 
+    @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        return new MapConfiguration(new HashMap());
+        return new MapConfiguration(new HashMap<String, Object>());
     }
 
+    @Test
     public void testGetMap()
     {
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
 
         MapConfiguration conf = new MapConfiguration(map);
         assertEquals(map, conf.getMap());
     }
 
+    @Test
     public void testClone()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
@@ -74,8 +83,9 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     /**
-     * Tests if the cloned configuration decoupled from the original.
+     * Tests if the cloned configuration is decoupled from the original.
      */
+    @Test
     public void testCloneModify()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
@@ -100,18 +110,20 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     /**
      * Tests adding another value to an existing property.
      */
+    @Test
     public void testAddProperty()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
         config.addProperty(KEY, TRIM_VALUE);
         config.addProperty(KEY, "anotherValue");
-        List values = config.getList(KEY);
+        List<Object> values = config.getList(KEY);
         assertEquals("Wrong number of values", 3, values.size());
     }
 
     /**
      * Tests querying a property when trimming is active.
      */
+    @Test
     public void testGetPropertyTrim()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
@@ -122,6 +134,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     /**
      * Tests querying a property when trimming is disabled.
      */
+    @Test
     public void testGetPropertyTrimDisabled()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
@@ -135,6 +148,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
      * disabled. In this case no trimming is performed (trimming only works if
      * list splitting is enabled).
      */
+    @Test
     public void testGetPropertyTrimNoSplit()
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();

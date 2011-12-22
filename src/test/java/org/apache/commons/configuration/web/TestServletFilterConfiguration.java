@@ -17,22 +17,25 @@
 
 package org.apache.commons.configuration.web;
 
-import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.TestAbstractConfiguration;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
-import java.util.Enumeration;
-import java.util.Properties;
+
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.junit.Test;
 
 /**
  * Test case for the {@link ServletFilterConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestServletFilterConfiguration extends TestAbstractConfiguration
 {
+    @Override
     protected AbstractConfiguration getConfiguration()
     {
         MockFilterConfig config = new MockFilterConfig();
@@ -44,6 +47,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
         return new ServletFilterConfiguration(config);
     }
 
+    @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
         return new ServletFilterConfiguration(new MockFilterConfig());
@@ -68,7 +72,7 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
             return parameters.getProperty(key);
         }
 
-        public Enumeration getInitParameterNames()
+        public Enumeration<?> getInitParameterNames()
         {
             return parameters.keys();
         }
@@ -79,30 +83,17 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
         }
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddPropertyDirect()
     {
-        try
-        {
-            super.testAddPropertyDirect();
-            fail("addPropertyDirect should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+        super.testAddPropertyDirect();
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testClearProperty()
     {
-        try
-        {
-            super.testClearProperty();
-            fail("testClearProperty should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+        super.testClearProperty();
     }
-
 }

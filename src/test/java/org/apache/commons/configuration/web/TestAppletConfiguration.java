@@ -17,20 +17,23 @@
 
 package org.apache.commons.configuration.web;
 
+import static org.junit.Assert.fail;
+
+import java.applet.Applet;
+import java.util.Properties;
+
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
-
-import java.applet.Applet;
-import java.util.Properties;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test case for the {@link AppletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date: 2005-02-26 13:56:39 +0100 (Sa, 26 Feb
- * 2005) $
+ * @version $Id$
  */
 public class TestAppletConfiguration extends TestAbstractConfiguration
 {
@@ -44,7 +47,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
      * environment, some tests need to behave differently or be completely
      * dropped.
      */
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         try
         {
@@ -58,6 +62,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         }
     }
 
+    @Override
     protected AbstractConfiguration getConfiguration()
     {
         final Properties parameters = new Properties();
@@ -70,11 +75,18 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         {
             Applet applet = new Applet()
             {
+                /**
+                 * Serial version UID.
+                 */
+                private static final long serialVersionUID = 1L;
+
+                @Override
                 public String getParameter(String key)
                 {
                     return parameters.getProperty(key);
                 }
 
+                @Override
                 public String[][] getParameterInfo()
                 {
                     return new String[][]
@@ -94,6 +106,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         }
     }
 
+    @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
         if (supportsApplet)
@@ -106,6 +119,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         }
     }
 
+    @Override
+    @Test
     public void testAddPropertyDirect()
     {
         if (supportsApplet)
@@ -122,6 +137,8 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
         }
     }
 
+    @Override
+    @Test
     public void testClearProperty()
     {
         if (supportsApplet)

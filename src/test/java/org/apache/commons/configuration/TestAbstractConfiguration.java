@@ -17,23 +17,31 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Test;
 
 /**
  * Abstract TestCase for implementations of {@link AbstractConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public abstract class TestAbstractConfiguration extends TestCase
+public abstract class TestAbstractConfiguration
 {
     /**
      * Return an abstract configuration with the following data:<br>
@@ -51,6 +59,7 @@ public abstract class TestAbstractConfiguration extends TestCase
      */
     protected abstract AbstractConfiguration getEmptyConfiguration();
 
+    @Test
     public void testGetProperty()
     {
         Configuration config = getConfiguration();
@@ -59,11 +68,12 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertNull("key3", config.getProperty("key3"));
     }
 
+    @Test
     public void testList()
     {
         Configuration config = getConfiguration();
 
-        List list = config.getList("list");
+        List<?> list = config.getList("list");
         assertNotNull("list not found", config.getProperty("list"));
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' is not in the list", list.contains("value1"));
@@ -74,12 +84,14 @@ public abstract class TestAbstractConfiguration extends TestCase
      * Tests whether the escape character for list delimiters is recocknized and
      * removed.
      */
+    @Test
     public void testListEscaped()
     {
         assertEquals("Wrong value for escaped list", "value1,value2",
                 getConfiguration().getString("listesc"));
     }
 
+    @Test
     public void testAddPropertyDirect()
     {
         AbstractConfiguration config = getConfiguration();
@@ -88,10 +100,10 @@ public abstract class TestAbstractConfiguration extends TestCase
 
         config.addPropertyDirect("key3", "value4");
         config.addPropertyDirect("key3", "value5");
-        List list = config.getList("key3");
+        List<Object> list = config.getList("key3");
         assertNotNull("no list found for the 'key3' property", list);
 
-        List expected = new ArrayList();
+        List<Object> expected = new ArrayList<Object>();
         expected.add("value3");
         expected.add("value4");
         expected.add("value5");
@@ -99,6 +111,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         ListAssert.assertEquals("values for the 'key3' property", expected, list);
     }
 
+    @Test
     public void testIsEmpty()
     {
         Configuration config = getConfiguration();
@@ -106,6 +119,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertTrue("the configuration is not empty", getEmptyConfiguration().isEmpty());
     }
 
+    @Test
     public void testContainsKey()
     {
         Configuration config = getConfiguration();
@@ -113,6 +127,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertFalse("key3 found", config.containsKey("key3"));
     }
 
+    @Test
     public void testClearProperty()
     {
         Configuration config = getConfiguration();
@@ -120,12 +135,13 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertFalse("key2 not cleared", config.containsKey("key2"));
     }
 
+    @Test
     public void testGetKeys()
     {
         Configuration config = getConfiguration();
-        Iterator keys = config.getKeys();
+        Iterator<String> keys = config.getKeys();
 
-        List expectedKeys = new ArrayList();
+        List<String> expectedKeys = new ArrayList<String>();
         expectedKeys.add("key1");
         expectedKeys.add("key2");
         expectedKeys.add("list");
@@ -134,7 +150,7 @@ public abstract class TestAbstractConfiguration extends TestCase
         assertNotNull("null iterator", keys);
         assertTrue("empty iterator", keys.hasNext());
 
-        List actualKeys = new ArrayList();
+        List<String> actualKeys = new ArrayList<String>();
         while (keys.hasNext())
         {
             actualKeys.add(keys.next());
@@ -146,6 +162,7 @@ public abstract class TestAbstractConfiguration extends TestCase
     /**
      * Tests accessing the configuration's logger.
      */
+    @Test
     public void testSetLogger()
     {
         AbstractConfiguration config = getEmptyConfiguration();
@@ -159,6 +176,7 @@ public abstract class TestAbstractConfiguration extends TestCase
      * Tests the exception message triggered by the conversion to BigInteger.
      * This test is related to CONFIGURATION-357.
      */
+    @Test
     public void testGetBigIntegerConversion()
     {
         Configuration config = getConfiguration();

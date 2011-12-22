@@ -17,26 +17,32 @@
 
 package org.apache.commons.configuration.web;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.servlet.ServletRequest;
 
-import com.mockobjects.servlet.MockHttpServletRequest;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationMap;
 import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.junit.Test;
+
+import com.mockobjects.servlet.MockHttpServletRequest;
 
 /**
  * Test case for the {@link ServletRequestConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestServletRequestConfiguration extends TestAbstractConfiguration
 {
+    @Override
     protected AbstractConfiguration getConfiguration()
     {
         final Configuration configuration = new BaseConfiguration();
@@ -50,20 +56,21 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
         return createConfiguration(configuration);
     }
 
+    @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
-        final Configuration configuration = new BaseConfiguration();
-
         ServletRequest request = new MockHttpServletRequest()
         {
+            @Override
             public String getParameter(String key)
             {
                 return null;
             }
 
-            public Map getParameterMap()
+            @Override
+            public Map<?, ?> getParameterMap()
             {
-                return new HashMap();
+                return new HashMap<Object, Object>();
             }
         };
 
@@ -81,12 +88,14 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     {
         ServletRequest request = new MockHttpServletRequest()
         {
+            @Override
             public String[] getParameterValues(String key)
             {
                 return base.getStringArray(key);
             }
 
-            public Map getParameterMap()
+            @Override
+            public Map<?, ?> getParameterMap()
             {
                 return new ConfigurationMap(base);
             }
@@ -95,51 +104,40 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
         return new ServletRequestConfiguration(request);
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddPropertyDirect()
     {
-        try
-        {
-            super.testAddPropertyDirect();
-            fail("addPropertyDirect should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+        super.testAddPropertyDirect();
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testClearProperty()
     {
-        try
-        {
-            super.testClearProperty();
-            fail("testClearProperty should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+        super.testClearProperty();
     }
 
     /**
      * Tests a list with elements that contain an escaped list delimiter.
      */
+    @Test
     public void testListWithEscapedElements()
     {
         String[] values = { "test1", "test2\\,test3", "test4\\,test5" };
         String listKey = "test.list";
-        
+
         BaseConfiguration config = new BaseConfiguration();
         config.setListDelimiter('\0');
         config.addProperty(listKey, values);
-        
+
         assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
-        
+
         Configuration c = createConfiguration(config);
-        List v = c.getList(listKey);
-        
+        List<?> v = c.getList(listKey);
+
         assertEquals("Wrong number of elements in list", values.length, v.size());
-        
+
         for (int i = 0; i < values.length; i++)
         {
             assertEquals("Wrong value at index " + i, values[i].replaceAll("\\\\", ""), v.get(i));

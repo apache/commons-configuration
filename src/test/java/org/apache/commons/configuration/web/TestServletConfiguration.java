@@ -21,18 +21,21 @@ import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServlet;
 
-import com.mockobjects.servlet.MockServletConfig;
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
+import org.junit.Test;
+
+import com.mockobjects.servlet.MockServletConfig;
 
 /**
  * Test case for the {@link ServletConfiguration} class.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
 public class TestServletConfiguration extends TestAbstractConfiguration
 {
+    @Override
     protected AbstractConfiguration getConfiguration()
     {
         final MockServletConfig config = new MockServletConfig();
@@ -42,6 +45,12 @@ public class TestServletConfiguration extends TestAbstractConfiguration
         config.setInitParameter("listesc", "value1\\,value2");
 
         Servlet servlet = new HttpServlet() {
+            /**
+             * Serial version UID.
+             */
+            private static final long serialVersionUID = 1L;
+
+            @Override
             public ServletConfig getServletConfig()
             {
                 return config;
@@ -51,35 +60,23 @@ public class TestServletConfiguration extends TestAbstractConfiguration
         return new ServletConfiguration(servlet);
     }
 
+    @Override
     protected AbstractConfiguration getEmptyConfiguration()
     {
         return new ServletConfiguration(new MockServletConfig());
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddPropertyDirect()
     {
-        try
-        {
-            super.testAddPropertyDirect();
-            fail("addPropertyDirect should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+        super.testAddPropertyDirect();
     }
 
+    @Override
+    @Test(expected = UnsupportedOperationException.class)
     public void testClearProperty()
     {
-        try
-        {
-            super.testClearProperty();
-            fail("testClearProperty should throw an UnsupportedException");
-        }
-        catch (UnsupportedOperationException e)
-        {
-            // ok
-        }
+       super.testClearProperty();
     }
-
 }
