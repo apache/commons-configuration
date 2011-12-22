@@ -16,17 +16,20 @@
  */
 package org.apache.commons.configuration;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 
 /**
- * An implementation of the <code>ConfigurationErrorListener</code> interface
+ * An implementation of the {@code ConfigurationErrorListener} interface
  * that can be used in unit tests. This implementation just records received
  * events and allows to test whether expected errors occurred.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class ConfigurationErrorListenerImpl implements
@@ -75,7 +78,7 @@ public class ConfigurationErrorListenerImpl implements
      */
     public void verify()
     {
-        Assert.assertEquals("Error events received", 0, errorCount);
+        assertEquals("Error events received", 0, errorCount);
     }
 
     /**
@@ -89,12 +92,12 @@ public class ConfigurationErrorListenerImpl implements
      */
     public void verify(int type, String propName, Object propValue)
     {
-        Assert.assertEquals("Wrong number of error events", 1, errorCount);
-        Assert.assertEquals("Wrong event type", type, event.getType());
-        Assert.assertTrue("Wrong property name", (propName == null) ? event
+        assertEquals("Wrong number of error events", 1, errorCount);
+        assertEquals("Wrong event type", type, event.getType());
+        assertTrue("Wrong property name", (propName == null) ? event
                 .getPropertyName() == null : propName.equals(event
                 .getPropertyName()));
-        Assert.assertTrue("Wrong property value", (propValue == null) ? event
+        assertTrue("Wrong property value", (propValue == null) ? event
                 .getPropertyValue() == null : propValue.equals(event
                 .getPropertyValue()));
     }
