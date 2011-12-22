@@ -29,7 +29,7 @@ import com.mockobjects.dynamic.C;
 import com.mockobjects.dynamic.Mock;
 
 /**
- * A mock implementation of the <code>InitialContextFactory</code> interface.
+ * A mock implementation of the {@code InitialContextFactory} interface.
  * This implementation will return a mock context that contains some test data.
  *
  * @author <a
@@ -75,14 +75,14 @@ public class MockInitialContextFactory implements InitialContextFactory
     { "missing/list", "test/imaginarykey", "foo/bar" };
 
     /**
-     * Creates a <code>Context</code> object that is backed by a mock object.
+     * Creates a {@code Context} object that is backed by a mock object.
      * The mock context can be queried for the values of certain test
      * properties. It also supports listing the contained (sub) properties.
      *
      * @param env the environment
      * @return the context mock
      */
-    public Context getInitialContext(Hashtable env) throws NamingException
+    public Context getInitialContext(@SuppressWarnings("rawtypes") Hashtable env) throws NamingException
     {
         boolean useCycles = env.containsKey(PROP_CYCLES);
 
@@ -146,7 +146,7 @@ public class MockInitialContextFactory implements InitialContextFactory
             bindError(mockCtx, MISSING_NAMES[i]);
         }
         mockCtx.matchAndReturn("hashCode", System.identityHashCode(mockCtx.proxy()));
-        
+
         return mockCtx;
     }
 
