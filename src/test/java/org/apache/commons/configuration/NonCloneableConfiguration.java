@@ -31,6 +31,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
+    @Override
     protected void addPropertyDirect(String key, Object value)
     {
     }
@@ -54,7 +55,7 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
-    public Iterator getKeys()
+    public Iterator<String> getKeys()
     {
         return null;
     }
