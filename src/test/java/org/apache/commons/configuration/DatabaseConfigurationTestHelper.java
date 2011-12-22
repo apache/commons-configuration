@@ -106,7 +106,7 @@ public class DatabaseConfigurationTestHelper
 
     /**
      * Initializes this helper object. This method can be called from a
-     * <code>setUp()</code> method of a unit test class. It creates the database
+     * {@code setUp()} method of a unit test class. It creates the database
      * instance if necessary.
      *
      * @throws Exception if an error occurs
@@ -119,7 +119,7 @@ public class DatabaseConfigurationTestHelper
 
     /**
      * Frees the resources used by this helper class. This method can be called
-     * by a <code>tearDown()</code> method of a unit test class.
+     * by a {@code tearDown()} method of a unit test class.
      *
      * @throws Exception if an error occurs
      */
@@ -168,10 +168,10 @@ public class DatabaseConfigurationTestHelper
     }
 
     /**
-     * Returns the <code>DataSource</code> managed by this class. The data
+     * Returns the {@code DataSource} managed by this class. The data
      * source is created on first access.
      *
-     * @return the <code>DataSource</code>
+     * @return the {@code DataSource}
      */
     public DataSource getDatasource()
     {
