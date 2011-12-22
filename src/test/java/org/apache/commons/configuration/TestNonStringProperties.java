@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import org.junit.Before;
 
 /**
  * Test if non-string properties are handled correctly.
@@ -28,10 +29,10 @@ public class TestNonStringProperties extends BaseNonStringProperties
     /** The File that we test with */
     private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
+    @Before
     public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
         nonStringTestHolder.setConfiguration(conf);
     }
-
 }

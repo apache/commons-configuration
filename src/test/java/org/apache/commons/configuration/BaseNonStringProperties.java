@@ -1,5 +1,3 @@
-package org.apache.commons.configuration;
-
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,32 +14,37 @@ package org.apache.commons.configuration;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Test if non-string properties are handled correctly.
  *
  * @version $Id$
  */
-public abstract class BaseNonStringProperties extends TestCase
+public abstract class BaseNonStringProperties
 {
 
     protected NonStringTestHolder nonStringTestHolder = new NonStringTestHolder();
-    public abstract void setUp() throws Exception;
 
-    public Configuration conf = null;
+    protected Configuration conf;
 
+    @Test
     public void testBoolean() throws Exception
     {
         nonStringTestHolder.testBoolean();
     }
 
+    @Test
     public void testBooleanDefaultValue() throws Exception
     {
         nonStringTestHolder.testBooleanDefaultValue();
     }
 
+    @Test
     public void testBooleanArrayValue() throws Exception
     {
         boolean booleanValue = conf.getBoolean("test.boolean");
@@ -49,11 +52,13 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.boolean.array").size());
     }
 
+    @Test
     public void testByte() throws Exception
     {
         nonStringTestHolder.testByte();
     }
 
+    @Test
     public void testByteArrayValue() throws Exception
     {
         byte testValue = 10;
@@ -62,16 +67,19 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.byte.array").size());
     }
 
+    @Test
     public void testDouble() throws Exception
     {
         nonStringTestHolder.testDouble();
     }
 
+    @Test
     public void testDoubleDefaultValue() throws Exception
     {
         nonStringTestHolder.testDoubleDefaultValue();
     }
 
+    @Test
     public void testDoubleArrayValue() throws Exception
     {
         double testValue = 10.25;
@@ -80,17 +88,20 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.double.array").size());
     }
 
+    @Test
     public void testFloat() throws Exception
     {
         nonStringTestHolder.testFloat();
     }
 
+    @Test
     public void testFloatDefaultValue() throws Exception
     {
         nonStringTestHolder.testFloatDefaultValue();
 
     }
 
+    @Test
     public void testFloatArrayValue() throws Exception
     {
         float testValue = (float) 20.25;
@@ -99,16 +110,19 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.float.array").size());
     }
 
+    @Test
     public void testInteger() throws Exception
     {
         nonStringTestHolder.testInteger();
     }
 
+    @Test
     public void testIntegerDefaultValue() throws Exception
     {
         nonStringTestHolder.testIntegerDefaultValue();
     }
 
+    @Test
     public void testIntegerArrayValue() throws Exception
     {
         int intValue = conf.getInt("test.integer");
@@ -116,14 +130,19 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.integer.array").size());
     }
 
+    @Test
     public void testLong() throws Exception
     {
         nonStringTestHolder.testLong();
     }
+
+    @Test
     public void testLongDefaultValue() throws Exception
     {
         nonStringTestHolder.testLongDefaultValue();
     }
+
+    @Test
     public void testLongArrayValue() throws Exception
     {
         long longValue = conf.getLong("test.long");
@@ -131,15 +150,19 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.long.array").size());
     }
 
+    @Test
     public void testShort() throws Exception
     {
         nonStringTestHolder.testShort();
     }
 
+    @Test
     public void testShortDefaultValue() throws Exception
     {
         nonStringTestHolder.testShortDefaultValue();
     }
+
+    @Test
     public void testShortArrayValue() throws Exception
     {
         short shortValue = conf.getShort("test.short");
@@ -147,15 +170,19 @@ public abstract class BaseNonStringProperties extends TestCase
         assertEquals(2, conf.getList("test.short.array").size());
     }
 
+    @Test
     public void testListMissing() throws Exception
     {
         nonStringTestHolder.testListMissing();
     }
 
+    @Test
     public void testSubset() throws Exception
     {
         nonStringTestHolder.testSubset();
     }
+
+    @Test
     public void testIsEmpty() throws Exception
     {
         nonStringTestHolder.testIsEmpty();

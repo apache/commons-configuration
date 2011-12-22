@@ -23,9 +23,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 /**
- * Pulling out the calls to do the tests so both JUnit and Cactus tests 
+ * Pulling out the calls to do the tests so both JUnit and Cactus tests
  * can share.
- * 
+ *
  * @version $Id$
  */
 public class NonStringTestHolder
@@ -41,7 +41,7 @@ public class NonStringTestHolder
     {
         boolean booleanValue = configuration.getBoolean("test.boolean");
         Assert.assertEquals(true, booleanValue);
-        Assert.assertEquals(1, configuration.getList("test.boolean").size());        
+        Assert.assertEquals(1, configuration.getList("test.boolean").size());
     }
 
     public void testBooleanDefaultValue() throws Exception
@@ -82,7 +82,7 @@ public class NonStringTestHolder
         float testValue = (float) 20.25;
         float floatValue = configuration.getFloat("test.float");
         Assert.assertEquals(testValue, floatValue, 0.01);
-        Assert.assertEquals(1, configuration.getList("test.float").size());       
+        Assert.assertEquals(1, configuration.getList("test.float").size());
     }
 
     public void testFloatDefaultValue() throws Exception
@@ -132,7 +132,7 @@ public class NonStringTestHolder
 
     public void testListMissing() throws Exception
     {
-        List list = configuration.getList("missing.list");
+        List<?> list = configuration.getList("missing.list");
         Assert.assertTrue("'missing.list' is not empty", list.isEmpty());
     }
 
@@ -142,10 +142,10 @@ public class NonStringTestHolder
 
         // search the "short" key in the subset using the key iterator
         boolean foundKeyValue = false;
-        Iterator it = subset.getKeys();
+        Iterator<String> it = subset.getKeys();
         while (it.hasNext() && !foundKeyValue)
         {
-            String key = (String) it.next();
+            String key = it.next();
             foundKeyValue = "short".equals(key);
         }
 
