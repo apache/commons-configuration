@@ -17,6 +17,12 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
@@ -24,8 +30,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-import junitx.framework.ObjectAssert;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests some basic functions of the BaseConfiguration class. Missing keys might
@@ -33,24 +39,24 @@ import junitx.framework.ObjectAssert;
  *
  * @version $Id$
  */
-public class TestBaseNullConfiguration extends TestCase
+public class TestBaseNullConfiguration
 {
-    protected BaseConfiguration config = null;
+    protected BaseConfiguration config;
 
-    protected static Class missingElementException = NoSuchElementException.class;
-    protected static Class incompatibleElementException = ConversionException.class;
-
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(false);
     }
 
+    @Test
     public void testThrowExceptionOnMissing()
     {
         assertFalse("Throw Exception Property is set!", config.isThrowExceptionOnMissing());
     }
 
+    @Test
     public void testGetProperty()
     {
         /* should be empty and return null */
@@ -62,6 +68,7 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns '1'", config.getString("number"), "1");
     }
 
+    @Test
     public void testGetByte()
     {
         config.setProperty("number", "1");
@@ -71,29 +78,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(byte)", oneB, config.getByte("number", twoB));
         assertEquals("This returns 2(default byte)", twoB, config.getByte("numberNotInConfig", twoB));
         assertEquals("This returns 1(Byte)", new Byte(oneB), config.getByte("number", new Byte("2")));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getByte("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getByte("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetByteUnknown()
+    {
+        config.getByte("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetByteIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getByte("test.empty");
+    }
+
+    @Test
     public void testGetShort()
     {
         config.setProperty("numberS", "1");
@@ -103,29 +103,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(short)", oneS, config.getShort("numberS", twoS));
         assertEquals("This returns 2(default short)", twoS, config.getShort("numberNotInConfig", twoS));
         assertEquals("This returns 1(Short)", new Short(oneS), config.getShort("numberS", new Short("2")));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getShort("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getShort("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetShortUnknown()
+    {
+        config.getShort("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetShortIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getShort("test.empty");
+    }
+
+    @Test
     public void testGetLong()
     {
         config.setProperty("numberL", "1");
@@ -135,29 +128,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(long)", oneL, config.getLong("numberL", twoL));
         assertEquals("This returns 2(default long)", twoL, config.getLong("numberNotInConfig", twoL));
         assertEquals("This returns 1(Long)", new Long(oneL), config.getLong("numberL", new Long("2")));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getLong("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getLong("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetLongUnknown()
+    {
+        config.getLong("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetLongIncompatibleTypes()
+    {
+        config.setProperty("test.empty", "");
+        config.getLong("test.empty");
+    }
+
+    @Test
     public void testGetFloat()
     {
         config.setProperty("numberF", "1.0");
@@ -167,29 +153,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(float)", oneF, config.getFloat("numberF", twoF), 0);
         assertEquals("This returns 2(default float)", twoF, config.getFloat("numberNotInConfig", twoF), 0);
         assertEquals("This returns 1(Float)", new Float(oneF), config.getFloat("numberF", new Float("2")));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getFloat("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getFloat("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetFloatUnknown()
+    {
+        config.getFloat("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetFloatIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getFloat("test.empty");
+    }
+
+    @Test
     public void testGetDouble()
     {
         config.setProperty("numberD", "1.0");
@@ -199,29 +178,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns 1(double)", oneD, config.getDouble("numberD", twoD), 0);
         assertEquals("This returns 2(default double)", twoD, config.getDouble("numberNotInConfig", twoD), 0);
         assertEquals("This returns 1(Double)", new Double(oneD), config.getDouble("numberD", new Double("2")));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getDouble("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getDouble("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetDoubleUnknown()
+    {
+        config.getDouble("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetDoubleIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getDouble("test.empty");
+    }
+
+    @Test
     public void testGetBigDecimal()
     {
         config.setProperty("numberBigD", "123.456");
@@ -231,22 +203,22 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("Existing key", number, config.getBigDecimal("numberBigD"));
         assertEquals("Existing key with default value", number, config.getBigDecimal("numberBigD", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getBigDecimal("numberNotInConfig", defaultValue));
-
-        // missing key without default value
-                assertEquals("Missing Key is not null!", null, config.getBigDecimal("numberNotInConfig"));
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        Throwable t = null;
-        try {
-            config.getBigDecimal("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test
+    public void testGetBigDecimalUnknown()
+    {
+        assertNull("Missing Key is not null!", config.getBigDecimal("numberNotInConfig"));
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetBigDecimalIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getBigDecimal("test.empty");
+    }
+
+    @Test
     public void testGetBigInteger()
     {
         config.setProperty("numberBigI", "1234567890");
@@ -256,23 +228,23 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("Existing key", number, config.getBigInteger("numberBigI"));
         assertEquals("Existing key with default value", number, config.getBigInteger("numberBigI", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getBigInteger("numberNotInConfig", defaultValue));
+    }
 
-        // missing key without default value
-                assertEquals("Missing Key is not null!", null, config.getBigInteger("numberNotInConfig"));
+    @Test
+    public void testGetBigIntegerUnknown()
+    {
+        assertNull("Missing Key is not null!", config.getBigInteger("numberNotInConfig"));
+    }
 
-        // existing key with an incompatible value
+    @Test(expected = ConversionException.class)
+    public void testGetBigIntegerIncompatibleType()
+    {
         config.setProperty("test.empty", "");
-        Throwable t = null;
-        try {
-            config.getBigInteger("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
+        config.getBigInteger("test.empty");
     }
 
 
+    @Test
     public void testGetString()
     {
         config.setProperty("testString", "The quick brown fox");
@@ -282,12 +254,15 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("Existing key", string, config.getString("testString"));
         assertEquals("Existing key with default value", string, config.getString("testString", defaultValue));
         assertEquals("Missing key with default value", defaultValue, config.getString("stringNotInConfig", defaultValue));
-
-        // missing key without default value
-                assertEquals("Missing Key is not null!", null, config.getString("stringNotInConfig"));
-
     }
 
+    @Test
+    public void testGetStringUnknown()
+    {
+        assertNull("Missing Key is not null!", config.getString("stringNotInConfig"));
+    }
+
+    @Test
     public void testGetBoolean()
     {
         config.setProperty("boolA", Boolean.TRUE);
@@ -296,80 +271,61 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals("This returns true, not the default", boolT, config.getBoolean("boolA", boolF));
         assertEquals("This returns false(default)", boolF, config.getBoolean("boolNotInConfig", boolF));
         assertEquals("This returns true(Boolean)", new Boolean(boolT), config.getBoolean("boolA", new Boolean(boolF)));
-
-        // missing key without default value
-        Throwable t = null;
-        try {
-            config.getBoolean("numberNotInConfig");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for missing keys", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for missing keys", missingElementException, t);
-
-        // existing key with an incompatible value
-        config.setProperty("test.empty", "");
-        t = null;
-        try {
-            config.getBoolean("test.empty");
-        } catch (Throwable T) {
-            t = T;
-        }
-        assertNotNull("No exception thrown for incompatible values", t);
-        ObjectAssert.assertInstanceOf("Exception thrown for incompatible values", incompatibleElementException, t);
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void testGetBooleanUnknown()
+    {
+        config.getBoolean("numberNotInConfig");
+    }
+
+    @Test(expected = ConversionException.class)
+    public void testGetBooleanIncompatibleType()
+    {
+        config.setProperty("test.empty", "");
+        config.getBoolean("test.empty");
+    }
+
+    @Test
     public void testGetList()
     {
         config.addProperty("number", "1");
         config.addProperty("number", "2");
-        List list = config.getList("number");
+        List<Object> list = config.getList("number");
         assertNotNull("The list is null", list);
         assertEquals("List size", 2, list.size());
         assertTrue("The number 1 is missing from the list", list.contains("1"));
         assertTrue("The number 2 is missing from the list", list.contains("2"));
-
-        /*
-         *  now test dan's new fix where we get the first scalar
-         *  when we access a list valued property
-         */
-        try
-        {
-            config.getString("number");
-        }
-        catch (NoSuchElementException nsse)
-        {
-            fail("Should return a string");
-        }
     }
 
+    @Test
+    public void testGetListAsScalar()
+    {
+        config.addProperty("number", "1");
+        config.addProperty("number", "2");
+        assertEquals("Wrong value", "1", config.getString("number"));
+    }
+
+    @Test
     public void testCommaSeparatedString()
     {
         String prop = "hey, that's a test";
         config.setProperty("prop.string", prop);
-        try
-        {
-            config.getList("prop.string");
-        }
-        catch (NoSuchElementException nsse)
-        {
-            fail("Should return a list");
-        }
+        List<Object> list = config.getList("prop.string");
+        assertEquals("Wrong number of elements", 2, list.size());
+        assertEquals("Wrong element 1", "hey", list.get(0));
+    }
 
+    @Test
+    public void testCommaSeparatedStringEscaped()
+    {
         String prop2 = "hey\\, that's a test";
         config.clearProperty("prop.string");
         config.setProperty("prop.string", prop2);
-        try
-        {
-            config.getString("prop.string");
-        }
-        catch (NoSuchElementException nsse)
-        {
-            fail("Should return a list");
-        }
-
+        assertEquals("Wrong value", "hey, that's a test", config.getString("prop.string"));
     }
 
+    @Test
     public void testPropertyAccess()
     {
         config.clearProperty("prop.properties");
@@ -391,6 +347,7 @@ public class TestBaseNullConfiguration extends TestCase
             p);
     }
 
+    @Test
     public void testSubset()
     {
         /*
@@ -409,24 +366,9 @@ public class TestBaseNullConfiguration extends TestCase
             "Returns the full string",
             prop,
             subEprop.getString("string"));
-        try
-        {
-            subEprop.getString("string");
-        }
-        catch (NoSuchElementException nsse)
-        {
-            fail("Should return a string");
-        }
-        try
-        {
-            subEprop.getList("string");
-        }
-        catch (NoSuchElementException nsse)
-        {
-            fail("Should return a list");
-        }
+        assertEquals("Wrong list size", 1, subEprop.getList("string").size());
 
-        Iterator it = subEprop.getKeys();
+        Iterator<String> it = subEprop.getKeys();
         it.next();
         assertFalse(it.hasNext());
 
@@ -435,6 +377,7 @@ public class TestBaseNullConfiguration extends TestCase
         assertFalse(it.hasNext());
     }
 
+    @Test
     public void testInterpolation() throws Exception
     {
         config.setProperty("applicationRoot", "/home/applicationRoot");
@@ -462,6 +405,7 @@ public class TestBaseNullConfiguration extends TestCase
             arrayInt[0]);
     }
 
+    @Test
     public void testMultipleInterpolation() throws Exception
     {
         config.setProperty("test.base-level", "/base-level");
@@ -479,22 +423,12 @@ public class TestBaseNullConfiguration extends TestCase
         assertEquals(config.getString("test.third-level"), expectedValue);
     }
 
+    @Test(expected = IllegalStateException.class)
     public void testInterpolationLoop() throws Exception
     {
         config.setProperty("test.a", "${test.b}");
         config.setProperty("test.b", "${test.a}");
-
-        try
-        {
-            config.getString("test.a");
-        }
-        catch (IllegalStateException e)
-        {
-            return;
-        }
-
-        fail("IllegalStateException should have been thrown for looped property references");
+        config.getString("test.a");
     }
-
 }
 
