@@ -17,6 +17,10 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -27,30 +31,31 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
 import org.apache.commons.jxpath.JXPathContext;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import junit.framework.TestCase;
-
 /**
  * Test class for BaseConfigurationXMLReader.
  *
  * @version $Id$
  */
-public class TestBaseConfigurationXMLReader extends TestCase
+public class TestBaseConfigurationXMLReader
 {
     private static final String[] CONTINENTS =
     {
         "Africa", "America", "Asia", "Australia", "Europe"
     };
-    
+
     private BaseConfiguration config;
     private BaseConfigurationXMLReader configReader;
-    
-    protected void setUp() throws Exception
+
+    @Before
+    public void setUp() throws Exception
     {
         config = new BaseConfiguration();
         config.addProperty("world.continents.continent", Arrays.asList(CONTINENTS));
@@ -64,67 +69,48 @@ public class TestBaseConfigurationXMLReader extends TestCase
         config.addProperty("application.mail.account.pwd", "?.-gulp*#");
         config.addProperty("application.mail.timeout", new Integer(42));
         config.addProperty("test", Boolean.TRUE);
-        
+
         configReader = new BaseConfigurationXMLReader(config);
     }
 
+    @Test
     public void testParse() throws Exception
     {
         checkDocument(configReader, "config");
     }
-    
-    public void testParseSAXException() throws IOException
+
+    @Test(expected = SAXException.class)
+    public void testParseSAXException() throws IOException, SAXException
     {
         configReader.setContentHandler(new TestContentHandler());
-        try
-        {
-            configReader.parse("systemID");
-            fail("Expected exception was not thrown!");
-        }
-        catch(SAXException ex)
-        {
-        }
+        configReader.parse("systemID");
     }
-    
-    public void testParseIOException() throws SAXException
+
+    @Test(expected = IOException.class)
+    public void testParseIOException() throws SAXException, IOException
     {
         BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader();
-        try
-        {
-            reader.parse("document");
-            fail("Expected exception was not thrown!");
-        }
-        catch(IOException ex)
-        {
-        }
+        reader.parse("document");
     }
-    
+
+    @Test
     public void testSetRootName() throws Exception
     {
         BaseConfigurationXMLReader reader = new BaseConfigurationXMLReader(config);
         reader.setRootName("apache");
         checkDocument(reader, "apache");
     }
-    
+
     private void checkDocument(BaseConfigurationXMLReader creader,
     String rootName) throws Exception
     {
         SAXSource source = new SAXSource(creader, new InputSource());
         DOMResult result = new DOMResult();
         Transformer trans = TransformerFactory.newInstance().newTransformer();
-        try
-        {
-            //When executed on a JDK 1.3 this line throws a NoSuchMethodError
-            //somewhere deep in Xalan. We simply ignore this.
-            trans.transform(source, result);
-        }
-        catch(NoSuchMethodError ex)
-        {
-            return;
-        }
+        trans.transform(source, result);
         Node root = ((Document) result.getNode()).getDocumentElement();
         JXPathContext ctx = JXPathContext.newContext(root);
-        
+
         assertEquals("Wrong root name", rootName, root.getNodeName());
         assertEquals("Wrong number of children", 3, ctx.selectNodes("/*").size());
 
@@ -135,9 +121,9 @@ public class TestBaseConfigurationXMLReader extends TestCase
         check(ctx, "application/mail/timeout", "42");
         check(ctx, "application/mail/account/type", "pop3");
         check(ctx, "application/mail/account/user", "postmaster");
-        check(ctx, "test", "true");        
+        check(ctx, "test", "true");
     }
-    
+
     /**
      * Helper method for checking values in the created document.
      *
@@ -147,12 +133,12 @@ public class TestBaseConfigurationXMLReader extends TestCase
      */
     private void check(JXPathContext ctx, String path, String[] values)
     {
-        Iterator it = ctx.iterate(path);
+        Iterator<?> it = ctx.iterate(path);
         for (int i = 0; i < values.length; i++)
         {
             assertTrue("Too few values", it.hasNext());
             assertEquals("Wrong property value", values[i], it.next());
-        } /* for */
+        }
         assertFalse("Too many values", it.hasNext());
     }
 
@@ -161,10 +147,11 @@ public class TestBaseConfigurationXMLReader extends TestCase
         check(ctx, path, new String[]
         { value });
     }
-    
+
     // A ContentHandler that raises an exception
     private static class TestContentHandler extends DefaultHandler
      {
+        @Override
         public void characters(char[] ch, int start, int length)
             throws SAXException
         {
