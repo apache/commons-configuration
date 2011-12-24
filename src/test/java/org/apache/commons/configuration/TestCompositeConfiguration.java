@@ -17,6 +17,15 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,18 +36,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test loading multiple configurations.
  *
  * @version $Id$
  */
-public class TestCompositeConfiguration extends TestCase
+public class TestCompositeConfiguration
 {
     /** Constant for a test property to be checked.*/
     private static final String TEST_PROPERTY = "test.source.property";
@@ -55,7 +64,8 @@ public class TestCompositeConfiguration extends TestCase
     private String testProperties2 = ConfigurationAssert.getTestFile("test2.properties").getAbsolutePath();
     private String testPropertiesXML = ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration(testProperties);
@@ -65,11 +75,13 @@ public class TestCompositeConfiguration extends TestCase
         cc.setThrowExceptionOnMissing(true);
     }
 
+    @Test
     public void testThrowExceptionOnMissing()
     {
         assertTrue("Throw Exception Property is not set!", cc.isThrowExceptionOnMissing());
     }
 
+    @Test
     public void testAddRemoveConfigurations() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -84,14 +96,16 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("Number of configurations", 1, cc.getNumberOfConfigurations());
     }
 
+    @Test
     public void testGetPropertyWIncludes() throws Exception
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(conf2);
-        List l = cc.getList("packages");
+        List<Object> l = cc.getList("packages");
         assertTrue(l.contains("packagea"));
     }
 
+    @Test
     public void testGetProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -104,6 +118,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("Make sure we get the property from conf2 first", "test2.properties", cc.getString("propertyInOrder"));
     }
 
+    @Test
     public void testCantRemoveMemoryConfig() throws Exception
     {
         cc.clear();
@@ -115,6 +130,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals(1, cc.getNumberOfConfigurations());
     }
 
+    @Test
     public void testGetPropertyMissing() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -134,8 +150,9 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>List</code> parsing.
+     * Tests {@code List} parsing.
      */
+    @Test
     public void testMultipleTypesOfConfigs() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -148,9 +165,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("Make sure we get the property from xml", 8, cc.getInt("test.short"));
     }
 
-    /**
-     * Tests <code>List</code> parsing.
-     */
+    @Test
     public void testPropertyExistsInOnlyOneConfig() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -161,6 +176,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests getting a default when the key doesn't exist
      */
+    @Test
     public void testDefaultValueWhenKeyMissing() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -170,9 +186,7 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue(1.4 == cc.getDouble("bogus", 1.4));
     }
 
-    /**
-     * Tests <code>List</code> parsing.
-     */
+    @Test
     public void testGettingConfiguration() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -184,6 +198,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests setting values.  These are set in memory mode only!
      */
+    @Test
     public void testClearingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -196,6 +211,7 @@ public class TestCompositeConfiguration extends TestCase
      * Tests adding values.  Make sure they _DON'T_ override any other properties but add to the
      * existing properties  and keep sequence
      */
+    @Test
     public void testAddingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -218,6 +234,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests setting values.  These are set in memory mode only!
      */
+    @Test
     public void testSettingMissingProperty() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -229,6 +246,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests retrieving subsets of configurations
      */
+    @Test
     public void testGettingSubset() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -247,6 +265,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests subsets and still can resolve elements
      */
+    @Test
     public void testSubsetCanResolve() throws Exception
     {
         cc = new CompositeConfiguration();
@@ -260,18 +279,19 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>List</code> parsing.
+     * Tests {@code List} parsing.
      */
+    @Test
     public void testList() throws Exception
     {
         cc.addConfiguration(conf1);
         cc.addConfiguration(xmlConf);
 
-        List packages = cc.getList("packages");
+        List<Object> packages = cc.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
 
-        List defaultList = new ArrayList();
+        List<Object> defaultList = new ArrayList<Object>();
         defaultList.add("1");
         defaultList.add("2");
 
@@ -282,8 +302,9 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>String</code> array parsing.
+     * Tests {@code String} array parsing.
      */
+    @Test
     public void testStringArray() throws Exception
     {
         cc.addConfiguration(conf1);
@@ -298,6 +319,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals(0, packages.length);
     }
 
+    @Test
     public void testGetList()
     {
         Configuration conf1 = new BaseConfiguration();
@@ -312,7 +334,7 @@ public class TestCompositeConfiguration extends TestCase
         cc.addConfiguration(conf2);
 
         // check the composite 'array' property
-        List list = cc.getList("array");
+        List<Object> list = cc.getList("array");
         assertNotNull("null list", list);
         assertEquals("list size", 2, list.size());
         assertTrue("'value1' not found in the list", list.contains("value1"));
@@ -331,18 +353,19 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>getKeys</code> preserves the order
+     * Tests {@code getKeys} preserves the order
      */
+    @Test
     public void testGetKeysPreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys(); keys.hasNext();)
+        List<String> orderedList = new ArrayList<String>();
+        for (Iterator<String> keys = conf1.getKeys(); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys(); keys.hasNext();)
+        List<String> iteratedList = new ArrayList<String>();
+        for (Iterator<String> keys = cc.getKeys(); keys.hasNext();)
         {
             iteratedList.add(keys.next());
         }
@@ -354,18 +377,19 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>getKeys(String key)</code> preserves the order
+     * Tests {@code getKeys(String key)} preserves the order
      */
+    @Test
     public void testGetKeys2PreservesOrder() throws Exception
     {
         cc.addConfiguration(conf1);
-        List orderedList = new ArrayList();
-        for (Iterator keys = conf1.getKeys("test"); keys.hasNext();)
+        List<String> orderedList = new ArrayList<String>();
+        for (Iterator<String> keys = conf1.getKeys("test"); keys.hasNext();)
         {
             orderedList.add(keys.next());
         }
-        List iteratedList = new ArrayList();
-        for (Iterator keys = cc.getKeys("test"); keys.hasNext();)
+        List<String> iteratedList = new ArrayList<String>();
+        for (Iterator<String> keys = cc.getKeys("test"); keys.hasNext();)
         {
             iteratedList.add(keys.next());
         }
@@ -376,6 +400,7 @@ public class TestCompositeConfiguration extends TestCase
         }
     }
 
+    @Test
     public void testGetStringWithDefaults()
     {
         BaseConfiguration defaults = new BaseConfiguration();
@@ -407,6 +432,7 @@ public class TestCompositeConfiguration extends TestCase
         assertEquals("some default value", c.getString("XXX", "some default value"));
     }
 
+    @Test
     public void testCheckingInMemoryConfiguration() throws Exception
     {
         String TEST_KEY = "testKey";
@@ -416,13 +442,13 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue(testConfiguration.containsKey(TEST_KEY));
         assertFalse(testConfiguration.isEmpty());
         boolean foundTestKey = false;
-        Iterator i = testConfiguration.getKeys();
+        Iterator<String> i = testConfiguration.getKeys();
         //assertTrue(i instanceof IteratorChain);
         //IteratorChain ic = (IteratorChain)i;
         //assertEquals(2,i.size());
         for (; i.hasNext();)
         {
-            String key = (String) i.next();
+            String key = i.next();
             if (key.equals(TEST_KEY))
             {
                 foundTestKey = true;
@@ -433,6 +459,7 @@ public class TestCompositeConfiguration extends TestCase
         assertFalse(testConfiguration.containsKey(TEST_KEY));
     }
 
+    @Test
     public void testStringArrayInterpolation()
     {
         CompositeConfiguration config = new CompositeConfiguration();
@@ -451,6 +478,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether global interpolation works with lists.
      */
+    @Test
     public void testListInterpolation()
     {
         PropertiesConfiguration c1 = new PropertiesConfiguration();
@@ -460,7 +488,7 @@ public class TestCompositeConfiguration extends TestCase
         PropertiesConfiguration c2 = new PropertiesConfiguration();
         c2.addProperty("c2.value", "test2");
         cc.addConfiguration(c2);
-        List lst = cc.getList("c1.value");
+        List<Object> lst = cc.getList("c1.value");
         assertEquals("Wrong list size", 2, lst.size());
         assertEquals("Wrong first element", "test1", lst.get(0));
         assertEquals("Wrong second element", "test2", lst.get(1));
@@ -469,6 +497,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests interpolation in combination with reloading.
      */
+    @Test
     public void testInterpolationWithReload() throws IOException,
             ConfigurationException
     {
@@ -523,9 +552,10 @@ public class TestCompositeConfiguration extends TestCase
         out.close();
     }
 
+    @Test
     public void testInstanciateWithCollection()
     {
-        Collection configs = new ArrayList();
+        Collection<Configuration> configs = new ArrayList<Configuration>();
         configs.add(xmlConf);
         configs.add(conf1);
         configs.add(conf2);
@@ -535,6 +565,7 @@ public class TestCompositeConfiguration extends TestCase
         assertTrue("The in memory configuration is not empty", config.getInMemoryConfiguration().isEmpty());
     }
 
+    @Test
     public void testClone()
     {
         CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
@@ -560,23 +591,17 @@ public class TestCompositeConfiguration extends TestCase
      * Tests cloning if one of the contained configurations does not support
      * this operation. This should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCloneNotSupported()
     {
         cc.addConfiguration(new NonCloneableConfiguration());
-        try
-        {
-            cc.clone();
-            fail("Could clone non cloneable configuration!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        cc.clone();
     }
 
     /**
      * Ensures that event listeners are not cloned.
      */
+    @Test
     public void testCloneEventListener()
     {
         cc.addConfigurationListener(new TestEventListenerImpl());
@@ -588,6 +613,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether add property events are triggered.
      */
+    @Test
     public void testEventAddProperty()
     {
         TestEventListenerImpl l = new TestEventListenerImpl();
@@ -599,6 +625,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether set property events are triggered.
      */
+    @Test
     public void testEventSetProperty()
     {
         TestEventListenerImpl l = new TestEventListenerImpl();
@@ -610,6 +637,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether clear property events are triggered.
      */
+    @Test
     public void testEventClearProperty()
     {
         cc.addConfiguration(conf1);
@@ -623,8 +651,9 @@ public class TestCompositeConfiguration extends TestCase
     }
 
     /**
-     * Tests chaning the list delimiter character.
+     * Tests changing the list delimiter character.
      */
+    @Test
     public void testSetListDelimiter()
     {
         cc.setListDelimiter('/');
@@ -634,6 +663,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether the correct list delimiter is set after a clear operation.
      */
+    @Test
     public void testSetListDelimiterAfterClear()
     {
         cc.setListDelimiter('/');
@@ -658,6 +688,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests whether list splitting can be disabled.
      */
+    @Test
     public void testSetDelimiterParsingDisabled()
     {
         cc.setDelimiterParsingDisabled(true);
@@ -668,6 +699,7 @@ public class TestCompositeConfiguration extends TestCase
      * Tests whether the list parsing flag is correctly handled after a clear()
      * operation.
      */
+    @Test
     public void testSetDelimiterParsingDisabledAfterClear()
     {
         cc.setDelimiterParsingDisabled(true);
@@ -699,6 +731,7 @@ public class TestCompositeConfiguration extends TestCase
      * Tests the getSource() method if the property is defined in a single child
      * configuration.
      */
+    @Test
     public void testGetSourceSingle()
     {
         setUpSourceTest();
@@ -710,6 +743,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests the getSource() method for an unknown property key.
      */
+    @Test
     public void testGetSourceUnknown()
     {
         setUpSourceTest();
@@ -720,6 +754,7 @@ public class TestCompositeConfiguration extends TestCase
      * Tests the getSource() method for a property contained in the in memory
      * configuration.
      */
+    @Test
     public void testGetSourceInMemory()
     {
         setUpSourceTest();
@@ -732,37 +767,23 @@ public class TestCompositeConfiguration extends TestCase
      * Tests the getSource() method if the property is defined by multiple child
      * configurations. In this case an exception should be thrown.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetSourceMultiple()
     {
         setUpSourceTest();
         conf1.addProperty(TEST_PROPERTY, Boolean.TRUE);
         cc.addProperty(TEST_PROPERTY, "a value");
-        try
-        {
-            cc.getSource(TEST_PROPERTY);
-            fail("Property in multiple configurations did not cause an error!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        cc.getSource(TEST_PROPERTY);
     }
 
     /**
      * Tests the getSource() method for a null key. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetSourceNull()
     {
-        try
-        {
-            cc.getSource(null);
-            fail("Could pass null key to getSource()!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        cc.getSource(null);
     }
 
     /**
@@ -786,10 +807,11 @@ public class TestCompositeConfiguration extends TestCase
      * Tests querying a list when a tricky interpolation is involved. This is
      * related to CONFIGURATION-339.
      */
+    @Test
     public void testGetListWithInterpolation()
     {
         prepareInterpolationTest();
-        List lst = cc.getList("bar");
+        List<Object> lst = cc.getList("bar");
         assertEquals("Wrong number of values", 1, lst.size());
         assertEquals("Wrong value in list", "override", lst.get(0));
     }
@@ -797,6 +819,7 @@ public class TestCompositeConfiguration extends TestCase
     /**
      * Tests querying a string array when a tricky interpolation is involved.
      */
+    @Test
     public void testGetStringArrayWithInterpolation()
     {
         prepareInterpolationTest();
@@ -809,6 +832,7 @@ public class TestCompositeConfiguration extends TestCase
      * Tests whether interpolation works if multiple configurations are
      * involved. This test is related to CONFIGURATION-441.
      */
+    @Test
     public void testInterpolationInMultipleConfigs()
     {
         Configuration c1 = new PropertiesConfiguration();
