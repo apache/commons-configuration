@@ -17,15 +17,20 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author rgladwel
  */
-public class TestConfigurationSet extends TestCase {
+public class TestConfigurationSet {
 
     ConfigurationMap.ConfigurationSet set;
 
@@ -50,17 +55,9 @@ public class TestConfigurationSet extends TestCase {
     };
 
     /**
-     * Construct a new instance of this test case.
-     * @param name Name of the test case
-     */
-    public TestConfigurationSet(String name)
-    {
-        super(name);
-    }
-
-    /**
      * Set up instance variables required by this test case.
      */
+    @Before
     public void setUp() throws Exception
     {
         BaseConfiguration configuration = new BaseConfiguration();
@@ -72,11 +69,13 @@ public class TestConfigurationSet extends TestCase {
     /**
      * Tear down instance variables required by this test case.
      */
+    @After
     public void tearDown()
     {
         set = null;
     }
 
+    @Test
     public void testSize() {
         assertEquals("Entry set does not match properties size.", properties.length, set.size());
     }
@@ -84,13 +83,11 @@ public class TestConfigurationSet extends TestCase {
     /**
      * Class under test for Iterator iterator()
      */
+    @Test
     public void testIterator() {
-        Iterator iterator = set.iterator();
+        Iterator<Map.Entry<Object, Object>> iterator = set.iterator();
         while(iterator.hasNext()) {
-            Object object = iterator.next();
-            assertTrue("Entry set iterator did not return EntrySet object, returned "
-                    + object.getClass().getName(), object instanceof Map.Entry);
-            Map.Entry entry = (Map.Entry) object;
+            Map.Entry<Object, Object> entry = iterator.next();
             boolean found = false;
             for(int i = 0; i < properties.length; i++) {
                 if(entry.getKey().equals(properties[i])) {
@@ -104,5 +101,4 @@ public class TestConfigurationSet extends TestCase {
         }
         assertTrue("Iterator failed to remove all properties.",set.isEmpty());
     }
-
 }
