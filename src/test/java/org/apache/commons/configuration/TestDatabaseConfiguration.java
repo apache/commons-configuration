@@ -17,6 +17,10 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -24,9 +28,9 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for database stored configurations.  Note, when running this Unit
@@ -35,7 +39,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
  *
  * @version $Id$
  */
-public class TestDatabaseConfiguration extends TestCase
+public class TestDatabaseConfiguration
 {
     /** Constant for another configuration name. */
     private static final String CONFIG_NAME2 = "anotherTestConfig";
@@ -46,7 +50,8 @@ public class TestDatabaseConfiguration extends TestCase
     /** The test helper. */
     private DatabaseConfigurationTestHelper helper;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         /*
          * Thread.sleep may or may not help with the database is already in
@@ -60,7 +65,8 @@ public class TestDatabaseConfiguration extends TestCase
         helper.setUp();
     }
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         // if an error listener is defined, we check whether an error occurred
         if(listener != null)
@@ -68,8 +74,6 @@ public class TestDatabaseConfiguration extends TestCase
             assertEquals("An internal error occurred", 0, listener.getErrorCount());
         }
         helper.tearDown();
-
-        super.tearDown();
     }
 
     /**
@@ -93,7 +97,7 @@ public class TestDatabaseConfiguration extends TestCase
     private void setUpErrorListener(PotentialErrorDatabaseConfiguration config)
     {
         // remove log listener to avoid exception longs
-        config.removeErrorListener((ConfigurationErrorListener) config.getErrorListeners().iterator().next());
+        config.removeErrorListener(config.getErrorListeners().iterator().next());
         listener = new ConfigurationErrorListenerImpl();
         config.addErrorListener(listener);
         config.failOnConnect = true;
@@ -134,6 +138,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests the default value of the doCommits property.
      */
+    @Test
     public void testDoCommitsDefault()
     {
         DatabaseConfiguration config = new DatabaseConfiguration(helper
@@ -147,6 +152,7 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests the default value of the doCommits property for multiple
      * configurations in a table.
      */
+    @Test
     public void testDoCommitsDefaultMulti()
     {
         DatabaseConfiguration config = new DatabaseConfiguration(helper
@@ -158,6 +164,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertFalse("Wrong commits flag", config.isDoCommits());
     }
 
+    @Test
     public void testAddPropertyDirectSingle()
     {
         DatabaseConfiguration config = helper.setUpConfig();
@@ -169,6 +176,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests whether a commit is performed after a property was added.
      */
+    @Test
     public void testAddPropertyDirectCommit()
     {
         helper.setAutoCommit(false);
@@ -177,6 +185,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("missing property", config.containsKey("key"));
     }
 
+    @Test
     public void testAddPropertyDirectMultiple()
     {
         DatabaseConfiguration config = helper.setUpMultiConfig();
@@ -185,6 +194,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("missing property", config.containsKey("key"));
     }
 
+    @Test
     public void testAddNonStringProperty()
     {
         DatabaseConfiguration config = helper.setUpConfig();
@@ -193,6 +203,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("missing property", config.containsKey("boolean"));
     }
 
+    @Test
     public void testGetPropertyDirectSingle()
     {
         Configuration config = setUpConfig();
@@ -202,6 +213,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertEquals("unknown property", null, config.getProperty("key3"));
     }
 
+    @Test
     public void testGetPropertyDirectMultiple()
     {
         Configuration config = helper.setUpMultiConfig();
@@ -211,6 +223,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertEquals("unknown property", null, config.getProperty("key3"));
     }
 
+    @Test
     public void testClearPropertySingle()
     {
         Configuration config = helper.setUpConfig();
@@ -219,6 +232,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertFalse("property not cleared", config.containsKey("key1"));
     }
 
+    @Test
     public void testClearPropertyMultiple()
     {
         Configuration config = helper.setUpMultiConfig();
@@ -231,6 +245,7 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests that another configuration is not affected when clearing
      * properties.
      */
+    @Test
     public void testClearPropertyMultipleOtherConfig()
     {
         DatabaseConfiguration config = helper.setUpMultiConfig();
@@ -245,6 +260,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests whether a commit is performed after a property was cleared.
      */
+    @Test
     public void testClearPropertyCommit()
     {
         helper.setAutoCommit(false);
@@ -253,6 +269,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertFalse("property not cleared", config.containsKey("key1"));
     }
 
+    @Test
     public void testClearSingle()
     {
         Configuration config = helper.setUpConfig();
@@ -261,6 +278,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("configuration is not cleared", config.isEmpty());
     }
 
+    @Test
     public void testClearMultiple()
     {
         Configuration config = helper.setUpMultiConfig();
@@ -272,6 +290,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests whether a commit is performed after a clear operation.
      */
+    @Test
     public void testClearCommit()
     {
         helper.setAutoCommit(false);
@@ -280,24 +299,27 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("configuration is not cleared", config.isEmpty());
     }
 
+    @Test
     public void testGetKeysSingle()
     {
         Configuration config = setUpConfig();
-        Iterator it = config.getKeys();
+        Iterator<String> it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
         assertEquals("2nd key", "key2", it.next());
     }
 
+    @Test
     public void testGetKeysMultiple()
     {
         Configuration config = helper.setUpMultiConfig();
-        Iterator it = config.getKeys();
+        Iterator<String> it = config.getKeys();
 
         assertEquals("1st key", "key1", it.next());
         assertEquals("2nd key", "key2", it.next());
     }
 
+    @Test
     public void testContainsKeySingle()
     {
         Configuration config = setUpConfig();
@@ -305,6 +327,7 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("missing key2", config.containsKey("key2"));
     }
 
+    @Test
     public void testContainsKeyMultiple()
     {
         Configuration config = helper.setUpMultiConfig();
@@ -312,12 +335,14 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("missing key2", config.containsKey("key2"));
     }
 
+    @Test
     public void testIsEmptySingle()
     {
         Configuration config1 = setUpConfig();
         assertFalse("The configuration is empty", config1.isEmpty());
     }
 
+    @Test
     public void testIsEmptyMultiple()
     {
         Configuration config1 = helper.setUpMultiConfig();
@@ -327,23 +352,26 @@ public class TestDatabaseConfiguration extends TestCase
         assertTrue("The configuration named 'testIsEmpty' is not empty", config2.isEmpty());
     }
 
+    @Test
     public void testGetList()
     {
         Configuration config1 = new DatabaseConfiguration(helper.getDatasource(), "configurationList", DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
-        List list = config1.getList("key3");
+        List<Object> list = config1.getList("key3");
         assertEquals(3,list.size());
     }
 
+    @Test
     public void testGetKeys()
     {
         Configuration config1 = new DatabaseConfiguration(helper.getDatasource(), "configurationList", DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
-        Iterator i = config1.getKeys();
+        Iterator<String> i = config1.getKeys();
         assertTrue(i.hasNext());
         Object key = i.next();
         assertEquals("key3",key.toString());
         assertFalse(i.hasNext());
     }
 
+    @Test
     public void testClearSubset()
     {
         Configuration config = setUpConfig();
@@ -359,6 +387,7 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests whether the configuration has already an error listener registered
      * that is used for logging.
      */
+    @Test
     public void testLogErrorListener()
     {
         DatabaseConfiguration config = new DatabaseConfiguration(helper.getDatasource(), DatabaseConfigurationTestHelper.TABLE, DatabaseConfigurationTestHelper.COL_KEY, DatabaseConfigurationTestHelper.COL_VALUE);
@@ -368,6 +397,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in getProperty().
      */
+    @Test
     public void testGetPropertyError()
     {
         setUpErrorConfig().getProperty("key1");
@@ -377,6 +407,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in addPropertyDirect().
      */
+    @Test
     public void testAddPropertyError()
     {
         setUpErrorConfig().addProperty("key1", "value");
@@ -386,6 +417,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in isEmpty().
      */
+    @Test
     public void testIsEmptyError()
     {
         assertTrue("Wrong return value for failure", setUpErrorConfig().isEmpty());
@@ -395,6 +427,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in containsKey().
      */
+    @Test
     public void testContainsKeyError()
     {
         assertFalse("Wrong return value for failure", setUpErrorConfig().containsKey("key1"));
@@ -404,6 +437,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in clearProperty().
      */
+    @Test
     public void testClearPropertyError()
     {
         setUpErrorConfig().clearProperty("key1");
@@ -413,6 +447,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in clear().
      */
+    @Test
     public void testClearError()
     {
         setUpErrorConfig().clear();
@@ -422,9 +457,10 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests handling of errors in getKeys().
      */
+    @Test
     public void testGetKeysError()
     {
-        Iterator it = setUpErrorConfig().getKeys();
+        Iterator<String> it = setUpErrorConfig().getKeys();
         checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null, null);
         assertFalse("Iteration is not empty", it.hasNext());
     }
@@ -433,11 +469,12 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests obtaining a property as list whose value contains the list
      * delimiter. Multiple values should be returned.
      */
+    @Test
     public void testGetListWithDelimiter()
     {
         DatabaseConfiguration config = setUpConfig();
         config.setListDelimiter(';');
-        List values = config.getList("keyMulti");
+        List<Object> values = config.getList("keyMulti");
         assertEquals("Wrong number of list elements", 3, values.size());
         assertEquals("Wrong list element 0", "a", values.get(0));
         assertEquals("Wrong list element 2", "c", values.get(2));
@@ -447,6 +484,7 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests obtaining a property whose value contains the list delimiter when
      * delimiter parsing is disabled.
      */
+    @Test
     public void testGetListWithDelimiterParsingDisabled()
     {
         DatabaseConfiguration config = setUpConfig();
@@ -459,6 +497,7 @@ public class TestDatabaseConfiguration extends TestCase
      * Tests adding a property containing the list delimiter. When this property
      * is queried multiple values should be returned.
      */
+    @Test
     public void testAddWithDelimiter()
     {
         DatabaseConfiguration config = setUpConfig();
@@ -472,6 +511,7 @@ public class TestDatabaseConfiguration extends TestCase
     /**
      * Tests setProperty() if the property value contains the list delimiter.
      */
+    @Test
     public void testSetPropertyWithDelimiter()
     {
         DatabaseConfiguration config = helper.setUpMultiConfig();
@@ -498,6 +538,7 @@ public class TestDatabaseConfiguration extends TestCase
             super(datasource, table, keyColumn, valueColumn);
         }
 
+        @Override
         protected Connection getConnection() throws SQLException
         {
             if (failOnConnect)
