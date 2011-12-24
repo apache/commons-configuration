@@ -17,6 +17,13 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,23 +31,24 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
 import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.junit.Test;
 
 import com.mockobjects.dynamic.Mock;
 
 /**
  * Tests the ConfigurationUtils class
  *
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public class TestConfigurationUtils extends TestCase
+public class TestConfigurationUtils
 {
     protected Configuration config = new BaseConfiguration();
 
+    @Test
     public void testToString()
     {
         String lineSeparator = System.getProperty("line.separator");
@@ -60,6 +68,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("String representation of a configuration", "two=2" + lineSeparator + "one=1" , ConfigurationUtils.toString(config));
     }
 
+    @Test
     public void testGetURL() throws Exception
     {
         assertEquals(
@@ -106,6 +115,7 @@ public class TestConfigurationUtils extends TestCase
         ConfigurationUtils.getURL(absFile.getParent(), "config.xml"));
     }
 
+    @Test
     public void testGetBasePath() throws Exception
     {
         URL url = new URL("http://xyz.net/foo/bar.xml");
@@ -124,6 +134,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("base path of " + url, "http://xyz.net", ConfigurationUtils.getBasePath(url));
     }
 
+    @Test
     public void testGetFileName() throws Exception
     {
         assertEquals("file name for a null URL", null, ConfigurationUtils.getFileName(null));
@@ -135,6 +146,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("file name for a valid URL " + url, "bar.xml", ConfigurationUtils.getFileName(url));
     }
 
+    @Test
     public void testCopy()
     {
         // create the source configuration
@@ -154,6 +166,7 @@ public class TestConfigurationUtils extends TestCase
         assertEquals("'key2' property", "value2", conf2.getProperty("key2"));
     }
 
+    @Test
     public void testAppend()
     {
         // create the source configuration
@@ -169,17 +182,18 @@ public class TestConfigurationUtils extends TestCase
         // append the source configuration to the target configuration
         ConfigurationUtils.append(conf1, conf2);
 
-        List expected = new ArrayList();
+        List<Object> expected = new ArrayList<Object>();
         expected.add("value3");
         expected.add("value1");
         ListAssert.assertEquals("'key1' property", expected, conf2.getList("key1"));
 
-        expected = new ArrayList();
+        expected = new ArrayList<Object>();
         expected.add("value4");
         expected.add("value2");
         ListAssert.assertEquals("'key2' property", expected, conf2.getList("key2"));
     }
 
+    @Test
     public void testGetFile() throws Exception
     {
         File directory = new File("target");
@@ -199,6 +213,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests whether a "+" character in the file name is handled correctly by
      * fileFromURL(). This test is related to CONFIGURATION-415.
      */
+    @Test
     public void testFileFromURLWithPlus() throws MalformedURLException
     {
         File file = new File(new File("target"), "foo+bar.txt")
@@ -211,12 +226,14 @@ public class TestConfigurationUtils extends TestCase
     /**
      * Tests whether fileFromURL() handles null URLs correctly.
      */
+    @Test
     public void testFileFromURLNull() throws MalformedURLException
     {
         assertNull("Wrong file for null URL", ConfigurationUtils
                 .fileFromURL(null));
     }
 
+    @Test
     public void testLocateWithNullTCCL() throws Exception
     {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -236,6 +253,7 @@ public class TestConfigurationUtils extends TestCase
     /**
      * Tests converting a configuration into a hierarchical one.
      */
+    @Test
     public void testConvertToHierarchical()
     {
         Configuration conf = new BaseConfiguration();
@@ -247,9 +265,9 @@ public class TestConfigurationUtils extends TestCase
 
         HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf);
-        for (Iterator it = conf.getKeys(); it.hasNext();)
+        for (Iterator<String> it = conf.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertEquals("Wrong value for key " + key, conf.getProperty(key),
                     hc.getProperty(key));
         }
@@ -259,6 +277,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting a configuration into a hierarchical one that is already
      * hierarchical.
      */
+    @Test
     public void testConvertHierarchicalToHierarchical()
     {
         Configuration conf = new HierarchicalConfiguration();
@@ -271,6 +290,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting a null configuration to a hierarchical one. The result
      * should be null, too.
      */
+    @Test
     public void testConvertNullToHierarchical()
     {
         assertNull("Wrong conversion result for null config",
@@ -281,6 +301,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting a configuration into a hierarchical one if some of its
      * properties contain escaped list delimiter characters.
      */
+    @Test
     public void testConvertToHierarchicalDelimiters()
     {
         Configuration conf = new BaseConfiguration();
@@ -297,6 +318,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting a configuration to a hierarchical one using a specific
      * expression engine.
      */
+    @Test
     public void testConvertToHierarchicalEngine()
     {
         Configuration conf = new BaseConfiguration();
@@ -315,6 +337,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting an already hierarchical configuration using an
      * expression engine. The new engine should be set.
      */
+    @Test
     public void testConvertHierarchicalToHierarchicalEngine()
     {
         HierarchicalConfiguration hc = new HierarchicalConfiguration();
@@ -329,6 +352,7 @@ public class TestConfigurationUtils extends TestCase
      * expression engine. In this case the expression engine of the
      * configuration should not be touched.
      */
+    @Test
     public void testConvertHierarchicalToHierarchicalNullEngine()
     {
         HierarchicalConfiguration hc = new HierarchicalConfiguration();
@@ -344,6 +368,7 @@ public class TestConfigurationUtils extends TestCase
      * Tests converting a configuration to a hierarchical one that contains a
      * property with multiple values. This test is related to CONFIGURATION-346.
      */
+    @Test
     public void testConvertToHierarchicalMultiValues()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -358,6 +383,7 @@ public class TestConfigurationUtils extends TestCase
     /**
      * Tests cloning a configuration that supports this operation.
      */
+    @Test
     public void testCloneConfiguration()
     {
         HierarchicalConfiguration conf = new HierarchicalConfiguration();
@@ -372,23 +398,17 @@ public class TestConfigurationUtils extends TestCase
      * Tests cloning a configuration that does not support this operation. This
      * should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCloneConfigurationNotSupported()
     {
         Configuration myNonCloneableConfig = new NonCloneableConfiguration();
-        try
-        {
-            ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
-            fail("Could clone non cloneable config!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        ConfigurationUtils.cloneConfiguration(myNonCloneableConfig);
     }
 
     /**
      * Tests cloning a <b>null</b> configuration.
      */
+    @Test
     public void testCloneConfigurationNull()
     {
         assertNull("Wrong return value", ConfigurationUtils
@@ -398,10 +418,12 @@ public class TestConfigurationUtils extends TestCase
     /**
      * Tests whether runtime exceptions can be enabled.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testEnableRuntimeExceptions()
     {
         PropertiesConfiguration config = new PropertiesConfiguration()
         {
+            @Override
             protected void addPropertyDirect(String key, Object value)
             {
                 // always simulate an exception
@@ -411,50 +433,27 @@ public class TestConfigurationUtils extends TestCase
         };
         config.clearErrorListeners();
         ConfigurationUtils.enableRuntimeExceptions(config);
-        try
-        {
-            config.addProperty("test", "testValue");
-            fail("No runtime exception was thrown!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        config.addProperty("test", "testValue");
     }
 
     /**
-     * Tries to enable runtime exceptions for a configurtion that does not
+     * Tries to enable runtime exceptions for a configuration that does not
      * inherit from EventSource. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testEnableRuntimeExceptionsInvalid()
     {
-        try
-        {
-            ConfigurationUtils
-                    .enableRuntimeExceptions((Configuration) new Mock(
-                            Configuration.class).proxy());
-            fail("Could enable exceptions for non EventSource configuration!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        ConfigurationUtils.enableRuntimeExceptions((Configuration) new Mock(
+                Configuration.class).proxy());
     }
 
     /**
      * Tries to enable runtime exceptions for a null configuration. This should
      * cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testEnableRuntimeExceptionsNull()
     {
-        try
-        {
-            ConfigurationUtils.enableRuntimeExceptions(null);
-            fail("Could enable exceptions for a null configuration!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            //ok
-        }
+        ConfigurationUtils.enableRuntimeExceptions(null);
     }
 }
