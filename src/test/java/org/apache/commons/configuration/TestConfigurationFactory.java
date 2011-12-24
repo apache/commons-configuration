@@ -17,14 +17,21 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 
 /**
@@ -32,7 +39,8 @@ import org.xml.sax.SAXException;
  *
  * @version $Id$
  */
-public class TestConfigurationFactory extends TestCase
+@SuppressWarnings("deprecation")
+public class TestConfigurationFactory
 {
     /** The Files that we test with */
     private URL digesterRules = getClass().getResource("/digesterRules.xml");
@@ -67,12 +75,14 @@ public class TestConfigurationFactory extends TestCase
     private CompositeConfiguration compositeConfiguration;
     private ConfigurationFactory factory;
 
+    @Before
     public void setUp() throws Exception
     {
         System.setProperty("java.naming.factory.initial", "org.apache.commons.configuration.MockInitialContextFactory");
         factory = new ConfigurationFactory();
     }
 
+    @Test
     public void testJNDI() throws Exception
     {
         JNDIConfiguration jndiConfiguration = new JNDIConfiguration();
@@ -81,6 +91,7 @@ public class TestConfigurationFactory extends TestCase
         assertEquals("true", o.toString());
     }
 
+    @Test
     public void testLoadingConfiguration() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFile.toString());
@@ -102,6 +113,7 @@ public class TestConfigurationFactory extends TestCase
         assertEquals("property in the XMLPropertiesConfiguration", "value1", compositeConfiguration.getProperty("key1"));
     }
 
+    @Test
     public void testLoadingConfigurationWithRulesXML() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFile.toString());
@@ -125,6 +137,7 @@ public class TestConfigurationFactory extends TestCase
         assertEquals("I'm complex!", compositeConfiguration.getProperty("element2.subelement.subsubelement"));
     }
 
+    @Test
     public void testLoadingConfigurationReverseOrder() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFileReverseOrder.toString());
@@ -139,6 +152,7 @@ public class TestConfigurationFactory extends TestCase
         assertEquals("1", configuration.getProperty("test.short"));
     }
 
+    @Test
     public void testLoadingConfigurationNamespaceAware() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFileNamespaceAware.toString());
@@ -147,6 +161,7 @@ public class TestConfigurationFactory extends TestCase
         checkCompositeConfiguration();
     }
 
+    @Test
     public void testLoadingConfigurationBasePath() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFileBasePath.toString());
@@ -158,6 +173,7 @@ public class TestConfigurationFactory extends TestCase
         checkCompositeConfiguration();
     }
 
+    @Test
     public void testLoadingAdditional() throws Exception
     {
         factory.setConfigurationFileName(testDigesterFileEnhanced.toString());
@@ -165,25 +181,23 @@ public class TestConfigurationFactory extends TestCase
         checkUnionConfig();
     }
 
+    @Test
     public void testLoadingURL() throws Exception
     {
         factory.setConfigurationURL(testDigesterFileEnhanced.toURL());
         checkUnionConfig();
+    }
 
+    @Test(expected = ConfigurationException.class)
+    public void testLoadingURLNonExisting() throws Exception
+    {
         factory = new ConfigurationFactory();
         File nonExistingFile = new File("conf/nonexisting.xml");
         factory.setConfigurationURL(nonExistingFile.toURL());
-        try
-        {
-            factory.getConfiguration();
-            fail("Could load non existing file!");
-        }
-        catch(ConfigurationException cex)
-        {
-            //ok
-        }
+        factory.getConfiguration();
     }
 
+    @Test
     public void testThrowingConfigurationInitializationException() throws Exception
     {
         factory.setConfigurationFileName(testDigesterBadXML.toString());
@@ -200,6 +214,7 @@ public class TestConfigurationFactory extends TestCase
     }
 
     // Tests if properties from all sources can be loaded
+    @Test
     public void testAllConfiguration() throws Exception
     {
         factory.setConfigurationURL(testDigesterFileComplete.toURL());
@@ -231,6 +246,7 @@ public class TestConfigurationFactory extends TestCase
     }
 
     // Checks if optional configurations work
+    @Test
     public void testOptionalConfigurations() throws Exception
     {
         factory.setConfigurationURL(testDigesterFileOptional.toURL());
@@ -251,6 +267,7 @@ public class TestConfigurationFactory extends TestCase
     }
 
     // Checks if a file with an absolute path can be loaded
+    @Test
     public void testLoadAbsolutePath() throws Exception
     {
         try
@@ -287,6 +304,7 @@ public class TestConfigurationFactory extends TestCase
         }
     }
 
+    @Test
     public void testBasePath() throws Exception
     {
         assertEquals(".", factory.getBasePath());
@@ -316,6 +334,7 @@ public class TestConfigurationFactory extends TestCase
 
     // Tests if system properties can be resolved in the configuration
     // definition
+    @Test
     public void testLoadingWithSystemProperties() throws ConfigurationException
     {
         System.setProperty("config.file", "test.properties");
@@ -328,6 +347,7 @@ public class TestConfigurationFactory extends TestCase
 
     // Tests if the properties of a configuration object are correctly set
     // before it is loaded.
+    @Test
     public void testLoadInitProperties() throws ConfigurationException
     {
         factory.setConfigurationFileName(testDigesterFileInitProps
@@ -336,7 +356,7 @@ public class TestConfigurationFactory extends TestCase
         PropertiesConfiguration c = (PropertiesConfiguration) ((CompositeConfiguration) config)
                 .getConfiguration(0);
         assertEquals("List delimiter was not set", ';', c.getListDelimiter());
-        List l = c.getList("test.mixed.array");
+        List<Object> l = c.getList("test.mixed.array");
         assertEquals("Wrong number of list elements", 2, l.size());
         assertEquals("List delimiter was not applied", "b, c, d", l.get(1));
     }
@@ -349,14 +369,14 @@ public class TestConfigurationFactory extends TestCase
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(3, ((Collection) prop).size());
+        assertEquals(3, ((Collection<?>) prop).size());
         assertEquals("users", compositeConfiguration.getProperty("tables.table(0).name"));
         assertEquals("documents", compositeConfiguration.getProperty("tables.table(1).name"));
         assertEquals("tasks", compositeConfiguration.getProperty("tables.table(2).name"));
 
         prop = compositeConfiguration.getProperty("tables.table.fields.field.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(17, ((Collection) prop).size());
+        assertEquals(17, ((Collection<?>) prop).size());
 
         assertEquals("smtp.mydomain.org", compositeConfiguration.getString("mail.host.smtp"));
         assertEquals("pop3.mydomain.org", compositeConfiguration.getString("mail.host.pop"));
