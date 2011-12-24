@@ -17,12 +17,17 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
  */
-public class TestConfigurationMap extends TestCase
+public class TestConfigurationMap
 {
 
     ConfigurationMap map;
@@ -36,7 +41,7 @@ public class TestConfigurationMap extends TestCase
             "shortProperty",
             "stringProperty"
     };
-    
+
     Object[] values = {
             Boolean.TRUE,
             new Double(Double.MAX_VALUE),
@@ -48,17 +53,9 @@ public class TestConfigurationMap extends TestCase
     };
 
     /**
-     * Construct a new instance of this test case.
-     * @param name Name of the test case
-     */
-    public TestConfigurationMap(String name)
-    {
-        super(name);
-    }
-
-    /**
      * Set up instance variables required by this test case.
      */
+    @Before
     public void setUp() throws Exception
     {
         BaseConfiguration configuration = new BaseConfiguration();
@@ -70,6 +67,7 @@ public class TestConfigurationMap extends TestCase
     /**
      * Tear down instance variables required by this test case.
      */
+    @After
     public void tearDown()
     {
         map = null;
@@ -78,6 +76,7 @@ public class TestConfigurationMap extends TestCase
     /**
      * Class under test for Object put(Object, Object)
      */
+    @Test
     public void testPut()
     {
         for(int i = 0; i < properties.length; i++) {
