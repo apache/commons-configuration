@@ -17,23 +17,29 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.NoSuchElementException;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
- * Test class for ConfigurationKey. 
- * 
+ * Test class for ConfigurationKey.
+ *
  * @version $Id$
  */
-public class TestConfigurationKey extends TestCase
+public class TestConfigurationKey
 {
     private static final String TESTPROPS = "tables.table(0).fields.field(1)";
-    
+
     private static final String TESTATTR = "[@dataType]";
-    
+
     private static final String TESTKEY = TESTPROPS + TESTATTR;
-    
+
+    @Test
     public void testAppend()
     {
         ConfigurationKey key = new ConfigurationKey();
@@ -42,7 +48,8 @@ public class TestConfigurationKey extends TestCase
         key.appendAttribute("dataType");
         assertEquals(TESTKEY, key.toString());
     }
-    
+
+    @Test
     public void testIterate()
     {
         ConfigurationKey key = new ConfigurationKey(TESTKEY);
@@ -71,7 +78,7 @@ public class TestConfigurationKey extends TestCase
         {
             //ok
         }
-        
+
         key = new ConfigurationKey();
         assertFalse(key.iterator().hasNext());
         key.append("simple");
@@ -88,18 +95,20 @@ public class TestConfigurationKey extends TestCase
             //ok
         }
     }
-    
+
+    @Test
     public void testAttribute()
     {
         assertTrue(ConfigurationKey.isAttributeKey(TESTATTR));
         assertFalse(ConfigurationKey.isAttributeKey(TESTPROPS));
         assertFalse(ConfigurationKey.isAttributeKey(TESTKEY));
-        
+
         ConfigurationKey key = new ConfigurationKey(TESTPROPS);
         key.append(TESTATTR);
         assertEquals(TESTKEY, key.toString());
     }
-    
+
+    @Test
     public void testLength()
     {
         ConfigurationKey key = new ConfigurationKey(TESTPROPS);
@@ -110,14 +119,16 @@ public class TestConfigurationKey extends TestCase
         assertEquals(TESTPROPS.length(), key.length());
         assertEquals(TESTPROPS, key.toString());
     }
-    
+
+    @Test
     public void testConstructAttributeKey()
     {
         assertEquals("[@attribute]", ConfigurationKey.constructAttributeKey("attribute"));
         assertEquals("attribute", ConfigurationKey.attributeName("[@attribute]"));
         assertEquals("attribute", ConfigurationKey.attributeName("attribute"));
     }
-    
+
+    @Test
     public void testEquals()
     {
         ConfigurationKey k1 = new ConfigurationKey(TESTKEY);
@@ -129,9 +140,10 @@ public class TestConfigurationKey extends TestCase
         assertFalse(k1.equals(k2));
         assertFalse(k2.equals(k1));
         assertFalse(k1.equals(null));
-        assertTrue(k1.equals(TESTKEY));        
+        assertTrue(k1.equals(TESTKEY));
     }
-    
+
+    @Test
     public void testCommonKey()
     {
         ConfigurationKey k1 = new ConfigurationKey(TESTKEY);
@@ -139,22 +151,22 @@ public class TestConfigurationKey extends TestCase
         ConfigurationKey kc = k1.commonKey(k2);
         assertEquals(new ConfigurationKey("tables.table(0)"), kc);
         assertEquals(kc, k2.commonKey(k1));
-        
+
         k2 = new ConfigurationKey("tables.table(1).fields.field(1)");
         kc = k1.commonKey(k2);
         assertEquals(new ConfigurationKey("tables"), kc);
-        
+
         k2 = new ConfigurationKey("completely.different.key");
         kc = k1.commonKey(k2);
         assertEquals(0, kc.length());
-        
+
         k2 = new ConfigurationKey();
         kc = k1.commonKey(k2);
         assertEquals(0, kc.length());
-        
+
         kc = k1.commonKey(k1);
         assertEquals(kc, k1);
-        
+
         try
         {
             kc.commonKey(null);
@@ -165,26 +177,28 @@ public class TestConfigurationKey extends TestCase
             //ok
         }
     }
-    
+
+    @Test
     public void testDifferenceKey()
     {
         ConfigurationKey k1 = new ConfigurationKey(TESTKEY);
         ConfigurationKey kd = k1.differenceKey(k1);
         assertEquals(0, kd.length());
-        
+
         ConfigurationKey k2 = new ConfigurationKey("tables.table(0).name");
         kd = k1.differenceKey(k2);
         assertEquals("name", kd.toString());
-        
+
         k2 = new ConfigurationKey("tables.table(1).fields.field(1)");
         kd = k1.differenceKey(k2);
         assertEquals("table(1).fields.field(1)", kd.toString());
-        
+
         k2 = new ConfigurationKey("completely.different.key");
         kd = k1.differenceKey(k2);
         assertEquals(k2, kd);
     }
-    
+
+    @Test
     public void testEscapedDelimiters()
     {
         ConfigurationKey k = new ConfigurationKey();
@@ -192,17 +206,18 @@ public class TestConfigurationKey extends TestCase
         k.append("trailing..dot..");
         k.append("strange");
         assertEquals("my..elem.trailing..dot...strange", k.toString());
-        
+
         ConfigurationKey.KeyIterator kit = k.iterator();
         assertEquals("my.elem", kit.nextKey());
         assertEquals("trailing.dot.", kit.nextKey());
         assertEquals("strange", kit.nextKey());
         assertFalse(kit.hasNext());
     }
-    
+
     /**
      * Tests some funny keys.
      */
+    @Test
     public void testIterateStrangeKeys()
     {
         ConfigurationKey k = new ConfigurationKey("key.");
@@ -210,11 +225,11 @@ public class TestConfigurationKey extends TestCase
         assertTrue(it.hasNext());
         assertEquals("key", it.next());
         assertFalse(it.hasNext());
-        
+
         k = new ConfigurationKey(".");
         it = k.iterator();
         assertFalse(it.hasNext());
-        
+
         k = new ConfigurationKey("key().index()undefined(0).test");
         it = k.iterator();
         assertEquals("key()", it.next());
@@ -223,16 +238,17 @@ public class TestConfigurationKey extends TestCase
         assertTrue(it.hasIndex());
         assertEquals(0, it.getIndex());
     }
-    
+
     /**
      * Tests iterating over an attribute key that has an index.
      */
+    @Test
     public void testAttributeKeyWithIndex()
     {
         ConfigurationKey k = new ConfigurationKey(TESTATTR);
         k.appendIndex(0);
         assertEquals("Wrong attribute key with index", TESTATTR + "(0)", k.toString());
-        
+
         ConfigurationKey.KeyIterator it = k.iterator();
         assertTrue("No first element", it.hasNext());
         it.next();
