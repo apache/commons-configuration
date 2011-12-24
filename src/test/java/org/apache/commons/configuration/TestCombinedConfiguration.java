@@ -16,6 +16,14 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,15 +31,12 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -43,13 +48,17 @@ import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test class for CombinedConfiguration.
  *
  * @version $Id$
  */
-public class TestCombinedConfiguration extends TestCase
+public class TestCombinedConfiguration
 {
     /** Constant for the name of a sub configuration. */
     private static final String TEST_NAME = "SUBCONFIG";
@@ -75,11 +84,9 @@ public class TestCombinedConfiguration extends TestCase
     /** Constant for the content of a properties reload test file.*/
     private static final String RELOAD_PROPS_CONTENT = "propsReload = {0}";
 
-    /** Constant for the directory for writing test files.*/
-    private static final File TEST_DIR = new File("target");
-
-    /** A list with files created during a test.*/
-    private Collection testFiles;
+    /** Helper object for managing temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /** The configuration to be tested. */
     private CombinedConfiguration config;
@@ -87,36 +94,18 @@ public class TestCombinedConfiguration extends TestCase
     /** The test event listener. */
     private CombinedListener listener;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         config = new CombinedConfiguration();
         listener = new CombinedListener();
         config.addConfigurationListener(listener);
     }
 
     /**
-     * Performs clean-up after a test run. If test files have been created, they
-     * are removed now.
-     */
-    protected void tearDown() throws Exception
-    {
-        if (testFiles != null)
-        {
-            for (Iterator it = testFiles.iterator(); it.hasNext();)
-            {
-                File f = (File) it.next();
-                if (f.exists())
-                {
-                    assertTrue("Cannot delete test file: " + f, f.delete());
-                }
-            }
-        }
-    }
-
-    /**
      * Tests accessing a newly created combined configuration.
      */
+    @Test
     public void testInit()
     {
         assertEquals("Already configurations contained", 0, config
@@ -132,6 +121,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests adding a configuration (without further information).
      */
+    @Test
     public void testAddConfiguration()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -149,6 +139,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests adding a configuration with a name.
      */
+    @Test
     public void testAddConfigurationWithName()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -159,7 +150,7 @@ public class TestCombinedConfiguration extends TestCase
         assertSame("Added config not found", c, config.getConfiguration(0));
         assertSame("Added config not found by name", c, config
                 .getConfiguration(TEST_NAME));
-        Set names = config.getConfigurationNames();
+        Set<String> names = config.getConfigurationNames();
         assertEquals("Wrong number of config names", 1, names.size());
         assertTrue("Name not found", names.contains(TEST_NAME));
         assertTrue("Wrong property value", config.getBoolean(TEST_KEY));
@@ -170,24 +161,18 @@ public class TestCombinedConfiguration extends TestCase
      * Tests adding a configuration with a name when this name already exists.
      * This should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testAddConfigurationWithNameTwice()
     {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
-        try
-        {
-            config.addConfiguration(setUpTestConfiguration(), TEST_NAME,
-                    "prefix");
-            fail("Could add config with same name!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        config.addConfiguration(setUpTestConfiguration(), TEST_NAME,
+                "prefix");
     }
 
     /**
      * Tests adding a configuration and specifying an at position.
      */
+    @Test
     public void testAddConfigurationAt()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -200,6 +185,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests adding a configuration with a complex at position. Here the at path
      * contains a dot, which must be escaped.
      */
+    @Test
     public void testAddConfigurationComplexAt()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -216,7 +202,7 @@ public class TestCombinedConfiguration extends TestCase
      */
     private void checkAddConfig(AbstractConfiguration c)
     {
-        Collection listeners = c.getConfigurationListeners();
+        Collection<ConfigurationListener> listeners = c.getConfigurationListeners();
         assertEquals("Wrong number of configuration listeners", 1, listeners
                 .size());
         assertTrue("Combined config is no listener", listeners.contains(config));
@@ -226,22 +212,16 @@ public class TestCombinedConfiguration extends TestCase
      * Tests adding a null configuration. This should cause an exception to be
      * thrown.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullConfiguration()
     {
-        try
-        {
-            config.addConfiguration(null);
-            fail("Could add null configuration!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        config.addConfiguration(null);
     }
 
     /**
      * Tests accessing properties if no configurations have been added.
      */
+    @Test
     public void testAccessPropertyEmpty()
     {
         assertFalse("Found a key", config.containsKey(TEST_KEY));
@@ -252,6 +232,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests accessing properties if multiple configurations have been added.
      */
+    @Test
     public void testAccessPropertyMulti()
     {
         config.addConfiguration(setUpTestConfiguration());
@@ -267,6 +248,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration.
      */
+    @Test
     public void testRemoveConfiguration()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -279,6 +261,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration by index.
      */
+    @Test
     public void testRemoveConfigurationAt()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -290,6 +273,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration by name.
      */
+    @Test
     public void testRemoveConfigurationByName()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -302,6 +286,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration with a name.
      */
+    @Test
     public void testRemoveNamedConfiguration()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -313,6 +298,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a named configuration by index.
      */
+    @Test
     public void testRemoveNamedConfigurationAt()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -324,6 +310,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration that was not added prior.
      */
+    @Test
     public void testRemoveNonContainedConfiguration()
     {
         assertFalse("Could remove non contained config", config
@@ -334,6 +321,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests removing a configuration by name, which is not contained.
      */
+    @Test
     public void testRemoveConfigurationByUnknownName()
     {
         assertNull("Could remove configuration by unknown name", config
@@ -361,6 +349,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests if an update of a contained configuration leeds to an invalidation
      * of the combined configuration.
      */
+    @Test
     public void testUpdateContainedConfiguration()
     {
         AbstractConfiguration c = setUpTestConfiguration();
@@ -374,6 +363,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests if setting a node combiner causes an invalidation.
      */
+    @Test
     public void testSetNodeCombiner()
     {
         NodeCombiner combiner = new UnionCombiner();
@@ -386,29 +376,23 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests setting a null node combiner. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetNullNodeCombiner()
     {
-        try
-        {
-            config.setNodeCombiner(null);
-            fail("Could set null node combiner!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        config.setNodeCombiner(null);
     }
 
     /**
      * Tests cloning a combined configuration.
      */
+    @Test
     public void testClone()
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
-        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        CombinedConfiguration cc2 = config.clone();
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -435,10 +419,11 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests if the cloned configuration is decoupled from the original.
      */
+    @Test
     public void testCloneModify()
     {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
-        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        CombinedConfiguration cc2 = config.clone();
         assertTrue("Name is missing", cc2.getConfigurationNames().contains(
                 TEST_NAME));
         cc2.removeConfiguration(TEST_NAME);
@@ -450,6 +435,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests clearing a combined configuration. This should remove all contained
      * configurations.
      */
+    @Test
     public void testClear()
     {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "test");
@@ -468,6 +454,7 @@ public class TestCombinedConfiguration extends TestCase
     /**
      * Tests if file-based configurations can be reloaded.
      */
+    @Test
     public void testReloading() throws Exception
     {
         config.setForceReloadCheck(true);
@@ -496,6 +483,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests whether the reload check works with a subnode configuration. This
      * test is related to CONFIGURATION-341.
      */
+    @Test
     public void testReloadingSubnodeConfig() throws IOException,
             ConfigurationException
     {
@@ -515,6 +503,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests whether reloading works for a combined configuration nested in
      * another combined configuration.
      */
+    @Test
     public void testReloadingNestedCC() throws IOException,
             ConfigurationException
     {
@@ -554,6 +543,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests the gestSource() method when the source property is defined in a
      * hierarchical configuration.
      */
+    @Test
     public void testGetSourceHierarchical()
     {
         setUpSourceTest();
@@ -565,6 +555,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests whether the source configuration can be detected for non
      * hierarchical configurations.
      */
+    @Test
     public void testGetSourceNonHierarchical()
     {
         setUpSourceTest();
@@ -576,6 +567,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests the getSource() method when the passed in key is not contained.
      * Result should be null in this case.
      */
+    @Test
     public void testGetSourceUnknown()
     {
         setUpSourceTest();
@@ -587,23 +579,17 @@ public class TestCombinedConfiguration extends TestCase
      * Tests the getSource() method when a null key is passed in. This should
      * cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetSourceNull()
     {
-        try
-        {
-            config.getSource(null);
-            fail("Could resolve source for null key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        config.getSource(null);
     }
 
     /**
      * Tests the getSource() method when the passed in key belongs to the
      * combined configuration itself.
      */
+    @Test
     public void testGetSourceCombined()
     {
         setUpSourceTest();
@@ -616,6 +602,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests the getSource() method when the passed in key refers to multiple
      * values, which are all defined in the same source configuration.
      */
+    @Test
     public void testGetSourceMulti()
     {
         setUpSourceTest();
@@ -629,26 +616,20 @@ public class TestCombinedConfiguration extends TestCase
      * Tests the getSource() method when the passed in key refers to multiple
      * values defined by different sources. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetSourceMultiSources()
     {
         setUpSourceTest();
         final String key = "list.key";
         config.getConfiguration(CHILD1).addProperty(key, "1,2,3");
         config.getConfiguration(CHILD2).addProperty(key, "a,b,c");
-        try
-        {
-            config.getSource(key);
-            fail("Multiple sources not detected!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            //ok
-        }
+        config.getSource(key);
     }
 
     /**
      * Tests whether escaped list delimiters are treated correctly.
      */
+    @Test
     public void testEscapeListDelimiters()
     {
         PropertiesConfiguration sub = new PropertiesConfiguration();
@@ -661,6 +642,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests whether an invalidate event is fired only after a change. This test
      * is related to CONFIGURATION-315.
      */
+    @Test
     public void testInvalidateAfterChange()
     {
         ConfigurationEvent event = new ConfigurationEvent(config, 0, null,
@@ -676,6 +658,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests using a conversion expression engine for child configurations with
      * strange keys. This test is related to CONFIGURATION-336.
      */
+    @Test
     public void testConversionExpressionEngine()
     {
         PropertiesConfiguration child = new PropertiesConfiguration();
@@ -699,6 +682,7 @@ public class TestCombinedConfiguration extends TestCase
      * configuration is accessed concurrently. This test is related to
      * CONFIGURATION-344.
      */
+    @Test
     public void testDeadlockWithReload() throws ConfigurationException,
             InterruptedException
     {
@@ -712,6 +696,7 @@ public class TestCombinedConfiguration extends TestCase
         {
             boolean error = false;
 
+            @Override
             public void run()
             {
                 for (int i = 0; i < count && !error; i++)
@@ -742,29 +727,31 @@ public class TestCombinedConfiguration extends TestCase
         assertFalse("Failure in thread", reloadThread.error);
     }
 
+    @Test
     public void testGetConfigurations() throws Exception
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
-        List list = config.getConfigurations();
+        List<AbstractConfiguration> list = config.getConfigurations();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
-        AbstractConfiguration c = ((AbstractConfiguration)list.get(2));
+        AbstractConfiguration c = list.get(2);
         assertTrue("Incorrect configuration", c == pc);
     }
 
+    @Test
     public void testGetConfigurationNameList() throws Exception
     {
         config.addConfiguration(setUpTestConfiguration());
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
-        List list = config.getConfigurationNameList();
+        List<String> list = config.getConfigurationNameList();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
-        String name = ((String)list.get(1));
+        String name = list.get(1);
         assertNotNull("No name returned", name);
         assertTrue("Incorrect configuration name", TEST_NAME.equals(name));
     }
@@ -774,6 +761,7 @@ public class TestCombinedConfiguration extends TestCase
      * combined configuration are detected. This test is related to
      * CONFIGURATION-368.
      */
+    @Test
     public void testReloadWithSubNodeConfig() throws Exception
     {
         final String reloadContent = "<config><default><xmlReload1>{0}</xmlReload1></default></config>";
@@ -795,6 +783,7 @@ public class TestCombinedConfiguration extends TestCase
                 .getInt("xmlReload1"));
     }
 
+    @Test
     public void testConcurrentGetAndReload() throws Exception
     {
         final int threadCount = 5;
@@ -833,6 +822,7 @@ public class TestCombinedConfiguration extends TestCase
      * Tests whether a combined configuration can be copied to an XML
      * configuration. This test is related to CONFIGURATION-445.
      */
+    @Test
     public void testCombinedCopyToXML() throws ConfigurationException
     {
         XMLConfiguration x1 = new XMLConfiguration();
@@ -875,6 +865,7 @@ public class TestCombinedConfiguration extends TestCase
             this.index = index;
             this.count = count;
         }
+        @Override
         public void run()
         {
             failures[index] = 0;
@@ -911,12 +902,6 @@ public class TestCombinedConfiguration extends TestCase
         {
             out = new PrintWriter(new FileWriter(file));
             out.print(content);
-
-            if (testFiles == null)
-            {
-                testFiles = new ArrayList();
-            }
-            testFiles.add(file);
         }
         finally
         {
@@ -939,7 +924,7 @@ public class TestCombinedConfiguration extends TestCase
      */
     private File writeFile(String fileName, String content) throws IOException
     {
-        File file = new File(TEST_DIR, fileName);
+        File file = folder.newFile(fileName);
         writeFile(file, content);
         return file;
     }
