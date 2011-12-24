@@ -17,13 +17,15 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.ExtendedProperties;
+import org.junit.Test;
 
 /**
  * Tests the ConfigurationConverter class.
@@ -32,8 +34,9 @@ import org.apache.commons.collections.ExtendedProperties;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class TestConfigurationConverter extends TestCase
+public class TestConfigurationConverter
 {
+    @Test
     public void testExtendedPropertiesToConfiguration()
     {
         ExtendedProperties eprops = new ExtendedProperties();
@@ -45,12 +48,13 @@ public class TestConfigurationConverter extends TestCase
         Configuration config = ConfigurationConverter.getConfiguration(eprops);
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
+        List<Object> item1 = config.getList("list");
+        assertEquals("This returns 'item 1'", "item 1", item1.get(0));
 
         assertEquals("This returns 123", 123, config.getInt("int"));
     }
 
+    @Test
     public void testPropertiesToConfiguration()
     {
         Properties props = new Properties();
@@ -61,12 +65,13 @@ public class TestConfigurationConverter extends TestCase
         Configuration config = ConfigurationConverter.getConfiguration(props);
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
-        List item1 = config.getList("list");
-        assertEquals("This returns 'item 1'", "item 1", (String) item1.get(0));
+        List<Object> item1 = config.getList("list");
+        assertEquals("This returns 'item 1'", "item 1", item1.get(0));
 
         assertEquals("This returns 123", 123, config.getInt("int"));
     }
 
+    @Test
     public void testConfigurationToExtendedProperties()
     {
         Configuration config = new BaseConfiguration();
@@ -78,11 +83,12 @@ public class TestConfigurationConverter extends TestCase
         ExtendedProperties eprops = ConfigurationConverter.getExtendedProperties(config);
 
         assertEquals("This returns 'teststring'", "teststring", eprops.getString("string"));
-        List list = eprops.getVector("list");
-        assertEquals("This returns 'item 1'", "item 1", (String) list.get(0));
+        List<?> list = eprops.getVector("list");
+        assertEquals("This returns 'item 1'", "item 1", list.get(0));
         assertEquals("This returns 123", 123, eprops.getInt("int"));
     }
 
+    @Test
     public void testConfigurationToProperties()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -111,6 +117,7 @@ public class TestConfigurationConverter extends TestCase
      * Tests the conversion of a configuration object to properties if scalar
      * values are involved. This test is related to CONFIGURATION-432.
      */
+    @Test
     public void testConfigurationToPropertiesScalarValue()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -119,12 +126,13 @@ public class TestConfigurationConverter extends TestCase
         assertEquals("Wrong value", "42", props.getProperty("scalar"));
     }
 
+    @Test
     public void testConfigurationToMap()
     {
         Configuration config = new BaseConfiguration();
         config.addProperty("string", "teststring");
 
-        Map map = ConfigurationConverter.getMap(config);
+        Map<Object, Object> map = ConfigurationConverter.getMap(config);
 
         assertNotNull("null map", map);
         assertEquals("'string' property", "teststring", map.get("string"));
