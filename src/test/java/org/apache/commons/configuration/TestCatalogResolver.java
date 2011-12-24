@@ -17,18 +17,22 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for CatalogResolver.
  *
- * @version $Id:$
+ * @version $Id$
  */
-public class TestCatalogResolver extends TestCase
+public class TestCatalogResolver
 {
     private static final String CATALOG_FILES = "catalog.xml";
     private static final String PUBLIC_FILE = "testResolver.xml";
@@ -38,7 +42,8 @@ public class TestCatalogResolver extends TestCase
     private CatalogResolver resolver;
     private XMLConfiguration config;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         resolver = new CatalogResolver();
         resolver.setCatalogFiles(CATALOG_FILES);
@@ -47,18 +52,21 @@ public class TestCatalogResolver extends TestCase
         config.setEntityResolver(resolver);
     }
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         resolver = null;
         config = null;
     }
 
+    @Test
     public void testPublic() throws Exception
     {
         config.setFileName(PUBLIC_FILE);
         config.load();
     }
 
+    @Test
     public void testRewriteSystem() throws Exception
     {
         config.setFileName(REWRITE_SYSTEM_FILE);
@@ -70,6 +78,7 @@ public class TestCatalogResolver extends TestCase
      * validate the file using the schema.
      * @throws Exception
      */
+    @Test
     public void testSchemaResolver() throws Exception
     {
         config.setFileName(REWRITE_SCHEMA_FILE);
@@ -77,6 +86,7 @@ public class TestCatalogResolver extends TestCase
         config.load();
     }
 
+    @Test
     public void testDebug() throws Exception
     {
         resolver.setDebug(true);
@@ -84,6 +94,7 @@ public class TestCatalogResolver extends TestCase
         // that causes debug output.
     }
 
+    @Test
     public void testLogger() throws Exception
     {
         Log log = LogFactory.getLog(this.getClass());
