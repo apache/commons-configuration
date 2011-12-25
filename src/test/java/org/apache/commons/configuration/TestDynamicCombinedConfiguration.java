@@ -17,6 +17,11 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,12 +29,11 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
+import org.junit.Test;
 
-public class TestDynamicCombinedConfiguration extends TestCase
+public class TestDynamicCombinedConfiguration
 {
     private static String PATTERN = "${sys:Id}";
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
@@ -45,6 +49,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
     /** Constant for the number of loops in the multi-thread tests. */
     private static final int LOOP_COUNT = 100;
 
+    @Test
     public void testConfiguration() throws Exception
     {
         DynamicCombinedConfiguration config = new DynamicCombinedConfiguration();
@@ -74,6 +79,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
+    @Test
     public void testConcurrentGetAndReload() throws Exception
     {
         System.getProperties().remove("Id");
@@ -100,6 +106,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
     }
 
+    @Test
     public void testConcurrentGetAndReload2() throws Exception
     {
         System.getProperties().remove("Id");
@@ -129,6 +136,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
     }
 
+    @Test
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
         System.getProperties().remove("Id");
@@ -166,6 +174,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
     }
 
+    @Test
   public void testConcurrentGetAndReloadFile() throws Exception
     {
         final int threadCount = 25;
@@ -236,6 +245,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
             this.id = id;
             this.useId = useId;
         }
+        @Override
         public void run()
         {
             failures[index] = 0;
@@ -273,6 +283,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
             combined = c;
         }
 
+        @Override
         public void run()
         {
             while (running)
@@ -327,7 +338,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
 
     public static class ThreadLookup extends StrLookup
     {
-        private static ThreadLocal id = new ThreadLocal();
+        private static ThreadLocal<String> id = new ThreadLocal<String>();
 
 
 
@@ -341,6 +352,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
             id.set(value);
         }
 
+        @Override
         public String lookup(String key)
         {
             if (key == null || !key.equals("Id"))
@@ -352,7 +364,7 @@ public class TestDynamicCombinedConfiguration extends TestCase
             {
                 return value;
             }
-            return (String)id.get();
+            return id.get();
 
         }
     }
