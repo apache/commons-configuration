@@ -17,18 +17,21 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * test if properties that contain a "=" will be loaded correctly.
  *
  * @version $Id$
  */
-public class TestEqualsProperty extends TestCase
+public class TestEqualsProperty
 {
     /** The File that we test with */
     private String testProperties = ConfigurationAssert.getTestFile("test.properties").getAbsolutePath();
 
+    @Test
     public void testEquals() throws Exception
     {
         PropertiesConfiguration conf = new PropertiesConfiguration(testProperties);
