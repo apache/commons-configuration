@@ -17,6 +17,10 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,7 +32,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Test;
 
 /**
  * Test class for HierarchicalINIConfiguration.
@@ -38,7 +43,7 @@ import junit.framework.TestCase;
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestHierarchicalINIConfiguration extends TestCase
+public class TestHierarchicalINIConfiguration
 {
     private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -97,15 +102,14 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /** A test ini file. */
     private static final File TEST_FILE = new File("target/test.ini");
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         if (TEST_FILE.exists())
         {
             assertTrue("Cannot remove test file: " + TEST_FILE, TEST_FILE
                     .delete());
         }
-
-        super.tearDown();
     }
 
     /**
@@ -148,6 +152,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Test of save method, of class {@link HierarchicalINIConfiguration}.
      */
+    @Test
     public void testSave() throws Exception
     {
         Writer writer = new StringWriter();
@@ -184,6 +189,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests saving a configuration that contains a global section.
      */
+    @Test
     public void testSaveWithGlobalSection() throws ConfigurationException
     {
         checkSave(INI_DATA_GLOBAL);
@@ -193,6 +199,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether a configuration that contains only a global section can be
      * saved correctly.
      */
+    @Test
     public void testSaveWithOnlyGlobalSection() throws ConfigurationException
     {
         checkSave(INI_DATA_GLOBAL_ONLY);
@@ -201,6 +208,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Test of load method, of class {@link HierarchicalINIConfiguration}.
      */
+    @Test
     public void testLoad() throws Exception
     {
         checkLoad(INI_DATA);
@@ -210,6 +218,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests the load() method when the alternative value separator is used (a
      * ':' for '=').
      */
+    @Test
     public void testLoadAlternativeSeparator() throws Exception
     {
         checkLoad(INI_DATA.replace('=', ':'));
@@ -218,6 +227,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests loading a configuration from a File.
      */
+    @Test
     public void testLoadFile() throws ConfigurationException, IOException
     {
         writeTestFile(INI_DATA);
@@ -229,6 +239,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests loading a configuration from a file name.
      */
+    @Test
     public void testLoadFileName() throws ConfigurationException, IOException
     {
         writeTestFile(INI_DATA);
@@ -240,6 +251,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests loading a configuration from a URL.
      */
+    @Test
     public void testLoadURL() throws ConfigurationException, IOException
     {
         writeTestFile(INI_DATA);
@@ -280,6 +292,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Test of isCommentLine method, of class
      * {@link HierarchicalINIConfiguration}.
      */
+    @Test
     public void testIsCommentLine()
     {
         HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
@@ -293,6 +306,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Test of isSectionLine method, of class
      * {@link HierarchicalINIConfiguration}.
      */
+    @Test
     public void testIsSectionLine()
     {
         HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
@@ -305,24 +319,27 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Test of getSections method, of class {@link HierarchicalINIConfiguration}
      * .
      */
+    @Test
     public void testGetSections()
     {
         HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
         instance.addProperty("test1.foo", "bar");
         instance.addProperty("test2.foo", "abc");
-        Set expResult = new HashSet();
+        Set<String> expResult = new HashSet<String>();
         expResult.add("test1");
         expResult.add("test2");
-        Set result = instance.getSections();
+        Set<String> result = instance.getSections();
         assertEquals(expResult, result);
     }
 
+    @Test
     public void testQuotedValue() throws Exception
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "quoted value", config.getString("section4.var1"));
     }
 
+    @Test
     public void testQuotedValueWithQuotes() throws Exception
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
@@ -330,18 +347,21 @@ public class TestHierarchicalINIConfiguration extends TestCase
                 .getString("section4.var2"));
     }
 
+    @Test
     public void testValueWithComment() throws Exception
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "123", config.getString("section4.var3"));
     }
 
+    @Test
     public void testQuotedValueWithComment() throws Exception
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "1;2;3", config.getString("section4.var4"));
     }
 
+    @Test
     public void testQuotedValueWithSingleQuotes() throws Exception
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
@@ -349,6 +369,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
                 .getString("section4.var5"));
     }
 
+    @Test
     public void testWriteValueWithCommentChar() throws Exception
     {
         HierarchicalINIConfiguration config = new HierarchicalINIConfiguration();
@@ -366,6 +387,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests whether whitespace is left unchanged for quoted values.
      */
+    @Test
     public void testQuotedValueWithWhitespace() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
@@ -377,6 +399,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a quoted value with space and a comment.
      */
+    @Test
     public void testQuotedValueWithWhitespaceAndComment() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
@@ -388,6 +411,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests an empty quoted value.
      */
+    @Test
     public void testQuotedValueEmpty() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
@@ -398,6 +422,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a property that has no value.
      */
+    @Test
     public void testGetPropertyNoValue() throws ConfigurationException
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "noValue ="
@@ -410,6 +435,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a property that has no key.
      */
+    @Test
     public void testGetPropertyNoKey() throws ConfigurationException
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "= noKey"
@@ -422,6 +448,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests reading a property from the global section.
      */
+    @Test
     public void testGlobalProperty() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
@@ -439,8 +466,8 @@ public class TestHierarchicalINIConfiguration extends TestCase
     private void checkSectionNames(HierarchicalINIConfiguration config,
             String[] expected)
     {
-        Set sectionNames = config.getSections();
-        Iterator it = sectionNames.iterator();
+        Set<String> sectionNames = config.getSections();
+        Iterator<String> it = sectionNames.iterator();
         for (int idx = 0; idx < expected.length; idx++)
         {
             assertEquals("Wrong section at " + idx, expected[idx], it.next());
@@ -466,6 +493,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying the sections if a global section if available.
      */
+    @Test
     public void testGetSectionsWithGlobal() throws ConfigurationException
     {
         checkSectionNames(INI_DATA_GLOBAL, new String[] {
@@ -476,6 +504,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying the sections if there is no global section.
      */
+    @Test
     public void testGetSectionsNoGlobal() throws ConfigurationException
     {
         checkSectionNames(INI_DATA, new String[] {
@@ -487,6 +516,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether the sections of a configuration can be queried that
      * contains only a global section.
      */
+    @Test
     public void testGetSectionsGlobalOnly() throws ConfigurationException
     {
         checkSectionNames(INI_DATA_GLOBAL_ONLY, new String[] {
@@ -498,6 +528,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether variables containing a dot are not misinterpreted as
      * sections. This test is related to CONFIGURATION-327.
      */
+    @Test
     public void testGetSectionsDottedVar() throws ConfigurationException
     {
         final String data = "dotted.var = 1" + LINE_SEPARATOR + INI_DATA_GLOBAL;
@@ -512,6 +543,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests whether a section added later is also found by getSections().
      */
+    @Test
     public void testGetSectionsAdded() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
@@ -524,6 +556,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying the properties of an existing section.
      */
+    @Test
     public void testGetSectionExisting() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
@@ -536,6 +569,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests querying the properties of a section that was merged from two
      * sections with the same name.
      */
+    @Test
     public void testGetSectionMerged() throws ConfigurationException
     {
         final String data = INI_DATA + "[section1]" + LINE_SEPARATOR
@@ -550,6 +584,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying the content of the global section.
      */
+    @Test
     public void testGetSectionGlobal() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
@@ -561,6 +596,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests concurrent access to the global section.
      */
+    @Test
     public void testGetSectionGloabalMultiThreaded()
             throws ConfigurationException, InterruptedException
     {
@@ -582,6 +618,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying the content of the global section if there is none.
      */
+    @Test
     public void testGetSectionGlobalNonExisting() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
@@ -592,6 +629,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests querying a non existing section.
      */
+    @Test
     public void testGetSectionNonExisting() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
@@ -603,6 +641,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a property whose value spans multiple lines.
      */
+    @Test
     public void testLineContinuation() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -615,6 +654,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests a property value that ends on a backslash, which is no line
      * continuation character.
      */
+    @Test
     public void testLineContinuationNone() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -626,6 +666,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests a property whose value spans multiple lines when quoting is
      * involved. In this case whitespace must not be trimmed.
      */
+    @Test
     public void testLineContinuationQuoted() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -637,6 +678,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a property whose value spans multiple lines with a comment.
      */
+    @Test
     public void testLineContinuationComment() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -648,6 +690,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests a property with a quoted value spanning multiple lines and a
      * comment.
      */
+    @Test
     public void testLineContinuationQuotedComment()
             throws ConfigurationException
     {
@@ -659,6 +702,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a multi-line property value with an empty line.
      */
+    @Test
     public void testLineContinuationEmptyLine() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -669,6 +713,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests a line continuation at the end of the file.
      */
+    @Test
     public void testLineContinuationAtEnd() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
@@ -680,6 +725,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether a configuration can be saved that contains section keys
      * with delimiter characters. This test is related to CONFIGURATION-409.
      */
+    @Test
     public void testSaveKeysWithDelimiters() throws ConfigurationException
     {
         HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration();
@@ -697,6 +743,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether a value which contains a semicolon can be loaded
      * successfully. This test is related to CONFIGURATION-434.
      */
+    @Test
     public void testValueWithSemicolon() throws ConfigurationException
     {
         final String path =
@@ -717,6 +764,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether the different separators with or without whitespace are
      * recognized.
      */
+    @Test
     public void testSeparators() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
@@ -730,6 +778,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests property definitions containing multiple separators.
      */
+    @Test
     public void testMultipleSeparators() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
@@ -743,6 +792,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests property definitions containing multiple separators that are
      * quoted.
      */
+    @Test
     public void testMultipleSeparatorsQuoted() throws ConfigurationException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
@@ -756,6 +806,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether a section that has been cleared can be manipulated and
      * saved later.
      */
+    @Test
     public void testSaveClearedSection() throws ConfigurationException
     {
         final String data = "[section]\ntest = failed\n";
@@ -774,6 +825,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests whether a duplicate session is merged.
      */
+    @Test
     public void testMergeDuplicateSection() throws ConfigurationException
     {
         final String data =
@@ -797,6 +849,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
      * Tests whether a section that was created by getSection() can be
      * manipulated.
      */
+    @Test
     public void testGetSectionNonExistingManipulate()
             throws ConfigurationException
     {
@@ -815,6 +868,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
     /**
      * Tests whether getSection() can deal with duplicate sections.
      */
+    @Test
     public void testGetSectionDuplicate()
     {
         HierarchicalINIConfiguration config =
@@ -822,7 +876,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
         config.addProperty("section.var1", "value1");
         config.addProperty("section(-1).var2", "value2");
         SubnodeConfiguration section = config.getSection("section");
-        Iterator keys = section.getKeys();
+        Iterator<String> keys = section.getKeys();
         assertEquals("Wrong key", "var1", keys.next());
         assertFalse("Too many keys", keys.hasNext());
     }
@@ -853,6 +907,7 @@ public class TestHierarchicalINIConfiguration extends TestCase
          * Accesses the global section in a loop. If there is no correct
          * synchronization, this can cause an exception.
          */
+        @Override
         public void run()
         {
             final int loopCount = 250;
