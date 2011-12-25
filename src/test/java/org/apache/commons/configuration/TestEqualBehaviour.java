@@ -17,18 +17,22 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
- * Compare the behaviour of various methods between CompositeConfiguration
+ * Compare the behavior of various methods between CompositeConfiguration
  * and normal (Properties) Configuration
  *
  * @version $Id$
  */
-public class TestEqualBehaviour extends TestCase
+public class TestEqualBehaviour
 {
     private Configuration setupSimpleConfiguration()
             throws Exception
@@ -37,6 +41,7 @@ public class TestEqualBehaviour extends TestCase
         return new PropertiesConfiguration(simpleConfigurationFile);
     }
 
+    @SuppressWarnings("deprecation")
     private Configuration setupCompositeConfiguration()
             throws Exception
     {
@@ -53,13 +58,13 @@ public class TestEqualBehaviour extends TestCase
      */
     private void checkEquality(String msg, Configuration c1, Configuration c2)
     {
-        Iterator it1 = c1.getKeys();
-        Iterator it2 = c2.getKeys();
+        Iterator<String> it1 = c1.getKeys();
+        Iterator<String> it2 = c2.getKeys();
 
         while(it1.hasNext() && it2.hasNext())
         {
-            String key1 = (String) it1.next();
-            String key2 = (String) it2.next();
+            String key1 = it1.next();
+            String key2 = it2.next();
             assertEquals(msg + ", Keys: ", key1, key2);
             assertEquals(msg + ", Contains: ", c1.containsKey(key1), c2.containsKey(key2));
         }
@@ -81,13 +86,13 @@ public class TestEqualBehaviour extends TestCase
             assertEquals(msg + ", String Array: ", s1[i], s2[i]);
         }
 
-        List list1 = c1.getList(key);
-        List list2 = c2.getList(key);
+        List<Object> list1 = c1.getList(key);
+        List<Object> list2 = c2.getList(key);
 
         assertEquals(msg + ", Size: ", list1.size(), list2.size());
 
-        Iterator it1 = list1.iterator();
-        Iterator it2 = list2.iterator();
+        Iterator<Object> it1 = list1.iterator();
+        Iterator<Object> it2 = list2.iterator();
 
         while(it1.hasNext() && it2.hasNext())
         {
@@ -101,6 +106,7 @@ public class TestEqualBehaviour extends TestCase
     /**
      * Are both configurations equal after loading?
      */
+    @Test
     public void testLoading() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -113,6 +119,7 @@ public class TestEqualBehaviour extends TestCase
      * If we delete a key, does it vanish? Does it leave all
      * the other keys unchanged? How about an unset key?
      */
+    @Test
     public void testDeletingExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -132,6 +139,7 @@ public class TestEqualBehaviour extends TestCase
         checkEquality("testDeletingExisting", simple, composite);
     }
 
+    @Test
     public void testDeletingNonExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -155,6 +163,7 @@ public class TestEqualBehaviour extends TestCase
      * If we set a key, does it work? How about an existing
      * key? Can we change it?
      */
+    @Test
     public void testSettingNonExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -176,6 +185,7 @@ public class TestEqualBehaviour extends TestCase
         checkEquality("testSettingNonExisting", simple, composite);
     }
 
+    @Test
     public void testSettingExisting() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -202,6 +212,7 @@ public class TestEqualBehaviour extends TestCase
     /**
      * If we add a key, does it work?
      */
+    @Test
     public void testAddingUnset() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
@@ -223,6 +234,7 @@ public class TestEqualBehaviour extends TestCase
     /**
      * If we add a to an existing key, does it work?
      */
+    @Test
     public void testAddingSet() throws Exception
     {
         Configuration simple = setupSimpleConfiguration();
