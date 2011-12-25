@@ -16,6 +16,14 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -29,8 +37,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.event.ConfigurationListenerTestImpl;
@@ -47,14 +53,18 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for DefaultConfigurationBuilder.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestDefaultConfigurationBuilder extends TestCase
+public class TestDefaultConfigurationBuilder
 {
     /** Test configuration definition file. */
     private static final File TEST_FILE = ConfigurationAssert
@@ -108,9 +118,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /** Stores the object to be tested. */
     DefaultConfigurationBuilder factory;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         System
                 .setProperty("java.naming.factory.initial",
                         "org.apache.commons.configuration.MockInitialContextFactory");
@@ -123,6 +133,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests the isReservedNode() method of ConfigurationDeclaration.
      */
+    @Test
     public void testConfigurationDeclarationIsReserved()
     {
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
@@ -149,6 +160,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests if the at attribute is correctly detected as reserved attribute.
      */
+    @Test
     public void testConfigurationDeclarationIsReservedAt()
     {
         checkOldReservedAttribute("at");
@@ -158,6 +170,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests if the optional attribute is correctly detected as reserved
      * attribute.
      */
+    @Test
     public void testConfigurationDeclarationIsReservedOptional()
     {
         checkOldReservedAttribute("optional");
@@ -213,21 +226,25 @@ public class TestDefaultConfigurationBuilder extends TestCase
         factory.clearProperty("xml[@config-optional]");
         factory.setProperty("xml[@optional]", Boolean.TRUE);
         assertTrue("Old optional attribute not detected", decl.isOptional());
+    }
+
+    /**
+     * Tests whether an invalid value of an optional attribute is detected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testConfigurationDeclarationOptionalAttributeInvalid()
+    {
+        factory.addProperty("xml.fileName", "test.xml");
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
+                factory, factory.configurationAt("xml"));
         factory.setProperty("xml[@optional]", "invalid value");
-        try
-        {
-            decl.isOptional();
-            fail("Invalid optional attribute was not detected!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        decl.isOptional();
     }
 
     /**
      * Tests adding a new configuration provider.
      */
+    @Test
     public void testAddConfigurationProvider()
     {
         DefaultConfigurationBuilder.ConfigurationProvider provider = new DefaultConfigurationBuilder.ConfigurationProvider();
@@ -242,40 +259,27 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tries to register a null configuration provider. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddConfigurationProviderNull()
     {
-        try
-        {
-            factory.addConfigurationProvider("test", null);
-            fail("Could register null provider");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        factory.addConfigurationProvider("test", null);
     }
 
     /**
      * Tries to register a configuration provider for a null tag. This should
      * cause an exception to be thrown.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddConfigurationProviderNullTag()
     {
-        try
-        {
-            factory.addConfigurationProvider(null,
-                    new DefaultConfigurationBuilder.ConfigurationProvider());
-            fail("Could register provider for null tag!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        factory.addConfigurationProvider(null,
+                new DefaultConfigurationBuilder.ConfigurationProvider());
     }
 
     /**
      * Tests removing configuration providers.
      */
+    @Test
     public void testRemoveConfigurationProvider()
     {
         assertNull("Removing unknown provider", factory
@@ -292,6 +296,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests creating a configuration object from a configuration declaration.
      */
+    @Test
     public void testConfigurationBeanFactoryCreateBean()
     {
         factory.addConfigurationProvider("test",
@@ -310,25 +315,19 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests creating a configuration object from an unknown tag. This should
      * cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testConfigurationBeanFactoryCreateUnknownTag()
     {
         factory.addProperty("test[@throwExceptionOnMissing]", "true");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
-        try
-        {
-            BeanHelper.createBean(decl);
-            fail("Could create configuration from unknown tag!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(decl);
     }
 
     /**
      * Tests loading a simple configuration definition file.
      */
+    @Test
     public void testLoadConfiguration() throws ConfigurationException
     {
         factory.setFile(TEST_FILE);
@@ -338,6 +337,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests the file constructor.
      */
+    @Test
     public void testLoadConfigurationFromFile() throws ConfigurationException
     {
         factory = new DefaultConfigurationBuilder(TEST_FILE);
@@ -347,6 +347,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests the file name constructor.
      */
+    @Test
     public void testLoadConfigurationFromFileName()
             throws ConfigurationException
     {
@@ -357,6 +358,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests the URL constructor.
      */
+    @Test
     public void testLoadConfigurationFromURL() throws Exception
     {
         factory = new DefaultConfigurationBuilder(TEST_FILE.toURI().toURL());
@@ -408,6 +410,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests loading a configuration definition file with an additional section.
      */
+    @Test
     public void testLoadAdditional() throws ConfigurationException
     {
         factory.setFile(ADDITIONAL_FILE);
@@ -419,7 +422,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(3, ((Collection) prop).size());
+        assertEquals(3, ((Collection<?>) prop).size());
         assertEquals("users", compositeConfiguration
                 .getProperty("tables.table(0).name"));
         assertEquals("documents", compositeConfiguration
@@ -430,7 +433,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         prop = compositeConfiguration
                 .getProperty("tables.table.fields.field.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(17, ((Collection) prop).size());
+        assertEquals(17, ((Collection<?>) prop).size());
 
         assertEquals("smtp.mydomain.org", compositeConfiguration
                 .getString("mail.host.smtp"));
@@ -452,6 +455,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests whether a default log error listener is registered at the builder
      * instance.
      */
+    @Test
     public void testLogErrorListener()
     {
         assertEquals("No default error listener registered", 1,
@@ -461,6 +465,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests loading a definition file that contains optional configurations.
      */
+    @Test
     public void testLoadOptional() throws Exception
     {
         factory.setURL(OPTIONAL_FILE.toURI().toURL());
@@ -473,6 +478,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests whether loading a failing optional configuration causes an error
      * event.
      */
+    @Test
     public void testLoadOptionalErrorEvent() throws Exception
     {
         factory.clearErrorListeners();
@@ -488,18 +494,11 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * configuration sources. One non optional does not exist, so this should
      * cause an exception.
      */
-    public void testLoadOptionalWithException()
+    @Test(expected = ConfigurationException.class)
+    public void testLoadOptionalWithException() throws ConfigurationException
     {
         factory.setFile(OPTIONALEX_FILE);
-        try
-        {
-            factory.getConfiguration();
-            fail("Non existing source did not cause an exception!");
-        }
-        catch (ConfigurationException cex)
-        {
-            // ok
-        }
+        factory.getConfiguration();
     }
 
     /**
@@ -507,6 +506,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * configuration. The optional attribute should work for other configuration
      * classes, too.
      */
+    @Test
     public void testLoadOptionalNonFileBased() throws ConfigurationException
     {
         CombinedConfiguration config = prepareOptionalTest("configuration", false);
@@ -520,6 +520,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * attribute. This configuration should be added to the resulting
      * configuration.
      */
+    @Test
     public void testLoadOptionalForceCreate() throws ConfigurationException
     {
         factory.setBasePath(TEST_FILE.getParent());
@@ -538,6 +539,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests loading an embedded optional configuration builder with the force
      * create attribute.
      */
+    @Test
     public void testLoadOptionalBuilderForceCreate()
             throws ConfigurationException
     {
@@ -555,6 +557,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * set. The provider will always throw an exception. In this case the
      * configuration will not be added to the resulting combined configuration.
      */
+    @Test
     public void testLoadOptionalForceCreateWithException()
             throws ConfigurationException
     {
@@ -562,6 +565,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 new DefaultConfigurationBuilder.ConfigurationBuilderProvider()
                 {
                     // Throw an exception here, too
+                    @Override
                     public AbstractConfiguration getEmptyConfiguration(
                             DefaultConfigurationBuilder.ConfigurationDeclaration decl) throws Exception
                     {
@@ -600,6 +604,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests whether the error log message caused by an optional configuration
      * can be suppressed if a child builder is involved.
      */
+    @Test
     public void testLoadOptionalChildBuilderSuppressErrorLog()
             throws ConfigurationException
     {
@@ -634,6 +639,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests loading a definition file with multiple different sources.
      */
+    @Test
     public void testLoadDifferentSources() throws ConfigurationException
     {
         factory.setFile(MULTI_FILE);
@@ -670,9 +676,9 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
         // test environment configuration
         EnvironmentConfiguration envConf = new EnvironmentConfiguration();
-        for (Iterator it = envConf.getKeys(); it.hasNext();)
+        for (Iterator<String> it = envConf.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             String combinedKey = "env." + key;
             assertEquals("Wrong value for env property " + key,
                     envConf.getString(key), config.getString(combinedKey));
@@ -682,6 +688,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests if the base path is correctly evaluated.
      */
+    @Test
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
         factory.addProperty("properties[@fileName]", "test.properties");
@@ -697,6 +704,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests reading a configuration definition file that contains complex
      * initialization of properties of the declared configuration sources.
      */
+    @Test
     public void testComplexInitialization() throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
@@ -731,6 +739,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests if the returned combined configuration has the expected structure.
      */
+    @Test
     public void testCombinedConfigurationStructure() throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
@@ -745,7 +754,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         CombinedConfiguration cc2 = (CombinedConfiguration) cc
                 .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
         assertNotNull("No additional configuration found", cc2);
-        Set names = cc2.getConfigurationNames();
+        Set<String> names = cc2.getConfigurationNames();
         assertEquals("Wrong number of contained additional configs", 2, names
                 .size());
         assertTrue("Config 1 not contained", names.contains("combiner1"));
@@ -770,6 +779,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests whether attributes are correctly set on the combined configurations
      * for the override and additional sections.
      */
+    @Test
     public void testCombinedConfigurationAttributes() throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
@@ -785,6 +795,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests the structure of the returned combined configuration if there is no
      * additional section.
      */
+    @Test
     public void testCombinedConfigurationNoAdditional()
             throws ConfigurationException
     {
@@ -797,12 +808,13 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests whether the list node definition was correctly processed.
      */
+    @Test
     public void testCombinedConfigurationListNodes()
             throws ConfigurationException
     {
         factory.setFile(INIT_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        Set listNodes = cc.getNodeCombiner().getListNodes();
+        Set<String> listNodes = cc.getNodeCombiner().getListNodes();
         assertEquals("Wrong number of list nodes", 2, listNodes.size());
         assertTrue("table node not a list node", listNodes.contains("table"));
         assertTrue("list node not a list node", listNodes.contains("list"));
@@ -818,6 +830,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests whether a configuration builder can itself be declared in a
      * configuration definition file.
      */
+    @Test
     public void testConfigurationBuilderProvider()
             throws ConfigurationException
     {
@@ -832,6 +845,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests whether settings of the builder are propagated to child builders.
      */
+    @Test
     public void testConfigurationBuilderProviderInheritProperties()
             throws Exception
     {
@@ -882,6 +896,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests whether properties of the parent configuration can be overridden.
      */
+    @Test
     public void testConfigurationBuilderProviderOverrideProperties()
             throws Exception
     {
@@ -908,6 +923,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests whether XML settings can be inherited.
      */
+    @Test
     public void testLoadXMLWithSettings() throws ConfigurationException,
             IOException
     {
@@ -948,6 +964,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
      * Tests loading a configuration definition file that defines a custom
      * result class.
      */
+    @Test
     public void testExtendedClass() throws ConfigurationException
     {
         factory.setFile(CLASS_FILE);
@@ -960,6 +977,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
     /**
      * Tests loading a configuration definition file that defines new providers.
      */
+    @Test
     public void testConfigurationProvider() throws ConfigurationException
     {
         factory.setFile(PROVIDER_FILE);
@@ -969,9 +987,10 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertNotNull("Provider 'test' not registered", provider);
     }
 
-        /**
+    /**
      * Tests loading a configuration definition file that defines new providers.
      */
+    @Test
     public void testExtendedXMLConfigurationProvider() throws ConfigurationException
     {
         factory.setFile(EXTENDED_PROVIDER_FILE);
@@ -985,6 +1004,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
                 config.getClass().getName(), config instanceof ExtendedXMLConfiguration);
     }
 
+    @Test
     public void testGlobalLookup() throws Exception
     {
         factory.setFile(GLOBAL_LOOKUP_FILE);
@@ -994,6 +1014,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","test.value",value);
     }
 
+    @Test
     public void testSystemProperties() throws Exception
     {
         factory.setFile(SYSTEM_PROPS_FILE);
@@ -1003,7 +1024,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
-
+    @Test
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
@@ -1013,7 +1034,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
-
+    @Test
     public void testValidation3() throws Exception
     {
         System.getProperties().remove("Id");
@@ -1028,6 +1049,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","Jane Doe",value);
     }
 
+    @Test
     public void testMultiTenentConfiguration() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -1043,6 +1065,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testMultiTenentConfiguration2() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -1058,6 +1081,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testMultiTenentConfiguration3() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -1086,6 +1110,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testMultiTenantConfigurationAt() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -1099,11 +1124,12 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("more test 2 data", sub2.getString("MoreChannelData"));
     }
 
+    @Test
     public void testMerge() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
         System.setProperty("Id", "1004");
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("default", "${colors.header4}");
         map.put("background", "#40404040");
         map.put("text", "#000000");
@@ -1112,8 +1138,8 @@ public class TestDefaultConfigurationBuilder extends TestCase
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
-        List list = config.configurationsAt("colors/*");
-        Iterator iter = list.iterator();
+        List<HierarchicalConfiguration> list = config.configurationsAt("colors/*");
+        Iterator<HierarchicalConfiguration> iter = list.iterator();
         while (iter.hasNext())
         {
             SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
@@ -1127,6 +1153,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     }
 
+    @Test
     public void testDelimiterParsingDisabled() throws Exception
     {
         factory.setFile(MULTI_TENENT_FILE);
@@ -1143,6 +1170,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
+    @Test
     public void testExpression() throws Exception
     {
         if (SystemUtils.isJavaVersionAtLeast(150))
@@ -1181,6 +1209,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
          */
         private static final long serialVersionUID = 4678031745085083392L;
 
+        @Override
         public Object getProperty(String key)
         {
             if (key.equals("test"))
@@ -1203,7 +1232,7 @@ public class TestDefaultConfigurationBuilder extends TestCase
 
     public static class TestLookup extends StrLookup
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
 
         public TestLookup()
         {
@@ -1212,13 +1241,14 @@ public class TestDefaultConfigurationBuilder extends TestCase
             map.put("test_key", "test.value");
         }
 
+        @Override
         public String lookup(String key)
         {
             if (key == null)
             {
                 return null;
             }
-            return (String)map.get(key);
+            return map.get(key);
 
         }
     }
