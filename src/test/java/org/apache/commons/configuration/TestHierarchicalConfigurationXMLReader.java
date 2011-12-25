@@ -17,14 +17,16 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.jxpath.JXPathContext;
+import org.junit.Before;
+import org.junit.Test;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
@@ -34,37 +36,29 @@ import org.xml.sax.InputSource;
  *
  * @version $Id$
  */
-public class TestHierarchicalConfigurationXMLReader extends TestCase
+public class TestHierarchicalConfigurationXMLReader
 {
     private static final String TEST_FILE = ConfigurationAssert.getTestFile(
             "testHierarchicalXMLConfiguration.xml").getAbsolutePath();
 
     private HierarchicalConfigurationXMLReader parser;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        XMLConfiguration config =
-        new XMLConfiguration();
+        XMLConfiguration config = new XMLConfiguration();
         config.setFileName(TEST_FILE);
         config.load();
         parser = new HierarchicalConfigurationXMLReader(config);
     }
 
+    @Test
     public void testParse() throws Exception
     {
         SAXSource source = new SAXSource(parser, new InputSource());
         DOMResult result = new DOMResult();
         Transformer trans = TransformerFactory.newInstance().newTransformer();
-        try
-        {
-            //When executed on a JDK 1.3 this line throws a NoSuchMethodError
-            //somewhere deep in Xalan. We simply ignore this.
-            trans.transform(source, result);
-        }
-        catch(NoSuchMethodError ex)
-        {
-            return;
-        }
+        trans.transform(source, result);
         Node root = ((Document) result.getNode()).getDocumentElement();
         JXPathContext ctx = JXPathContext.newContext(root);
 
