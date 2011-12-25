@@ -17,24 +17,31 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for EnvironmentConfiguration.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestEnvironmentConfiguration extends TestCase
+public class TestEnvironmentConfiguration
 {
     /** Stores the configuration to be tested. */
     private EnvironmentConfiguration config;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         config = new EnvironmentConfiguration();
     }
 
@@ -42,13 +49,14 @@ public class TestEnvironmentConfiguration extends TestCase
      * Tests whether a newly created configuration contains some properties. (We
      * expect that at least some properties are set in each environment.)
      */
+    @Test
     public void testInit()
     {
         boolean found = false;
         assertFalse("No properties found", config.isEmpty());
-        for (Iterator it = config.getKeys(); it.hasNext();)
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertTrue("Key not found: " + key, config.containsKey(key));
             assertNotNull("No value for property " + key, config.getString(key));
             found = true;
@@ -59,65 +67,37 @@ public class TestEnvironmentConfiguration extends TestCase
     /**
      * Tests removing properties. This should not be possible.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testClearProperty()
     {
-        String key = (String) config.getKeys().next();
-        try
-        {
-            config.clearProperty(key);
-            fail("Could remove a property!");
-        }
-        catch (UnsupportedOperationException uoex)
-        {
-            // ok
-        }
+        String key = config.getKeys().next();
+        config.clearProperty(key);
     }
 
     /**
      * Tests removing all properties. This should not be possible.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testClear()
     {
-        try
-        {
-            config.clear();
-            fail("Could remove properties!");
-        }
-        catch (UnsupportedOperationException uoex)
-        {
-            // ok
-        }
+        config.clear();
     }
 
     /**
      * Tries to add another property. This should cause an exception.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testAddProperty()
     {
-        try
-        {
-            config.addProperty("JAVA_HOME", "C:\\java");
-            fail("Could add a property!");
-        }
-        catch (UnsupportedOperationException uoex)
-        {
-            // ok
-        }
+        config.addProperty("JAVA_HOME", "C:\\java");
     }
 
     /**
      * Tries to set the value of a property. This should cause an exception.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testSetProperty()
     {
-        try
-        {
-            config.setProperty("JAVA_HOME", "C:\\java");
-            fail("Could set a property!");
-        }
-        catch (UnsupportedOperationException uoex)
-        {
-            // ok
-        }
+        config.setProperty("JAVA_HOME", "C:\\java");
     }
 }
