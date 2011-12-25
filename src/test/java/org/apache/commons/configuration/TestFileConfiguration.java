@@ -17,6 +17,13 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -24,21 +31,21 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Properties;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class TestFileConfiguration extends TestCase
+public class TestFileConfiguration
 {
     /** Constant for the name of a test file.*/
     private static final String TEST_FILENAME = "test.properties";
@@ -53,16 +60,17 @@ public class TestFileConfiguration extends TestCase
     /** Constant for the name of a resource to be resolved.*/
     private static final String RESOURCE_NAME = "config/deep/deeptest.properties";
 
-    /** A list with temporary files created during a test case. */
-    private Collection tempFiles = new LinkedList();
+    /** Helper object for managing temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Initializes the test environment. This implementation ensures that the
      * test output file does not exist.
      */
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         removeOutFile();
     }
 
@@ -72,27 +80,7 @@ public class TestFileConfiguration extends TestCase
      */
     protected void tearDown() throws Exception
     {
-        for(Iterator it = tempFiles.iterator(); it.hasNext();)
-        {
-            File file = (File) it.next();
-            removeFile(file);
-        }
         removeOutFile();
-
-        super.tearDown();
-    }
-
-    /**
-     * Adds a temporary file used by a test case. This method removes the file
-     * if it already exists. It is then added to a list so that it is removed at
-     * the end of the test.
-     *
-     * @param file the temporary file
-     */
-    private void addTemporaryFile(File file)
-    {
-        removeFile(file);
-        tempFiles.add(file);
     }
 
     /**
@@ -121,6 +109,7 @@ public class TestFileConfiguration extends TestCase
         removeFile(parent);
     }
 
+    @Test
     public void testSetURL() throws Exception
     {
         // http URL
@@ -136,6 +125,7 @@ public class TestFileConfiguration extends TestCase
         assertEquals("file name", "test.properties", config.getFileName());
     }
 
+    @Test
     public void testSetURLWithParams() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
@@ -146,6 +136,7 @@ public class TestFileConfiguration extends TestCase
         assertEquals("URL was not correctly stored", url, config.getURL());
     }
 
+    @Test
     public void testLocations() throws Exception
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
@@ -169,6 +160,7 @@ public class TestFileConfiguration extends TestCase
         assertEquals(TEST_FILENAME, config.getFileName());
     }
 
+    @Test
     public void testCreateFile1() throws Exception
     {
         assertFalse("The file should not exist", OUT_FILE.exists());
@@ -179,6 +171,7 @@ public class TestFileConfiguration extends TestCase
         assertTrue("The file doesn't exist", OUT_FILE.exists());
     }
 
+    @Test
     public void testCreateFile2() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
@@ -188,6 +181,7 @@ public class TestFileConfiguration extends TestCase
         assertTrue("The file doesn't exist", OUT_FILE.exists());
     }
 
+    @Test
     public void testCreateFile3() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
@@ -202,10 +196,11 @@ public class TestFileConfiguration extends TestCase
      *
      * @throws Exception if an error occurs
      */
+    @SuppressWarnings("deprecation")
+    @Test
     public void testWithConfigurationFactory() throws Exception
     {
-        File file = ConfigurationAssert.getOutFile("testFileConfiguration.properties");
-        addTemporaryFile(file);
+        File file = folder.newFile();
 
         ConfigurationFactory factory = new ConfigurationFactory();
         factory.setConfigurationURL(ConfigurationAssert.getTestURL(
@@ -235,34 +230,27 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests if invalid URLs cause an exception.
      */
+    @Test(expected = ConfigurationException.class)
     public void testSaveInvalidURL() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
+        config.save(new URL("http://jakarta.apache.org/test.properties"));
+    }
 
-        try
-        {
-            config.save(new URL("http://jakarta.apache.org/test.properties"));
-            fail("Should throw a ConfigurationException!");
-        }
-        catch (ConfigurationException cex)
-        {
-            //fine
-        }
-
-        try
-        {
-            config.save("http://www.apache.org/test.properties");
-            fail("Should throw a ConfigurationException!");
-        }
-        catch (ConfigurationException cex)
-        {
-            //fine
-        }
+    /**
+     * Tests if an invalid URL string causes an exception.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testSaveInvalidURLString() throws ConfigurationException
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        config.save("http://www.apache.org/test.properties");
     }
 
     /**
      * Tests if the URL used by the load() method is also used by save().
      */
+    @Test
     public void testFileOverwrite() throws Exception
     {
         FileOutputStream out = null;
@@ -270,18 +258,14 @@ public class TestFileConfiguration extends TestCase
         File tempFile = null;
         try
         {
-            String path = System.getProperties().getProperty("user.home");
-            File homeDir = new File(path);
-            tempFile = File.createTempFile("CONF", null, homeDir);
-            tempFiles.add(tempFile);
-            String fileName = tempFile.getName();
+            tempFile = folder.newFile();
             Properties props = new Properties();
             props.setProperty("1", "one");
             out = new FileOutputStream(tempFile);
             props.store(out, "TestFileOverwrite");
             out.close();
             out = null;
-            FileConfiguration config = new PropertiesConfiguration(fileName);
+            FileConfiguration config = new PropertiesConfiguration(tempFile);
             config.load();
             String value = config.getString("1");
             assertTrue("one".equals(value));
@@ -324,10 +308,10 @@ public class TestFileConfiguration extends TestCase
      * Tests setting a file changed reloading strategy together with the auto
      * save feature.
      */
+    @Test
     public void testReloadingWithAutoSave() throws Exception
     {
-        File configFile = ConfigurationAssert.getOutFile(TEST_FILENAME);
-        addTemporaryFile(configFile);
+        File configFile = folder.newFile();
         PrintWriter out = null;
 
         try
@@ -359,24 +343,21 @@ public class TestFileConfiguration extends TestCase
      * Tests loading and saving a configuration file with a complicated path
      * name including spaces. (related to issue 35210)
      */
+    @Test
     public void testPathWithSpaces() throws Exception
     {
-        File path = ConfigurationAssert.getOutFile("path with spaces");
+        File path = folder.newFolder("path with spaces");
         File confFile = new File(path, "config-test.properties");
-        addTemporaryFile(confFile);
-        addTemporaryFile(path);
         PrintWriter out = null;
 
         try
         {
-            assertTrue(path.mkdir());
             out = new PrintWriter(new FileWriter(confFile));
             out.println("saved = false");
             out.close();
             out = null;
 
-            URL url = new URL(ConfigurationAssert.OUT_DIR.toURI().toURL()
-                    + "path%20with%20spaces/config-test.properties");
+            URL url = confFile.toURI().toURL();
             PropertiesConfiguration config = new PropertiesConfiguration(url);
             config.load();
             assertFalse(config.getBoolean("saved"));
@@ -401,13 +382,10 @@ public class TestFileConfiguration extends TestCase
      * Tests whether file names containing a "+" character are handled
      * correctly. This test is related to CONFIGURATION-415.
      */
+    @Test
     public void testPathWithPlus() throws ConfigurationException, IOException
     {
-        File saveFile =
-                ConfigurationAssert.getOutFile("test+config.properties")
-                        .getAbsoluteFile();
-        saveFile.createNewFile();
-        tempFiles.add(saveFile);
+        File saveFile = folder.newFile("test+config.properties");
         FileConfiguration config = new PropertiesConfiguration(saveFile);
         config.addProperty("test", Boolean.TRUE);
         config.save();
@@ -418,6 +396,7 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests the getFile() method.
      */
+    @Test
     public void testGetFile() throws ConfigurationException
     {
         FileConfiguration config = new PropertiesConfiguration();
@@ -433,6 +412,7 @@ public class TestFileConfiguration extends TestCase
      * Tests whether getFile() returns a valid file after a configuration has
      * been loaded.
      */
+    @Test
     public void testGetFileAfterLoad() throws ConfigurationException,
             IOException
     {
@@ -447,6 +427,7 @@ public class TestFileConfiguration extends TestCase
      * Tests whether calling load() multiple times changes the source. This
      * should not be the case.
      */
+    @Test
     public void testLoadMultiple() throws ConfigurationException
     {
         FileConfiguration config = new PropertiesConfiguration();
@@ -459,102 +440,66 @@ public class TestFileConfiguration extends TestCase
         assertEquals("Source file was changed", srcFile, config.getFile());
     }
 
-    /**
-     * Tests to invoke save() without explicitly setting a file name. This
-     * will cause an exception.
-     */
-    public void testSaveWithoutFileName() throws Exception
+    @Test(expected = ConfigurationException.class)
+    public void testSaveWithoutFileNameFile() throws Exception
     {
         FileConfiguration config = new PropertiesConfiguration();
-        File file = TEST_FILE;
-        config.load(file);
-        try
-        {
-            config.save();
-            fail("Could save config without setting a file name!");
-        }
-        catch(ConfigurationException cex)
-        {
-            //ok
-        }
-
-        config = new PropertiesConfiguration();
         config.load(TEST_FILE);
-        try
-        {
-            config.save();
-            fail("Could save config without setting a file name!");
-        }
-        catch(ConfigurationException cex)
-        {
-            //ok
-        }
+        config.save();
+    }
 
-        config = new PropertiesConfiguration();
-        config.load(file.toURI().toURL());
-        try
-        {
-            config.save();
-            fail("Could save config without setting a file name!");
-        }
-        catch(ConfigurationException cex)
-        {
-            //ok
-        }
+    @Test(expected = ConfigurationException.class)
+    public void testSaveWithoutFileNameURL() throws Exception
+    {
+        FileConfiguration config = new PropertiesConfiguration();
+        config.load(TEST_FILE.toURI().toURL());
+        config.save();
     }
 
     /**
      * Checks that loading a directory instead of a file throws an exception.
      */
-    public void testLoadDirectory()
+    @Test(expected = ConfigurationException.class)
+    public void testLoadDirectoryString() throws ConfigurationException
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
+        config.load("target");
+    }
 
-        try
-        {
-            config.load("target");
-            fail("Could load config from a directory!");
-        }
-        catch (ConfigurationException e)
-        {
-            // ok
-        }
+    /**
+     * Tests that it is not possible to load a directory using the load() method
+     * which expects a File.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testLoadDirectoryFile() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.load(new File("target"));
+    }
 
-        try
-        {
-            config.load(new File("target"));
-            fail("Could load config from a directory!");
-        }
-        catch (ConfigurationException e)
-        {
-            // ok
-        }
+    /**
+     * Tests that it is not possible to load a directory using the String constructor.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testLoadDirectoryConstrString() throws ConfigurationException
+    {
+        new PropertiesConfiguration("target");
+    }
 
-        try
-        {
-            new PropertiesConfiguration("target");
-            fail("Could load config from a directory!");
-        }
-        catch (ConfigurationException e)
-        {
-            // ok
-        }
-
-        try
-        {
-            new PropertiesConfiguration(new File("target"));
-            fail("Could load config from a directory!");
-        }
-        catch (ConfigurationException e)
-        {
-            // ok
-        }
+    /**
+     * Tests that it is not possible to load a directory using the File constructor.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testLoadDirectoryConstrFile() throws ConfigurationException
+    {
+        new PropertiesConfiguration(new File("target"));
     }
 
     /**
      * Tests whether the constructor behaves the same as setFileName() when the
      * configuration source is in the classpath.
      */
+    @Test
     public void testInitFromClassPath() throws ConfigurationException
     {
         PropertiesConfiguration config1 = new PropertiesConfiguration();
@@ -569,6 +514,7 @@ public class TestFileConfiguration extends TestCase
      * Tests the loading of configuration file in a Combined configuration
      * when the configuration source is in the classpath.
      */
+    @Test
     public void testLoadFromClassPath() throws ConfigurationException
     {
         DefaultConfigurationBuilder cf =
@@ -582,11 +528,12 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests cloning a file based configuration.
      */
+    @Test
     public void testClone() throws ConfigurationException
     {
         PropertiesConfiguration config = new PropertiesConfiguration(
                 RESOURCE_NAME);
-        PropertiesConfiguration copy = (PropertiesConfiguration) config.clone();
+        PropertiesConfiguration copy = config.clone();
         compare(config, copy);
         assertNull("URL was not reset", copy.getURL());
         assertNull("Base path was not reset", copy.getBasePath());
@@ -598,6 +545,7 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests whether an error log listener was registered at the configuration.
      */
+    @Test
     public void testLogErrorListener()
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
@@ -608,6 +556,7 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests handling of errors in the reload() method.
      */
+    @Test
     public void testReloadError() throws ConfigurationException
     {
         ConfigurationErrorListenerImpl l = new ConfigurationErrorListenerImpl();
@@ -628,6 +577,7 @@ public class TestFileConfiguration extends TestCase
      * configuration while a reload happens. This test is related to
      * CONFIGURATION-347.
      */
+    @Test
     public void testIterationWithReloadFlat() throws ConfigurationException
     {
         PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
@@ -638,6 +588,7 @@ public class TestFileConfiguration extends TestCase
      * Tests iterating over the keys of a hierarchical file-based configuration
      * while a reload happens. This test is related to CONFIGURATION-347.
      */
+    @Test
     public void testIterationWithReloadHierarchical()
             throws ConfigurationException
     {
@@ -648,6 +599,7 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests whether a configuration can be refreshed.
      */
+    @Test
     public void testRefresh() throws ConfigurationException
     {
         PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
@@ -663,18 +615,11 @@ public class TestFileConfiguration extends TestCase
     /**
      * Tests refresh if the configuration is not associated with a file.
      */
+    @Test(expected = ConfigurationException.class)
     public void testRefreshNoFile() throws ConfigurationException
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
-        try
-        {
-            config.refresh();
-            fail("Could refresh configuration without a file!");
-        }
-        catch (ConfigurationException cex)
-        {
-            // ok
-        }
+        config.refresh();
     }
 
     /**
@@ -686,9 +631,9 @@ public class TestFileConfiguration extends TestCase
     private void checkIterationWithReload(FileConfiguration config)
     {
         config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        for (Iterator it = config.getKeys(); it.hasNext();)
+        for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertNotNull("No value for key " + key, config.getProperty(key));
         }
     }
