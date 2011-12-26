@@ -17,22 +17,28 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import junit.framework.TestCase;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Unit test for simple MultiConfigurationTest.
+ *
+ * @version $Id:$
  */
-public class TestPatternSubtreeConfiguration extends TestCase
+public class TestPatternSubtreeConfiguration
 {
     private static String CONFIG_FILE = "target/test-classes/testPatternSubtreeConfig.xml";
     private static String PATTERN = "BusinessClient[@name='${sys:Id}']";
     private XMLConfiguration conf;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         conf = new XMLConfiguration();
         conf.setFile(new File(CONFIG_FILE));
@@ -42,6 +48,7 @@ public class TestPatternSubtreeConfiguration extends TestCase
     /**
      * Rigourous Test :-)
      */
+    @Test
     public void testMultiConfiguration()
     {
         //set up a reloading strategy
