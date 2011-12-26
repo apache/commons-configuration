@@ -17,6 +17,11 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -24,9 +29,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.junit.Test;
 import org.xml.sax.SAXParseException;
 
 /**
@@ -34,7 +38,7 @@ import org.xml.sax.SAXParseException;
  *
  * @version $Id$
  */
-public class TestMultiFileHierarchicalConfiguration extends TestCase
+public class TestMultiFileHierarchicalConfiguration
 {
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
 
@@ -50,6 +54,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
     /**
      * Rigourous Test :-)
      */
+    @Test
     public void testMultiConfiguration()
     {
         //set up a reloading strategy
@@ -69,6 +74,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         assertTrue(config.getInt("rowsPerPage") == 35);
     }
 
+    @Test
     public void testSchemaValidationError() throws Exception
     {
         System.getProperties().remove("Id");
@@ -92,6 +98,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         }
     }
 
+    @Test
     public void testSchemaValidation() throws Exception
     {
         System.getProperties().remove("Id");
@@ -103,6 +110,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         assertTrue("expected: " + rows + " actual: " + "25", 25 == rows);
     }
 
+    @Test
     public void testMissingFile() throws Exception
     {
         System.getProperties().remove("Id");
@@ -115,6 +123,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
 
     }
 
+    @Test
     public void testFileReload1() throws Exception
     {
         System.getProperties().remove("Id");
@@ -145,6 +154,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         output.delete();
     }
 
+    @Test
     public void testFileReload2() throws Exception
     {
         // create a new configuration
@@ -167,6 +177,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         output.delete();
     }
 
+    @Test
     public void testFileReload3() throws Exception
     {
         // create a new configuration
@@ -200,7 +211,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         output.delete();
     }
 
-
+    @Test
     public void testReloadDefault() throws Exception
     {
         // create a new configuration
@@ -234,7 +245,7 @@ public class TestMultiFileHierarchicalConfiguration extends TestCase
         assertNull("Property was not cleared by reload", test);
     }
 
-
+    @Test
     public void testFileReloadSchemaValidationError() throws Exception
     {
         System.getProperties().remove("Id");
