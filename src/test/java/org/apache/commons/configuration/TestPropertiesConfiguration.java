@@ -17,6 +17,15 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,17 +49,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.lang.SystemUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test for loading and saving properties files.
  *
  * @version $Id$
  */
-public class TestPropertiesConfiguration extends TestCase
+public class TestPropertiesConfiguration
 {
     /** Constant for a test property name.*/
     private static final String PROP_NAME = "testProperty";
@@ -68,7 +77,8 @@ public class TestPropertiesConfiguration extends TestCase
     private static String testBasePath2 = ConfigurationAssert.TEST_DIR.getParentFile().getAbsolutePath();
     private static File testSavePropertiesFile = ConfigurationAssert.getOutFile("testsave.properties");
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration(testProperties);
 
@@ -80,6 +90,7 @@ public class TestPropertiesConfiguration extends TestCase
         }
     }
 
+    @Test
     public void testLoad() throws Exception
     {
         String loaded = conf.getString("configuration.loaded");
@@ -90,6 +101,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests if properties can be appended by simply calling load() another
      * time.
      */
+    @Test
     public void testAppend() throws Exception
     {
         File file2 = ConfigurationAssert.getTestFile("threesome.properties");
@@ -102,6 +114,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests that empty properties are treated as the empty string
      * (rather than as null).
      */
+    @Test
     public void testEmpty() throws Exception
     {
         String empty = conf.getString("test.empty");
@@ -112,6 +125,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests that references to other properties work
      */
+    @Test
     public void testReference() throws Exception
     {
         assertEquals("baseextra", conf.getString("base.reference"));
@@ -120,6 +134,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * test if includes properties get loaded too
      */
+    @Test
     public void testLoadInclude() throws Exception
     {
         String loaded = conf.getString("include.loaded");
@@ -130,12 +145,14 @@ public class TestPropertiesConfiguration extends TestCase
      * test if includes properties from interpolated file
      * name get loaded
      */
+    @Test
     public void testLoadIncludeInterpol() throws Exception
     {
         String loaded = conf.getString("include.interpol.loaded");
         assertEquals("true", loaded);
     }
 
+    @Test
     public void testSetInclude() throws Exception
     {
         // change the include key
@@ -152,20 +169,22 @@ public class TestPropertiesConfiguration extends TestCase
     }
 
     /**
-     * Tests <code>List</code> parsing.
+     * Tests {@code List} parsing.
      */
+    @Test
     public void testList() throws Exception
     {
-        List packages = conf.getList("packages");
+        List<Object> packages = conf.getList("packages");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
+    @Test
     public void testSave() throws Exception
     {
         // add an array of strings to the configuration
         conf.addProperty("string", "value1");
-        List list = new ArrayList();
+        List<Object> list = new ArrayList<Object>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -182,10 +201,11 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
         ConfigurationAssert.assertEquals(conf, checkConfig);
 
-        // Save it again, verifing a save with a filename works.
+        // Save it again, verifying a save with a filename works.
         checkConfig.save();
     }
 
+    @Test
     public void testSaveToCustomURL() throws Exception
     {
         // save the configuration to a custom URL
@@ -197,12 +217,13 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("true", config2.getString("configuration.loaded"));
     }
 
+    @Test
     public void testInMemoryCreatedSave() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
         // add an array of strings to the configuration
         pc.addProperty("string", "value1");
-        List list = new ArrayList();
+        List<Object> list = new ArrayList<Object>();
         for (int i = 1; i < 5; i++)
         {
             list.add("value" + i);
@@ -219,13 +240,14 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
         ConfigurationAssert.assertEquals(pc, checkConfig);
 
-        // Save it again, verifing a save with a filename works.
+        // Save it again, verifying a save with a filename works.
         checkConfig.save();
     }
 
     /**
      * Tests saving a configuration when delimiter parsing is disabled.
      */
+    @Test
     public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException
     {
         conf.clear();
@@ -241,24 +263,18 @@ public class TestPropertiesConfiguration extends TestCase
         ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
-    public void testSaveMissingFilename()
+    @Test(expected = ConfigurationException.class)
+    public void testSaveMissingFilename() throws ConfigurationException
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
-        try
-        {
-            pc.save();
-            fail("Should have throw ConfigurationException");
-        }
-        catch (ConfigurationException ce)
-        {
-            //good
-        }
+        pc.save();
     }
 
     /**
      * Tests if the base path is taken into account by the save() method.
      * @throws Exception if an error occurs
      */
+    @Test
     public void testSaveWithBasePath() throws Exception
     {
         conf.setProperty("test", "true");
@@ -273,11 +289,12 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests whether the escape character for list delimiters can be itself
      * escaped and survives a save operation.
      */
+    @Test
     public void testSaveEscapedEscapingCharacter()
             throws ConfigurationException
     {
         conf.addProperty("test.dirs", "C:\\Temp\\\\,D:\\Data\\\\,E:\\Test\\");
-        List dirs = conf.getList("test.dirs");
+        List<Object> dirs = conf.getList("test.dirs");
         assertEquals("Wrong number of list elements", 3, dirs.size());
         conf.save(testSavePropertiesFile);
 
@@ -286,6 +303,7 @@ public class TestPropertiesConfiguration extends TestCase
         ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
+    @Test
     public void testLoadViaProperty() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
@@ -295,6 +313,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
 
+    @Test
     public void testLoadViaPropertyWithBasePath() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
@@ -305,6 +324,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
 
+    @Test
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
@@ -322,6 +342,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
 
+    @Test
     public void testLoadFromFile() throws Exception
     {
         File file = ConfigurationAssert.getTestFile("test.properties");
@@ -330,22 +351,16 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("true", conf.getString("configuration.loaded"));
     }
 
-    public void testLoadUnexistingFile()
+    @Test(expected = ConfigurationException.class)
+    public void testLoadUnexistingFile() throws ConfigurationException
     {
-        try
-        {
-            conf = new PropertiesConfiguration("Unexisting file");
-            fail("Unexisting file was loaded.");
-        }
-        catch(ConfigurationException cex)
-        {
-            // fine
-        }
+        conf = new PropertiesConfiguration("Unexisting file");
     }
 
     /**
      * Tests to load a file with enabled auto save mode.
      */
+    @Test
     public void testLoadWithAutoSave() throws Exception
     {
         setUpSavedProperties();
@@ -354,6 +369,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests the auto save functionality when an existing property is modified.
      */
+    @Test
     public void testLoadWithAutoSaveAndSetExisting() throws Exception
     {
         setUpSavedProperties();
@@ -365,6 +381,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests the auto save functionality when a new property is added using the
      * setProperty() method.
      */
+    @Test
     public void testLoadWithAutoSaveAndSetNew() throws Exception
     {
         setUpSavedProperties();
@@ -376,6 +393,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests the auto save functionality when a new property is added using the
      * addProperty() method.
      */
+    @Test
     public void testLoadWithAutoSaveAndAdd() throws Exception
     {
         setUpSavedProperties();
@@ -386,6 +404,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests the auto save functionality when a property is removed.
      */
+    @Test
     public void testLoadWithAutoSaveAndClear() throws Exception
     {
         setUpSavedProperties();
@@ -445,23 +464,27 @@ public class TestPropertiesConfiguration extends TestCase
         return checkConfig;
     }
 
+    @Test
     public void testGetStringWithEscapedChars()
     {
         String property = conf.getString("test.unescape");
         assertEquals("String with escaped characters", "This \n string \t contains \" escaped \\ characters", property);
     }
 
+    @Test
     public void testGetStringWithEscapedComma()
     {
         String property = conf.getString("test.unescape.list-separator");
         assertEquals("String with an escaped list separator", "This string contains , an escaped list separator", property);
     }
 
+    @Test
     public void testUnescapeJava()
     {
         assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test", ','));
     }
 
+    @Test
     public void testEscapedKey() throws Exception
     {
         PropertiesConfiguration conf = new PropertiesConfiguration();
@@ -470,6 +493,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("value of the 'foo' property", "bar", conf.getString("foo"));
     }
 
+    @Test
     public void testMixedArray()
     {
         String[] array = conf.getStringArray("test.mixed.array");
@@ -481,6 +505,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("4th element", "d", array[3]);
     }
 
+    @Test
     public void testMultilines()
     {
         String property = "This is a value spread out across several adjacent "
@@ -490,6 +515,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals("'test.multilines' property", property, conf.getString("test.multilines"));
     }
 
+    @Test
     public void testChangingDefaultListDelimiter() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration(testProperties);
@@ -502,6 +528,7 @@ public class TestPropertiesConfiguration extends TestCase
         PropertiesConfiguration.setDefaultListDelimiter(delimiter);
     }
 
+    @Test
     public void testChangingListDelimiter() throws Exception
     {
         PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
@@ -515,6 +542,7 @@ public class TestPropertiesConfiguration extends TestCase
         assertEquals(2, pc2.getList("test.mixed.array").size());
     }
 
+    @Test
     public void testDisableListDelimiter() throws Exception
     {
         PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
@@ -530,9 +558,10 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests escaping of an end of line with a backslash.
      */
+    @Test
     public void testNewLineEscaping()
     {
-        List list = conf.getList("test.path");
+        List<Object> list = conf.getList("test.path");
         assertEquals(3, list.size());
         assertEquals("C:\\path1\\", list.get(0));
         assertEquals("C:\\path2\\", list.get(1));
@@ -542,6 +571,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests if included files are loaded when the source lies in the class path.
      */
+    @Test
     public void testLoadIncludeFromClassPath() throws ConfigurationException
     {
         conf = new PropertiesConfiguration("test.properties");
@@ -551,6 +581,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Test if the lines starting with # or ! are properly ignored.
      */
+    @Test
     public void testComment() {
         assertFalse("comment line starting with '#' parsed as a property", conf.containsKey("#comment"));
         assertFalse("comment line starting with '!' parsed as a property", conf.containsKey("!comment"));
@@ -559,6 +590,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Check that key/value separators can be part of a key.
      */
+    @Test
     public void testEscapedKeyValueSeparator()
     {
         assertEquals("Escaped separator '=' not supported in keys", "foo", conf.getProperty("test.separator=in.key"));
@@ -571,6 +603,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Test all acceptable key/value separators ('=', ':' or white spaces).
      */
+    @Test
     public void testKeyValueSeparators() {
         assertEquals("equal separator not properly parsed",      "foo", conf.getProperty("test.separator.equal"));
         assertEquals("colon separator not properly parsed",      "foo", conf.getProperty("test.separator.colon"));
@@ -583,6 +616,8 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests including properties when they are loaded from a nested directory
      * structure.
      */
+    @SuppressWarnings("deprecation")
+    @Test
     public void testIncludeInSubDir() throws ConfigurationException
     {
         ConfigurationFactory factory = new ConfigurationFactory("conf/testFactoryPropertiesInclude.xml");
@@ -595,6 +630,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests whether the correct line separator is used.
      */
+    @Test
     public void testLineSeparator() throws ConfigurationException
     {
         final String EOL = System.getProperty("line.separator");
@@ -614,11 +650,13 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests what happens if a reloading strategy's <code>reloadingRequired()</code>
      * implementation accesses methods of the configuration that in turn cause a reload.
      */
+    @Test
     public void testReentrantReload()
     {
         conf.setProperty("shouldReload", Boolean.FALSE);
         conf.setReloadingStrategy(new FileChangedReloadingStrategy()
         {
+            @Override
             public boolean reloadingRequired()
             {
                 return configuration.getBoolean("shouldReload");
@@ -630,6 +668,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests accessing the layout object.
      */
+    @Test
     public void testGetLayout()
     {
         PropertiesConfigurationLayout layout = conf.getLayout();
@@ -644,6 +683,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests the propertyLoaded() method for a simple property.
      */
+    @Test
     public void testPropertyLoaded() throws ConfigurationException
     {
         DummyLayout layout = new DummyLayout(conf);
@@ -656,6 +696,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests the propertyLoaded() method for an include property.
      */
+    @Test
     public void testPropertyLoadedInclude() throws ConfigurationException
     {
         DummyLayout layout = new DummyLayout(conf);
@@ -669,6 +710,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests propertyLoaded() for an include property, when includes are
      * disabled.
      */
+    @Test
     public void testPropertyLoadedIncludeNotAllowed() throws ConfigurationException
     {
         DummyLayout layout = new DummyLayout(conf);
@@ -682,6 +724,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests whether comment lines are correctly detected.
      */
+    @Test
     public void testIsCommentLine()
     {
         assertTrue("Comment not detected", PropertiesConfiguration.isCommentLine("# a comment"));
@@ -695,9 +738,10 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests whether a properties configuration can be successfully cloned. It
      * is especially checked whether the layout object is taken into account.
      */
+    @Test
     public void testClone() throws ConfigurationException
     {
-        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
+        PropertiesConfiguration copy = conf.clone();
         assertNotSame("Copy has same layout object", conf.getLayout(), copy.getLayout());
         assertEquals("Wrong number of event listeners for original", 1, conf.getConfigurationListeners().size());
         assertEquals("Wrong number of event listeners for clone", 1, copy.getConfigurationListeners().size());
@@ -713,16 +757,18 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests the clone() method when no layout object exists yet.
      */
+    @Test
     public void testCloneNullLayout()
     {
         conf = new PropertiesConfiguration();
-        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
+        PropertiesConfiguration copy = conf.clone();
         assertNotSame("Layout objects are the same", conf.getLayout(), copy.getLayout());
     }
 
     /**
      * Tests saving a file-based configuration to a HTTP server.
      */
+    @Test
     public void testSaveToHTTPServerSuccess() throws Exception
     {
         MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
@@ -742,6 +788,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests saving a file-based configuration to a HTTP server when the server
      * reports a failure. This should cause an exception.
      */
+    @Test
     public void testSaveToHTTPServerFail() throws Exception
     {
         MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(
@@ -763,6 +810,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Test the creation of a file containing a '#' in its name. This test is
      * skipped on Java 1.3 as it always fails.
      */
+    @Test
     public void testFileWithSharpSymbol() throws Exception
     {
         if (SystemUtils.isJavaVersionAtLeast(1.4f))
@@ -782,6 +830,7 @@ public class TestPropertiesConfiguration extends TestCase
      * There was a bug, which caused properties getting lost when later save()
      * is called.
      */
+    @Test
     public void testInitFromNonExistingFile() throws ConfigurationException
     {
         final String testProperty = "test.successfull";
@@ -799,6 +848,7 @@ public class TestPropertiesConfiguration extends TestCase
      * test ensures that the layout object is informed about the newly added
      * properties.
      */
+    @Test
     public void testCopyAndSave() throws ConfigurationException
     {
         Configuration copyConf = setUpCopyConfig();
@@ -810,6 +860,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests appending a configuration to the test configuration. Again it has
      * to be ensured that the layout object is correctly updated.
      */
+    @Test
     public void testAppendAndSave() throws ConfigurationException
     {
         Configuration copyConf = setUpCopyConfig();
@@ -821,6 +872,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests adding properties through a DataConfiguration. This is related to
      * CONFIGURATION-332.
      */
+    @Test
     public void testSaveWithDataConfig() throws ConfigurationException
     {
         conf = new PropertiesConfiguration(testSavePropertiesFile);
@@ -838,6 +890,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests whether the correct default encoding is used when loading a
      * properties file. This test is related to CONFIGURATION-345.
      */
+    @Test
     public void testLoadWithDefaultEncoding() throws ConfigurationException
     {
         class PropertiesConfigurationTestImpl extends PropertiesConfiguration
@@ -850,6 +903,7 @@ public class TestPropertiesConfiguration extends TestCase
                 super(fileName);
             }
 
+            @Override
             public void load(InputStream in, String encoding)
                     throws ConfigurationException
             {
@@ -867,6 +921,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests whether a default IOFactory is set.
      */
+    @Test
     public void testGetIOFactoryDefault()
     {
         assertNotNull("No default IO factory", conf.getIOFactory());
@@ -875,22 +930,16 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests setting the IOFactory to null. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetIOFactoryNull()
     {
-        try
-        {
-            conf.setIOFactory(null);
-            fail("Could set IO factory to null!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        conf.setIOFactory(null);
     }
 
     /**
      * Tests setting an IOFactory that uses a specialized reader.
      */
+    @Test
     public void testSetIOFactoryReader() throws ConfigurationException
     {
         final int propertyCount = 10;
@@ -921,6 +970,7 @@ public class TestPropertiesConfiguration extends TestCase
     /**
      * Tests setting an IOFactory that uses a specialized writer.
      */
+    @Test
     public void testSetIOFactoryWriter() throws ConfigurationException, IOException
     {
         final PropertiesWriterTestImpl testWriter = new PropertiesWriterTestImpl(',');
@@ -947,6 +997,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests that the property separators are retained when saving the
      * configuration.
      */
+    @Test
     public void testKeepSeparators() throws ConfigurationException, IOException
     {
         conf.save(testSavePropertiesFile);
@@ -955,7 +1006,7 @@ public class TestPropertiesConfiguration extends TestCase
                 "test.separator.tab\tfoo", "test.separator.whitespace foo",
                 "test.separator.no.space=foo"
         };
-        Set foundLines = new HashSet();
+        Set<String> foundLines = new HashSet<String>();
         BufferedReader in = new BufferedReader(new FileReader(
                 testSavePropertiesFile));
         try
@@ -984,6 +1035,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests whether properties with slashes in their values can be saved. This
      * test is related to CONFIGURATION-408.
      */
+    @Test
     public void testSlashEscaping() throws ConfigurationException
     {
         conf.setProperty(PROP_NAME, "http://www.apache.org");
@@ -998,6 +1050,7 @@ public class TestPropertiesConfiguration extends TestCase
      * Tests whether backslashes are correctly handled if lists are parsed. This
      * test is related to CONFIGURATION-418.
      */
+    @Test
     public void testBackslashEscapingInLists() throws ConfigurationException
     {
         checkBackslashList("share2");
@@ -1014,7 +1067,7 @@ public class TestPropertiesConfiguration extends TestCase
     {
         Object prop = conf.getProperty("test." + key);
         assertTrue("Not a list", prop instanceof List);
-        List list = (List) prop;
+        List<?> list = (List<?>) prop;
         assertEquals("Wrong number of list elements", 2, list.size());
         final String prefix = "\\\\" + key;
         assertEquals("Wrong element 1", prefix + "a", list.get(0));
@@ -1050,9 +1103,9 @@ public class TestPropertiesConfiguration extends TestCase
         conf.save(testSavePropertiesFile);
         PropertiesConfiguration checkConf = new PropertiesConfiguration(
                 testSavePropertiesFile);
-        for (Iterator it = copyConf.getKeys(); it.hasNext();)
+        for (Iterator<String> it = copyConf.getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             assertEquals("Wrong value for property " + key, checkConf
                     .getProperty(key), copyConf.getProperty(key));
         }
@@ -1072,6 +1125,7 @@ public class TestPropertiesConfiguration extends TestCase
             super(config);
         }
 
+        @Override
         public void load(Reader in) throws ConfigurationException
         {
             loadCalls++;
@@ -1097,24 +1151,29 @@ public class TestPropertiesConfiguration extends TestCase
             outputFile = outFile;
         }
 
+        @Override
         public void disconnect()
         {
         }
 
+        @Override
         public boolean usingProxy()
         {
             return false;
         }
 
+        @Override
         public void connect() throws IOException
         {
         }
 
+        @Override
         public int getResponseCode() throws IOException
         {
             return responseCode;
         }
 
+        @Override
         public OutputStream getOutputStream() throws IOException
         {
             return new FileOutputStream(outputFile);
@@ -1146,6 +1205,7 @@ public class TestPropertiesConfiguration extends TestCase
             return connection;
         }
 
+        @Override
         protected URLConnection openConnection(URL u) throws IOException
         {
             connection = new MockHttpURLConnection(u, responseCode, outputFile);
@@ -1175,16 +1235,19 @@ public class TestPropertiesConfiguration extends TestCase
             maxProperties = maxProps;
         }
 
+        @Override
         public String getPropertyName()
         {
             return PROP_NAME + propertyCount;
         }
 
+        @Override
         public String getPropertyValue()
         {
             return PROP_VALUE + propertyCount;
         }
 
+        @Override
         public boolean nextProperty() throws IOException
         {
             propertyCount++;
