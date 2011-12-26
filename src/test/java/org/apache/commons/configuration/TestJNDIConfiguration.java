@@ -17,6 +17,12 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Hashtable;
 import java.util.Properties;
 
@@ -25,16 +31,16 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 
-import junit.framework.TestCase;
-
-import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test to see if the JNDIConfiguration works properly.
  *
  * @version $Id$
  */
-public class TestJNDIConfiguration extends TestCase {
+public class TestJNDIConfiguration {
 
     public static final String CONTEXT_FACTORY = MockInitialContextFactory.class.getName();
 
@@ -44,6 +50,7 @@ public class TestJNDIConfiguration extends TestCase {
     /** A test error listener for counting internal errors.*/
     private ConfigurationErrorListenerImpl listener;
 
+    @Before
     public void setUp() throws Exception {
 
         System.setProperty("java.naming.factory.initial", CONTEXT_FACTORY);
@@ -64,81 +71,98 @@ public class TestJNDIConfiguration extends TestCase {
      * Clears the test environment. If an error listener is defined, checks
      * whether no error event was received.
      */
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         if (listener != null)
         {
             listener.verify();
         }
-        super.tearDown();
     }
 
+    @Test
     public void testBoolean() throws Exception {
         nonStringTestHolder.testBoolean();
     }
 
+    @Test
     public void testBooleanDefaultValue() throws Exception {
         nonStringTestHolder.testBooleanDefaultValue();
     }
 
+    @Test
     public void testByte() throws Exception {
         nonStringTestHolder.testByte();
     }
 
+    @Test
     public void testDouble() throws Exception {
         nonStringTestHolder.testDouble();
     }
 
+    @Test
     public void testDoubleDefaultValue() throws Exception {
         nonStringTestHolder.testDoubleDefaultValue();
     }
 
+    @Test
     public void testFloat() throws Exception {
         nonStringTestHolder.testFloat();
     }
 
+    @Test
     public void testFloatDefaultValue() throws Exception {
         nonStringTestHolder.testFloatDefaultValue();
     }
 
+    @Test
     public void testInteger() throws Exception {
         nonStringTestHolder.testInteger();
     }
 
+    @Test
     public void testIntegerDefaultValue() throws Exception {
         nonStringTestHolder.testIntegerDefaultValue();
     }
 
+    @Test
     public void testLong() throws Exception {
         nonStringTestHolder.testLong();
     }
 
+    @Test
     public void testLongDefaultValue() throws Exception {
         nonStringTestHolder.testLongDefaultValue();
     }
 
+    @Test
     public void testShort() throws Exception {
         nonStringTestHolder.testShort();
     }
 
+    @Test
     public void testShortDefaultValue() throws Exception {
         nonStringTestHolder.testShortDefaultValue();
     }
 
+    @Test
     public void testListMissing() throws Exception {
         nonStringTestHolder.testListMissing();
     }
 
+    @Test
     public void testSubset() throws Exception {
         nonStringTestHolder.testSubset();
     }
 
+    @Test
     public void testProperties() throws Exception {
         Object o = conf.getProperty("test.boolean");
         assertNotNull(o);
         assertEquals("true", o.toString());
     }
 
+    @Test
     public void testContainsKey()
     {
         String key = "test.boolean";
@@ -148,6 +172,7 @@ public class TestJNDIConfiguration extends TestCase {
         assertFalse("'" + key + "' still found", conf.containsKey(key));
     }
 
+    @Test
     public void testChangePrefix()
     {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
@@ -159,6 +184,7 @@ public class TestJNDIConfiguration extends TestCase {
         assertEquals("'boolean' property", "true", conf.getString("boolean"));
     }
 
+    @Test
     public void testResetRemovedProperties() throws Exception
     {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
@@ -174,6 +200,7 @@ public class TestJNDIConfiguration extends TestCase {
         assertEquals("'test.boolean' property", "true", conf.getString("test.boolean"));
     }
 
+    @Test
     public void testConstructor() throws Exception
     {
         // test the constructor accepting a context
@@ -193,9 +220,8 @@ public class TestJNDIConfiguration extends TestCase {
     private PotentialErrorJNDIConfiguration setUpErrorConfig()
     {
         conf.installException();
-        conf.removeErrorListener((ConfigurationErrorListener) conf
-                .getErrorListeners().iterator().next());
-        return (PotentialErrorJNDIConfiguration) conf;
+        conf.removeErrorListener(conf.getErrorListeners().iterator().next());
+        return conf;
     }
 
     /**
@@ -216,6 +242,7 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests whether a JNDI configuration registers an error log listener.
      */
+    @Test
     public void testLogListener() throws NamingException
     {
         JNDIConfiguration c = new JNDIConfiguration();
@@ -226,6 +253,7 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests handling of errors in getKeys().
      */
+    @Test
     public void testGetKeysError()
     {
         assertFalse("Iteration not empty", setUpErrorConfig().getKeys()
@@ -237,6 +265,7 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests handling of errors in isEmpty().
      */
+    @Test
     public void testIsEmptyError() throws NamingException
     {
         assertTrue("Error config not empty", setUpErrorConfig().isEmpty());
@@ -247,6 +276,7 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests handling of errors in the containsKey() method.
      */
+    @Test
     public void testContainsKeyError()
     {
         assertFalse("Key contained after error", setUpErrorConfig()
@@ -258,6 +288,7 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests handling of errors in getProperty().
      */
+    @Test
     public void testGetPropertyError()
     {
         assertNull("Wrong property value after error", setUpErrorConfig()
@@ -269,9 +300,10 @@ public class TestJNDIConfiguration extends TestCase {
     /**
      * Tests the getKeys() method when there are cycles in the tree.
      */
+    @Test
     public void testGetKeysWithCycles() throws NamingException
     {
-        Hashtable env = new Hashtable();
+        Hashtable<Object, Object> env = new Hashtable<Object, Object>();
         env.put(MockInitialContextFactory.PROP_CYCLES, Boolean.TRUE);
         InitialContext initCtx = new InitialContext(env);
         JNDIConfiguration c = new JNDIConfiguration(initCtx);
@@ -282,6 +314,7 @@ public class TestJNDIConfiguration extends TestCase {
      * Tests getKeys() if no data is found. This should not cause a problem and
      * not notify the error listeners.
      */
+    @Test
     public void testGetKeysNoData()
     {
         conf.installException(new NameNotFoundException("Test exception"));
@@ -329,6 +362,7 @@ public class TestJNDIConfiguration extends TestCase {
         /**
          * Returns the JNDI context. Optionally throws an exception.
          */
+        @Override
         public Context getBaseContext() throws NamingException
         {
             if (exception != null)
