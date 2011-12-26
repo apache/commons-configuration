@@ -17,6 +17,10 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -25,7 +29,7 @@ import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test class for INIConfiguration.
@@ -33,7 +37,8 @@ import junit.framework.TestCase;
  * @author Trevor Miller
  * @version $Id$
  */
-public class TestINIConfiguration extends TestCase
+@SuppressWarnings("deprecation")
+public class TestINIConfiguration
 {
     private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -65,6 +70,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of save method, of class {@link INIConfiguration}.
      */
+    @Test
     public void testSave() throws Exception
     {
         Writer writer = new StringWriter();
@@ -85,6 +91,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of load method, of class {@link INIConfiguration}.
      */
+    @Test
     public void testLoad() throws Exception
     {
         checkLoad(INI_DATA);
@@ -94,6 +101,7 @@ public class TestINIConfiguration extends TestCase
      * Tests the load() method when the alternative value separator is used (a
      * ':' for '=').
      */
+    @Test
     public void testLoadAlternativeSeparator() throws Exception
     {
         checkLoad(INI_DATA.replace('=', ':'));
@@ -122,6 +130,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of isCommentLine method, of class {@link INIConfiguration}.
      */
+    @Test
     public void testIsCommentLine()
     {
         INIConfiguration instance = new INIConfiguration();
@@ -134,6 +143,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of isSectionLine method, of class {@link INIConfiguration}.
      */
+    @Test
     public void testIsSectionLine()
     {
         INIConfiguration instance = new INIConfiguration();
@@ -145,18 +155,20 @@ public class TestINIConfiguration extends TestCase
     /**
      * Test of getSections method, of class {@link INIConfiguration}.
      */
+    @Test
     public void testGetSections()
     {
         INIConfiguration instance = new INIConfiguration();
         instance.addProperty("test1.foo", "bar");
         instance.addProperty("test2.foo", "abc");
-        Set expResult = new HashSet();
+        Set<String> expResult = new HashSet<String>();
         expResult.add("test1");
         expResult.add("test2");
-        Set result = instance.getSections();
+        Set<String> result = instance.getSections();
         assertEquals(expResult, result);
     }
 
+    @Test
     public void testQuotedValue() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -165,6 +177,7 @@ public class TestINIConfiguration extends TestCase
         assertEquals("value", "quoted value", config.getString("section4.var1"));
     }
 
+    @Test
     public void testQuotedValueWithQuotes() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -173,6 +186,7 @@ public class TestINIConfiguration extends TestCase
         assertEquals("value", "quoted value\\nwith \"quotes\"", config.getString("section4.var2"));
     }
 
+    @Test
     public void testValueWithComment() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -181,6 +195,7 @@ public class TestINIConfiguration extends TestCase
         assertEquals("value", "123", config.getString("section4.var3"));
     }
 
+    @Test
     public void testQuotedValueWithComment() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -189,6 +204,7 @@ public class TestINIConfiguration extends TestCase
         assertEquals("value", "1;2;3", config.getString("section4.var4"));
     }
 
+    @Test
     public void testQuotedValueWithSingleQuotes() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -197,6 +213,7 @@ public class TestINIConfiguration extends TestCase
         assertEquals("value", "'quoted' \"value\"", config.getString("section4.var5"));
     }
 
+    @Test
     public void testWriteValueWithCommentChar() throws Exception
     {
         INIConfiguration config = new INIConfiguration();
@@ -214,6 +231,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Tests whether whitespace is left unchanged for quoted values.
      */
+    @Test
     public void testQuotedValueWithWhitespace() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
@@ -226,6 +244,7 @@ public class TestINIConfiguration extends TestCase
     /**
      * Tests a quoted value with space and a comment.
      */
+    @Test
     public void testQuotedValueWithWhitespaceAndComment() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
