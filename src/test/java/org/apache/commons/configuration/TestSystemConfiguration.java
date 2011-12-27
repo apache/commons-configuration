@@ -17,18 +17,21 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
- * Tests for MapConfiguration.
+ * Tests for {@code SystemConfiguration}.
  *
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public class TestSystemConfiguration extends TestCase
+public class TestSystemConfiguration
 {
+    @Test
     public void testSystemConfiguration()
     {
         Properties props = System.getProperties();
@@ -38,6 +41,7 @@ public class TestSystemConfiguration extends TestCase
         assertEquals("number", 123, conf.getInt("test.number"));
     }
 
+    @Test
     public void testSetSystemProperties()
     {
         PropertiesConfiguration props = new PropertiesConfiguration();
