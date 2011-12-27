@@ -17,9 +17,12 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A base class for testing {@link
@@ -28,43 +31,37 @@ import junit.framework.TestCase;
  *
  * @version $Id$
  */
-public class TestThreesomeConfiguration extends TestCase
+public class TestThreesomeConfiguration
 {
-    protected Configuration conf = null;
+    protected Configuration conf;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration("threesome.properties");
     }
-    
-    /**
-     * Tests <code>List</code> parsing.
-     */
+
+    @Test
     public void testList1() throws Exception
     {
-        List packages = conf.getList("test.threesome.one");
+        List<Object> packages = conf.getList("test.threesome.one");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
-    /**
-     * Tests <code>List</code> parsing.
-     */
+    @Test
     public void testList2() throws Exception
     {
-        List packages = conf.getList("test.threesome.two");
+        List<Object> packages = conf.getList("test.threesome.two");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
 
-    /**
-     * Tests <code>List</code> parsing.
-     */
+    @Test
     public void testList3() throws Exception
     {
-        List packages = conf.getList("test.threesome.three");
+        List<Object> packages = conf.getList("test.threesome.three");
         // we should get 3 packages here
         assertEquals(3, packages.size());
     }
-
 }
