@@ -17,13 +17,15 @@ package org.apache.commons.configuration;
  * limitations under the License.
  */
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Test;
 
 /**
  * Test that the configuration factory returns keys in the same
@@ -31,9 +33,10 @@ import org.apache.commons.lang.StringUtils;
  *
  * @version $Id$
  */
-public class TestPropertiesSequence extends TestCase
+@SuppressWarnings("deprecation")
+public class TestPropertiesSequence
 {
-
+    @Test
     public void testConfigurationValuesInSameOrderFromFile() throws Exception
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
@@ -48,8 +51,8 @@ public class TestPropertiesSequence extends TestCase
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<?> keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
+        List<?> keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -60,6 +63,7 @@ public class TestPropertiesSequence extends TestCase
         }
     }
 
+    @Test
     public void testConfigurationValuesInSameOrderWithManualAdd() throws Exception
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
@@ -80,8 +84,8 @@ public class TestPropertiesSequence extends TestCase
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
 
-        List keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
-        List keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
+        List<?> keysSimpleConfiguration = IteratorUtils.toList(a.getKeys());
+        List<?> keysCompositeConfiguration = IteratorUtils.toList(b.getKeys());
 
         assertTrue("Size:" + keysSimpleConfiguration.size(), keysSimpleConfiguration.size() > 0);
         assertEquals(keysSimpleConfiguration.size(), keysCompositeConfiguration.size());
@@ -92,6 +96,7 @@ public class TestPropertiesSequence extends TestCase
         }
     }
 
+    @Test
     public void testMappingInSameOrder() throws Exception
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
@@ -106,9 +111,9 @@ public class TestPropertiesSequence extends TestCase
         Configuration mapping = new BaseConfiguration();
         Configuration mapping2 = new BaseConfiguration();
 
-        for (Iterator keys = simpleConfiguration.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = simpleConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
@@ -122,9 +127,9 @@ public class TestPropertiesSequence extends TestCase
             }
         }
 
-        for (Iterator keys = compositeConfiguration.getKeys(); keys.hasNext();)
+        for (Iterator<String> keys = compositeConfiguration.getKeys(); keys.hasNext();)
         {
-            String key = (String) keys.next();
+            String key = keys.next();
             String[] keyParts = StringUtils.split(key, ".");
 
             if ((keyParts.length == 3) && keyParts[0].equals("prefix") && keyParts[2].equals("postfix"))
