@@ -17,14 +17,17 @@
 
 package org.apache.commons.configuration;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 /**
  * Tests the StrintConfigurationComparator class
  *
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public class TestStrictConfigurationComparator extends TestCase
+public class TestStrictConfigurationComparator
 {
     /**
      * The comparator.
@@ -39,6 +42,7 @@ public class TestStrictConfigurationComparator extends TestCase
     /**
      * Tests the comparator.
      */
+    @Test
     public void testCompare()
     {
         // Identity comparison for empty configuration
@@ -81,6 +85,7 @@ public class TestStrictConfigurationComparator extends TestCase
             comparator.compare(configuration, other));
     }
 
+    @Test
     public void testCompareNull()
     {
         assertTrue(comparator.compare(null, null));
