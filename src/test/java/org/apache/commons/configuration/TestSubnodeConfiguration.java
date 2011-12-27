@@ -16,15 +16,18 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
@@ -34,14 +37,20 @@ import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.apache.commons.lang.text.StrLookup;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test case for SubnodeConfiguration.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestSubnodeConfiguration extends TestCase
+public class TestSubnodeConfiguration
 {
     /** An array with names of tables (test data). */
     private static final String[] TABLE_NAMES =
@@ -53,11 +62,12 @@ public class TestSubnodeConfiguration extends TestCase
     { "docid", "docname", "author", "dateOfCreation", "version", "size" },
     { "userid", "uname", "firstName", "lastName" } };
 
-    /** Constant for a test output file.*/
-    private static final File TEST_FILE = new File("target/test.xml");
-
     /** Constant for an updated table name.*/
     private static final String NEW_TABLE_NAME = "newTable";
+
+    /** A helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /** The parent configuration. */
     HierarchicalConfiguration parent;
@@ -68,25 +78,17 @@ public class TestSubnodeConfiguration extends TestCase
     /** Stores a counter for the created nodes. */
     int nodeCounter;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         parent = setUpParentConfig();
         nodeCounter = 0;
-    }
-
-    protected void tearDown() throws Exception
-    {
-        // remove the test output file if necessary
-        if (TEST_FILE.exists())
-        {
-            assertTrue("Could not remove test file", TEST_FILE.delete());
-        }
     }
 
     /**
      * Tests creation of a subnode config.
      */
+    @Test
     public void testInitSubNodeConfig()
     {
         setUpSubnodeConfig();
@@ -99,45 +101,32 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests constructing a subnode configuration with a null parent. This
      * should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullParent()
     {
-        try
-        {
-            config = new SubnodeConfiguration(null, getSubnodeRoot(parent));
-            fail("Could set a null parent config!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        config = new SubnodeConfiguration(null, getSubnodeRoot(parent));
     }
 
     /**
      * Tests constructing a subnode configuration with a null root node. This
      * should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullNode()
     {
-        try
-        {
-            config = new SubnodeConfiguration(parent, null);
-            fail("Could set a null root node!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        config = new SubnodeConfiguration(parent, null);
     }
 
     /**
      * Tests if properties of the sub node can be accessed.
      */
+    @Test
     public void testGetProperties()
     {
         setUpSubnodeConfig();
         assertEquals("Wrong table name", TABLE_NAMES[0], config
                 .getString("name"));
-        List fields = config.getList("fields.field.name");
+        List<Object> fields = config.getList("fields.field.name");
         assertEquals("Wrong number of fields", TABLE_FIELDS[0].length, fields
                 .size());
         for (int i = 0; i < TABLE_FIELDS[0].length; i++)
@@ -151,6 +140,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests setting of properties in both the parent and the subnode
      * configuration and whether the changes are visible to each other.
      */
+    @Test
     public void testSetProperty()
     {
         setUpSubnodeConfig();
@@ -169,6 +159,7 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests adding of properties.
      */
+    @Test
     public void testAddProperty()
     {
         setUpSubnodeConfig();
@@ -178,7 +169,7 @@ public class TestSubnodeConfiguration extends TestCase
                 .getString("tables.table(0)[@table-type]"));
 
         parent.addProperty("tables.table(0).fields.field(-1).name", "newField");
-        List fields = config.getList("fields.field.name");
+        List<Object> fields = config.getList("fields.field.name");
         assertEquals("New field was not added", TABLE_FIELDS[0].length + 1,
                 fields.size());
         assertEquals("Wrong last field", "newField", fields
@@ -188,10 +179,11 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests listing the defined keys.
      */
+    @Test
     public void testGetKeys()
     {
         setUpSubnodeConfig();
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         CollectionUtils.addAll(keys, config.getKeys());
         assertEquals("Incorrect number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
@@ -202,22 +194,24 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests setting the exception on missing flag. The subnode config obtains
      * this flag from its parent.
      */
+    @Test(expected = NoSuchElementException.class)
     public void testSetThrowExceptionOnMissing()
     {
         parent.setThrowExceptionOnMissing(true);
         setUpSubnodeConfig();
         assertTrue("Exception flag not fetchted from parent", config
                 .isThrowExceptionOnMissing());
-        try
-        {
-            config.getString("non existing key");
-            fail("Could fetch non existing key!");
-        }
-        catch (NoSuchElementException nex)
-        {
-            // ok
-        }
+        config.getString("non existing key");
+    }
 
+    /**
+     * Tests whether the exception flag can be set independently from the parent.
+     */
+    @Test
+    public void testSetThrowExceptionOnMissingAffectsParent()
+    {
+        parent.setThrowExceptionOnMissing(true);
+        setUpSubnodeConfig();
         config.setThrowExceptionOnMissing(false);
         assertTrue("Exception flag reset on parent", parent
                 .isThrowExceptionOnMissing());
@@ -227,6 +221,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests handling of the delimiter parsing disabled flag. This is shared
      * with the parent, too.
      */
+    @Test
     public void testSetDelimiterParsingDisabled()
     {
         parent.setDelimiterParsingDisabled(true);
@@ -247,6 +242,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests manipulating the list delimiter. This piece of data is derived from
      * the parent.
      */
+    @Test
     public void testSetListDelimiter()
     {
         parent.setListDelimiter('/');
@@ -265,13 +261,14 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests changing the expression engine.
      */
+    @Test
     public void testSetExpressionEngine()
     {
         parent.setExpressionEngine(new XPathExpressionEngine());
         setUpSubnodeConfig();
         assertEquals("Wrong field name", TABLE_FIELDS[0][1], config
                 .getString("fields/field[2]/name"));
-        Set keys = new HashSet();
+        Set<String> keys = new HashSet<String>();
         CollectionUtils.addAll(keys, config.getKeys());
         assertEquals("Wrong number of keys", 2, keys.size());
         assertTrue("Key 1 not contained", keys.contains("name"));
@@ -284,10 +281,11 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests the configurationAt() method.
      */
+    @Test
     public void testConfiguarationAt()
     {
         setUpSubnodeConfig();
-        SubnodeConfiguration sub2 = (SubnodeConfiguration) config
+        SubnodeConfiguration sub2 = config
                 .configurationAt("fields.field(1)");
         assertEquals("Wrong value of property", TABLE_FIELDS[0][1], sub2
                 .getString("name"));
@@ -298,6 +296,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests interpolation features. The subnode config should use its parent
      * for interpolation.
      */
+    @Test
     public void testInterpolation()
     {
         parent.addProperty("tablespaces.tablespace.name", "default");
@@ -316,6 +315,7 @@ public class TestSubnodeConfiguration extends TestCase
      * An additional test for interpolation when the configurationAt() method is
      * involved.
      */
+    @Test
     public void testInterpolationFromConfigurationAt()
     {
         parent.addProperty("base.dir", "/home/foo");
@@ -337,6 +337,7 @@ public class TestSubnodeConfiguration extends TestCase
      * An additional test for interpolation when the configurationAt() method is
      * involved for a local interpolation.
      */
+    @Test
     public void testLocalInterpolationFromConfigurationAt()
     {
         parent.addProperty("base.dir", "/home/foo");
@@ -353,6 +354,7 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests manipulating the interpolator.
      */
+    @Test
     public void testInterpolator()
     {
         parent.addProperty("tablespaces.tablespace.name", "default");
@@ -362,18 +364,20 @@ public class TestSubnodeConfiguration extends TestCase
         InterpolationTestHelper.testGetInterpolator(config);
     }
 
+    @Test
     public void testLocalLookupsInInterpolatorAreInherited() {
         parent.addProperty("tablespaces.tablespace.name", "default");
         parent.addProperty("tablespaces.tablespace(-1).name", "test");
         parent.addProperty("tables.table(0).var", "${brackets:x}");
-        
+
         ConfigurationInterpolator interpolator = parent.getInterpolator();
         interpolator.registerLookup("brackets", new StrLookup(){
 
+            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }
-            
+
         });
         setUpSubnodeConfig();
         assertEquals("Local lookup was not inherited", "(x)", config.getString("var", ""));
@@ -384,6 +388,7 @@ public class TestSubnodeConfiguration extends TestCase
      * configuration does not support reloads. Then the new value should not be
      * detected.
      */
+    @Test
     public void testParentReloadNotSupported() throws ConfigurationException
     {
         Configuration c = setUpReloadTest(false);
@@ -397,6 +402,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests a reload operation for the parent configuration when the subnode
      * configuration does support reloads. The new value should be returned.
      */
+    @Test
     public void testParentReloadSupported() throws ConfigurationException
     {
         Configuration c = setUpReloadTest(true);
@@ -409,6 +415,7 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests whether events are fired if a change of the parent is detected.
      */
+    @Test
     public void testParentReloadEvents() throws ConfigurationException
     {
         setUpReloadTest(true);
@@ -417,9 +424,8 @@ public class TestSubnodeConfiguration extends TestCase
         config.getString("name");
         assertEquals("Wrong number of events", 2, l.events.size());
         boolean before = true;
-        for (Iterator it = l.events.iterator(); it.hasNext();)
+        for (ConfigurationEvent e : l.events)
         {
-            ConfigurationEvent e = (ConfigurationEvent) it.next();
             assertEquals("Wrong configuration", config, e.getSource());
             assertEquals("Wrong event type",
                     HierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
@@ -436,6 +442,7 @@ public class TestSubnodeConfiguration extends TestCase
      * configuration is aware of reloads, and the parent configuration is
      * accessed first. The new value should be returned.
      */
+    @Test
     public void testParentReloadSupportAccessParent()
             throws ConfigurationException
     {
@@ -449,6 +456,7 @@ public class TestSubnodeConfiguration extends TestCase
     /**
      * Tests whether reloads work with sub subnode configurations.
      */
+    @Test
     public void testParentReloadSubSubnode() throws ConfigurationException
     {
         setUpReloadTest(true);
@@ -463,6 +471,7 @@ public class TestSubnodeConfiguration extends TestCase
      * Tests creating a sub sub config when the sub config is not aware of
      * changes. Then the sub sub config shouldn't be either.
      */
+    @Test
     public void testParentReloadSubSubnodeNoChangeSupport()
             throws ConfigurationException
     {
@@ -484,20 +493,28 @@ public class TestSubnodeConfiguration extends TestCase
     private XMLConfiguration setUpReloadTest(boolean supportReload)
             throws ConfigurationException
     {
-        XMLConfiguration xmlConf = new XMLConfiguration(parent);
-        xmlConf.setFile(TEST_FILE);
-        xmlConf.save();
-        config = xmlConf.configurationAt("tables.table(1)", supportReload);
-        assertEquals("Wrong table name", TABLE_NAMES[1], config
-                .getString("name"));
-        xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        // Now change the configuration file
-        XMLConfiguration confUpdate = new XMLConfiguration(TEST_FILE);
-        confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
-        confUpdate.setProperty("tables.table(1).fields.field(0).name",
-                "newField");
-        confUpdate.save();
-        return xmlConf;
+        try
+        {
+            File testFile = folder.newFile();
+            XMLConfiguration xmlConf = new XMLConfiguration(parent);
+            xmlConf.setFile(testFile);
+            xmlConf.save();
+            config = xmlConf.configurationAt("tables.table(1)", supportReload);
+            assertEquals("Wrong table name", TABLE_NAMES[1],
+                    config.getString("name"));
+            xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
+            // Now change the configuration file
+            XMLConfiguration confUpdate = new XMLConfiguration(testFile);
+            confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
+            confUpdate.setProperty("tables.table(1).fields.field(0).name",
+                    "newField");
+            confUpdate.save();
+            return xmlConf;
+        }
+        catch (IOException ioex)
+        {
+            throw new ConfigurationException(ioex);
+        }
     }
 
     /**
@@ -505,6 +522,7 @@ public class TestSubnodeConfiguration extends TestCase
      * configuration to become invalid. In this case the sub config should be
      * detached and keep its old values.
      */
+    @Test
     public void testParentChangeDetach()
     {
         final String key = "tables.table(1)";
@@ -523,6 +541,7 @@ public class TestSubnodeConfiguration extends TestCase
      * during reconstruction. This can happen e.g. if the expression engine is
      * changed for the parent.
      */
+    @Test
     public void testParentChangeDetatchException()
     {
         config = parent.configurationAt("tables.table(1)", true);
@@ -542,8 +561,14 @@ public class TestSubnodeConfiguration extends TestCase
     {
         HierarchicalConfiguration conf = new HierarchicalConfiguration()
         {
+            /**
+             * Serial version UID.
+             */
+            private static final long serialVersionUID = 1L;
+
             // Provide a special implementation of createNode() to check
             // if it is called by the subnode config
+            @Override
             protected Node createNode(String name)
             {
                 nodeCounter++;
@@ -590,7 +615,7 @@ public class TestSubnodeConfiguration extends TestCase
     private static class ConfigurationListenerTestImpl implements ConfigurationListener
     {
         /** Stores the events received.*/
-        final List events = new ArrayList();
+        final List<ConfigurationEvent> events = new ArrayList<ConfigurationEvent>();
 
         public void configurationChanged(ConfigurationEvent event)
         {
