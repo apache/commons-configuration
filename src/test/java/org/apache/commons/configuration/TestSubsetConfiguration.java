@@ -17,6 +17,12 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,10 +31,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.text.StrLookup;
+import org.junit.Test;
 
 /**
  * Test case for the {@link SubsetConfiguration} class.
@@ -36,11 +41,12 @@ import org.apache.commons.lang.text.StrLookup;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class TestSubsetConfiguration extends TestCase
+public class TestSubsetConfiguration
 {
     static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
 
+    @Test
     public void testGetProperty()
     {
         Configuration conf = new BaseConfiguration();
@@ -53,6 +59,7 @@ public class TestSubsetConfiguration extends TestCase
         assertFalse("'ng.key2' found in the subset", subset.containsKey("ng.key2"));
     }
 
+    @Test
     public void testSetProperty()
     {
         Configuration conf = new BaseConfiguration();
@@ -69,6 +76,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("key2 in the subset configuration", "value2", subset.getProperty("key2"));
     }
 
+    @Test
     public void testGetParentKey()
     {
         // subset with delimiter
@@ -82,6 +90,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("parent key for \"\"", "prefix", subset.getParentKey(""));
     }
 
+    @Test
     public void testGetChildKey()
     {
         // subset with delimiter
@@ -95,6 +104,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("parent key for \"prefix\"", "", subset.getChildKey("prefix"));
     }
 
+    @Test
     public void testGetKeys()
     {
         Configuration conf = new BaseConfiguration();
@@ -104,12 +114,13 @@ public class TestSubsetConfiguration extends TestCase
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
-        Iterator it = subset.getKeys();
+        Iterator<String> it = subset.getKeys();
         assertEquals("1st key", "", it.next());
         assertEquals("2nd key", "key1", it.next());
         assertFalse("too many elements", it.hasNext());
     }
 
+    @Test
     public void testGetKeysWithPrefix()
     {
         Configuration conf = new BaseConfiguration();
@@ -119,12 +130,13 @@ public class TestSubsetConfiguration extends TestCase
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
 
-        Iterator it = subset.getKeys("abc");
+        Iterator<String> it = subset.getKeys("abc");
         assertEquals("1st key", "abc", it.next());
         assertEquals("2nd key", "abc.key1", it.next());
         assertFalse("too many elements", it.hasNext());
     }
 
+    @Test
     public void testGetList()
     {
         Configuration conf = new BaseConfiguration();
@@ -132,10 +144,11 @@ public class TestSubsetConfiguration extends TestCase
         conf.addProperty("test.abc", "value3");
 
         Configuration subset = new SubsetConfiguration(conf, "test", ".");
-        List list = subset.getList("abc", new ArrayList());
+        List<Object> list = subset.getList("abc", new ArrayList<Object>());
         assertEquals(3, list.size());
     }
 
+    @Test
     public void testGetParent()
     {
         Configuration conf = new BaseConfiguration();
@@ -144,6 +157,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("parent", conf, subset.getParent());
     }
 
+    @Test
     public void testGetPrefix()
     {
         Configuration conf = new BaseConfiguration();
@@ -152,6 +166,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("prefix", "prefix", subset.getPrefix());
     }
 
+    @Test
     public void testSetPrefix()
     {
         Configuration conf = new BaseConfiguration();
@@ -161,6 +176,7 @@ public class TestSubsetConfiguration extends TestCase
         assertEquals("prefix", "prefix", subset.getPrefix());
     }
 
+    @Test
     public void testThrowExceptionOnMissing()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -194,6 +210,8 @@ public class TestSubsetConfiguration extends TestCase
         }
     }
 
+    @SuppressWarnings("deprecation")
+    @Test
     public void testNested() throws Exception
     {
         ConfigurationFactory factory = new ConfigurationFactory();
@@ -203,19 +221,20 @@ public class TestSubsetConfiguration extends TestCase
         Configuration subConf = config.subset("tables.table(0)");
         assertTrue(subConf.getKeys().hasNext());
         Configuration subSubConf = subConf.subset("fields.field(1)");
-        Iterator itKeys = subSubConf.getKeys();
-        Set keys = new HashSet();
+        Iterator<String> itKeys = subSubConf.getKeys();
+        Set<String> keys = new HashSet<String>();
         keys.add("name");
         keys.add("type");
         while(itKeys.hasNext())
         {
-            String k = (String) itKeys.next();
+            String k = itKeys.next();
             assertTrue(keys.contains(k));
             keys.remove(k);
         }
         assertTrue(keys.isEmpty());
     }
 
+    @Test
     public void testClear()
     {
         Configuration config = new BaseConfiguration();
@@ -229,6 +248,7 @@ public class TestSubsetConfiguration extends TestCase
         assertFalse("the parent configuration is empty", config.isEmpty());
     }
 
+    @Test
     public void testSetListDelimiter()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -244,6 +264,7 @@ public class TestSubsetConfiguration extends TestCase
                 .size());
     }
 
+    @Test
     public void testGetListDelimiter()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -257,6 +278,7 @@ public class TestSubsetConfiguration extends TestCase
                 .getListDelimiter());
     }
 
+    @Test
     public void testSetDelimiterParsingDisabled()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -272,6 +294,7 @@ public class TestSubsetConfiguration extends TestCase
                 .size());
     }
 
+    @Test
     public void testIsDelimiterParsingDisabled()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -288,6 +311,7 @@ public class TestSubsetConfiguration extends TestCase
     /**
      * Tests manipulating the interpolator.
      */
+    @Test
     public void testInterpolator()
     {
         BaseConfiguration config = new BaseConfiguration();
@@ -296,11 +320,13 @@ public class TestSubsetConfiguration extends TestCase
         InterpolationTestHelper.testGetInterpolator(subset);
     }
 
+    @Test
     public void testLocalLookupsInInterpolatorAreInherited() {
         BaseConfiguration config = new BaseConfiguration();
         ConfigurationInterpolator interpolator = config.getInterpolator();
         interpolator.registerLookup("brackets", new StrLookup(){
 
+            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }
@@ -313,6 +339,7 @@ public class TestSubsetConfiguration extends TestCase
                 .getString("var", ""));
     }
 
+    @Test
     public void testInterpolationForKeysOfTheParent() {
         BaseConfiguration config = new BaseConfiguration();
         config.setProperty("test", "junit");
