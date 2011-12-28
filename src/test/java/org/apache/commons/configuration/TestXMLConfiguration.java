@@ -17,6 +17,13 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,14 +40,15 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import junit.framework.TestCase;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.Before;
+import org.junit.Test;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -50,7 +58,7 @@ import org.xml.sax.helpers.DefaultHandler;
  *
  * @version $Id$
  */
-public class TestXMLConfiguration extends TestCase
+public class TestXMLConfiguration
 {
     /** XML Catalog */
     private static final String CATALOG_FILES = ConfigurationAssert
@@ -90,7 +98,8 @@ public class TestXMLConfiguration extends TestCase
 
     private XMLConfiguration conf;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
         conf = new XMLConfiguration();
         conf.setFile(new File(testProperties));
@@ -98,21 +107,25 @@ public class TestXMLConfiguration extends TestCase
         removeTestFile();
     }
 
+    @Test
     public void testGetProperty()
     {
         assertEquals("value", conf.getProperty("element"));
     }
 
+    @Test
     public void testGetCommentedProperty()
     {
         assertEquals("", conf.getProperty("test.comment"));
     }
 
+    @Test
     public void testGetPropertyWithXMLEntity()
     {
         assertEquals("1<2", conf.getProperty("test.entity"));
     }
 
+    @Test
     public void testClearProperty() throws ConfigurationException, IOException
     {
         // test non-existent element
@@ -170,6 +183,7 @@ public class TestXMLConfiguration extends TestCase
         assertNull(key, conf.getProperty(key));
     }
 
+    @Test
     public void testgetProperty() {
         // test non-leaf element
         Object property = conf.getProperty("clear");
@@ -209,7 +223,7 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.sublist.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        List list = (List)property;
+        List<?> list = (List<?>) property;
         assertEquals(2, list.size());
         assertEquals("five", list.get(0));
         assertEquals("six", list.get(1));
@@ -218,7 +232,7 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.item");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        list = (List)property;
+        list = (List<?>) property;
         assertEquals(4, list.size());
         assertEquals("one", list.get(0));
         assertEquals("two", list.get(1));
@@ -229,17 +243,19 @@ public class TestXMLConfiguration extends TestCase
         property = conf.getProperty("list.item[@name]");
         assertNotNull(property);
         assertTrue(property instanceof List);
-        list = (List)property;
+        list = (List<?>) property;
         assertEquals(2, list.size());
         assertEquals("one", list.get(0));
         assertEquals("three", list.get(1));
     }
 
+    @Test
     public void testGetAttribute()
     {
         assertEquals("element3[@name]", "foo", conf.getProperty("element3[@name]"));
     }
 
+    @Test
     public void testClearAttribute() throws Exception
     {
         // test non-existent attribute
@@ -269,6 +285,7 @@ public class TestXMLConfiguration extends TestCase
         assertNotNull(key, conf.getProperty(key));
     }
 
+    @Test
     public void testSetAttribute()
     {
         // replace an existing attribute
@@ -283,17 +300,19 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("value1",conf.getProperty("name1"));
     }
 
+    @Test
     public void testAddAttribute()
     {
         conf.addProperty("element3[@name]", "bar");
 
-        List list = conf.getList("element3[@name]");
+        List<Object> list = conf.getList("element3[@name]");
         assertNotNull("null list", list);
         assertTrue("'foo' element missing", list.contains("foo"));
         assertTrue("'bar' element missing", list.contains("bar"));
         assertEquals("list size", 2, list.size());
     }
 
+    @Test
     public void testAddObjectAttribute()
     {
         conf.addProperty("test.boolean[@value]", Boolean.TRUE);
@@ -303,6 +322,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests setting an attribute on the root element.
      */
+    @Test
     public void testSetRootAttribute() throws ConfigurationException
     {
         conf.setProperty("[@test]", "true");
@@ -328,29 +348,33 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether the configuration's root node is initialized with a
      * reference to the corresponding XML element.
      */
+    @Test
     public void testGetRootReference()
     {
         assertNotNull("Root node has no reference", conf.getRootNode()
                 .getReference());
     }
 
+    @Test
     public void testAddList()
     {
         conf.addProperty("test.array", "value1");
         conf.addProperty("test.array", "value2");
 
-        List list = conf.getList("test.array");
+        List<Object> list = conf.getList("test.array");
         assertNotNull("null list", list);
         assertTrue("'value1' element missing", list.contains("value1"));
         assertTrue("'value2' element missing", list.contains("value2"));
         assertEquals("list size", 2, list.size());
     }
 
+    @Test
     public void testGetComplexProperty()
     {
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
 
+    @Test
     public void testSettingFileNames()
     {
         conf = new XMLConfiguration();
@@ -370,6 +394,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals(new File(testBasePath, "subdir/hello.xml"), conf.getFile());
     }
 
+    @Test
     public void testLoad() throws Exception
     {
         conf = new XMLConfiguration();
@@ -379,6 +404,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("I'm complex!", conf.getProperty("element2.subelement.subsubelement"));
     }
 
+    @Test
     public void testLoadWithBasePath() throws Exception
     {
         conf = new XMLConfiguration();
@@ -394,6 +420,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests constructing an XMLConfiguration from a non existing file and
      * later saving to this file.
      */
+    @Test
     public void testLoadAndSaveFromFile() throws Exception
     {
         // If the file does not exist, an empty config is created
@@ -409,6 +436,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests loading a configuration from a URL.
      */
+    @Test
     public void testLoadFromURL() throws Exception
     {
         URL url = new File(testProperties).toURI().toURL();
@@ -420,6 +448,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests loading from a stream.
      */
+    @Test
     public void testLoadFromStream() throws Exception
     {
         String xml = "<?xml version=\"1.0\"?><config><test>1</test></config>";
@@ -435,21 +464,15 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests loading a non well formed XML from a string.
      */
+    @Test(expected = ConfigurationException.class)
     public void testLoadInvalidXML() throws Exception
     {
         String xml = "<?xml version=\"1.0\"?><config><test>1</rest></config>";
         conf = new XMLConfiguration();
-        try
-        {
-            conf.load(new StringReader(xml));
-            fail("Could load invalid XML!");
-        }
-        catch(ConfigurationException cex)
-        {
-            //ok
-        }
+        conf.load(new StringReader(xml));
     }
 
+    @Test
     public void testSetProperty() throws Exception
     {
         conf.setProperty("element.string", "hello");
@@ -458,6 +481,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("XML value of element.string", "hello", conf.getProperty("element.string"));
     }
 
+    @Test
     public void testAddProperty()
     {
         // add a property to a non initialized xml configuration
@@ -467,6 +491,7 @@ public class TestXMLConfiguration extends TestCase
         assertEquals("'test.string'", "hello", config.getString("test.string"));
     }
 
+    @Test
     public void testAddObjectProperty()
     {
         // add a non string property
@@ -474,6 +499,7 @@ public class TestXMLConfiguration extends TestCase
         assertTrue("'test.boolean'", conf.getBoolean("test.boolean"));
     }
 
+    @Test
     public void testSave() throws Exception
     {
         // add an array of strings to the configuration
@@ -506,6 +532,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests saving to a URL.
      */
+    @Test
     public void testSaveToURL() throws Exception
     {
         conf.save(testSaveConf.toURI().toURL());
@@ -517,6 +544,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests saving to a stream.
      */
+    @Test
     public void testSaveToStream() throws Exception
     {
         assertNull(conf.getEncoding());
@@ -556,6 +584,7 @@ public class TestXMLConfiguration extends TestCase
         checkSavedConfig(checkConfig);
     }
 
+    @Test
     public void testAutoSave() throws Exception
     {
         conf.setFile(testSaveConf);
@@ -577,6 +606,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests if a second file can be appended to a first.
      */
+    @Test
     public void testAppend() throws Exception
     {
         conf = new XMLConfiguration();
@@ -596,6 +626,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests saving attributes (related to issue 34442).
      */
+    @Test
     public void testSaveAttributes() throws Exception
     {
         conf.clear();
@@ -609,6 +640,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests collaboration between XMLConfiguration and a reloading strategy.
      */
+    @Test
     public void testReloading() throws Exception
     {
         assertNotNull(conf.getReloadingStrategy());
@@ -648,6 +680,7 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    @Test
     public void testReloadingOOM() throws Exception
     {
         assertNotNull(conf.getReloadingStrategy());
@@ -684,6 +717,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests the refresh() method.
      */
+    @Test
     public void testRefresh() throws ConfigurationException
     {
         conf.setProperty("element", "anotherValue");
@@ -696,23 +730,17 @@ public class TestXMLConfiguration extends TestCase
      * Tries to call refresh() when the configuration is not associated with a
      * file.
      */
+    @Test(expected = ConfigurationException.class)
     public void testRefreshNoFile() throws ConfigurationException
     {
         conf = new XMLConfiguration();
-        try
-        {
-            conf.refresh();
-            fail("Could refresh a configuration without a file!");
-        }
-        catch (ConfigurationException cex)
-        {
-            // ok
-        }
+        conf.refresh();
     }
 
     /**
      * Tests access to tag names with delimiter characters.
      */
+    @Test
     public void testComplexNames()
     {
         assertEquals("Name with dot", conf.getString("complexNames.my..elem"));
@@ -720,8 +748,30 @@ public class TestXMLConfiguration extends TestCase
     }
 
     /**
+     * Creates a validating document builder.
+     * @return the document builder
+     * @throws ParserConfigurationException if an error occurs
+     */
+    private DocumentBuilder createValidatingDocBuilder()
+            throws ParserConfigurationException
+    {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setValidating(true);
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        builder.setErrorHandler(new DefaultHandler() {
+            @Override
+            public void error(SAXParseException ex) throws SAXException
+            {
+                throw ex;
+            }
+        });
+        return builder;
+    }
+
+    /**
      * Tests setting a custom document builder.
      */
+    @Test
     public void testCustomDocBuilder() throws Exception
     {
         // Load an invalid XML file with the default (non validating)
@@ -730,30 +780,27 @@ public class TestXMLConfiguration extends TestCase
         conf.load(ConfigurationAssert.getTestFile("testValidateInvalid.xml"));
         assertEquals("customers", conf.getString("table.name"));
         assertFalse(conf.containsKey("table.fields.field(1).type"));
+    }
 
-        // Now create a validating doc builder and set it.
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setValidating(true);
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        builder.setErrorHandler(new DefaultHandler() {
-            public void error(SAXParseException ex) throws SAXException
-            {
-                throw ex;
-            }
-        });
+    /**
+     * Tests whether a validating document builder detects a validation error.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testCustomDocBuilderValidationError() throws Exception
+    {
+        DocumentBuilder builder = createValidatingDocBuilder();
         conf = new XMLConfiguration();
         conf.setDocumentBuilder(builder);
-        try
-        {
-            conf.load(new File("conf/testValidateInvalid.xml"));
-            fail("Could load invalid file with validating set to true!");
-        }
-        catch(ConfigurationException ex)
-        {
-            //ok
-        }
+        conf.load(new File("conf/testValidateInvalid.xml"));
+    }
 
-        // Try to load a valid document with a validating builder
+    /**
+     * Tests whether a valid document can be loaded with a validating document builder.
+     */
+    @Test
+    public void testCustomDocBuilderValidationSuccess() throws Exception
+    {
+        DocumentBuilder builder = createValidatingDocBuilder();
         conf = new XMLConfiguration();
         conf.setDocumentBuilder(builder);
         conf.load(ConfigurationAssert.getTestFile("testValidateValid.xml"));
@@ -763,9 +810,10 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests the clone() method.
      */
+    @Test
     public void testClone()
     {
-        Configuration c = (Configuration) conf.clone();
+        Configuration c = conf.clone();
         assertTrue(c instanceof XMLConfiguration);
         XMLConfiguration copy = (XMLConfiguration) c;
         assertNotNull(conf.getDocument());
@@ -783,9 +831,10 @@ public class TestXMLConfiguration extends TestCase
      * Tests saving a configuration after cloning to ensure that the clone and
      * the original are completely detachted.
      */
+    @Test
     public void testCloneWithSave() throws ConfigurationException
     {
-        XMLConfiguration c = (XMLConfiguration) conf.clone();
+        XMLConfiguration c = conf.clone();
         c.addProperty("test.newProperty", Boolean.TRUE);
         conf.addProperty("test.orgProperty", Boolean.TRUE);
         c.save(testSaveConf);
@@ -800,6 +849,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests the subset() method. There was a bug that calling subset() had
      * undesired side effects.
      */
+    @Test
     public void testSubset() throws ConfigurationException
     {
         conf = new XMLConfiguration();
@@ -814,6 +864,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests string properties with list delimiters and escaped delimiters.
      */
+    @Test
     public void testSplitLists()
     {
         assertEquals("a", conf.getString("split.list3[@values]"));
@@ -828,6 +879,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests string properties with list delimiters when delimiter parsing
      * is disabled
      */
+    @Test
     public void testDelimiterParsingDisabled() throws ConfigurationException {
         XMLConfiguration conf2 = new XMLConfiguration();
         conf2.setDelimiterParsingDisabled(true);
@@ -858,6 +910,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests string properties with list delimiters when delimiter parsing
      * is disabled
      */
+    @Test
     public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException {
         XMLConfiguration conf = new XMLConfiguration();
         conf.setExpressionEngine(new XPathExpressionEngine());
@@ -918,6 +971,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether a DTD can be accessed.
      */
+    @Test
     public void testDtd() throws ConfigurationException
     {
         conf = new XMLConfiguration("testDtd.xml");
@@ -928,6 +982,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests DTD validation using the setValidating() method.
      */
+    @Test
     public void testValidating() throws ConfigurationException
     {
         File nonValidFile = ConfigurationAssert.getTestFile("testValidateInvalid.xml");
@@ -955,6 +1010,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests handling of empty elements.
      */
+    @Test
     public void testEmptyElements() throws ConfigurationException
     {
         assertTrue(conf.containsKey("empty"));
@@ -971,6 +1027,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests the isEmpty() method for an empty configuration that was reloaded.
      */
+    @Test
     public void testEmptyReload() throws ConfigurationException
     {
         XMLConfiguration config = new XMLConfiguration();
@@ -987,6 +1044,7 @@ public class TestXMLConfiguration extends TestCase
      * "Content is not allowed in prolog". This test case is related to issue
      * 34204.
      */
+    @Test
     public void testLoadWithEncoding() throws ConfigurationException
     {
         File file = ConfigurationAssert.getTestFile("testEncoding.xml");
@@ -998,6 +1056,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether the encoding is written to the generated XML file.
      */
+    @Test
     public void testSaveWithEncoding() throws ConfigurationException
     {
         conf = new XMLConfiguration();
@@ -1015,6 +1074,7 @@ public class TestXMLConfiguration extends TestCase
      * According to the XSLT specification (http://www.w3.org/TR/xslt#output)
      * this should be either UTF-8 or UTF-16.
      */
+    @Test
     public void testSaveWithNullEncoding() throws ConfigurationException
     {
         conf = new XMLConfiguration();
@@ -1030,6 +1090,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether the DOCTYPE survives a save operation.
      */
+    @Test
     public void testSaveWithDoctype() throws ConfigurationException
     {
         String content = "<?xml  version=\"1.0\"?>"
@@ -1056,6 +1117,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests setting public and system IDs for the D'OCTYPE and then saving the
      * configuration. This should generate a DOCTYPE declaration.
      */
+    @Test
     public void testSaveWithDoctypeIDs() throws ConfigurationException
     {
         assertNull("A public ID was found", conf.getPublicID());
@@ -1073,6 +1135,7 @@ public class TestXMLConfiguration extends TestCase
      * specified. In this case the error thrown by the TransformerFactory class
      * should be caught and re-thrown as a ConfigurationException.
      */
+    @Test
     public void testSaveWithInvalidTransformerFactory()
     {
         System.setProperty(PROP_FACTORY, "an.invalid.Class");
@@ -1094,6 +1157,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests if reloads are recognized by subset().
      */
+    @Test
     public void testSubsetWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
@@ -1104,6 +1168,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests if reloads are recognized by configurationAt().
      */
+    @Test
     public void testConfigurationAtWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
@@ -1114,26 +1179,27 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests if reloads are recognized by configurationsAt().
      */
+    @Test
     public void testConfigurationsAtWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
-        List configs = c.configurationsAt("test");
+        List<HierarchicalConfiguration> configs = c.configurationsAt("test");
         assertEquals("New value not read", "newValue",
-                ((HierarchicalConfiguration) configs.get(0))
-                        .getString("entity"));
+                configs.get(0).getString("entity"));
     }
 
     /**
      * Tests whether reloads are recognized when querying the configuration's
      * keys.
      */
+    @Test
     public void testGetKeysWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
         conf.addProperty("aNewKey", "aNewValue");
         conf.save(testSaveConf);
         boolean found = false;
-        for (Iterator it = c.getKeys(); it.hasNext();)
+        for (Iterator<String> it = c.getKeys(); it.hasNext();)
         {
             if ("aNewKey".equals(it.next()))
             {
@@ -1146,6 +1212,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests accessing properties when the XPATH expression engine is set.
      */
+    @Test
     public void testXPathExpressionEngine()
     {
         conf.setExpressionEngine(new XPathExpressionEngine());
@@ -1158,15 +1225,15 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests the copy constructor.
      */
+    @Test
     public void testInitCopy() throws ConfigurationException
     {
         XMLConfiguration copy = new XMLConfiguration(conf);
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
         ConfigurationNode root = copy.getRootNode();
-        for(Iterator it = root.getChildren().iterator(); it.hasNext();)
+        for (ConfigurationNode node : root.getChildren())
         {
-            ConfigurationNode node = (ConfigurationNode) it.next();
             assertNull("Reference was not cleared", node.getReference());
         }
 
@@ -1180,6 +1247,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests setting text of the root element.
      */
+    @Test
     public void testSetTextRootElement() throws ConfigurationException
     {
         conf.setProperty("", "Root text");
@@ -1192,6 +1260,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests removing the text of the root element.
      */
+    @Test
     public void testClearTextRootElement() throws ConfigurationException
     {
         final String xml = "<e a=\"v\">text</e>";
@@ -1210,6 +1279,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests list nodes with multiple values and attributes.
      */
+    @Test
     public void testListWithAttributes()
     {
         assertEquals("Wrong number of <a> elements", 6, conf.getList(
@@ -1227,6 +1297,7 @@ public class TestXMLConfiguration extends TestCase
      * the list delimiter. In this scenario the attribute should be added to the
      * node with the first value.
      */
+    @Test
     public void testListWithAttributesMultiValue()
     {
         assertEquals("Wrong value of 2nd element", "1", conf
@@ -1246,6 +1317,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests a list node with a multi-value attribute and multiple values. All
      * attribute values should be assigned to the node with the first value.
      */
+    @Test
     public void testListWithMultiAttributesMultiValue()
     {
         for (int i = 1; i <= 2; i++)
@@ -1253,7 +1325,7 @@ public class TestXMLConfiguration extends TestCase
             assertEquals("Wrong value of multi-valued node", "value" + i, conf
                     .getString("attrList.a(" + (i + 3) + ")"));
         }
-        List attrs = conf.getList("attrList.a(4)[@name]");
+        List<Object> attrs = conf.getList("attrList.a(4)[@name]");
         final String attrVal = "uvw";
         assertEquals("Wrong number of name attributes", attrVal.length(), attrs
                 .size());
@@ -1274,6 +1346,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether the auto save mechanism is triggered by changes at a
      * subnode configuration.
      */
+    @Test
     public void testAutoSaveWithSubnodeConfig() throws ConfigurationException
     {
         final String newValue = "I am autosaved";
@@ -1292,6 +1365,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether a subnode configuration created from another subnode
      * configuration of a XMLConfiguration can trigger the auto save mechanism.
      */
+    @Test
     public void testAutoSaveWithSubSubnodeConfig() throws ConfigurationException
     {
         final String newValue = "I am autosaved";
@@ -1311,6 +1385,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests saving and loading a configuration when delimiter parsing is
      * disabled.
      */
+    @Test
     public void testSaveDelimiterParsingDisabled()
             throws ConfigurationException
     {
@@ -1321,6 +1396,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests saving and loading a configuration when delimiter parsing is
      * disabled and attributes are involved.
      */
+    @Test
     public void testSaveDelimiterParsingDisabledAttrs()
             throws ConfigurationException
     {
@@ -1352,12 +1428,13 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests multiple attribute values in delimiter parsing disabled mode.
      */
+    @Test
     public void testDelimiterParsingDisabledMultiAttrValues() throws ConfigurationException
     {
         conf.clear();
         conf.setDelimiterParsingDisabled(true);
         conf.load();
-        List expr = conf.getList("expressions[@value]");
+        List<Object> expr = conf.getList("expressions[@value]");
         assertEquals("Wrong list size", 2, expr.size());
         assertEquals("Wrong element 1", "a || (b && c)", expr.get(0));
         assertEquals("Wrong element 2", "!d", expr.get(1));
@@ -1367,6 +1444,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests using multiple attribute values, which are partly escaped when
      * delimiter parsing is not disabled.
      */
+    @Test
     public void testMultipleAttrValuesEscaped() throws ConfigurationException
     {
         conf.addProperty("test.dir[@name]", "C:\\Temp\\");
@@ -1381,6 +1459,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests a combination of auto save = true and an associated reloading
      * strategy.
      */
+    @Test
     public void testAutoSaveWithReloadingStrategy() throws ConfigurationException
     {
         conf.setFile(testSaveConf);
@@ -1393,6 +1472,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests adding nodes from another configuration.
      */
+    @Test
     public void testAddNodesCopy() throws ConfigurationException
     {
         XMLConfiguration c2 = new XMLConfiguration(testProperties2);
@@ -1406,13 +1486,14 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether the addNodes() method triggers an auto save.
      */
+    @Test
     public void testAutoSaveAddNodes() throws ConfigurationException
     {
         conf.setFile(testSaveConf);
         conf.setAutoSave(true);
         HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
                 "addNodesTest", Boolean.TRUE);
-        Collection nodes = new ArrayList(1);
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(node);
         conf.addNodes("test.autosave", nodes);
         XMLConfiguration c2 = new XMLConfiguration(testSaveConf);
@@ -1424,6 +1505,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests saving a configuration after a node was added. Test for
      * CONFIGURATION-294.
      */
+    @Test
     public void testAddNodesAndSave() throws ConfigurationException
     {
         ConfigurationNode node = new HierarchicalConfiguration.Node("test");
@@ -1432,7 +1514,7 @@ public class TestXMLConfiguration extends TestCase
         ConfigurationNode attr = new HierarchicalConfiguration.Node("attr");
         node.addAttribute(attr);
         ConfigurationNode node2 = conf.createNode("test2");
-        Collection nodes = new ArrayList(2);
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
         nodes.add(node);
         nodes.add(node2);
         conf.addNodes("add.nodes", nodes);
@@ -1457,6 +1539,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests registering the publicId of a DTD.
      */
+    @Test
     public void testRegisterEntityId() throws ConfigurationException,
             IOException
     {
@@ -1475,23 +1558,17 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tries to register a null public ID. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterEntityIdNull() throws IOException
     {
-        try
-        {
-            conf.registerEntityId(null, new URL("http://commons.apache.org"));
-            fail("Could register null public ID!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        conf.registerEntityId(null, new URL("http://commons.apache.org"));
     }
 
     /**
      * Tests saving a configuration that was created from a hierarchical
      * configuration. This test exposes bug CONFIGURATION-301.
      */
+    @Test
     public void testSaveAfterCreateWithCopyConstructor()
             throws ConfigurationException
     {
@@ -1509,6 +1586,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether the name of the root element is copied when a configuration
      * is created using the copy constructor.
      */
+    @Test
     public void testCopyRootName() throws ConfigurationException
     {
         final String rootName = "rootElement";
@@ -1529,6 +1607,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether the name of the root element is copied for a configuration
      * for which not yet a document exists.
      */
+    @Test
     public void testCopyRootNameNoDocument() throws ConfigurationException
     {
         final String rootName = "rootElement";
@@ -1547,13 +1626,14 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests adding an attribute node using the addNodes() method.
      */
+    @Test
     public void testAddNodesAttributeNode()
     {
         conf.addProperty("testAddNodes.property[@name]", "prop1");
         conf.addProperty("testAddNodes.property(0).value", "value1");
         conf.addProperty("testAddNodes.property(-1)[@name]", "prop2");
         conf.addProperty("testAddNodes.property(1).value", "value2");
-        Collection nodes = new ArrayList();
+        Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
         nodes.add(new HierarchicalConfiguration.Node("property"));
         conf.addNodes("testAddNodes", nodes);
         nodes.clear();
@@ -1569,6 +1649,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether spaces are preserved when the xml:space attribute is set.
      */
+    @Test
     public void testPreserveSpace()
     {
         assertEquals("Wrong value of blanc", " ", conf.getString("space.blanc"));
@@ -1580,6 +1661,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether the xml:space attribute can be overridden in nested
      * elements.
      */
+    @Test
     public void testPreserveSpaceOverride()
     {
         assertEquals("Not trimmed", "Some text", conf
@@ -1590,6 +1672,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests an xml:space attribute with an invalid value. This will be
      * interpreted as default.
      */
+    @Test
     public void testPreserveSpaceInvalid()
     {
         assertEquals("Invalid not trimmed", "Some other text", conf
@@ -1599,9 +1682,10 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests whether attribute splitting can be disabled.
      */
+    @Test
     public void testAttributeSplittingDisabled() throws ConfigurationException
     {
-        List values = conf.getList("expressions[@value2]");
+        List<Object> values = conf.getList("expressions[@value2]");
         assertEquals("Wrong number of attribute values", 2, values.size());
         assertEquals("Wrong value 1", "a", values.get(0));
         assertEquals("Wrong value 2", "b|c", values.get(1));
@@ -1616,13 +1700,14 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests disabling both delimiter parsing and attribute splitting.
      */
+    @Test
     public void testAttributeSplittingAndDelimiterParsingDisabled()
             throws ConfigurationException
     {
         conf.clear();
         conf.setDelimiterParsingDisabled(true);
         conf.load();
-        List values = conf.getList("expressions[@value2]");
+        List<Object> values = conf.getList("expressions[@value2]");
         assertEquals("Wrong number of attribute values", 2, values.size());
         assertEquals("Wrong value 1", "a,b", values.get(0));
         assertEquals("Wrong value 2", "c", values.get(1));
@@ -1638,6 +1723,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests modifying an XML document and saving it with schema validation enabled.
      */
+    @Test
     public void testSaveWithValidation() throws Exception
     {
         CatalogResolver resolver = new CatalogResolver();
@@ -1657,6 +1743,7 @@ public class TestXMLConfiguration extends TestCase
     /**
      * Tests modifying an XML document and validating it against the schema.
      */
+    @Test
     public void testSaveWithValidationFailure() throws Exception
     {
         CatalogResolver resolver = new CatalogResolver();
@@ -1680,6 +1767,7 @@ public class TestXMLConfiguration extends TestCase
         }
     }
 
+    @Test
     public void testConcurrentGetAndReload() throws Exception
     {
         //final FileConfiguration config = new PropertiesConfiguration("test.properties");
@@ -1711,6 +1799,7 @@ public class TestXMLConfiguration extends TestCase
      * Tests whether a windows path can be saved correctly. This test is related
      * to CONFIGURATION-428.
      */
+    @Test
     public void testSaveWindowsPath() throws ConfigurationException
     {
         conf.clear();
@@ -1726,27 +1815,11 @@ public class TestXMLConfiguration extends TestCase
                 conf2.getString("path"));
     }
 
-    private class ReloadThread extends Thread
-    {
-        FileConfiguration config;
-
-        ReloadThread(FileConfiguration config)
-        {
-            this.config = config;
-        }
-        public void run()
-        {
-            for (int i = 0; i < LOOP_COUNT; i++)
-            {
-                config.reload();
-            }
-        }
-    }
-
     /**
      * Tests whether an attribute can be set to an empty string. This test is
      * related to CONFIGURATION-446.
      */
+    @Test
     public void testEmptyAttribute() throws ConfigurationException
     {
         String key = "element3[@value]";
@@ -1798,5 +1871,23 @@ public class TestXMLConfiguration extends TestCase
     {
         checkConfig.load();
         ConfigurationAssert.assertEquals(conf, checkConfig);
+    }
+
+    private class ReloadThread extends Thread
+    {
+        FileConfiguration config;
+
+        ReloadThread(FileConfiguration config)
+        {
+            this.config = config;
+        }
+        @Override
+        public void run()
+        {
+            for (int i = 0; i < LOOP_COUNT; i++)
+            {
+                config.reload();
+            }
+        }
     }
 }
