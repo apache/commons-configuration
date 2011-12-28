@@ -16,38 +16,48 @@
  */
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
 import java.io.FileReader;
-import java.io.Writer;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.event.ConfigurationEvent;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.configuration.event.ConfigurationEvent;
-import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.VFS;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for DefaultConfigurationBuilder.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestWebdavConfigurationBuilder extends TestCase
+public class TestWebdavConfigurationBuilder
         implements FileOptionsProvider, ConfigurationListener
 {
     /** Test configuration definition file. */
@@ -106,11 +116,10 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /** Constant for the name of an optional configuration.*/
     private static final String OPTIONAL_NAME = "optionalConfig";
 
-    private Map options;
+    private Map<String, Object> options;
 
     /** true when a file is changed */
     private boolean configChanged = false;
-
 
     /** Stores the object to be tested. */
     DefaultConfigurationBuilder factory;
@@ -122,9 +131,9 @@ public class TestWebdavConfigurationBuilder extends TestCase
         return path;
     }
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         System.setProperty("java.naming.factory.initial",
                         "org.apache.commons.configuration.MockInitialContextFactory");
         System.setProperty("test_file_xml", "test.xml");
@@ -138,15 +147,16 @@ public class TestWebdavConfigurationBuilder extends TestCase
         factory.clearErrorListeners();  // avoid exception messages
     }
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         FileSystem.resetDefaultFileSystem();
-        super.tearDown();
     }
 
     /**
      * Tests the isReservedNode() method of ConfigurationDeclaration.
      */
+    @Test
     public void testConfigurationDeclarationIsReserved()
     {
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
@@ -173,6 +183,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests if the at attribute is correctly detected as reserved attribute.
      */
+    @Test
     public void testConfigurationDeclarationIsReservedAt()
     {
         checkOldReservedAttribute("at");
@@ -182,6 +193,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests if the optional attribute is correctly detected as reserved
      * attribute.
      */
+    @Test
     public void testConfigurationDeclarationIsReservedOptional()
     {
         checkOldReservedAttribute("optional");
@@ -217,6 +229,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests access to certain reserved attributes of a
      * ConfigurationDeclaration.
      */
+    @Test
     public void testConfigurationDeclarationGetAttributes()
     {
         factory.addProperty("xml.fileName", "test.xml");
@@ -237,21 +250,25 @@ public class TestWebdavConfigurationBuilder extends TestCase
         factory.clearProperty("xml[@config-optional]");
         factory.setProperty("xml[@optional]", Boolean.TRUE);
         assertTrue("Old optional attribute not detected", decl.isOptional());
+    }
+
+    /**
+     * Tests whether an invalid value of an optional attribute is detected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testConfigurationDeclarationOptionalAttributeInvalid()
+    {
+        factory.addProperty("xml.fileName", "test.xml");
+        DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
+                factory, factory.configurationAt("xml"));
         factory.setProperty("xml[@optional]", "invalid value");
-        try
-        {
-            decl.isOptional();
-            fail("Invalid optional attribute was not detected!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        decl.isOptional();
     }
 
     /**
      * Tests adding a new configuration provider.
      */
+    @Test
     public void testAddConfigurationProvider()
     {
         DefaultConfigurationBuilder.ConfigurationProvider provider = new DefaultConfigurationBuilder.ConfigurationProvider();
@@ -266,40 +283,27 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tries to register a null configuration provider. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddConfigurationProviderNull()
     {
-        try
-        {
-            factory.addConfigurationProvider("test", null);
-            fail("Could register null provider");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        factory.addConfigurationProvider("test", null);
     }
 
     /**
      * Tries to register a configuration provider for a null tag. This should
      * cause an exception to be thrown.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddConfigurationProviderNullTag()
     {
-        try
-        {
-            factory.addConfigurationProvider(null,
-                    new DefaultConfigurationBuilder.ConfigurationProvider());
-            fail("Could register provider for null tag!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        factory.addConfigurationProvider(null,
+                new DefaultConfigurationBuilder.ConfigurationProvider());
     }
 
     /**
      * Tests removing configuration providers.
      */
+    @Test
     public void testRemoveConfigurationProvider()
     {
         assertNull("Removing unknown provider", factory
@@ -316,6 +320,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests creating a configuration object from a configuration declaration.
      */
+    @Test
     public void testConfigurationBeanFactoryCreateBean()
     {
         factory.addConfigurationProvider("test",
@@ -334,25 +339,19 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests creating a configuration object from an unknown tag. This should
      * cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testConfigurationBeanFactoryCreateUnknownTag()
     {
         factory.addProperty("test[@throwExceptionOnMissing]", "true");
         DefaultConfigurationBuilder.ConfigurationDeclaration decl = new DefaultConfigurationBuilder.ConfigurationDeclaration(
                 factory, factory.configurationAt("test"));
-        try
-        {
-            BeanHelper.createBean(decl);
-            fail("Could create configuration from unknown tag!");
-        }
-        catch (ConfigurationRuntimeException crex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(decl);
     }
 
     /**
      * Tests loading a simple configuration definition file.
      */
+    @Test
     public void testLoadConfiguration() throws ConfigurationException
     {
         factory.setFileName(TEST_FILE);
@@ -362,6 +361,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests the file constructor.
      */
+    @Test
     public void testLoadConfigurationFromFile() throws ConfigurationException
     {
         factory = new DefaultConfigurationBuilder(getBasePath() + TEST_FILE);
@@ -372,9 +372,10 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * This test doesn't test DefaultConfigurationBuilder. It tests saving a file
      * using Webdav file options.
      */
+    @Test
     public void testSaveConfiguration() throws ConfigurationException
     {
-        options = new HashMap();
+        options = new HashMap<String, Object>();
         options.put(FileOptionsProvider.VERSIONING, Boolean.TRUE);
         options.put(FileOptionsProvider.CURRENT_USER, "TestUser");
         XMLConfiguration conf = new XMLConfiguration();
@@ -432,6 +433,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests loading a configuration definition file with an additional section.
      */
+    @Test
     public void testLoadAdditional() throws ConfigurationException
     {
         factory.setFileName(ADDITIONAL_FILE);
@@ -443,7 +445,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         // Test if union was constructed correctly
         Object prop = compositeConfiguration.getProperty("tables.table.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(3, ((Collection) prop).size());
+        assertEquals(3, ((Collection<?>) prop).size());
         assertEquals("users", compositeConfiguration
                 .getProperty("tables.table(0).name"));
         assertEquals("documents", compositeConfiguration
@@ -454,20 +456,20 @@ public class TestWebdavConfigurationBuilder extends TestCase
         prop = compositeConfiguration
                 .getProperty("tables.table.fields.field.name");
         assertTrue(prop instanceof Collection);
-        assertEquals(17, ((Collection) prop).size());
+        assertEquals(17, ((Collection<?>) prop).size());
 
         assertEquals("smtp.mydomain.org", compositeConfiguration
                 .getString("mail.host.smtp"));
         assertEquals("pop3.mydomain.org", compositeConfiguration
                 .getString("mail.host.pop"));
 
-        // This was overriden
+        // This was overridden
         assertEquals("masterOfPost", compositeConfiguration
                 .getString("mail.account.user"));
         assertEquals("topsecret", compositeConfiguration
                 .getString("mail.account.psswd"));
 
-        // This was overriden, too, but not in additional section
+        // This was overridden, too, but not in additional section
         assertEquals("enhanced factory", compositeConfiguration
                 .getString("test.configuration"));
     }
@@ -476,6 +478,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests whether a default log error listener is registered at the builder
      * instance.
      */
+    @Test
     public void testLogErrorListener()
     {
         assertEquals("No default error listener registered", 1,
@@ -485,6 +488,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests loading a definition file that contains optional configurations.
      */
+    @Test
     public void testLoadOptional() throws Exception
     {
         factory.setFileName(OPTIONAL_FILE);
@@ -497,6 +501,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests whether loading a failing optional configuration causes an error
      * event.
      */
+    @Test
     public void testLoadOptionalErrorEvent() throws Exception
     {
         factory.clearErrorListeners();
@@ -512,18 +517,11 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * configuration sources. One non optional does not exist, so this should
      * cause an exception.
      */
-    public void testLoadOptionalWithException()
+    @Test(expected = ConfigurationException.class)
+    public void testLoadOptionalWithException() throws ConfigurationException
     {
         factory.setFileName(OPTIONALEX_FILE);
-        try
-        {
-            factory.getConfiguration();
-            fail("Non existing source did not cause an exception!");
-        }
-        catch (ConfigurationException cex)
-        {
-            // ok
-        }
+        factory.getConfiguration();
     }
 
     /**
@@ -531,6 +529,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * configuration. The optional attribute should work for other configuration
      * classes, too.
      */
+    @Test
     public void testLoadOptionalNonFileBased() throws ConfigurationException
     {
         CombinedConfiguration config = prepareOptionalTest("configuration", false);
@@ -543,6 +542,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests loading an embedded optional configuration builder with the force
      * create attribute.
      */
+    @Test
     public void testLoadOptionalBuilderForceCreate()
             throws ConfigurationException
     {
@@ -560,6 +560,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * set. The provider will always throw an exception. In this case the
      * configuration will not be added to the resulting combined configuration.
      */
+    @Test
     public void testLoadOptionalForceCreateWithException()
             throws ConfigurationException
     {
@@ -567,6 +568,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
                 new DefaultConfigurationBuilder.ConfigurationBuilderProvider()
                 {
                     // Throw an exception here, too
+                    @Override
                     public AbstractConfiguration getEmptyConfiguration(
                             DefaultConfigurationBuilder.ConfigurationDeclaration decl) throws Exception
                     {
@@ -604,6 +606,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests loading a definition file with multiple different sources.
      */
+    @Test
     public void testLoadDifferentSources() throws ConfigurationException
     {
         factory.setFileName(MULTI_FILE);
@@ -638,6 +641,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests if the base path is correctly evaluated.
      */
+    @Test
     public void testSetConfigurationBasePath() throws ConfigurationException
     {
         factory.addProperty("properties[@fileName]", "test.properties");
@@ -653,6 +657,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests reading a configuration definition file that contains complex
      * initialization of properties of the declared configuration sources.
      */
+    @Test
     public void testComplexInitialization() throws ConfigurationException
     {
         factory.setFileName(INIT_FILE);
@@ -687,6 +692,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests if the returned combined configuration has the expected structure.
      */
+    @Test
     public void testCombinedConfiguration() throws ConfigurationException
     {
         factory.setFileName(INIT_FILE);
@@ -701,7 +707,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         CombinedConfiguration cc2 = (CombinedConfiguration) cc
                 .getConfiguration(DefaultConfigurationBuilder.ADDITIONAL_NAME);
         assertNotNull("No additional configuration found", cc2);
-        Set names = cc2.getConfigurationNames();
+        Set<String> names = cc2.getConfigurationNames();
         assertEquals("Wrong number of contained additional configs", 2, names
                 .size());
         assertTrue("Config 1 not contained", names.contains("combiner1"));
@@ -712,6 +718,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests the structure of the returned combined configuration if there is no
      * additional section.
      */
+    @Test
     public void testCombinedConfigurationNoAdditional()
             throws ConfigurationException
     {
@@ -724,12 +731,13 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests whether the list node definition was correctly processed.
      */
+    @Test
     public void testCombinedConfigurationListNodes()
             throws ConfigurationException
     {
         factory.setFileName(INIT_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        Set listNodes = cc.getNodeCombiner().getListNodes();
+        Set<String> listNodes = cc.getNodeCombiner().getListNodes();
         assertEquals("Wrong number of list nodes", 2, listNodes.size());
         assertTrue("table node not a list node", listNodes.contains("table"));
         assertTrue("list node not a list node", listNodes.contains("list"));
@@ -744,6 +752,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests whether XML settings can be inherited.
      */
+    @Test
     public void testLoadXMLWithSettings() throws ConfigurationException,
             IOException
     {
@@ -770,7 +779,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
 
         factory = new DefaultConfigurationBuilder();
         factory.setFile(testSavedFactory);
-        factory.registerEntityId(publicId, dtdFile.toURL());
+        factory.registerEntityId(publicId, dtdFile.toURI().toURL());
         factory.clearErrorListeners();
         Configuration c = factory.getConfiguration();
         assertEquals("Wrong property value", "value1", c.getString("entry(0)"));
@@ -785,6 +794,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
      * Tests loading a configuration definition file that defines a custom
      * result class.
      */
+    @Test
     public void testExtendedClass() throws ConfigurationException
     {
         factory.setFileName(CLASS_FILE);
@@ -798,6 +808,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
     /**
      * Tests loading a configuration definition file that defines new providers.
      */
+    @Test
     public void testConfigurationProvider() throws ConfigurationException
     {
         factory.setFileName(PROVIDER_FILE);
@@ -807,9 +818,10 @@ public class TestWebdavConfigurationBuilder extends TestCase
         assertNotNull("Provider 'test' not registered", provider);
     }
 
-        /**
+    /**
      * Tests loading a configuration definition file that defines new providers.
      */
+    @Test
     public void testExtendedXMLConfigurationProvider() throws ConfigurationException
     {
         factory.setFileName(EXTENDED_PROVIDER_FILE);
@@ -824,6 +836,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
                 config instanceof TestDefaultConfigurationBuilder.ExtendedXMLConfiguration);
     }
 
+    @Test
     public void testGlobalLookup() throws Exception
     {
         factory.setFileName(GLOBAL_LOOKUP_FILE);
@@ -833,6 +846,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","test.value",value);
     }
 
+    @Test
     public void testSystemProperties() throws Exception
     {
         factory.setFileName(SYSTEM_PROPS_FILE);
@@ -842,7 +856,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
-
+    @Test
     public void testValidation() throws Exception
     {
         factory.setFileName(VALIDATION_FILE);
@@ -852,6 +866,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
+    @Test
     public void testMultiTenentConfiguration() throws Exception
     {
         factory.setFileName(MULTI_TENENT_FILE);
@@ -867,6 +882,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testMultiTenentConfiguration2() throws Exception
     {
         factory.setFileName(MULTI_TENENT_FILE);
@@ -882,6 +898,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testMultiTenentConfiguration3() throws Exception
     {
         factory.setFileName(MULTI_TENENT_FILE);
@@ -897,6 +914,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         verify("1005", config, 50);
     }
 
+    @Test
     public void testFileChanged() throws Exception
     {
         // create a new configuration
@@ -926,6 +944,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         output.delete();
     }
 
+    @Test
     public void testFileChanged2() throws Exception
     {
         // create a new configuration
@@ -953,8 +972,6 @@ public class TestWebdavConfigurationBuilder extends TestCase
         output.delete();
     }
 
-
-
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);
@@ -962,7 +979,7 @@ public class TestWebdavConfigurationBuilder extends TestCase
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
     }
 
-    public Map getOptions()
+    public Map<String, Object> getOptions()
     {
         return this.options;
     }
