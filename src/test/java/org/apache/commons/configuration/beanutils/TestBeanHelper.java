@@ -16,22 +16,30 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for BeanHelper.
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestBeanHelper extends TestCase
+public class TestBeanHelper
 {
     /** Constant for the name of the test bean factory. */
     private static final String TEST_FACTORY = "testFactory";
@@ -42,21 +50,20 @@ public class TestBeanHelper extends TestCase
      */
     private BeanFactory tempDefaultBeanFactory;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         tempDefaultBeanFactory = BeanHelper.getDefaultBeanFactory();
         deregisterFactories();
     }
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         deregisterFactories();
 
         // Reset old default bean factory
         BeanHelper.setDefaultBeanFactory(tempDefaultBeanFactory);
-
-        super.tearDown();
     }
 
     /**
@@ -64,10 +71,9 @@ public class TestBeanHelper extends TestCase
      */
     private void deregisterFactories()
     {
-        for (Iterator it = BeanHelper.registeredFactoryNames().iterator(); it
-                .hasNext();)
+        for (String name : BeanHelper.registeredFactoryNames())
         {
-            BeanHelper.deregisterBeanFactory((String) it.next());
+            BeanHelper.deregisterBeanFactory(name);
         }
         assertTrue("Remaining registered bean factories", BeanHelper
                 .registeredFactoryNames().isEmpty());
@@ -76,6 +82,7 @@ public class TestBeanHelper extends TestCase
     /**
      * Tests registering a new bean factory.
      */
+    @Test
     public void testRegisterBeanFactory()
     {
         assertTrue("List of registered factories is not empty", BeanHelper
@@ -90,39 +97,26 @@ public class TestBeanHelper extends TestCase
     /**
      * Tries to register a null factory. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterBeanFactoryNull()
     {
-        try
-        {
-            BeanHelper.registerBeanFactory(TEST_FACTORY, null);
-            fail("Could register null factory!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        BeanHelper.registerBeanFactory(TEST_FACTORY, null);
     }
 
     /**
      * Tries to register a bean factory with a null name. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterBeanFactoryNullName()
     {
-        try
-        {
-            BeanHelper.registerBeanFactory(null, new TestBeanFactory());
-            fail("Could register factory with null name!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        BeanHelper.registerBeanFactory(null, new TestBeanFactory());
     }
 
     /**
      * Tests to deregister a bean factory.
      */
+    @Test
     public void testDeregisterBeanFactory()
     {
         assertNull("deregistering non existing factory", BeanHelper
@@ -140,6 +134,7 @@ public class TestBeanHelper extends TestCase
     /**
      * Tests whether the default bean factory is correctly initialized.
      */
+    @Test
     public void testGetDefaultBeanFactory()
     {
         assertSame("Incorrect default bean factory",
@@ -150,22 +145,16 @@ public class TestBeanHelper extends TestCase
      * Tests setting the default bean factory to null. This should caus an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetDefaultBeanFactoryNull()
     {
-        try
-        {
-            BeanHelper.setDefaultBeanFactory(null);
-            fail("Could set default bean factory to null!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        BeanHelper.setDefaultBeanFactory(null);
     }
 
     /**
      * Tests initializing a bean.
      */
+    @Test
     public void testInitBean()
     {
         BeanHelper.setDefaultBeanFactory(new TestBeanFactory());
@@ -179,6 +168,7 @@ public class TestBeanHelper extends TestCase
      * Tests initializing a bean when the bean declaration does not contain any
      * data.
      */
+    @Test
     public void testInitBeanWithNoData()
     {
         TestBeanDeclaration data = new TestBeanDeclaration();
@@ -193,25 +183,19 @@ public class TestBeanHelper extends TestCase
      * Tries to initialize a bean with a bean declaration that contains an
      * invalid property value. This should cause an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testInitBeanWithInvalidProperty()
     {
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.getBeanProperties().put("nonExistingProperty", Boolean.TRUE);
-        try
-        {
-            BeanHelper.initBean(new TestBean(), data);
-            fail("Could initialize non existing property!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        BeanHelper.initBean(new TestBean(), data);
     }
 
     /**
      * Tests creating a bean. All necessary information is stored in the bean
      * declaration.
      */
+    @Test
     public void testCreateBean()
     {
         TestBeanFactory factory = new TestBeanFactory();
@@ -227,23 +211,17 @@ public class TestBeanHelper extends TestCase
      * Tests creating a bean when no bean declaration is provided. This should
      * cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testCreateBeanWithNullDeclaration()
     {
-        try
-        {
-            BeanHelper.createBean(null);
-            fail("Could create bean with null declaration!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(null);
     }
 
     /**
      * Tests creating a bean. The bean's class is specified as the default class
      * argument.
      */
+    @Test
     public void testCreateBeanWithDefaultClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
@@ -256,6 +234,7 @@ public class TestBeanHelper extends TestCase
      * Tests creating a bean when the bean's class is specified as the default
      * class of the bean factory.
      */
+    @Test
     public void testCreateBeanWithFactoryDefaultClass()
     {
         TestBeanFactory factory = new TestBeanFactory();
@@ -270,46 +249,33 @@ public class TestBeanHelper extends TestCase
      * Tries to create a bean when no class is provided. This should cause an
      * exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithNoClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        try
-        {
-            BeanHelper.createBean(data, null);
-            fail("Could create bean without class!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(data, null);
     }
 
     /**
      * Tries to create a bean with a non existing class. This should cause an
      * exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithInvalidClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName("non.existing.ClassName");
-        try
-        {
-            BeanHelper.createBean(data, null);
-            fail("Could create bean of an unexisting class!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(data, null);
     }
 
     /**
      * Tests creating a bean using the default bean factory.
      */
+    @Test
     public void testCreateBeanWithDefaultFactory()
     {
         BeanHelper.setDefaultBeanFactory(new TestBeanFactory());
@@ -321,45 +287,32 @@ public class TestBeanHelper extends TestCase
     /**
      * Tests creating a bean using a non registered factory.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithUnknownFactory()
     {
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(TestBean.class.getName());
-        try
-        {
-            BeanHelper.createBean(data, null);
-            fail("Could create bean with non registered factory!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(data, null);
     }
 
     /**
      * Tests creating a bean when the factory throws an exception.
      */
+    @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithException()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
         TestBeanDeclaration data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(getClass().getName());
-        try
-        {
-            BeanHelper.createBean(data, null);
-            fail("Could create bean of wrong class!");
-        }
-        catch (ConfigurationRuntimeException cex)
-        {
-            // ok
-        }
+        BeanHelper.createBean(data, null);
     }
 
     /**
      * Tests if a parameter is correctly passed to the bean factory.
      */
+    @Test
     public void testCreateBeanWithParameter()
     {
         Object param = new Integer(42);
@@ -380,12 +333,12 @@ public class TestBeanHelper extends TestCase
     private TestBeanDeclaration setUpBeanDeclaration()
     {
         TestBeanDeclaration data = new TestBeanDeclaration();
-        Map properties = new HashMap();
+        Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("stringValue", "testString");
         properties.put("intValue", "42");
         data.setBeanProperties(properties);
         TestBeanDeclaration buddyData = new TestBeanDeclaration();
-        Map properties2 = new HashMap();
+        Map<String, Object> properties2 = new HashMap<String, Object>();
         properties2.put("stringValue", "Another test string");
         properties2.put("intValue", new Integer(100));
         buddyData.setBeanProperties(properties2);
@@ -394,7 +347,7 @@ public class TestBeanHelper extends TestCase
         {
             buddyData.setBeanFactoryName(TEST_FACTORY);
         }
-        Map nested = new HashMap();
+        Map<String, Object> nested = new HashMap<String, Object>();
         nested.put("buddy", buddyData);
         data.setNestedBeanDeclarations(nested);
         return data;
@@ -471,7 +424,7 @@ public class TestBeanHelper extends TestCase
 
         boolean supportsDefaultClass;
 
-        public Object createBean(Class beanClass, BeanDeclaration data, Object param)
+        public Object createBean(Class<?> beanClass, BeanDeclaration data, Object param)
                 throws Exception
         {
             parameter = param;
@@ -492,7 +445,7 @@ public class TestBeanHelper extends TestCase
          * Returns the default class, but only if the supportsDefaultClass flag
          * is set.
          */
-        public Class getDefaultBeanClass()
+        public Class<?> getDefaultBeanClass()
         {
             return supportsDefaultClass ? TestBean.class : null;
         }
@@ -511,9 +464,9 @@ public class TestBeanHelper extends TestCase
 
         private Object beanFactoryParameter;
 
-        private Map beanProperties;
+        private Map<String, Object> beanProperties;
 
-        private Map nestedBeanDeclarations;
+        private Map<String, Object> nestedBeanDeclarations;
 
         public String getBeanClassName()
         {
@@ -545,22 +498,22 @@ public class TestBeanHelper extends TestCase
             this.beanFactoryParameter = beanFactoryParameter;
         }
 
-        public Map getBeanProperties()
+        public Map<String, Object> getBeanProperties()
         {
             return beanProperties;
         }
 
-        public void setBeanProperties(Map beanProperties)
+        public void setBeanProperties(Map<String, Object> beanProperties)
         {
             this.beanProperties = beanProperties;
         }
 
-        public Map getNestedBeanDeclarations()
+        public Map<String, Object> getNestedBeanDeclarations()
         {
             return nestedBeanDeclarations;
         }
 
-        public void setNestedBeanDeclarations(Map nestedBeanDeclarations)
+        public void setNestedBeanDeclarations(Map<String, Object> nestedBeanDeclarations)
         {
             this.nestedBeanDeclarations = nestedBeanDeclarations;
         }
