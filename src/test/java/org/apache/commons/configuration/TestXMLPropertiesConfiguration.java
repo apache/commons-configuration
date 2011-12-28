@@ -17,16 +17,21 @@
 
 package org.apache.commons.configuration;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public class TestXMLPropertiesConfiguration extends TestCase
+public class TestXMLPropertiesConfiguration
 {
+    @Test
     public void testLoad() throws Exception
     {
         XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration("test.properties.xml");
@@ -39,6 +44,7 @@ public class TestXMLPropertiesConfiguration extends TestCase
         assertEquals("'key3' property", "value3", conf.getProperty("key3"));
     }
 
+    @Test
     public void testSave() throws Exception
     {
         // load the configuration
