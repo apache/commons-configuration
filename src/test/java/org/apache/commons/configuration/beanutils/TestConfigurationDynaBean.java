@@ -17,18 +17,25 @@
 
 package org.apache.commons.configuration.beanutils;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.AssertionFailedError;
-import junit.framework.TestCase;
 import junitx.framework.ObjectAssert;
 
 import org.apache.commons.beanutils.DynaProperty;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.MapConfiguration;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * <p>Test Case for the <code>ConfigurationDynaBean</code> implementation class.
@@ -36,9 +43,9 @@ import org.apache.commons.configuration.MapConfiguration;
  * because the two classes provide similar levels of functionality.</p>
  *
  * @author <a href="mailto:ricardo.gladwell@btinternet.com">Ricardo Gladwell</a>
- * @version $Revision$
+ * @version $Id$
  */
-public class TestConfigurationDynaBean extends TestCase
+public class TestConfigurationDynaBean
 {
     /**
      * The basic test bean for each test.
@@ -98,6 +105,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Set up instance variables required by this test case.
      */
+    @Before
     public void setUp() throws Exception
     {
         Configuration configuration = createConfiguration();
@@ -117,11 +125,7 @@ public class TestConfigurationDynaBean extends TestCase
             configuration.addProperty("stringIndexed", stringArray[a]);
         }
 
-        List list = new ArrayList();
-        for (int i = 0; i < stringArray.length; i++)
-        {
-            list.add(stringArray[i]);
-        }
+        List<String> list = Arrays.asList(stringArray);
         configuration.addProperty("listIndexed", list);
 
         bean = new ConfigurationDynaBean(configuration);
@@ -150,33 +154,18 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Corner cases on getDynaProperty invalid arguments.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetDescriptorArguments()
     {
         DynaProperty descriptor = bean.getDynaClass().getDynaProperty("unknown");
         assertNull("Unknown property descriptor should be null", descriptor);
-
-        try
-        {
-            bean.getDynaClass().getDynaProperty(null);
-            fail("Should throw IllegalArgumentException");
-        }
-        catch (java.lang.IllegalArgumentException e)
-        {
-            // Expected response
-        }
-        catch (AssertionFailedError e)
-        {
-            // ignore other failed responses
-        }
-        catch (Throwable t)
-        {
-            fail("Threw '" + t + "' instead of 'IllegalArgumentException'");
-        }
+        bean.getDynaClass().getDynaProperty(null);
     }
 
     /**
      * Positive getDynaProperty on property <code>booleanProperty</code>.
      */
+    @Test
     public void testGetDescriptorBoolean()
     {
         testGetDescriptorBase("booleanProperty", Boolean.TYPE);
@@ -185,6 +174,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>doubleProperty</code>.
      */
+    @Test
     public void testGetDescriptorDouble()
     {
         testGetDescriptorBase("doubleProperty", Double.TYPE);
@@ -193,6 +183,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>floatProperty</code>.
      */
+    @Test
     public void testGetDescriptorFloat()
     {
         testGetDescriptorBase("floatProperty", Float.TYPE);
@@ -201,6 +192,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>intProperty</code>.
      */
+    @Test
     public void testGetDescriptorInt()
     {
         testGetDescriptorBase("intProperty", Integer.TYPE);
@@ -209,6 +201,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>longProperty</code>.
      */
+    @Test
     public void testGetDescriptorLong()
     {
         testGetDescriptorBase("longProperty", Long.TYPE);
@@ -218,6 +211,7 @@ public class TestConfigurationDynaBean extends TestCase
      * Positive getDynaProperty on property <code>booleanSecond</code>
      * that uses an "is" method as the getter.
      */
+    @Test
     public void testGetDescriptorSecond()
     {
         testGetDescriptorBase("booleanSecond", Boolean.TYPE);
@@ -226,6 +220,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>shortProperty</code>.
      */
+    @Test
     public void testGetDescriptorShort()
     {
         testGetDescriptorBase("shortProperty", Short.TYPE);
@@ -234,6 +229,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive getDynaProperty on property <code>stringProperty</code>.
      */
+    @Test
     public void testGetDescriptorString()
     {
         testGetDescriptorBase("stringProperty", String.class);
@@ -243,6 +239,7 @@ public class TestConfigurationDynaBean extends TestCase
      * Positive test for getDynaPropertys().  Each property name
      * listed in <code>properties</code> should be returned exactly once.
      */
+    @Test
     public void testGetDescriptors()
     {
         DynaProperty pd[] = bean.getDynaClass().getDynaProperties();
@@ -276,28 +273,16 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Corner cases on getIndexedProperty invalid arguments.
      */
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testGetIndexedArguments()
     {
-        try
-        {
-            bean.get("intArray", -1);
-        }
-        catch (IndexOutOfBoundsException e)
-        {
-            return; // Expected response
-        }
-        catch (Throwable t)
-        {
-            fail("Threw '" + t + "' instead of 'IndexOutOfBoundsException'");
-            return;
-        }
-
-        fail("Should throw IndexOutOfBoundsException");
+        bean.get("intArray", -1);
     }
 
     /**
      * Positive and negative tests on getIndexedProperty valid arguments.
      */
+    @Test
     public void testGetIndexedValues()
     {
         for (int i = 0; i < 5; i++)
@@ -318,26 +303,27 @@ public class TestConfigurationDynaBean extends TestCase
 
             assertNotNull("listIndexed index " + i + "returned value " + i, value);
             ObjectAssert.assertInstanceOf("list index " + i, String.class, value);
-            assertEquals("listIndexed index " + i + "returned correct " + i, "String " + i, (String) value);
+            assertEquals("listIndexed index " + i + "returned correct " + i, "String " + i, value);
 
             value = bean.get("stringArray", i);
 
             assertNotNull("stringArray index " + i + " returnde null.", value);
             assertFalse("stringArray index " + i + " returned array instead of String.", value.getClass().isArray());
             ObjectAssert.assertInstanceOf("stringArray index " + i, String.class, value);
-            assertEquals("stringArray returned correct " + i, "String " + i, (String) value);
+            assertEquals("stringArray returned correct " + i, "String " + i, value);
 
             value = bean.get("stringIndexed", i);
 
             assertNotNull("stringIndexed returned value " + i, value);
             ObjectAssert.assertInstanceOf("stringIndexed", String.class, value);
-            assertEquals("stringIndexed returned correct " + i, "String " + i, (String) value);
+            assertEquals("stringIndexed returned correct " + i, "String " + i, value);
         }
     }
 
     /**
      * Corner cases on getMappedProperty invalid arguments.
      */
+    @Test
     public void testGetMappedArguments()
     {
         try
@@ -354,6 +340,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Positive and negative tests on getMappedProperty valid arguments.
      */
+    @Test
     public void testGetMappedValues()
     {
         Object value = bean.get("mappedProperty", "key1");
@@ -369,26 +356,16 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Corner cases on getSimpleProperty invalid arguments.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetSimpleArguments()
     {
-        try
-        {
-            bean.get("a non existing property");
-        }
-        catch (IllegalArgumentException e)
-        {
-            return; // Expected response
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of IllegalArgumentException");
-        }
-        fail("Should throw IllegalArgumentException");
+        bean.get("a non existing property");
     }
 
     /**
      * Test getSimpleProperty on a boolean property.
      */
+    @Test
     public void testGetSimpleBoolean()
     {
         Object value = bean.get("booleanProperty");
@@ -400,6 +377,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a double property.
      */
+    @Test
     public void testGetSimpleDouble()
     {
         Object value = bean.get("doubleProperty");
@@ -411,6 +389,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a float property.
      */
+    @Test
     public void testGetSimpleFloat()
     {
         Object value = bean.get("floatProperty");
@@ -422,6 +401,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a int property.
      */
+    @Test
     public void testGetSimpleInt()
     {
         Object value = bean.get("intProperty");
@@ -433,6 +413,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a long property.
      */
+    @Test
     public void testGetSimpleLong()
     {
         Object value = bean.get("longProperty");
@@ -444,6 +425,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a short property.
      */
+    @Test
     public void testGetSimpleShort()
     {
         Object value = bean.get("shortProperty");
@@ -455,17 +437,19 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test getSimpleProperty on a String property.
      */
+    @Test
     public void testGetSimpleString()
     {
         Object value = bean.get("stringProperty");
         assertNotNull("Got a value", value);
         ObjectAssert.assertInstanceOf("Got correct type", String.class, value);
-        assertEquals("Got correct value", (String) value, "This is a string");
+        assertEquals("Got correct value", value, "This is a string");
     }
 
     /**
      * Test <code>contains()</code> method for mapped properties.
      */
+    @Test
     public void testMappedContains()
     {
         assertTrue("Can't see first key", bean.contains("mappedProperty", "key1"));
@@ -475,6 +459,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test <code>remove()</code> method for mapped properties.
      */
+    @Test
     public void testMappedRemove()
     {
         assertTrue("Can see first key", bean.contains("mappedProperty", "key1"));
@@ -489,27 +474,16 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Corner cases on setIndexedProperty invalid arguments.
      */
+    @Test(expected = IndexOutOfBoundsException.class)
     public void testSetIndexedArguments()
     {
-        try
-        {
-            bean.set("intArray", -1, new Integer(0));
-        }
-        catch (IndexOutOfBoundsException e)
-        {
-            return; // Expected response
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of IndexOutOfBoundsException");
-        }
-
-        fail("Should throw IndexOutOfBoundsException");
+        bean.set("intArray", -1, new Integer(0));
     }
 
     /**
      * Positive and negative tests on setIndexedProperty valid arguments.
      */
+    @Test
     public void testSetIndexedValues()
     {
         bean.set("intArray", 0, new Integer(1));
@@ -533,7 +507,7 @@ public class TestConfigurationDynaBean extends TestCase
 
         assertNotNull("Returned new value 2", value);
         ObjectAssert.assertInstanceOf("Returned String new value 2", String.class,  value);
-        assertEquals("Returned correct new value 2", "New Value 2", (String) value);
+        assertEquals("Returned correct new value 2", "New Value 2", value);
 
 
         bean.set("stringArray", 3, "New Value 3");
@@ -541,7 +515,7 @@ public class TestConfigurationDynaBean extends TestCase
 
         assertNotNull("Returned new value 3", value);
         ObjectAssert.assertInstanceOf("Returned String new value 3", String.class,  value);
-        assertEquals("Returned correct new value 3", "New Value 3", (String) value);
+        assertEquals("Returned correct new value 3", "New Value 3", value);
 
 
         bean.set("stringIndexed", 4, "New Value 4");
@@ -549,15 +523,16 @@ public class TestConfigurationDynaBean extends TestCase
 
         assertNotNull("Returned new value 4", value);
         ObjectAssert.assertInstanceOf("Returned String new value 4", String.class,  value);
-        assertEquals("Returned correct new value 4", "New Value 4", (String) value);
+        assertEquals("Returned correct new value 4", "New Value 4", value);
     }
 
     /**
      * Test the modification of a configuration property stored internally as an array.
      */
+    @Test
     public void testSetArrayValue()
     {
-        MapConfiguration configuration = new MapConfiguration(new HashMap());
+        MapConfiguration configuration = new MapConfiguration(new HashMap<String, Object>());
         configuration.getMap().put("objectArray", new Object[] {"value1", "value2", "value3"});
 
         ConfigurationDynaBean bean = new ConfigurationDynaBean(configuration);
@@ -567,24 +542,26 @@ public class TestConfigurationDynaBean extends TestCase
 
         assertNotNull("Returned new value 1", value);
         ObjectAssert.assertInstanceOf("Returned String new value 1", String.class,  value);
-        assertEquals("Returned correct new value 1", "New Value 1", (String) value);
+        assertEquals("Returned correct new value 1", "New Value 1", value);
     }
 
     /**
      * Positive and negative tests on setMappedProperty valid arguments.
      */
+    @Test
     public void testSetMappedValues()
     {
         bean.set("mappedProperty", "First Key", "New First Value");
-        assertEquals("Can replace old value", "New First Value", (String) bean.get("mappedProperty", "First Key"));
+        assertEquals("Can replace old value", "New First Value", bean.get("mappedProperty", "First Key"));
 
         bean.set("mappedProperty", "Fourth Key", "Fourth Value");
-        assertEquals("Can set new value", "Fourth Value", (String) bean.get("mappedProperty", "Fourth Key"));
+        assertEquals("Can set new value", "Fourth Value", bean.get("mappedProperty", "Fourth Key"));
     }
 
     /**
      * Test setSimpleProperty on a boolean property.
      */
+    @Test
     public void testSetSimpleBoolean()
     {
         boolean oldValue = ((Boolean) bean.get("booleanProperty")).booleanValue();
@@ -596,6 +573,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a double property.
      */
+    @Test
     public void testSetSimpleDouble()
     {
         double oldValue = ((Double) bean.get("doubleProperty")).doubleValue();
@@ -607,6 +585,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a float property.
      */
+    @Test
     public void testSetSimpleFloat()
     {
         float oldValue = ((Float) bean.get("floatProperty")).floatValue();
@@ -618,6 +597,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a int property.
      */
+    @Test
     public void testSetSimpleInt()
     {
         int oldValue = ((Integer) bean.get("intProperty")).intValue();
@@ -629,6 +609,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a long property.
      */
+    @Test
     public void testSetSimpleLong()
     {
         long oldValue = ((Long) bean.get("longProperty")).longValue();
@@ -640,6 +621,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a short property.
      */
+    @Test
     public void testSetSimpleShort()
     {
         short oldValue = ((Short) bean.get("shortProperty")).shortValue();
@@ -651,54 +633,31 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Test setSimpleProperty on a String property.
      */
+    @Test
     public void testSetSimpleString()
     {
         String oldValue = (String) bean.get("stringProperty");
         String newValue = oldValue + " Extra Value";
         bean.set("stringProperty", newValue);
-        assertEquals("Matched new value", newValue, (String) bean.get("stringProperty"));
+        assertEquals("Matched new value", newValue, bean.get("stringProperty"));
     }
 
     /**
      * Tests set on a null value: should throw NPE.
      */
+    @Test(expected = NullPointerException.class)
     public void testAddNullPropertyValue()
     {
-        try
-        {
-            bean.set("nullProperty", null);
-        }
-        catch (NullPointerException e)
-        {
-            return;
-        }
-        catch (Throwable t)
-        {
-            fail("Threw " + t + " instead of NullPointerException");
-            return;
-        }
-        fail("Should have thrown NullPointerException");
+        bean.set("nullProperty", null);
     }
 
     /**
      * Test the retrieval of a non-existent property.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetNonExistentProperty()
     {
-        try
-        {
-            bean.get("nonexistProperty");
-        }
-        catch (IllegalArgumentException e)
-        {
-            return;
-        }
-        catch (Exception e)
-        {
-            fail("Threw '" + e + "' instead of java.lang.IllegalArgumentException");
-        }
-
-        fail("Get non-existent property failed to throw java.lang.IllegalArgumentException");
+        bean.get("nonexistProperty");
     }
 
     /**
@@ -707,7 +666,7 @@ public class TestConfigurationDynaBean extends TestCase
      * @param name Name of the property to be retrieved
      * @param type Expected class type of this property
      */
-    protected void testGetDescriptorBase(String name, Class type)
+    protected void testGetDescriptorBase(String name, Class<?> type)
     {
         DynaProperty descriptor = bean.getDynaClass().getDynaProperty(name);
 
@@ -718,6 +677,7 @@ public class TestConfigurationDynaBean extends TestCase
     /**
      * Tests whether nested properties can be accessed.
      */
+    @Test
     public void testNestedPropeties()
     {
         ConfigurationDynaBean nested = (ConfigurationDynaBean) bean.get("mappedProperty");
@@ -734,52 +694,31 @@ public class TestConfigurationDynaBean extends TestCase
      * get method throws an IllegalArgumentException as it
      * should.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetNonIndexedProperties()
     {
-        try
-        {
-            bean.get("booleanProperty", 0);
-            fail("Should have thrown IllegalArgumentException");
-        }
-        catch (IllegalArgumentException e)
-        {
-            //ok
-        }
+        bean.get("booleanProperty", 0);
     }
 
     /**
      * Tests whether accessing a non-indexed string property using the index get
      * method causes an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetIndexedString()
     {
         bean.set("stringProp", "value");
-        try
-        {
-            bean.get("stringProp", 0);
-            fail("Could access non-indexed property with indexed get method!");
-        }
-        catch(IllegalArgumentException iex)
-        {
-            //ok
-        }
+        bean.get("stringProp", 0);
     }
 
     /**
      * Tests whether an indexed access to a non-existing property causes an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testGetIndexedNonExisting()
     {
-        try
-        {
-            bean.get("Non existing property", 0);
-            fail("Non existing property not detected!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        bean.get("Non existing property", 0);
     }
 
     /**
@@ -787,16 +726,9 @@ public class TestConfigurationDynaBean extends TestCase
      * set method with an index &gt; 0 throws an IllegalArgumentException as it
      * should.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetNonIndexedProperties()
     {
-        try
-        {
-            bean.set("booleanProperty", 1, Boolean.TRUE);
-            fail("Could write indexed property!");
-        }
-        catch (IllegalArgumentException e)
-        {
-            //ok
-        }
+        bean.set("booleanProperty", 1, Boolean.TRUE);
     }
 }
