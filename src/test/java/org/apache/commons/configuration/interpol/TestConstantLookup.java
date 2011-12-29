@@ -16,16 +16,21 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.awt.event.KeyEvent;
 
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ConstantLookup.
  *
  * @version $Id$
  */
-public class TestConstantLookup extends TestCase
+public class TestConstantLookup
 {
     /** Constant for the name of the test class. */
     private static final String CLS_NAME = ConfigurationInterpolator.class
@@ -40,9 +45,9 @@ public class TestConstantLookup extends TestCase
     /** The lookup object to be tested. */
     private ConstantLookup lookup;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         lookup = new ConstantLookup();
     }
 
@@ -50,15 +55,16 @@ public class TestConstantLookup extends TestCase
      * Clears the test environment. Here the static cache of the constant lookup
      * class is wiped out.
      */
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         ConstantLookup.clear();
-        super.tearDown();
     }
 
     /**
      * Tests resolving a valid constant.
      */
+    @Test
     public void testLookupConstant()
     {
         assertEquals("Wrong value of constant",
@@ -69,6 +75,7 @@ public class TestConstantLookup extends TestCase
     /**
      * Tests resolving a non existing constant. Result should be null.
      */
+    @Test
     public void testLookupNonExisting()
     {
         assertNull("Non null return value for non existing constant", lookup
@@ -79,6 +86,7 @@ public class TestConstantLookup extends TestCase
      * Tests resolving a private constant. Because a private field cannot be
      * accessed this should again yield null.
      */
+    @Test
     public void testLookupPrivate()
     {
         assertNull("Non null return value for non accessable field", lookup
@@ -88,6 +96,7 @@ public class TestConstantLookup extends TestCase
     /**
      * Tests resolving a field from an unknown class.
      */
+    @Test
     public void testLookupUnknownClass()
     {
         assertNull("Non null return value for unknown class", lookup
@@ -99,6 +108,7 @@ public class TestConstantLookup extends TestCase
      * Tries to resolve a variable with an invalid syntax: The name does not
      * contain a dot as a field separator.
      */
+    @Test
     public void testLookupInvalidSyntax()
     {
         assertNull("Non null return value for invalid variable name", lookup
@@ -108,6 +118,7 @@ public class TestConstantLookup extends TestCase
     /**
      * Tests looking up a null variable.
      */
+    @Test
     public void testLookupNull()
     {
         assertNull("Non null return value for null variable", lookup
@@ -117,6 +128,7 @@ public class TestConstantLookup extends TestCase
     /**
      * Tests accessing the cache by querying a variable twice.
      */
+    @Test
     public void testLookupCache()
     {
         testLookupConstant();
@@ -127,6 +139,7 @@ public class TestConstantLookup extends TestCase
      * Tests resolving a non string constant. Then looks the same variable up
      * from the cache.
      */
+    @Test
     public void testLookupNonStringFromCache()
     {
         final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
