@@ -16,34 +16,42 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
-
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for DefaultBeanFactory.
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestDefaultBeanFactory extends TestCase
+public class TestDefaultBeanFactory
 {
     /** The object to be tested. */
     DefaultBeanFactory factory;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         factory = new DefaultBeanFactory();
     }
 
     /**
      * Tests obtaining the default class. This should be null.
      */
+    @Test
     public void testGetDefaultBeanClass()
     {
         assertNull("Default class is not null", factory.getDefaultBeanClass());
@@ -52,6 +60,7 @@ public class TestDefaultBeanFactory extends TestCase
     /**
      * Tests creating a bean.
      */
+    @Test
     public void testCreateBean() throws Exception
     {
         Object bean = factory.createBean(PropertiesConfiguration.class,
@@ -84,14 +93,14 @@ public class TestDefaultBeanFactory extends TestCase
             return null;
         }
 
-        public Map getBeanProperties()
+        public Map<String, Object> getBeanProperties()
         {
-            Map props = new HashMap();
+            Map<String, Object> props = new HashMap<String, Object>();
             props.put("throwExceptionOnMissing", Boolean.TRUE);
             return props;
         }
 
-        public Map getNestedBeanDeclarations()
+        public Map<String, Object> getNestedBeanDeclarations()
         {
             return null;
         }
