@@ -16,21 +16,26 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang.text.StrLookup;
-
-import junit.framework.TestCase;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ConfigurationInterpolator.
  *
  * @version $Id$
  */
-public class TestConfigurationInterpolator extends TestCase
+public class TestConfigurationInterpolator
 {
     /** Constant for a test variable prefix. */
     private static final String TEST_PREFIX = "prefix";
@@ -44,9 +49,9 @@ public class TestConfigurationInterpolator extends TestCase
     /** Stores the object to be tested. */
     private ConfigurationInterpolator interpolator;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         interpolator = new ConfigurationInterpolator();
     }
 
@@ -54,7 +59,8 @@ public class TestConfigurationInterpolator extends TestCase
      * Cleans the test environment. Deregisters the test lookup object if
      * necessary.
      */
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         ConfigurationInterpolator.deregisterGlobalLookup(TEST_PREFIX);
     }
@@ -62,6 +68,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests creating an instance. Does it contain some predefined lookups?
      */
+    @Test
     public void testInit()
     {
         assertNull("A default lookup is set", interpolator.getDefaultLookup());
@@ -72,40 +79,27 @@ public class TestConfigurationInterpolator extends TestCase
      * Tries to register a global lookup for a null prefix. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterGlobalLookupNullPrefix()
     {
-        try
-        {
-            ConfigurationInterpolator.registerGlobalLookup(null, StrLookup
-                    .noneLookup());
-            fail("Could register global lookup with null prefix!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        ConfigurationInterpolator.registerGlobalLookup(null, StrLookup
+                .noneLookup());
     }
 
     /**
      * Tries to register a global null lookup. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterGlobalLookupNull()
     {
-        try
-        {
-            ConfigurationInterpolator.registerGlobalLookup(TEST_PREFIX, null);
-            fail("Could register global null lookup!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        ConfigurationInterpolator.registerGlobalLookup(TEST_PREFIX, null);
     }
 
     /**
      * Tests registering a global lookup object. This lookup object should then
      * be available for instances created later on.
      */
+    @Test
     public void testRegisterGlobalLookup()
     {
         ConfigurationInterpolator.registerGlobalLookup(TEST_PREFIX, StrLookup
@@ -120,6 +114,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests deregistering a global lookup object.
      */
+    @Test
     public void testDeregisterGlobalLookup()
     {
         ConfigurationInterpolator.registerGlobalLookup(TEST_PREFIX, StrLookup
@@ -134,6 +129,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests deregistering an unknown lookup.
      */
+    @Test
     public void testDeregisterGlobalLookupNonExisting()
     {
         assertFalse("Could deregister unknown global lookup",
@@ -143,6 +139,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests registering a lookup object at an instance.
      */
+    @Test
     public void testRegisterLookup()
     {
         int cnt = interpolator.prefixSet().size();
@@ -159,39 +156,26 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests registering a null lookup object. This should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterLookupNull()
     {
-        try
-        {
-            interpolator.registerLookup(TEST_PREFIX, null);
-            fail("Could register null lookup!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        interpolator.registerLookup(TEST_PREFIX, null);
     }
 
     /**
      * Tests registering a lookup object for an undefined prefix. This should
      * cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testRegisterLookupNullPrefix()
     {
-        try
-        {
-            interpolator.registerLookup(null, StrLookup.noneLookup());
-            fail("Could register lookup for null prefix!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        interpolator.registerLookup(null, StrLookup.noneLookup());
     }
 
     /**
      * Tests deregistering a local lookup object.
      */
+    @Test
     public void testDeregisterLookup()
     {
         interpolator.registerLookup(TEST_PREFIX, StrLookup.noneLookup());
@@ -204,6 +188,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests deregistering an unknown lookup object.
      */
+    @Test
     public void testDeregisterLookupNonExisting()
     {
         assertFalse("Could deregister unknown lookup", interpolator
@@ -214,6 +199,7 @@ public class TestConfigurationInterpolator extends TestCase
      * Tests whether a variable can be resolved using the associated lookup
      * object. The lookup is identified by the variable's prefix.
      */
+    @Test
     public void testLookupWithPrefix()
     {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
@@ -225,6 +211,7 @@ public class TestConfigurationInterpolator extends TestCase
      * Tests the behavior of the lookup method for variables with an unknown
      * prefix. These variables should not be resolved.
      */
+    @Test
     public void testLookupWithUnknownPrefix()
     {
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
@@ -238,6 +225,7 @@ public class TestConfigurationInterpolator extends TestCase
      * Tests looking up a variable without a prefix. This should trigger the
      * default lookup object.
      */
+    @Test
     public void testLookupDefault()
     {
         interpolator.setDefaultLookup(setUpTestLookup());
@@ -249,6 +237,7 @@ public class TestConfigurationInterpolator extends TestCase
      * Tests looking up a variable without a prefix when no default lookup is
      * specified. Result should be null in this case.
      */
+    @Test
     public void testLookupNoDefault()
     {
         assertNull("Variable could be resolved", interpolator.lookup(TEST_NAME));
@@ -257,6 +246,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests the empty variable prefix. This is a special case, but legal.
      */
+    @Test
     public void testLookupEmptyPrefix()
     {
         interpolator.registerLookup("", setUpTestLookup());
@@ -267,9 +257,10 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests an empty variable name.
      */
+    @Test
     public void testLookupEmptyVarName()
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("", TEST_VALUE);
         interpolator.registerLookup(TEST_PREFIX, StrLookup.mapLookup(map));
         assertEquals("Wrong variable value", TEST_VALUE, interpolator
@@ -279,9 +270,10 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests an empty variable name without a prefix.
      */
+    @Test
     public void testLookupDefaultEmptyVarName()
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         map.put("", TEST_VALUE);
         interpolator.setDefaultLookup(StrLookup.mapLookup(map));
         assertEquals("Wrong variable value", TEST_VALUE, interpolator
@@ -291,6 +283,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests looking up a null variable. Result shoult be null, too.
      */
+    @Test
     public void testLookupNull()
     {
         assertNull("Could resolve null variable", interpolator.lookup(null));
@@ -303,7 +296,7 @@ public class TestConfigurationInterpolator extends TestCase
      */
     private StrLookup setUpTestLookup()
     {
-        Map map = new HashMap();
+        Map<String, String> map = new HashMap<String, String>();
         map.put(TEST_NAME, TEST_VALUE);
         return StrLookup.mapLookup(map);
     }
@@ -311,12 +304,13 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests whether system properties can be correctly resolved.
      */
+    @Test
     public void testLookupSysProperties()
     {
         Properties sysProps = System.getProperties();
-        for (Iterator it = sysProps.keySet().iterator(); it.hasNext();)
+        for (Object prop : sysProps.keySet())
         {
-            String key = (String) it.next();
+            String key = (String) prop;
             assertEquals("Wrong value for system property " + key, sysProps
                     .getProperty(key), interpolator
                     .lookup(ConfigurationInterpolator.PREFIX_SYSPROPERTIES
@@ -327,6 +321,7 @@ public class TestConfigurationInterpolator extends TestCase
     /**
      * Tests whether constants can be correctly resolved.
      */
+    @Test
     public void testLookupConstants()
     {
         String varName = ConfigurationInterpolator.class.getName()
@@ -342,11 +337,12 @@ public class TestConfigurationInterpolator extends TestCase
      * when the lookup that was registered for this prefix is not able to
      * resolve the variable.
      */
+    @Test
     public void testLookupDefaultAfterPrefixFails()
     {
         final String varName = TEST_PREFIX + ':' + TEST_NAME + "2";
         interpolator.registerLookup(TEST_PREFIX, setUpTestLookup());
-        Map map = new HashMap();
+        Map<String, Object> map = new HashMap<String, Object>();
         map.put(varName, TEST_VALUE);
         interpolator.setDefaultLookup(StrLookup.mapLookup(map));
         assertEquals("Variable is not resolved by default lookup", TEST_VALUE,
