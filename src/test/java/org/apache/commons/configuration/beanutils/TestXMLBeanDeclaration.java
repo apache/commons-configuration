@@ -16,22 +16,28 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test class for XMLBeanDeclaration.
  *
  * @since 1.3
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestXMLBeanDeclaration extends TestCase
+public class TestXMLBeanDeclaration
 {
     /** An array with some test properties. */
     static final String[] TEST_PROPS =
@@ -75,75 +81,48 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests creating a declaration from a null node. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromNullNode()
     {
-        try
-        {
-            decl = new XMLBeanDeclaration(new HierarchicalConfiguration().configurationAt(null),
-                    (ConfigurationNode) null);
-            fail("Could init declaration with null node!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration(new HierarchicalConfiguration().configurationAt(null),
+                (ConfigurationNode) null);
     }
 
     /**
      * Tests creating a declaration from a null configuration. This should cause
      * an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromNullConfiguration()
     {
-        try
-        {
-            decl = new XMLBeanDeclaration((HierarchicalConfiguration) null);
-            fail("Could init declaration with null configuration!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration((HierarchicalConfiguration) null);
     }
 
     /**
      * Tests creating a declaration from a null configuration with a key. This
      * should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromNullConfigurationAndKey()
     {
-        try
-        {
-            decl = new XMLBeanDeclaration(null, KEY);
-            fail("Could init declaration with null configuration and key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration(null, KEY);
     }
 
     /**
      * Tests creating a declaration from a null configuration with a node. This
      * should cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromNullConfigurationAndNode()
     {
-        try
-        {
-            decl = new XMLBeanDeclaration(null, new HierarchicalConfiguration()
-                    .getRoot());
-            fail("Could init declaration with null configuration and node!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration(null, new HierarchicalConfiguration()
+                .getRoot());
     }
 
     /**
      * Tests fetching the bean's class name.
      */
+    @Test
     public void testGetBeanClassName()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -156,6 +135,7 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching the bean's class name if it is undefined.
      */
+    @Test
     public void testGetBeanClassNameUndefined()
     {
         decl = new XMLBeanDeclaration(new HierarchicalConfiguration());
@@ -165,6 +145,7 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching the name of the bean factory.
      */
+    @Test
     public void testGetBeanFactoryName()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -177,6 +158,7 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching the name of the bean factory if it is undefined.
      */
+    @Test
     public void testGetBeanFactoryNameUndefined()
     {
         decl = new XMLBeanDeclaration(new HierarchicalConfiguration());
@@ -184,8 +166,9 @@ public class TestXMLBeanDeclaration extends TestCase
     }
 
     /**
-     * Tests fetching the paramter for the bean factory.
+     * Tests fetching the parameter for the bean factory.
      */
+    @Test
     public void testGetBeanFactoryParameter()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -198,8 +181,9 @@ public class TestXMLBeanDeclaration extends TestCase
     }
 
     /**
-     * Tests fetching the paramter for the bean factory if it is undefined.
+     * Tests fetching the parameter for the bean factory if it is undefined.
      */
+    @Test
     public void testGetBeanFactoryParameterUndefined()
     {
         decl = new XMLBeanDeclaration(new HierarchicalConfiguration());
@@ -210,6 +194,7 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests if the bean's properties are correctly extracted from the
      * configuration object.
      */
+    @Test
     public void testGetBeanProperties()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -222,6 +207,7 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests obtaining the bean's properties when reserved attributes are
      * involved. These should be ignored.
      */
+    @Test
     public void testGetBeanPropertiesWithReservedAttributes()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -235,10 +221,11 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching properties if none are defined.
      */
+    @Test
     public void testGetBeanPropertiesEmpty()
     {
         decl = new XMLBeanDeclaration(new HierarchicalConfiguration());
-        Map props = decl.getBeanProperties();
+        Map<String, Object> props = decl.getBeanProperties();
         assertTrue("Properties found", props == null || props.isEmpty());
     }
 
@@ -264,13 +251,14 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching nested bean declarations.
      */
+    @Test
     public void testGetNestedBeanDeclarations()
     {
         HierarchicalConfiguration config = prepareNestedBeanDeclarations();
         decl = new XMLBeanDeclaration(config, KEY);
         checkProperties(decl, TEST_PROPS, TEST_VALUES);
 
-        Map nested = decl.getNestedBeanDeclarations();
+        Map<String, Object> nested = decl.getNestedBeanDeclarations();
         assertEquals("Wrong number of nested declarations",
                 COMPLEX_PROPS.length, nested.size());
         for (int i = 0; i < COMPLEX_PROPS.length; i++)
@@ -288,11 +276,13 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests whether the factory method for creating nested bean declarations
      * gets called.
      */
+    @Test
     public void testGetNestedBeanDeclarationsFactoryMethod()
     {
         HierarchicalConfiguration config = prepareNestedBeanDeclarations();
         decl = new XMLBeanDeclaration(config, KEY)
         {
+            @Override
             protected BeanDeclaration createBeanDeclaration(
                     ConfigurationNode node)
             {
@@ -300,7 +290,7 @@ public class TestXMLBeanDeclaration extends TestCase
                         .configurationAt(node.getName()), node);
             }
         };
-        Map nested = decl.getNestedBeanDeclarations();
+        Map<String, Object> nested = decl.getNestedBeanDeclarations();
         for (int i = 0; i < COMPLEX_PROPS.length; i++)
         {
             Object d = nested.get(COMPLEX_PROPS[i]);
@@ -312,12 +302,13 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests fetching nested bean declarations if none are defined.
      */
+    @Test
     public void testGetNestedBeanDeclarationsEmpty()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
         setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
         decl = new XMLBeanDeclaration(config, KEY);
-        Map nested = decl.getNestedBeanDeclarations();
+        Map<String, Object> nested = decl.getNestedBeanDeclarations();
         assertTrue("Found nested declarations", nested == null
                 || nested.isEmpty());
     }
@@ -325,6 +316,7 @@ public class TestXMLBeanDeclaration extends TestCase
     /**
      * Tests whether interpolation of bean properties works.
      */
+    @Test
     public void testGetInterpolatedBeanProperties()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -343,19 +335,12 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests constructing a bean declaration from an undefined key. This should
      * cause an exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromUndefinedKey()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
         setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
-        try
-        {
-            decl = new XMLBeanDeclaration(config, "undefined_key");
-            fail("Could create declaration from an undefined key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration(config, "undefined_key");
     }
 
     /**
@@ -364,6 +349,7 @@ public class TestXMLBeanDeclaration extends TestCase
      * created, which can be used for creating beans as long as a default class
      * is provided.
      */
+    @Test
     public void testInitFromUndefinedKeyOptional()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
@@ -376,20 +362,13 @@ public class TestXMLBeanDeclaration extends TestCase
      * Tests constructing a bean declaration from a key with multiple values.
      * This should cause an exception because keys must be unique.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testInitFromMultiValueKey()
     {
         HierarchicalConfiguration config = new HierarchicalConfiguration();
         config.addProperty(KEY, "myFirstKey");
         config.addProperty(KEY, "mySecondKey");
-        try
-        {
-            decl = new XMLBeanDeclaration(config, KEY);
-            fail("Could create declaration from multi-valued property!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        decl = new XMLBeanDeclaration(config, KEY);
     }
 
     /**
@@ -420,7 +399,7 @@ public class TestXMLBeanDeclaration extends TestCase
     private void checkProperties(BeanDeclaration beanDecl, String[] names,
             String[] values)
     {
-        Map props = beanDecl.getBeanProperties();
+        Map<String, Object> props = beanDecl.getBeanProperties();
         assertEquals("Wrong number of properties", names.length, props.size());
         for (int i = 0; i < names.length; i++)
         {
