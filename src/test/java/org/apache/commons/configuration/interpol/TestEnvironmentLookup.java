@@ -16,11 +16,14 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 import java.util.Iterator;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.EnvironmentConfiguration;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for EnvironmentLookup.
@@ -30,26 +33,27 @@ import org.apache.commons.configuration.EnvironmentConfiguration;
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestEnvironmentLookup extends TestCase
+public class TestEnvironmentLookup
 {
     /** The lookup to be tested. */
     private EnvironmentLookup lookup;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         lookup = new EnvironmentLookup();
     }
 
     /**
      * Tests whether environment variables can be queried.
      */
+    @Test
     public void testLookup()
     {
         EnvironmentConfiguration envConf = new EnvironmentConfiguration();
-        for (Iterator it = envConf.getKeys(); it.hasNext();)
+        for (Iterator<String> it = envConf.getKeys(); it.hasNext();)
         {
-            String var = (String) it.next();
+            String var = it.next();
             assertEquals("Wrong value for " + var, envConf.getString(var),
                     lookup.lookup(var));
         }
@@ -58,6 +62,7 @@ public class TestEnvironmentLookup extends TestCase
     /**
      * Tries to lookup a non existing property.
      */
+    @Test
     public void testLookupNonExisting()
     {
         assertNull("Got result for non existing environment variable", lookup
