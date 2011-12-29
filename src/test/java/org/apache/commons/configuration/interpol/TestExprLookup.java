@@ -16,9 +16,9 @@
  */
 package org.apache.commons.configuration.interpol;
 
-import java.io.File;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -29,13 +29,14 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
+import org.junit.Test;
 
 /**
  * Test class for ExprLookup.
  *
  * @version $Id$
  */
-public class TestExprLookup extends TestCase
+public class TestExprLookup
 {
     private static File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
@@ -44,20 +45,7 @@ public class TestExprLookup extends TestCase
     private static String PATTERN2 =
         "'$[element] ' + String.trimToEmpty('$[space.description]')";
 
-    protected void setUp() throws Exception
-    {
-        super.setUp();
-    }
-
-    /**
-     * Clears the test environment. Here the static cache of the constant lookup
-     * class is wiped out.
-     */
-    protected void tearDown() throws Exception
-    {
-        super.tearDown();
-    }
-
+    @Test
     public void testLookup() throws Exception
     {
         ConsoleAppender app = new ConsoleAppender(new SimpleLayout());
@@ -81,8 +69,6 @@ public class TestExprLookup extends TestCase
         logger.removeAppender(app);
 
     }
-
-
 
     public static class Utility
     {
