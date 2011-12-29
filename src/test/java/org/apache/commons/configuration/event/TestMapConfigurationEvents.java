@@ -28,8 +28,9 @@ import org.apache.commons.configuration.MapConfiguration;
  */
 public class TestMapConfigurationEvents extends AbstractTestConfigurationEvents
 {
+    @Override
     protected AbstractConfiguration createConfiguration()
     {
-        return new MapConfiguration(new HashMap());
+        return new MapConfiguration(new HashMap<String, Object>());
     }
 }

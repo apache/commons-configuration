@@ -16,6 +16,10 @@
  */
 package org.apache.commons.configuration.event;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,7 +38,7 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
     private final Object expectedSource;
 
     /** Stores the received events. */
-    private final List events;
+    private final List<ConfigurationEvent> events;
 
     /**
      * Creates a new instance of {@code ConfigurationListenerTestImpl} and sets
@@ -46,7 +50,7 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
     public ConfigurationListenerTestImpl(Object source)
     {
         expectedSource = source;
-        events = new LinkedList();
+        events = new LinkedList<ConfigurationEvent>();
     }
 
     public void configurationChanged(ConfigurationEvent event)
@@ -55,14 +59,13 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
     }
 
     /**
-     * Checks if at least <code>minEvents</code> events have been received.
+     * Checks if at least {@code minEvents} events have been received.
      *
      * @param minEvents the minimum number of expected events
      */
     public void checkEventCount(int minEvents)
     {
-        AbstractTestConfigurationEvents.assertTrue("Too view events received",
-                events.size() >= minEvents);
+        assertTrue("Too view events received", events.size() >= minEvents);
     }
 
     /**
@@ -77,17 +80,14 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
             boolean before)
     {
         ConfigurationEvent e = nextEvent(type);
-        AbstractTestConfigurationEvents.assertEquals("Wrong property name",
-                propName, e.getPropertyName());
-        AbstractTestConfigurationEvents.assertEquals("Wrong property value",
-                propValue, e.getPropertyValue());
-        AbstractTestConfigurationEvents.assertEquals("Wrong before flag",
-                before, e.isBeforeUpdate());
+        assertEquals("Wrong property name", propName, e.getPropertyName());
+        assertEquals("Wrong property value", propValue, e.getPropertyValue());
+        assertEquals("Wrong before flag", before, e.isBeforeUpdate());
     }
 
     /**
      * Returns the next received event and checks for the expected type. This
-     * method can be used instead of <code>checkEvent()</code> for comparing
+     * method can be used instead of {@code checkEvent()} for comparing
      * complex event values.
      *
      * @param expectedType the expected type of the event
@@ -95,16 +95,13 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
      */
     public ConfigurationEvent nextEvent(int expectedType)
     {
-        AbstractTestConfigurationEvents.assertFalse("Too few events received",
-                events.isEmpty());
-        ConfigurationEvent e = (ConfigurationEvent) events.remove(0);
+        assertFalse("Too few events received", events.isEmpty());
+        ConfigurationEvent e = events.remove(0);
         if (expectedSource != null)
         {
-            AbstractTestConfigurationEvents.assertEquals("Wrong event source",
-                    expectedSource, e.getSource());
+            assertEquals("Wrong event source", expectedSource, e.getSource());
         }
-        AbstractTestConfigurationEvents.assertEquals("Wrong event type",
-                expectedType, e.getType());
+        assertEquals("Wrong event type", expectedType, e.getType());
         return e;
     }
 
@@ -119,9 +116,8 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
     {
         while (events.size() > 1)
         {
-            ConfigurationEvent e = (ConfigurationEvent) events.remove(0);
-            AbstractTestConfigurationEvents.assertTrue(
-                    "Found end event in details", type != e.getType());
+            ConfigurationEvent e = events.remove(0);
+            assertTrue("Found end event in details", type != e.getType());
         }
     }
 
@@ -130,7 +126,6 @@ public class ConfigurationListenerTestImpl implements ConfigurationListener
      */
     public void done()
     {
-        AbstractTestConfigurationEvents.assertTrue("Too many events received",
-                events.isEmpty());
+        assertTrue("Too many events received", events.isEmpty());
     }
 }

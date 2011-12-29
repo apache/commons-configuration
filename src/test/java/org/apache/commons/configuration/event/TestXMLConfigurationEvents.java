@@ -34,11 +34,13 @@ public class TestXMLConfigurationEvents extends
 {
     static final File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
 
+    @Override
     protected URL getSourceURL() throws IOException
     {
         return TEST_FILE.toURI().toURL();
     }
 
+    @Override
     protected AbstractConfiguration createConfiguration()
     {
         return new XMLConfiguration();
