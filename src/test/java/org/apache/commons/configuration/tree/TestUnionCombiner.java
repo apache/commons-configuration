@@ -16,8 +16,12 @@
  */
 package org.apache.commons.configuration.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.junit.Test;
 
 /**
  * Test class for UnionCombiner.
@@ -31,6 +35,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
      *
      * @return the combiner
      */
+    @Override
     protected NodeCombiner createCombiner()
     {
         return new UnionCombiner();
@@ -39,6 +44,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     /**
      * Tests combination of simple values (no lists).
      */
+    @Test
     public void testSimpleValues() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -56,6 +62,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     /**
      * Tests combinations of elements with attributes.
      */
+    @Test
     public void testSimpleValuesWithAttributes() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -76,6 +83,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     /**
      * Tests combination of attributes.
      */
+    @Test
     public void testAttributes() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -90,6 +98,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
     /**
      * Tests combination of lists.
      */
+    @Test
     public void testLists() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -110,6 +119,7 @@ public class TestUnionCombiner extends AbstractCombinerTest
      * combined. But if they are defined as list elements, the resulting tree
      * should contain two table nodes.
      */
+    @Test
     public void testTableList() throws ConfigurationException
     {
         combiner.addListNode("table");

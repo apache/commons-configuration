@@ -16,11 +16,16 @@
  */
 package org.apache.commons.configuration.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
 import java.util.List;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.Test;
 
 /**
  * Test class for MergeCombiner.
@@ -34,6 +39,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
      *
      * @return the combiner
      */
+    @Override
     protected NodeCombiner createCombiner()
     {
         return new MergeCombiner();
@@ -42,6 +48,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     /**
      * Tests combination of simple elements.
      */
+    @Test
     public void testSimpleValues() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -57,6 +64,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     /**
      * Tests combination of attributes.
      */
+    @Test
     public void testAttributes() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -73,6 +81,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
     /**
      * Tests whether property values are correctly overridden.
      */
+    @Test
     public void testOverrideValues() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -89,6 +98,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
      * Tests if a list from the first node structure overrides a list in the
      * second structure.
      */
+    @Test
     public void testListFromFirstStructure() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -104,6 +114,7 @@ public class TestMergeCombiner extends AbstractCombinerTest
      * Tests if a list from the second structure is added if it is not defined
      * in the first structure.
      */
+    @Test
     public void testListFromSecondStructure() throws ConfigurationException
     {
         HierarchicalConfiguration config = createCombinedConfiguration();
@@ -117,11 +128,13 @@ public class TestMergeCombiner extends AbstractCombinerTest
      * Tests the combination of the table structure. With the merge combiner
      * both table 1 and table 2 should be present.
      */
+    @Test
     public void testCombinedTable() throws ConfigurationException
     {
         checkTable(createCombinedConfiguration());
     }
 
+    @Test
     public void testMerge() throws ConfigurationException
     {
         //combiner.setDebugStream(System.out);
@@ -163,9 +176,9 @@ public class TestMergeCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname", c
                 .getString("fields.field(1).name"));
 
-        List nds = config.getExpressionEngine().query(config.getRoot(),
+        List<ConfigurationNode> nds = config.getExpressionEngine().query(config.getRoot(),
                 "database.tables.table");
         assertFalse("No node found", nds.isEmpty());
-        return (ConfigurationNode) nds.get(0);
+        return nds.get(0);
     }
 }

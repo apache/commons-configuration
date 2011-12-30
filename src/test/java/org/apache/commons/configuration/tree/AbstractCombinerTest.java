@@ -16,14 +16,17 @@
  */
 package org.apache.commons.configuration.tree;
 
-import java.io.File;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import junit.framework.TestCase;
+import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A base class for testing combiner implementations. This base class provides
@@ -33,7 +36,7 @@ import org.apache.commons.configuration.XMLConfiguration;
  *
  * @version $Id$
  */
-public abstract class AbstractCombinerTest extends TestCase
+public abstract class AbstractCombinerTest
 {
     /** Constant for the first test configuration. */
     static File CONF1 = ConfigurationAssert.getTestFile("testcombine1.xml");
@@ -44,9 +47,9 @@ public abstract class AbstractCombinerTest extends TestCase
     /** The combiner to be tested. */
     protected NodeCombiner combiner;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         combiner = createCombiner();
     }
 
@@ -81,6 +84,7 @@ public abstract class AbstractCombinerTest extends TestCase
     /**
      * Tests a newly created combiner.
      */
+    @Test
     public void testInit()
     {
         assertTrue("Combiner has list nodes", combiner.getListNodes().isEmpty());
