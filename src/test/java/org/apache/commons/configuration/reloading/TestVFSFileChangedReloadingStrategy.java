@@ -17,39 +17,46 @@
 
 package org.apache.commons.configuration.reloading;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileWriter;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.VFSFileSystem;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test case for the VFSFileMonitorReloadingStrategy class.
  *
  * @author Ralph Goers
- * @version $Revision$
+ * @version $Id$
  */
-public class TestVFSFileChangedReloadingStrategy extends TestCase
+public class TestVFSFileChangedReloadingStrategy
 {
     /** Constant for the name of a test properties file.*/
     private static final String TEST_FILE = "test.properties";
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         FileSystem.setDefaultFileSystem(new VFSFileSystem());
     }
 
-    protected void tearDown() throws Exception
+    @After
+    public void tearDown() throws Exception
     {
         FileSystem.resetDefaultFileSystem();
-        super.tearDown();
     }
 
+    @Test
     public void testAutomaticReloading() throws Exception
     {
         // create a new configuration
@@ -85,6 +92,7 @@ public class TestVFSFileChangedReloadingStrategy extends TestCase
         assertEquals("Modified value with enabled reloading", "value2", config.getString("string"));
     }
 
+    @Test
     public void testNewFileReloading() throws Exception
     {
         // create a new configuration
@@ -115,6 +123,7 @@ public class TestVFSFileChangedReloadingStrategy extends TestCase
         assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
     }
 
+    @Test
     public void testGetRefreshDelay() throws Exception
     {
         VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
@@ -126,11 +135,13 @@ public class TestVFSFileChangedReloadingStrategy extends TestCase
      * Tests calling reloadingRequired() multiple times before a reload actually
      * happens. This test is related to CONFIGURATION-302.
      */
+    @Test
     public void testReloadingRequiredMultipleTimes()
             throws ConfigurationException
     {
         VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy()
         {
+            @Override
             protected boolean hasChanged()
             {
                 // signal always a change
