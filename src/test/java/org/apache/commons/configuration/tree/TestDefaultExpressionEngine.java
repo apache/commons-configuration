@@ -16,17 +16,26 @@
  */
 package org.apache.commons.configuration.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for DefaultExpressionEngine.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
-public class TestDefaultExpressionEngine extends TestCase
+public class TestDefaultExpressionEngine
 {
     /** Stores the names of the test nodes representing tables. */
     private static String[] tables =
@@ -48,9 +57,9 @@ public class TestDefaultExpressionEngine extends TestCase
     /** The root of a hierarchy with configuration nodes. */
     ConfigurationNode root;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         root = setUpNodes();
         engine = new DefaultExpressionEngine();
     }
@@ -58,6 +67,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests some simple queries.
      */
+    @Test
     public void testQueryKeys()
     {
         checkKey("tables.table.name", "name", 2);
@@ -71,6 +81,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Performs some queries and evaluates the values of the result nodes.
      */
+    @Test
     public void testQueryNodes()
     {
         for (int i = 0; i < tables.length; i++)
@@ -89,6 +100,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests querying keys that do not exist.
      */
+    @Test
     public void testQueryNonExistingKeys()
     {
         checkKey("tables.tablespace.name", null, 0);
@@ -103,6 +115,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests querying nodes whose names contain a delimiter.
      */
+    @Test
     public void testQueryEscapedKeys()
     {
         checkKeyValue("connection..settings.usr..name", "usr.name", "scott");
@@ -113,6 +126,7 @@ public class TestDefaultExpressionEngine extends TestCase
      * Tests some queries when the same delimiter is used for properties and
      * attributes.
      */
+    @Test
     public void testQueryAttributeEmulation()
     {
         engine.setAttributeEnd(null);
@@ -125,9 +139,10 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests accessing the root node.
      */
+    @Test
     public void testQueryRootNode()
     {
-        List nodes = checkKey(null, null, 1);
+        List<ConfigurationNode> nodes = checkKey(null, null, 1);
         assertSame("Root node not found", root, nodes.get(0));
         nodes = checkKey("", null, 1);
         assertSame("Root node not found", root, nodes.get(0));
@@ -135,9 +150,10 @@ public class TestDefaultExpressionEngine extends TestCase
     }
 
     /**
-     * Tests a different query snytax. Sets other strings for the typical tokens
+     * Tests a different query syntax. Sets other strings for the typical tokens
      * used by the expression engine.
      */
+    @Test
     public void testQueryAlternativeSyntax()
     {
         setUpAlternativeSyntax();
@@ -150,6 +166,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests obtaining keys for nodes.
      */
+    @Test
     public void testNodeKey()
     {
         ConfigurationNode node = root.getChild(0);
@@ -165,6 +182,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests obtaining keys when the root node is involved.
      */
+    @Test
     public void testNodeKeyWithRoot()
     {
         assertEquals("Wrong name for root noot", "", engine.nodeKey(root, null));
@@ -175,6 +193,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests obtaining keys for attribute nodes.
      */
+    @Test
     public void testNodeKeyWithAttribute()
     {
         ConfigurationNode node = root.getChild(0).getChild(0).getAttribute(0);
@@ -188,6 +207,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests obtaining keys for nodes that contain the delimiter character.
      */
+    @Test
     public void testNodeKeyWithEscapedDelimiters()
     {
         ConfigurationNode node = root.getChild(1);
@@ -201,6 +221,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests obtaining node keys when a different syntax is set.
      */
+    @Test
     public void testNodeKeyWithAlternativeSyntax()
     {
         setUpAlternativeSyntax();
@@ -217,6 +238,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests adding direct child nodes to the existing hierarchy.
      */
+    @Test
     public void testPrepareAddDirectly()
     {
         NodeAddData data = engine.prepareAdd(root, "newNode");
@@ -237,6 +259,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests adding when indices are involved.
      */
+    @Test
     public void testPrepareAddWithIndex()
     {
         NodeAddData data = engine
@@ -260,6 +283,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests adding new attributes.
      */
+    @Test
     public void testPrepareAddAttribute()
     {
         NodeAddData data = engine.prepareAdd(root,
@@ -278,8 +302,9 @@ public class TestDefaultExpressionEngine extends TestCase
     }
 
     /**
-     * Tests add operations where complete pathes are added.
+     * Tests add operations where complete paths are added.
      */
+    @Test
     public void testPrepareAddWithPath()
     {
         NodeAddData data = engine.prepareAdd(root,
@@ -308,6 +333,7 @@ public class TestDefaultExpressionEngine extends TestCase
      * Tests add operations when property and attribute delimiters are equal.
      * Then it is not possible to add new attribute nodes.
      */
+    @Test
     public void testPrepareAddWithSameAttributeDelimiter()
     {
         engine.setAttributeEnd(null);
@@ -328,6 +354,7 @@ public class TestDefaultExpressionEngine extends TestCase
     /**
      * Tests add operations when an alternative syntax is set.
      */
+    @Test
     public void testPrepareAddWithAlternativeSyntax()
     {
         setUpAlternativeSyntax();
@@ -349,49 +376,30 @@ public class TestDefaultExpressionEngine extends TestCase
      * Tests using invalid keys, e.g. if something should be added to
      * attributes.
      */
-    public void testPrepareAddInvalidKeys()
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrepareAddInvalidKey()
     {
-        try
-        {
-            engine.prepareAdd(root, "tables.table(0)[@type].new");
-            fail("Could add node to existing attribute!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(root, "tables.table(0)[@type].new");
+    }
 
-        try
-        {
-            engine
-                    .prepareAdd(root,
-                            "a.complete.new.path.with.an[@attribute].at.a.non.allowed[@position]");
-            fail("Could add invalid path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrepareAddInvalidKeyAttribute()
+    {
+        engine
+        .prepareAdd(root,
+                "a.complete.new.path.with.an[@attribute].at.a.non.allowed[@position]");
+    }
 
-        try
-        {
-            engine.prepareAdd(root, null);
-            fail("Could add null key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrepareAddNullKey()
+    {
+        engine.prepareAdd(root, null);
+    }
 
-        try
-        {
-            engine.prepareAdd(root, "");
-            fail("Could add undefined key!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+    @Test(expected = IllegalArgumentException.class)
+    public void testPrepareAddEmptyKey()
+    {
+        engine.prepareAdd(root, "");
     }
 
     /**
@@ -468,15 +476,15 @@ public class TestDefaultExpressionEngine extends TestCase
      * @param count the number of expected result nodes
      * @return the list with the results of the query
      */
-    private List checkKey(String key, String name, int count)
+    private List<ConfigurationNode> checkKey(String key, String name, int count)
     {
-        List nodes = engine.query(root, key);
+        List<ConfigurationNode> nodes = engine.query(root, key);
         assertEquals("Wrong number of result nodes for key " + key, count,
                 nodes.size());
-        for (Iterator it = nodes.iterator(); it.hasNext();)
+        for (Iterator<ConfigurationNode> it = nodes.iterator(); it.hasNext();)
         {
             assertEquals("Wrong result node for key " + key, name,
-                    ((ConfigurationNode) it.next()).getName());
+                    it.next().getName());
         }
         return nodes;
     }
@@ -492,9 +500,9 @@ public class TestDefaultExpressionEngine extends TestCase
      */
     private void checkKeyValue(String key, String name, String value)
     {
-        List nodes = checkKey(key, name, 1);
+        List<ConfigurationNode> nodes = checkKey(key, name, 1);
         assertEquals("Wrong value for key " + key, value,
-                ((ConfigurationNode) nodes.get(0)).getValue());
+                nodes.get(0).getValue());
     }
 
     /**
@@ -507,7 +515,7 @@ public class TestDefaultExpressionEngine extends TestCase
     {
         assertEquals("Wrong number of path nodes", expected.length, data
                 .getPathNodes().size());
-        Iterator it = data.getPathNodes().iterator();
+        Iterator<String> it = data.getPathNodes().iterator();
         for (int i = 0; i < expected.length; i++)
         {
             assertEquals("Wrong path node " + i, expected[i], it.next());
