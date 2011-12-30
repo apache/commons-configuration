@@ -16,9 +16,16 @@
  */
 package org.apache.commons.configuration.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.NoSuchElementException;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for DefaultConfigurationKey.
@@ -26,7 +33,7 @@ import junit.framework.TestCase;
  * @author Oliver Heger
  * @version $Id$
  */
-public class TestDefaultConfigurationKey extends TestCase
+public class TestDefaultConfigurationKey
 {
     /** Constant for a test key. */
     private static final String TESTPROPS = "tables.table(0).fields.field(1)";
@@ -43,9 +50,9 @@ public class TestDefaultConfigurationKey extends TestCase
     /** Stores the object to be tested. */
     DefaultConfigurationKey key;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         expressionEngine = new DefaultExpressionEngine();
         key = new DefaultConfigurationKey(expressionEngine);
     }
@@ -53,22 +60,16 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests setting the expression engine to null. This should not be allowed.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testSetNullExpressionEngine()
     {
-        try
-        {
-            key.setExpressionEngine(null);
-            fail("Could set null expression engine!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        key.setExpressionEngine(null);
     }
 
     /**
      * Tests the isAttributeKey() method with several keys.
      */
+    @Test
     public void testIsAttributeKey()
     {
         assertTrue("Attribute key not detected", key.isAttributeKey(TESTATTR));
@@ -83,6 +84,7 @@ public class TestDefaultConfigurationKey extends TestCase
      * (In this test case we use the same delimiter for attributes as for simple
      * properties.)
      */
+    @Test
     public void testIsAttributeKeyWithoutEndMarkers()
     {
         expressionEngine.setAttributeEnd(null);
@@ -100,6 +102,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests removing leading delimiters.
      */
+    @Test
     public void testTrimLeft()
     {
         assertEquals("Key was not left trimmed", "test.", key
@@ -111,6 +114,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests removing trailing delimiters.
      */
+    @Test
     public void testTrimRight()
     {
         assertEquals("Key was not right trimmed", ".test", key
@@ -122,6 +126,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests removing delimiters.
      */
+    @Test
     public void testTrim()
     {
         assertEquals("Key was not trimmed", "test", key.trim(".test."));
@@ -133,6 +138,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending keys.
      */
+    @Test
     public void testAppend()
     {
         key.append("tables").append("table(0).");
@@ -144,6 +150,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending keys that contain delimiters.
      */
+    @Test
     public void testAppendDelimiters()
     {
         key.append("key..").append("test").append(".");
@@ -155,6 +162,7 @@ public class TestDefaultConfigurationKey extends TestCase
      * Tests appending keys that contain delimiters when no escpaped delimiter
      * is defined.
      */
+    @Test
     public void testAppendDelimitersWithoutEscaping()
     {
         expressionEngine.setEscapedDelimiter(null);
@@ -167,6 +175,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests calling append with the escape flag.
      */
+    @Test
     public void testAppendWithEscapeFlag()
     {
         key.append(".key.test.", true);
@@ -178,6 +187,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests constructing keys for attributes.
      */
+    @Test
     public void testConstructAttributeKey()
     {
         assertEquals("Wrong attribute key", TESTATTR, key
@@ -192,6 +202,7 @@ public class TestDefaultConfigurationKey extends TestCase
      * Tests constructing attribute keys when no end markers are defined. In
      * this test case we use the property delimiter as attribute prefix.
      */
+    @Test
     public void testConstructAttributeKeyWithoutEndMarkers()
     {
         expressionEngine.setAttributeEnd(null);
@@ -206,6 +217,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending attribute keys.
      */
+    @Test
     public void testAppendAttribute()
     {
         key.appendAttribute("dataType");
@@ -216,6 +228,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending an attribute key that is already decorated-
      */
+    @Test
     public void testAppendDecoratedAttributeKey()
     {
         key.appendAttribute(TESTATTR);
@@ -226,6 +239,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending a null attribute key.
      */
+    @Test
     public void testAppendNullAttributeKey()
     {
         key.appendAttribute(null);
@@ -236,6 +250,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests appending an index to a key.
      */
+    @Test
     public void testAppendIndex()
     {
         key.append("test").appendIndex(42);
@@ -246,6 +261,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests constructing a complex key by chaining multiple append operations.
      */
+    @Test
     public void testAppendComplexKey()
     {
         key.append("tables").append("table.").appendIndex(0);
@@ -257,6 +273,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests getting and setting the key's length.
      */
+    @Test
     public void testLength()
     {
         key.append(TESTPROPS);
@@ -272,6 +289,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests comparing configuration keys.
      */
+    @Test
     public void testEquals()
     {
         DefaultConfigurationKey k1 = new DefaultConfigurationKey(
@@ -291,6 +309,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests determining an attribute key's name.
      */
+    @Test
     public void testAttributeName()
     {
         assertEquals("Plain key not detected", "test", key
@@ -303,6 +322,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests to iterate over a simple key.
      */
+    @Test
     public void testIterate()
     {
         key.append(TESTKEY);
@@ -338,6 +358,7 @@ public class TestDefaultConfigurationKey extends TestCase
      * Tests an iteration where the remove() method is called. This is not
      * supported.
      */
+    @Test(expected = UnsupportedOperationException.class)
     public void testIterateWithRemove()
     {
         assertFalse(key.iterator().hasNext());
@@ -345,20 +366,13 @@ public class TestDefaultConfigurationKey extends TestCase
         DefaultConfigurationKey.KeyIterator it = key.iterator();
         assertTrue(it.hasNext());
         assertEquals("simple", it.next());
-        try
-        {
-            it.remove();
-            fail("Could remove key component!");
-        }
-        catch (UnsupportedOperationException uex)
-        {
-            // ok
-        }
+        it.remove();
     }
 
     /**
      * Tests iterating over some funny keys.
      */
+    @Test
     public void testIterateStrangeKeys()
     {
         key = new DefaultConfigurationKey(expressionEngine, "key.");
@@ -384,6 +398,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests iterating over keys with escaped delimiters.
      */
+    @Test
     public void testIterateEscapedDelimiters()
     {
         key.append("my..elem");
@@ -400,6 +415,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests iterating over keys when a different escaped delimiter is used.
      */
+    @Test
     public void testIterateAlternativeEscapeDelimiter()
     {
         expressionEngine.setEscapedDelimiter("\\.");
@@ -417,6 +433,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests iterating when no escape delimiter is defined.
      */
+    @Test
     public void testIterateWithoutEscapeDelimiter()
     {
         expressionEngine.setEscapedDelimiter(null);
@@ -436,6 +453,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests whether a key with brackets in it can be iterated over.
      */
+    @Test
     public void testIterateWithBrackets()
     {
         key.append("directory.platform(x86).path");
@@ -455,6 +473,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests iterating over an attribute key that has an index.
      */
+    @Test
     public void testAttributeKeyWithIndex()
     {
         key.append(TESTATTR);
@@ -475,6 +494,7 @@ public class TestDefaultConfigurationKey extends TestCase
     /**
      * Tests iteration when the attribute markers equals the property delimiter.
      */
+    @Test
     public void testIterateAttributeEqualsPropertyDelimiter()
     {
         expressionEngine.setAttributeEnd(null);
