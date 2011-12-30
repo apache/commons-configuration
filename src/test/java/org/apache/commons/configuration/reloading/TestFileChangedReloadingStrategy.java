@@ -17,12 +17,16 @@
 
 package org.apache.commons.configuration.reloading;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.net.URL;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -33,6 +37,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.WriterAppender;
+import org.junit.Test;
 
 /**
  * Test case for the ReloadableConfiguration class.
@@ -40,11 +45,12 @@ import org.apache.log4j.WriterAppender;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class TestFileChangedReloadingStrategy extends TestCase
+public class TestFileChangedReloadingStrategy
 {
     /** Constant for the name of a test properties file.*/
     private static final String TEST_FILE = "test.properties";
 
+    @Test
     public void testAutomaticReloading() throws Exception
     {
         // create a new configuration
@@ -80,6 +86,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertEquals("Modified value with enabled reloading", "value2", config.getString("string"));
     }
 
+    @Test
     public void testNewFileReloading() throws Exception
     {
         // create a new configuration
@@ -110,6 +117,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertEquals("Modified value with enabled reloading", "value1", config.getString("string"));
     }
 
+    @Test
     public void testGetRefreshDelay()
     {
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy();
@@ -120,6 +128,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
     /**
      * Tests if a file from the classpath can be monitored.
      */
+    @Test
     public void testFromClassPath() throws Exception
     {
         PropertiesConfiguration config = new PropertiesConfiguration();
@@ -135,6 +144,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
      * Tests to watch a configuration file in a jar. In this case the jar file
      * itself should be monitored.
      */
+    @Test
     public void testFromJar() throws Exception
     {
         XMLConfiguration config = new XMLConfiguration();
@@ -151,11 +161,13 @@ public class TestFileChangedReloadingStrategy extends TestCase
      * Tests calling reloadingRequired() multiple times before a reload actually
      * happens. This test is related to CONFIGURATION-302.
      */
+    @Test
     public void testReloadingRequiredMultipleTimes()
             throws ConfigurationException
     {
         FileChangedReloadingStrategy strategy = new FileChangedReloadingStrategy()
         {
+            @Override
             protected boolean hasChanged()
             {
                 // signal always a change
@@ -171,6 +183,7 @@ public class TestFileChangedReloadingStrategy extends TestCase
         assertFalse("Reloading still required", strategy.reloadingRequired());
     }
 
+    @Test
     public void testFileDeletion() throws Exception
     {
         Logger logger = Logger.getLogger(FileChangedReloadingStrategy.class.getName());
