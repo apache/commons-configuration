@@ -17,21 +17,25 @@
 
 package org.apache.commons.configuration.plist;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.Reader;
 import java.util.Calendar;
 import java.util.SimpleTimeZone;
 
-import junit.framework.TestCase;
 import junitx.framework.ArrayAssert;
+
+import org.junit.Test;
 
 /**
  * @author Emmanuel Bourg
- * @version $Revision$, $Date$
+ * @version $Id$
  */
-public class TestPropertyListParser extends TestCase
+public class TestPropertyListParser
 {
     private PropertyListParser parser = new PropertyListParser((Reader) null);
 
+    @Test
     public void testRemoveQuotes()
     {
         assertEquals("unquoted string", "abc", parser.removeQuotes("abc"));
@@ -41,12 +45,14 @@ public class TestPropertyListParser extends TestCase
         assertEquals("null string", null, parser.removeQuotes(null));
     }
 
+    @Test
     public void testUnescapeQuotes()
     {
         assertEquals("non escaped quotes", "aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\"bbb\"ccc"));
         assertEquals("escaped quotes", "aaa\"bbb\"ccc", parser.unescapeQuotes("aaa\\\"bbb\\\"ccc"));
     }
 
+    @Test
     public void testParseDate() throws Exception
     {
         Calendar calendar = Calendar.getInstance();
@@ -62,6 +68,7 @@ public class TestPropertyListParser extends TestCase
         assertEquals("parsed date", calendar.getTime(), parser.parseDate("<*D2002-03-22 11:30:00 +0100>"));
     }
 
+    @Test
     public void testFilterData() throws Exception
     {
         byte[] expected = new byte[] {0x20, 0x20};
