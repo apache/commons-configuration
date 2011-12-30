@@ -17,21 +17,23 @@
 
 package org.apache.commons.configuration.reloading;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.File;
 import java.io.FileWriter;
 
 import org.apache.commons.configuration.PropertiesConfiguration;
-
-import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  * Test case for the ManagedReloadingStrategy class.
  *
  * @author Nicolas De loof
+ * @version $Id$
  */
-public class TestManagedReloadingStrategy extends TestCase
+public class TestManagedReloadingStrategy
 {
-
+    @Test
     public void testManagedRefresh() throws Exception
     {
         File file = new File("target/testReload.properties");
