@@ -16,11 +16,14 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
@@ -28,14 +31,18 @@ import org.apache.commons.configuration.tree.NodeAddData;
 import org.apache.commons.jxpath.JXPathContext;
 import org.apache.commons.jxpath.ri.JXPathContextReferenceImpl;
 import org.apache.commons.jxpath.ri.model.NodePointerFactory;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for XPathExpressionEngine.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
-public class TestXPathExpressionEngine extends TestCase
+public class TestXPathExpressionEngine
 {
     /** Constant for the test root node. */
     static final ConfigurationNode ROOT = new DefaultConfigurationNode(
@@ -47,18 +54,19 @@ public class TestXPathExpressionEngine extends TestCase
     /** The expression engine to be tested. */
     XPathExpressionEngine engine;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         engine = new MockJXPathContextExpressionEngine();
     }
 
     /**
      * Tests the query() method with a normal expression.
      */
+    @Test
     public void testQueryExpression()
     {
-        List nodes = engine.query(ROOT, TEST_KEY);
+        List<ConfigurationNode> nodes = engine.query(ROOT, TEST_KEY);
         assertEquals("Incorrect number of results", 1, nodes.size());
         assertSame("Wrong result node", ROOT, nodes.get(0));
         checkSelectCalls(1);
@@ -67,9 +75,10 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests a query that has no results. This should return an empty list.
      */
+    @Test
     public void testQueryWithoutResult()
     {
-        List nodes = engine.query(ROOT, "a non existing key");
+        List<ConfigurationNode> nodes = engine.query(ROOT, "a non existing key");
         assertTrue("Result list is not empty", nodes.isEmpty());
         checkSelectCalls(1);
     }
@@ -78,6 +87,7 @@ public class TestXPathExpressionEngine extends TestCase
      * Tests a query with an empty key. This should directly return the root
      * node without invoking the JXPathContext.
      */
+    @Test
     public void testQueryWithEmptyKey()
     {
         checkEmptyKey("");
@@ -86,6 +96,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests a query with a null key. Same as an empty key.
      */
+    @Test
     public void testQueryWithNullKey()
     {
         checkEmptyKey(null);
@@ -98,7 +109,7 @@ public class TestXPathExpressionEngine extends TestCase
      */
     private void checkEmptyKey(String key)
     {
-        List nodes = engine.query(ROOT, key);
+        List<ConfigurationNode> nodes = engine.query(ROOT, key);
         assertEquals("Incorrect number of results", 1, nodes.size());
         assertSame("Wrong result node", ROOT, nodes.get(0));
         checkSelectCalls(0);
@@ -107,6 +118,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests if the used JXPathContext is correctly initialized.
      */
+    @Test
     public void testCreateContext()
     {
         JXPathContext ctx = new XPathExpressionEngine().createContext(ROOT,
@@ -131,6 +143,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests a normal call of nodeKey().
      */
+    @Test
     public void testNodeKeyNormal()
     {
         assertEquals("Wrong node key", "parent/child", engine.nodeKey(
@@ -140,6 +153,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests nodeKey() for an attribute node.
      */
+    @Test
     public void testNodeKeyAttribute()
     {
         ConfigurationNode node = new DefaultConfigurationNode("attr");
@@ -151,6 +165,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests nodeKey() for the root node.
      */
+    @Test
     public void testNodeKeyForRootNode()
     {
         assertEquals("Wrong key for root node", "", engine.nodeKey(ROOT, null));
@@ -161,6 +176,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests node key() for direct children of the root node.
      */
+    @Test
     public void testNodeKeyForRootChild()
     {
         ConfigurationNode node = new DefaultConfigurationNode("child");
@@ -174,6 +190,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a single child node.
      */
+    @Test
     public void testPrepareAddNode()
     {
         NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY + "  newNode");
@@ -185,6 +202,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a new attribute node.
      */
+    @Test
     public void testPrepareAddAttribute()
     {
         NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY + "\t@newAttr");
@@ -196,6 +214,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a complete path.
      */
+    @Test
     public void testPrepareAddPath()
     {
         NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY
@@ -208,6 +227,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a complete path whose final node is an attribute.
      */
+    @Test
     public void testPrepareAddAttributePath()
     {
         NodeAddData data = engine.prepareAdd(ROOT, TEST_KEY
@@ -220,6 +240,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a new node to the root.
      */
+    @Test
     public void testPrepareAddRootChild()
     {
         NodeAddData data = engine.prepareAdd(ROOT, " newNode");
@@ -231,6 +252,7 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests adding a new attribute to the root.
      */
+    @Test
     public void testPrepareAddRootAttribute()
     {
         NodeAddData data = engine.prepareAdd(ROOT, " @attr");
@@ -242,148 +264,85 @@ public class TestXPathExpressionEngine extends TestCase
     /**
      * Tests an add operation with a query that does not return a single node.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidParent()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, "invalidKey newNode");
-            fail("Could add to invalid parent!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, "invalidKey newNode");
     }
 
     /**
      * Tests an add operation with an empty path for the new node.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddEmptyPath()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " ");
-            fail("Could add empty path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " ");
     }
 
     /**
      * Tests an add operation where the key is null.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddNullKey()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, null);
-            fail("Could add null path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, null);
     }
 
     /**
      * Tests an add operation where the key is null.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddEmptyKey()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, "");
-            fail("Could add empty path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, "");
     }
 
     /**
      * Tests an add operation with an invalid path.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPath()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " an/invalid//path");
-            fail("Could add invalid path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " an/invalid//path");
     }
 
     /**
      * Tests an add operation with an invalid path: the path contains an
      * attribute in the middle part.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidAttributePath()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " a/path/with@an/attribute");
-            fail("Could add invalid attribute path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " a/path/with@an/attribute");
     }
 
     /**
      * Tests an add operation with an invalid path: the path contains an
      * attribute after a slash.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidAttributePath2()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " a/path/with/@attribute");
-            fail("Could add invalid attribute path!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " a/path/with/@attribute");
     }
 
     /**
      * Tests an add operation with an invalid path that starts with a slash.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPathWithSlash()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " /a/path/node");
-            fail("Could add path starting with a slash!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " /a/path/node");
     }
 
     /**
      * Tests an add operation with an invalid path that contains multiple
      * attribute components.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testPrepareAddInvalidPathMultipleAttributes()
     {
-        try
-        {
-            engine.prepareAdd(ROOT, TEST_KEY + " an@attribute@path");
-            fail("Could add path with multiple attributes!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        engine.prepareAdd(ROOT, TEST_KEY + " an@attribute@path");
     }
 
     /**
@@ -396,10 +355,10 @@ public class TestXPathExpressionEngine extends TestCase
     private void checkAddPath(NodeAddData data, String[] expected, boolean attr)
     {
         assertSame("Wrong parent node", ROOT, data.getParent());
-        List path = data.getPathNodes();
+        List<String> path = data.getPathNodes();
         assertEquals("Incorrect number of path nodes", expected.length - 1,
                 path.size());
-        Iterator it = path.iterator();
+        Iterator<String> it = path.iterator();
         for (int idx = 0; idx < expected.length - 1; idx++)
         {
             assertEquals("Wrong node at position " + idx, expected[idx], it
@@ -443,12 +402,13 @@ public class TestXPathExpressionEngine extends TestCase
          * test key, the root node will be returned in the list. Otherwise the
          * return value is <b>null</b>.
          */
-        public List selectNodes(String xpath)
+        @Override
+        public List<?> selectNodes(String xpath)
         {
             selectInvocations++;
             if (TEST_KEY.equals(xpath))
             {
-                List result = new ArrayList(1);
+                List<ConfigurationNode> result = new ArrayList<ConfigurationNode>(1);
                 result.add(ROOT);
                 return result;
             }
@@ -469,6 +429,7 @@ public class TestXPathExpressionEngine extends TestCase
         /** Stores the context instance. */
         private MockJXPathContext context;
 
+        @Override
         protected JXPathContext createContext(ConfigurationNode root, String key)
         {
             context = new MockJXPathContext(root);
