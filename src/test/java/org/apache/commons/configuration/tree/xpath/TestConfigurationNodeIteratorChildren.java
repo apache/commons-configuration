@@ -16,6 +16,10 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -30,11 +34,15 @@ import org.apache.commons.jxpath.ri.compiler.NodeTypeTest;
 import org.apache.commons.jxpath.ri.compiler.ProcessingInstructionTest;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ConfigurationNodeIteratorChildren.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
@@ -42,7 +50,9 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /** Stores the node pointer to the root node. */
     NodePointer rootPointer;
 
-    protected void setUp() throws Exception
+    @Override
+    @Before
+    public void setUp() throws Exception
     {
         super.setUp();
         rootPointer = new ConfigurationNodePointer(root, Locale.getDefault());
@@ -51,6 +61,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests to iterate over all children of the root node.
      */
+    @Test
     public void testIterateAllChildren()
     {
         ConfigurationNodeIteratorChildren it = new ConfigurationNodeIteratorChildren(
@@ -63,6 +74,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests a reverse iteration.
      */
+    @Test
     public void testIterateReverse()
     {
         ConfigurationNodeIteratorChildren it = new ConfigurationNodeIteratorChildren(
@@ -75,6 +87,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests using a node test with a wildcard name.
      */
+    @Test
     public void testIterateWithWildcardTest()
     {
         NodeNameTest test = new NodeNameTest(new QName(null, "*"));
@@ -87,6 +100,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
      * Tests using a node test that defines a namespace prefix. Because
      * namespaces are not supported, no elements should be in the iteration.
      */
+    @Test
     public void testIterateWithPrefixTest()
     {
         NodeNameTest test = new NodeNameTest(new QName("prefix", "*"));
@@ -99,17 +113,16 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests using a node test that selects a certain sub node name.
      */
+    @Test
     public void testIterateWithNameTest()
     {
         NodeNameTest test = new NodeNameTest(new QName(null, CHILD_NAME2));
         ConfigurationNodeIteratorChildren it = new ConfigurationNodeIteratorChildren(
                 rootPointer, test, false, null);
         assertTrue("No children found", iteratorSize(it) > 0);
-        for (Iterator elemIt = iterationElements(it).iterator(); elemIt
-                .hasNext();)
+        for (ConfigurationNode nd : iterationElements(it))
         {
-            assertEquals("Wrong child element", CHILD_NAME2,
-                    ((ConfigurationNode) elemIt.next()).getName());
+            assertEquals("Wrong child element", CHILD_NAME2, nd.getName());
         }
     }
 
@@ -117,6 +130,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
      * Tests using a not supported test class. This should yield an empty
      * iteration.
      */
+    @Test
     public void testIterateWithUnknownTest()
     {
         NodeTest test = new ProcessingInstructionTest("test");
@@ -128,6 +142,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests using a type test for nodes. This should return all nodes.
      */
+    @Test
     public void testIterateWithNodeType()
     {
         NodeTypeTest test = new NodeTypeTest(Compiler.NODE_TYPE_NODE);
@@ -140,6 +155,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
      * Tests using a type test for a non supported type. This should return an
      * empty iteration.
      */
+    @Test
     public void testIterateWithUnknownType()
     {
         NodeTypeTest test = new NodeTypeTest(Compiler.NODE_TYPE_COMMENT);
@@ -151,6 +167,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests defining a start node for the iteration.
      */
+    @Test
     public void testIterateStartsWith()
     {
         NodePointer childPointer = new ConfigurationNodePointer(rootPointer,
@@ -158,12 +175,12 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
         ConfigurationNodeIteratorChildren it = new ConfigurationNodeIteratorChildren(
                 rootPointer, null, false, childPointer);
         assertEquals("Wrong start position", 0, it.getPosition());
-        List nodes = iterationElements(it);
+        List<ConfigurationNode> nodes = iterationElements(it);
         assertEquals("Wrong size of iteration", CHILD_COUNT - 3, nodes.size());
         int index = 4;
-        for (Iterator it2 = nodes.iterator(); it2.hasNext(); index++)
+        for (Iterator<ConfigurationNode> it2 = nodes.iterator(); it2.hasNext(); index++)
         {
-            ConfigurationNode node = (ConfigurationNode) it2.next();
+            ConfigurationNode node = it2.next();
             assertEquals("Wrong node value", String.valueOf(index), node
                     .getValue());
         }
@@ -172,6 +189,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
     /**
      * Tests defining a start node for a reverse iteration.
      */
+    @Test
     public void testIterateStartsWithReverse()
     {
         NodePointer childPointer = new ConfigurationNodePointer(rootPointer,
@@ -193,6 +211,7 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
      * Tests iteration with an invalid start node. This should cause the
      * iteration to start at the first position.
      */
+    @Test
     public void testIterateStartsWithInvalid()
     {
         NodePointer childPointer = new ConfigurationNodePointer(rootPointer,
@@ -217,10 +236,10 @@ public class TestConfigurationNodeIteratorChildren extends AbstractXPathTest
      */
     private void checkValues(NodeIterator iterator, int[] expectedIndices)
     {
-        List nodes = iterationElements(iterator);
+        List<ConfigurationNode> nodes = iterationElements(iterator);
         for (int i = 0; i < expectedIndices.length; i++)
         {
-            ConfigurationNode child = (ConfigurationNode) nodes.get(i);
+            ConfigurationNode child = nodes.get(i);
             assertTrue("Wrong index value for child " + i, child.getValue()
                     .toString().endsWith(String.valueOf(expectedIndices[i])));
         }

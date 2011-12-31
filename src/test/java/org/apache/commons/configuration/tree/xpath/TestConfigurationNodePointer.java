@@ -16,6 +16,10 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.util.Locale;
 
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -23,11 +27,15 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodeIterator;
 import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ConfigurationNodePointer.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationNodePointer extends AbstractXPathTest
@@ -35,7 +43,9 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /** Stores the node pointer to be tested. */
     NodePointer pointer;
 
-    protected void setUp() throws Exception
+    @Override
+    @Before
+    public void setUp() throws Exception
     {
         super.setUp();
         pointer = new ConfigurationNodePointer(root, Locale.getDefault());
@@ -44,6 +54,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * Tests comparing child node pointers for child nodes.
      */
+    @Test
     public void testCompareChildNodePointersChildren()
     {
         NodePointer p1 = new ConfigurationNodePointer(pointer, root.getChild(1));
@@ -57,6 +68,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * Tests comparing child node pointers for attribute nodes.
      */
+    @Test
     public void testCompareChildNodePointersAttributes()
     {
         root.addAttribute(new DefaultConfigurationNode("attr1", "test1"));
@@ -74,6 +86,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * tests comparing child node pointers for both child and attribute nodes.
      */
+    @Test
     public void testCompareChildNodePointersChildAndAttribute()
     {
         root.addAttribute(new DefaultConfigurationNode("attr1", "test1"));
@@ -90,6 +103,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
      * Tests comparing child node pointers for child nodes that do not belong to
      * the parent node.
      */
+    @Test
     public void testCompareChildNodePointersInvalidChildren()
     {
         ConfigurationNode node = root.getChild(1);
@@ -104,6 +118,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * Tests the attribute flag.
      */
+    @Test
     public void testIsAttribute()
     {
         ConfigurationNode node = new DefaultConfigurationNode("test", "testval");
@@ -116,6 +131,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * Tests if leaves in the tree are correctly detected.
      */
+    @Test
     public void testIsLeave()
     {
         assertFalse("Root node is leaf", pointer.isLeaf());
@@ -134,6 +150,7 @@ public class TestConfigurationNodePointer extends AbstractXPathTest
     /**
      * Tests the iterators returned by the node pointer.
      */
+    @Test
     public void testIterators()
     {
         checkIterators(pointer);

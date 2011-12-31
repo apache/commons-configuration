@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -23,25 +25,31 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.jxpath.ri.QName;
 import org.apache.commons.jxpath.ri.model.NodePointer;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ConfigurationIteratorAttributes.
- * 
- * @author Oliver Heger
+ *
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
  * @version $Id$
  */
 public class TestConfigurationIteratorAttributes extends AbstractXPathTest
 {
     /** Constant for the name of another test attribute.*/
     private static final String TEST_ATTR = "test";
-    
+
     /** Stores the node pointer of the test node.*/
     NodePointer pointer;
-    
-    protected void setUp() throws Exception
+
+    @Override
+    @Before
+    public void setUp() throws Exception
     {
         super.setUp();
-        
+
         // Adds further attributes to the test node
         ConfigurationNode testNode = root.getChild(1);
         testNode.addAttribute(new DefaultConfigurationNode(TEST_ATTR, "yes"));
@@ -51,38 +59,42 @@ public class TestConfigurationIteratorAttributes extends AbstractXPathTest
     /**
      * Tests to iterate over all attributes.
      */
+    @Test
     public void testIterateAllAttributes()
     {
         ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, "*"));
         assertEquals("Wrong number of attributes", 2, iteratorSize(it));
-        List attrs = iterationElements(it);
-        assertEquals("Wrong first attribute", ATTR_NAME, ((ConfigurationNode) attrs.get(0)).getName());
-        assertEquals("Wrong first attribute", TEST_ATTR, ((ConfigurationNode) attrs.get(1)).getName());
+        List<ConfigurationNode> attrs = iterationElements(it);
+        assertEquals("Wrong first attribute", ATTR_NAME, attrs.get(0).getName());
+        assertEquals("Wrong first attribute", TEST_ATTR, attrs.get(1).getName());
     }
-    
+
     /**
      * Tests to iterate over attributes with a specific name.
      */
+    @Test
     public void testIterateSpecificAttribute()
     {
         ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, TEST_ATTR));
         assertEquals("Wrong number of attributes", 1, iteratorSize(it));
-        assertEquals("Wrong attribute", TEST_ATTR, ((ConfigurationNode) iterationElements(it).get(0)).getName());
+        assertEquals("Wrong attribute", TEST_ATTR, iterationElements(it).get(0).getName());
     }
-    
+
     /**
      * Tests to iterate over non existing attributes.
      */
+    @Test
     public void testIterateUnknownAttribute()
     {
         ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName(null, "unknown"));
         assertEquals("Found attributes", 0, iteratorSize(it));
     }
-    
+
     /**
      * Tests iteration when a namespace is specified. This is not supported, so
      * the iteration should be empty.
      */
+    @Test
     public void testIterateNamespace()
     {
         ConfigurationNodeIteratorAttribute it = new ConfigurationNodeIteratorAttribute(pointer, new QName("test", "*"));
