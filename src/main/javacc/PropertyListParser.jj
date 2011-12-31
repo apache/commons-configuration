@@ -156,7 +156,7 @@ PropertyListConfiguration parse() :
 PropertyListConfiguration Dictionary() :
 {
     PropertyListConfiguration configuration = new PropertyListConfiguration();
-    List children = new ArrayList();
+    List<Node> children = new ArrayList<Node>();
     Node child = null;
 }
 {
@@ -182,7 +182,7 @@ PropertyListConfiguration Dictionary() :
     {
         for (int i = 0; i < children.size(); i++)
         {
-            child = (Node) children.get(i);
+            child = children.get(i);
             configuration.getRoot().addChild(child);
         }
 
@@ -231,7 +231,7 @@ Object Element() :
 
 List Array() :
 {
-    List list = new ArrayList();
+    List<Object> list = new ArrayList<Object>();
     Object element = null;
 }
 {
