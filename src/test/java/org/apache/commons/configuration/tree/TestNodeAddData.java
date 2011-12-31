@@ -16,16 +16,26 @@
  */
 package org.apache.commons.configuration.tree;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for NodeAddData.
  *
- * @author Oliver Heger
+ * @author <a
+ * href="http://commons.apache.org/configuration/team-list.html">Commons
+ * Configuration team</a>
+ * @version $Id$
  */
-public class TestNodeAddData extends TestCase
+public class TestNodeAddData
 {
     /** Constant for the default parent node used for testing. */
     private static final ConfigurationNode TEST_PARENT = new DefaultConfigurationNode(
@@ -43,15 +53,16 @@ public class TestNodeAddData extends TestCase
     /** The object to be tested. */
     NodeAddData addData;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         addData = new NodeAddData(TEST_PARENT, TEST_NODENAME);
     }
 
     /**
-     * Tests the default values of an unitialized instance.
+     * Tests the default values of an uninitialized instance.
      */
+    @Test
     public void testUninitialized()
     {
         addData = new NodeAddData();
@@ -64,6 +75,7 @@ public class TestNodeAddData extends TestCase
     /**
      * Tests the constructor that initializes the most important fields.
      */
+    @Test
     public void testInitialized()
     {
         assertSame("Wrong parent", TEST_PARENT, addData.getParent());
@@ -75,6 +87,7 @@ public class TestNodeAddData extends TestCase
     /**
      * Tests adding path nodes.
      */
+    @Test
     public void testAddPathNode()
     {
         for (int i = 0; i < PATH_NODE_COUNT; i++)
@@ -82,7 +95,7 @@ public class TestNodeAddData extends TestCase
             addData.addPathNode(PATH_NODE_NAME + i);
         }
 
-        List nodes = addData.getPathNodes();
+        List<String> nodes = addData.getPathNodes();
         assertEquals("Incorrect number of path nodes", PATH_NODE_COUNT, nodes
                 .size());
         for (int i = 0; i < PATH_NODE_COUNT; i++)
