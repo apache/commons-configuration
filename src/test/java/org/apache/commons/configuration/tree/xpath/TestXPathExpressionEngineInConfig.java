@@ -16,9 +16,11 @@
  */
 package org.apache.commons.configuration.tree.xpath;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 
 import org.apache.commons.configuration.XMLConfiguration;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * A test class for XPathExpressionEngine that tests the engine integrated into
@@ -29,7 +31,7 @@ import org.apache.commons.configuration.XMLConfiguration;
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestXPathExpressionEngineInConfig extends TestCase
+public class TestXPathExpressionEngineInConfig
 {
     /** Constant for a test key. */
     private static final String KEY = "test/expression/xpath";
@@ -40,9 +42,9 @@ public class TestXPathExpressionEngineInConfig extends TestCase
     /** The test configuration. */
     private XMLConfiguration config;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         config = new XMLConfiguration();
         config.setExpressionEngine(new XPathExpressionEngine());
     }
@@ -51,6 +53,7 @@ public class TestXPathExpressionEngineInConfig extends TestCase
      * Tests whether an already existing property can be changed using
      * setProperty().
      */
+    @Test
     public void testSetPropertyExisting()
     {
         config.addProperty(" " + KEY, "failure");
@@ -61,6 +64,7 @@ public class TestXPathExpressionEngineInConfig extends TestCase
     /**
      * Tests setProperty() if the specified path partly exists.
      */
+    @Test
     public void testSetPropertyPartlyExisting()
     {
         final String testKey = KEY + "/sub";
@@ -72,6 +76,7 @@ public class TestXPathExpressionEngineInConfig extends TestCase
     /**
      * Tests whether setProperty() can be used to add a new attribute.
      */
+    @Test
     public void testSetPropertyNewAttribute()
     {
         final String keyAttr = KEY + "/@attr";
@@ -83,6 +88,7 @@ public class TestXPathExpressionEngineInConfig extends TestCase
     /**
      * Tests whether setProperty() can be used to create a completely new key.
      */
+    @Test
     public void testSetPropertyNewKey()
     {
         config.setProperty(KEY, VALUE);
@@ -93,6 +99,7 @@ public class TestXPathExpressionEngineInConfig extends TestCase
      * Tests whether addProperty() can be used to create more complex
      * hierarchical structures.
      */
+    @Test
     public void testAddPropertyComplexStructures()
     {
         config.addProperty("tables/table/name", "tasks");
