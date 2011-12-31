@@ -16,14 +16,17 @@
  */
 package org.apache.commons.configuration.tree;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Test class for ViewNode.
  *
  * @version $Id$
  */
-public class TestViewNode extends TestCase
+public class TestViewNode
 {
     /** Stores the view node to be tested. */
     ViewNode viewNode;
@@ -37,9 +40,9 @@ public class TestViewNode extends TestCase
     /** An attribute node of the regular node. */
     ConfigurationNode attr;
 
-    protected void setUp() throws Exception
+    @Before
+    public void setUp() throws Exception
     {
-        super.setUp();
         node = new DefaultConfigurationNode();
         child = new DefaultConfigurationNode("child");
         attr = new DefaultConfigurationNode("attr");
@@ -51,6 +54,7 @@ public class TestViewNode extends TestCase
     /**
      * Tests adding a child to the view node.
      */
+    @Test
     public void testAddChild()
     {
         viewNode.addChild(child);
@@ -62,22 +66,16 @@ public class TestViewNode extends TestCase
      * Tests adding a null child to the view node. This should throw an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullChild()
     {
-        try
-        {
-            viewNode.addChild(null);
-            fail("Could add null child!");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        viewNode.addChild(null);
     }
 
     /**
      * Tests adding an attribute to the view node.
      */
+    @Test
     public void testAddAttribute()
     {
         viewNode.addAttribute(attr);
@@ -89,35 +87,30 @@ public class TestViewNode extends TestCase
      * Tests adding a null attribute to the view node. This should cause an
      * exception.
      */
+    @Test(expected = IllegalArgumentException.class)
     public void testAddNullAttribute()
     {
-        try
-        {
-            viewNode.addAttribute(null);
-            fail("Could add null attribute");
-        }
-        catch (IllegalArgumentException iex)
-        {
-            // ok
-        }
+        viewNode.addAttribute(null);
     }
 
     /**
      * Tests appending all children to a view node.
      */
+    @Test
     public void testAppendChildren()
     {
         viewNode.addChild(new DefaultConfigurationNode("testNode"));
         viewNode.appendChildren(node);
         assertEquals("Wrong number of children", 2, viewNode.getChildrenCount());
         assertEquals("Cannot find child", child, viewNode.getChild(1));
-        assertEquals("Parent was changed", node, ((ConfigurationNode) viewNode
-                .getChild(1)).getParentNode());
+        assertEquals("Parent was changed", node, viewNode
+                .getChild(1).getParentNode());
     }
 
     /**
      * Tests appending children from a null source. This should be a noop.
      */
+    @Test
     public void testAppendNullChildren()
     {
         viewNode.appendChildren(null);
@@ -127,19 +120,21 @@ public class TestViewNode extends TestCase
     /**
      * tests appending all attributes to a view node.
      */
+    @Test
     public void testAppendAttributes()
     {
         viewNode.appendAttributes(node);
         assertEquals("Wrong number of attributes", 1, viewNode
                 .getAttributeCount());
         assertEquals("Cannot find attribute", attr, viewNode.getAttribute(0));
-        assertEquals("Parent was changed", node, ((ConfigurationNode) viewNode
-                .getAttribute(0)).getParentNode());
+        assertEquals("Parent was changed", node, viewNode
+                .getAttribute(0).getParentNode());
     }
 
     /**
      * Tests appending attributes from a null source. This should be a noop.
      */
+    @Test
     public void testAppendNullAttributes()
     {
         viewNode.appendAttributes(null);
