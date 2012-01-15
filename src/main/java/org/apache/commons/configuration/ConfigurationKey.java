@@ -39,7 +39,11 @@ import java.util.NoSuchElementException;
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  * @version $Id$
+ * @deprecated Use {@link org.apache.commons.configuration.tree.DefaultConfigurationKey}
+ * instead. It is associated with a {@code DefaultExpressionEngine} and thus
+ * can produce correct keys even if key separators have been changed.
  */
+@Deprecated
 public class ConfigurationKey implements Serializable
 {
     /** Constant for a property delimiter.*/

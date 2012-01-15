@@ -38,6 +38,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -444,11 +445,21 @@ public class TestHierarchicalConfiguration
         config.addProperty("connection.passwd", "tiger");
         assertEquals("tiger", config.getProperty("connection.passwd"));
 
-        ConfigurationKey key = new ConfigurationKey();
+        DefaultConfigurationKey key = createConfigurationKey();
         key.append("tables").append("table").appendIndex(0);
         key.appendAttribute("tableType");
         config.addProperty(key.toString(), "system");
         assertEquals("system", config.getProperty(key.toString()));
+    }
+
+    /**
+     * Creates a {@code DefaultConfigurationKey} object.
+     *
+     * @return the new key object
+     */
+    private static DefaultConfigurationKey createConfigurationKey()
+    {
+        return new DefaultConfigurationKey(new DefaultExpressionEngine());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -471,7 +482,9 @@ public class TestHierarchicalConfiguration
         int maxIdx = config.getMaxIndex("tables.table(0).fields.field.name");
         for(int i = 0; i <= maxIdx; i++)
         {
-            ConfigurationKey key = new ConfigurationKey("tables.table(0).fields");
+            DefaultConfigurationKey key =
+                    new DefaultConfigurationKey(new DefaultExpressionEngine(),
+                            "tables.table(0).fields");
             key.append("field").appendIndex(i).append("name");
             assertNotNull(config.getProperty(key.toString()));
         }
@@ -491,7 +504,7 @@ public class TestHierarchicalConfiguration
 
         for (int i = 0; i < fields[0].length; i++)
         {
-            ConfigurationKey key = new ConfigurationKey();
+            DefaultConfigurationKey key = createConfigurationKey();
             key.append("fields").append("field").appendIndex(i);
             key.append("name");
             assertEquals(fields[0][i], subset.getProperty(key.toString()));
@@ -809,6 +822,7 @@ public class TestHierarchicalConfiguration
     public void testNodeVisitorKeys()
     {
         CountVisitor v = new CountVisitor();
+        @SuppressWarnings("deprecation")
         ConfigurationKey configKey = new ConfigurationKey();
         config.getRoot().visit(v, configKey);
         for (Iterator<String> it = config.getKeys(); it.hasNext();)
@@ -1198,6 +1212,7 @@ public class TestHierarchicalConfiguration
      * A test visitor implementation for checking whether all visitor methods
      * are correctly called.
      */
+    @SuppressWarnings("deprecation")
     static class CountVisitor extends HierarchicalConfiguration.NodeVisitor
     {
         /** The number of invocations of visitBeforeChildren(). */

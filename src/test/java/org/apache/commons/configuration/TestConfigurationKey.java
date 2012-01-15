@@ -31,6 +31,7 @@ import org.junit.Test;
  *
  * @version $Id$
  */
+@SuppressWarnings("deprecation")
 public class TestConfigurationKey
 {
     private static final String TESTPROPS = "tables.table(0).fields.field(1)";
