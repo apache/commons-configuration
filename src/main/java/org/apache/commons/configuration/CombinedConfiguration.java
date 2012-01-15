@@ -460,7 +460,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = (ConfigData) configurations.get(index);
+        ConfigData cd = configurations.get(index);
         return cd.getConfiguration();
     }
 
@@ -473,7 +473,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public Configuration getConfiguration(String name)
     {
-        return (Configuration) namedConfigurations.get(name);
+        return namedConfigurations.get(name);
     }
 
     /**
@@ -518,7 +518,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     {
         for (int index = 0; index < getNumberOfConfigurations(); index++)
         {
-            if (((ConfigData) configurations.get(index)).getConfiguration() == config)
+            if (configurations.get(index).getConfiguration() == config)
             {
                 removeConfigurationAt(index);
                 return true;
@@ -536,7 +536,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData cd = (ConfigData) configurations.remove(index);
+        ConfigData cd = configurations.remove(index);
         if (cd.getName() != null)
         {
             namedConfigurations.remove(cd.getName());
@@ -653,7 +653,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @return the copied object
      */
     @Override
-    public CombinedConfiguration clone()
+    public Object clone()
     {
         CombinedConfiguration copy = (CombinedConfiguration) super.clone();
         copy.clear();

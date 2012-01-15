@@ -392,7 +392,7 @@ public class TestCombinedConfiguration
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
-        CombinedConfiguration cc2 = config.clone();
+        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -423,7 +423,7 @@ public class TestCombinedConfiguration
     public void testCloneModify()
     {
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME);
-        CombinedConfiguration cc2 = config.clone();
+        CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
         assertTrue("Name is missing", cc2.getConfigurationNames().contains(
                 TEST_NAME));
         cc2.removeConfiguration(TEST_NAME);
