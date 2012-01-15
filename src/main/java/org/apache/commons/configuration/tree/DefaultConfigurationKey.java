@@ -460,7 +460,7 @@ public class DefaultConfigurationKey
      * class implements the normal iterator interface. In addition it provides
      * some specific methods for configuration keys.
      */
-    public class KeyIterator implements Iterator<String>, Cloneable
+    public class KeyIterator implements Iterator<Object>, Cloneable
     {
         /** Stores the current key name. */
         private String current;
@@ -534,7 +534,7 @@ public class DefaultConfigurationKey
          *
          * @return the next object
          */
-        public String next()
+        public Object next()
         {
             return nextKey();
         }
