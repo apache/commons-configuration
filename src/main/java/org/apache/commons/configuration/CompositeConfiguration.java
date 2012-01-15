@@ -327,7 +327,7 @@ implements Cloneable
      */
     public Configuration getConfiguration(int index)
     {
-        return (Configuration) configList.get(index);
+        return configList.get(index);
     }
 
     /**
@@ -393,8 +393,11 @@ implements Cloneable
     @Override
     public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
     {
-        ((BaseConfiguration) getInMemoryConfiguration())
-                .setDelimiterParsingDisabled(delimiterParsingDisabled);
+        if (inMemoryConfiguration instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) inMemoryConfiguration)
+                    .setDelimiterParsingDisabled(delimiterParsingDisabled);
+        }
         super.setDelimiterParsingDisabled(delimiterParsingDisabled);
     }
 
@@ -408,8 +411,11 @@ implements Cloneable
     @Override
     public void setListDelimiter(char listDelimiter)
     {
-        ((BaseConfiguration) getInMemoryConfiguration())
-                .setListDelimiter(listDelimiter);
+        if (inMemoryConfiguration instanceof AbstractConfiguration)
+        {
+            ((AbstractConfiguration) inMemoryConfiguration)
+                    .setListDelimiter(listDelimiter);
+        }
         super.setListDelimiter(listDelimiter);
     }
 

@@ -39,6 +39,7 @@ import java.util.NoSuchElementException;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -844,6 +845,34 @@ public class TestCompositeConfiguration
         cc.addConfiguration(c2);
         assertEquals("Wrong interpolated value", "one",
                 cc.getString("property.one.ref"));
+    }
+
+    /**
+     * Tests the behavior of setListDelimiter() if the in-memory configuration
+     * is not derived from BaseConfiguration. This test is related to
+     * CONFIGURATION-476.
+     */
+    @Test
+    public void testSetListDelimiterInMemoryConfigNonBaseConfig()
+    {
+        Configuration inMemoryConfig = EasyMock.createMock(Configuration.class);
+        EasyMock.replay(inMemoryConfig);
+        cc = new CompositeConfiguration(inMemoryConfig);
+        cc.setListDelimiter(';');
+    }
+
+    /**
+     * Tests the behavior of setDelimiterParsingDisabled() if the in-memory
+     * configuration is not derived from BaseConfiguration. This test is related
+     * to CONFIGURATION-476.
+     */
+    @Test
+    public void testSetDelimiterParsingDisabledInMemoryConfigNonBaseConfig()
+    {
+        Configuration inMemoryConfig = EasyMock.createMock(Configuration.class);
+        EasyMock.replay(inMemoryConfig);
+        cc = new CompositeConfiguration(inMemoryConfig);
+        cc.setDelimiterParsingDisabled(true);
     }
 
     /**
