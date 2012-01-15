@@ -678,7 +678,7 @@ public class TestBaseConfiguration
         {
             config.addProperty("key" + i, new Integer(i));
         }
-        BaseConfiguration config2 = config.clone();
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
         for (Iterator<String> it = config.getKeys(); it.hasNext();)
         {
@@ -704,7 +704,7 @@ public class TestBaseConfiguration
         };
         config.addConfigurationListener(l);
         config.addProperty("original", Boolean.TRUE);
-        BaseConfiguration config2 = config.clone();
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
 
         config2.addProperty("clone", Boolean.TRUE);
         assertFalse("New key appears in original", config.containsKey("clone"));
@@ -725,7 +725,7 @@ public class TestBaseConfiguration
         final String key = "list";
         config.addProperty(key, "value1");
         config.addProperty(key, "value2");
-        BaseConfiguration config2 = config.clone();
+        BaseConfiguration config2 = (BaseConfiguration) config.clone();
         config2.addProperty(key, "value3");
         assertEquals("Wrong number of original properties", 2, config.getList(
                 key).size());

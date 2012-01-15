@@ -741,7 +741,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testClone() throws ConfigurationException
     {
-        PropertiesConfiguration copy = conf.clone();
+        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
         assertNotSame("Copy has same layout object", conf.getLayout(), copy.getLayout());
         assertEquals("Wrong number of event listeners for original", 1, conf.getConfigurationListeners().size());
         assertEquals("Wrong number of event listeners for clone", 1, copy.getConfigurationListeners().size());
@@ -761,7 +761,7 @@ public class TestPropertiesConfiguration
     public void testCloneNullLayout()
     {
         conf = new PropertiesConfiguration();
-        PropertiesConfiguration copy = conf.clone();
+        PropertiesConfiguration copy = (PropertiesConfiguration) conf.clone();
         assertNotSame("Layout objects are the same", conf.getLayout(), copy.getLayout());
     }
 

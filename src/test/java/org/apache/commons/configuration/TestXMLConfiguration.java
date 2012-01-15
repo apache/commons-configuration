@@ -813,7 +813,7 @@ public class TestXMLConfiguration
     @Test
     public void testClone()
     {
-        Configuration c = conf.clone();
+        Configuration c = (Configuration) conf.clone();
         assertTrue(c instanceof XMLConfiguration);
         XMLConfiguration copy = (XMLConfiguration) c;
         assertNotNull(conf.getDocument());
@@ -829,12 +829,12 @@ public class TestXMLConfiguration
 
     /**
      * Tests saving a configuration after cloning to ensure that the clone and
-     * the original are completely detachted.
+     * the original are completely detached.
      */
     @Test
     public void testCloneWithSave() throws ConfigurationException
     {
-        XMLConfiguration c = conf.clone();
+        XMLConfiguration c = (XMLConfiguration) conf.clone();
         c.addProperty("test.newProperty", Boolean.TRUE);
         conf.addProperty("test.orgProperty", Boolean.TRUE);
         c.save(testSaveConf);

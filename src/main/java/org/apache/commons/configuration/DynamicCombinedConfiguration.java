@@ -766,9 +766,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * @return the copied object
      */
     @Override
-    public DynamicCombinedConfiguration clone()
+    public Object clone()
     {
-        return (DynamicCombinedConfiguration) super.clone();
+        return super.clone();
     }
 
     /**
@@ -805,7 +805,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     protected Object resolveContainerStore(String key)
     {
-        if (((Boolean) recursive.get()).booleanValue())
+        if (recursive.get().booleanValue())
         {
             return null;
         }

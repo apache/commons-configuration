@@ -518,7 +518,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * @return the copy
      */
     @Override
-    public PropertiesConfiguration clone()
+    public Object clone()
     {
         PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
         if (layout != null)

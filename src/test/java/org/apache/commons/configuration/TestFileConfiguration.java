@@ -533,7 +533,7 @@ public class TestFileConfiguration
     {
         PropertiesConfiguration config = new PropertiesConfiguration(
                 RESOURCE_NAME);
-        PropertiesConfiguration copy = config.clone();
+        PropertiesConfiguration copy = (PropertiesConfiguration) config.clone();
         compare(config, copy);
         assertNull("URL was not reset", copy.getURL());
         assertNull("Base path was not reset", copy.getBasePath());

@@ -1059,7 +1059,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @return the copy
      */
     @Override
-    public XMLConfiguration clone()
+    public Object clone()
     {
         XMLConfiguration copy = (XMLConfiguration) super.clone();
 

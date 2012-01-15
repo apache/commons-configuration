@@ -1039,7 +1039,7 @@ implements FileConfiguration, FileSystemBased
      * @since 1.3
      */
     @Override
-    public AbstractFileConfiguration clone()
+    public Object clone()
     {
         AbstractFileConfiguration copy = (AbstractFileConfiguration) super.clone();
         copy.setBasePath(null);

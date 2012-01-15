@@ -165,7 +165,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @since 1.3
      */
     @Override
-    public BaseConfiguration clone()
+    public Object clone()
     {
         try
         {
