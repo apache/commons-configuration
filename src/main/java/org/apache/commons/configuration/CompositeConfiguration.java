@@ -27,11 +27,26 @@ import java.util.ListIterator;
 import java.util.Set;
 
 /**
- * This Configuration class allows you to add multiple different types of Configuration
- * to this CompositeConfiguration.  If you add Configuration1, and then Configuration2,
- * any properties shared will mean that Configuration1 will be returned.
- * You can add multiple different types or the same type of properties file.
- * If Configuration1 doesn't have the property, then Configuration2 will be checked.
+ * <p>{@code CompositeConfiguration} allows you to add multiple {@code Configuration}
+ * objects to an aggregated configuration. If you add Configuration1, and then Configuration2,
+ * any properties shared will mean that the value defined by Configuration1
+ * will be returned. If Configuration1 doesn't have the property, then
+ * Configuration2 will be checked. You can add multiple different types or the
+ * same type of properties file.</p>
+ * <p>When querying properties the order in which child configurations have been
+ * added is relevant. To deal with property updates, a so-called <em>in-memory
+ * configuration</em> is used. Per default, such a configuration is created
+ * automatically. All property writes target this special configuration. There
+ * are constructors which allow you to provide a specific in-memory configuration.
+ * If used that way, the in-memory configuration is always the last one in the
+ * list of child configurations. This means that for query operations all other
+ * configurations take precedence.</p>
+ * <p>Alternatively it is possible to mark a child configuration as in-memory
+ * configuration when it is added. In this case the treatment of the in-memory
+ * configuration is slightly different: it remains in the list of child
+ * configurations at the position it was added, i.e. its priority for property
+ * queries can be defined by adding the child configurations in the correct
+ * order.</p>
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
@@ -50,6 +65,12 @@ implements Cloneable
     private Configuration inMemoryConfiguration;
 
     /**
+     * Stores a flag whether the current in-memory configuration is also a
+     * child configuration.
+     */
+    private boolean inMemoryConfigIsChild;
+
+    /**
      * Creates an empty CompositeConfiguration object which can then
      * be added some other Configuration files
      */
@@ -59,9 +80,14 @@ implements Cloneable
     }
 
     /**
-     * Creates a CompositeConfiguration object with a specified in memory
-     * configuration. This configuration will store any changes made to
-     * the CompositeConfiguration.
+     * Creates a CompositeConfiguration object with a specified <em>in-memory
+     * configuration</em>. This configuration will store any changes made to the
+     * {@code CompositeConfiguration}. Note: Use this constructor if you want to
+     * set a special type of in-memory configuration. If you have a
+     * configuration which should act as both a child configuration and as
+     * in-memory configuration, use
+     * {@link #addConfiguration(Configuration, boolean)} with a value of
+     * <b>true</b> instead.
      *
      * @param inMemoryConfiguration the in memory configuration to use
      */
@@ -84,11 +110,12 @@ implements Cloneable
     }
 
     /**
-     * Creates a CompositeConfiguration with a specified in memory
-     * configuration, and then adds the given collection of configurations.
+     * Creates a CompositeConfiguration with a specified <em>in-memory
+     * configuration</em>, and then adds the given collection of configurations.
      *
      * @param inMemoryConfiguration the in memory configuration to use
      * @param configurations        the collection of configurations to add
+     * @see #CompositeConfiguration(Configuration)
      */
     public CompositeConfiguration(Configuration inMemoryConfiguration,
             Collection<? extends Configuration> configurations)
@@ -111,17 +138,55 @@ implements Cloneable
      */
     public void addConfiguration(Configuration config)
     {
+        addConfiguration(config, false);
+    }
+
+    /**
+     * Adds a child configuration and optionally makes it the <em>in-memory
+     * configuration</em>. This means that all future property write operations
+     * are executed on this configuration. Note that the current in-memory
+     * configuration is replaced by the new one. If it was created automatically
+     * or passed to the constructor, it is removed from the list of child
+     * configurations! Otherwise, it stays in the list of child configurations
+     * at its current position, but it passes its role as in-memory
+     * configuration to the new one.
+     *
+     * @param config the configuration to be added
+     * @param asInMemory <b>true</b> if this configuration becomes the new
+     *        <em>in-memory</em> configuration, <b>false</b> otherwise
+     * @since 1.8
+     */
+    public void addConfiguration(Configuration config, boolean asInMemory)
+    {
         if (!configList.contains(config))
         {
-            // As the inMemoryConfiguration contains all manually added keys,
-            // we must make sure that it is always last. "Normal", non composed
-            // configuration add their keys at the end of the configuration and
-            // we want to mimic this behavior.
-            configList.add(configList.indexOf(inMemoryConfiguration), config);
+            if (asInMemory)
+            {
+                replaceInMemoryConfiguration(config);
+                inMemoryConfigIsChild = true;
+            }
+
+            if (!inMemoryConfigIsChild)
+            {
+                // As the inMemoryConfiguration contains all manually added
+                // keys, we must make sure that it is always last. "Normal", non
+                // composed configurations add their keys at the end of the
+                // configuration and we want to mimic this behavior.
+                configList.add(configList.indexOf(inMemoryConfiguration),
+                        config);
+            }
+            else
+            {
+                // However, if the in-memory configuration is a regular child,
+                // only the order in which child configurations are added is
+                // relevant
+                configList.add(config);
+            }
 
             if (config instanceof AbstractConfiguration)
             {
-                ((AbstractConfiguration) config).setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+                ((AbstractConfiguration) config)
+                        .setThrowExceptionOnMissing(isThrowExceptionOnMissing());
             }
         }
     }
@@ -152,7 +217,9 @@ implements Cloneable
     }
 
     /**
-     * Remove all configuration reinitialize the in memory configuration.
+     * Removes all child configurations and reinitializes the <em>in-memory
+     * configuration</em>. <strong>Attention:</strong> A new in-memory
+     * configuration is created; the old one is lost.
      */
     @Override
     public void clear()
@@ -164,6 +231,7 @@ implements Cloneable
         ((BaseConfiguration) inMemoryConfiguration).setListDelimiter(getListDelimiter());
         ((BaseConfiguration) inMemoryConfiguration).setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         configList.add(inMemoryConfiguration);
+        inMemoryConfigIsChild = false;
     }
 
     /**
@@ -464,6 +532,21 @@ implements Cloneable
         }
 
         return source;
+    }
+
+    /**
+     * Replaces the current in-memory configuration by the given one.
+     *
+     * @param config the new in-memory configuration
+     */
+    private void replaceInMemoryConfiguration(Configuration config)
+    {
+        if (!inMemoryConfigIsChild)
+        {
+            // remove current in-memory configuration
+            configList.remove(inMemoryConfiguration);
+        }
+        inMemoryConfiguration = config;
     }
 
     /**

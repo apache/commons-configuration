@@ -876,6 +876,45 @@ public class TestCompositeConfiguration
     }
 
     /**
+     * Tests whether a configuration can act as both regular child configuration
+     * and in-memory configuration. This test is related to CONFIGURATION-471.
+     */
+    @Test
+    public void testUseChildConfigAsInMemoryConfig()
+    {
+        conf1.setProperty(TEST_PROPERTY, "conf1");
+        conf2.setProperty(TEST_PROPERTY, "conf2");
+        cc.addConfiguration(conf1, true);
+        cc.addConfiguration(conf2);
+        assertEquals("Wrong number of configurations", 2,
+                cc.getNumberOfConfigurations());
+        assertEquals("Wrong property", "conf1", cc.getString(TEST_PROPERTY));
+        cc.addProperty("newProperty", "newValue");
+        assertEquals("Not added to in-memory config", "newValue",
+                conf1.getString("newProperty"));
+    }
+
+    /**
+     * Tests whether the in-memory configuration can be replaced by a new child
+     * configuration.
+     */
+    @Test
+    public void testReplaceInMemoryConfig()
+    {
+        conf1.setProperty(TEST_PROPERTY, "conf1");
+        conf2.setProperty(TEST_PROPERTY, "conf2");
+        cc.addConfiguration(conf1, true);
+        cc.addProperty("newProperty1", "newValue1");
+        cc.addConfiguration(conf2, true);
+        cc.addProperty("newProperty2", "newValue2");
+        assertEquals("Wrong property", "conf1", cc.getString(TEST_PROPERTY));
+        assertEquals("Not added to in-memory config", "newValue1",
+                conf1.getString("newProperty1"));
+        assertEquals("In-memory config not changed", "newValue2",
+                conf2.getString("newProperty2"));
+    }
+
+    /**
      * A test configuration event listener that counts the number of received
      * events. Used for testing the event facilities.
      */
