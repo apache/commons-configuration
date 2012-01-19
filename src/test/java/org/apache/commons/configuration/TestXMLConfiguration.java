@@ -1834,6 +1834,24 @@ public class TestXMLConfiguration
     }
 
     /**
+     * Tests whether it is possible to add nodes to a XMLConfiguration through a
+     * SubnodeConfiguration and whether these nodes have the correct type. This
+     * test is related to CONFIGURATION-472.
+     */
+    @Test
+    public void testAddNodesToSubnodeConfiguration()
+            throws ConfigurationException
+    {
+        SubnodeConfiguration sub = conf.configurationAt("element2");
+        sub.addProperty("newKey", "newvalue");
+        ConfigurationNode root = conf.getRootNode();
+        ConfigurationNode elem = root.getChildren("element2").get(0);
+        ConfigurationNode newNode = elem.getChildren("newKey").get(0);
+        assertTrue("Wrong node type: " + newNode,
+                newNode instanceof XMLConfiguration.XMLNode);
+    }
+
+    /**
      * Prepares a configuration object for testing a reload operation.
      *
      * @return the initialized configuration
