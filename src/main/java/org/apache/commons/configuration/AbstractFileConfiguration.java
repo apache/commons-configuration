@@ -58,6 +58,15 @@ import org.apache.commons.logging.LogFactory;
  * directory or a URL. It can be set using the {@code setBasePath()}
  * method. The file name, non surprisingly, defines the name of the configuration
  * file.</li></ul></p>
+ * <p>The configuration source to be loaded can be specified using one of the
+ * methods described above. Then the parameterless {@code load()} method can be
+ * called. Alternatively, one of the {@code load()} methods can be used which is
+ * passed the source directly. These methods typically do not change the
+ * internally stored file; however, if the configuration is not yet associated
+ * with a configuration source, the first call to one of the {@code load()}
+ * methods sets the base path and the source URL. This fact has to be taken
+ * into account when calling {@code load()} multiple times with different file
+ * paths.</p>
  * <p>Note that the {@code load()} methods do not wipe out the configuration's
  * content before the new configuration file is loaded. Thus it is very easy to
  * construct a union configuration by simply loading multiple configuration
@@ -231,9 +240,10 @@ implements FileConfiguration, FileSystemBased
     }
 
     /**
-     * Locate the specified file and load the configuration. This does not
-     * change the source of the configuration (i.e. the internally maintained file name).
-     * Use one of the setter methods for this purpose.
+     * Locate the specified file and load the configuration. If the configuration is
+     * already associated with a source, the current source is not changed.
+     * Otherwise (i.e. this is the first load operation), the source URL and
+     * the base path are set now based on the source to be loaded.
      *
      * @param fileName the name of the file to be loaded
      * @throws ConfigurationException if an error occurs
@@ -261,9 +271,10 @@ implements FileConfiguration, FileSystemBased
     }
 
     /**
-     * Load the configuration from the specified file. This does not change
-     * the source of the configuration (i.e. the internally maintained file
-     * name). Use one of the setter methods for this purpose.
+     * Load the configuration from the specified file. If the configuration is
+     * already associated with a source, the current source is not changed.
+     * Otherwise (i.e. this is the first load operation), the source URL and
+     * the base path are set now based on the source to be loaded.
      *
      * @param file the file to load
      * @throws ConfigurationException if an error occurs
@@ -285,9 +296,10 @@ implements FileConfiguration, FileSystemBased
     }
 
     /**
-     * Load the configuration from the specified URL. This does not change the
-     * source of the configuration (i.e. the internally maintained file name).
-     * Use on of the setter methods for this purpose.
+     * Load the configuration from the specified URL. If the configuration is
+     * already associated with a source, the current source is not changed.
+     * Otherwise (i.e. this is the first load operation), the source URL and
+     * the base path are set now based on the source to be loaded.
      *
      * @param url the URL of the file to be loaded
      * @throws ConfigurationException if an error occurs
