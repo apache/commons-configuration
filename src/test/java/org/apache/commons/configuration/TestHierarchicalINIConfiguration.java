@@ -30,6 +30,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.After;
@@ -123,11 +124,24 @@ public class TestHierarchicalINIConfiguration
     private static HierarchicalINIConfiguration setUpConfig(String data)
             throws ConfigurationException
     {
-        StringReader reader = new StringReader(data);
         HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        load(instance, data);
+        return instance;
+    }
+
+    /**
+     * Loads the specified content into the given configuration instance.
+     *
+     * @param instance the configuration
+     * @param data the data to be loaded
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void load(HierarchicalINIConfiguration instance, String data)
+            throws ConfigurationException
+    {
+        StringReader reader = new StringReader(data);
         instance.load(reader);
         reader.close();
-        return instance;
     }
 
     /**
@@ -879,6 +893,35 @@ public class TestHierarchicalINIConfiguration
         Iterator<String> keys = section.getKeys();
         assertEquals("Wrong key", "var1", keys.next());
         assertFalse("Too many keys", keys.hasNext());
+    }
+
+    /**
+     * Tests whether the list delimiter character is recognized.
+     */
+    @Test
+    public void testValueWithDelimiters() throws ConfigurationException
+    {
+        HierarchicalINIConfiguration config =
+                setUpConfig("[test]" + LINE_SEPARATOR + "list=1,2,3"
+                        + LINE_SEPARATOR);
+        List<Object> list = config.getList("test.list");
+        assertEquals("Wrong number of elements", 3, list.size());
+        assertEquals("Wrong element at 1", "1", list.get(0));
+        assertEquals("Wrong element at 2", "2", list.get(1));
+        assertEquals("Wrong element at 3", "3", list.get(2));
+    }
+
+    /**
+     * Tests whether parsing of lists can be disabled.
+     */
+    @Test
+    public void testListParsingDisabled() throws ConfigurationException
+    {
+        HierarchicalINIConfiguration config =
+                new HierarchicalINIConfiguration();
+        config.setDelimiterParsingDisabled(true);
+        load(config, "[test]" + LINE_SEPARATOR + "nolist=1,2,3");
+        assertEquals("Wrong value", "1,2,3", config.getString("test.nolist"));
     }
 
     /**

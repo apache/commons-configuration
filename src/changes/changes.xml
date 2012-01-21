@@ -34,6 +34,12 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-475">
         Class ConfigurationKey was deprecated in favour of DefaultConfigurationKey.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-474">
+        Implemented delimiter parsing in HierarchicalINIConfiguration to be
+        consistent with other Configuration implementations. Note that this can
+        impact existing code. To switch back to the old behavior, call
+        setDelimiterParsingDisabled(true) before loading the configuration.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-471">
         CompositeConfiguration now provides better support for child
         configurations that are used as in-memory configuration.

@@ -24,6 +24,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -314,7 +315,7 @@ public class HierarchicalINIConfiguration extends
                     Iterator<?> values = ((Collection<?>) value).iterator();
                     while (values.hasNext())
                     {
-                        value = (Object) values.next();
+                        value = values.next();
                         out.print(key);
                         out.print(" = ");
                         out.print(formatValue(value.toString()));
@@ -384,9 +385,7 @@ public class HierarchicalINIConfiguration extends
                             // use space for properties with no key
                             key = " ";
                         }
-                        ConfigurationNode node = createNode(key);
-                        node.setValue(value);
-                        sectionNode.addChild(node);
+                        createValueNodes(sectionNode, key, value);
                     }
                 }
 
@@ -397,6 +396,36 @@ public class HierarchicalINIConfiguration extends
         {
             throw new ConfigurationException(
                     "Unable to load the configuration", e);
+        }
+    }
+
+    /**
+     * Creates the node(s) for the given key value-pair. If delimiter parsing is
+     * enabled, the value string is split if possible, and for each single value
+     * a node is created. Otherwise only a single node is added to the section.
+     *
+     * @param sectionNode the section node new nodes have to be added
+     * @param key the key
+     * @param value the value string
+     */
+    private void createValueNodes(ConfigurationNode sectionNode, String key,
+            String value)
+    {
+        Collection<String> values;
+        if (isDelimiterParsingDisabled())
+        {
+            values = Collections.singleton(value);
+        }
+        else
+        {
+            values = PropertyConverter.split(value, getListDelimiter(), false);
+        }
+
+        for (String v : values)
+        {
+            ConfigurationNode node = createNode(key);
+            node.setValue(v);
+            sectionNode.addChild(node);
         }
     }
 
