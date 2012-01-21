@@ -20,10 +20,10 @@ import java.util.ArrayList;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-import org.apache.commons.jexl.Expression;
-import org.apache.commons.jexl.ExpressionFactory;
-import org.apache.commons.jexl.JexlContext;
-import org.apache.commons.jexl.JexlHelper;
+import org.apache.commons.jexl2.Expression;
+import org.apache.commons.jexl2.JexlContext;
+import org.apache.commons.jexl2.JexlEngine;
+import org.apache.commons.jexl2.MapContext;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrLookup;
@@ -79,7 +79,10 @@ public class ExprLookup extends StrLookup
     private AbstractConfiguration configuration;
 
     /** The JexlContext */
-    private JexlContext context = JexlHelper.createContext();
+    private JexlContext context = new MapContext();
+
+    /** The engine. */
+    private final JexlEngine engine = new JexlEngine();
 
     /** The String to use to start subordinate lookup expressions */
     private String prefixMatcher = DEFAULT_PREFIX;
@@ -142,13 +145,11 @@ public class ExprLookup extends StrLookup
      * Add the Variables that will be accessible within expressions.
      * @param list The list of Variables.
      */
-    // It should be safe to put data in the JEXL context the way we do it here
-    @SuppressWarnings("unchecked")
     public void setVariables(Variables list)
     {
         for (Variable var : list)
         {
-            context.getVars().put(var.getName(), var.getValue());
+            context.set(var.getName(), var.getValue());
         }
     }
 
@@ -186,7 +187,7 @@ public class ExprLookup extends StrLookup
 
         try
         {
-            Expression exp = ExpressionFactory.createExpression(result);
+            Expression exp = engine.createExpression(result);
             result = (String) exp.evaluate(context);
         }
         catch (Exception e)
