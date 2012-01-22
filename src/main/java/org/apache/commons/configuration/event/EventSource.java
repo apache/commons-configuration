@@ -75,6 +75,9 @@ public class EventSource
     /** A collection for the registered error listeners.*/
     private Collection<ConfigurationErrorListener> errorListeners;
 
+    /** A lock object for guarding access to the detail events counter. */
+    private final Object lockDetailEventsCount = new Object();
+
     /** A counter for the detail events. */
     private int detailEvents;
 
@@ -152,7 +155,7 @@ public class EventSource
      */
     public void setDetailEvents(boolean enable)
     {
-        synchronized (listeners)
+        synchronized (lockDetailEventsCount)
         {
             if (enable)
             {
@@ -353,7 +356,7 @@ public class EventSource
      */
     private boolean checkDetailEvents(int limit)
     {
-        synchronized (listeners)
+        synchronized (lockDetailEventsCount)
         {
             return detailEvents > limit;
         }
