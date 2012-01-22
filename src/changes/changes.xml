@@ -54,6 +54,10 @@
       <action dev="ebourg" type="add" issue="CONFIGURATION-466">
         Binary literals are now supported (i.e Ob11010001).
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-465">
+        Updated the dependency to Commons Jexl to version 2.1.1. This version
+        provides correct OSGi manifest headers.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-463">
         Improved documentation of AbstractFileConfiguration related to load()
         methods and their impact on the base path.
