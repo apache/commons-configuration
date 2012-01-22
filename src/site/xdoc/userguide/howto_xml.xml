@@ -118,7 +118,7 @@ String textColor = config.getString("colors.text");
 String linkNormal = config.getString("colors.link[@normal]");
 String defColor = config.getString("colors.default");
 int rowsPerPage = config.getInt("rowsPerPage");
-List buttons = config.getList("buttons.name");
+List<Object> buttons = config.getList("buttons.name");
 ]]></source>
 			<p>
 				This listing demonstrates some important points about constructing
@@ -268,14 +268,14 @@ List buttons = config.getList("buttons.name");
 Object prop = config.getProperty("tables.table.name");
 if(prop instanceof Collection)
 {
-	System.out.println("Number of tables: " + ((Collection) prop).size());
+	System.out.println("Number of tables: " + ((Collection<?>) prop).size());
 }
 ]]></source>
 			<p>
 				An alternative to this code would be the <code>getList()</code>
 				method of <code>Configuration</code>. If a property is known to
 				have multiple values (as is the table name property in this example),
-				<code>getList()</code> allows to retrieve all values at once.
+				<code>getList()</code> allows retrieving all values at once.
 				<b>Note:</b> it is legal to call <code>getString()</code>
 				or one of the other getter methods on a property with multiple
 				values; it returns the first element of the list.
@@ -372,7 +372,7 @@ if(prop instanceof Collection)
    			<source><![CDATA[
 HierarchicalConfiguration sub = config.configurationAt("tables.table(0)");
 String tableName = sub.getString("name");  // only need to provide relative path
-List fieldNames = sub.getList("fields.field.name");
+List<Object> fieldNames = sub.getList("fields.field.name");
 ]]></source>
             <p>
                 For dealing with complex list-like structures there is another
@@ -386,9 +386,9 @@ List fieldNames = sub.getList("fields.field.name");
                 by one:
             </p>
    			<source><![CDATA[
-List fieldNames = config.getList("tables.table(0).fields.field.name");
-List fieldTypes = config.getList("tables.table(0).fields.field.type");
-List ... // further calls for other data that might be stored in the config
+List<Object> fieldNames = config.getList("tables.table(0).fields.field.name");
+List<Object> fieldTypes = config.getList("tables.table(0).fields.field.type");
+List<Object> ... // further calls for other data that might be stored in the config
 ]]></source>
             <p>
                 But this is not very readable and will fail if not all field
@@ -405,10 +405,10 @@ List ... // further calls for other data that might be stored in the config
                 very handy when processing list-like structures:
             </p>
    			<source><![CDATA[
-List fields = config.configurationsAt("tables.table(0).fields.field");
-for(Iterator it = fields.iterator(); it.hasNext();)
+List<HierarchicalConfiguration> fields = 
+    config.configurationsAt("tables.table(0).fields.field");
+for(HierarchicalConfiguration sub : fields)
 {
-    HierarchicalConfiguration sub = (HierarchicalConfiguration) it.next();
     // sub contains all data about a single field
     String fieldName = sub.getString("name");
     String fieldType = sub.getString("type");
@@ -848,7 +848,7 @@ HierarchicalConfiguration config = ...
 config.setExpressionEngine(new XPathExpressionEngine());
 
 // Now we can use XPATH queries:
-List fields = config.getList("tables/table[1]/fields/name");
+List<Object> fields = config.getList("tables/table[1]/fields/name");
          ]]></source>
             <p>
                 XPATH expressions are not only used for selecting properties

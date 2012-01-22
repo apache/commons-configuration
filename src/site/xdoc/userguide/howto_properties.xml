@@ -128,7 +128,7 @@ colors.pie = #FF0000, #00FF00, #0000FF
         </p>
 <source>
 String[] colors = config.getStringArray("colors.pie");
-List colorList = config.getList("colors.pie");
+List&lt;Object&gt; colorList = config.getList("colors.pie");
 </source>
         <p>
           Alternatively, you can specify a list of values in your properties file by using

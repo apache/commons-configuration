@@ -68,7 +68,7 @@ cc.addConfiguration(fileToDefaults);
 				save changes made to a configuration, and you are using a
 				CompositeConfiguration, then you will need to pass into
 				the constructor of the CompositeConfiguration what Configuration
-				to save the changes via.  
+				to save the changes via.
 			</p>
     			<source><![CDATA[
 PropertiesConfiguration saveConfiguration = new PropertiesConfiguration(fileToSaveChangesIn);
@@ -79,19 +79,22 @@ saveConfiguration.save();
 ]]></source>
 			<p>
 				Alternatively, you can just request the
-				inMemoryConfiguration that stores the changes:
+				in-memory configuration that stores the changes. The following
+                example fragment copies all properties from the in-memory
+                configuration into a <code>DatabaseConfiguration</code>, so
+                that they are made persistent:
     			<source><![CDATA[
 Configuration changes = myCompositeConfiguration.getInMemoryConfiguration();
 DatabaseConfiguration config = new DatabaseConfiguration(datasource, "configuration", "key", "value");
-for (Iterator i = changes.getKeys().iterator();i.hasNext()){
-	String key = (key)i.next();
+for (Iterator<String> i = changes.getKeys(); i.hasNext()){
+	String key = i.next();
 	Object value = changes.get(key);
 	config.setProperty(key,value);
 }
 ]]></source>
 			</p>
-		
-		</subsection>		
+
+		</subsection>
 	</section>
 </body>
 
