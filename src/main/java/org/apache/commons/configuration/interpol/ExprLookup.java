@@ -78,11 +78,11 @@ public class ExprLookup extends StrLookup
     /** Configuration being operated on */
     private AbstractConfiguration configuration;
 
-    /** The JexlContext */
-    private JexlContext context = new MapContext();
-
     /** The engine. */
     private final JexlEngine engine = new JexlEngine();
+
+    /** The variables maintained by this object. */
+    private Variables variables;
 
     /** The String to use to start subordinate lookup expressions */
     private String prefixMatcher = DEFAULT_PREFIX;
@@ -147,10 +147,7 @@ public class ExprLookup extends StrLookup
      */
     public void setVariables(Variables list)
     {
-        for (Variable var : list)
-        {
-            context.set(var.getName(), var.getValue());
-        }
+        variables = new Variables(list);
     }
 
     /**
@@ -188,7 +185,7 @@ public class ExprLookup extends StrLookup
         try
         {
             Expression exp = engine.createExpression(result);
-            result = (String) exp.evaluate(context);
+            result = (String) exp.evaluate(createContext());
         }
         catch (Exception e)
         {
@@ -196,6 +193,33 @@ public class ExprLookup extends StrLookup
         }
 
         return result;
+    }
+
+    /**
+     * Creates a new {@code JexlContext} and initializes it with the variables
+     * managed by this Lookup object.
+     *
+     * @return the newly created context
+     */
+    private JexlContext createContext()
+    {
+        JexlContext ctx = new MapContext();
+        initializeContext(ctx);
+        return ctx;
+    }
+
+    /**
+     * Initializes the specified context with the variables managed by this
+     * Lookup object.
+     *
+     * @param ctx the context to be initialized
+     */
+    private void initializeContext(JexlContext ctx)
+    {
+        for (Variable var : variables)
+        {
+            ctx.set(var.getName(), var.getValue());
+        }
     }
 
     /**
@@ -209,11 +233,24 @@ public class ExprLookup extends StrLookup
          */
         private static final long serialVersionUID = 20111205L;
 
-        /*
-        public void setVariable(Variable var)
+        /**
+         * Creates a new empty instance of {@code Variables}.
+         */
+        public Variables()
         {
-            add(var);
-        } */
+            super();
+        }
+
+        /**
+         * Creates a new instance of {@code Variables} and copies the content of
+         * the given object.
+         *
+         * @param vars the {@code Variables} object to be copied
+         */
+        public Variables(Variables vars)
+        {
+            super(vars);
+        }
 
         public Variable getVariable()
         {
