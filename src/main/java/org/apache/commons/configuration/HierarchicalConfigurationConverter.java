@@ -125,7 +125,7 @@ abstract class HierarchicalConfigurationConverter
 
         while (it.hasNext())
         {
-            elementEnd((String) it.next());
+            elementEnd(it.next());
         }
     }
 
@@ -161,7 +161,8 @@ abstract class HierarchicalConfigurationConverter
      * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct, Configuration config, Set<String> keySet)
+    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct,
+            Configuration config, Set<String> keySet)
     {
         ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
         ConfigurationKey k = keyLast.commonKey(keyAct);

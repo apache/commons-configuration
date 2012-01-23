@@ -484,7 +484,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     public List<AbstractConfiguration> getConfigurations()
     {
         List<AbstractConfiguration> list = new ArrayList<AbstractConfiguration>(configurations.size());
-        for(ConfigData cd : configurations)
+        for (ConfigData cd : configurations)
         {
             list.add(cd.getConfiguration());
         }
@@ -501,7 +501,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     public List<String> getConfigurationNameList()
     {
         List<String> list = new ArrayList<String>(configurations.size());
-        for(ConfigData cd : configurations)
+        for (ConfigData cd : configurations)
         {
             list.add(cd.getName());
         }

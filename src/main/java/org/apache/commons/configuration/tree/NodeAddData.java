@@ -165,7 +165,7 @@ public class NodeAddData
      */
     public List<String> getPathNodes()
     {
-        if(pathNodes != null)
+        if (pathNodes != null)
         {
             return Collections.unmodifiableList(pathNodes);
         }

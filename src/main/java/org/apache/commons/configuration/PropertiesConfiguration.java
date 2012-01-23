@@ -627,6 +627,15 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
                         + "]]|\\\\.)*)(\\s*(\\s+|[" + new String(SEPARATORS)
                         + "])\\s*)(.*)");
 
+        /** Constant for the index of the group for the key. */
+        private static final int IDX_KEY = 1;
+
+        /** Constant for the index of the group for the value. */
+        private static final int IDX_VALUE = 5;
+
+        /** Constant for the index of the group for the separator. */
+        private static final int IDX_SEPARATOR = 3;
+
         /** Stores the comment lines for the currently processed property.*/
         private List<String> commentLines;
 
@@ -874,10 +883,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
             String[] result = {"", "", ""};
 
-            if (matcher.matches()) {
-                result[0] = matcher.group(1).trim();
-                result[1] = matcher.group(5).trim();
-                result[2] = matcher.group(3);
+            if (matcher.matches())
+            {
+                result[0] = matcher.group(IDX_KEY).trim();
+                result[1] = matcher.group(IDX_VALUE).trim();
+                result[2] = matcher.group(IDX_SEPARATOR);
             }
 
             return result;

@@ -119,7 +119,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param processedCtx a set with the so far processed objects
      * @throws NamingException If JNDI has an issue.
      */
-    private void recursiveGetKeys(Set<String> keys, Context context, String prefix, Set<Context> processedCtx) throws NamingException
+    private void recursiveGetKeys(Set<String> keys, Context context, String prefix,
+            Set<Context> processedCtx) throws NamingException
     {
         processedCtx.add(context);
         NamingEnumeration<NameClassPair> elements = null;

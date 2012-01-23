@@ -488,8 +488,8 @@ public final class PropertyConverter
             if (size >= 1 && ((elements.get(0)).length() == 2 || (elements.get(0)).length() == 0))
             {
                 String language = elements.get(0);
-                String country = ((size >= 2) ? elements.get(1) : "");
-                String variant = ((size >= 3) ? elements.get(2) : "");
+                String country = (size >= 2) ? elements.get(1) : "";
+                String variant = (size >= 3) ? elements.get(2) : "";
 
                 return new Locale(language, country, variant);
             }
@@ -755,7 +755,8 @@ public final class PropertyConverter
         {
             try
             {
-                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME).getConstructor(new Class[] {String.class});
+                Constructor<?> ctor = Class.forName(INTERNET_ADDRESS_CLASSNAME)
+                        .getConstructor(new Class[] {String.class});
                 return ctor.newInstance(new Object[] {value});
             }
             catch (Exception e)
@@ -940,7 +941,7 @@ public final class PropertyConverter
             String s = (String) value;
             if (s.indexOf(delimiter) > 0)
             {
-                return split((String) s, delimiter);
+                return split(s, delimiter);
             }
         }
 
@@ -1010,14 +1011,17 @@ public final class PropertyConverter
     }
 
     /**
-     * Helper method for converting a value to a constant of an enumeration class.
+     * Helper method for converting a value to a constant of an enumeration
+     * class.
+     *
      * @param enumClass the enumeration class
      * @param value the value to be converted
      * @return the converted value
      */
     @SuppressWarnings("unchecked")
     // conversion is safe because we know that the class is an Enum class
-    private static Object convertToEnum(Class<?> enumClass, Object value) {
+    private static Object convertToEnum(Class<?> enumClass, Object value)
+    {
         return toEnum(value, enumClass.asSubclass(Enum.class));
     }
 }

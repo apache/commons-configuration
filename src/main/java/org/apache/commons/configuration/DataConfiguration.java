@@ -180,7 +180,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      * method returns null unless {@link #isThrowExceptionOnMissing()} is set
      * to <tt>true</tt>.
      *
-     * @param cls the target type of the value
+     * @param <T> the target type of the value
+     * @param cls the target class of the value
      * @param key the key of the value
      *
      * @return the value of the requested type for the key
@@ -235,7 +236,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
         if (Date.class.equals(cls) || Calendar.class.equals(cls))
         {
-            return convert(cls, key, interpolate(value), new String[] { getDefaultDateFormat() });
+            return convert(cls, key, interpolate(value), new String[] {getDefaultDateFormat()});
         }
         else
         {
@@ -1094,7 +1095,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key)
     {
-        return (URL) get(URL.class, key);
+        return get(URL.class, key);
     }
 
     /**
@@ -1111,7 +1112,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public URL getURL(String key, URL defaultValue)
     {
-        return (URL) get(URL.class, key, defaultValue);
+        return get(URL.class, key, defaultValue);
     }
 
     /**
@@ -1191,7 +1192,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Date getDate(String key)
     {
-        return (Date) get(Date.class, key);
+        return get(Date.class, key);
     }
 
     /**
@@ -1348,7 +1349,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(convert(Date.class, key, interpolate(Array.get(value, i)), new String[] { format }));
+                list.add(convert(Date.class, key, interpolate(Array.get(value, i)), new String[] {format}));
             }
         }
         else if (value instanceof Collection)
@@ -1358,14 +1359,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
             for (Object o : values)
             {
-                list.add(convert(Date.class, key, interpolate(o), new String[] { format }));
+                list.add(convert(Date.class, key, interpolate(o), new String[] {format}));
             }
         }
         else
         {
             // attempt to convert a single value
             list = new ArrayList<Date>();
-            list.add(convert(Date.class, key, interpolate(value), new String[] { format }));
+            list.add(convert(Date.class, key, interpolate(value), new String[] {format}));
         }
 
         return list;
@@ -1467,7 +1468,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Calendar getCalendar(String key)
     {
-        return (Calendar) get(Calendar.class, key);
+        return get(Calendar.class, key);
     }
 
     /**
@@ -1639,7 +1640,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
             int length = Array.getLength(value);
             for (int i = 0; i < length; i++)
             {
-                list.add(convert(Calendar.class, key, interpolate(Array.get(value, i)), new String[] { format }));
+                list.add(convert(Calendar.class, key, interpolate(Array.get(value, i)), new String[] {format}));
             }
         }
         else if (value instanceof Collection)
@@ -1649,14 +1650,14 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
 
             for (Object o : values)
             {
-                list.add(convert(Calendar.class, key, interpolate(o), new String[] { format }));
+                list.add(convert(Calendar.class, key, interpolate(o), new String[] {format}));
             }
         }
         else
         {
             // attempt to convert a single value
             list = new ArrayList<Calendar>();
-            list.add(convert(Calendar.class, key, interpolate(value), new String[] { format }));
+            list.add(convert(Calendar.class, key, interpolate(value), new String[] {format}));
         }
 
         return list;
@@ -1766,7 +1767,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key)
     {
-        return (Locale) get(Locale.class, key);
+        return get(Locale.class, key);
     }
 
     /**
@@ -1783,7 +1784,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Locale getLocale(String key, Locale defaultValue)
     {
-        return (Locale) get(Locale.class, key, defaultValue);
+        return get(Locale.class, key, defaultValue);
     }
 
     /**
@@ -1862,7 +1863,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key)
     {
-        return (Color) get(Color.class, key);
+        return get(Color.class, key);
     }
 
     /**
@@ -1879,7 +1880,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
      */
     public Color getColor(String key, Color defaultValue)
     {
-        return (Color) get(Color.class, key, defaultValue);
+        return get(Color.class, key, defaultValue);
     }
 
     /**

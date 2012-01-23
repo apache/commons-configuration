@@ -529,7 +529,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             Iterator<String> it = getKeys();
             while (it.hasNext())
             {
-                String key = (String) it.next();
+                String key = it.next();
                 if (useIterator)
                 {
                     try
@@ -1133,7 +1133,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
             List<?> l = (List<?>) value;
 
             // add the interpolated elements in the new list
-            for(Object elem : l)
+            for (Object elem : l)
             {
                 list.add(interpolate(elem));
             }
@@ -1265,7 +1265,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         {
             for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
-                String key = (String) it.next();
+                String key = it.next();
                 Object value = c.getProperty(key);
                 fireEvent(EVENT_ADD_PROPERTY, key, value, true);
                 addPropertyValues(key, value, DISABLED_DELIMITER);
@@ -1299,7 +1299,7 @@ public abstract class AbstractConfiguration extends EventSource implements Confi
         c.setDelimiterParsingDisabled(true);
         for (Iterator<String> it = getKeys(); it.hasNext();)
         {
-            String key = (String) it.next();
+            String key = it.next();
             c.setProperty(key, getList(key));
         }
 
