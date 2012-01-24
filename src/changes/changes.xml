@@ -26,13 +26,13 @@
 
   <body>
     <release version="1.8" date="in SVN"
-      description="TBD">
+      description="Support for Java 1.5">
       <action dev="oheger" type="fix" issue="CONFIGURATION-476">
         Fixed possible ClassCastExceptions in CompositeConfiguration related to
         special in-memory configurations.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-475">
-        Class ConfigurationKey was deprecated in favour of DefaultConfigurationKey.
+        Class ConfigurationKey was deprecated in favor of DefaultConfigurationKey.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-474">
         Implemented delimiter parsing in HierarchicalINIConfiguration to be
