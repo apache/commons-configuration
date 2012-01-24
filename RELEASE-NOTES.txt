@@ -1,7 +1,7 @@
 $Id$
 
                            Commons Configuration Package
-                               Version 1.7
+                               Version 1.8
                                Release Notes
 
 
@@ -9,280 +9,69 @@ INTRODUCTION
 ============
 
 This document contains the release notes for this version of the Commons
-Configuration component, and highlights changes since the previous version.
+Configuration component. It describes the changes since the previous version.
 The Commons Configuration software library provides a generic configuration
 interface which enables an application to read configuration data from a variety
 of sources.
 
-It has been a while since the last release, therefore numerous bug fixes have
-accumulated. Most of them are not critical, but make the library more stable
-and consistent.
+The main focus of the 1.8 release is support for Java 1.5; this is now the
+minimum required Java version. The API has been adapted to new language
+features - mainly generics - where it makes sense. This could be achieved in a
+binary compatible way; Commons Configuration 1.8 is fully binary compatible to
+the previous version.
 
-There are also some new features, e.g. multi-tenant configurations, or
-improvements of DefaultConfigurationBuilder. With the new support for file
-systems a major weakness of earlier versions of Commons Configuration has been
-addressed: the algorithm for locating configuration files.
+Although Commons Configuration 1.8 targets Java 1.5, it was not possible to
+update the dependency to Commons Lang to the new 3.x version. This is due to
+the fact that the public API of Configuration contains some classes of
+Commons Lang. Thus changing the dependency would mean breaking compatibility.
+Therefore, the update of the Commons Lang dependency can only take place in the
+next major release. In the mean time, if you want to use new features provided
+by Commons Lang 3.x, you have to add both versions of the library to the
+classpath. This will not cause any problems because in version 3.x the
+package names of Commons Lang have changed, so the classes can co-exist.
 
-Commons Configuration 1.7 is fully binary compatible to the previous version.
-Support for Java 1.3 has been dropped, a minimum of Java 1.4 is now
-required. There is one exception, however: Commons Configuration 1.7 supports
-optionally loading configuration files through Commons VFS
-(http://commons.apache.org/vfs/). VFS requires Java 1.5+, so if this feature is
-going to be used, a minimum JDK version of 1.5 is needed. More information
-about optional dependencies required by specific components of Commons
-Configuration can be found at
-http://commons.apache.org/configuration/dependencies.html.
+Following is a complete list of all changes in the new 1.8 release:
 
-Following is a complete list of all changes in the new 1.7 release:
-
-BUG FIXES IN 1.7
+BUG FIXES IN 1.8
 ================
-* [CONFIGURATION-460]
-  Reloading now also works for configuration sources declared in the additional
-  section of a configuration definition file for DefaultConfigurationBuilder.
-
-* [CONFIGURATION-445]
-  Transforming a CombinedConfiguration with ViewNodes to an XMLConfiguration
-  could cause problems with attributes. This has been fixed.
-
-* [CONFIGURATION-434]
-  HierarchicalINIConfiguration now recognizes comment characters in property
-  definitions only if they are preceded by whitespace. Thus comment characters
-  can now be part of the property value. This is for instance required for the
-  definition of file paths which use the semicolon as path separator.
-
-* [CONFIGURATION-433]
-  Minor improvements of the support for indexed properties in
-  ConfigurationDynaBean.
-
-* [CONFIGURATION-432]
-  The methods getList() and getStringArray() of AbstractConfiguration can now
-  handle single-valued properties of primitive types.
-
-* [CONFIGURATION-428]
-  XMLConfiguration no longer escapes backslashs in the values of XML elements.
-
-* [CONFIGURATION-424]
-  HierarchicalINIConfiguration now works correctly with configurations that
-  contain only properties in the global section.
-
-* [CONFIGURATION-423]
-  testFromClassPath() can fail when it should not because of inconsistent
-  escaping of output from PropertiesConfiguration.getURL() and
-  FileChangedReloadingStrategy.getFile().toURL().
-
-* [CONFIGURATION-418]
-  A bug related to the interpretation of escape sequences for backslashes has
-  been fixed. The user guide has also been improved in this area.
-
-* [CONFIGURATION-415]
-  Files with a plus character in their names are now handled correctly.
-
-* [CONFIGURATION-413]
-  SubsetConfiguration now produces correct events.
-
-* [CONFIGURATION-409]
-  HierarchicalINIConfiguration now correctly saves sections whose name contains
-  delimiter characters.
-
-* [CONFIGURATION-407]
-  Fixed a potential IllegalStateException in HierarchicalINIConfiguration that
-  can be thrown when the global section is requested concurrently.
-
-* [CONFIGURATION-405]
-  XMLPropertyListConfiguration no longer throws a ConfigurationException if the
-  file to be loaded does not have an outer dict element.
-
-* [CONFIGURATION-404]
-  The default expression engine used by hierarchical configurations used to
-  throw a NumberFormatException if invalid indices were used in property keys.
-  This has been fixed. As a side effect brackets can now be used in property
-  keys.
-
-* [CONFIGURATION-403]
-  When an empty XMLConfiguration was saved and reloaded the root element was
-  assigned an empty text value. Because of this isEmpty() returned false for this
-  configuration. This has been fixed.
-
-* [CONFIGURATION-397]
-  Schema violation exceptions are now propagated back to the caller.
-
-* [CONFIGURATION-390]
-  XMLConfiguration and CombinedConfiguraton are now synchronized to fix problems
-  caused by reloading in a multithreaded environment.
-
-* [CONFIGURATION-396]
-  HierarchicalConfiguration.NodeVisitor is now passed the correct key to its
-  visitAfterChildren() method.
-
-* [CONFIGURATION-393]
-  BaseConfiguration.clone() now also clones collections stored in the internal
-  map. This causes list properties to be handled correctly.
-
-* [CONFIGURATION-388]
-  Attribute or element values will not be escaped when attribute or element
-  splitting are disabled.
-
-* [CONFIGURATION-385]
-  DatabaseConfiguration now generates correct events for the clear() and
-  clearProperty() methods.
-
-* [CONFIGURATION-369]
-  SubsetConfiguration did not use locally registered lookups of its interpolator.
-
-* [CONFIGURATION-368]
-  SubnodeConfiguration now fires an event of type EVENT_SUBNODE_CHANGED if a
-  structural change of the parent configuration was detected. If the
-  SubnodeConfiguration is contained in a CombinedConfiguration, the
-  CombinedConfiguration receives this event and can update itself.
-
-* [CONFIGURATION-362]
-  Empty dictionaries in a PropertyList configuration are now preserved when the
-  configuration is saved.
-
-* [CONFIGURATION-361]
-  MultiFileHierarchicalConfiguration was not using basepath to construct the
-  file url. It also threw an exception if the file pattern resolved to a
-  non-existent file. This is now configurable.
-
-* [CONFIGURATION-359]
-  Fixed broken links to the API documentation in the user's guide.
-
-* [CONFIGURATION-357]
-  The message of the ConversionException thrown by
-  AbstractConfiguration.getBigInteger() is now correct.
+* [CONFIGURATION-476]
+  Fixed possible ClassCastExceptions in CompositeConfiguration related to
+  special in-memory configurations.
 
 IMPROVEMENTS AND NEW FEATURES IN 1.7
 ====================================
-* [CONFIGURATION-458]
-  HierarchicalConfiguration now provides a specific implementation of the
-  clear() method. This is more efficient and also solves some other problems
-  related to clearing a SubnodeConfiguration.
+* [CONFIGURATION-475]
+  Class ConfigurationKey was deprecated in favor of DefaultConfigurationKey.
 
-* [CONFIGURATION-455]
-  HierarchicalINIConfiguration.getSection() now creates a section if it does not
-  exist. The SubnodeConfiguration returned by this method is now always
-  connected to the parent ini configuration.
+* [CONFIGURATION-474]
+  Implemented delimiter parsing in HierarchicalINIConfiguration to be
+  consistent with other Configuration implementations. Note that this can
+  impact existing code. To switch back to the old behavior, call
+  setDelimiterParsingDisabled(true) before loading the configuration.
 
-* [CONFIGURATION-452]
-  XPathExpressionEngine now provides better support for the setProperty() method.
+* [CONFIGURATION-471]
+  CompositeConfiguration now provides better support for child configurations
+  that are used as in-memory configuration.
 
-* [CONFIGURATION-448]
-  The parsing of ini files has been improved for property definitions containing
-  multiple separator characters.
+* [CONFIGURATION-466]
+  Binary literals are now supported (i.e Ob11010001).
 
-* [CONFIGURATION-447]
-  DefaultConfigurationBuilder now supports including environment properties
-  using the "env" tag.
+* [CONFIGURATION-465]
+  Updated the dependency to Commons Jexl to version 2.1.1. This version
+  provides correct OSGi manifest headers.
 
-* [CONFIGURATION-446]
-  XMLConfiguration now handles attributes correctly whose value is an empty
-  string.
-
-* [CONFIGURATION-439]
-  Child configuration builders created for a <configuration> element in a
-  configuration definition file now inherit the configuration and error
-  listeners from the original DefaultConfigurationBuilder. This makes it
-  possible to suppress log output created for optional configurations.
-
-* [CONFIGURATION-438]
-  JNDIConfiguration.getKeys() no more logs an exception if the prefix does not
-  exist.
-
-* [CONFIGURATION-437]
-  Child configuration builders created for a <configuration> element in a
-  configuration definition file now inherit some of their properties from the
-  builder object which processed the file.
-
-* [CONFIGURATION-412]
-  DatabaseConfiguration can now be instructed to perform a commit after an
-  update of the managed database table. This makes it usable in environments
-  where the connections do not use auto-commit mode.
-
-* [CONFIGURATION-410]
-  Added a refresh() method to AbstractFileConfiguration and
-  AbstractHierarchicalFileConfiguration.
-
-* [CONFIGURATION-399]
-  Default variable interpolation now supports the env: prefix for referencing
-  environment variables.
-
-* [CONFIGURATION-389]
-  DefaultConfigurationBuilder now supports defining ini files in its
-  configuration definition file.
-
-* [CONFIGURATION-380]
-  Add ExprLookup to allow expressions to be evaluated in configurations. When
-  used, this requires that Apache Commons Jexl be added as a dependency to
-  projects using Commons Configuration.
-
-* [CONFIGURATION-378]
-  Added MergeCombiner to allow elements in two configurations to be merged when
-  the element and attributes in the first file match those in the second file.
-
-* [CONFIGURATION-375, CONFIGURATION-376, CONFIGURATION-377]
-  Align interpolation functionality of SubnodeConfiguration and
-  SubsetConfiguration. SubsetConfiguration will now also interpolate keys of the
-  parent configuration or use the local lookups of its parent.
-  SubnodeConfiguration is in turn now able to lookup local keys as well.
-
-* [CONFIGURATION-374]
-  MapConfiguration now provides a way of controlling the trimming behavior.
-
-* [CONFIGURATION-371]
-  PropertiesConfigurationLayout now also stores the property separators used for
-  the single properties. It is also possible to change them for specific
-  properties or set a global properties separator. In earlier versions the
-  separator was hard-coded to " = ".
-
-* [CONFIGURATION-370]
-  PropertiesConfiguration now defines a nested interface IOFactory. Using this
-  interface it is possible to inject custom PropertiesReader and
-  PropertiesWriter implementations.
-
-* [CONFIGURATION-363]
-  When using Commons Lang 2.6 or higher as dependency nested interpolation in
-  variable names is supported.
-
-* [CONFIGURATION-356]
-  Added getConfigurations and getConfigurationNameList.
-
-* [CONFIGURATION-340]
-  File system access has been abstracted to a FileSystem interface. Two
-  implementations are provided, DefaultFileSystem that behaves in a backward
-  compatible manner and VFSFileSystem which uses Commons VFS to retreive and
-  store files.
-
-* [CONFIGURATION-314]
-  PropertiesConfigurationLayout now allows setting the line separator to be used
-  when writing the properties file.
-
-* [CONFIGURATION-257, CONFIGURATION-355]
-  Allow configurations to be validated using XML Schemas.
+* [CONFIGURATION-463]
+  Improved documentation of AbstractFileConfiguration related to load()
+  methods and their impact on the base path.
 
 OTHER CHANGES
 =============
-* [CONFIGURATION-459]
-  ConfigurationFactory has been deprecated. The user guide was updated to no
-  more mention this class.
+* Commons Configuration now requires Java 5 or later. The API has been slightly
+  adapted to new language features.
 
-* [CONFIGURATION-456]
-  Improved Javadocs of getKeys(String) method for some configuration classes.
+* [CONFIGURATION-470]
+  Classes generated by JavaCC are now created dynamically during the build
+  process.
 
-* [CONFIGURATION-436]
-  The optional dependency to Apache Ant has been changed to the new groupId
-  org.apache.ant. The version was updated to the most recent version 1.8.2
-  (older versions should still work).
-
-* [CONFIGURATION-408]
-  PropertiesConfiguration.save() escaped slashes in properties values. This was
-  caused by a bug in commons-lang 2.4. Updating to a newer version of commons-lang
-  fixed this problem.
-
-* [CONFIGURATION-358]
-  Improvements of the user's guide for hierarchical configurations.
-
-* Dependencies to some other Commons components have been updated to use the
-  most recent version. However, as none of the new features are used, the old
-  versions will still work.
-
+* [CONFIGURATION-461]
+  The project now uses standard Maven directory layout.
