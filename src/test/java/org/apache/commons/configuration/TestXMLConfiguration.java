@@ -1109,7 +1109,6 @@ public class TestXMLConfiguration
         assertEquals("Wrong system ID", SYSTEM_ID, conf.getSystemID());
         StringWriter out = new StringWriter();
         conf.save(out);
-        System.out.println(out.toString());
         assertTrue("Did not find DOCTYPE", out.toString().indexOf(DOCTYPE) >= 0);
     }
 
