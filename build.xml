@@ -17,12 +17,12 @@
 -->
 
 <project name="commons-configuration" default="jar" basedir=".">
-	  
+
   <!-- read properties from the build.properties, if any -->
   <property name="component.propfile" value="${basedir}/build.properties"/>
   <property file="${component.propfile}"/>
-  
-  <property name="component.final.name" value="commons-configuration-1.8-SNAPSHOT"/>
+
+  <property name="component.final.name" value="commons-configuration-1.8"/>
   <property name="build.dir" value="target"/>
   <property name="build.classes.dir" value="${build.dir}/classes"/>
   <property name="src.java.dir" value="src/main/java"/>
@@ -58,7 +58,7 @@
         <pathelement location="${lib}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
         <pathelement location="${lib}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
         <pathelement location="${lib}/commons-codec/commons-codec/1.5/commons-codec-1.5.jar"/>
-        <pathelement location="${lib}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar"/>
+        <pathelement location="${lib}/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar"/>
         <pathelement location="${lib}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar"/>
         <pathelement location="${lib}/org/apache/maven/scm/maven-scm-api/1.4/maven-scm-api-1.4.jar"/>
         <pathelement location="${lib}/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar"/>
@@ -80,7 +80,7 @@
 	    <pathelement location="${lib}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
 	    <pathelement location="${lib}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
 	    <pathelement location="${lib}/commons-codec/commons-codec/1.5/commons-codec-1.5.jar"/>
-	    <pathelement location="${lib}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar"/>
+	    <pathelement location="${lib}/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar"/>
 	    <pathelement location="${lib}/org/apache/commons/commons-vfs2/2.0/commons-vfs2-2.0.jar"/>
 	    <pathelement location="${lib}/org/apache/maven/scm/maven-scm-api/1.4/maven-scm-api-1.4.jar"/>
 	    <pathelement location="${lib}/org/codehaus/plexus/plexus-utils/1.5.6/plexus-utils-1.5.6.jar"/>
@@ -98,8 +98,9 @@
 	    <pathelement location="${lib}/commons-pool/commons-pool/1.4/commons-pool-1.4.jar"/>
 	    <pathelement location="${lib}/hsqldb/hsqldb/1.7.2.2/hsqldb-1.7.2.2.jar"/>
 	    <pathelement location="${lib}/dbunit/dbunit/2.1/dbunit-2.1.jar"/>
-	    <pathelement location="${lib}/junit/junit/3.8.1/junit-3.8.1.jar"/>
+	    <pathelement location="${lib}/junit/junit/4.10/junit-4.10.jar"/>
 	    <pathelement location="${lib}/junit-addons/junit-addons/1.4/junit-addons-1.4.jar"/>
+	    <pathelement location="${lib}/org/easymock/easymock/3.1/easymock-3.1.jar"/>
 	    <pathelement location="${lib}/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar"/>
 	    <pathelement location="${lib}/mockobjects/mockobjects-jdk1.4-j2ee1.3/0.09/mockobjects-jdk1.4-j2ee1.3-0.09.jar"/>
 	    <pathelement location="${lib}/javax/mail/mail/1.4/mail-1.4.jar"/>
@@ -305,9 +306,9 @@
          dest="${lib}/commons-codec/commons-codec/1.5/commons-codec-1.5.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
-    <mkdir dir="${lib}/commons-jexl/commons-jexl/1.1"/>
-    <get src="http://repo1.maven.org/maven2/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar" 
-         dest="${lib}/commons-jexl/commons-jexl/1.1/commons-jexl-1.1.jar" 
+    <mkdir dir="${lib}/org/apache/commons/commons-jexl/2.1.1"/>
+    <get src="http://repo1.maven.org/maven2/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar" 
+         dest="${lib}/org/apache/commons/commons-jexl/2.1.1/commons-jexl-2.1.1.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
     <mkdir dir="${lib}/org/apache/commons/commons-vfs2/2.0"/>
@@ -397,12 +398,17 @@
          ignoreerrors="true"/>
     <mkdir dir="${lib}/junit/junit/3.8.1"/>
     <get src="http://repo1.maven.org/maven2/junit/junit/3.8.1/junit-3.8.1.jar" 
-         dest="${lib}/junit/junit/3.8.1/junit-3.8.1.jar" 
+         dest="${lib}/junit/junit/4.10/junit-4.10.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
     <mkdir dir="${lib}/junit-addons/junit-addons/1.4"/>
     <get src="http://repo1.maven.org/maven2/junit-addons/junit-addons/1.4/junit-addons-1.4.jar" 
          dest="${lib}/junit-addons/junit-addons/1.4/junit-addons-1.4.jar" 
+         usetimestamp="true" 
+         ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/easymock/easymock/3.1"/>
+    <get src="http://repo1.maven.org/maven2/org/easymock/easymock/3.1/easymock-3.1.jar" 
+         dest="${lib}/org/easymock/easymock/3.1/easymock-3.1.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
     <mkdir dir="${lib}/mockobjects/mockobjects-core/0.09"/>
