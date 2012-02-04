@@ -25,7 +25,11 @@
   </properties>
 
   <body>
-    <release version="1.8" date="in SVN"
+    <release version="1.9" date="in SVN"
+      description="TBD">
+    </release>
+
+    <release version="1.8" date="2012-02-04"
       description="Support for Java 1.5">
       <action dev="oheger" type="fix" issue="CONFIGURATION-476">
         Fixed possible ClassCastExceptions in CompositeConfiguration related to
