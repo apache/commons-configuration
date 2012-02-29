@@ -296,7 +296,7 @@ public class ConfigurationInterpolator extends StrLookup
             String value = fetchLookupForPrefix(prefix).lookup(name);
             if (value == null && getParentInterpolator() != null)
             {
-                value = getParentInterpolator().fetchLookupForPrefix(prefix).lookup(name);
+                value = getParentInterpolator().lookup(name);
             }
             if (value != null)
             {
@@ -306,7 +306,7 @@ public class ConfigurationInterpolator extends StrLookup
         String value = fetchNoPrefixLookup().lookup(var);
         if (value == null && getParentInterpolator() != null)
         {
-            value = getParentInterpolator().fetchNoPrefixLookup().lookup(var);
+            value = getParentInterpolator().lookup(var);
         }
         return value;
     }

@@ -1188,6 +1188,31 @@ public class TestDefaultConfigurationBuilder
         }
     }
 
+    /**
+     * Tests whether variable substitution works across multiple child
+     * configurations. This test is related to CONFIGURATION-481.
+     */
+    @Test
+    public void testInterpolationOverMultipleSources()
+            throws ConfigurationException
+    {
+        File testFile =
+                ConfigurationAssert.getTestFile("testInterpolationBuilder.xml");
+        factory.setFile(testFile);
+        CombinedConfiguration combConfig = factory.getConfiguration(true);
+        assertEquals("Wrong value", "abc-product",
+                combConfig.getString("products.product.desc"));
+        XMLConfiguration xmlConfig =
+                (XMLConfiguration) combConfig.getConfiguration("test");
+        assertEquals("Wrong value from XML config", "abc-product",
+                xmlConfig.getString("products/product/desc"));
+        SubnodeConfiguration subConfig =
+                xmlConfig
+                        .configurationAt("products/product[@name='abc']", true);
+        assertEquals("Wrong value from sub config", "abc-product",
+                subConfig.getString("desc"));
+    }
+
     private void verify(String key, CombinedConfiguration config, int rows)
     {
         System.setProperty("Id", key);

@@ -414,6 +414,27 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     private static final long serialVersionUID = -3113777854714492123L;
 
+    /**
+     * A specialized {@code StrLookup} object which operates on the combined
+     * configuration constructed by this builder. This object is used as
+     * default lookup for {@code ConfigurationInterpolator} objects assigned to
+     * newly created configuration objects.
+     */
+    private final StrLookup combinedConfigLookup = new StrLookup()
+    {
+        @Override
+        public String lookup(String key)
+        {
+            if (constructedConfiguration != null)
+            {
+                Object value =
+                        constructedConfiguration.resolveContainerStore(key);
+                return (value != null) ? value.toString() : null;
+            }
+            return null;
+        }
+    };
+
     /** Stores the configuration that is currently constructed.*/
     private CombinedConfiguration constructedConfiguration;
 
@@ -538,7 +559,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     public ConfigurationProvider removeConfigurationProvider(String tagName)
     {
-        return (ConfigurationProvider) providers.remove(tagName);
+        return providers.remove(tagName);
     }
 
     /**
@@ -550,7 +571,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     public ConfigurationProvider providerForTag(String tagName)
     {
-        return (ConfigurationProvider) providers.get(tagName);
+        return providers.get(tagName);
     }
 
     /**
@@ -1297,7 +1318,9 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
 
             try
             {
-                return provider.getConfiguration(decl);
+                AbstractConfiguration config = provider.getConfiguration(decl);
+                installInterpolator(decl, config);
+                return config;
             }
             catch (Exception ex)
             {
@@ -1346,6 +1369,25 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             // Here some valid class must be returned, otherwise BeanHelper
             // will complain that the bean's class cannot be determined
             return Configuration.class;
+        }
+
+        /**
+         * Installs a specialized {@code ConfigurationInterpolator} on a newly
+         * created configuration which also takes the combined configuration
+         * created by the builder into account. With this
+         * {@code ConfigurationInterpolator} the interpolation facilities of
+         * this child configuration are extended to include all other
+         * configurations created by this builder.
+         *
+         * @param decl the {@code ConfigurationDeclaration}
+         * @param config the newly created configuration instance
+         */
+        private void installInterpolator(ConfigurationDeclaration decl,
+                AbstractConfiguration config)
+        {
+            ConfigurationInterpolator parent = new ConfigurationInterpolator();
+            parent.setDefaultLookup(decl.getConfigurationBuilder().combinedConfigLookup);
+            config.getInterpolator().setParentInterpolator(parent);
         }
     }
 
