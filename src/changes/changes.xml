@@ -31,6 +31,10 @@
         Variable substitution in configuration sources declared in a definition
         file for DefaultConfigurationBuilder now works across multiple sources.
       </action>
+      <action dev="oheger" type="fix" issue="CONFIGURATION-477">
+        PropertyListConfiguration now can deal with C-style comments in plist
+        configuration files. Both block and single-line comments are supported.
+      </action>
     </release>
 
     <release version="1.8" date="2012-02-04"

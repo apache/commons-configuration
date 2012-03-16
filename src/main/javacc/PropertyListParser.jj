@@ -115,6 +115,16 @@ PARSER_END(PropertyListParser)
 
 SKIP : { " " | "\t" | "\n" | "\r" }
 
+// Handle comments
+MORE : { "/*": IN_COMMENT }
+< IN_COMMENT > MORE : { <  ~[] > }
+< IN_COMMENT > SKIP : { "*/": DEFAULT } 
+
+MORE : { "//": IN_SINGLE_LINE_COMMENT }
+< IN_SINGLE_LINE_COMMENT > SPECIAL_TOKEN : {
+    < SINGLE_LINE_COMMENT: "\n"|"\r"|"\r\n" > : DEFAULT }
+< IN_SINGLE_LINE_COMMENT > MORE : { <  ~[] > } 
+
 TOKEN : { <ARRAY_BEGIN     : "(" > }
 TOKEN : { <ARRAY_END       : ")" > }
 TOKEN : { <ARRAY_SEPARATOR : "," > }
