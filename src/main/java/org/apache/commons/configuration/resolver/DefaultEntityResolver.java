@@ -89,7 +89,7 @@ public class DefaultEntityResolver implements EntityResolver, EntityRegistry
         URL entityURL = null;
         if (publicId != null)
         {
-            entityURL = (URL) getRegisteredEntities().get(publicId);
+            entityURL = getRegisteredEntities().get(publicId);
         }
 
         if (entityURL != null)

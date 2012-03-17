@@ -503,8 +503,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
             }
             else
             {
-                return findLastPathNode(keyIt, (ConfigurationNode) node
-                        .getChildren(keyPart).get(idx));
+                return findLastPathNode(keyIt, node.getChildren(keyPart).get(idx));
             }
         }
 
@@ -531,8 +530,7 @@ public class DefaultExpressionEngine implements ExpressionEngine
             if (keyPart.getIndex() >= 0 && keyPart.getIndex() < subNodes.size())
             {
                 findNodesForKey((DefaultConfigurationKey.KeyIterator) keyPart
-                        .clone(), (ConfigurationNode) subNodes.get(keyPart
-                        .getIndex()), nodes);
+                        .clone(), subNodes.get(keyPart.getIndex()), nodes);
             }
         }
         else

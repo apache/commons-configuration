@@ -750,7 +750,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
 
         while (itNodes.hasNext() && itValues.hasNext())
         {
-            ((ConfigurationNode) itNodes.next()).setValue(itValues.next());
+            itNodes.next().setValue(itValues.next());
         }
 
         // Add additional nodes if necessary
@@ -762,7 +762,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         // Remove remaining nodes
         while (itNodes.hasNext())
         {
-            clearNode((ConfigurationNode) itNodes.next());
+            clearNode(itNodes.next());
         }
 
         fireEvent(EVENT_SET_PROPERTY, key, value, false);

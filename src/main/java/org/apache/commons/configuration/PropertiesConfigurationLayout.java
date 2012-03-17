@@ -490,8 +490,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     int blancLines = 0;
                     int idx = checkHeaderComment(reader.getCommentLines());
                     while (idx < reader.getCommentLines().size()
-                            && ((String) reader.getCommentLines().get(idx))
-                                    .length() < 1)
+                            && reader.getCommentLines().get(idx).length() < 1)
                     {
                         idx++;
                         blancLines++;
@@ -797,7 +796,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             // This is the first comment. Search for blanc lines.
             int index = commentLines.size() - 1;
             while (index >= 0
-                    && ((String) commentLines.get(index)).length() > 0)
+                    && commentLines.get(index).length() > 0)
             {
                 index--;
             }
@@ -819,8 +818,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         for (String key : c.getKeys())
         {
-            PropertyLayoutData data = (PropertyLayoutData) c.layoutData
-                    .get(key);
+            PropertyLayoutData data = c.layoutData.get(key);
             layoutData.put(key, data.clone());
         }
     }

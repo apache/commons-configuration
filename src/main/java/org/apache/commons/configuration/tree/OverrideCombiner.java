@@ -143,8 +143,7 @@ public class OverrideCombiner extends NodeCombiner
                 && node1.getChildrenCount(child.getName()) == 1
                 && !isListNode(child))
         {
-            return (ConfigurationNode) node2.getChildren(child.getName())
-                    .get(0);
+            return node2.getChildren(child.getName()).get(0);
         }
         else
         {

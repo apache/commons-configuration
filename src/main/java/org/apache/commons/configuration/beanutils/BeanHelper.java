@@ -448,7 +448,7 @@ public final class BeanHelper
         String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
         {
-            BeanFactory factory = (BeanFactory) beanFactories.get(factoryName);
+            BeanFactory factory = beanFactories.get(factoryName);
             if (factory == null)
             {
                 throw new ConfigurationRuntimeException(

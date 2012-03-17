@@ -148,7 +148,7 @@ public class MergeCombiner extends NodeCombiner
 
         if (nodes.size() == 1)
         {
-            return (ConfigurationNode) nodes.get(0);
+            return nodes.get(0);
         }
         if (nodes.size() > 1 && !isListNode(child))
         {

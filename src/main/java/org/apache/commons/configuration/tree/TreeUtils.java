@@ -53,7 +53,7 @@ public final class TreeUtils
         Iterator<ConfigurationNode> iter = result.getAttributes().iterator();
         while (iter.hasNext())
         {
-            ConfigurationNode node = (ConfigurationNode) iter.next();
+            ConfigurationNode node = iter.next();
             buffer.append(" ").append(node.getName()).append("='").append(node.getValue()).append("'");
         }
         buffer.append(">");
@@ -69,7 +69,7 @@ public final class TreeUtils
             iter = result.getChildren().iterator();
             while (iter.hasNext())
             {
-                printTree(stream, indent + "  ", (ConfigurationNode) iter.next());
+                printTree(stream, indent + "  ", iter.next());
             }
             newline = true;
         }

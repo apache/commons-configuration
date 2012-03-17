@@ -611,7 +611,7 @@ public class DefaultConfigurationNode implements ConfigurationNode, Cloneable
             {
                 throw new IndexOutOfBoundsException("No sub nodes available!");
             }
-            return (ConfigurationNode) nodes.get(index);
+            return nodes.get(index);
         }
 
         /**

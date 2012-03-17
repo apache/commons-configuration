@@ -385,7 +385,7 @@ public class CatalogResolver implements EntityResolver
             {
                 for (int count = 0; count < catalogs.size(); count++)
                 {
-                    String fileName = (String) catalogs.elementAt(count);
+                    String fileName = catalogs.elementAt(count);
 
                     URL url = null;
                     InputStream is = null;
