@@ -409,7 +409,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         else if (value instanceof Map)
         {
             // display a Map as a dictionary
-            Map<String, Object> map = transformMap((Map<?, ?>) value);;
+            Map<String, Object> map = transformMap((Map<?, ?>) value);
             printValue(out, indentLevel, new MapConfiguration(map));
         }
         else if (value instanceof byte[])
@@ -685,7 +685,6 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             catch (ParseException e)
             {
                 // ignore
-                ;
             }
         }
 
