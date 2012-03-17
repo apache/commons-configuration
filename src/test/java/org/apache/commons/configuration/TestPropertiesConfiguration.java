@@ -1139,15 +1139,15 @@ public class TestPropertiesConfiguration
     static class MockHttpURLConnection extends HttpURLConnection
     {
         /** The response code to return.*/
-        private int responseCode;
+        private final int returnCode;
 
         /** The output file. The output stream will point to this file.*/
-        private File outputFile;
+        private final File outputFile;
 
         protected MockHttpURLConnection(URL u, int respCode, File outFile)
         {
             super(u);
-            responseCode = respCode;
+            returnCode = respCode;
             outputFile = outFile;
         }
 
@@ -1170,7 +1170,7 @@ public class TestPropertiesConfiguration
         @Override
         public int getResponseCode() throws IOException
         {
-            return responseCode;
+            return returnCode;
         }
 
         @Override
