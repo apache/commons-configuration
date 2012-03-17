@@ -27,6 +27,10 @@
   <body>
     <release version="1.9" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="fix" issue="CONFIGURATION-487">
+        DataConfiguration.get() now also works with String properties and if no
+        data type conversion is required.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-481">
         Variable substitution in configuration sources declared in a definition
         file for DefaultConfigurationBuilder now works across multiple sources.

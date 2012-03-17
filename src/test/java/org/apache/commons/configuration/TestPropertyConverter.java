@@ -338,4 +338,15 @@ public class TestPropertyConverter
     {
         PropertyConverter.toEnum(Integer.valueOf(-1), ENUM_CLASS);
     }
+
+    /**
+     * Tests a trivial conversion: the value has already the desired type.
+     */
+    @Test
+    public void testToNoConversionNeeded()
+    {
+        String value = "testValue";
+        assertEquals("Wrong conversion result", value,
+                PropertyConverter.to(String.class, value, null));
+    }
 }

@@ -97,6 +97,11 @@ public final class PropertyConverter
      */
     static Object to(Class<?> cls, Object value, Object[] params) throws ConversionException
     {
+        if (cls.isInstance(value))
+        {
+            return value; // no conversion needed
+        }
+
         if (Boolean.class.equals(cls) || Boolean.TYPE.equals(cls))
         {
             return toBoolean(value);

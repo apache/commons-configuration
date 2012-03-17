@@ -2386,4 +2386,17 @@ public class TestDataConfiguration
             // expected
         }
     }
+
+    /**
+     * Tests whether a string property can be obtained through get() if no type
+     * conversion is required.
+     */
+    @Test
+    public void testGetPropertyWithoutConversion()
+    {
+        String key = "test.str";
+        String value = "someTestValue";
+        conf.addProperty(key, value);
+        assertEquals("Wrong result", value, conf.get(String.class, key));
+    }
 }
