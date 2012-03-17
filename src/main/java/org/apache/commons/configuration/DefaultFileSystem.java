@@ -43,6 +43,7 @@ public class DefaultFileSystem extends FileSystem
      */
     private Log log = LogFactory.getLog(DefaultFileSystem.class);
 
+    @Override
     public InputStream getInputStream(String basePath, String fileName)
         throws ConfigurationException
     {
@@ -66,6 +67,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public InputStream getInputStream(URL url) throws ConfigurationException
     {
         // throw an exception if the target URL is a directory
@@ -85,6 +87,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public OutputStream getOutputStream(URL url) throws ConfigurationException
     {
         // file URLs have to be converted to Files since FileURLConnection is
@@ -126,6 +129,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public OutputStream getOutputStream(File file) throws ConfigurationException
     {
         try
@@ -140,6 +144,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public String getPath(File file, URL url, String basePath, String fileName)
     {
         String path = null;
@@ -165,7 +170,6 @@ public class DefaultFileSystem extends FileSystem
                 catch (Exception e)
                 {
                     // simply ignore it and return null
-                    ;
                 }
             }
         }
@@ -173,6 +177,7 @@ public class DefaultFileSystem extends FileSystem
         return path;
     }
 
+    @Override
     public String getBasePath(String path)
     {
         URL url;
@@ -187,6 +192,7 @@ public class DefaultFileSystem extends FileSystem
         }
     }
 
+    @Override
     public String getFileName(String path)
     {
         URL url;
@@ -202,6 +208,7 @@ public class DefaultFileSystem extends FileSystem
     }
 
 
+    @Override
     public URL getURL(String basePath, String file) throws MalformedURLException
     {
         File f = new File(file);
@@ -229,6 +236,7 @@ public class DefaultFileSystem extends FileSystem
     }
 
 
+    @Override
     public URL locateFromURL(String basePath, String fileName)
     {
         try
@@ -310,36 +318,43 @@ public class DefaultFileSystem extends FileSystem
             this.connection = connection;
         }
 
+        @Override
         public void write(byte[] bytes) throws IOException
         {
             stream.write(bytes);
         }
 
+        @Override
         public void write(byte[] bytes, int i, int i1) throws IOException
         {
             stream.write(bytes, i, i1);
         }
 
+        @Override
         public void flush() throws IOException
         {
             stream.flush();
         }
 
+        @Override
         public void close() throws IOException
         {
             stream.close();
         }
 
+        @Override
         public void write(int i) throws IOException
         {
             stream.write(i);
         }
 
+        @Override
         public String toString()
         {
             return stream.toString();
         }
 
+        @Override
         public void verify() throws IOException
         {
             if (connection.getResponseCode() >= HttpURLConnection.HTTP_BAD_REQUEST)
