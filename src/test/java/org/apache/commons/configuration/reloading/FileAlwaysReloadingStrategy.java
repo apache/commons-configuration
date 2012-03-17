@@ -33,6 +33,7 @@ public class FileAlwaysReloadingStrategy extends FileChangedReloadingStrategy
      *
      * @return a flag whether a reload is required
      */
+    @Override
     public boolean reloadingRequired()
     {
         return true;

@@ -37,6 +37,7 @@ public class FileRandomReloadingStrategy extends FileChangedReloadingStrategy
      *
      * @return a flag whether a reload is required
      */
+    @Override
     public boolean reloadingRequired()
     {
         boolean result = random.nextBoolean();
