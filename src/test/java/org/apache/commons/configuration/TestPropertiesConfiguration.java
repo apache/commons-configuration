@@ -622,8 +622,8 @@ public class TestPropertiesConfiguration
     {
         ConfigurationFactory factory = new ConfigurationFactory("conf/testFactoryPropertiesInclude.xml");
         Configuration config = factory.getConfiguration();
-        assertEquals(true, config.getBoolean("deeptest"));
-        assertEquals(true, config.getBoolean("deepinclude"));
+        assertTrue(config.getBoolean("deeptest"));
+        assertTrue(config.getBoolean("deepinclude"));
         assertFalse(config.containsKey("deeptestinvalid"));
     }
 

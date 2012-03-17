@@ -17,6 +17,7 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public abstract class BaseNonStringProperties
     public void testBooleanArrayValue() throws Exception
     {
         boolean booleanValue = conf.getBoolean("test.boolean");
-        assertEquals(true, booleanValue);
+        assertTrue(booleanValue);
         assertEquals(2, conf.getList("test.boolean.array").size());
     }
 

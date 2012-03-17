@@ -40,14 +40,14 @@ public class NonStringTestHolder
     public void testBoolean() throws Exception
     {
         boolean booleanValue = configuration.getBoolean("test.boolean");
-        Assert.assertEquals(true, booleanValue);
+        Assert.assertTrue(booleanValue);
         Assert.assertEquals(1, configuration.getList("test.boolean").size());
     }
 
     public void testBooleanDefaultValue() throws Exception
     {
         boolean booleanValue = configuration.getBoolean("test.boolean.missing", true);
-        Assert.assertEquals(true, booleanValue);
+        Assert.assertTrue(booleanValue);
 
         Boolean booleanObject = configuration.getBoolean("test.boolean.missing", new Boolean(true));
         Assert.assertEquals(new Boolean(true), booleanObject);
