@@ -439,7 +439,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private CombinedConfiguration constructedConfiguration;
 
     /** Stores a map with the registered configuration providers. */
-    private Map<String, ConfigurationProvider> providers;
+    private final Map<String, ConfigurationProvider> providers;
 
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;

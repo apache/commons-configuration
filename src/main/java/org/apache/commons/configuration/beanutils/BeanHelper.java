@@ -60,7 +60,7 @@ import org.apache.commons.lang.ClassUtils;
 public final class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static Map<String, BeanFactory> beanFactories = Collections
+    private static final Map<String, BeanFactory> beanFactories = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());
 
     /**

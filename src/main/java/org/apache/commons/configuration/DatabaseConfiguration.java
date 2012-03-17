@@ -88,22 +88,22 @@ import org.apache.commons.logging.LogFactory;
 public class DatabaseConfiguration extends AbstractConfiguration
 {
     /** The datasource to connect to the database. */
-    private DataSource datasource;
+    private final DataSource datasource;
 
     /** The name of the table containing the configurations. */
-    private String table;
+    private final String table;
 
     /** The column containing the name of the configuration. */
-    private String nameColumn;
+    private final String nameColumn;
 
     /** The column containing the keys. */
-    private String keyColumn;
+    private final String keyColumn;
 
     /** The column containing the values. */
-    private String valueColumn;
+    private final String valueColumn;
 
     /** The name of the configuration. */
-    private String name;
+    private final String name;
 
     /** A flag whether commits should be performed by this configuration. */
     private final boolean doCommits;

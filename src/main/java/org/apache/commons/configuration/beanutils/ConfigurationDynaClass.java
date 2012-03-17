@@ -40,10 +40,10 @@ import org.apache.commons.logging.LogFactory;
 public class ConfigurationDynaClass implements DynaClass
 {
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationDynaClass.class);
+    private static final Log log = LogFactory.getLog(ConfigurationDynaClass.class);
 
     /** Stores the associated configuration.*/
-    private Configuration configuration;
+    private final Configuration configuration;
 
     /**
      * Construct an instance of a {@code ConfigurationDynaClass}

@@ -40,7 +40,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
     /**
      * The {@code Configuration} wrapped by this class.
      */
-    private Configuration configuration;
+    private final Configuration configuration;
 
     /**
      * Creates a new instance of a {@code ConfigurationMap}
@@ -115,7 +115,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
     static class ConfigurationSet extends AbstractSet<Map.Entry<Object, Object>>
     {
         /** The configuration mapped to this entry set. */
-        private Configuration configuration;
+        private final Configuration configuration;
 
         /**
          * A Map entry in the ConfigurationMap.
@@ -154,7 +154,7 @@ public class ConfigurationMap extends AbstractMap<Object, Object>
         private final class ConfigurationSetIterator implements Iterator<Map.Entry<Object, Object>>
         {
             /** An iterator over the keys in the configuration. */
-            private Iterator<String> keys;
+            private final Iterator<String> keys;
 
             private ConfigurationSetIterator()
             {

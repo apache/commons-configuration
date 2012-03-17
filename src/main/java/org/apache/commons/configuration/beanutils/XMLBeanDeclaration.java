@@ -125,10 +125,10 @@ public class XMLBeanDeclaration implements BeanDeclaration
             + "factoryParam]";
 
     /** Stores the associated configuration. */
-    private SubnodeConfiguration configuration;
+    private final SubnodeConfiguration configuration;
 
     /** Stores the configuration node that contains the bean declaration. */
-    private ConfigurationNode node;
+    private final ConfigurationNode node;
 
     /**
      * Creates a new instance of {@code XMLBeanDeclaration} and
@@ -170,10 +170,12 @@ public class XMLBeanDeclaration implements BeanDeclaration
                     "Configuration must not be null!");
         }
 
+        SubnodeConfiguration tmpconfiguration = null;
+        ConfigurationNode tmpnode = null;
         try
         {
-            configuration = config.configurationAt(key);
-            node = configuration.getRootNode();
+            tmpconfiguration = config.configurationAt(key);
+            tmpnode = tmpconfiguration.getRootNode();
         }
         catch (IllegalArgumentException iex)
         {
@@ -182,9 +184,11 @@ public class XMLBeanDeclaration implements BeanDeclaration
             {
                 throw iex;
             }
-            configuration = config.configurationAt(null);
-            node = new DefaultConfigurationNode();
+            tmpconfiguration = config.configurationAt(null);
+            tmpnode = new DefaultConfigurationNode();
         }
+        this.node = tmpnode;
+        this.configuration = tmpconfiguration;
         initSubnodeConfiguration(getConfiguration());
     }
 

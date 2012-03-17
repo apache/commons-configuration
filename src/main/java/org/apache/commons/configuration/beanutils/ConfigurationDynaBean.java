@@ -59,7 +59,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     private static final String PROPERTY_DELIMITER = ".";
 
     /** The logger.*/
-    private static Log log = LogFactory.getLog(ConfigurationDynaBean.class);
+    private static final Log log = LogFactory.getLog(ConfigurationDynaBean.class);
 
     /**
      * Creates a new instance of {@code ConfigurationDynaBean} and sets
