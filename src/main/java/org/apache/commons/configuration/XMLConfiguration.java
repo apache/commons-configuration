@@ -1411,8 +1411,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         private Document document;
 
         /** Stores the list delimiter.*/
-        private char listDelimiter = AbstractConfiguration.
-                getDefaultListDelimiter();
+        private final char listDelimiter;
 
         /** True if attributes should not be split */
         private boolean isAttributeSplittingDisabled;
