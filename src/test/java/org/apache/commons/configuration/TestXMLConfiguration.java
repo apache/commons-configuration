@@ -126,7 +126,7 @@ public class TestXMLConfiguration
     }
 
     @Test
-    public void testClearProperty() throws ConfigurationException, IOException
+    public void testClearProperty() throws Exception
     {
         // test non-existent element
         String key = "clearly";
@@ -1539,8 +1539,7 @@ public class TestXMLConfiguration
      * Tests registering the publicId of a DTD.
      */
     @Test
-    public void testRegisterEntityId() throws ConfigurationException,
-            IOException
+    public void testRegisterEntityId() throws Exception
     {
         URL dtdURL = getClass().getResource("/properties.dtd");
         final String publicId = "http://commons.apache.org/test/properties.dtd";
@@ -1838,8 +1837,7 @@ public class TestXMLConfiguration
      * test is related to CONFIGURATION-472.
      */
     @Test
-    public void testAddNodesToSubnodeConfiguration()
-            throws ConfigurationException
+    public void testAddNodesToSubnodeConfiguration() throws Exception
     {
         SubnodeConfiguration sub = conf.configurationAt("element2");
         sub.addProperty("newKey", "newvalue");

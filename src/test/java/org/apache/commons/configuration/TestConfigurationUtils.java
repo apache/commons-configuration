@@ -227,7 +227,7 @@ public class TestConfigurationUtils
      * Tests whether fileFromURL() handles null URLs correctly.
      */
     @Test
-    public void testFileFromURLNull() throws MalformedURLException
+    public void testFileFromURLNull() throws Exception
     {
         assertNull("Wrong file for null URL", ConfigurationUtils
                 .fileFromURL(null));

@@ -266,7 +266,7 @@ public class TestJNDIConfiguration {
      * Tests handling of errors in isEmpty().
      */
     @Test
-    public void testIsEmptyError() throws NamingException
+    public void testIsEmptyError() throws Exception
     {
         assertTrue("Error config not empty", setUpErrorConfig().isEmpty());
         checkErrorListener(AbstractConfiguration.EVENT_READ_PROPERTY, null,

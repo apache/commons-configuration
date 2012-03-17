@@ -348,7 +348,7 @@ public class TestPropertiesConfigurationLayout
      * Tests if a clear event is correctly processed.
      */
     @Test
-    public void testEventClearConfig() throws ConfigurationException
+    public void testEventClearConfig() throws Exception
     {
         fillLayout();
         ConfigurationEvent event = new ConfigurationEvent(this,

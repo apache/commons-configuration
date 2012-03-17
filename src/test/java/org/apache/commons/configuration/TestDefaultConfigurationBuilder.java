@@ -924,8 +924,7 @@ public class TestDefaultConfigurationBuilder
      * Tests whether XML settings can be inherited.
      */
     @Test
-    public void testLoadXMLWithSettings() throws ConfigurationException,
-            IOException
+    public void testLoadXMLWithSettings() throws Exception
     {
         File confDir = new File("conf");
         File targetDir = new File("target");

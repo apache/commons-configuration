@@ -1051,7 +1051,7 @@ public class TestPropertiesConfiguration
      * test is related to CONFIGURATION-418.
      */
     @Test
-    public void testBackslashEscapingInLists() throws ConfigurationException
+    public void testBackslashEscapingInLists() throws Exception
     {
         checkBackslashList("share2");
         checkBackslashList("share1");
