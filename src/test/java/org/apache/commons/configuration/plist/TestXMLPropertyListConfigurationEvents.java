@@ -33,6 +33,7 @@ public class TestXMLPropertyListConfigurationEvents extends
     /** Constant for the test file that will be loaded. */
     private static final File TEST_FILE = new File("conf/test.plist.xml");
 
+    @Override
     protected AbstractConfiguration createConfiguration()
     {
         try

@@ -112,6 +112,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#trace(Object)
      */
+    @Override
     public void trace(Object message)
     {
         getLogger().log(FQCN, traceLevel, message, null);
@@ -127,6 +128,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#trace(Object, Throwable)
      */
+    @Override
     public void trace(Object message, Throwable t)
     {
         getLogger().log(FQCN, traceLevel, message, t);
@@ -139,6 +141,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#debug(Object)
      */
+    @Override
     public void debug(Object message)
     {
         getLogger().log(FQCN, Priority.DEBUG, message, null);
@@ -151,6 +154,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#debug(Object, Throwable)
      */
+    @Override
     public void debug(Object message, Throwable t)
     {
         getLogger().log(FQCN, Priority.DEBUG, message, t);
@@ -163,6 +167,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#info(Object)
      */
+    @Override
     public void info(Object message)
     {
         getLogger().log(FQCN, Priority.INFO, message, null);
@@ -176,6 +181,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#info(Object, Throwable)
      */
+    @Override
     public void info(Object message, Throwable t)
     {
         getLogger().log(FQCN, Priority.INFO, message, t);
@@ -188,6 +194,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#warn(Object)
      */
+    @Override
     public void warn(Object message)
     {
         getLogger().log(FQCN, Priority.WARN, message, null);
@@ -201,6 +208,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#warn(Object, Throwable)
      */
+    @Override
     public void warn(Object message, Throwable t)
     {
         getLogger().log(FQCN, Priority.WARN, message, t);
@@ -213,6 +221,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#error(Object)
      */
+    @Override
     public void error(Object message)
     {
         getLogger().log(FQCN, Priority.ERROR, message, null);
@@ -226,6 +235,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#error(Object, Throwable)
      */
+    @Override
     public void error(Object message, Throwable t)
     {
         getLogger().log(FQCN, Priority.ERROR, message, t);
@@ -238,6 +248,7 @@ public class Logging extends Log4JLogger
      * @param message to log
      * @see org.apache.commons.logging.Log#fatal(Object)
      */
+    @Override
     public void fatal(Object message)
     {
         getLogger().log(FQCN, Priority.FATAL, message, null);
@@ -251,6 +262,7 @@ public class Logging extends Log4JLogger
      * @param t       log this cause
      * @see org.apache.commons.logging.Log#fatal(Object, Throwable)
      */
+    @Override
     public void fatal(Object message, Throwable t)
     {
         getLogger().log(FQCN, Priority.FATAL, message, t);
