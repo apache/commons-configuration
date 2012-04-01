@@ -877,8 +877,8 @@ public class TestVFSConfigurationBuilder
     public void testValidation() throws Exception
     {
         factory.setFile(VALIDATION_FILE);
-        factory.getConfiguration(true);
-        String value = System.getProperty("key1");
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        String value = cc.getString("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
     }
@@ -887,8 +887,8 @@ public class TestVFSConfigurationBuilder
     public void testValidation2() throws Exception
     {
         factory.setFile(VALIDATION2_FILE);
-        factory.getConfiguration(true);
-        String value = System.getProperty("key1");
+        CombinedConfiguration cc = factory.getConfiguration(true);
+        String value = cc.getString("key1");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","value1",value);
     }
