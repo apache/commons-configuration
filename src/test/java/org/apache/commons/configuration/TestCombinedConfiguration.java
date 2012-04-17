@@ -924,7 +924,7 @@ public class TestCombinedConfiguration
      */
     private File writeFile(String fileName, String content) throws IOException
     {
-        File file = folder.newFile(fileName);
+        File file = new File(folder.getRoot(), fileName);
         writeFile(file, content);
         return file;
     }
