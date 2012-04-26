@@ -34,6 +34,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -1846,6 +1847,44 @@ public class TestXMLConfiguration
         ConfigurationNode newNode = elem.getChildren("newKey").get(0);
         assertTrue("Wrong node type: " + newNode,
                 newNode instanceof XMLConfiguration.XMLNode);
+    }
+
+    /**
+     * Tests whether list properties are set correctly if delimiter
+     * parsing is disabled. This test is related to CONFIGURATION-495.
+     */
+    @Test
+    public void testSetPropertyListWithDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        String prop = "delimiterListProp";
+        conf.setDelimiterParsingDisabled(true);
+        List<String> list = Arrays.asList("val", "val2", "val3");
+        conf.setProperty(prop, list);
+        conf.setFile(testSaveFile);
+        conf.save();
+        conf.clear();
+        conf.load();
+        assertEquals("Wrong list property", list, conf.getProperty(prop));
+    }
+
+    /**
+     * Tests whether list properties are added correctly if delimiter parsing is
+     * disabled. This test is related to CONFIGURATION-495.
+     */
+    @Test
+    public void testAddPropertyListWithDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        String prop = "delimiterListProp";
+        conf.setDelimiterParsingDisabled(true);
+        List<String> list = Arrays.asList("val", "val2", "val3");
+        conf.addProperty(prop, list);
+        conf.setFile(testSaveFile);
+        conf.save();
+        conf.clear();
+        conf.load();
+        assertEquals("Wrong list property", list, conf.getProperty(prop));
     }
 
     /**

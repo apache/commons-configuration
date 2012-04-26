@@ -44,6 +44,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -1055,6 +1056,25 @@ public class TestPropertiesConfiguration
     {
         checkBackslashList("share2");
         checkBackslashList("share1");
+    }
+
+    /**
+     * Tests whether a list property is handled correctly if delimiter parsing
+     * is disabled. This test is related to CONFIGURATION-495.
+     */
+    @Test
+    public void testSetPropertyListWithDelimiterParsingDisabled()
+            throws ConfigurationException
+    {
+        String prop = "delimiterListProp";
+        conf.setDelimiterParsingDisabled(true);
+        List<String> list = Arrays.asList("val", "val2", "val3");
+        conf.setProperty(prop, list);
+        conf.setFile(testSavePropertiesFile);
+        conf.save();
+        conf.clear();
+        conf.load();
+        assertEquals("Wrong list property", list, conf.getProperty(prop));
     }
 
     /**
