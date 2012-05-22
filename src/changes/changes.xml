@@ -35,6 +35,10 @@
         DataConfiguration.get() now also works with String properties and if no
         data type conversion is required.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-482" due-to="Chris Seieroe">
+        The Import-Package section in the OSGi manifest now uses the
+        resolution:=optional directive for optional dependencies.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-481">
         Variable substitution in configuration sources declared in a definition
         file for DefaultConfigurationBuilder now works across multiple sources.

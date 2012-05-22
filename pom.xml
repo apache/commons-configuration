@@ -435,6 +435,20 @@
     <commons.jira.pid>12310467</commons.jira.pid>
     <maven.compile.source>1.5</maven.compile.source>
     <maven.compile.target>1.5</maven.compile.target>
+
+    <!-- Explicitly declare optional dependencies for the OSGi manifest. -->
+    <commons.osgi.import>
+      org.apache.commons.beanutils.*;resolution:=optional,
+      org.apache.commons.digester.*;resolution:=optional,
+      org.apache.commons.collections.*;resolution:=optional,
+      org.apache.commons.codec.*;resolution:=optional,
+      org.apache.commons.jxpath.*;resolution:=optional,
+      org.apache.xml.resolver.*;resolution:=optional,
+      javax.servlet.*;resolution:=optional,
+      org.apache.commons.jexl2.*;resolution:=optional,
+      org.apache.commons.vfs2.*;resolution:=optional,
+      *
+    </commons.osgi.import>
   </properties>
 
   <build>
