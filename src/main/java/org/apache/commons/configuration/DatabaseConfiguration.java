@@ -219,6 +219,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try
         {
@@ -232,7 +233,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.setString(2, name);
             }
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             List<Object> results = new ArrayList<Object>();
             while (rs.next())
@@ -264,7 +265,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         }
         finally
         {
-            close(conn, pstmt);
+            close(conn, pstmt, rs);
         }
 
         return result;
@@ -321,7 +322,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, null);
         }
     }
 
@@ -377,6 +378,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try
         {
@@ -389,7 +391,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.setString(1, name);
             }
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             if (rs.next())
             {
@@ -403,7 +405,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, rs);
         }
 
         return empty;
@@ -432,6 +434,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try
         {
@@ -445,7 +448,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.setString(2, name);
             }
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             found = rs.next();
         }
@@ -456,7 +459,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, rs);
         }
 
         return found;
@@ -506,7 +509,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, null);
         }
     }
 
@@ -552,7 +555,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, null);
         }
         fireEvent(EVENT_CLEAR, null, null, false);
     }
@@ -580,6 +583,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
         Connection conn = null;
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try
         {
@@ -592,7 +596,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 pstmt.setString(1, name);
             }
 
-            ResultSet rs = pstmt.executeQuery();
+            rs = pstmt.executeQuery();
 
             while (rs.next())
             {
@@ -606,7 +610,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         finally
         {
             // clean up
-            close(conn, pstmt);
+            close(conn, pstmt, rs);
         }
 
         return keys.iterator();
@@ -641,14 +645,27 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Close a {@code Connection} and, {@code Statement}.
+     * Close the specified database objects.
      * Avoid closing if null and hide any SQLExceptions that occur.
      *
      * @param conn The database connection to close
      * @param stmt The statement to close
+     * @param rs the result set to close
      */
-    private void close(Connection conn, Statement stmt)
+    private void close(Connection conn, Statement stmt, ResultSet rs)
     {
+        try
+        {
+            if (rs != null)
+            {
+                rs.close();
+            }
+        }
+        catch (SQLException e)
+        {
+            getLogger().error("An error occurred on closing the result set", e);
+        }
+
         try
         {
             if (stmt != null)
