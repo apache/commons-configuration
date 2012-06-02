@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -62,8 +64,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     };
 
     /** The CombinedConfigurations */
-    private Map<String, CombinedConfiguration> configs =
-            new HashMap<String, CombinedConfiguration>();
+    private final ConcurrentMap<String, CombinedConfiguration> configs =
+            new ConcurrentHashMap<String, CombinedConfiguration>();
 
     /** Stores a list with the contained configurations. */
     private List<ConfigData> configurations = new ArrayList<ConfigData>();
@@ -823,41 +825,44 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private CombinedConfiguration getCurrentConfig()
     {
         String key = localSubst.replace(keyPattern);
-        CombinedConfiguration config;
-        synchronized (getNodeCombiner())
+        CombinedConfiguration config = configs.get(key);
+        // The double-checked works here due to the Thread guarantees of ConcurrentMap.
+        if (config == null)
         {
-            config = configs.get(key);
-            if (config == null)
+            synchronized(configs)
             {
-                config = new CombinedConfiguration(getNodeCombiner());
-                if (loggerName != null)
+                config = configs.get(key);
+                if (config == null)
                 {
-                    Log log = LogFactory.getLog(loggerName);
-                    if (log != null)
+                    config = new CombinedConfiguration(getNodeCombiner());
+                    if (loggerName != null)
                     {
-                        config.setLogger(log);
+                        Log log = LogFactory.getLog(loggerName);
+                        if (log != null)
+                        {
+                            config.setLogger(log);
+                        }
                     }
+                    config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
+                    config.setExpressionEngine(this.getExpressionEngine());
+                    config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+                    config.setConversionExpressionEngine(getConversionExpressionEngine());
+                    config.setListDelimiter(getListDelimiter());
+                    for (ConfigurationErrorListener listener : getErrorListeners())
+                    {
+                        config.addErrorListener(listener);
+                    }
+                    for (ConfigurationListener listener : getConfigurationListeners())
+                    {
+                        config.addConfigurationListener(listener);
+                    }
+                    config.setForceReloadCheck(isForceReloadCheck());
+                    for (ConfigData data : configurations)
+                    {
+                        config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());
+                    }
+                    configs.put(key, config);
                 }
-                config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
-                config.setExpressionEngine(this.getExpressionEngine());
-                config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-                config.setConversionExpressionEngine(getConversionExpressionEngine());
-                config.setListDelimiter(getListDelimiter());
-                for (ConfigurationErrorListener listener : getErrorListeners())
-                {
-                    config.addErrorListener(listener);
-                }
-                for (ConfigurationListener listener : getConfigurationListeners())
-                {
-                    config.addConfigurationListener(listener);
-                }
-                config.setForceReloadCheck(isForceReloadCheck());
-                for (ConfigData data : configurations)
-                {
-                    config.addConfiguration(data.getConfiguration(), data.getName(),
-                            data.getAt());
-                }
-                configs.put(key, config);
             }
         }
         if (getLogger().isDebugEnabled())
