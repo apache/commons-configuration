@@ -59,7 +59,7 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     private static final String PROPERTY_DELIMITER = ".";
 
     /** The logger.*/
-    private static final Log log = LogFactory.getLog(ConfigurationDynaBean.class);
+    private static final Log LOG = LogFactory.getLog(ConfigurationDynaBean.class);
 
     /**
      * Creates a new instance of {@code ConfigurationDynaBean} and sets
@@ -70,17 +70,17 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
     public ConfigurationDynaBean(Configuration configuration)
     {
         super(configuration);
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("ConfigurationDynaBean(" + configuration + ")");
+            LOG.trace("ConfigurationDynaBean(" + configuration + ")");
         }
     }
 
     public void set(String name, Object value)
     {
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("set(" + name + "," + value + ")");
+            LOG.trace("set(" + name + "," + value + ")");
         }
 
         if (value == null)
@@ -112,9 +112,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
 
     public Object get(String name)
     {
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("get(" + name + ")");
+            LOG.trace("get(" + name + ")");
         }
 
         // get configuration property
@@ -129,9 +129,9 @@ public class ConfigurationDynaBean extends ConfigurationMap implements DynaBean
             }
         }
 
-        if (log.isDebugEnabled())
+        if (LOG.isDebugEnabled())
         {
-            log.debug(name + "=[" + result + "]");
+            LOG.debug(name + "=[" + result + "]");
         }
 
         if (result == null)

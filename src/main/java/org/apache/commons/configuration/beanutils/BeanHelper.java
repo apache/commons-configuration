@@ -60,7 +60,7 @@ import org.apache.commons.lang.ClassUtils;
 public final class BeanHelper
 {
     /** Stores a map with the registered bean factories. */
-    private static final Map<String, BeanFactory> beanFactories = Collections
+    private static final Map<String, BeanFactory> BEAN_FACTORIES = Collections
             .synchronizedMap(new HashMap<String, BeanFactory>());
 
     /**
@@ -97,7 +97,7 @@ public final class BeanHelper
             throw new IllegalArgumentException("Bean factory must not be null!");
         }
 
-        beanFactories.put(name, factory);
+        BEAN_FACTORIES.put(name, factory);
     }
 
     /**
@@ -110,7 +110,7 @@ public final class BeanHelper
      */
     public static BeanFactory deregisterBeanFactory(String name)
     {
-        return beanFactories.remove(name);
+        return BEAN_FACTORIES.remove(name);
     }
 
     /**
@@ -120,7 +120,7 @@ public final class BeanHelper
      */
     public static Set<String> registeredFactoryNames()
     {
-        return beanFactories.keySet();
+        return BEAN_FACTORIES.keySet();
     }
 
     /**
@@ -448,7 +448,7 @@ public final class BeanHelper
         String factoryName = data.getBeanFactoryName();
         if (factoryName != null)
         {
-            BeanFactory factory = beanFactories.get(factoryName);
+            BeanFactory factory = BEAN_FACTORIES.get(factoryName);
             if (factory == null)
             {
                 throw new ConfigurationRuntimeException(

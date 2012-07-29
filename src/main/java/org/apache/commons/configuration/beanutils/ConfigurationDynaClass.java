@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
 public class ConfigurationDynaClass implements DynaClass
 {
     /** The logger.*/
-    private static final Log log = LogFactory.getLog(ConfigurationDynaClass.class);
+    private static final Log LOG = LogFactory.getLog(ConfigurationDynaClass.class);
 
     /** Stores the associated configuration.*/
     private final Configuration configuration;
@@ -53,18 +53,18 @@ public class ConfigurationDynaClass implements DynaClass
     public ConfigurationDynaClass(Configuration configuration)
     {
         super();
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("ConfigurationDynaClass(" + configuration + ")");
+            LOG.trace("ConfigurationDynaClass(" + configuration + ")");
         }
         this.configuration = configuration;
     }
 
     public DynaProperty getDynaProperty(String name)
     {
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("getDynaProperty(" + name + ")");
+            LOG.trace("getDynaProperty(" + name + ")");
         }
 
         if (name == null)
@@ -120,9 +120,9 @@ public class ConfigurationDynaClass implements DynaClass
 
     public DynaProperty[] getDynaProperties()
     {
-        if (log.isTraceEnabled())
+        if (LOG.isTraceEnabled())
         {
-            log.trace("getDynaProperties()");
+            LOG.trace("getDynaProperties()");
         }
 
         Iterator<String> keys = configuration.getKeys();
@@ -136,9 +136,9 @@ public class ConfigurationDynaClass implements DynaClass
 
         DynaProperty[] propertyArray = new DynaProperty[properties.size()];
         properties.toArray(propertyArray);
-        if (log.isDebugEnabled())
+        if (LOG.isDebugEnabled())
         {
-            log.debug("Found " + properties.size() + " properties.");
+            LOG.debug("Found " + properties.size() + " properties.");
         }
 
         return propertyArray;
