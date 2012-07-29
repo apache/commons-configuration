@@ -16,19 +16,19 @@
  */
 package org.apache.commons.configuration;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.InputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 /**
  * FileSystem that uses java.io.File or HttpClient
@@ -170,6 +170,12 @@ public class DefaultFileSystem extends FileSystem
                 catch (Exception e)
                 {
                     // simply ignore it and return null
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug(String.format("Could not determine URL for "
+                                + "basePath = %s, fileName = %s.", basePath,
+                                fileName), e);
+                    }
                 }
             }
         }

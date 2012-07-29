@@ -1351,6 +1351,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                         catch (Exception ex2)
                         {
                             // Ignore exception, return null in this case
+                            logger.warn("Could not create instance of optional configuration "
+                                    + tagName, ex2);
                         }
                     }
                     return null;
