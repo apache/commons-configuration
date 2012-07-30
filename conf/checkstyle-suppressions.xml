@@ -28,4 +28,6 @@
 
     <suppress checks="MissingSwitchDefault" files="PropertiesConfiguration.java"/>
 
+    <suppress checks="DoubleCheckedLocking" files="DynamicCombinedConfiguration.java"
+      lines="800-900"/>
 </suppressions>
