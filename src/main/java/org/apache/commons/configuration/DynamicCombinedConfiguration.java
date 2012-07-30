@@ -829,7 +829,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         // The double-checked works here due to the Thread guarantees of ConcurrentMap.
         if (config == null)
         {
-            synchronized(configs)
+            synchronized (configs)
             {
                 config = configs.get(key);
                 if (config == null)
