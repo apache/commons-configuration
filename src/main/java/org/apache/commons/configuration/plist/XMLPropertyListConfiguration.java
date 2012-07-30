@@ -459,7 +459,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     /**
      * SAX Handler to build the configuration nodes while the document is being parsed.
      */
-    private static class XMLPropertyListHandler extends DefaultHandler
+    private class XMLPropertyListHandler extends DefaultHandler
     {
         /** The buffer containing the text node being read */
         private StringBuilder buffer = new StringBuilder();
@@ -578,7 +578,15 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
                 }
                 else if ("date".equals(qName))
                 {
-                    ((PListNode) peek()).addDateValue(buffer.toString());
+                    try
+                    {
+                        ((PListNode) peek()).addDateValue(buffer.toString());
+                    }
+                    catch (IllegalArgumentException iex)
+                    {
+                        getLogger().warn(
+                                "Ignoring invalid date property " + buffer);
+                    }
                 }
                 else if ("array".equals(qName))
                 {
@@ -660,6 +668,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          * Parse the specified string as a date and add it to the values of the node.
          *
          * @param value the value to be added
+         * @throws IllegalArgumentException if the date string cannot be parsed
          */
         public void addDateValue(String value)
         {
@@ -684,7 +693,8 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             }
             catch (ParseException e)
             {
-                // ignore
+                throw new IllegalArgumentException(String.format(
+                        "'%s' cannot be parsed to a date!", value), e);
             }
         }
 

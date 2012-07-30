@@ -392,4 +392,18 @@ public class TestXMLPropertyListConfiguration
                 ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
+
+    /**
+     * Tests a configuration file which contains an invalid date property value.
+     * This test is related to CONFIGURATION-501.
+     */
+    @Test
+    public void testSetDatePropertyInvalid() throws ConfigurationException
+    {
+        config.clear();
+        config.setFile(ConfigurationAssert.getTestFile("test_invalid_date.plist.xml"));
+        config.load();
+        assertEquals("'string' property", "value1", config.getString("string"));
+        assertFalse("Date property was loaded", config.containsKey("date"));
+    }
 }
