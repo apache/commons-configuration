@@ -48,6 +48,10 @@ IMPROVEMENTS AND NEW FEATURES IN 1.9
   XMLPropertyListConfiguration no longer swallows exception caused by invalid
   date properties. Now a warning message is logged.
 
+* [CONFIGURATION-488]
+  Made static DateFormat fields in XMLPropertyListConfiguration.PListNode final
+  and added a note about proper synchronization.
+
 * [CONFIGURATION-483]
   DatabaseConfiguration now always closes the result set.
 

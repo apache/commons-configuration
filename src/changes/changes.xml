@@ -35,6 +35,10 @@
         List properties can now be set correctly on a HierarchicalConfiguration
         if delimiter parsing is disabled.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-488">
+        Made static DateFormat fields in XMLPropertyListConfiguration.PListNode
+        final and added a note about proper synchronization.
+      </action>
       <action dev="oheger" type="fix" issue="CONFIGURATION-487">
         DataConfiguration.get() now also works with String properties and if no
         data type conversion is required.
