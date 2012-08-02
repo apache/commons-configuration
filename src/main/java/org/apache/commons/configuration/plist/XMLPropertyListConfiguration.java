@@ -56,8 +56,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Property list file (plist) in XML format as used by Mac OS X (http://www.apple.com/DTDs/PropertyList-1.0.dtd).
- * This configuration doesn't support the binary format used in OS X 10.4.
+ * Property list file (plist) in XML FORMAT as used by Mac OS X (http://www.apple.com/DTDs/PropertyList-1.0.dtd).
+ * This configuration doesn't support the binary FORMAT used in OS X 10.4.
  *
  * <p>Example:</p>
  * <pre>
@@ -337,9 +337,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
         if (value instanceof Date)
         {
-            synchronized (PListNode.format)
+            synchronized (PListNode.FORMAT)
             {
-                out.println(padding + "<date>" + PListNode.format.format((Date) value) + "</date>");
+                out.println(padding + "<date>" + PListNode.FORMAT.format((Date) value) + "</date>");
             }
         }
         else if (value instanceof Calendar)
@@ -624,15 +624,23 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
          */
         private static final long serialVersionUID = -7614060264754798317L;
 
-        /** The MacOS format of dates in plist files. */
-        private static DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        /**
+         * The MacOS FORMAT of dates in plist files. Note: Because
+         * {@code SimpleDateFormat} is not thread-safe, each access has to be
+         * synchronized.
+         */
+        private static final DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
         static
         {
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         }
 
-        /** The GNUstep format of dates in plist files. */
-        private static DateFormat gnustepFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+        /**
+         * The GNUstep FORMAT of dates in plist files. Note: Because
+         * {@code SimpleDateFormat} is not thread-safe, each access has to be
+         * synchronized.
+         */
+        private static final DateFormat GNUSTEP_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 
         /**
          * Update the value of the node. If the existing value is null, it's
@@ -676,18 +684,18 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             {
                 if (value.indexOf(' ') != -1)
                 {
-                    // parse the date using the GNUstep format
-                    synchronized (gnustepFormat)
+                    // parse the date using the GNUstep FORMAT
+                    synchronized (GNUSTEP_FORMAT)
                     {
-                        addValue(gnustepFormat.parse(value));
+                        addValue(GNUSTEP_FORMAT.parse(value));
                     }
                 }
                 else
                 {
-                    // parse the date using the MacOS X format
-                    synchronized (format)
+                    // parse the date using the MacOS X FORMAT
+                    synchronized (FORMAT)
                     {
-                        addValue(format.parse(value));
+                        addValue(FORMAT.parse(value));
                     }
                 }
             }
@@ -699,7 +707,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
 
         /**
-         * Parse the specified string as a byte array in base 64 format
+         * Parse the specified string as a byte array in base 64 FORMAT
          * and add it to the values of the node.
          *
          * @param value the value to be added
