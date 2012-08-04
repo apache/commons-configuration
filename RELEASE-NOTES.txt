@@ -44,6 +44,9 @@ BUG FIXES IN 1.9
 
 IMPROVEMENTS AND NEW FEATURES IN 1.9
 ====================================
+* [CONFIGURATION-502]
+  Improvements of basic features and AbstractConfiguration documentation.
+
 * [CONFIGURATION-501]
   XMLPropertyListConfiguration no longer swallows exception caused by invalid
   date properties. Now a warning message is logged.

@@ -57,10 +57,11 @@
       is thrown:
     </p>
     <source><![CDATA[
-// This will probably return null
+// This will return null if no property with key "NonExistingProperty" exists
 String strValue = config.getString("NonExistingProperty");
 
-// This might throw an exception
+// This will throw a NoSuchElementException exception if no property with
+// key "NonExistingProperty" exists
 long longValue = config.getLong("NonExistingProperty");
 ]]></source>
     <p>
