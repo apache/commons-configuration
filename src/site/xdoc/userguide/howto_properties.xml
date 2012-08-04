@@ -38,7 +38,7 @@
         This is because most configuration implementations that ship with
         Commons Configuration are derived from the common base class
         <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">AbstractConfiguration</a></code>,
-        which implementes this features.
+        which implements these features.
       </p>
 
       <subsection name="Using PropertiesConfiguration">
@@ -260,7 +260,7 @@ config.dirs = \\\\share2
         <code><a href="../apidocs/org/apache/commons/configuration/PropertiesConfigurationLayout.html">
         PropertiesConfigurationLayout</a></code>. This layout object is
         responsible for preserving most of the structure of loaded configuration
-        files. This means that things like comments or blanc lines in a saved
+        files. This means that things like comments or blank lines in a saved
         properties file will closely resemble the original properties file
         (the algorithm is not 100 percent perfect, but for most use cases it
         should be sufficient).
@@ -284,8 +284,8 @@ config.dirs = \\\\share2
         followed by an empty line.</li>
         <li><code>setBlancLinesBefore()</code><br/>
         This methods allows defining the number of empty lines to be written
-        before the specified property. It can be used, for instance, for
-        deviding the properties file into multiple logic sections.</li>
+        before the specified property. It can be used, for instance, to
+        devide the properties file into multiple logical sections.</li>
         <li><code>setSingleLine()</code><br/>
         If a property has multiple values, with <code>setSingleLine()</code> it
         can be specified that all these values should be written into a single

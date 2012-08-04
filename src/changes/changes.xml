@@ -27,6 +27,9 @@
   <body>
     <release version="1.9" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-503" due-to="Tino Sino">
+        Small changes in user guide documentation.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-502" due-to="Tino Sino">
         Improvements of basic features and AbstractConfiguration documentation.
       </action>
