@@ -1288,58 +1288,49 @@ public class TestXMLConfiguration
                 .getString("attrList.a(0)"));
         assertEquals("Wrong value of first name attribute", "x", conf
                 .getString("attrList.a(0)[@name]"));
-        assertEquals("Wrong number of name attributes", 5, conf.getList(
+        assertEquals("Wrong number of name attributes", 6, conf.getList(
                 "attrList.a[@name]").size());
     }
 
     /**
      * Tests a list node with attributes that has multiple values separated by
-     * the list delimiter. In this scenario the attribute should be added to the
-     * node with the first value.
+     * the list delimiter. In this scenario the attribute should be added to all
+     * list nodes.
      */
     @Test
     public void testListWithAttributesMultiValue()
     {
-        assertEquals("Wrong value of 2nd element", "1", conf
-                .getString("attrList.a(1)"));
-        assertEquals("Wrong value of 2nd name attribute", "y", conf
-                .getString("attrList.a(1)[@name]"));
-        for (int i = 2; i <= 3; i++)
+        assertEquals("Wrong value of 2nd element", "1",
+                conf.getString("attrList.a(1)"));
+        assertEquals("Wrong value of 2nd name attribute", "y",
+                conf.getString("attrList.a(1)[@name]"));
+        for (int i = 1; i <= 3; i++)
         {
-            assertEquals("Wrong value of element " + (i + 1), i, conf
-                    .getInt("attrList.a(" + i + ")"));
-            assertFalse("element " + (i + 1) + " has attribute", conf
-                    .containsKey("attrList.a(2)[@name]"));
+            assertEquals("Wrong value of element " + (i + 1), i,
+                    conf.getInt("attrList.a(" + i + ")"));
+            assertEquals("Wrong name attribute for element " + (i), "y",
+                    conf.getString("attrList.a(" + i + ")[@name]"));
         }
     }
 
     /**
-     * Tests a list node with a multi-value attribute and multiple values. All
-     * attribute values should be assigned to the node with the first value.
+     * Tests a list node with multiple values and multiple attributes. All
+     * attribute values should be assigned to all list nodes.
      */
     @Test
-    public void testListWithMultiAttributesMultiValue()
+    public void testListWithMultipleAttributesMultiValue()
     {
         for (int i = 1; i <= 2; i++)
         {
-            assertEquals("Wrong value of multi-valued node", "value" + i, conf
-                    .getString("attrList.a(" + (i + 3) + ")"));
+            String idxStr = String.format("(%d)", Integer.valueOf(i + 3));
+            String nodeKey = "attrList.a" + idxStr;
+            assertEquals("Wrong value of multi-valued node", "value" + i,
+                    conf.getString(nodeKey));
+            assertEquals("Wrong name attribute at " + i, "u",
+                    conf.getString(nodeKey + "[@name]"));
+            assertEquals("Wrong test attribute at " + i, "yes",
+                    conf.getString(nodeKey + "[@test]"));
         }
-        List<Object> attrs = conf.getList("attrList.a(4)[@name]");
-        final String attrVal = "uvw";
-        assertEquals("Wrong number of name attributes", attrVal.length(), attrs
-                .size());
-        for (int i = 0; i < attrVal.length(); i++)
-        {
-            assertEquals("Wrong value for attribute " + i, String
-                    .valueOf(attrVal.charAt(i)), attrs.get(i));
-        }
-        assertEquals("Wrong value of test attribute", "yes", conf
-                .getString("attrList.a(4)[@test]"));
-        assertFalse("Name attribute for 2nd value", conf
-                .containsKey("attrList.a(5)[@name]"));
-        assertFalse("Test attribute for 2nd value", conf
-                .containsKey("attrList.a(5)[@test]"));
     }
 
     /**

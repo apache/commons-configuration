@@ -99,7 +99,7 @@ And even longer.
     <attrList>
       <a name="x">ABC</a>
       <a name="y">1,2,3</a>
-      <a name="u,v,w" test="yes">value1,value2</a>
+      <a name="u" test="yes">value1,value2</a>
     </attrList>
 
     <!-- An attribute with multiple values and escape characters for testing

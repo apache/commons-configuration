@@ -608,11 +608,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param elemRefs a flag whether references to the XML elements should be set
      * @param trim a flag whether the text content of elements should be trimmed;
      * this controls the whitespace handling
+     * @return a map with all attribute values extracted for the current node
      */
-    private void constructHierarchy(Node node, Element element, boolean elemRefs, boolean trim)
+    private Map<String, Collection<String>> constructHierarchy(Node node,
+            Element element, boolean elemRefs, boolean trim)
     {
         boolean trimFlag = shouldTrim(element, trim);
-        processAttributes(node, element, elemRefs);
+        Map<String, Collection<String>> attributes =
+                processAttributes(node, element, elemRefs);
         StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
         for (int i = 0; i < list.getLength(); i++)
@@ -623,9 +626,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Element child = (Element) w3cNode;
                 Node childNode = new XMLNode(child.getTagName(),
                         elemRefs ? child : null);
-                constructHierarchy(childNode, child, elemRefs, trimFlag);
+                Map<String, Collection<String>> attrmap =
+                        constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
-                handleDelimiters(node, childNode, trimFlag);
+                handleDelimiters(node, childNode, trimFlag, attrmap);
             }
             else if (w3cNode instanceof Text)
             {
@@ -643,19 +647,32 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             node.setValue(text);
         }
+        return attributes;
     }
 
     /**
      * Helper method for constructing node objects for the attributes of the
      * given XML element.
      *
-     * @param node the actual node
+     * @param node the current node
      * @param element the actual XML element
      * @param elemRefs a flag whether references to the XML elements should be set
+     * @return a map with all attribute values extracted for the current node
      */
-    private void processAttributes(Node node, Element element, boolean elemRefs)
+    private Map<String, Collection<String>> processAttributes(Node node,
+            Element element, boolean elemRefs)
     {
         NamedNodeMap attributes = element.getAttributes();
+        Map<String, Collection<String>> attrmap;
+        if (attributes.getLength() > 0)
+        {
+            attrmap = new HashMap<String, Collection<String>>();
+        }
+        else
+        {
+            attrmap = Collections.emptyMap();
+        }
+
         for (int i = 0; i < attributes.getLength(); ++i)
         {
             org.w3c.dom.Node w3cNode = attributes.item(i);
@@ -674,14 +691,31 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                                     : getListDelimiter());
                 }
 
-                for (String value : values)
-                {
-                    Node child = new XMLNode(attr.getName(), elemRefs ? element
-                            : null);
-                    child.setValue(value);
-                    node.addAttribute(child);
-                }
+                appendAttributes(node, element, elemRefs, attr.getName(), values);
+                attrmap.put(attr.getName(), values);
             }
+        }
+
+        return attrmap;
+    }
+
+    /**
+     * Adds attribute nodes to the given node. For each attribute value, a new
+     * attribute node is created and added as child to the current node.
+     *
+     * @param node the current node
+     * @param element the corresponding XML element
+     * @param attr the name of the attribute
+     * @param values the attribute values
+     */
+    private void appendAttributes(Node node, Element element, boolean elemRefs,
+            String attr, Collection<String> values)
+    {
+        for (String value : values)
+        {
+            Node child = new XMLNode(attr, elemRefs ? element : null);
+            child.setValue(value);
+            node.addAttribute(child);
         }
     }
 
@@ -692,8 +726,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param parent the parent element
      * @param child the child element
      * @param trim flag whether texts of elements should be trimmed
+     * @param attrmap a map with the attributes of the current node
      */
-    private void handleDelimiters(Node parent, Node child, boolean trim)
+    private void handleDelimiters(Node parent, Node child, boolean trim,
+            Map<String, Collection<String>> attrmap)
     {
         if (child.getValue() != null)
         {
@@ -729,6 +765,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 {
                     c = new XMLNode(child.getName(), null);
                     c.setValue(it.next());
+                    for (Map.Entry<String, Collection<String>> e : attrmap
+                            .entrySet())
+                    {
+                        appendAttributes(c, null, false, e.getKey(),
+                                e.getValue());
+                    }
                     parent.addChild(c);
                 }
             }

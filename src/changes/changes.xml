@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-500">
+        XMLConfiguration now adds attributes of elements defining a list to
+        all list nodes.
+      </action>
     </release>
 
     <release version="1.9" date="2012-08-22"
