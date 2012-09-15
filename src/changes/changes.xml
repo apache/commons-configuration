@@ -27,6 +27,11 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-505">
+        XMLConfiguration no longer supports attributes with multiple values or
+        list delimiter parsing in attributes. This feature was complex and
+        error prone and brought little value to the user.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-500">
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.

@@ -1776,8 +1776,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 DefaultConfigurationBuilder parent,
                 DefaultConfigurationBuilder child)
         {
-            child.setAttributeSplittingDisabled(parent
-                    .isAttributeSplittingDisabled());
             child.setBasePath(parent.getBasePath());
             child.setDelimiterParsingDisabled(parent
                     .isDelimiterParsingDisabled());

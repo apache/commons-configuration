@@ -143,7 +143,6 @@ public class TestMultiFileHierarchicalConfiguration
         Thread.sleep(1100);
         XMLConfiguration x = new XMLConfiguration();
         x.setFile(output);
-        x.setAttributeSplittingDisabled(true);
         x.setDelimiterParsingDisabled(true);
         x.load();
         x.setProperty("rowsPerPage", "35");
@@ -200,7 +199,6 @@ public class TestMultiFileHierarchicalConfiguration
         Thread.sleep(500);
         XMLConfiguration x = new XMLConfiguration();
         x.setFile(output);
-        x.setAttributeSplittingDisabled(true);
         x.setDelimiterParsingDisabled(true);
         x.load();
         x.setProperty("rowsPerPage", "35");
@@ -265,7 +263,6 @@ public class TestMultiFileHierarchicalConfiguration
         Thread.sleep(1100);
         XMLConfiguration x = new XMLConfiguration();
         x.setFile(output);
-        x.setAttributeSplittingDisabled(true);
         x.setDelimiterParsingDisabled(true);
         x.load();
         x.setProperty("rowsPerPage", "test");

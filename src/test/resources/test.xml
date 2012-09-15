@@ -55,7 +55,7 @@ And even longer.
 		</sublist>
 	</list>
     
-    <!-- Comma delimited lists -->
+    <!-- Comma delimited lists (work in elements, but not in attributes) -->
     <split>
       <list1>a,b,c</list1>
       <list2>a\,b\,c</list2>
@@ -102,10 +102,10 @@ And even longer.
       <a name="u" test="yes">value1,value2</a>
     </attrList>
 
-    <!-- An attribute with multiple values and escape characters for testing
-         splitting when delimiter parsing is disabled.
+    <!-- An attribute with list delimiter characters for testing that
+         attribute values are not split.
     -->
-    <expressions value="a \|\| (b &amp;&amp; c)|!d"
+    <expressions value="a || (b &amp;&amp; c) | !d"
       value2="a,b|c"/>
 
     <!-- Tests for handling of spaces -->

@@ -182,9 +182,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /** Constant for the xml:space value for preserving whitespace.*/
     private static final String VALUE_PRESERVE = "preserve";
 
-    /** Constant for the delimiter for multiple attribute values.*/
-    private static final char ATTR_VALUE_DELIMITER = '|';
-
     /** Schema Langauge key for the parser */
     private static final String JAXP_SCHEMA_LANGUAGE =
         "http://java.sun.com/xml/jaxp/properties/schemaLanguage";
@@ -213,9 +210,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
     /** Stores a flag whether DTD or Schema validation is used */
     private boolean schemaValidation;
-
-    /** A flag whether attribute splitting is disabled.*/
-    private boolean attributeSplittingDisabled;
 
     /** The EntityResolver to use */
     private EntityResolver entityResolver = new DefaultEntityResolver();
@@ -489,71 +483,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Returns the flag whether attribute splitting is disabled.
-     *
-     * @return the flag whether attribute splitting is disabled
-     * @see #setAttributeSplittingDisabled(boolean)
-     * @since 1.6
-     */
-    public boolean isAttributeSplittingDisabled()
-    {
-        return attributeSplittingDisabled;
-    }
-
-    /**
-     * <p>
-     * Sets a flag whether attribute splitting is disabled.
-     * </p>
-     * <p>
-     * The Configuration API allows adding multiple values to an attribute. This
-     * is problematic when storing the configuration because in XML an attribute
-     * can appear only once with a single value. To solve this problem, per
-     * default multiple attribute values are concatenated using a special
-     * separator character and split again when the configuration is loaded. The
-     * separator character is either the list delimiter character (see
-     * {@link #setListDelimiter(char)}) or the pipe symbol (&quot;|&quot;) if
-     * list delimiter parsing is disabled.
-     * </p>
-     * <p>
-     * In some constellations the splitting of attribute values can have
-     * undesired effects, especially if list delimiter parsing is disabled and
-     * attributes may contain the &quot;|&quot; character. In these cases it is
-     * possible to disable the attribute splitting mechanism by calling this
-     * method with a boolean value set to <b>false</b>. If attribute splitting
-     * is disabled, the values of attributes will not be processed, but stored
-     * as configuration properties exactly as they are returned by the XML
-     * parser.
-     * </p>
-     * <p>
-     * Note that in this mode multiple attribute values cannot be handled
-     * correctly. It is possible to create a {@code XMLConfiguration}
-     * object, add multiple values to an attribute and save it. When the
-     * configuration is loaded again and attribute splitting is disabled, the
-     * attribute will only have a single value, which is the concatenation of
-     * all values set before. So it lies in the responsibility of the
-     * application to carefully set the values of attributes.
-     * </p>
-     * <p>
-     * As is true for the {@link #setDelimiterParsingDisabled(boolean)} method,
-     * this method must be called before the configuration is loaded. So it
-     * can't be used together with one of the constructors expecting the
-     * specification of the file to load. Instead the default constructor has to
-     * be used, then {@code setAttributeSplittingDisabled(false)} has to be
-     * called, and finally the configuration can be loaded using one of its
-     * {@code load()} methods.
-     * </p>
-     *
-     * @param attributeSplittingDisabled <b>true</b> for disabling attribute
-     *        splitting, <b>false</b> for enabling it
-     * @see #setDelimiterParsingDisabled(boolean)
-     * @since 1.6
-     */
-    public void setAttributeSplittingDisabled(boolean attributeSplittingDisabled)
-    {
-        this.attributeSplittingDisabled = attributeSplittingDisabled;
-    }
-
-    /**
      * Returns the XML document this configuration was loaded from. The return
      * value is <b>null</b> if this configuration was not loaded from a XML
      * document.
@@ -610,11 +539,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * this controls the whitespace handling
      * @return a map with all attribute values extracted for the current node
      */
-    private Map<String, Collection<String>> constructHierarchy(Node node,
+    private Map<String, String> constructHierarchy(Node node,
             Element element, boolean elemRefs, boolean trim)
     {
         boolean trimFlag = shouldTrim(element, trim);
-        Map<String, Collection<String>> attributes =
+        Map<String, String> attributes =
                 processAttributes(node, element, elemRefs);
         StringBuilder buffer = new StringBuilder();
         NodeList list = element.getChildNodes();
@@ -626,7 +555,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 Element child = (Element) w3cNode;
                 Node childNode = new XMLNode(child.getTagName(),
                         elemRefs ? child : null);
-                Map<String, Collection<String>> attrmap =
+                Map<String, String> attrmap =
                         constructHierarchy(childNode, child, elemRefs, trimFlag);
                 node.addChild(childNode);
                 handleDelimiters(node, childNode, trimFlag, attrmap);
@@ -659,14 +588,14 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param elemRefs a flag whether references to the XML elements should be set
      * @return a map with all attribute values extracted for the current node
      */
-    private Map<String, Collection<String>> processAttributes(Node node,
+    private Map<String, String> processAttributes(Node node,
             Element element, boolean elemRefs)
     {
         NamedNodeMap attributes = element.getAttributes();
-        Map<String, Collection<String>> attrmap;
+        Map<String, String> attrmap;
         if (attributes.getLength() > 0)
         {
-            attrmap = new HashMap<String, Collection<String>>();
+            attrmap = new HashMap<String, String>();
         }
         else
         {
@@ -679,20 +608,8 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             if (w3cNode instanceof Attr)
             {
                 Attr attr = (Attr) w3cNode;
-                List<String> values;
-                if (isAttributeSplittingDisabled())
-                {
-                    values = Collections.singletonList(attr.getValue());
-                }
-                else
-                {
-                    values = PropertyConverter.split(attr.getValue(),
-                            isDelimiterParsingDisabled() ? ATTR_VALUE_DELIMITER
-                                    : getListDelimiter());
-                }
-
-                appendAttributes(node, element, elemRefs, attr.getName(), values);
-                attrmap.put(attr.getName(), values);
+                appendAttribute(node, element, elemRefs, attr.getName(), attr.getValue());
+                attrmap.put(attr.getName(), attr.getValue());
             }
         }
 
@@ -700,23 +617,21 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Adds attribute nodes to the given node. For each attribute value, a new
+     * Adds an attribute node to the given node. Attributes are represented
+     * as configuration nodes like child nodes. For each attribute value, a new
      * attribute node is created and added as child to the current node.
      *
      * @param node the current node
      * @param element the corresponding XML element
      * @param attr the name of the attribute
-     * @param values the attribute values
+     * @param value the attribute value
      */
-    private void appendAttributes(Node node, Element element, boolean elemRefs,
-            String attr, Collection<String> values)
+    private void appendAttribute(Node node, Element element, boolean elemRefs,
+            String attr, String value)
     {
-        for (String value : values)
-        {
-            Node child = new XMLNode(attr, elemRefs ? element : null);
-            child.setValue(value);
-            node.addAttribute(child);
-        }
+        Node child = new XMLNode(attr, elemRefs ? element : null);
+        child.setValue(value);
+        node.addAttribute(child);
     }
 
     /**
@@ -729,7 +644,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      * @param attrmap a map with the attributes of the current node
      */
     private void handleDelimiters(Node parent, Node child, boolean trim,
-            Map<String, Collection<String>> attrmap)
+            Map<String, String> attrmap)
     {
         if (child.getValue() != null)
         {
@@ -765,10 +680,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 {
                     c = new XMLNode(child.getName(), null);
                     c.setValue(it.next());
-                    for (Map.Entry<String, Collection<String>> e : attrmap
-                            .entrySet())
+                    for (Map.Entry<String, String> e : attrmap.entrySet())
                     {
-                        appendAttributes(c, null, false, e.getKey(),
+                        appendAttribute(c, null, false, e.getKey(),
                                 e.getValue());
                     }
                     parent.addChild(c);
@@ -881,8 +795,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             }
 
             XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
-                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter(),
-                    isAttributeSplittingDisabled());
+                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
             builder.processDocument(getRoot());
             initRootElementText(document, getRootNode().getValue());
             return document;
@@ -1392,8 +1305,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          */
         private void updateAttribute()
         {
-            XMLBuilderVisitor.updateAttribute(getParent(), getName(), getListDelimiter(),
-                    isAttributeSplittingDisabled());
+            XMLBuilderVisitor.updateAttribute(getParent(), getName());
         }
 
         /**
@@ -1455,21 +1367,16 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         /** Stores the list delimiter.*/
         private final char listDelimiter;
 
-        /** True if attributes should not be split */
-        private boolean isAttributeSplittingDisabled;
-
         /**
          * Creates a new instance of {@code XMLBuilderVisitor}.
          *
          * @param doc the document to be created
          * @param listDelimiter the delimiter for attribute properties with multiple values
-         * @param isAttributeSplittingDisabled true if attribute splitting is disabled.
          */
-        public XMLBuilderVisitor(Document doc, char listDelimiter, boolean isAttributeSplittingDisabled)
+        public XMLBuilderVisitor(Document doc, char listDelimiter)
         {
             document = doc;
             this.listDelimiter = listDelimiter;
-            this.isAttributeSplittingDisabled = isAttributeSplittingDisabled;
         }
 
         /**
@@ -1497,8 +1404,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             if (newNode.isAttribute())
             {
-                updateAttribute(parent, getElement(parent), newNode.getName(), listDelimiter,
-                    isAttributeSplittingDisabled);
+                updateAttribute(parent, getElement(parent), newNode.getName());
                 return null;
             }
 
@@ -1537,44 +1443,56 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          * @param node the affected node
          * @param elem the element that is associated with this node
          * @param name the name of the affected attribute
-         * @param listDelimiter the delimiter for attributes with multiple values
-         * @param isAttributeSplittingDisabled true if attribute splitting is disabled.
          */
-        private static void updateAttribute(Node node, Element elem, String name, char listDelimiter,
-                                            boolean isAttributeSplittingDisabled)
+        private static void updateAttribute(Node node, Element elem, String name)
         {
             if (node != null && elem != null)
             {
-                boolean hasAttribute = false;
-                List<ConfigurationNode> attrs = node.getAttributes(name);
-                StringBuilder buf = new StringBuilder();
-                char delimiter = (listDelimiter != 0) ? listDelimiter : ATTR_VALUE_DELIMITER;
-                for (ConfigurationNode attr : attrs)
-                {
-                    if (attr.getValue() != null)
-                    {
-                        hasAttribute = true;
-                        if (buf.length() > 0)
-                        {
-                            buf.append(delimiter);
-                        }
-                        String value = isAttributeSplittingDisabled ? attr.getValue().toString()
-                            : PropertyConverter.escapeDelimiters(attr.getValue().toString(),
-                                    delimiter);
-                        buf.append(value);
-                    }
-                    attr.setReference(elem);
-                }
+                List<ConfigurationNode> definedAttrs =
+                        fetchDefinedAttributes(node.getAttributes(name));
 
-                if (!hasAttribute)
+                if (!definedAttrs.isEmpty())
                 {
-                    elem.removeAttribute(name);
+                    if (definedAttrs.size() > 1)
+                    {
+                        throw new ConfigurationRuntimeException(
+                                "Multiple values for attribute '" + name
+                                        + "' are not supported!");
+                    }
+                    ConfigurationNode attr = definedAttrs.get(0);
+                    elem.setAttribute(name, attr.getValue().toString());
                 }
                 else
                 {
-                    elem.setAttribute(name, buf.toString());
+                    elem.removeAttribute(name);
                 }
             }
+        }
+
+        /**
+         * Returns a list containing only attribute nodes with a defined value.
+         *
+         * @param attrs the list with all attributes
+         * @return a list with the defined attributes
+         */
+        private static List<ConfigurationNode> fetchDefinedAttributes(
+                List<ConfigurationNode> attrs)
+        {
+            if (attrs.isEmpty())
+            {
+                return attrs;
+            }
+
+            List<ConfigurationNode> definedAttrs =
+                    new ArrayList<ConfigurationNode>(attrs.size());
+            for (ConfigurationNode attr : attrs)
+            {
+                if (attr.getValue() != null)
+                {
+                    definedAttrs.add(attr);
+                }
+            }
+            return definedAttrs;
         }
 
         /**
@@ -1584,16 +1502,12 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
          *
          * @param node the affected node
          * @param name the name of the attribute
-         * @param listDelimiter the delimiter for attributes with multiple values
-         * @param isAttributeSplittingDisabled true if attributes splitting is disabled.
          */
-        static void updateAttribute(Node node, String name, char listDelimiter,
-                                    boolean isAttributeSplittingDisabled)
+        static void updateAttribute(Node node, String name)
         {
             if (node != null)
             {
-                updateAttribute(node, (Element) node.getReference(), name, listDelimiter,
-                        isAttributeSplittingDisabled);
+                updateAttribute(node, (Element) node.getReference(), name);
             }
         }
 

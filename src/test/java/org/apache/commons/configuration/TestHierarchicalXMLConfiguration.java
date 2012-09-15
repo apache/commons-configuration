@@ -250,7 +250,7 @@ public class TestHierarchicalXMLConfiguration
         config.setProperty("clear", "yes");
         config.setProperty("mean", "now it's simple");
         config.addProperty("[@topattr]", "available");
-        config.addProperty("[@topattr]", "successfull");
+        config.addProperty("[@topattr_other]", "successfull");
 
         File saveFile = folder.newFile(TEST_SAVENAME);
         config.save(saveFile);
@@ -267,7 +267,7 @@ public class TestHierarchicalXMLConfiguration
         assertEquals("yes", config.getProperty("clear"));
         assertEquals("now it's simple", config.getString("mean"));
         assertEquals("available", config.getString("[@topattr](0)"));
-        assertEquals("successfull", config.getString("[@topattr](1)"));
+        assertEquals("successfull", config.getString("[@topattr_other]"));
     }
 
     /**

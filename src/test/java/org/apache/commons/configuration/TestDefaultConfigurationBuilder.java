@@ -43,7 +43,6 @@ import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -851,7 +850,6 @@ public class TestDefaultConfigurationBuilder
         factory.addProperty("override.configuration[@fileName]",
                 TEST_FILE.getAbsolutePath());
         factory.setBasePath("conf");
-        factory.setAttributeSplittingDisabled(true);
         factory.setDelimiterParsingDisabled(true);
         factory.setListDelimiter('/');
         factory.setThrowExceptionOnMissing(true);
@@ -873,9 +871,6 @@ public class TestDefaultConfigurationBuilder
                         provider.fetchConfigurationClass(), decl, null);
         assertEquals("Wrong base path", factory.getBasePath(),
                 child.getBasePath());
-        assertEquals("Wrong attribute splitting flag",
-                factory.isAttributeSplittingDisabled(),
-                child.isAttributeSplittingDisabled());
         assertEquals("Wrong delimiter parsing flag",
                 factory.isDelimiterParsingDisabled(),
                 child.isDelimiterParsingDisabled());
@@ -1171,19 +1166,15 @@ public class TestDefaultConfigurationBuilder
     @Test
     public void testExpression() throws Exception
     {
-        if (SystemUtils.isJavaVersionAtLeast(150))
-        {
-            factory.setFile(EXPRESSION_FILE);
-            factory.setAttributeSplittingDisabled(true);
-            System.getProperties().remove("Id");
-            org.slf4j.MDC.clear();
+        factory.setFile(EXPRESSION_FILE);
+        System.getProperties().remove("Id");
+        org.slf4j.MDC.clear();
 
-            CombinedConfiguration config = factory.getConfiguration(true);
-            assertTrue("Incorrect configuration",
-                    config instanceof DynamicCombinedConfiguration);
+        CombinedConfiguration config = factory.getConfiguration(true);
+        assertTrue("Incorrect configuration",
+                config instanceof DynamicCombinedConfiguration);
 
-            verify("1001", config, 15);
-        }
+        verify("1001", config, 15);
     }
 
     /**

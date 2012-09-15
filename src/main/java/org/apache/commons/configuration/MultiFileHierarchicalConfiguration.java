@@ -810,7 +810,6 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
             configuration.setReloadingStrategy(strategy);
         }
         configuration.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-        configuration.setAttributeSplittingDisabled(isAttributeSplittingDisabled());
         configuration.setValidating(validating);
         configuration.setSchemaValidation(schemaValidation);
         configuration.setEntityResolver(entityResolver);

@@ -510,12 +510,6 @@ public class TestXMLConfiguration
             conf.addProperty("test.array", "value" + i);
         }
 
-        // add an array of strings in an attribute
-        for (int i = 1; i < 5; i++)
-        {
-           conf.addProperty("test.attribute[@array]", "value" + i);
-        }
-
         // add comma delimited lists with escaped delimiters
         conf.addProperty("split.list5", "a\\,b\\,c");
         conf.setProperty("element3", "value\\,value1\\,value2");
@@ -868,9 +862,9 @@ public class TestXMLConfiguration
     @Test
     public void testSplitLists()
     {
-        assertEquals("a", conf.getString("split.list3[@values]"));
-        assertEquals(2, conf.getMaxIndex("split.list3[@values]"));
-        assertEquals("a,b,c", conf.getString("split.list4[@values]"));
+        assertEquals("a,b,c", conf.getString("split.list3[@values]"));
+        assertEquals(0, conf.getMaxIndex("split.list3[@values]"));
+        assertEquals("a\\,b\\,c", conf.getString("split.list4[@values]"));
         assertEquals("a", conf.getString("split.list1"));
         assertEquals(2, conf.getMaxIndex("split.list1"));
         assertEquals("a,b,c", conf.getString("split.list2"));
@@ -916,7 +910,6 @@ public class TestXMLConfiguration
         XMLConfiguration conf = new XMLConfiguration();
         conf.setExpressionEngine(new XPathExpressionEngine());
         conf.setDelimiterParsingDisabled(true);
-        conf.setAttributeSplittingDisabled(true);
         conf.setFile(new File(testProperties));
         conf.load();
 
@@ -937,7 +930,6 @@ public class TestXMLConfiguration
         config.setFileName(testFile2);
         //config.setExpressionEngine(new XPathExpressionEngine());
         config.setDelimiterParsingDisabled(true);
-        config.setAttributeSplittingDisabled(true);
         config.load();
         config.setProperty("Employee[@attr1]", "3,2,1");
         assertEquals("3,2,1", config.getString("Employee[@attr1]"));
@@ -946,7 +938,6 @@ public class TestXMLConfiguration
         config.setFileName(testSaveFile.getAbsolutePath());
         //config.setExpressionEngine(new XPathExpressionEngine());
         config.setDelimiterParsingDisabled(true);
-        config.setAttributeSplittingDisabled(true);
         config.load();
         config.setProperty("Employee[@attr1]", "1,2,3");
         assertEquals("1,2,3", config.getString("Employee[@attr1]"));
@@ -961,7 +952,6 @@ public class TestXMLConfiguration
         checkConfig.setFileName(testSaveFile.getAbsolutePath());
         checkConfig.setExpressionEngine(new XPathExpressionEngine());
         checkConfig.setDelimiterParsingDisabled(true);
-        checkConfig.setAttributeSplittingDisabled(true);
         checkConfig.load();
         assertEquals("1,2,3", checkConfig.getString("Employee/@attr1"));
         assertEquals("one, two, three", checkConfig.getString("Employee/@attr2"));
@@ -1384,17 +1374,6 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tests saving and loading a configuration when delimiter parsing is
-     * disabled and attributes are involved.
-     */
-    @Test
-    public void testSaveDelimiterParsingDisabledAttrs()
-            throws ConfigurationException
-    {
-        checkSaveDelimiterParsingDisabled("list.delimiter.test[@attr]");
-    }
-
-    /**
      * Helper method for testing saving and loading a configuration when
      * delimiter parsing is disabled.
      *
@@ -1417,33 +1396,29 @@ public class TestXMLConfiguration
     }
 
     /**
-     * Tests multiple attribute values in delimiter parsing disabled mode.
+     * Tests that attribute values are not split.
      */
     @Test
-    public void testDelimiterParsingDisabledMultiAttrValues() throws ConfigurationException
+    public void testNoDelimiterParsingInAttrValues() throws ConfigurationException
     {
         conf.clear();
         conf.setDelimiterParsingDisabled(true);
         conf.load();
         List<Object> expr = conf.getList("expressions[@value]");
-        assertEquals("Wrong list size", 2, expr.size());
-        assertEquals("Wrong element 1", "a || (b && c)", expr.get(0));
-        assertEquals("Wrong element 2", "!d", expr.get(1));
+        assertEquals("Wrong list size", 1, expr.size());
+        assertEquals("Wrong element 1", "a || (b && c) | !d", expr.get(0));
     }
 
     /**
-     * Tests using multiple attribute values, which are partly escaped when
-     * delimiter parsing is not disabled.
+     * Tries to create an attribute with multiple values.
      */
-    @Test
-    public void testMultipleAttrValuesEscaped() throws ConfigurationException
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testAttributeKeyWithMultipleValues()
+            throws ConfigurationException
     {
-        conf.addProperty("test.dir[@name]", "C:\\Temp\\");
-        conf.addProperty("test.dir[@name]", "C:\\Data\\");
-        conf.save(testSaveConf);
-        XMLConfiguration checkConf = new XMLConfiguration();
-        checkConf.setFile(testSaveConf);
-        checkSavedConfig(checkConf);
+        conf.addProperty("errorTest[@multiAttr]", Arrays.asList("v1", "v2"));
+        StringWriter out = new StringWriter();
+        conf.save(out);
     }
 
     /**
@@ -1667,47 +1642,6 @@ public class TestXMLConfiguration
     {
         assertEquals("Invalid not trimmed", "Some other text", conf
                 .getString("space.testInvalid"));
-    }
-
-    /**
-     * Tests whether attribute splitting can be disabled.
-     */
-    @Test
-    public void testAttributeSplittingDisabled() throws ConfigurationException
-    {
-        List<Object> values = conf.getList("expressions[@value2]");
-        assertEquals("Wrong number of attribute values", 2, values.size());
-        assertEquals("Wrong value 1", "a", values.get(0));
-        assertEquals("Wrong value 2", "b|c", values.get(1));
-        XMLConfiguration conf2 = new XMLConfiguration();
-        conf2.setAttributeSplittingDisabled(true);
-        conf2.setFile(conf.getFile());
-        conf2.load();
-        assertEquals("Attribute was split", "a,b|c", conf2
-                .getString("expressions[@value2]"));
-    }
-
-    /**
-     * Tests disabling both delimiter parsing and attribute splitting.
-     */
-    @Test
-    public void testAttributeSplittingAndDelimiterParsingDisabled()
-            throws ConfigurationException
-    {
-        conf.clear();
-        conf.setDelimiterParsingDisabled(true);
-        conf.load();
-        List<Object> values = conf.getList("expressions[@value2]");
-        assertEquals("Wrong number of attribute values", 2, values.size());
-        assertEquals("Wrong value 1", "a,b", values.get(0));
-        assertEquals("Wrong value 2", "c", values.get(1));
-        XMLConfiguration conf2 = new XMLConfiguration();
-        conf2.setAttributeSplittingDisabled(true);
-        conf2.setDelimiterParsingDisabled(true);
-        conf2.setFile(conf.getFile());
-        conf2.load();
-        assertEquals("Attribute was split", "a,b|c", conf2
-                .getString("expressions[@value2]"));
     }
 
     /**
