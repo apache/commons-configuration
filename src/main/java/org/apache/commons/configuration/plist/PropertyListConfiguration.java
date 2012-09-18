@@ -38,6 +38,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -229,7 +230,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         try
         {
             HierarchicalConfiguration config = parser.parse();
-            setRoot(config.getRoot());
+            setRootNode(config.getRootNode());
         }
         catch (ParseException e)
         {
@@ -240,7 +241,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
     public void save(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
-        printNode(writer, 0, getRoot());
+        printNode(writer, 0, getRootNode());
         writer.flush();
     }
 
@@ -339,7 +340,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
         else if (value instanceof HierarchicalConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRoot());
+            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
         }
         else if (value instanceof Configuration)
         {
@@ -352,7 +353,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
             while (it.hasNext())
             {
                 String key = it.next();
-                Node node = new Node(key);
+                ConfigurationNode node = new DefaultConfigurationNode(key);
                 node.setValue(config.getProperty(key));
 
                 printNode(out, indentLevel + 1, node);

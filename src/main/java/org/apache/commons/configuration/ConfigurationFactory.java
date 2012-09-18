@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.plist.PropertyListConfiguration;
 import org.apache.commons.configuration.plist.XMLPropertyListConfiguration;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.digester.AbstractObjectCreationFactory;
 import org.apache.commons.digester.CallMethodRule;
 import org.apache.commons.digester.Digester;
@@ -816,19 +817,19 @@ public class ConfigurationFactory
          * @param cdata the configuration data object
          * @return a root node for this configuration
          */
-        private HierarchicalConfiguration.Node createRootNode(AdditionalConfigurationData cdata)
+        private ConfigurationNode createRootNode(AdditionalConfigurationData cdata)
         {
             if (cdata.getConfiguration() instanceof HierarchicalConfiguration)
             {
                 // we can directly use this configuration's root node
-                return ((HierarchicalConfiguration) cdata.getConfiguration()).getRoot();
+                return ((HierarchicalConfiguration) cdata.getConfiguration()).getRootNode();
             }
             else
             {
                 // transform configuration to a hierarchical root node
                 HierarchicalConfiguration hc = new HierarchicalConfiguration();
                 ConfigurationUtils.copy(cdata.getConfiguration(), hc);
-                return hc.getRoot();
+                return hc.getRootNode();
             }
         }
     }

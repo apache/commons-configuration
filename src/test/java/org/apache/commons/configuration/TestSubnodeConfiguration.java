@@ -70,13 +70,13 @@ public class TestSubnodeConfiguration
     public TemporaryFolder folder = new TemporaryFolder();
 
     /** The parent configuration. */
-    HierarchicalConfiguration parent;
+    private HierarchicalConfiguration parent;
 
     /** The subnode configuration to be tested. */
-    SubnodeConfiguration config;
+    private SubnodeConfiguration config;
 
     /** Stores a counter for the created nodes. */
-    int nodeCounter;
+    private int nodeCounter;
 
     @Before
     public void setUp() throws Exception
@@ -93,7 +93,7 @@ public class TestSubnodeConfiguration
     {
         setUpSubnodeConfig();
         assertSame("Wrong root node in subnode", getSubnodeRoot(parent), config
-                .getRoot());
+                .getRootNode());
         assertSame("Wrong parent config", parent, config.getParent());
     }
 
@@ -569,7 +569,7 @@ public class TestSubnodeConfiguration
             // Provide a special implementation of createNode() to check
             // if it is called by the subnode config
             @Override
-            protected Node createNode(String name)
+            protected ConfigurationNode createNode(String name)
             {
                 nodeCounter++;
                 return super.createNode(name);
@@ -596,7 +596,7 @@ public class TestSubnodeConfiguration
      */
     protected ConfigurationNode getSubnodeRoot(HierarchicalConfiguration conf)
     {
-        ConfigurationNode root = conf.getRoot();
+        ConfigurationNode root = conf.getRootNode();
         return root.getChild(0).getChild(0);
     }
 

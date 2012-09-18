@@ -36,8 +36,6 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeAddData;
-import org.apache.commons.configuration.tree.ViewNode;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * <p>A specialized configuration class that extends its base class by the
@@ -154,11 +152,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     /** Stores the default expression engine to be used for new objects.*/
     private static ExpressionEngine defaultExpressionEngine;
 
-    /** Stores the root node of this configuration. This field is required for
-     * backwards compatibility only.
-     */
-    private Node root;
-
     /** Stores the root configuration node.*/
     private ConfigurationNode rootNode;
 
@@ -170,7 +163,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public HierarchicalConfiguration()
     {
-        setRootNode(new Node());
+        setRootNode(new DefaultConfigurationNode());
     }
 
     /**
@@ -205,43 +198,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Returns the root node of this hierarchical configuration. This method
-     * exists for backwards compatibility only. New code should use the
-     * {@link #getRootNode()} method instead, which operates on
-     * the preferred data type {@code ConfigurationNode}.
-     *
-     * @return the root node
-     */
-    public Node getRoot()
-    {
-        if (root == null && rootNode != null)
-        {
-            // Dynamically create a snapshot of the root node
-            return new Node(rootNode);
-        }
-
-        return root;
-    }
-
-    /**
-     * Sets the root node of this hierarchical configuration. This method
-     * exists for backwards compatibility only. New code should use the
-     * {@link #setRootNode(ConfigurationNode)} method instead,
-     * which operates on the preferred data type {@code ConfigurationNode}.
-     *
-     * @param node the root node
-     */
-    public void setRoot(Node node)
-    {
-        if (node == null)
-        {
-            throw new IllegalArgumentException("Root node must not be null!");
-        }
-        root = node;
-        rootNode = null;
-    }
-
-    /**
      * Returns the root node of this hierarchical configuration.
      *
      * @return the root node
@@ -249,7 +205,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      */
     public ConfigurationNode getRootNode()
     {
-        return (rootNode != null) ? rootNode : root;
+        return rootNode;
     }
 
     /**
@@ -265,9 +221,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
             throw new IllegalArgumentException("Root node must not be null!");
         }
         this.rootNode = rootNode;
-
-        // For backward compatibility also set the old root field.
-        root = (rootNode instanceof Node) ? (Node) rootNode : null;
     }
 
     /**
@@ -959,39 +912,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Recursive helper method for fetching a property. This method processes
-     * all facets of a configuration key, traverses the tree of properties and
-     * fetches the the nodes of all matching properties.
-     *
-     * @param keyPart the configuration key iterator
-     * @param node the actual node
-     * @param nodes here the found nodes are stored
-     * @deprecated Property keys are now evaluated by the expression engine
-     * associated with the configuration; this method will no longer be called.
-     * If you want to modify the way properties are looked up, consider
-     * implementing you own {@code ExpressionEngine} implementation.
-     */
-    @Deprecated
-    protected void findPropertyNodes(ConfigurationKey.KeyIterator keyPart,
-            Node node, Collection<ConfigurationNode> nodes)
-    {
-    }
-
-    /**
-     * Checks if the specified node is defined.
-     *
-     * @param node the node to be checked
-     * @return a flag if this node is defined
-     * @deprecated Use the method {@link #nodeDefined(ConfigurationNode)}
-     * instead.
-     */
-    @Deprecated
-    protected boolean nodeDefined(Node node)
-    {
-        return nodeDefined((ConfigurationNode) node);
-    }
-
-    /**
      * Checks if the specified node is defined.
      *
      * @param node the node to be checked
@@ -1002,21 +922,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
         DefinedVisitor visitor = new DefinedVisitor();
         node.visit(visitor);
         return visitor.isDefined();
-    }
-
-    /**
-     * Removes the specified node from this configuration. This method ensures
-     * that parent nodes that become undefined by this operation are also
-     * removed.
-     *
-     * @param node the node to be removed
-     * @deprecated Use the method {@link #removeNode(ConfigurationNode)}
-     * instead.
-     */
-    @Deprecated
-    protected void removeNode(Node node)
-    {
-        removeNode((ConfigurationNode) node);
     }
 
     /**
@@ -1044,20 +949,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * this operation, it is removed from the hierarchy.
      *
      * @param node the node to be cleared
-     * @deprecated Use the method {@link #clearNode(ConfigurationNode)}
-     * instead
-     */
-    @Deprecated
-    protected void clearNode(Node node)
-    {
-        clearNode((ConfigurationNode) node);
-    }
-
-    /**
-     * Clears the value of the specified node. If the node becomes undefined by
-     * this operation, it is removed from the hierarchy.
-     *
-     * @param node the node to be cleared
      */
     protected void clearNode(ConfigurationNode node)
     {
@@ -1069,77 +960,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
     }
 
     /**
-     * Returns a reference to the parent node of an add operation. Nodes for new
-     * properties can be added as children of this node. If the path for the
-     * specified key does not exist so far, it is created now.
-     *
-     * @param keyIt the iterator for the key of the new property
-     * @param startNode the node to start the search with
-     * @return the parent node for the add operation
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * {@code ExpressionEngine} associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    @Deprecated
-    protected Node fetchAddNode(ConfigurationKey.KeyIterator keyIt, Node startNode)
-    {
-        return null;
-    }
-
-    /**
-     * Finds the last existing node for an add operation. This method traverses
-     * the configuration tree along the specified key. The last existing node on
-     * this path is returned.
-     *
-     * @param keyIt the key iterator
-     * @param node the actual node
-     * @return the last existing node on the given path
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * {@code ExpressionEngine} associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    @Deprecated
-    protected Node findLastPathNode(ConfigurationKey.KeyIterator keyIt, Node node)
-    {
-        return null;
-    }
-
-    /**
-     * Creates the missing nodes for adding a new property. This method ensures
-     * that there are corresponding nodes for all components of the specified
-     * configuration key.
-     *
-     * @param keyIt the key iterator
-     * @param root the base node of the path to be created
-     * @return the last node of the path
-     * @deprecated Adding new properties is now to a major part delegated to the
-     * {@code ExpressionEngine} associated with this configuration instance.
-     * This method will no longer be called. Developers who want to modify the
-     * process of adding new properties should consider implementing their own
-     * expression engine.
-     */
-    @Deprecated
-    protected Node createAddPath(ConfigurationKey.KeyIterator keyIt, Node root)
-    {
-        return null;
-    }
-
-    /**
      * Creates a new {@code Node} object with the specified name. This
      * method can be overloaded in derived classes if a specific node type is
      * needed. This base implementation always returns a new object of the
-     * {@code Node} class.
+     * {@code DefaultConfigurationNode} class.
      *
      * @param name the name of the new node
      * @return the new node
      */
-    protected Node createNode(String name)
+    protected ConfigurationNode createNode(String name)
     {
-        return new Node(name);
+        return new DefaultConfigurationNode(name);
     }
 
     /**
@@ -1196,279 +1027,6 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 node.setReference(null);
             }
         });
-    }
-
-    /**
-     * Transforms the specified object into a Node. This method treats view
-     * nodes in a special way. This is necessary because ViewNode does not
-     * extend HierarchicalConfiguration.Node; thus the API for the node visitor
-     * is slightly different. Therefore a view node is transformed into a
-     * special compatibility Node object.
-     *
-     * @param obj the original node object
-     * @return the node to be used
-     */
-    private static Node getNodeFor(Object obj)
-    {
-        Node nd;
-        if (obj instanceof ViewNode)
-        {
-            final ViewNode viewNode = (ViewNode) obj;
-            nd = new Node(viewNode)
-            {
-                @Override
-                public void setReference(Object reference)
-                {
-                    super.setReference(reference);
-                    // also set the reference at the original node
-                    viewNode.setReference(reference);
-                }
-            };
-        }
-        else
-        {
-            nd = (Node) obj;
-        }
-        return nd;
-    }
-
-    /**
-     * A data class for storing (hierarchical) property information. A property
-     * can have a value and an arbitrary number of child properties. From
-     * version 1.3 on this class is only a thin wrapper over the
-     * {@link org.apache.commons.configuration.tree.DefaultConfigurationNode DefaultconfigurationNode}
-     * class that exists mainly for the purpose of backwards compatibility.
-     */
-    public static class Node extends DefaultConfigurationNode implements Serializable
-    {
-        /**
-         * The serial version UID.
-         */
-        private static final long serialVersionUID = -6357500633536941775L;
-
-        /**
-         * Creates a new instance of {@code Node}.
-         */
-        public Node()
-        {
-            super();
-        }
-
-        /**
-         * Creates a new instance of {@code Node} and sets the name.
-         *
-         * @param name the node's name
-         */
-        public Node(String name)
-        {
-            super(name);
-        }
-
-        /**
-         * Creates a new instance of {@code Node} and sets the name and the value.
-         *
-         * @param name the node's name
-         * @param value the value
-         */
-        public Node(String name, Object value)
-        {
-            super(name, value);
-        }
-
-        /**
-         * Creates a new instance of {@code Node} based on the given
-         * source node. All properties of the source node, including its
-         * children and attributes, will be copied.
-         *
-         * @param src the node to be copied
-         */
-        public Node(ConfigurationNode src)
-        {
-            this(src.getName(), src.getValue());
-            setReference(src.getReference());
-            for (ConfigurationNode nd : src.getChildren())
-            {
-                // Don't change the parent node
-                ConfigurationNode parent = nd.getParentNode();
-                addChild(nd);
-                nd.setParentNode(parent);
-            }
-
-            for (ConfigurationNode nd : src.getAttributes())
-            {
-                // Don't change the parent node
-                ConfigurationNode parent = nd.getParentNode();
-                addAttribute(nd);
-                nd.setParentNode(parent);
-            }
-        }
-
-        /**
-         * Returns the parent of this node.
-         *
-         * @return this node's parent (can be <b>null</b>)
-         */
-        public Node getParent()
-        {
-            return (Node) getParentNode();
-        }
-
-        /**
-         * Sets the parent of this node.
-         *
-         * @param node the parent node
-         */
-        public void setParent(Node node)
-        {
-            setParentNode(node);
-        }
-
-        /**
-         * Adds the given node to the children of this node.
-         *
-         * @param node the child to be added
-         */
-        public void addChild(Node node)
-        {
-            addChild((ConfigurationNode) node);
-        }
-
-        /**
-         * Returns a flag whether this node has child elements.
-         *
-         * @return <b>true</b> if there is a child node, <b>false</b> otherwise
-         */
-        public boolean hasChildren()
-        {
-            return getChildrenCount() > 0 || getAttributeCount() > 0;
-        }
-
-        /**
-         * Removes the specified child from this node.
-         *
-         * @param child the child node to be removed
-         * @return a flag if the child could be found
-         */
-        public boolean remove(Node child)
-        {
-            return child.isAttribute() ? removeAttribute(child) : removeChild(child);
-        }
-
-        /**
-         * Removes all children with the given name.
-         *
-         * @param name the name of the children to be removed
-         * @return a flag if children with this name existed
-         */
-        public boolean remove(String name)
-        {
-            boolean childrenRemoved = removeChild(name);
-            boolean attrsRemoved = removeAttribute(name);
-            return childrenRemoved || attrsRemoved;
-        }
-
-        /**
-         * A generic method for traversing this node and all of its children.
-         * This method sends the passed in visitor to this node and all of its
-         * children.
-         *
-         * @param visitor the visitor
-         * @param key here a configuration key with the name of the root node of
-         * the iteration can be passed; if this key is not <b>null </b>, the
-         * full paths to the visited nodes are builded and passed to the
-         * visitor's {@code visit()} methods
-         */
-        public void visit(NodeVisitor visitor, ConfigurationKey key)
-        {
-            int length = 0;
-            if (key != null)
-            {
-                length = key.length();
-                if (getName() != null)
-                {
-                    key
-                            .append(StringUtils
-                                    .replace(
-                                            isAttribute() ? ConfigurationKey
-                                                    .constructAttributeKey(getName())
-                                                    : getName(),
-                                            String
-                                                    .valueOf(ConfigurationKey.PROPERTY_DELIMITER),
-                                            ConfigurationKey.ESCAPED_DELIMITER));
-                }
-            }
-
-            visitor.visitBeforeChildren(this, key);
-
-            for (Iterator<ConfigurationNode> it = getChildren().iterator(); it.hasNext()
-                    && !visitor.terminate();)
-            {
-                Object obj = it.next();
-                getNodeFor(obj).visit(visitor, key);
-            }
-            for (Iterator<ConfigurationNode> it = getAttributes().iterator(); it.hasNext()
-                    && !visitor.terminate();)
-            {
-                Object obj = it.next();
-                getNodeFor(obj).visit(visitor, key);
-            }
-
-            visitor.visitAfterChildren(this, key);
-            if (key != null)
-            {
-                key.setLength(length);
-            }
-        }
-    }
-
-    /**
-     * <p>Definition of a visitor class for traversing a node and all of its
-     * children.</p><p>This class defines the interface of a visitor for
-     * {@code Node} objects and provides a default implementation. The
-     * method {@code visit()} of {@code Node} implements a generic
-     * iteration algorithm based on the <em>Visitor</em> pattern. By providing
-     * different implementations of visitors it is possible to collect different
-     * data during the iteration process.</p>
-     *
-     */
-    public static class NodeVisitor
-    {
-        /**
-         * Visits the specified node. This method is called during iteration for
-         * each node before its children have been visited.
-         *
-         * @param node the actual node
-         * @param key the key of this node (may be <b>null </b>)
-         */
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
-        {
-        }
-
-        /**
-         * Visits the specified node after its children have been processed.
-         * This gives a visitor the opportunity of collecting additional data
-         * after the child nodes have been visited.
-         *
-         * @param node the node to be visited
-         * @param key the key of this node (may be <b>null </b>)
-         */
-        public void visitAfterChildren(Node node, ConfigurationKey key)
-        {
-        }
-
-        /**
-         * Returns a flag that indicates if iteration should be stopped. This
-         * method is called after each visited node. It can be useful for
-         * visitors that search a specific node. If this node is found, the
-         * whole process can be stopped. This base implementation always returns
-         * <b>false </b>.
-         *
-         * @return a flag if iteration should be stopped
-         */
-        public boolean terminate()
-        {
-            return false;
-        }
     }
 
     /**
@@ -1679,7 +1237,7 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * structure.
      *
      */
-    protected abstract static class BuilderVisitor extends NodeVisitor
+    protected abstract static class BuilderVisitor extends ConfigurationNodeVisitorAdapter
     {
         /**
          * Visits the specified node before its children have been traversed.
@@ -1688,13 +1246,13 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * @param key the current key
          */
         @Override
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        public void visitBeforeChildren(ConfigurationNode node)
         {
             Collection<ConfigurationNode> subNodes = new LinkedList<ConfigurationNode>(node.getChildren());
             subNodes.addAll(node.getAttributes());
             Iterator<ConfigurationNode> children = subNodes.iterator();
-            Node sibling1 = null;
-            Node nd = null;
+            ConfigurationNode sibling1 = null;
+            ConfigurationNode nd = null;
 
             while (children.hasNext())
             {
@@ -1702,19 +1260,17 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                 do
                 {
                     sibling1 = nd;
-                    Object obj = children.next();
-                    nd = getNodeFor(obj);
+                    nd = children.next();
                 } while (nd.getReference() != null && children.hasNext());
 
                 if (nd.getReference() == null)
                 {
                     // find all following new nodes
-                    List<Node> newNodes = new LinkedList<Node>();
+                    List<ConfigurationNode> newNodes = new LinkedList<ConfigurationNode>();
                     newNodes.add(nd);
                     while (children.hasNext())
                     {
-                        Object obj = children.next();
-                        nd = getNodeFor(obj);
+                        nd = children.next();
                         if (nd.getReference() == null)
                         {
                             newNodes.add(nd);
@@ -1726,8 +1282,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
                     }
 
                     // Insert all new nodes
-                    Node sibling2 = (nd.getReference() == null) ? null : nd;
-                    for (Node insertNode : newNodes)
+                    ConfigurationNode sibling2 = (nd.getReference() == null) ? null : nd;
+                    for (ConfigurationNode insertNode : newNodes)
                     {
                         if (insertNode.getReference() == null)
                         {
@@ -1764,6 +1320,8 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
          * node
          * @return the reference object for the node to be inserted
          */
-        protected abstract Object insert(Node newNode, Node parent, Node sibling1, Node sibling2);
+        protected abstract Object insert(ConfigurationNode newNode,
+                ConfigurationNode parent, ConfigurationNode sibling1,
+                ConfigurationNode sibling2);
     }
 }

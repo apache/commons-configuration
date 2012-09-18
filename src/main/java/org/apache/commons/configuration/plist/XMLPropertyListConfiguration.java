@@ -47,6 +47,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.xml.sax.Attributes;
@@ -247,7 +248,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         };
 
         // parse the file
-        XMLPropertyListHandler handler = new XMLPropertyListHandler(getRoot());
+        XMLPropertyListHandler handler = new XMLPropertyListHandler(getRootNode());
         try
         {
             SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -280,7 +281,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         writer.println("<!DOCTYPE plist SYSTEM \"file://localhost/System/Library/DTDs/PropertyList.dtd\">");
         writer.println("<plist version=\"1.0\">");
 
-        printNode(writer, 1, getRoot());
+        printNode(writer, 1, getRootNode());
 
         writer.println("</plist>");
         writer.flush();
@@ -380,7 +381,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
         else if (value instanceof HierarchicalConfiguration)
         {
-            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRoot());
+            printNode(out, indentLevel, ((HierarchicalConfiguration) value).getRootNode());
         }
         else if (value instanceof Configuration)
         {
@@ -393,7 +394,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
             {
                 // create a node for each property
                 String key = it.next();
-                Node node = new Node(key);
+                ConfigurationNode node = new DefaultConfigurationNode(key);
                 node.setValue(config.getProperty(key));
 
                 // print the node
@@ -465,9 +466,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         private StringBuilder buffer = new StringBuilder();
 
         /** The stack of configuration nodes */
-        private List<Node> stack = new ArrayList<Node>();
+        private List<ConfigurationNode> stack = new ArrayList<ConfigurationNode>();
 
-        public XMLPropertyListHandler(Node root)
+        public XMLPropertyListHandler(ConfigurationNode root)
         {
             push(root);
         }
@@ -475,7 +476,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         /**
          * Return the node on the top of the stack.
          */
-        private Node peek()
+        private ConfigurationNode peek()
         {
             if (!stack.isEmpty())
             {
@@ -490,7 +491,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         /**
          * Remove and return the node on the top of the stack.
          */
-        private Node pop()
+        private ConfigurationNode pop()
         {
             if (!stack.isEmpty())
             {
@@ -505,7 +506,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         /**
          * Put a node on the top of the stack.
          */
-        private void push(Node node)
+        private void push(ConfigurationNode node)
         {
             stack.add(node);
         }
@@ -529,7 +530,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
                     node.addValue(config);
 
                     // push the root on the stack
-                    push(config.getRoot());
+                    push(config.getRootNode());
                 }
             }
         }
@@ -617,7 +618,7 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
      * <b>Do not use this class !</b> It is used internally by XMLPropertyConfiguration
      * to parse the configuration file, it may be removed at any moment in the future.
      */
-    public static class PListNode extends Node
+    public static class PListNode extends DefaultConfigurationNode
     {
         /**
          * The serial version UID.

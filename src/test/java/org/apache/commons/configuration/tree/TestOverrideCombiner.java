@@ -170,7 +170,7 @@ public class TestOverrideCombiner extends AbstractCombinerTest
         assertEquals("Wrong field", "docname", c
                 .getString("fields.field(1).name"));
 
-        List<ConfigurationNode> nds = config.getExpressionEngine().query(config.getRoot(),
+        List<ConfigurationNode> nds = config.getExpressionEngine().query(config.getRootNode(),
                 "database.tables.table");
         assertFalse("No node found", nds.isEmpty());
         return nds.get(0);

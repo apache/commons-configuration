@@ -462,25 +462,6 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     }
 
     @Override
-    public Node getRoot()
-    {
-        return this.getConfiguration().getRoot();
-    }
-
-    @Override
-    public void setRoot(Node node)
-    {
-        if (init)
-        {
-            this.getConfiguration().setRoot(node);
-        }
-        else
-        {
-            super.setRoot(node);
-        }
-    }
-
-    @Override
     public ConfigurationNode getRootNode()
     {
         return this.getConfiguration().getRootNode();

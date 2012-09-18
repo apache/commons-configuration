@@ -332,25 +332,6 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     }
 
     @Override
-    public Node getRoot()
-    {
-        return getConfig().getRoot();
-    }
-
-    @Override
-    public void setRoot(Node node)
-    {
-        if (init)
-        {
-            getConfig().setRoot(node);
-        }
-        else
-        {
-            super.setRoot(node);
-        }
-    }
-
-    @Override
     public ConfigurationNode getRootNode()
     {
         return getConfig().getRootNode();

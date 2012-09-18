@@ -116,7 +116,7 @@ public class TestXMLBeanDeclaration
     public void testInitFromNullConfigurationAndNode()
     {
         decl = new XMLBeanDeclaration(null, new HierarchicalConfiguration()
-                .getRoot());
+                .getRootNode());
     }
 
     /**

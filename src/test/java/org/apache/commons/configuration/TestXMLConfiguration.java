@@ -47,6 +47,7 @@ import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.InvariantReloadingStrategy;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Test;
@@ -1457,7 +1458,7 @@ public class TestXMLConfiguration
     {
         conf.setFile(testSaveConf);
         conf.setAutoSave(true);
-        HierarchicalConfiguration.Node node = new HierarchicalConfiguration.Node(
+        ConfigurationNode node = new DefaultConfigurationNode(
                 "addNodesTest", Boolean.TRUE);
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(node);
@@ -1474,10 +1475,10 @@ public class TestXMLConfiguration
     @Test
     public void testAddNodesAndSave() throws ConfigurationException
     {
-        ConfigurationNode node = new HierarchicalConfiguration.Node("test");
-        ConfigurationNode child = new HierarchicalConfiguration.Node("child");
+        ConfigurationNode node = new DefaultConfigurationNode("test");
+        ConfigurationNode child = new DefaultConfigurationNode("child");
         node.addChild(child);
-        ConfigurationNode attr = new HierarchicalConfiguration.Node("attr");
+        ConfigurationNode attr = new DefaultConfigurationNode("attr");
         node.addAttribute(attr);
         ConfigurationNode node2 = conf.createNode("test2");
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(2);
@@ -1599,11 +1600,10 @@ public class TestXMLConfiguration
         conf.addProperty("testAddNodes.property(-1)[@name]", "prop2");
         conf.addProperty("testAddNodes.property(1).value", "value2");
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>();
-        nodes.add(new HierarchicalConfiguration.Node("property"));
+        nodes.add(new DefaultConfigurationNode("property"));
         conf.addNodes("testAddNodes", nodes);
         nodes.clear();
-        ConfigurationNode nd = new HierarchicalConfiguration.Node("name",
-                "prop3");
+        ConfigurationNode nd = new DefaultConfigurationNode("name", "prop3");
         nd.setAttribute(true);
         nodes.add(nd);
         conf.addNodes("testAddNodes.property(2)", nodes);

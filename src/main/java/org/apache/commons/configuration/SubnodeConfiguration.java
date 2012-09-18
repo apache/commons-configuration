@@ -311,7 +311,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * @return the new node
      */
     @Override
-    protected Node createNode(String name)
+    protected ConfigurationNode createNode(String name)
     {
         return getParent().createNode(name);
     }

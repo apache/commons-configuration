@@ -580,25 +580,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Node getRoot()
-    {
-        return this.getCurrentConfig().getRoot();
-    }
-
-    @Override
-    public void setRoot(Node node)
-    {
-        if (configs != null)
-        {
-            this.getCurrentConfig().setRoot(node);
-        }
-        else
-        {
-            super.setRoot(node);
-        }
-    }
-
-    @Override
     public ExpressionEngine getExpressionEngine()
     {
         return super.getExpressionEngine();

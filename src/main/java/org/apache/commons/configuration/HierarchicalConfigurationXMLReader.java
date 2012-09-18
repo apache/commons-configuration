@@ -17,8 +17,8 @@
 
 package org.apache.commons.configuration;
 
-import org.apache.commons.configuration.HierarchicalConfiguration.Node;
 import org.apache.commons.configuration.tree.ConfigurationNode;
+import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.AttributesImpl;
 
@@ -100,7 +100,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
     @Override
     protected void processKeys()
     {
-        getConfiguration().getRoot().visit(new SAXVisitor(), null);
+        getConfiguration().getRootNode().visit(new SAXVisitor());
     }
 
     /**
@@ -108,7 +108,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
      * hierarchical node structure.
      *
      */
-    class SAXVisitor extends HierarchicalConfiguration.NodeVisitor
+    class SAXVisitor extends ConfigurationNodeVisitorAdapter
     {
         /** Constant for the attribute type.*/
         private static final String ATTR_TYPE = "CDATA";
@@ -117,10 +117,9 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * Visits the specified node after its children have been processed.
          *
          * @param node the actual node
-         * @param key the key of this node
          */
         @Override
-        public void visitAfterChildren(Node node, ConfigurationKey key)
+        public void visitAfterChildren(ConfigurationNode node)
         {
             if (!isAttributeNode(node))
             {
@@ -135,7 +134,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param key the key of this node
          */
         @Override
-        public void visitBeforeChildren(Node node, ConfigurationKey key)
+        public void visitBeforeChildren(ConfigurationNode node)
         {
             if (!isAttributeNode(node))
             {
@@ -166,7 +165,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param node the actual node
          * @return an object with all attributes of this node
          */
-        protected Attributes fetchAttributes(Node node)
+        protected Attributes fetchAttributes(ConfigurationNode node)
         {
             AttributesImpl attrs = new AttributesImpl();
 
@@ -190,7 +189,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param node the node to be checked
          * @return the name for this node
          */
-        private String nodeName(Node node)
+        private String nodeName(ConfigurationNode node)
         {
             return (node.getName() == null) ? getRootName() : node.getName();
         }
@@ -203,7 +202,7 @@ public class HierarchicalConfigurationXMLReader extends ConfigurationXMLReader
          * @param node the node to be checked
          * @return a flag if this is an attribute node
          */
-        private boolean isAttributeNode(Node node)
+        private boolean isAttributeNode(ConfigurationNode node)
         {
             return node.isAttribute();
         }
