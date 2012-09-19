@@ -45,16 +45,27 @@ public class TestDefaultConfigurationKey
     private static final String TESTKEY = TESTPROPS + TESTATTR;
 
     /** Stores the expression engine of the key to test. */
-    DefaultExpressionEngine expressionEngine;
+    private DefaultExpressionEngine expressionEngine;
 
     /** Stores the object to be tested. */
-    DefaultConfigurationKey key;
+    private DefaultConfigurationKey key;
 
     @Before
     public void setUp() throws Exception
     {
         expressionEngine = new DefaultExpressionEngine();
         key = new DefaultConfigurationKey(expressionEngine);
+    }
+
+    /**
+     * Helper method to create a key instance with the given content.
+     *
+     * @param k the key for initialization
+     * @return the newly created {@code DefaultConfigurationKey} instance
+     */
+    private DefaultConfigurationKey key(String k)
+    {
+        return new DefaultConfigurationKey(expressionEngine, k);
     }
 
     /**
@@ -292,10 +303,8 @@ public class TestDefaultConfigurationKey
     @Test
     public void testEquals()
     {
-        DefaultConfigurationKey k1 = new DefaultConfigurationKey(
-                expressionEngine, TESTKEY);
-        DefaultConfigurationKey k2 = new DefaultConfigurationKey(
-                expressionEngine, TESTKEY);
+        DefaultConfigurationKey k1 = key(TESTKEY);
+        DefaultConfigurationKey k2 = key(TESTKEY);
         assertTrue("Keys are not equal", k1.equals(k2));
         assertTrue("Not reflexiv", k2.equals(k1));
         assertEquals("Hash codes not equal", k1.hashCode(), k2.hashCode());
@@ -512,5 +521,72 @@ public class TestDefaultConfigurationKey
         assertTrue("Third part is not an attribute", kit.isAttribute());
         assertTrue("Third part is not a property key", kit.isPropertyKey());
         assertEquals("Wrong decorated key part", "key", kit.currentKey(true));
+    }
+
+    /**
+     * Tests whether common key parts can be extracted.
+     */
+    @Test
+    public void testCommonKey()
+    {
+        DefaultConfigurationKey k1 = key(TESTKEY);
+        DefaultConfigurationKey k2 = key("tables.table(0).name");
+        DefaultConfigurationKey kc = k1.commonKey(k2);
+        assertEquals("Wrong common key (1)", key("tables.table(0)"), kc);
+        assertEquals("Not symmetric", kc, k2.commonKey(k1));
+
+        k2 = key("tables.table(1).fields.field(1)");
+        kc = k1.commonKey(k2);
+        assertEquals("Wrong common key (2)", key("tables"), kc);
+
+        k2 = key("completely.different.key");
+        kc = k1.commonKey(k2);
+        assertEquals("Got a common key for different keys", 0, kc.length());
+
+        kc = k1.commonKey(key);
+        assertEquals("Got a common key for empty key", 0, kc.length());
+
+        kc = k1.commonKey(k1);
+        assertEquals("Wrong result for reflexiv invocation", kc, k1);
+    }
+
+    /**
+     * Tries to call commonKey() with null input.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCommonKeyNull()
+    {
+        key.commonKey(null);
+    }
+
+    /**
+     * Tests differenceKey() on the same object.
+     */
+    @Test
+    public void testDifferenceKeySame()
+    {
+        DefaultConfigurationKey k1 = key(TESTKEY);
+        DefaultConfigurationKey kd = k1.differenceKey(k1);
+        assertEquals("Got difference for same keys", 0, kd.length());
+    }
+
+    /**
+     * Tests the differenceKey() method.
+     */
+    @Test
+    public void testDifferenceKey()
+    {
+        DefaultConfigurationKey k1 = key(TESTKEY);
+        DefaultConfigurationKey k2 = key("tables.table(0).name");
+        DefaultConfigurationKey kd = k1.differenceKey(k2);
+        assertEquals("Wrong difference (1)", "name", kd.toString());
+
+        k2 = key("tables.table(1).fields.field(1)");
+        kd = k1.differenceKey(k2);
+        assertEquals("Wrong difference (2)", "table(1).fields.field(1)", kd.toString());
+
+        k2 = key("completely.different.key");
+        kd = k1.differenceKey(k2);
+        assertEquals("Wrong difference (3)", k2, kd);
     }
 }

@@ -206,6 +206,78 @@ public class DefaultConfigurationKey
     {
         keyBuffer.setLength(len);
     }
+    /**
+     * Returns a configuration key object that is initialized with the part
+     * of the key that is common to this key and the passed in key.
+     *
+     * @param other the other key
+     * @return a key object with the common key part
+     */
+    public DefaultConfigurationKey commonKey(DefaultConfigurationKey other)
+    {
+        if (other == null)
+        {
+            throw new IllegalArgumentException("Other key must no be null!");
+        }
+
+        DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
+        KeyIterator it1 = iterator();
+        KeyIterator it2 = other.iterator();
+
+        while (it1.hasNext() && it2.hasNext() && partsEqual(it1, it2))
+        {
+            if (it1.isAttribute())
+            {
+                result.appendAttribute(it1.currentKey());
+            }
+            else
+            {
+                result.append(it1.currentKey());
+                if (it1.hasIndex)
+                {
+                    result.appendIndex(it1.getIndex());
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Returns the &quot;difference key&quot; to a given key. This value
+     * is the part of the passed in key that differs from this key. There is
+     * the following relation:
+     * {@code other = key.commonKey(other) + key.differenceKey(other)}
+     * for an arbitrary configuration key {@code key}.
+     *
+     * @param other the key for which the difference is to be calculated
+     * @return the difference key
+     */
+    public DefaultConfigurationKey differenceKey(DefaultConfigurationKey other)
+    {
+        DefaultConfigurationKey common = commonKey(other);
+        DefaultConfigurationKey result = new DefaultConfigurationKey(getExpressionEngine());
+
+        if (common.length() < other.length())
+        {
+            String k = other.toString().substring(common.length());
+            // skip trailing delimiters
+            int i = 0;
+            while (i < k.length()
+                    && String.valueOf(k.charAt(i)).equals(
+                            getExpressionEngine().getPropertyDelimiter()))
+            {
+                i++;
+            }
+
+            if (i < k.length())
+            {
+                result.append(k.substring(i));
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Checks if two {@code ConfigurationKey} objects are equal. The
@@ -453,6 +525,20 @@ public class DefaultConfigurationKey
                 : StringUtils.replace(key, getExpressionEngine()
                         .getPropertyDelimiter(), getExpressionEngine()
                         .getEscapedDelimiter());
+    }
+
+    /**
+     * Helper method for comparing two key parts.
+     *
+     * @param it1 the iterator with the first part
+     * @param it2 the iterator with the second part
+     * @return a flag if both parts are equal
+     */
+    private static boolean partsEqual(KeyIterator it1, KeyIterator it2)
+    {
+        return it1.nextKey().equals(it2.nextKey())
+                && it1.getIndex() == it2.getIndex()
+                && it1.isAttribute() == it2.isAttribute();
     }
 
     /**
