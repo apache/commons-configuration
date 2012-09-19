@@ -27,6 +27,11 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-506">
+        Removed obsolete nested classes Node and NodeVisitor of
+        HierarchicalConfiguration. The related deprecated class
+        ConfigurationKey was removed, too.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-505">
         XMLConfiguration no longer supports attributes with multiple values or
         list delimiter parsing in attributes. This feature was complex and
