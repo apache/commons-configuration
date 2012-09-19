@@ -25,6 +25,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.tree.DefaultConfigurationKey;
+import org.apache.commons.configuration.tree.DefaultExpressionEngine;
+
 /**
  * <p>A base class for converters that transform a normal configuration
  * object into a hierarchical configuration.</p>
@@ -58,8 +61,10 @@ abstract class HierarchicalConfigurationConverter
     {
         if (config != null)
         {
-            ConfigurationKey keyEmpty = new ConfigurationKey();
-            ConfigurationKey keyLast = keyEmpty;
+            DefaultExpressionEngine exprEngine = new DefaultExpressionEngine();
+            DefaultConfigurationKey keyEmpty =
+                    new DefaultConfigurationKey(exprEngine);
+            DefaultConfigurationKey keyLast = keyEmpty;
             Set<String> keySet = new HashSet<String>();
 
             for (Iterator<String> it = config.getKeys(); it.hasNext();)
@@ -70,7 +75,8 @@ abstract class HierarchicalConfigurationConverter
                     // this key has already been processed by openElements
                     continue;
                 }
-                ConfigurationKey keyAct = new ConfigurationKey(key);
+                DefaultConfigurationKey keyAct =
+                        new DefaultConfigurationKey(exprEngine, key);
                 closeElements(keyLast, keyAct);
                 String elem = openElements(keyLast, keyAct, config, keySet);
                 fireValue(elem, config.getProperty(key));
@@ -113,9 +119,9 @@ abstract class HierarchicalConfigurationConverter
      * @param keyLast the last processed key
      * @param keyAct the actual key
      */
-    protected void closeElements(ConfigurationKey keyLast, ConfigurationKey keyAct)
+    protected void closeElements(DefaultConfigurationKey keyLast, DefaultConfigurationKey keyAct)
     {
-        ConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
+        DefaultConfigurationKey keyDiff = keyAct.differenceKey(keyLast);
         Iterator<String> it = reverseIterator(keyDiff);
         if (it.hasNext())
         {
@@ -137,10 +143,10 @@ abstract class HierarchicalConfigurationConverter
      * @param key the key
      * @return a reverse iterator for the parts of this key
      */
-    protected Iterator<String> reverseIterator(ConfigurationKey key)
+    protected Iterator<String> reverseIterator(DefaultConfigurationKey key)
     {
         List<String> list = new ArrayList<String>();
-        for (ConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
+        for (DefaultConfigurationKey.KeyIterator it = key.iterator(); it.hasNext();)
         {
             list.add(it.nextKey());
         }
@@ -161,11 +167,11 @@ abstract class HierarchicalConfigurationConverter
      * @param keySet the set with the processed keys
      * @return the name of the last element on the path
      */
-    protected String openElements(ConfigurationKey keyLast, ConfigurationKey keyAct,
+    protected String openElements(DefaultConfigurationKey keyLast, DefaultConfigurationKey keyAct,
             Configuration config, Set<String> keySet)
     {
-        ConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
-        ConfigurationKey k = keyLast.commonKey(keyAct);
+        DefaultConfigurationKey.KeyIterator it = keyLast.differenceKey(keyAct).iterator();
+        DefaultConfigurationKey k = keyLast.commonKey(keyAct);
         for (it.nextKey(); it.hasNext(); it.nextKey())
         {
             k.append(it.currentKey(true));
