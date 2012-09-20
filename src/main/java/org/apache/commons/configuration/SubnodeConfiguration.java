@@ -241,6 +241,24 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     }
 
     /**
+     * Clears this configuration and removes its root node from the parent
+     * configuration. While a default {@link #clear()} operation just removes
+     * all content from the root node, this method is more radical. It also
+     * removes this configuration's root node from the node structure of its
+     * parent. This means that even if later properties are added to this
+     * {@code SubnodeConfiguration}, they will not be visible in the parent
+     * configuration.
+     *
+     * @since 2.0
+     */
+    public void clearAndDetachFromParent()
+    {
+        clear();
+        setSubnodeKey(null); // always detach
+        getParent().removeNode(getRootNode());
+    }
+
+    /**
      * Returns a hierarchical configuration object for the given sub node.
      * This implementation will ensure that the returned
      * {@code SubnodeConfiguration} object will have the same parent than

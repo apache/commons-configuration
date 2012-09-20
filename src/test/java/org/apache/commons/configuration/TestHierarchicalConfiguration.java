@@ -597,11 +597,28 @@ public class TestHierarchicalConfiguration
         SubnodeConfiguration sub = config.configurationAt("test.sub");
         assertEquals("Wrong value", "fail", sub.getString("test"));
         sub.clear();
-        assertNull("Key still found", config.getString("test.sub.key"));
+        assertNull("Key still found", config.getString("test.sub.test"));
         sub.setProperty("test", "success");
         assertEquals("Property not set", "success",
                 config.getString("test.sub.test"));
         assertEquals("Wrong index (2)", 0, config.getMaxIndex("test"));
+    }
+
+    /**
+     * Tests whether a {@code SubnodeConfiguration} can be cleared and its root
+     * node can be removed from its parent configuration.
+     */
+    @Test
+    public void testConfigurationAtClearAndDetach()
+    {
+        config.addProperty("test.sub.test", "success");
+        config.addProperty("test.other", "check");
+        SubnodeConfiguration sub = config.configurationAt("test.sub");
+        sub.clearAndDetachFromParent();
+        assertTrue("Sub not empty", sub.isEmpty());
+        assertNull("Key still found", config.getString("test.sub.test"));
+        sub.setProperty("test", "failure!");
+        assertNull("Node not detached", config.getString("test.sub.test"));
     }
 
     /**
