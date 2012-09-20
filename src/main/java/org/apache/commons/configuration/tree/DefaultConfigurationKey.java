@@ -57,34 +57,47 @@ public class DefaultConfigurationKey
     private static final int INITIAL_SIZE = 32;
 
     /** Stores a reference to the associated expression engine. */
-    private DefaultExpressionEngine expressionEngine;
+    private final DefaultExpressionEngine expressionEngine;
 
     /** Holds a buffer with the so far created key. */
-    private StringBuilder keyBuffer;
+    private final StringBuilder keyBuffer;
 
     /**
      * Creates a new instance of {@code DefaultConfigurationKey} and sets
      * the associated expression engine.
      *
-     * @param engine the expression engine
+     * @param engine the expression engine (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the expression engine is <b>null</b>
      */
     public DefaultConfigurationKey(DefaultExpressionEngine engine)
     {
-        keyBuffer = new StringBuilder(INITIAL_SIZE);
-        setExpressionEngine(engine);
+        this(engine, null);
     }
 
     /**
-     * Creates a new instance of {@code DefaultConfigurationKey} and sets
-     * the associated expression engine and an initial key.
+     * Creates a new instance of {@code DefaultConfigurationKey} and sets the
+     * associated expression engine and an initial key.
      *
-     * @param engine the expression engine
+     * @param engine the expression engine (must not be <b>null</b>)
      * @param key the key to be wrapped
+     * @throws IllegalArgumentException if the expression engine is <b>null</b>
      */
     public DefaultConfigurationKey(DefaultExpressionEngine engine, String key)
     {
-        setExpressionEngine(engine);
-        keyBuffer = new StringBuilder(trim(key));
+        if (engine == null)
+        {
+            throw new IllegalArgumentException(
+                    "Expression engine must not be null!");
+        }
+        expressionEngine = engine;
+        if (key != null)
+        {
+            keyBuffer = new StringBuilder(trim(key));
+        }
+        else
+        {
+            keyBuffer = new StringBuilder(INITIAL_SIZE);
+        }
     }
 
     /**
@@ -95,21 +108,6 @@ public class DefaultConfigurationKey
     public DefaultExpressionEngine getExpressionEngine()
     {
         return expressionEngine;
-    }
-
-    /**
-     * Sets the associated expression engine.
-     *
-     * @param expressionEngine the expression engine (must not be <b>null</b>)
-     */
-    public void setExpressionEngine(DefaultExpressionEngine expressionEngine)
-    {
-        if (expressionEngine == null)
-        {
-            throw new IllegalArgumentException(
-                    "Expression engine must not be null!");
-        }
-        this.expressionEngine = expressionEngine;
     }
 
     /**
@@ -280,20 +278,27 @@ public class DefaultConfigurationKey
     }
 
     /**
-     * Checks if two {@code ConfigurationKey} objects are equal. The
-     * method can be called with strings or other objects, too.
+     * Checks if two {@code ConfigurationKey} objects are equal. Two instances
+     * of this class are considered equal if they have the same content (i.e.
+     * their internal string representation is equal). The expression engine
+     * property is not taken into account.
      *
-     * @param c the object to compare
+     * @param obj the object to compare
      * @return a flag if both objects are equal
      */
     @Override
-    public boolean equals(Object c)
+    public boolean equals(Object obj)
     {
-        if (c == null)
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!(obj instanceof DefaultConfigurationKey))
         {
             return false;
         }
 
+        DefaultConfigurationKey c = (DefaultConfigurationKey) obj;
         return keyBuffer.toString().equals(c.toString());
     }
 

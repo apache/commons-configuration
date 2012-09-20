@@ -74,7 +74,7 @@ public class TestDefaultConfigurationKey
     @Test(expected = IllegalArgumentException.class)
     public void testSetNullExpressionEngine()
     {
-        key.setExpressionEngine(null);
+        new DefaultConfigurationKey(null);
     }
 
     /**
@@ -304,15 +304,16 @@ public class TestDefaultConfigurationKey
     public void testEquals()
     {
         DefaultConfigurationKey k1 = key(TESTKEY);
+        assertTrue("Key not equal to itself", k1.equals(k1));
         DefaultConfigurationKey k2 = key(TESTKEY);
         assertTrue("Keys are not equal", k1.equals(k2));
         assertTrue("Not reflexiv", k2.equals(k1));
         assertEquals("Hash codes not equal", k1.hashCode(), k2.hashCode());
         k2.append("anotherPart");
         assertFalse("Keys considered equal", k1.equals(k2));
-        assertFalse("Keys considered equal", k2.equals(k1));
+        assertFalse("Keys considered equal (2)", k2.equals(k1));
         assertFalse("Key equals null key", k1.equals(null));
-        assertTrue("Faild comparison with string", k1.equals(TESTKEY));
+        assertFalse("Equal with string", k1.equals(TESTKEY));
     }
 
     /**
