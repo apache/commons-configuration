@@ -37,6 +37,13 @@
         list delimiter parsing in attributes. This feature was complex and
         error prone and brought little value to the user.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-504">
+        SubnodeConfiguration now provides a new method for clearing it and
+        removing its root node from the parent configuration. The method
+        HierarchicalConfiguration.configurationsAt() now returns a list
+        of SubnodeConfiguration so that it is easier to make direct use of
+        this feature.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-500">
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.
