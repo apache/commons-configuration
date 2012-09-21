@@ -1131,11 +1131,11 @@ public class TestDefaultConfigurationBuilder
         CombinedConfiguration config = factory.getConfiguration(true);
         assertTrue("Incorrect configuration", config instanceof DynamicCombinedConfiguration);
 
-        List<HierarchicalConfiguration> list = config.configurationsAt("colors/*");
-        Iterator<HierarchicalConfiguration> iter = list.iterator();
+        List<SubnodeConfiguration> list = config.configurationsAt("colors/*");
+        Iterator<SubnodeConfiguration> iter = list.iterator();
         while (iter.hasNext())
         {
-            SubnodeConfiguration sub = (SubnodeConfiguration)iter.next();
+            SubnodeConfiguration sub = iter.next();
             ConfigurationNode node = sub.getRootNode();
             String value = (node.getValue() == null) ? "null" : node.getValue().toString();
             if (map.containsKey(node.getName()))

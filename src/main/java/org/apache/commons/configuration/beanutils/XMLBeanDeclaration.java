@@ -394,17 +394,17 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     protected BeanDeclaration createBeanDeclaration(ConfigurationNode node)
     {
-        List<HierarchicalConfiguration> list = getConfiguration().configurationsAt(node.getName());
+        List<SubnodeConfiguration> list = getConfiguration().configurationsAt(node.getName());
         if (list.size() == 1)
         {
-            return new XMLBeanDeclaration((SubnodeConfiguration) list.get(0), node);
+            return new XMLBeanDeclaration(list.get(0), node);
         }
         else
         {
-            Iterator<HierarchicalConfiguration> iter = list.iterator();
+            Iterator<SubnodeConfiguration> iter = list.iterator();
             while (iter.hasNext())
             {
-                SubnodeConfiguration config = (SubnodeConfiguration) iter.next();
+                SubnodeConfiguration config = iter.next();
                 if (config.getRootNode().equals(node))
                 {
                     return new XMLBeanDeclaration(config, node);

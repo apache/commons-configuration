@@ -388,7 +388,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     }
 
     @Override
-    public List<HierarchicalConfiguration> configurationsAt(String key)
+    public List<SubnodeConfiguration> configurationsAt(String key)
     {
         return config.configurationsAt(makePath(key));
     }

@@ -745,8 +745,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     protected void registerConfiguredProviders() throws ConfigurationException
     {
-        List<HierarchicalConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-        for (HierarchicalConfiguration config : nodes)
+        List<SubnodeConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
+        for (SubnodeConfiguration config : nodes)
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_PROVIDER_KEY);
@@ -762,8 +762,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      */
     protected void registerConfiguredLookups() throws ConfigurationException
     {
-        List<HierarchicalConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-        for (HierarchicalConfiguration config : nodes)
+        List<SubnodeConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_LOOKUPS);
+        for (SubnodeConfiguration config : nodes)
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);

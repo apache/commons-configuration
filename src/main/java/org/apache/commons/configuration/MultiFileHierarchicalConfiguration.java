@@ -511,7 +511,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     }
 
     @Override
-    public List<HierarchicalConfiguration> configurationsAt(String key)
+    public List<SubnodeConfiguration> configurationsAt(String key)
     {
         return this.getConfiguration().configurationsAt(key);
     }

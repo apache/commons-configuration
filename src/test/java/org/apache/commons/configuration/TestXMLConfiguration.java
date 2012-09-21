@@ -1174,7 +1174,7 @@ public class TestXMLConfiguration
     public void testConfigurationsAtWithReload() throws ConfigurationException
     {
         XMLConfiguration c = setUpReloadTest();
-        List<HierarchicalConfiguration> configs = c.configurationsAt("test");
+        List<SubnodeConfiguration> configs = c.configurationsAt("test");
         assertEquals("New value not read", "newValue",
                 configs.get(0).getString("entity"));
     }

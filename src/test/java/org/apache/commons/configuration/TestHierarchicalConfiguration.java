@@ -627,7 +627,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testConfigurationsAt()
     {
-        List<HierarchicalConfiguration> lstFlds = config.configurationsAt("tables.table(1).fields.field");
+        List<SubnodeConfiguration> lstFlds = config.configurationsAt("tables.table(1).fields.field");
         assertEquals("Wrong size of fields", fields[1].length, lstFlds.size());
         for (int i = 0; i < fields[1].length; i++)
         {

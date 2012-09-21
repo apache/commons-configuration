@@ -610,7 +610,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public List<HierarchicalConfiguration> configurationsAt(String key)
+    public List<SubnodeConfiguration> configurationsAt(String key)
     {
         return this.getCurrentConfig().configurationsAt(key);
     }

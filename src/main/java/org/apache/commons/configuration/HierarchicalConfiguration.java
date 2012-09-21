@@ -585,10 +585,10 @@ public class HierarchicalConfiguration extends AbstractConfiguration implements 
      * configuration represents one of the nodes selected by the passed in key
      * @since 1.3
      */
-    public List<HierarchicalConfiguration> configurationsAt(String key)
+    public List<SubnodeConfiguration> configurationsAt(String key)
     {
         List<ConfigurationNode> nodes = fetchNodeList(key);
-        List<HierarchicalConfiguration> configs = new ArrayList<HierarchicalConfiguration>(nodes.size());
+        List<SubnodeConfiguration> configs = new ArrayList<SubnodeConfiguration>(nodes.size());
         for (ConfigurationNode node : nodes)
         {
             configs.add(createSubnodeConfiguration(node));
