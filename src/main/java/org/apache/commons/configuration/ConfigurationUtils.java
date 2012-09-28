@@ -571,7 +571,7 @@ public final class ConfigurationUtils
      * @param url the URL from which to extract the path
      * @return the path component of the passed in URL
      */
-    static String getBasePath(URL url)
+    public static String getBasePath(URL url)
     {
         if (url == null)
         {
@@ -600,7 +600,7 @@ public final class ConfigurationUtils
      * @param url the URL from which to extract the file name
      * @return the extracted file name
      */
-    static String getFileName(URL url)
+    public static String getFileName(URL url)
     {
         if (url == null)
         {
@@ -721,7 +721,7 @@ public final class ConfigurationUtils
      *
      * @param file the file to be converted into an URL
      */
-    static URL toURL(File file) throws MalformedURLException
+    public static URL toURL(File file) throws MalformedURLException
     {
         return file.toURI().toURL();
     }
