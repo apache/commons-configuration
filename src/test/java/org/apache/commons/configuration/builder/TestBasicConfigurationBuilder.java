@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,6 +35,8 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -309,6 +312,100 @@ public class TestBasicConfigurationBuilder
                     }
                 };
         builder.getConfiguration();
+    }
+
+    /**
+     * Tests whether configuration listeners can be added.
+     */
+    @Test
+    public void testAddConfigurationListener() throws ConfigurationException
+    {
+        ConfigurationListener l1 =
+                EasyMock.createMock(ConfigurationListener.class);
+        ConfigurationListener l2 =
+                EasyMock.createMock(ConfigurationListener.class);
+        EasyMock.replay(l1, l2);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                        .addConfigurationListener(l1);
+        PropertiesConfiguration config = builder.getConfiguration();
+        builder.addConfigurationListener(l2);
+        assertTrue("Listeners not registered", config
+                .getConfigurationListeners().containsAll(Arrays.asList(l1, l2)));
+    }
+
+    /**
+     * Tests whether configuration listeners can be removed.
+     */
+    @Test
+    public void testRemoveConfigurationListener() throws ConfigurationException
+    {
+        ConfigurationListener l1 =
+                EasyMock.createMock(ConfigurationListener.class);
+        ConfigurationListener l2 =
+                EasyMock.createMock(ConfigurationListener.class);
+        EasyMock.replay(l1, l2);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class)
+                        .addConfigurationListener(l1).addConfigurationListener(
+                                l2);
+        builder.removeConfigurationListener(l2);
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertFalse("Removed listener was registered", config
+                .getConfigurationListeners().contains(l2));
+        assertTrue("Listener not registered", config
+                .getConfigurationListeners().contains(l1));
+        builder.removeConfigurationListener(l1);
+        assertFalse("Listener still registered", config
+                .getConfigurationListeners().contains(l1));
+    }
+
+    /**
+     * Tests whether error listeners can be registered.
+     */
+    @Test
+    public void testAddErrorListener() throws ConfigurationException
+    {
+        ConfigurationErrorListener l1 =
+                EasyMock.createMock(ConfigurationErrorListener.class);
+        ConfigurationErrorListener l2 =
+                EasyMock.createMock(ConfigurationErrorListener.class);
+        EasyMock.replay(l1, l2);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class).addErrorListener(l1);
+        PropertiesConfiguration config = builder.getConfiguration();
+        builder.addErrorListener(l2);
+        assertTrue("Listeners not registered", config.getErrorListeners()
+                .containsAll(Arrays.asList(l1, l2)));
+    }
+
+    /**
+     * Tests whether error listeners can be removed.
+     */
+    @Test
+    public void testRemoveErrorListener() throws ConfigurationException
+    {
+        ConfigurationErrorListener l1 =
+                EasyMock.createMock(ConfigurationErrorListener.class);
+        ConfigurationErrorListener l2 =
+                EasyMock.createMock(ConfigurationErrorListener.class);
+        EasyMock.replay(l1, l2);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class).addErrorListener(l1)
+                        .addErrorListener(l2);
+        builder.removeErrorListener(l2);
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertFalse("Removed listener was registered", config
+                .getErrorListeners().contains(l2));
+        assertTrue("Listener not registered", config
+                .getErrorListeners().contains(l1));
+        builder.removeErrorListener(l1);
+        assertFalse("Listener still registered", config
+                .getErrorListeners().contains(l1));
     }
 
     /**

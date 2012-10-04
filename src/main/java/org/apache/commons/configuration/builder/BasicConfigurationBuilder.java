@@ -16,6 +16,8 @@
  */
 package org.apache.commons.configuration.builder;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +27,9 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventSource;
 
 /**
  * <p>
@@ -78,8 +83,50 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 public class BasicConfigurationBuilder<T extends Configuration> implements
         ConfigurationBuilder<T>
 {
+    /**
+     * A dummy event source that is used for registering listeners if no
+     * compatible result object is available. This source has empty dummy
+     * implementations for listener registration methods.
+     */
+    private static final EventSource DUMMY_EVENT_SOURCE = new EventSource()
+    {
+        @Override
+        public void addConfigurationListener(ConfigurationListener l)
+        {
+        }
+
+        @Override
+        public boolean removeConfigurationListener(ConfigurationListener l)
+        {
+            return false;
+        }
+
+        @Override
+        public void addErrorListener(ConfigurationErrorListener l)
+        {
+        }
+
+        @Override
+        public boolean removeErrorListener(ConfigurationErrorListener l)
+        {
+            return false;
+        }
+    };
+
     /** The class of the objects produced by this builder instance. */
     private final Class<T> resultClass;
+
+    /**
+     * A collection with configuration listeners to be registered at newly
+     * created configuration objects.
+     */
+    private final Collection<ConfigurationListener> configListeners;
+
+    /**
+     * A collection with error listeners to be registered at newly created
+     * configuration objects.
+     */
+    private final Collection<ConfigurationErrorListener> errorListeners;
 
     /** The map with current initialization parameters. */
     private Map<String, Object> parameters;
@@ -121,6 +168,8 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         }
 
         resultClass = resCls;
+        configListeners = new ArrayList<ConfigurationListener>();
+        errorListeners = new ArrayList<ConfigurationErrorListener>();
         updateParameters(params);
     }
 
@@ -189,6 +238,69 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         }
 
         return setParameters(newParams);
+    }
+
+    /**
+     * Adds the specified listener for {@code ConfigurationEvent}s to this
+     * builder. It is also registered at the result objects produced by this
+     * builder.
+     *
+     * @param l the listener to be registered
+     * @return a reference to this builder for method chaining
+     */
+    public synchronized BasicConfigurationBuilder<T> addConfigurationListener(
+            ConfigurationListener l)
+    {
+        configListeners.add(l);
+        fetchEventSource().addConfigurationListener(l);
+        return this;
+    }
+
+    /**
+     * Removes the specified listener for {@code ConfigurationEvent}s from this
+     * builder. It is also removed from the current result object if it exists.
+     *
+     * @param l the listener to be removed
+     * @return a reference to this builder for method chaining
+     */
+    public synchronized BasicConfigurationBuilder<T> removeConfigurationListener(
+            ConfigurationListener l)
+    {
+        configListeners.remove(l);
+        fetchEventSource().removeConfigurationListener(l);
+        return this;
+    }
+
+    /**
+     * Adds the specified listener for {@code ConfigurationErrorEvent}s to this
+     * builder. It is also registered at the result objects produced by this
+     * builder.
+     *
+     * @param l the listener to be registered
+     * @return a reference to this builder for method chaining
+     */
+    public BasicConfigurationBuilder<T> addErrorListener(
+            ConfigurationErrorListener l)
+    {
+        errorListeners.add(l);
+        fetchEventSource().addErrorListener(l);
+        return this;
+    }
+
+    /**
+     * Removes the specified listener for {@code ConfigurationErrorEvent}s from
+     * this builder. It is also removed from the current result object if it
+     * exists.
+     *
+     * @param l the listener to be removed
+     * @return a reference to this builder for method chaining
+     */
+    public BasicConfigurationBuilder<T> removeErrorListener(
+            ConfigurationErrorListener l)
+    {
+        errorListeners.remove(l);
+        fetchEventSource().removeErrorListener(l);
+        return this;
     }
 
     /**
@@ -298,6 +410,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     protected void initResultInstance(T obj) throws ConfigurationException
     {
         BeanHelper.initBean(obj, getResultDeclaration());
+        registerEventListeners(obj);
     }
 
     /**
@@ -397,6 +510,37 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
+     * Registers the available event listeners at the given object. This method
+     * is called for each result object created by the builder.
+     *
+     * @param obj the object to initialize
+     */
+    private void registerEventListeners(T obj)
+    {
+        EventSource evSrc = fetchEventSource(obj);
+        for (ConfigurationListener l : configListeners)
+        {
+            evSrc.addConfigurationListener(l);
+        }
+        for (ConfigurationErrorListener l : errorListeners)
+        {
+            evSrc.addErrorListener(l);
+        }
+    }
+
+    /**
+     * Returns an {@code EventSource} for the current result object. If there is
+     * no current result or if it does not extend {@code EventSource}, a dummy
+     * event source is returned.
+     *
+     * @return the {@code EventSource} for the current result object
+     */
+    private EventSource fetchEventSource()
+    {
+        return fetchEventSource(result);
+    }
+
+    /**
      * Checks whether the bean class of the given {@code BeanDeclaration} equals
      * this builder's result class. This is done to ensure that only objects of
      * the expected result class are created.
@@ -412,5 +556,19 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             throw new ConfigurationRuntimeException("Unexpected bean class: "
                     + decl.getBeanClassName());
         }
+    }
+
+    /**
+     * Returns an {@code EventSource} for the specified object. If the object is
+     * an {@code EventSource}, it is returned. Otherwise, a dummy event source
+     * is returned.
+     *
+     * @param obj the object in question
+     * @return an {@code EventSource} for this object
+     */
+    private static EventSource fetchEventSource(Object obj)
+    {
+        return (obj instanceof EventSource) ? (EventSource) obj
+                : DUMMY_EVENT_SOURCE;
     }
 }
