@@ -1,0 +1,184 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.configuration.reloading;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+
+import org.apache.commons.lang3.mutable.MutableObject;
+import org.easymock.EasyMock;
+import org.easymock.IAnswer;
+import org.junit.Before;
+import org.junit.Test;
+
+/**
+ * Test class for {@code ReloadingController}.
+ *
+ * @version $Id$
+ */
+public class TestReloadingController
+{
+    /** A mock for the detector. */
+    private ReloadingDetector detector;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        detector = EasyMock.createMock(ReloadingDetector.class);
+    }
+
+    /**
+     * Creates a default test instance.
+     *
+     * @return the test instance
+     */
+    private ReloadingController createController()
+    {
+        return new ReloadingController(detector);
+    }
+
+    /**
+     * Tries to create an instance without a detector.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNoDetector()
+    {
+        new ReloadingController(null);
+    }
+
+    /**
+     * Tests that a newly created instance is not in reloading state.
+     */
+    @Test
+    public void testReloadingStateAfterInit()
+    {
+        assertFalse("In reloading state", createController()
+                .isInReloadingState());
+    }
+
+    /**
+     * Prepares the given event listener mock to expect an event notification.
+     * The event received is stored in the given mutable object.
+     *
+     * @param l the listener mock
+     * @param evRef the reference where to store the event
+     */
+    private void expectEvent(ReloadingListener l,
+            final MutableObject<ReloadingEvent> evRef)
+    {
+        l.reloadingRequired(EasyMock.anyObject(ReloadingEvent.class));
+        EasyMock.expectLastCall().andAnswer(new IAnswer<Object>()
+        {
+            public Object answer() throws Throwable
+            {
+                evRef.setValue((ReloadingEvent) EasyMock.getCurrentArguments()[0]);
+                return null;
+            }
+        });
+    }
+
+    /**
+     * Tests a reloading check with a positive result.
+     */
+    @Test
+    public void testCheckForReloadingTrue()
+    {
+        ReloadingListener l = EasyMock.createMock(ReloadingListener.class);
+        ReloadingListener lRemoved =
+                EasyMock.createMock(ReloadingListener.class);
+        MutableObject<ReloadingEvent> evRef =
+                new MutableObject<ReloadingEvent>();
+        expectEvent(l, evRef);
+        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
+        EasyMock.replay(detector, l, lRemoved);
+        ReloadingController ctrl = createController();
+        ctrl.addReloadingListener(lRemoved);
+        ctrl.addReloadingListener(l);
+        ctrl.removeReloadingListener(lRemoved);
+        Object testData = "Some test data";
+        ctrl.checkForReloading(testData);
+        assertTrue("Not in reloading state", ctrl.isInReloadingState());
+        assertSame("Wrong event source", ctrl, evRef.getValue().getSource());
+        assertSame("Wrong controller", ctrl, evRef.getValue().getController());
+        assertEquals("Wrong event data", testData, evRef.getValue().getData());
+        EasyMock.verify(l, lRemoved, detector);
+    }
+
+    /**
+     * Tests a reloading check with a negative result.
+     */
+    @Test
+    public void testCheckForReloadingFalse()
+    {
+        ReloadingListener l = EasyMock.createMock(ReloadingListener.class);
+        EasyMock.expect(detector.isReloadingRequired())
+                .andReturn(Boolean.FALSE);
+        EasyMock.replay(detector, l);
+        ReloadingController ctrl = createController();
+        ctrl.addReloadingListener(l);
+        ctrl.checkForReloading(null);
+        assertFalse("In reloading state", ctrl.isInReloadingState());
+        EasyMock.verify(detector, l);
+    }
+
+    /**
+     * Tests that no further checks are performed when already in reloading
+     * state.
+     */
+    @Test
+    public void testCheckForReloadingInReloadingState()
+    {
+        ReloadingListener l = EasyMock.createMock(ReloadingListener.class);
+        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
+        expectEvent(l, new MutableObject<ReloadingEvent>());
+        EasyMock.replay(detector, l);
+        ReloadingController ctrl = createController();
+        ctrl.addReloadingListener(l);
+        ctrl.checkForReloading(1);
+        ctrl.checkForReloading(2);
+        EasyMock.verify(detector, l);
+    }
+
+    /**
+     * Tests that the reloading state can be reset.
+     */
+    @Test
+    public void testResetReloadingState()
+    {
+        EasyMock.expect(detector.isReloadingRequired()).andReturn(Boolean.TRUE);
+        detector.reloadingPerformed();
+        EasyMock.replay(detector);
+        ReloadingController ctrl = createController();
+        ctrl.checkForReloading(null);
+        ctrl.resetReloadingState();
+        assertFalse("In reloading state", ctrl.isInReloadingState());
+        EasyMock.verify(detector);
+    }
+
+    /**
+     * Tests that resetReloadingState() has no effect if the controller is not
+     * in reloading state.
+     */
+    @Test
+    public void testResetReloadingNotInReloadingState()
+    {
+        EasyMock.replay(detector);
+        createController().resetReloadingState();
+    }
+}
