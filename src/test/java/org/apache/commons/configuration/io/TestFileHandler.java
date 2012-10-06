@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -755,6 +756,87 @@ public class TestFileHandler
         h1.setFileName("someOtherFile.txt");
         assertSame("Content not set", content, h2.getContent());
         assertEquals("Wrong location", f, h2.getFile());
+    }
+
+    /**
+     * Tests isLocationDefined() if a File has been set.
+     */
+    @Test
+    public void testIsLocationDefinedFile()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFile(createTestFile());
+        assertTrue("Location not defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests isLocationDefined() if a URL has been set.
+     */
+    @Test
+    public void testIsLocationDefinedURL() throws IOException
+    {
+        FileHandler handler = new FileHandler();
+        handler.setURL(createTestFile().toURI().toURL());
+        assertTrue("Location not defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests isLocationDefined() if a path has been set.
+     */
+    @Test
+    public void testIsLocationDefinedPath()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setPath(createTestFile().getAbsolutePath());
+        assertTrue("Location not defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests isLocationDefined() if a file name has been set.
+     */
+    @Test
+    public void testIsLocationDefinedFileName()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFileName(createTestFile().getName());
+        assertTrue("Location not defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests whether an undefined location can be queried.
+     */
+    @Test
+    public void testIsLocationDefinedFalse()
+    {
+        FileHandler handler = new FileHandler();
+        assertFalse("Location defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests isLocationDefined() if only a base path is set.
+     */
+    @Test
+    public void testIsLocationDefinedBasePathOnly()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setBasePath(createTestFile().getParent());
+        assertFalse("Location defined", handler.isLocationDefined());
+    }
+
+    /**
+     * Tests whether the location can be cleared.
+     */
+    @Test
+    public void testClearLocation()
+    {
+        FileHandler handler = new FileHandler();
+        handler.setFile(createTestFile());
+        handler.clearLocation();
+        assertFalse("Location defined", handler.isLocationDefined());
+        assertNull("Got a file", handler.getFile());
+        assertNull("Got a URL", handler.getURL());
+        assertNull("Got a base path", handler.getBasePath());
+        assertNull("Got a path", handler.getPath());
     }
 
     /**

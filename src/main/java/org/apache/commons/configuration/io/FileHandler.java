@@ -342,6 +342,33 @@ public class FileHandler
     }
 
     /**
+     * Tests whether a location is defined for this {@code FileHandler}.
+     *
+     * @return <b>true</b> if a location is defined, <b>false</b> otherwise
+     */
+    public boolean isLocationDefined()
+    {
+        synchronized (fileSpec)
+        {
+            return fileSpec.getFileName() != null;
+        }
+    }
+
+    /**
+     * Clears the location of this {@code FileHandler}. Afterwards this handler
+     * does not point to any valid file.
+     */
+    public void clearLocation()
+    {
+        synchronized (fileSpec)
+        {
+            fileSpec.setBasePath(null);
+            fileSpec.setFileName(null);
+            fileSpec.setSourceURL(null);
+        }
+    }
+
+    /**
      * Returns the encoding of the associated file. Result can be <b>null</b> if
      * no encoding has been set.
      *
