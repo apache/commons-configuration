@@ -30,6 +30,7 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.lang3.event.EventListenerSupport;
 
 /**
  * <p>
@@ -128,6 +129,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     private final Collection<ConfigurationErrorListener> errorListeners;
 
+    /** An object managing the builder listeners registered at this builder. */
+    private final EventListenerSupport<BuilderListener> builderListeners;
+
     /** The map with current initialization parameters. */
     private Map<String, Object> parameters;
 
@@ -170,6 +174,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         resultClass = resCls;
         configListeners = new ArrayList<ConfigurationListener>();
         errorListeners = new ArrayList<ConfigurationErrorListener>();
+        builderListeners = EventListenerSupport.create(BuilderListener.class);
         updateParameters(params);
     }
 
@@ -327,14 +332,44 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
+     * {@inheritDoc} The listener must not be <b>null</b>, otherwise an
+     * exception is thrown.
+     *
+     * @throws IllegalArgumentException if the listener is <b>null</b>
+     */
+    public void addBuilderListener(BuilderListener l)
+    {
+        if (l == null)
+        {
+            throw new IllegalArgumentException(
+                    "Builder listener must not be null!");
+        }
+        builderListeners.addListener(l);
+    }
+
+    /**
+     * {@inheritDoc} If the specified listener is not registered at this object,
+     * this method has no effect.
+     */
+    public void removeBuilderListener(BuilderListener l)
+    {
+        builderListeners.removeListener(l);
+    }
+
+    /**
      * Clears an existing result object. An invocation of this method causes a
      * new {@code Configuration} object to be created the next time
      * {@link #getConfiguration()} is called.
      */
     public synchronized void resetResult()
     {
-        result = null;
-        resultDeclaration = null;
+        synchronized (this)
+        {
+            result = null;
+            resultDeclaration = null;
+        }
+
+        builderListeners.fire().builderReset(this);
     }
 
     /**

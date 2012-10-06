@@ -47,4 +47,18 @@ public interface ConfigurationBuilder<T extends Configuration>
      * @throws ConfigurationException if an error occurs
      */
     T getConfiguration() throws ConfigurationException;
+
+    /**
+     * Adds the specified {@code BuilderListener} to this builder.
+     *
+     * @param l the listener to be registered
+     */
+    void addBuilderListener(BuilderListener l);
+
+    /**
+     * Removes the specified {@code BuilderListener} from this builder.
+     *
+     * @param l the listener to be removed
+     */
+    void removeBuilderListener(BuilderListener l);
 }
