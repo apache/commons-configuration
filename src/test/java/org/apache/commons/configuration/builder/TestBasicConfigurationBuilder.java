@@ -444,6 +444,23 @@ public class TestBasicConfigurationBuilder
     }
 
     /**
+     * Tests whether parameters starting with a reserved prefix are filtered out
+     * before result objects are initialized.
+     */
+    @Test
+    public void testReservedParameter() throws ConfigurationException
+    {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("throwExceptionOnMissing", Boolean.TRUE);
+        params.put("config-test", "a test");
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class, params);
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertTrue("Flag not set", config.isThrowExceptionOnMissing());
+    }
+
+    /**
      * A test thread class for testing whether the builder's result object can
      * be requested concurrently.
      */

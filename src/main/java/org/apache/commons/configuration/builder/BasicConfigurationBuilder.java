@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.configuration.Configuration;
@@ -84,6 +85,16 @@ import org.apache.commons.lang3.event.EventListenerSupport;
 public class BasicConfigurationBuilder<T extends Configuration> implements
         ConfigurationBuilder<T>
 {
+    /**
+     * Constant for a prefix for reserved initialization parameter keys. If a
+     * parameter was set whose key starts with this prefix, it is filtered out
+     * before the initialization of a newly created result object. This
+     * mechanism allows derived classes to store specific configuration data in
+     * the parameters map which does not represent a property value for the
+     * result object.
+     */
+    public static final String RESERVED_PARAMETER = "config-";
+
     /**
      * A dummy event source that is used for registering listeners if no
      * compatible result object is available. This source has empty dummy
@@ -461,7 +472,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         if (resultDeclaration == null)
         {
-            resultDeclaration = createResultDeclaration(getParameters());
+            resultDeclaration = createResultDeclaration(getFilteredParameters());
             checkResultClass(resultDeclaration);
         }
         return resultDeclaration;
@@ -591,6 +602,28 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             throw new ConfigurationRuntimeException("Unexpected bean class: "
                     + decl.getBeanClassName());
         }
+    }
+
+    /**
+     * Returns a map with initialization parameters where all parameters
+     * starting with the reserved prefix have been filtered out.
+     *
+     * @return the filtered parameters map
+     */
+    private Map<String, Object> getFilteredParameters()
+    {
+        Map<String, Object> filteredMap =
+                new HashMap<String, Object>(getParameters());
+        for (Iterator<String> it = filteredMap.keySet().iterator(); it
+                .hasNext();)
+        {
+            String key = it.next();
+            if (key.startsWith(RESERVED_PARAMETER))
+            {
+                it.remove();
+            }
+        }
+        return filteredMap;
     }
 
     /**
