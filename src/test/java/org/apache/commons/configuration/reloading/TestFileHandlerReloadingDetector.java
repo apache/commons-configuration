@@ -21,19 +21,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
 import java.net.URL;
 
 import org.apache.commons.configuration.io.FileHandler;
-import org.junit.Before;
-import org.junit.Rule;
+import org.easymock.EasyMock;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /**
  * Test class for {@code FileHandlerReloadingDetector}.
@@ -42,71 +36,20 @@ import org.junit.rules.TemporaryFolder;
  */
 public class TestFileHandlerReloadingDetector
 {
-    /** The content of a test file. */
-    private static final String CONTENT = "Test file content ";
-
-    /** Constant for a sleep interval. */
-    private static final long SLEEP_TIME = 200;
-
-    /** Helper object for managing temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
-
-    /** A counter for generating test file content. */
-    private int count;
+	/** Constant for a file's modification time. */
+	private static final long LAST_MODIFIED = 20121008215654L;
 
     /** The detector to be tested. */
-    private FileHandlerReloadingDetector detector;
-
-    @Before
-    public void setUp() throws Exception
-    {
-        detector = new FileHandlerReloadingDetector(null, 0);
-    }
-
-    /**
-     * Writes a test file at the specified location.
-     *
-     * @param f points to the file to be written
-     */
-    private void writeTestFile(File f)
-    {
-        Writer out = null;
-        try
-        {
-            out = new FileWriter(f);
-            out.write(CONTENT);
-            out.write(String.valueOf(count++));
-        }
-        catch (IOException ioex)
-        {
-            fail("Could not create test file: " + ioex);
-        }
-        finally
-        {
-            if (out != null)
-            {
-                try
-                {
-                    out.close();
-                }
-                catch (IOException ioex)
-                {
-                    // ignore
-                }
-            }
-        }
-    }
-
     /**
      * Tests whether an instance can be created with a file handler.
      */
     @Test
     public void testInitWithFileHandler()
     {
-        FileHandler handler = new FileHandler();
-        detector = new FileHandlerReloadingDetector(handler);
-        assertSame("Different file handler", handler, detector.getFileHandler());
+		FileHandler handler = new FileHandler();
+		FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector(
+				handler);
+		assertSame("Different file handler", handler, detector.getFileHandler());
     }
 
     /**
@@ -115,7 +58,7 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testDefaultRefreshDelay()
     {
-        detector = new FileHandlerReloadingDetector();
+    	FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         assertEquals("Wrong delay", 5000, detector.getRefreshDelay());
     }
 
@@ -125,6 +68,7 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testLocationAfterInit()
     {
+    	FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         assertFalse("Got a location", detector.getFileHandler()
                 .isLocationDefined());
     }
@@ -135,26 +79,8 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testIsReloadingRequiredNoLocation()
     {
+    	FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         assertFalse("Reloading", detector.isReloadingRequired());
-    }
-
-    /**
-     * Helper method for testing whether the need for a reload operation is
-     * detected.
-     *
-     * @return the test file used by this method
-     */
-    private File checkReloadingDetect() throws IOException,
-            InterruptedException
-    {
-        File f = folder.newFile();
-        detector.getFileHandler().setFile(f);
-        writeTestFile(f);
-        assertFalse("Reloading required", detector.isReloadingRequired());
-        Thread.sleep(SLEEP_TIME);
-        writeTestFile(f);
-        assertTrue("Reloading not detected", detector.isReloadingRequired());
-        return f;
     }
 
     /**
@@ -163,7 +89,14 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testIsReloadingRequiredTrue() throws Exception
     {
-        checkReloadingDetect();
+        File f = EasyMock.createMock(File.class);
+        EasyMock.expect(f.exists()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 1);
+        EasyMock.replay(f);
+        FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
+        assertFalse("Reloading required", detector.isReloadingRequired());
+        assertTrue("Reloading not detected", detector.isReloadingRequired());
     }
 
     /**
@@ -173,11 +106,17 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testReloadingAndReset() throws Exception
     {
-        File f = checkReloadingDetect();
+        File f = EasyMock.createMock(File.class);
+        EasyMock.expect(f.exists()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 1).times(3);
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED + 2);
+        EasyMock.replay(f);
+        FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(f);
+        assertFalse("Reloading required", detector.isReloadingRequired());
+        assertTrue("Reloading not detected", detector.isReloadingRequired());
         detector.reloadingPerformed();
         assertFalse("Still reloading required", detector.isReloadingRequired());
-        Thread.sleep(SLEEP_TIME);
-        writeTestFile(f);
         assertTrue("Next reloading not detected",
                 detector.isReloadingRequired());
     }
@@ -188,16 +127,15 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testRefreshDelay() throws Exception
     {
-        FileHandler handler = new FileHandler();
-        detector = new FileHandlerReloadingDetector(handler, 60 * 60 * 1000L);
-        File f = folder.newFile();
-        handler.setFile(f);
-        writeTestFile(f);
+        File f = EasyMock.createMock(File.class);
+        EasyMock.expect(f.exists()).andReturn(Boolean.TRUE).anyTimes();
+        EasyMock.expect(f.lastModified()).andReturn(LAST_MODIFIED).times(2);
+        EasyMock.replay(f);
+		FileHandlerReloadingDetector detector = new FileHandlerReloadingDetectorTestImpl(
+				f, 60 * 60 * 1000L);
         detector.reloadingPerformed();
         assertFalse("Reloading initially required",
                 detector.isReloadingRequired());
-        Thread.sleep(SLEEP_TIME);
-        writeTestFile(f);
         assertFalse("Reloading required", detector.isReloadingRequired());
     }
 
@@ -207,6 +145,7 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testIsReloadingRequiredFileDoesNotExist()
     {
+    	FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         detector.getFileHandler().setFile(new File("NonExistingFile.txt"));
         detector.reloadingPerformed();
         assertFalse("Reloading required", detector.isReloadingRequired());
@@ -218,6 +157,7 @@ public class TestFileHandlerReloadingDetector
     @Test
     public void testGetFileJarURL() throws Exception
     {
+    	FileHandlerReloadingDetector detector = new FileHandlerReloadingDetector();
         URL url =
                 new URL("jar:"
                         + new File("conf/resources.jar").getAbsoluteFile()
@@ -228,4 +168,46 @@ public class TestFileHandlerReloadingDetector
         assertEquals("Detector does not monitor the jar file", "resources.jar",
                 file.getName());
     }
+
+	/**
+	 * A test implementation which allows mocking the monitored file.
+	 */
+	private static class FileHandlerReloadingDetectorTestImpl extends
+			FileHandlerReloadingDetector {
+		/** The mock file. */
+		private final File mockFile;
+
+		/**
+		 * Creates a new instance of
+		 * {@code FileHandlerReloadingDetectorTestImpl} and initializes it with
+		 * the mock file.
+		 *
+		 * @param file the mock file
+		 */
+		public FileHandlerReloadingDetectorTestImpl(File file) {
+			this(file, 0);
+		}
+
+		/**
+		 * Creates a new instance of
+		 * {@code FileHandlerReloadingDetectorTestImpl} and initializes it with
+		 * the mock file and a refresh delay.
+		 *
+		 * @param file the mock file
+		 * @param delay the delay
+		 */
+		public FileHandlerReloadingDetectorTestImpl(File file, long delay)
+		{
+			super(null, delay);
+			mockFile = file;
+		}
+
+		/**
+		 * Always returns the mock file.
+		 */
+		@Override
+		protected File getFile() {
+			return mockFile;
+		}
+	}
 }

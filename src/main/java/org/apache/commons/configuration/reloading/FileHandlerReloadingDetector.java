@@ -150,7 +150,7 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
     public boolean isReloadingRequired()
     {
         long now = System.currentTimeMillis();
-        if (now > lastChecked + getRefreshDelay())
+        if (now >= lastChecked + getRefreshDelay())
         {
             lastChecked = now;
 
