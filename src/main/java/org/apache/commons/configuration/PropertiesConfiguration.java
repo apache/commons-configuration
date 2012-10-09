@@ -174,6 +174,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
+    implements FileBasedConfiguration
 {
     /** Constant for the supported comment characters.*/
     static final String COMMENT_CHARS = "#!";
@@ -480,6 +481,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         }
     }
 
+    public void read(Reader in) throws ConfigurationException, IOException
+    {
+        load(in);
+    }
+
     /**
      * Save the configuration to the specified stream.
      *
@@ -497,6 +503,11 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             exitNoReload();
         }
+    }
+
+    public void write(Writer out) throws ConfigurationException, IOException
+    {
+        save(out);
     }
 
     /**
