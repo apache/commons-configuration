@@ -31,7 +31,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
@@ -78,7 +78,7 @@ import org.apache.commons.logging.impl.NoOpLog;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
  * @version $Id$
  */
-public abstract class AbstractConfiguration extends EventSource implements Configuration
+public abstract class AbstractConfiguration extends BaseEventSource implements Configuration
 {
     /**
      * Constant for the add property event type.

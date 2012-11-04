@@ -102,23 +102,19 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     private static final EventSource DUMMY_EVENT_SOURCE = new EventSource()
     {
-        @Override
         public void addConfigurationListener(ConfigurationListener l)
         {
         }
 
-        @Override
         public boolean removeConfigurationListener(ConfigurationListener l)
         {
             return false;
         }
 
-        @Override
         public void addErrorListener(ConfigurationErrorListener l)
         {
         }
 
-        @Override
         public boolean removeErrorListener(ConfigurationErrorListener l)
         {
             return false;

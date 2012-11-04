@@ -737,15 +737,14 @@ public final class ConfigurationUtils
      * each received error event.
      *
      * @param src the configuration, for which runtime exceptions are to be
-     * enabled; this configuration must be derived from
-     * {@link EventSource}
+     * enabled; this configuration must implement {@link EventSource}
      */
     public static void enableRuntimeExceptions(Configuration src)
     {
         if (!(src instanceof EventSource))
         {
             throw new IllegalArgumentException(
-                    "Configuration must be derived from EventSource!");
+                    "Configuration must implement EventSource!");
         }
         ((EventSource) src).addErrorListener(new ConfigurationErrorListener()
         {

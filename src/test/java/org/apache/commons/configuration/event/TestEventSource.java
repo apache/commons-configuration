@@ -26,7 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for EventSource.
+ * Test class for BaseEventSource.
  *
  * @version $Id$
  */
@@ -331,7 +331,7 @@ public class TestEventSource
     {
         source.addConfigurationListener(new TestListener());
         source.addErrorListener(new TestListener());
-        EventSource copy = (EventSource) source.clone();
+        BaseEventSource copy = (BaseEventSource) source.clone();
         assertTrue("Configuration listeners registered for clone", copy
                 .getConfigurationListeners().isEmpty());
         assertTrue("Error listeners registered for clone", copy
@@ -369,7 +369,7 @@ public class TestEventSource
      * {@code fireEvent()} methods only creates event objects if
      * necessary. It also allows testing the clone() operation.
      */
-    static class CountingEventSource extends EventSource implements Cloneable
+    static class CountingEventSource extends BaseEventSource implements Cloneable
     {
         int eventCount;
 
