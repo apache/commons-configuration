@@ -176,4 +176,18 @@ public class TestImmutableConfiguration
         Configuration mutableConf = (Configuration) conf;
         mutableConf.clear();
     }
+
+    /**
+     * Tests whether an immutable subset can be queried.
+     */
+    @Test
+    public void testImmutableSubset() throws ConfigurationException
+    {
+        ImmutableConfiguration conf =
+                ConfigurationUtils
+                        .unmodifiableConfiguration(createTestConfig());
+        ImmutableConfiguration subset = conf.immutableSubset("test");
+        assertFalse("No content", subset.isEmpty());
+        assertEquals("Wrong value", 1000000, subset.getLong("long"));
+    }
 }

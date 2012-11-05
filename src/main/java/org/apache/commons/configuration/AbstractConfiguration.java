@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
+import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
-import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
@@ -474,6 +474,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public Configuration subset(String prefix)
     {
         return new SubsetConfiguration(this, prefix, ".");
+    }
+
+    public ImmutableConfiguration immutableSubset(String prefix)
+    {
+        return ConfigurationUtils.unmodifiableConfiguration(subset(prefix));
     }
 
     public void setProperty(String key, Object value)

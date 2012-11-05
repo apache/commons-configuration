@@ -515,4 +515,30 @@ public interface ImmutableConfiguration
      *         object that is not a List.
      */
     List<Object> getList(String key, List<Object> defaultValue);
+    /**
+     * Return a decorator immutable Configuration containing every key from the current
+     * Configuration that starts with the specified prefix. The prefix is
+     * removed from the keys in the subset. For example, if the configuration
+     * contains the following properties:
+     *
+     * <pre>
+     *    prefix.number = 1
+     *    prefix.string = Apache
+     *    prefixed.foo = bar
+     *    prefix = Jakarta</pre>
+     *
+     * the immutable Configuration returned by {@code subset("prefix")} will contain
+     * the properties:
+     *
+     * <pre>
+     *    number = 1
+     *    string = Apache
+     *    = Jakarta</pre>
+     *
+     * (The key for the value "Jakarta" is an empty string)
+     *
+     * @param prefix The prefix used to select the properties.
+     * @return a subset immutable configuration
+     */
+    ImmutableConfiguration immutableSubset(String prefix);
 }
