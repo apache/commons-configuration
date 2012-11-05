@@ -23,6 +23,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
@@ -61,6 +62,14 @@ public final class ConfigurationUtils
 
     /** Constant for parsing numbers in hex format. */
     private static final int HEX = 16;
+
+    /**
+     * An array with interfaces to be implemented by a proxy for an immutable
+     * configuration.
+     */
+    private static final Class<?>[] IMMUTABLE_CONFIG_IFCS = {
+        ImmutableConfiguration.class
+    };
 
     /** The logger.*/
     private static final Log LOG = LogFactory.getLog(ConfigurationUtils.class);
@@ -754,5 +763,31 @@ public final class ConfigurationUtils
                 throw new ConfigurationRuntimeException(event.getCause());
             }
         });
+    }
+
+    /**
+     * Creates an {@code ImmutableConfiguration} from the given
+     * {@code Configuration} object. This method creates a proxy object wrapping
+     * the original configuration and making it available under the
+     * {@code ImmutableConfiguration} interface. Through this interface the
+     * configuration cannot be manipulated. It is also not possible to cast the
+     * returned object back to a {@code Configuration} instance to circumvent
+     * this protection.
+     *
+     * @param c the {@code Configuration} to be wrapped (must not be
+     *        <b>null</b>)
+     * @return an {@code ImmutableConfiguration} view on the specified
+     *         {@code Configuration} object
+     * @throws NullPointerException if the passed in {@code Configuration} is
+     *         <b>null</b>
+     * @since 2.0
+     */
+    public static ImmutableConfiguration unmodifiableConfiguration(
+            Configuration c)
+    {
+        return (ImmutableConfiguration) Proxy.newProxyInstance(
+                ConfigurationUtils.class.getClassLoader(),
+                IMMUTABLE_CONFIG_IFCS,
+                new ImmutableConfigurationInvocationHandler(c));
     }
 }
