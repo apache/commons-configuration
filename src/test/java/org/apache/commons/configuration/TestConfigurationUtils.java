@@ -263,8 +263,9 @@ public class TestConfigurationUtils
             conf.addProperty("test.list", "item" + i);
         }
 
-        BaseHierarchicalConfiguration hc = ConfigurationUtils
-                .convertToHierarchical(conf);
+        BaseHierarchicalConfiguration hc =
+                (BaseHierarchicalConfiguration) ConfigurationUtils
+                        .convertToHierarchical(conf);
         for (Iterator<String> it = conf.getKeys(); it.hasNext();)
         {
             String key = it.next();
@@ -308,7 +309,7 @@ public class TestConfigurationUtils
         conf.addProperty("test.key", "1\\,2\\,3");
         assertEquals("Wrong property value", "1,2,3", conf
                 .getString("test.key"));
-        BaseHierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf);
         assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
                 hc.getString("test.key"));
@@ -327,7 +328,7 @@ public class TestConfigurationUtils
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setIndexStart("[");
         engine.setIndexEnd("]");
-        BaseHierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
@@ -373,7 +374,7 @@ public class TestConfigurationUtils
     {
         BaseConfiguration config = new BaseConfiguration();
         config.addProperty("test", "1,2,3");
-        BaseHierarchicalConfiguration hc = ConfigurationUtils
+        HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(config);
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));

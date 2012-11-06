@@ -188,7 +188,7 @@ public final class ConfigurationUtils
      * and only if the passed in configuration is <b>null</b>)
      * @since 1.3
      */
-    public static BaseHierarchicalConfiguration convertToHierarchical(
+    public static HierarchicalConfiguration convertToHierarchical(
             Configuration conf)
     {
         return convertToHierarchical(conf, null);
@@ -217,7 +217,7 @@ public final class ConfigurationUtils
      *         and only if the passed in configuration is <b>null</b>)
      * @since 1.6
      */
-    public static BaseHierarchicalConfiguration convertToHierarchical(
+    public static HierarchicalConfiguration convertToHierarchical(
             Configuration conf, ExpressionEngine engine)
     {
         if (conf == null)
@@ -225,9 +225,9 @@ public final class ConfigurationUtils
             return null;
         }
 
-        if (conf instanceof BaseHierarchicalConfiguration)
+        if (conf instanceof HierarchicalConfiguration)
         {
-            BaseHierarchicalConfiguration hc;
+            HierarchicalConfiguration hc;
             if (conf instanceof Reloadable)
             {
                 Object lock = ((Reloadable) conf).getReloadLock();
@@ -238,7 +238,7 @@ public final class ConfigurationUtils
             }
             else
             {
-                hc = (BaseHierarchicalConfiguration) conf;
+                hc = (HierarchicalConfiguration) conf;
             }
             if (engine != null)
             {
