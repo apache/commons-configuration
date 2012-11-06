@@ -188,7 +188,7 @@ public final class ConfigurationUtils
      * and only if the passed in configuration is <b>null</b>)
      * @since 1.3
      */
-    public static HierarchicalConfiguration convertToHierarchical(
+    public static BaseHierarchicalConfiguration convertToHierarchical(
             Configuration conf)
     {
         return convertToHierarchical(conf, null);
@@ -217,7 +217,7 @@ public final class ConfigurationUtils
      *         and only if the passed in configuration is <b>null</b>)
      * @since 1.6
      */
-    public static HierarchicalConfiguration convertToHierarchical(
+    public static BaseHierarchicalConfiguration convertToHierarchical(
             Configuration conf, ExpressionEngine engine)
     {
         if (conf == null)
@@ -225,20 +225,20 @@ public final class ConfigurationUtils
             return null;
         }
 
-        if (conf instanceof HierarchicalConfiguration)
+        if (conf instanceof BaseHierarchicalConfiguration)
         {
-            HierarchicalConfiguration hc;
+            BaseHierarchicalConfiguration hc;
             if (conf instanceof Reloadable)
             {
                 Object lock = ((Reloadable) conf).getReloadLock();
                 synchronized (lock)
                 {
-                    hc = new HierarchicalConfiguration((HierarchicalConfiguration) conf);
+                    hc = new BaseHierarchicalConfiguration((HierarchicalConfiguration) conf);
                 }
             }
             else
             {
-                hc = (HierarchicalConfiguration) conf;
+                hc = (BaseHierarchicalConfiguration) conf;
             }
             if (engine != null)
             {
@@ -249,7 +249,7 @@ public final class ConfigurationUtils
         }
         else
         {
-            HierarchicalConfiguration hc = new HierarchicalConfiguration();
+            BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
             if (engine != null)
             {
                 hc.setExpressionEngine(engine);

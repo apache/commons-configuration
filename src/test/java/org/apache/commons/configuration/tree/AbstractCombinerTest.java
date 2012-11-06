@@ -23,7 +23,7 @@ import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public abstract class AbstractCombinerTest
      * @return the union configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected HierarchicalConfiguration createCombinedConfiguration()
+    protected BaseHierarchicalConfiguration createCombinedConfiguration()
             throws ConfigurationException
     {
         XMLConfiguration conf1 = new XMLConfiguration(CONF1);
@@ -75,7 +75,7 @@ public abstract class AbstractCombinerTest
         ConfigurationNode cn = combiner.combine(conf1.getRootNode(), conf2
                 .getRootNode());
 
-        HierarchicalConfiguration result = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
         result.setRootNode(cn);
 
         return result;

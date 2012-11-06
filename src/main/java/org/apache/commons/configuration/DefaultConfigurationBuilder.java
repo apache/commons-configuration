@@ -698,7 +698,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
      * @throws ConfigurationException if an error occurs
      */
     protected void initCombinedConfiguration(CombinedConfiguration config,
-            List<? extends HierarchicalConfiguration> containedConfigs,
+            List<? extends BaseHierarchicalConfiguration> containedConfigs,
             String keyListNodes) throws ConfigurationException
     {
         List<Object> listNodes = getList(keyListNodes);

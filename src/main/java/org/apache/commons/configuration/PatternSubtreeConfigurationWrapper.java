@@ -31,7 +31,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
 /**
- * Wraps a HierarchicalConfiguration and allows subtrees to be access via a configured path with
+ * Wraps a BaseHierarchicalConfiguration and allows subtrees to be access via a configured path with
  * replaceable tokens derived from the ConfigurationInterpolator. When used with injection frameworks
  * such as Spring it allows components to be injected with subtrees of the configuration.
  * @since 1.6
@@ -487,7 +487,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         }
     }
 
-    private HierarchicalConfiguration getConfig()
+    private BaseHierarchicalConfiguration getConfig()
     {
         return config.configurationAt(makePath());
     }

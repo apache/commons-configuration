@@ -791,7 +791,7 @@ public class ConfigurationFactory
         /**
          * Creates a configuration object with the union of all properties
          * defined in the <code>&lt;additional&gt;</code> section. This
-         * implementation returns a {@code HierarchicalConfiguration}
+         * implementation returns a {@code BaseHierarchicalConfiguration}
          * object.
          *
          * @param configs a collection with
@@ -800,7 +800,7 @@ public class ConfigurationFactory
          */
         protected Configuration createAdditionalConfiguration(Collection<AdditionalConfigurationData> configs)
         {
-            HierarchicalConfiguration result = new HierarchicalConfiguration();
+            BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration();
 
             for (AdditionalConfigurationData cdata : configs)
             {
@@ -819,7 +819,7 @@ public class ConfigurationFactory
          */
         private ConfigurationNode createRootNode(AdditionalConfigurationData cdata)
         {
-            if (cdata.getConfiguration() instanceof HierarchicalConfiguration)
+            if (cdata.getConfiguration() instanceof BaseHierarchicalConfiguration)
             {
                 // we can directly use this configuration's root node
                 return ((HierarchicalConfiguration) cdata.getConfiguration()).getRootNode();
@@ -827,7 +827,7 @@ public class ConfigurationFactory
             else
             {
                 // transform configuration to a hierarchical root node
-                HierarchicalConfiguration hc = new HierarchicalConfiguration();
+                BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
                 ConfigurationUtils.copy(cdata.getConfiguration(), hc);
                 return hc.getRootNode();
             }

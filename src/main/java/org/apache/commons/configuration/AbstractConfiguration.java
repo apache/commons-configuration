@@ -1216,7 +1216,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * hierarchical configurations because it is not able to copy information
      * about the properties' structure (i.e. the parent-child-relationships will
      * get lost). So when dealing with hierarchical configuration objects their
-     * {@link HierarchicalConfiguration#clone() clone()} methods
+     * {@link BaseHierarchicalConfiguration#clone() clone()} methods
      * should be used.
      *
      * @param c the configuration to copy (can be <b>null</b>, then this
@@ -1257,7 +1257,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * copy information about the properties' structure (i.e. the
      * parent-child-relationships will get lost). So when dealing with
      * hierarchical configuration objects their
-     * {@link HierarchicalConfiguration#clone() clone()} methods
+     * {@link BaseHierarchicalConfiguration#clone() clone()} methods
      * should be used.
      *
      * @param c the configuration to be appended (can be <b>null</b>, then this

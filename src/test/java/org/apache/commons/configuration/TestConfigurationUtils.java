@@ -263,7 +263,7 @@ public class TestConfigurationUtils
             conf.addProperty("test.list", "item" + i);
         }
 
-        HierarchicalConfiguration hc = ConfigurationUtils
+        BaseHierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf);
         for (Iterator<String> it = conf.getKeys(); it.hasNext();)
         {
@@ -280,7 +280,7 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchical()
     {
-        Configuration conf = new HierarchicalConfiguration();
+        Configuration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
         assertSame("Wrong configuration returned", conf, ConfigurationUtils
                 .convertToHierarchical(conf));
@@ -308,7 +308,7 @@ public class TestConfigurationUtils
         conf.addProperty("test.key", "1\\,2\\,3");
         assertEquals("Wrong property value", "1,2,3", conf
                 .getString("test.key"));
-        HierarchicalConfiguration hc = ConfigurationUtils
+        BaseHierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf);
         assertEquals("Escaped list delimiters not correctly handled", "1,2,3",
                 hc.getString("test.key"));
@@ -327,7 +327,7 @@ public class TestConfigurationUtils
         DefaultExpressionEngine engine = new DefaultExpressionEngine();
         engine.setIndexStart("[");
         engine.setIndexEnd("]");
-        HierarchicalConfiguration hc = ConfigurationUtils
+        BaseHierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(conf, engine);
         assertTrue("Wrong value for test(a)", hc.getBoolean("test(a)"));
         assertFalse("Wrong value for test(b)", hc.getBoolean("test(b)"));
@@ -340,7 +340,7 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchicalEngine()
     {
-        HierarchicalConfiguration hc = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         ExpressionEngine engine = new DefaultExpressionEngine();
         assertSame("Created new configuration", hc, ConfigurationUtils
                 .convertToHierarchical(hc, engine));
@@ -355,7 +355,7 @@ public class TestConfigurationUtils
     @Test
     public void testConvertHierarchicalToHierarchicalNullEngine()
     {
-        HierarchicalConfiguration hc = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration hc = new BaseHierarchicalConfiguration();
         ExpressionEngine engine = new DefaultExpressionEngine();
         hc.setExpressionEngine(engine);
         assertSame("Created new configuration", hc, ConfigurationUtils
@@ -373,7 +373,7 @@ public class TestConfigurationUtils
     {
         BaseConfiguration config = new BaseConfiguration();
         config.addProperty("test", "1,2,3");
-        HierarchicalConfiguration hc = ConfigurationUtils
+        BaseHierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(config);
         assertEquals("Wrong value 1", 1, hc.getInt("test(0)"));
         assertEquals("Wrong value 2", 2, hc.getInt("test(1)"));
@@ -386,9 +386,9 @@ public class TestConfigurationUtils
     @Test
     public void testCloneConfiguration()
     {
-        HierarchicalConfiguration conf = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
         conf.addProperty("test", "yes");
-        HierarchicalConfiguration copy = (HierarchicalConfiguration) ConfigurationUtils
+        BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) ConfigurationUtils
                 .cloneConfiguration(conf);
         assertNotSame("Same object was returned", conf, copy);
         assertEquals("Property was not cloned", "yes", copy.getString("test"));

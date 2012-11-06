@@ -49,7 +49,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * (which is the default), detail events are suppressed, so only property set
  * events will be received. Note that the number of received detail events may
  * differ for different configuration implementations.
- * {@link org.apache.commons.configuration.HierarchicalConfiguration HierarchicalConfiguration}
+ * {@link org.apache.commons.configuration.BaseHierarchicalConfiguration BaseHierarchicalConfiguration}
  * for instance has a custom implementation of {@code setProperty()},
  * which does not generate any detail events.
  * </p>

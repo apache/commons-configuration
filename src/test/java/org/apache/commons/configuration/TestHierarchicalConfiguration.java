@@ -44,7 +44,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test class for HierarchicalConfiguration.
+ * Test class for BaseHierarchicalConfiguration.
  *
  * @version $Id$
  */
@@ -58,7 +58,7 @@ public class TestHierarchicalConfiguration
         { "docid", "name", "creationDate", "authorID", "version" }
     };
 
-    private HierarchicalConfiguration config;
+    private BaseHierarchicalConfiguration config;
 
     @Before
     public void setUp() throws Exception
@@ -75,7 +75,7 @@ public class TestHierarchicalConfiguration
          *             field
          *                 name
          */
-        config = new HierarchicalConfiguration();
+        config = new BaseHierarchicalConfiguration();
         ConfigurationNode nodeTables = createNode("tables", null);
         for(int i = 0; i < tables.length; i++)
         {
@@ -114,7 +114,7 @@ public class TestHierarchicalConfiguration
     public void testIsEmpty()
     {
         assertFalse(config.isEmpty());
-        HierarchicalConfiguration conf2 = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration conf2 = new BaseHierarchicalConfiguration();
         assertTrue(conf2.isEmpty());
         ConfigurationNode child1 = new DefaultConfigurationNode("child1");
         ConfigurationNode child2 = new DefaultConfigurationNode("child2");
@@ -547,7 +547,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testConfigurationAt()
     {
-        HierarchicalConfiguration subConfig = config
+        BaseHierarchicalConfiguration subConfig = config
                 .configurationAt("tables.table(1)");
         assertEquals("Wrong table name", tables[1], subConfig.getString("name"));
         List<Object> lstFlds = subConfig.getList("fields.field.name");
@@ -631,7 +631,7 @@ public class TestHierarchicalConfiguration
         assertEquals("Wrong size of fields", fields[1].length, lstFlds.size());
         for (int i = 0; i < fields[1].length; i++)
         {
-            HierarchicalConfiguration sub = lstFlds.get(i);
+            BaseHierarchicalConfiguration sub = lstFlds.get(i);
             assertEquals("Wrong field at position " + i, fields[1][i], sub
                     .getString("name"));
         }
@@ -652,7 +652,7 @@ public class TestHierarchicalConfiguration
     public void testClone()
     {
         Configuration copy = (Configuration) config.clone();
-        assertTrue(copy instanceof HierarchicalConfiguration);
+        assertTrue(copy instanceof BaseHierarchicalConfiguration);
         checkContent(copy);
     }
 
@@ -670,7 +670,7 @@ public class TestHierarchicalConfiguration
                 // just a dummy
             }
         });
-        HierarchicalConfiguration copy = (HierarchicalConfiguration) config
+        BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) config
                 .clone();
         assertTrue("Event listener registered at clone", copy
                 .getConfigurationListeners().isEmpty());
@@ -726,7 +726,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testAddNodesCopy()
     {
-        HierarchicalConfiguration configDest = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration configDest = new BaseHierarchicalConfiguration();
         configDest.addProperty("test", "TEST");
         Collection<ConfigurationNode> nodes = config.getRootNode().getChildren();
         assertEquals("Wrong number of children", 1, nodes.size());
@@ -769,7 +769,7 @@ public class TestHierarchicalConfiguration
     {
         config.setExpressionEngine(null);
         assertNotNull("Expression engine is null", config.getExpressionEngine());
-        assertSame("Default engine is not used", HierarchicalConfiguration
+        assertSame("Default engine is not used", BaseHierarchicalConfiguration
                 .getDefaultExpressionEngine(), config.getExpressionEngine());
 
         config.setExpressionEngine(createAlternativeExpressionEngine());
@@ -783,11 +783,11 @@ public class TestHierarchicalConfiguration
     @Test
     public void testSetDefaultExpressionEngine()
     {
-        ExpressionEngine engineOld = HierarchicalConfiguration.getDefaultExpressionEngine();
-        HierarchicalConfiguration
+        ExpressionEngine engineOld = BaseHierarchicalConfiguration.getDefaultExpressionEngine();
+        BaseHierarchicalConfiguration
                 .setDefaultExpressionEngine(createAlternativeExpressionEngine());
         checkAlternativeSyntax();
-        HierarchicalConfiguration.setDefaultExpressionEngine(engineOld);
+        BaseHierarchicalConfiguration.setDefaultExpressionEngine(engineOld);
     }
 
     /**
@@ -797,7 +797,7 @@ public class TestHierarchicalConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testSetDefaultExpressionEngineNull()
     {
-        HierarchicalConfiguration.setDefaultExpressionEngine(null);
+        BaseHierarchicalConfiguration.setDefaultExpressionEngine(null);
     }
 
     /**
@@ -806,7 +806,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInitCopy()
     {
-        HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+        BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(config);
         checkContent(copy);
     }
 
@@ -817,7 +817,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInitCopyUpdate()
     {
-        HierarchicalConfiguration copy = new HierarchicalConfiguration(config);
+        BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(config);
         config.setProperty("tables.table(0).name", "NewTable");
         checkContent(copy);
     }
@@ -945,7 +945,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInterpolatedConfiguration()
     {
-        HierarchicalConfiguration c = (HierarchicalConfiguration) InterpolationTestHelper
+        BaseHierarchicalConfiguration c = (BaseHierarchicalConfiguration) InterpolationTestHelper
                 .testInterpolatedConfiguration(config);
 
         // tests whether the hierarchical structure has been maintained
@@ -959,7 +959,7 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInitCopyNull()
     {
-        HierarchicalConfiguration copy = new HierarchicalConfiguration(null);
+        BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(null);
         assertTrue("Configuration not empty", copy.isEmpty());
     }
 

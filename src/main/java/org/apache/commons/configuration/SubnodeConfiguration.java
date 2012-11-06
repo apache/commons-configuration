@@ -72,8 +72,8 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * instance a subnode configuration is only used for a temporary convenient
  * access to a complex configuration, there is no need to make it aware for
  * structural changes of its parent. If a subnode configuration is created
- * using the {@link HierarchicalConfiguration#configurationAt(String, boolean)
- * configurationAt()} method of {@code HierarchicalConfiguration}
+ * using the {@link BaseHierarchicalConfiguration#configurationAt(String, boolean)
+ * configurationAt()} method of {@code BaseHierarchicalConfiguration}
  * (which should be the preferred way), with an additional boolean parameter it
  * can be specified whether the resulting subnode configuration should be
  * aware of structural changes or not. Then the configuration key will be
@@ -124,7 +124,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     private static final long serialVersionUID = 3105734147019386480L;
 
     /** Stores the parent configuration. */
-    private HierarchicalConfiguration parent;
+    private BaseHierarchicalConfiguration parent;
 
     /** Stores the key that was used to construct this configuration.*/
     private String subnodeKey;
@@ -136,7 +136,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * @param parent the parent configuration
      * @param root the root node of this subnode configuration
      */
-    public SubnodeConfiguration(HierarchicalConfiguration parent, ConfigurationNode root)
+    public SubnodeConfiguration(BaseHierarchicalConfiguration parent, ConfigurationNode root)
     {
         super(parent instanceof Reloadable ? ((Reloadable) parent).getReloadLock() : null);
         if (parent == null)
@@ -159,7 +159,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      *
      * @return the parent configuration
      */
-    public HierarchicalConfiguration getParent()
+    public BaseHierarchicalConfiguration getParent()
     {
         return parent;
     }
@@ -341,7 +341,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      *
      * @param parentConfig the parent configuration
      */
-    protected void initFromParent(HierarchicalConfiguration parentConfig)
+    protected void initFromParent(BaseHierarchicalConfiguration parentConfig)
     {
         setExpressionEngine(parentConfig.getExpressionEngine());
         setListDelimiter(parentConfig.getListDelimiter());

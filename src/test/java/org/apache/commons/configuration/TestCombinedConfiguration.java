@@ -531,7 +531,7 @@ public class TestCombinedConfiguration
      */
     private void setUpSourceTest()
     {
-        HierarchicalConfiguration c1 = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration c1 = new BaseHierarchicalConfiguration();
         PropertiesConfiguration c2 = new PropertiesConfiguration();
         c1.addProperty(TEST_KEY, TEST_NAME);
         c2.addProperty("another.key", "test");
@@ -954,7 +954,7 @@ public class TestCombinedConfiguration
      */
     private AbstractConfiguration setUpTestConfiguration()
     {
-        HierarchicalConfiguration config = new HierarchicalConfiguration();
+        BaseHierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(TEST_KEY, Boolean.TRUE);
         config.addProperty("test.comment", "This is a test");
         return config;

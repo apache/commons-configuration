@@ -48,7 +48,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * @version $Id$
  */
 public abstract class AbstractHierarchicalFileConfiguration
-extends HierarchicalConfiguration
+extends BaseHierarchicalConfiguration
 implements FileConfiguration, ConfigurationListener, ConfigurationErrorListener, FileSystemBased,
         Reloadable
 {

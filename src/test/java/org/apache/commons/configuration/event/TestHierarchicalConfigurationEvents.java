@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -40,7 +41,7 @@ public class TestHierarchicalConfigurationEvents extends
     @Override
     protected AbstractConfiguration createConfiguration()
     {
-        return new HierarchicalConfiguration();
+        return new BaseHierarchicalConfiguration();
     }
 
     /**
@@ -54,9 +55,9 @@ public class TestHierarchicalConfigurationEvents extends
         Collection<ConfigurationNode> nodes = hc.getExpressionEngine()
                 .query(hc.getRootNode(), key);
         hc.clearTree(key);
-        l.checkEvent(HierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, null,
                 true);
-        l.checkEvent(HierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_CLEAR_TREE, key, nodes,
                 false);
         l.done();
     }
@@ -71,9 +72,9 @@ public class TestHierarchicalConfigurationEvents extends
         Collection<ConfigurationNode> nodes = new ArrayList<ConfigurationNode>(1);
         nodes.add(new DefaultConfigurationNode("a_key", TEST_PROPVALUE));
         hc.addNodes(TEST_PROPNAME, nodes);
-        l.checkEvent(HierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
                 nodes, true);
-        l.checkEvent(HierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
+        l.checkEvent(BaseHierarchicalConfiguration.EVENT_ADD_NODES, TEST_PROPNAME,
                 nodes, false);
         l.done();
     }
@@ -101,10 +102,10 @@ public class TestHierarchicalConfigurationEvents extends
                 .configurationAt(EXIST_PROPERTY);
         sub.addProperty("newProp", "newValue");
         checkSubnodeEvent(l
-                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                .nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
                 true);
         checkSubnodeEvent(l
-                .nextEvent(HierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
+                .nextEvent(BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED),
                 false);
         l.done();
     }
@@ -124,7 +125,7 @@ public class TestHierarchicalConfigurationEvents extends
         ConfigurationEvent evSub = (ConfigurationEvent) event
                 .getPropertyValue();
         assertEquals("Wrong event type",
-                HierarchicalConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
+                BaseHierarchicalConfiguration.EVENT_ADD_PROPERTY, evSub.getType());
         assertEquals("Wrong property name", "newProp", evSub.getPropertyName());
         assertEquals("Wrong property value", "newValue", evSub
                 .getPropertyValue());

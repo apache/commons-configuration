@@ -70,7 +70,7 @@ public class TestSubnodeConfiguration
     public TemporaryFolder folder = new TemporaryFolder();
 
     /** The parent configuration. */
-    private HierarchicalConfiguration parent;
+    private BaseHierarchicalConfiguration parent;
 
     /** The subnode configuration to be tested. */
     private SubnodeConfiguration config;
@@ -428,7 +428,7 @@ public class TestSubnodeConfiguration
         {
             assertEquals("Wrong configuration", config, e.getSource());
             assertEquals("Wrong event type",
-                    HierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
+                    BaseHierarchicalConfiguration.EVENT_SUBNODE_CHANGED, e
                             .getType());
             assertNull("Got a property name", e.getPropertyName());
             assertNull("Got a property value", e.getPropertyValue());
@@ -557,9 +557,9 @@ public class TestSubnodeConfiguration
      *
      * @return the parent configuration
      */
-    protected HierarchicalConfiguration setUpParentConfig()
+    protected BaseHierarchicalConfiguration setUpParentConfig()
     {
-        HierarchicalConfiguration conf = new HierarchicalConfiguration()
+        BaseHierarchicalConfiguration conf = new BaseHierarchicalConfiguration()
         {
             /**
              * Serial version UID.

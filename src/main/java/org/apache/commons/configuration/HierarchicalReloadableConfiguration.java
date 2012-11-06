@@ -29,7 +29,7 @@ import org.apache.commons.configuration.reloading.Reloadable;
  * @since 1.7
  * @version $Id$
  */
-public class HierarchicalReloadableConfiguration extends HierarchicalConfiguration
+public class HierarchicalReloadableConfiguration extends BaseHierarchicalConfiguration
     implements Reloadable
 {
     /** Constant for the name used for the lock object. */
