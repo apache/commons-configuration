@@ -71,6 +71,14 @@ public final class ConfigurationUtils
         ImmutableConfiguration.class
     };
 
+    /**
+     * An array with interfaces to be implemented by a proxy for an immutable
+     * hierarchical configuration.
+     */
+    private static final Class<?>[] IMMUTABLE_HIERARCHICAL_CONFIG_IFCS = {
+        ImmutableHierarchicalConfiguration.class
+    };
+
     /** The logger.*/
     private static final Log LOG = LogFactory.getLog(ConfigurationUtils.class);
 
@@ -785,9 +793,43 @@ public final class ConfigurationUtils
     public static ImmutableConfiguration unmodifiableConfiguration(
             Configuration c)
     {
+        return createUnmodifiableConfiguration(IMMUTABLE_CONFIG_IFCS, c);
+    }
+
+    /**
+     * Creates an {@code ImmutableHierarchicalConfiguration} from the given
+     * {@code HierarchicalConfiguration} object. This method works exactly like
+     * the method with the same name, but it operates on hierarchical
+     * configurations.
+     *
+     * @param c the {@code HierarchicalConfiguration} to be wrapped (must not be
+     *        <b>null</b>)
+     * @return an {@code ImmutableHierarchicalConfiguration} view on the
+     *         specified {@code HierarchicalConfiguration} object
+     * @throws NullPointerException if the passed in
+     *         {@code HierarchicalConfiguration} is <b>null</b>
+     * @since 2.0
+     */
+    public static ImmutableHierarchicalConfiguration unmodifiableConfiguration(
+            HierarchicalConfiguration c)
+    {
+        return (ImmutableHierarchicalConfiguration) createUnmodifiableConfiguration(
+                IMMUTABLE_HIERARCHICAL_CONFIG_IFCS, c);
+    }
+
+    /**
+     * Helper method for creating a proxy for an unmodifiable configuration.
+     * The interfaces the proxy should implement are passed as argument.
+     * @param ifcs an array with the interface classes the proxy must implement
+     * @param c the configuration object to be wrapped
+     * @return a proxy object for an immutable configuration
+     * @throws NullPointerException if the configuration is <b>null</b>
+     */
+    private static ImmutableConfiguration createUnmodifiableConfiguration(
+            Class<?>[] ifcs, Configuration c)
+    {
         return (ImmutableConfiguration) Proxy.newProxyInstance(
-                ConfigurationUtils.class.getClassLoader(),
-                IMMUTABLE_CONFIG_IFCS,
+                ConfigurationUtils.class.getClassLoader(), ifcs,
                 new ImmutableConfigurationInvocationHandler(c));
     }
 }

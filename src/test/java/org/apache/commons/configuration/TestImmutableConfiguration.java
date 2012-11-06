@@ -190,4 +190,19 @@ public class TestImmutableConfiguration
         assertFalse("No content", subset.isEmpty());
         assertEquals("Wrong value", 1000000, subset.getLong("long"));
     }
+
+    /**
+     * Tests whether an unmodifiable hierarchical configuration can be created.
+     */
+    @Test
+    public void testUnmodifiableHierarchicalConfiguration()
+    {
+        HierarchicalConfiguration conf = new BaseHierarchicalConfiguration();
+        String key = "test";
+        conf.addProperty(key, Boolean.TRUE);
+        ImmutableHierarchicalConfiguration ihc =
+                ConfigurationUtils.unmodifiableConfiguration(conf);
+        assertTrue("Property not found", ihc.getBoolean(key));
+        assertEquals("Wrong max index", 0, ihc.getMaxIndex(key));
+    }
 }
