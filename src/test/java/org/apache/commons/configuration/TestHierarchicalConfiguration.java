@@ -63,25 +63,31 @@ public class TestHierarchicalConfiguration
     @Before
     public void setUp() throws Exception
     {
-        /**
-         * Initialize the configuration with the following structure:
-         *
-         * tables
-         *      table
-         *         name
-         *         fields
-         *             field
-         *                 name
-         *             field
-         *                 name
-         */
         config = new BaseHierarchicalConfiguration();
+        fillConfiguration(tables);
+    }
+
+    /**
+     * Initialize the configuration with the following structure:
+     *
+     * tables
+     *      table
+     *         name
+     *         fields
+     *             field
+     *                 name
+     *             field
+     *                 name
+     * @param tabNames the array with the names of the test tables
+     */
+    private void fillConfiguration(String[] tabNames)
+    {
         ConfigurationNode nodeTables = createNode("tables", null);
-        for(int i = 0; i < tables.length; i++)
+        for(int i = 0; i < tabNames.length; i++)
         {
             ConfigurationNode nodeTable = createNode("table", null);
             nodeTables.addChild(nodeTable);
-            ConfigurationNode nodeName = createNode("name", tables[i]);
+            ConfigurationNode nodeName = createNode("name", tabNames[i]);
             nodeTable.addChild(nodeName);
             ConfigurationNode nodeFields = createNode("fields", null);
             nodeTable.addChild(nodeFields);
@@ -94,7 +100,6 @@ public class TestHierarchicalConfiguration
 
         config.getRootNode().addChild(nodeTables);
     }
-
 
     @Test
     public void testSetRootNode()
@@ -567,6 +572,43 @@ public class TestHierarchicalConfiguration
     }
 
     /**
+     * Tests whether an immutable configuration for a sub tree can be obtained.
+     */
+    @Test
+    public void testImmutableConfigurationAt()
+    {
+        ImmutableHierarchicalConfiguration subConfig =
+                config.immutableConfigurationAt("tables.table(1)");
+        assertEquals("Wrong table name", tables[1], subConfig.getString("name"));
+        List<Object> lstFlds = subConfig.getList("fields.field.name");
+        assertEquals("Wrong number of fields", fields[1].length, lstFlds.size());
+        for (int i = 0; i < fields[1].length; i++)
+        {
+            assertEquals("Wrong field at position " + i, fields[1][i],
+                    lstFlds.get(i));
+        }
+    }
+
+    /**
+     * Tests whether the support updates flag is taken into account when
+     * creating an immutable sub configuration.
+     */
+    @Test
+    public void testImmutableConfigurationAtSupportUpdates()
+    {
+        String[] tables2 = new String[tables.length];
+        for(int i = 0; i < tables2.length; i++)
+        {
+            tables2[i] = tables[i] + "_other";
+        }
+        ImmutableHierarchicalConfiguration subConfig =
+                config.immutableConfigurationAt("tables.table(1)", true);
+        config.clear();
+        fillConfiguration(tables2);
+        assertEquals("Name not updated", tables2[1], subConfig.getString("name"));
+    }
+
+    /**
      * Tests the configurationAt() method when the passed in key does not exist.
      */
     @Test(expected = IllegalArgumentException.class)
@@ -622,19 +664,43 @@ public class TestHierarchicalConfiguration
     }
 
     /**
+     * Helper method for checking a list of sub configurations pointing to the
+     * single fields of the table configuration.
+     *
+     * @param lstFlds the list with sub configurations
+     */
+    private void checkSubConfigurations(
+            List<? extends ImmutableConfiguration> lstFlds)
+    {
+        assertEquals("Wrong size of fields", fields[1].length, lstFlds.size());
+        for (int i = 0; i < fields[1].length; i++)
+        {
+            ImmutableConfiguration sub = lstFlds.get(i);
+            assertEquals("Wrong field at position " + i, fields[1][i],
+                    sub.getString("name"));
+        }
+    }
+
+    /**
      * Tests the configurationsAt() method.
      */
     @Test
     public void testConfigurationsAt()
     {
-        List<SubnodeConfiguration> lstFlds = config.configurationsAt("tables.table(1).fields.field");
-        assertEquals("Wrong size of fields", fields[1].length, lstFlds.size());
-        for (int i = 0; i < fields[1].length; i++)
-        {
-            BaseHierarchicalConfiguration sub = lstFlds.get(i);
-            assertEquals("Wrong field at position " + i, fields[1][i], sub
-                    .getString("name"));
-        }
+        List<SubnodeConfiguration> lstFlds =
+                config.configurationsAt("tables.table(1).fields.field");
+        checkSubConfigurations(lstFlds);
+    }
+
+    /**
+     * Tests whether a list of immutable sub configurations can be queried.
+     */
+    @Test
+    public void testImmutableConfigurationsAt()
+    {
+        List<ImmutableHierarchicalConfiguration> lstFlds =
+                config.immutableConfigurationsAt("tables.table(1).fields.field");
+        checkSubConfigurations(lstFlds);
     }
 
     /**

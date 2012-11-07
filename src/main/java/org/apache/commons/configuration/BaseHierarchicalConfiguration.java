@@ -544,6 +544,18 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
+     * {@inheritDoc} This implementation creates a {@code SubnodeConfiguration}
+     * by delegating to {@code configurationAt()}. Then an immutable wrapper
+     * is created and returned.
+     */
+    public ImmutableHierarchicalConfiguration immutableConfigurationAt(
+            String key, boolean supportUpdates)
+    {
+        return ConfigurationUtils.unmodifiableConfiguration(configurationAt(
+                key, supportUpdates));
+    }
+
+    /**
      * Returns a hierarchical subnode configuration for the node specified by
      * the given key. This is a short form for {@code configurationAt(key,
      * <b>false</b>)}.
@@ -556,6 +568,18 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public SubnodeConfiguration configurationAt(String key)
     {
         return configurationAt(key, false);
+    }
+
+    /**
+     * {@inheritDoc} This implementation creates a {@code SubnodeConfiguration}
+     * by delegating to {@code configurationAt()}. Then an immutable wrapper
+     * is created and returned.
+     */
+    public ImmutableHierarchicalConfiguration immutableConfigurationAt(
+            String key)
+    {
+        return ConfigurationUtils.unmodifiableConfiguration(configurationAt(
+                key));
     }
 
     /**
@@ -594,6 +618,25 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             configs.add(createSubnodeConfiguration(node));
         }
         return configs;
+    }
+
+    /**
+     * {@inheritDoc} This implementation first delegates to
+     * {@code configurationsAt()} to create a list of
+     * {@code SubnodeConfiguration} objects. Then for each element of this list
+     * an unmodifiable wrapper is created.
+     */
+    public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
+            String key)
+    {
+        List<SubnodeConfiguration> subs = configurationsAt(key);
+        List<ImmutableHierarchicalConfiguration> res =
+                new ArrayList<ImmutableHierarchicalConfiguration>(subs.size());
+        for (SubnodeConfiguration sub : subs)
+        {
+            res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
+        }
+        return res;
     }
 
     /**
