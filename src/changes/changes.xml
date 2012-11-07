@@ -27,6 +27,16 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-513">
+        HierarchicalConfiguration is now an interface. The base implementation
+        class is named BaseHierarchicalConfiguration.
+      </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-512">
+        It is now possible to obtain an immutable view on a Configuration or
+        HierarchicalConfiguration object. New interfaces,
+        ImmutableConfiguration, and ImmutableHierarchicalConfiguration have
+        been introduced.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-506">
         Removed obsolete nested classes Node and NodeVisitor of
         HierarchicalConfiguration. The related deprecated class
