@@ -28,6 +28,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.beanutils.ConstructorArg;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
@@ -511,6 +512,12 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             {
                 // no nested beans
                 return Collections.emptyMap();
+            }
+
+            public Collection<ConstructorArg> getConstructorArgs()
+            {
+                // no constructor arguments
+                return Collections.emptySet();
             }
 
             public Map<String, Object> getBeanProperties()

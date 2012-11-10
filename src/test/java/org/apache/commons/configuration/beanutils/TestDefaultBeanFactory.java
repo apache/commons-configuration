@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -101,6 +102,11 @@ public class TestDefaultBeanFactory
         }
 
         public Map<String, Object> getNestedBeanDeclarations()
+        {
+            return null;
+        }
+
+        public Collection<ConstructorArg> getConstructorArgs()
         {
             return null;
         }

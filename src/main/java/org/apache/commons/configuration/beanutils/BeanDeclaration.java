@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -93,10 +94,22 @@ public interface BeanDeclaration
      * these complex properties. The returned map's key are the names of the
      * properties to initialize. The values are either {@code BeanDeclaration}
      * implementations or collections thereof. They will be treated like this
-     * declaration (in a* recursive manner), and the resulting beans are
+     * declaration (in a recursive manner), and the resulting beans are
      * assigned to the corresponding properties.
      *
      * @return a map with nested bean declarations
      */
     Map<String, Object> getNestedBeanDeclarations();
+
+    /**
+     * Returns a collection with constructor arguments. This data is used to
+     * determine the constructor of the bean class to be invoked. The values of
+     * the arguments are passed to the constructor. An implementation can return
+     * <b>null</b> or an empty collection; then the standard constructor of the
+     * bean class is called.
+     *
+     * @return a collection with the arguments to be passed to the bean class's
+     *         constructor
+     */
+    Collection<ConstructorArg> getConstructorArgs();
 }

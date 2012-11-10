@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -516,6 +517,12 @@ public class TestBeanHelper
         public void setNestedBeanDeclarations(Map<String, Object> nestedBeanDeclarations)
         {
             this.nestedBeanDeclarations = nestedBeanDeclarations;
+        }
+
+        public Collection<ConstructorArg> getConstructorArgs()
+        {
+            //TODO implementation
+            return null;
         }
     }
 }

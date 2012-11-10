@@ -17,8 +17,10 @@
 package org.apache.commons.configuration.beanutils;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,7 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  *   ...
  *   &lt;personBean config-class=&quot;my.model.PersonBean&quot;
  *       lastName=&quot;Doe&quot; firstName=&quot;John&quot;&gt;
+ *       &lt;config-constrarg config-value=&quot;ID03493&quot; config-type=&quot;java.lang.String&quot;/&gt;
  *       &lt;address config-class=&quot;my.model.AddressBean&quot;
  *           street=&quot;21st street 11&quot; zip=&quot;1234&quot;
  *           city=&quot;TestCity&quot;/&gt;
@@ -90,6 +93,14 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
  * nested elements for complex bean properties.
  * </p>
  * <p>
+ * If the bean should be created using a specific constructor, the constructor
+ * arguments have to be specified. This is done by an arbitrary number of
+ * nested {@code <config-constrarg>} elements. Each element can either have the
+ * {@code config-value} attribute - then it defines a simple value - or must be
+ * again a bean declaration (conforming to the format defined here) defining
+ * the complex value of this constructor argument.
+ * </p>
+ * <p>
  * A {@code XMLBeanDeclaration} object is usually created from a
  * {@code HierarchicalConfiguration}. From this it will derive a
  * {@code SubnodeConfiguration}, which is used to access the needed
@@ -123,6 +134,24 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /** Constant for the bean factory parameter attribute. */
     public static final String ATTR_FACTORY_PARAM = ATTR_PREFIX
             + "factoryParam]";
+
+    /** Constant for the name of the bean class attribute. */
+    private static final String ATTR_BEAN_CLASS_NAME = RESERVED_PREFIX + "class";
+
+    /** Constant for the name of the element for constructor arguments. */
+    private static final String ELEM_CTOR_ARG = RESERVED_PREFIX + "constrarg";
+
+    /**
+     * Constant for the name of the attribute with the value of a constructor
+     * argument.
+     */
+    private static final String ATTR_CTOR_VALUE = RESERVED_PREFIX + "value";
+
+    /**
+     * Constant for the name of the attribute with the data type of a
+     * constructor argument.
+     */
+    private static final String ATTR_CTOR_TYPE = RESERVED_PREFIX + "type";
 
     /** Stores the associated configuration. */
     private final SubnodeConfiguration configuration;
@@ -347,6 +376,23 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
+     * {@inheritDoc} This implementation processes all child nodes with the name
+     * {@code config-constrarg}. If such a node has a {@code config-class}
+     * attribute, it is considered a nested bean declaration; otherwise it is
+     * interpreted as a simple value. If no nested constructor argument
+     * declarations are found, result is an empty collection.
+     */
+    public Collection<ConstructorArg> getConstructorArgs()
+    {
+        Collection<ConstructorArg> args = new LinkedList<ConstructorArg>();
+        for (ConfigurationNode child : getNode().getChildren(ELEM_CTOR_ARG))
+        {
+            args.add(createConstructorArg(child));
+        }
+        return args;
+    }
+
+    /**
      * Performs interpolation for the specified value. This implementation will
      * interpolate against the current subnode configuration's parent. If sub
      * classes need a different interpolation mechanism, they should override
@@ -364,18 +410,16 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /**
      * Checks if the specified node is reserved and thus should be ignored. This
      * method is called when the maps for the bean's properties and complex
-     * properties are collected. It checks whether the given node is an
-     * attribute node and if its name starts with the reserved prefix.
+     * properties are collected. It checks whether the name of the given node
+     * starts with the reserved prefix.
      *
      * @param nd the node to be checked
      * @return a flag whether this node is reserved (and does not point to a
-     * property)
+     *         property)
      */
     protected boolean isReservedNode(ConfigurationNode nd)
     {
-        return nd.isAttribute()
-                && (nd.getName() == null || nd.getName().startsWith(
-                        RESERVED_PREFIX));
+        return nd.getName() == null || nd.getName().startsWith(RESERVED_PREFIX);
     }
 
     /**
@@ -424,5 +468,53 @@ public class XMLBeanDeclaration implements BeanDeclaration
     {
         conf.setThrowExceptionOnMissing(false);
         conf.setExpressionEngine(null);
+    }
+
+    /**
+     * Creates a {@code ConstructorArg} object for the specified configuration
+     * node.
+     *
+     * @param child the configuration node
+     * @return the corresponding {@code ConstructorArg} object
+     */
+    private ConstructorArg createConstructorArg(ConfigurationNode child)
+    {
+        String type = getAttribute(child, ATTR_CTOR_TYPE);
+        if (isBeanDeclarationArgument(child))
+        {
+            return ConstructorArg.forValue(
+                    getAttribute(child, ATTR_CTOR_VALUE), type);
+        }
+        else
+        {
+            return ConstructorArg.forBeanDeclaration(
+                    createBeanDeclaration(child), type);
+        }
+    }
+
+    /**
+     * Checks whether the constructor argument represented by the given
+     * configuration node is a bean declaration.
+     *
+     * @param nd the configuration node in question
+     * @return a flag whether this constructor argument is a bean declaration
+     */
+    private static boolean isBeanDeclarationArgument(ConfigurationNode nd)
+    {
+        return nd.getAttributes(ATTR_BEAN_CLASS_NAME).isEmpty();
+    }
+
+    /**
+     * Helper method for obtaining an attribute of a configuration node.
+     *
+     * @param nd the node
+     * @param attr the name of the attribute
+     * @return the string value of this attribute (can be <b>null</b>)
+     */
+    private static String getAttribute(ConfigurationNode nd, String attr)
+    {
+        List<ConfigurationNode> attributes = nd.getAttributes(attr);
+        return attributes.isEmpty() ? null : String.valueOf(attributes.get(0)
+                .getValue());
     }
 }
