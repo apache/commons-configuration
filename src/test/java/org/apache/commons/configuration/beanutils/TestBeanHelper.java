@@ -168,8 +168,8 @@ public class TestBeanHelper
     public void testInitBean()
     {
         BeanHelper.setDefaultBeanFactory(new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
-        TestBean bean = new TestBean();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        BeanCreationTestBean bean = new BeanCreationTestBean();
         BeanHelper.initBean(bean, data);
         checkBean(bean);
     }
@@ -181,8 +181,8 @@ public class TestBeanHelper
     @Test
     public void testInitBeanWithNoData()
     {
-        TestBeanDeclaration data = new TestBeanDeclaration();
-        TestBean bean = new TestBean();
+        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        BeanCreationTestBean bean = new BeanCreationTestBean();
         BeanHelper.initBean(bean, data);
         assertNull("Wrong string property", bean.getStringValue());
         assertEquals("Wrong int property", 0, bean.getIntValue());
@@ -196,9 +196,9 @@ public class TestBeanHelper
     @Test(expected = ConfigurationRuntimeException.class)
     public void testInitBeanWithInvalidProperty()
     {
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.getBeanProperties().put("nonExistingProperty", Boolean.TRUE);
-        BeanHelper.initBean(new TestBean(), data);
+        BeanHelper.initBean(new BeanCreationTestBean(), data);
     }
 
     /**
@@ -210,10 +210,10 @@ public class TestBeanHelper
     {
         TestBeanFactory factory = new TestBeanFactory();
         BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        data.setBeanClassName(TestBean.class.getName());
-        checkBean((TestBean) BeanHelper.createBean(data, null));
+        data.setBeanClassName(BeanCreationTestBean.class.getName());
+        checkBean((BeanCreationTestBean) BeanHelper.createBean(data, null));
         assertNull("A parameter was passed", factory.parameter);
     }
 
@@ -235,9 +235,9 @@ public class TestBeanHelper
     public void testCreateBeanWithDefaultClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        checkBean((TestBean) BeanHelper.createBean(data, TestBean.class));
+        checkBean((BeanCreationTestBean) BeanHelper.createBean(data, BeanCreationTestBean.class));
     }
 
     /**
@@ -250,9 +250,9 @@ public class TestBeanHelper
         TestBeanFactory factory = new TestBeanFactory();
         factory.supportsDefaultClass = true;
         BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        checkBean((TestBean) BeanHelper.createBean(data, null));
+        checkBean((BeanCreationTestBean) BeanHelper.createBean(data, null));
     }
 
     /**
@@ -263,7 +263,7 @@ public class TestBeanHelper
     public void testCreateBeanWithNoClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         BeanHelper.createBean(data, null);
     }
@@ -276,7 +276,7 @@ public class TestBeanHelper
     public void testCreateBeanWithInvalidClass()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName("non.existing.ClassName");
         BeanHelper.createBean(data, null);
@@ -289,9 +289,9 @@ public class TestBeanHelper
     public void testCreateBeanWithDefaultFactory()
     {
         BeanHelper.setDefaultBeanFactory(new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
-        data.setBeanClassName(TestBean.class.getName());
-        checkBean((TestBean) BeanHelper.createBean(data, null));
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
+        data.setBeanClassName(BeanCreationTestBean.class.getName());
+        checkBean((BeanCreationTestBean) BeanHelper.createBean(data, null));
     }
 
     /**
@@ -300,9 +300,9 @@ public class TestBeanHelper
     @Test(expected = ConfigurationRuntimeException.class)
     public void testCreateBeanWithUnknownFactory()
     {
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        data.setBeanClassName(TestBean.class.getName());
+        data.setBeanClassName(BeanCreationTestBean.class.getName());
         BeanHelper.createBean(data, null);
     }
 
@@ -313,7 +313,7 @@ public class TestBeanHelper
     public void testCreateBeanWithException()
     {
         BeanHelper.registerBeanFactory(TEST_FACTORY, new TestBeanFactory());
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(getClass().getName());
         BeanHelper.createBean(data, null);
@@ -328,10 +328,10 @@ public class TestBeanHelper
         Object param = new Integer(42);
         TestBeanFactory factory = new TestBeanFactory();
         BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
-        TestBeanDeclaration data = setUpBeanDeclaration();
+        BeanDeclarationTestImpl data = setUpBeanDeclaration();
         data.setBeanFactoryName(TEST_FACTORY);
-        data.setBeanClassName(TestBean.class.getName());
-        checkBean((TestBean) BeanHelper.createBean(data, null, param));
+        data.setBeanClassName(BeanCreationTestBean.class.getName());
+        checkBean((BeanCreationTestBean) BeanHelper.createBean(data, null, param));
         assertSame("Wrong parameter", param, factory.parameter);
     }
 
@@ -341,9 +341,9 @@ public class TestBeanHelper
     @Test
     public void testFindMatchingConstructorNoArgs()
     {
-        TestBeanDeclaration decl = new TestBeanDeclaration();
-        Constructor<TestBean> ctor =
-                BeanHelper.findMatchingConstructor(TestBean.class, decl);
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
+        Constructor<BeanCreationTestBean> ctor =
+                BeanHelper.findMatchingConstructor(BeanCreationTestBean.class, decl);
         assertEquals("Not the standard constructor", 0,
                 ctor.getParameterTypes().length);
     }
@@ -355,13 +355,13 @@ public class TestBeanHelper
     @Test
     public void testFindMatchingConstructorArgCount()
     {
-        TestBeanDeclaration decl = new TestBeanDeclaration();
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
         args.add(ConstructorArg.forValue(TEST_STRING));
         args.add(ConstructorArg.forValue(String.valueOf(TEST_INT)));
         decl.setConstructorArgs(args);
-        Constructor<TestCtorBean> ctor =
-                BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+        Constructor<BeanCreationTestCtorBean> ctor =
+                BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
         Class<?>[] paramTypes = ctor.getParameterTypes();
         assertEquals("Wrong number of parameters", 2, paramTypes.length);
         assertEquals("Wrong parameter type 1", String.class, paramTypes[0]);
@@ -374,11 +374,11 @@ public class TestBeanHelper
     @Test(expected = ConfigurationRuntimeException.class)
     public void testFindMatchingConstructorAmbiguous()
     {
-        TestBeanDeclaration decl = new TestBeanDeclaration();
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
         args.add(ConstructorArg.forValue(TEST_STRING));
         decl.setConstructorArgs(args);
-        BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+        BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
     }
 
     /**
@@ -388,16 +388,16 @@ public class TestBeanHelper
     @Test
     public void testFindMatchingConstructorExplicitType()
     {
-        TestBeanDeclaration decl = new TestBeanDeclaration();
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
         args.add(ConstructorArg.forBeanDeclaration(setUpBeanDeclaration(),
-                TestBean.class.getName()));
+                BeanCreationTestBean.class.getName()));
         decl.setConstructorArgs(args);
-        Constructor<TestCtorBean> ctor =
-                BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+        Constructor<BeanCreationTestCtorBean> ctor =
+                BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
         Class<?>[] paramTypes = ctor.getParameterTypes();
         assertEquals("Wrong number of parameters", 1, paramTypes.length);
-        assertEquals("Wrong parameter type", TestBean.class, paramTypes[0]);
+        assertEquals("Wrong parameter type", BeanCreationTestBean.class, paramTypes[0]);
     }
 
     /**
@@ -406,20 +406,20 @@ public class TestBeanHelper
     @Test
     public void testFindMatchingConstructorNoMatch()
     {
-        TestBeanDeclaration decl = new TestBeanDeclaration();
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
         Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
         args.add(ConstructorArg.forValue(TEST_STRING, getClass().getName()));
         decl.setConstructorArgs(args);
         try
         {
-            BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+            BeanHelper.findMatchingConstructor(BeanCreationTestCtorBean.class, decl);
             fail("No exception thrown!");
         }
         catch (ConfigurationRuntimeException crex)
         {
             String msg = crex.getMessage();
             assertTrue("Bean class not found:" + msg,
-                    msg.indexOf(TestCtorBean.class.getName()) > 0);
+                    msg.indexOf(BeanCreationTestCtorBean.class.getName()) > 0);
             assertTrue("Parameter value not found: " + msg,
                     msg.indexOf(TEST_STRING) > 0);
             assertTrue("Parameter type not found: " + msg,
@@ -432,19 +432,19 @@ public class TestBeanHelper
      *
      * @return the bean declaration
      */
-    private TestBeanDeclaration setUpBeanDeclaration()
+    private BeanDeclarationTestImpl setUpBeanDeclaration()
     {
-        TestBeanDeclaration data = new TestBeanDeclaration();
+        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
         Map<String, Object> properties = new HashMap<String, Object>();
         properties.put("stringValue", TEST_STRING);
         properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
-        TestBeanDeclaration buddyData = new TestBeanDeclaration();
+        BeanDeclarationTestImpl buddyData = new BeanDeclarationTestImpl();
         Map<String, Object> properties2 = new HashMap<String, Object>();
         properties2.put("stringValue", "Another test string");
         properties2.put("intValue", new Integer(100));
         buddyData.setBeanProperties(properties2);
-        buddyData.setBeanClassName(TestBean.class.getName());
+        buddyData.setBeanClassName(BeanCreationTestBean.class.getName());
         if (BeanHelper.getDefaultBeanFactory() == null)
         {
             buddyData.setBeanFactoryName(TEST_FACTORY);
@@ -461,12 +461,12 @@ public class TestBeanHelper
      *
      * @param bean the bean to be checked
      */
-    private void checkBean(TestBean bean)
+    private void checkBean(BeanCreationTestBean bean)
     {
         assertEquals("Wrong string property", TEST_STRING, bean
                 .getStringValue());
         assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
-        TestBean buddy = bean.getBuddy();
+        BeanCreationTestBean buddy = bean.getBuddy();
         assertNotNull("Buddy was not set", buddy);
         assertEquals("Wrong string property in buddy", "Another test string",
                 buddy.getStringValue());
@@ -474,76 +474,8 @@ public class TestBeanHelper
     }
 
     /**
-     * A simple bean class used for testing creation operations.
-     */
-    public static class TestBean
-    {
-        private String stringValue;
-
-        private int intValue;
-
-        private TestBean buddy;
-
-        public TestBean getBuddy()
-        {
-            return buddy;
-        }
-
-        public void setBuddy(TestBean buddy)
-        {
-            this.buddy = buddy;
-        }
-
-        public int getIntValue()
-        {
-            return intValue;
-        }
-
-        public void setIntValue(int intValue)
-        {
-            this.intValue = intValue;
-        }
-
-        public String getStringValue()
-        {
-            return stringValue;
-        }
-
-        public void setStringValue(String stringValue)
-        {
-            this.stringValue = stringValue;
-        }
-    }
-
-    /**
-     * Another test bean class which defines some constructors.
-     */
-    public static class TestCtorBean extends TestBean
-    {
-        public TestCtorBean()
-        {
-        }
-
-        public TestCtorBean(TestBean buddy)
-        {
-            setBuddy(buddy);
-        }
-
-        public TestCtorBean(String s)
-        {
-            setStringValue(s);
-        }
-
-        public TestCtorBean(String s, int i)
-        {
-            this(s);
-            setIntValue(i);
-        }
-    }
-
-    /**
      * An implementation of the BeanFactory interface used for testing. This
-     * implementation is really simple: If the TestBean class is provided, a new
+     * implementation is really simple: If the BeanCreationTestBean class is provided, a new
      * instance will be created. Otherwise an exception is thrown.
      */
     static class TestBeanFactory implements BeanFactory
@@ -556,9 +488,9 @@ public class TestBeanHelper
                 throws Exception
         {
             parameter = param;
-            if (TestBean.class.equals(beanClass))
+            if (BeanCreationTestBean.class.equals(beanClass))
             {
-                TestBean bean = new TestBean();
+                BeanCreationTestBean bean = new BeanCreationTestBean();
                 BeanHelper.initBean(bean, data);
                 return bean;
             }
@@ -575,87 +507,7 @@ public class TestBeanHelper
          */
         public Class<?> getDefaultBeanClass()
         {
-            return supportsDefaultClass ? TestBean.class : null;
-        }
-    }
-
-    /**
-     * A test implementation of the BeanDeclaration interface. This
-     * implementation allows setting the values directly, which should be
-     * returned by the methods required by the BeanDeclaration interface.
-     */
-    static class TestBeanDeclaration implements BeanDeclaration
-    {
-        private String beanClassName;
-
-        private String beanFactoryName;
-
-        private Object beanFactoryParameter;
-
-        private Map<String, Object> beanProperties;
-
-        private Map<String, Object> nestedBeanDeclarations;
-
-        private Collection<ConstructorArg> constructorArgs;
-
-        public String getBeanClassName()
-        {
-            return beanClassName;
-        }
-
-        public void setBeanClassName(String beanClassName)
-        {
-            this.beanClassName = beanClassName;
-        }
-
-        public String getBeanFactoryName()
-        {
-            return beanFactoryName;
-        }
-
-        public void setBeanFactoryName(String beanFactoryName)
-        {
-            this.beanFactoryName = beanFactoryName;
-        }
-
-        public Object getBeanFactoryParameter()
-        {
-            return beanFactoryParameter;
-        }
-
-        public void setBeanFactoryParameter(Object beanFactoryParameter)
-        {
-            this.beanFactoryParameter = beanFactoryParameter;
-        }
-
-        public Map<String, Object> getBeanProperties()
-        {
-            return beanProperties;
-        }
-
-        public void setBeanProperties(Map<String, Object> beanProperties)
-        {
-            this.beanProperties = beanProperties;
-        }
-
-        public Map<String, Object> getNestedBeanDeclarations()
-        {
-            return nestedBeanDeclarations;
-        }
-
-        public void setNestedBeanDeclarations(Map<String, Object> nestedBeanDeclarations)
-        {
-            this.nestedBeanDeclarations = nestedBeanDeclarations;
-        }
-
-        public Collection<ConstructorArg> getConstructorArgs()
-        {
-            return constructorArgs;
-        }
-
-        public void setConstructorArgs(Collection<ConstructorArg> args)
-        {
-            constructorArgs = args;
+            return supportsDefaultClass ? BeanCreationTestBean.class : null;
         }
     }
 }
