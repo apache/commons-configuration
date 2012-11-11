@@ -21,7 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,7 +43,7 @@ import org.junit.Test;
 public class TestDefaultBeanFactory
 {
     /** The object to be tested. */
-    DefaultBeanFactory factory;
+    private DefaultBeanFactory factory;
 
     @Before
     public void setUp() throws Exception
@@ -64,8 +66,12 @@ public class TestDefaultBeanFactory
     @Test
     public void testCreateBean() throws Exception
     {
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put("throwExceptionOnMissing", Boolean.TRUE);
+        decl.setBeanProperties(props);
         Object bean = factory.createBean(PropertiesConfiguration.class,
-                new TestBeanDeclaration(), null);
+                decl, null);
         assertNotNull("New bean is null", bean);
         assertEquals("Bean is of wrong class", PropertiesConfiguration.class,
                 bean.getClass());
@@ -75,40 +81,44 @@ public class TestDefaultBeanFactory
     }
 
     /**
-     * A simple implementation of BeanDeclaration used for testing purposes.
+     * Tests whether a bean can be created by calling its constructor.
      */
-    static class TestBeanDeclaration implements BeanDeclaration
+    @Test
+    public void testCreateBeanConstructor() throws Exception
     {
-        public String getBeanFactoryName()
-        {
-            return null;
-        }
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forValue("test"));
+        args.add(ConstructorArg.forValue("42"));
+        decl.setConstructorArgs(args);
+        BeanCreationTestCtorBean bean =
+                (BeanCreationTestCtorBean) factory.createBean(
+                        BeanCreationTestCtorBean.class, decl, null);
+        assertEquals("Wrong string property", "test", bean.getStringValue());
+        assertEquals("Wrong int property", 42, bean.getIntValue());
+    }
 
-        public Object getBeanFactoryParameter()
-        {
-            return null;
-        }
-
-        public String getBeanClassName()
-        {
-            return null;
-        }
-
-        public Map<String, Object> getBeanProperties()
-        {
-            Map<String, Object> props = new HashMap<String, Object>();
-            props.put("throwExceptionOnMissing", Boolean.TRUE);
-            return props;
-        }
-
-        public Map<String, Object> getNestedBeanDeclarations()
-        {
-            return null;
-        }
-
-        public Collection<ConstructorArg> getConstructorArgs()
-        {
-            return null;
-        }
+    /**
+     * Tests whether nested bean declarations in constructor arguments are taken
+     * into account.
+     */
+    @Test
+    public void testCreateBeanConstructorNestedBean() throws Exception
+    {
+        BeanDeclarationTestImpl declNested = new BeanDeclarationTestImpl();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forValue("test", String.class.getName()));
+        declNested.setConstructorArgs(args);
+        declNested.setBeanClassName(BeanCreationTestCtorBean.class.getName());
+        BeanDeclarationTestImpl decl = new BeanDeclarationTestImpl();
+        decl.setConstructorArgs(Collections.singleton(ConstructorArg
+                .forBeanDeclaration(declNested,
+                        BeanCreationTestBean.class.getName())));
+        BeanCreationTestCtorBean bean =
+                (BeanCreationTestCtorBean) factory.createBean(
+                        BeanCreationTestCtorBean.class, decl, null);
+        assertNotNull("Buddy bean was not set", bean.getBuddy());
+        assertEquals("Wrong property of buddy bean", "test", bean.getBuddy()
+                .getStringValue());
     }
 }

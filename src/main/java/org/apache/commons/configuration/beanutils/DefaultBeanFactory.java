@@ -16,6 +16,12 @@
  */
 package org.apache.commons.configuration.beanutils;
 
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Collections;
+
+import org.apache.commons.configuration.PropertyConverter;
+
 /**
  * <p>
  * The default implementation of the {@code BeanFactory} interface.
@@ -89,7 +95,9 @@ public class DefaultBeanFactory implements BeanFactory
     protected Object createBeanInstance(Class<?> beanClass, BeanDeclaration data)
             throws Exception
     {
-        return beanClass.newInstance();
+        Constructor<?> ctor = BeanHelper.findMatchingConstructor(beanClass, data);
+        Object[] args = fetchConstructorArgs(ctor, data);
+        return ctor.newInstance(args);
     }
 
     /**
@@ -106,5 +114,53 @@ public class DefaultBeanFactory implements BeanFactory
             throws Exception
     {
         BeanHelper.initBean(bean, data);
+    }
+
+    /**
+     * Obtains the arguments for a constructor call to create a bean. This method
+     * resolves nested bean declarations and performs necessary type
+     * conversions.
+     *
+     * @param ctor the constructor to be invoked
+     * @param data the current bean declaration
+     * @return an array with constructor arguments
+     */
+    private static Object[] fetchConstructorArgs(Constructor<?> ctor,
+            BeanDeclaration data)
+    {
+        Class<?>[] types = ctor.getParameterTypes();
+        assert types.length == nullSafeConstructorArgs(data).size() :
+            "Wrong number of constructor arguments!";
+        Object[] args = new Object[types.length];
+        int idx = 0;
+
+        for (ConstructorArg arg : nullSafeConstructorArgs(data))
+        {
+            Object val =
+                    arg.isNestedBeanDeclaration() ? BeanHelper.createBean(arg
+                            .getBeanDeclaration()) : arg.getValue();
+            args[idx] = PropertyConverter.to(types[idx], val, null);
+            idx++;
+        }
+
+        return args;
+    }
+
+    /**
+     * Fetches constructor arguments from the given bean declaration. Handles
+     * <b>null</b> values safely.
+     *
+     * @param data the bean declaration
+     * @return the collection with constructor arguments (never <b>null</b>)
+     */
+    private static Collection<ConstructorArg> nullSafeConstructorArgs(
+            BeanDeclaration data)
+    {
+        Collection<ConstructorArg> args = data.getConstructorArgs();
+        if (args == null)
+        {
+            args = Collections.emptySet();
+        }
+        return args;
     }
 }
