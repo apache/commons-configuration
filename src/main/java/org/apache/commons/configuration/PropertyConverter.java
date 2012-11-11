@@ -95,7 +95,7 @@ public final class PropertyConverter
      *
      * @since 1.5
      */
-    static Object to(Class<?> cls, Object value, Object[] params) throws ConversionException
+    public static Object to(Class<?> cls, Object value, Object[] params) throws ConversionException
     {
         if (cls.isInstance(value))
         {
