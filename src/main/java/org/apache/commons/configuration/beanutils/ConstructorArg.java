@@ -205,4 +205,26 @@ public final class ConstructorArg
 
         return getTypeName() == null || getTypeName().equals(argCls.getName());
     }
+
+    /**
+     * Returns a string representation of this object. This string contains the
+     * value of this constructor argument and the explicit type if provided.
+     *
+     * @return a string for this object
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder buf = new StringBuilder();
+        buf.append(getClass().getSimpleName());
+        buf.append(" [ value = ");
+        buf.append(isNestedBeanDeclaration() ? getBeanDeclaration()
+                : getValue());
+        if (getTypeName() != null)
+        {
+            buf.append(" (").append(getTypeName()).append(')');
+        }
+        buf.append(" ]");
+        return buf.toString();
+    }
 }

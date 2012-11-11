@@ -21,7 +21,10 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +45,12 @@ import org.junit.Test;
  */
 public class TestBeanHelper
 {
+    /** Constant for the test value of the string property. */
+    private static final String TEST_STRING = "testString";
+
+    /** Constant for the test value of the numeric property. */
+    private static final int TEST_INT = 42;
+
     /** Constant for the name of the test bean factory. */
     private static final String TEST_FACTORY = "testFactory";
 
@@ -327,6 +336,98 @@ public class TestBeanHelper
     }
 
     /**
+     * Tests whether the standard constructor can be found.
+     */
+    @Test
+    public void testFindMatchingConstructorNoArgs()
+    {
+        TestBeanDeclaration decl = new TestBeanDeclaration();
+        Constructor<TestBean> ctor =
+                BeanHelper.findMatchingConstructor(TestBean.class, decl);
+        assertEquals("Not the standard constructor", 0,
+                ctor.getParameterTypes().length);
+    }
+
+    /**
+     * Tests whether a matching constructor is found if the number of arguments
+     * is unique.
+     */
+    @Test
+    public void testFindMatchingConstructorArgCount()
+    {
+        TestBeanDeclaration decl = new TestBeanDeclaration();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forValue(TEST_STRING));
+        args.add(ConstructorArg.forValue(String.valueOf(TEST_INT)));
+        decl.setConstructorArgs(args);
+        Constructor<TestCtorBean> ctor =
+                BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+        Class<?>[] paramTypes = ctor.getParameterTypes();
+        assertEquals("Wrong number of parameters", 2, paramTypes.length);
+        assertEquals("Wrong parameter type 1", String.class, paramTypes[0]);
+        assertEquals("Wrong parameter type 2", Integer.TYPE, paramTypes[1]);
+    }
+
+    /**
+     * Tests whether ambiguous constructor arguments are detected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testFindMatchingConstructorAmbiguous()
+    {
+        TestBeanDeclaration decl = new TestBeanDeclaration();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forValue(TEST_STRING));
+        decl.setConstructorArgs(args);
+        BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+    }
+
+    /**
+     * Tests whether explicit type declarations are used to resolve ambiguous
+     * parameter types.
+     */
+    @Test
+    public void testFindMatchingConstructorExplicitType()
+    {
+        TestBeanDeclaration decl = new TestBeanDeclaration();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forBeanDeclaration(setUpBeanDeclaration(),
+                TestBean.class.getName()));
+        decl.setConstructorArgs(args);
+        Constructor<TestCtorBean> ctor =
+                BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+        Class<?>[] paramTypes = ctor.getParameterTypes();
+        assertEquals("Wrong number of parameters", 1, paramTypes.length);
+        assertEquals("Wrong parameter type", TestBean.class, paramTypes[0]);
+    }
+
+    /**
+     * Tests the case that no matching constructor is found.
+     */
+    @Test
+    public void testFindMatchingConstructorNoMatch()
+    {
+        TestBeanDeclaration decl = new TestBeanDeclaration();
+        Collection<ConstructorArg> args = new ArrayList<ConstructorArg>();
+        args.add(ConstructorArg.forValue(TEST_STRING, getClass().getName()));
+        decl.setConstructorArgs(args);
+        try
+        {
+            BeanHelper.findMatchingConstructor(TestCtorBean.class, decl);
+            fail("No exception thrown!");
+        }
+        catch (ConfigurationRuntimeException crex)
+        {
+            String msg = crex.getMessage();
+            assertTrue("Bean class not found:" + msg,
+                    msg.indexOf(TestCtorBean.class.getName()) > 0);
+            assertTrue("Parameter value not found: " + msg,
+                    msg.indexOf(TEST_STRING) > 0);
+            assertTrue("Parameter type not found: " + msg,
+                    msg.indexOf("(" + getClass().getName() + ')') > 0);
+        }
+    }
+
+    /**
      * Returns an initialized bean declaration.
      *
      * @return the bean declaration
@@ -335,8 +436,8 @@ public class TestBeanHelper
     {
         TestBeanDeclaration data = new TestBeanDeclaration();
         Map<String, Object> properties = new HashMap<String, Object>();
-        properties.put("stringValue", "testString");
-        properties.put("intValue", "42");
+        properties.put("stringValue", TEST_STRING);
+        properties.put("intValue", String.valueOf(TEST_INT));
         data.setBeanProperties(properties);
         TestBeanDeclaration buddyData = new TestBeanDeclaration();
         Map<String, Object> properties2 = new HashMap<String, Object>();
@@ -362,9 +463,9 @@ public class TestBeanHelper
      */
     private void checkBean(TestBean bean)
     {
-        assertEquals("Wrong string property", "testString", bean
+        assertEquals("Wrong string property", TEST_STRING, bean
                 .getStringValue());
-        assertEquals("Wrong int property", 42, bean.getIntValue());
+        assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
         TestBean buddy = bean.getBuddy();
         assertNotNull("Buddy was not set", buddy);
         assertEquals("Wrong string property in buddy", "Another test string",
@@ -415,6 +516,32 @@ public class TestBeanHelper
     }
 
     /**
+     * Another test bean class which defines some constructors.
+     */
+    public static class TestCtorBean extends TestBean
+    {
+        public TestCtorBean()
+        {
+        }
+
+        public TestCtorBean(TestBean buddy)
+        {
+            setBuddy(buddy);
+        }
+
+        public TestCtorBean(String s)
+        {
+            setStringValue(s);
+        }
+
+        public TestCtorBean(String s, int i)
+        {
+            this(s);
+            setIntValue(i);
+        }
+    }
+
+    /**
      * An implementation of the BeanFactory interface used for testing. This
      * implementation is really simple: If the TestBean class is provided, a new
      * instance will be created. Otherwise an exception is thrown.
@@ -454,7 +581,7 @@ public class TestBeanHelper
 
     /**
      * A test implementation of the BeanDeclaration interface. This
-     * implementation allows to set the values directly, which should be
+     * implementation allows setting the values directly, which should be
      * returned by the methods required by the BeanDeclaration interface.
      */
     static class TestBeanDeclaration implements BeanDeclaration
@@ -468,6 +595,8 @@ public class TestBeanHelper
         private Map<String, Object> beanProperties;
 
         private Map<String, Object> nestedBeanDeclarations;
+
+        private Collection<ConstructorArg> constructorArgs;
 
         public String getBeanClassName()
         {
@@ -521,8 +650,12 @@ public class TestBeanHelper
 
         public Collection<ConstructorArg> getConstructorArgs()
         {
-            //TODO implementation
-            return null;
+            return constructorArgs;
+        }
+
+        public void setConstructorArgs(Collection<ConstructorArg> args)
+        {
+            constructorArgs = args;
         }
     }
 }
