@@ -100,6 +100,7 @@
       <ul>
         <li><a href="howto_beans.html#Basic_Concepts">Basic Concepts</a></li>
         <li><a href="howto_beans.html#An_Example">An Example</a></li>
+        <li><a href="howto_beans.html#Constructor_arguments">Constructor arguments</a></li>
         <li><a href="howto_beans.html#Extending_the_Basic_Mechanism">Extending the Basic Mechanism</a></li>
       </ul>
       <li><a href="howto_configurationbuilder.html#Using_DefaultConfigurationBuilder">Using DefaultConfigurationBuilder</a></li>

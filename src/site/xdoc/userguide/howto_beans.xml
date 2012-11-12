@@ -15,12 +15,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
+<!-- $Id$ -->
 
 <document>
 
  <properties>
   <title>Declaring Beans Howto</title>
-  <author email="oheger@apache.org">Oliver Heger</author>
  </properties>
 
 <body>
@@ -160,7 +160,7 @@ public class DefaultWindowManager implements WindowManager
         <code>windowManager</code> element and including its sub elements. Note
         the following points:
         <ul>
-          <li>The (full qualified) class of the bean is specified using the
+          <li>The (fully qualified) class of the bean is specified using the
           <code>config-class</code> attribute. (Attributes starting with the
           prefix &quot;config-&quot; are reserved; they contain special meta
           data for the bean creation process.)</li>
@@ -204,7 +204,144 @@ WindowManager wm = (WindowManager) BeanHelper.createBean(decl);
         will be thrown.
       </p>
       </subsection>
-      
+
+      <subsection name="Constructor arguments">
+      <p>
+        In the examples so far we assumed that beans are created using their
+        standard constructor. This is appropriate for classes conforming to the
+        Java Beans specification which requires bean classes to have such a
+        no-argument constructor. Commons Configuration also supports invoking
+        an arbitrary constructor passing in the corresponding constructor
+        arguments. Let's extend the example from the previous section and assume
+        that the <code>WindowStyleDefinition</code> class is now an immutable
+        class which has to be initialized by passing parameters to its
+        constructor. The constructor may look as follows:
+      </p>
+<source><![CDATA[
+public class WindowStyleDefinition
+{
+    ...
+    public WindowStyleDefinition(String forefround, String background,
+        Font stdFont)
+    {
+        ...
+    }
+    ...
+}
+]]></source>
+      <p>
+        In order to create an instance of <code>WindowStyleDefinition</code>,
+        we have to pass the foreground and background colors and a standard
+        font to the constructor. The colors are simple strings while a font is
+        again a complex object. The following code fragement shows the complete 
+        bean declaration for this scenario:
+      </p>
+<source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<config>
+  <gui>
+    <windowManager config-class="examples.windows.DefaultWindowManager"
+      closable="false" resizable="true" defaultWidth="400"
+      defaultHeight="250">
+      <styleDefinition config-class="examples.windows.WindowStyleDefinition">
+        <config-constrarg config-value="#0080ff"/>
+        <config-constrarg config-value="#ffffff"/>
+        <config-constrarg config-class="java.awt.Font">
+          <config-constrarg config-value="Monospaced"/>
+          <config-constrarg config-value="0"/>
+          <config-constrarg config-value="12"/>
+        </config-constrarg>
+      </styleDefinition>
+    </windowManager>
+  </gui>
+</config>
+]]></source>
+      <p>
+        The <em>styleDefinition</em> property is still defined as a nested
+        bean declaration in the body of the <code>&lt;windowManager&gt;</code>
+        element. But this time there are nested
+        <code>&lt;config-constrarg&gt;</code> elements. Each element defines
+        one constructor argument. In this example there are three constructor
+        arguments for the foreground color, the background color, and the
+        standard font. The first two arguments are simple values (i.e. primitive
+        Java data types) and are defined using the <code>config-value</code>
+        attribute. The third argument, the font, is actually another nested
+        bean declaration. This is indicated by the presence of the
+        <code>config-class</code> attribute which defines the class of this
+        constructor argument. To create a <code>Font</code> instance, we again
+        have to define constructor arguments: the font name, its style, and its
+        size. Note that corresponding type conversions are performed
+        automatically; while all values in the XML configuration file are
+        strings, they are converted to the correct parameter type when calling
+        the constructor.
+      </p>
+      <p>
+        Commons Configuration uses a pretty simple algorithm to determine the
+        constructor to be invoked: it is mainly based on the number of
+        constructor arguments. This works as expected as long as there are not
+        multiple constructors with the same number of arguments. If this is
+        the case, the developer has to provide some hints indicating which
+        constructor to select. Consider a bean class with the following
+        constructors:
+      </p>
+<source><![CDATA[
+public class MyBean
+{
+    ...
+    public MyBean(String svalue)
+    {
+        ...
+    }
+    
+    public MyBean(int ivalue)
+    {
+        ...
+    }
+    ...
+}
+]]></source>
+      <p>
+        This bean class has two constructors expecting a single argument. A
+        bean declaration like the following one will not work because it is
+        not clear which constructor to choose:
+      </p>
+<source><![CDATA[
+<config>
+  <!-- This will not work as the constructor is ambiguous! -->
+  <bean config-class="examples.MyBean">
+    <config-constrarg config-value="100"/>
+  </bean>
+</config>
+]]></source>
+      <p>
+        The solution is to explicitly specify the data type (the fully-qualified
+        Java class) of the constructor argument. This can be done by adding
+        the <code>config-type</code> attribute as in the following fragment:
+      </p>
+<source><![CDATA[
+<config>
+  <bean config-class="examples.MyBean">
+    <config-constrarg config-value="100" config-type="int"/>
+  </bean>
+</config>
+]]></source>
+      <p>
+        Now it is clear that the constructor expecting an <code>int</code>
+        argument is desired. The <code>config-type</code> attribute can be
+        used for both simple constructor arguments and nested bean
+        declarations. It does not have to be specified for all arguments; it
+        is sufficient to define a minimum number of data types so that there is
+        no ambiguity any more. The type specified for the attribute must be the
+        exact same type as expected by the constructor. This is not necessarily
+        the same type as the value passed to this argument. (For instance,
+        the constructor expects an object implementing a specific interface,
+        while the actual argument value is an instance of a concrete
+        implementation class.) Also, the <code>config-type</code> attribute is
+        only evaluated to determine a matching constructor; it is not related
+        to data type conversion.
+      </p>
+      </subsection>
+
       <subsection name="Extending the Basic Mechanism">
       <p>
         As was pointed out in the introduction of this chapter support for creating
