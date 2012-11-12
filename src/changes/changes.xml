@@ -27,6 +27,9 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="add" issue="CONFIGURATION-514">
+        Bean declarations now support constructor invocations.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-513">
         HierarchicalConfiguration is now an interface. The base implementation
         class is named BaseHierarchicalConfiguration.
