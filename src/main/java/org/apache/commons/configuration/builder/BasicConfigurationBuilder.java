@@ -416,7 +416,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * new {@code Configuration} object to be created the next time
      * {@link #getConfiguration()} is called.
      */
-    public synchronized void resetResult()
+    public void resetResult()
     {
         synchronized (this)
         {
