@@ -70,6 +70,19 @@ import org.apache.commons.lang3.event.EventListenerSupport;
  * </ul>
  * </p>
  * <p>
+ * A builder instance can be constructed with an <em>allowFailOnInit</em>
+ * flag. If set to <strong>true</strong>, exceptions during initialization
+ * of the configuration are ignored; in such a case an empty configuration
+ * object is returned. A use case for this flag is a scenario in which a
+ * configuration is optional and created on demand the first time configuration
+ * data is to be stored. Consider an application that stores user-specific
+ * configuration data in the user's home directory: When started for the first
+ * time by a new user there is no configuration file; so it makes sense to
+ * start with an empty configuration object. On application exit, settings
+ * can be stored in this object and written to the associated file. Then they
+ * are available on next application start.
+ * </p>
+ * <p>
  * This class is thread-safe. Multiple threads can modify initialization
  * properties and call {@code getConfiguration()}. However, the intended use
  * case is that the builder is configured by a single thread first. Then
@@ -140,6 +153,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     /** An object managing the builder listeners registered at this builder. */
     private final EventListenerSupport<BuilderListener> builderListeners;
 
+    /** A flag whether exceptions on initializing configurations are allowed. */
+    private final boolean allowFailOnInit;
+
     /** The map with current initialization parameters. */
     private Map<String, Object> parameters;
 
@@ -165,8 +181,8 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     /**
      * Creates a new instance of {@code BasicConfigurationBuilder} and
      * initializes it with the given result class and an initial set of builder
-     * parameters. The map with parameters may be <b>null</b>, in this case no
-     * initialization parameters are set.
+     * parameters. The <em>allowFailOnInit</em> flag is set to
+     * <strong>false</strong>.
      *
      * @param resCls the result class (must not be <b>null</b>
      * @param params a map with initialization parameters
@@ -174,12 +190,32 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     public BasicConfigurationBuilder(Class<T> resCls, Map<String, Object> params)
     {
+        this(resCls, params, false);
+    }
+
+    /**
+     * Creates a new instance of {@code BasicConfigurationBuilder} and
+     * initializes it with the given result class, an initial set of builder
+     * parameters, and the <em>allowFailOnInit</em> flag. The map with
+     * parameters may be <b>null</b>, in this case no initialization parameters
+     * are set.
+     *
+     * @param resCls the result class (must not be <b>null</b>
+     * @param params a map with initialization parameters
+     * @param allowFailOnInit a flag whether exceptions on initializing a newly
+     *        created {@code Configuration} object are allowed
+     * @throws IllegalArgumentException if the result class is <b>null</b>
+     */
+    public BasicConfigurationBuilder(Class<T> resCls,
+            Map<String, Object> params, boolean allowFailOnInit)
+    {
         if (resCls == null)
         {
             throw new IllegalArgumentException("Result class must not be null!");
         }
 
         resultClass = resCls;
+        this.allowFailOnInit = allowFailOnInit;
         configListeners = new ArrayList<ConfigurationListener>();
         errorListeners = new ArrayList<ConfigurationErrorListener>();
         builderListeners = EventListenerSupport.create(BuilderListener.class);
@@ -195,6 +231,17 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     public Class<T> getResultClass()
     {
         return resultClass;
+    }
+
+    /**
+     * Returns the <em>allowFailOnInit</em> flag. See the header comment for
+     * information about this flag.
+     *
+     * @return the <em>allowFailOnInit</em> flag
+     */
+    public boolean isAllowFailOnInit()
+    {
+        return allowFailOnInit;
     }
 
     /**
@@ -410,6 +457,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * <li>{@code initResultInstance()} is called to process all initialization
      * parameters.</li>
      * </ul>
+     * It also evaluates the <em>allowFailOnInit</em> flag, i.e. if
+     * initialization causes an exception and this flag is set, the exception is
+     * ignored, and the newly created, uninitialized configuration is returned.
      * Note that this method is called in a synchronized block.
      *
      * @return the newly created result object
@@ -418,7 +468,19 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     protected T createResult() throws ConfigurationException
     {
         T resObj = createResultInstance();
-        initResultInstance(resObj);
+
+        try
+        {
+            initResultInstance(resObj);
+        }
+        catch (ConfigurationException cex)
+        {
+            if (!isAllowFailOnInit())
+            {
+                throw cex;
+            }
+        }
+
         return resObj;
     }
 

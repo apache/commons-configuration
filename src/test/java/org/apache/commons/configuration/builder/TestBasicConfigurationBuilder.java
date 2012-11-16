@@ -461,6 +461,32 @@ public class TestBasicConfigurationBuilder
     }
 
     /**
+     * Tests an exception during configuration initialization if the
+     * allowFailOnInit flag is false.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testInitializationErrorNotAllowed()
+            throws ConfigurationException
+    {
+        BasicConfigurationBuilderInitFailImpl builder =
+                new BasicConfigurationBuilderInitFailImpl(false);
+        builder.getConfiguration();
+    }
+
+    /**
+     * Tests an exception during configuration initialization if the
+     * allowFailOnInit flag is true.
+     */
+    @Test
+    public void testInitializationErrorAllowed() throws ConfigurationException
+    {
+        BasicConfigurationBuilderInitFailImpl builder =
+                new BasicConfigurationBuilderInitFailImpl(true);
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertTrue("Got data", config.isEmpty());
+    }
+
+    /**
      * A test thread class for testing whether the builder's result object can
      * be requested concurrently.
      */
@@ -509,6 +535,29 @@ public class TestBasicConfigurationBuilder
             {
                 endLatch.countDown();
             }
+        }
+    }
+
+    /**
+     * A builder test implementation which allows checking exception handling
+     * when creating new configuration objects.
+     */
+    private static class BasicConfigurationBuilderInitFailImpl extends
+            BasicConfigurationBuilder<PropertiesConfiguration>
+    {
+        public BasicConfigurationBuilderInitFailImpl(boolean allowFailOnInit)
+        {
+            super(PropertiesConfiguration.class, null, allowFailOnInit);
+        }
+
+        /**
+         * {@inheritDoc} This implementation only throws an exception.
+         */
+        @Override
+        protected void initResultInstance(PropertiesConfiguration obj)
+                throws ConfigurationException
+        {
+            throw new ConfigurationException("Initialization test exception!");
         }
     }
 }
