@@ -87,6 +87,22 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
+     * Creates a new instance of {@code FileBasedConfigurationBuilder} which
+     * produces result objects of the specified class and sets initialization
+     * parameters and the <em>allowFailOnInit</em> flag.
+     *
+     * @param resCls the result class (must not be <b>null</b>
+     * @param params a map with initialization parameters
+     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @throws IllegalArgumentException if the result class is <b>null</b>
+     */
+    public FileBasedConfigurationBuilder(Class<T> resCls,
+            Map<String, Object> params, boolean allowFailOnInit)
+    {
+        super(resCls, params, allowFailOnInit);
+    }
+
+    /**
      * Returns the {@code FileHandler} associated with this builder. If already
      * a result object has been created, this {@code FileHandler} can be used to
      * save it. Otherwise, the {@code FileHandler} from the initialization

@@ -206,4 +206,16 @@ public class TestFileBasedConfigurationBuilder
         config = builder.getConfiguration();
         assertEquals("Not read from file 2", 2, config.getInt(PROP));
     }
+
+    /**
+     * Tests whether the allowFailOnInit flag is correctly initialized.
+     */
+    @Test
+    public void testInitAllowFailOnInitFlag()
+    {
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class, null, true);
+        assertTrue("Flag not set", builder.isAllowFailOnInit());
+    }
 }

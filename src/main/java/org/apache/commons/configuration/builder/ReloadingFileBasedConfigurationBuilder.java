@@ -94,6 +94,23 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
 
     /**
      * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder}
+     * which produces result objects of the specified class and sets
+     * initialization parameters and the <em>allowFailOnInit</em> flag.
+     *
+     * @param resCls the result class (must not be <b>null</b>
+     * @param params a map with initialization parameters
+     * @param allowFailOnInit the <em>allowFailOnInit</em> flag
+     * @throws IllegalArgumentException if the result class is <b>null</b>
+     */
+    public ReloadingFileBasedConfigurationBuilder(Class<T> resCls,
+            Map<String, Object> params, boolean allowFailOnInit)
+    {
+        super(resCls, params, allowFailOnInit);
+        reloadingController = createReloadingController();
+    }
+
+    /**
+     * Creates a new instance of {@code ReloadingFileBasedConfigurationBuilder}
      * which produces result objects of the specified class.
      *
      * @param resCls the result class (must not be <b>null</b>

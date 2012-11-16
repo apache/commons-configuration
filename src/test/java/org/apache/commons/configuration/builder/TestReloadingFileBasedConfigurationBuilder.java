@@ -187,6 +187,18 @@ public class TestReloadingFileBasedConfigurationBuilder
     }
 
     /**
+     * Tests whether the allowFailOnInit flag is correctly initialized.
+     */
+    @Test
+    public void testInitAllowFailOnInitFlag()
+    {
+        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class, null, true);
+        assertTrue("Flag not set", builder.isAllowFailOnInit());
+    }
+
+    /**
      * A test builder implementation which allows mocking the underlying
      * reloading detector.
      */
