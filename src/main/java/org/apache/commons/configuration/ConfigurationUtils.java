@@ -774,6 +774,40 @@ public final class ConfigurationUtils
     }
 
     /**
+     * Loads the class with the given name. This method is used whenever a class
+     * has to be loaded dynamically. It first tries the current thread's context
+     * class loader. If this fails, the class loader of this class is tried.
+     *
+     * @param clsName the name of the class to be loaded
+     * @return the loaded class
+     * @throws ClassNotFoundException if the class cannot be resolved
+     */
+    public static Class<?> loadClass(String clsName)
+            throws ClassNotFoundException
+    {
+        if (LOG.isDebugEnabled())
+        {
+            LOG.debug("Loading class " + clsName);
+        }
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        try
+        {
+            if (cl != null)
+            {
+                return cl.loadClass(clsName);
+            }
+        }
+        catch (ClassNotFoundException cnfex)
+        {
+            LOG.info("Could not load class " + clsName
+                    + " using CCL. Falling back to default CL.", cnfex);
+        }
+
+        return ConfigurationUtils.class.getClassLoader().loadClass(clsName);
+    }
+
+    /**
      * Creates an {@code ImmutableConfiguration} from the given
      * {@code Configuration} object. This method creates a proxy object wrapping
      * the original configuration and making it available under the

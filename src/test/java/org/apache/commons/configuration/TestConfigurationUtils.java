@@ -35,6 +35,8 @@ import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.mockobjects.dynamic.Mock;
@@ -46,11 +48,29 @@ import com.mockobjects.dynamic.Mock;
  */
 public class TestConfigurationUtils
 {
-    protected Configuration config = new BaseConfiguration();
+    /** Constant for the name of a class to be loaded. */
+    private static final String CLS_NAME =
+            "org.apache.commons.configuration.PropertiesConfiguration";
+
+    /** Stores the CCL. */
+    private ClassLoader ccl;
+
+    @Before
+    public void setUp() throws Exception
+    {
+        ccl = Thread.currentThread().getContextClassLoader();
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+        Thread.currentThread().setContextClassLoader(ccl);
+    }
 
     @Test
     public void testToString()
     {
+        Configuration config = new BaseConfiguration();
         String lineSeparator = System.getProperty("line.separator");
 
         assertEquals("String representation of an empty configuration", "", ConfigurationUtils.toString(config));
@@ -456,5 +476,56 @@ public class TestConfigurationUtils
     public void testEnableRuntimeExceptionsNull()
     {
         ConfigurationUtils.enableRuntimeExceptions(null);
+    }
+
+    /**
+     * Tests whether a class can be loaded from CCL.
+     */
+    @Test
+    public void testLoadClassFromCCL() throws ClassNotFoundException
+    {
+        Thread.currentThread().setContextClassLoader(
+                getClass().getClassLoader());
+        assertEquals("Wrong class", CLS_NAME,
+                ConfigurationUtils.loadClass(CLS_NAME).getName());
+    }
+
+    /**
+     * Tests whether a class can be loaded if there is no CCL.
+     */
+    @Test
+    public void testLoadClassCCLNull() throws ClassNotFoundException
+    {
+        Thread.currentThread().setContextClassLoader(null);
+        assertEquals("Wrong class", CLS_NAME,
+                ConfigurationUtils.loadClass(CLS_NAME).getName());
+    }
+
+    /**
+     * Tests whether a class can be loaded if it is not found by the CCL.
+     */
+    @Test
+    public void testLoadClassCCLNotFound() throws ClassNotFoundException
+    {
+        Thread.currentThread().setContextClassLoader(new ClassLoader()
+        {
+            @Override
+            public Class<?> loadClass(String name)
+                    throws ClassNotFoundException
+            {
+                throw new ClassNotFoundException(name);
+            }
+        });
+        assertEquals("Wrong class", CLS_NAME,
+                ConfigurationUtils.loadClass(CLS_NAME).getName());
+    }
+
+    /**
+     * Tests the behavior of loadClass() for a non-existing class.
+     */
+    @Test(expected = ClassNotFoundException.class)
+    public void testLoadClassNotFound() throws ClassNotFoundException
+    {
+        ConfigurationUtils.loadClass("a non existing class!");
     }
 }
