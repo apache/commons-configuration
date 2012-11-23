@@ -167,7 +167,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  */
 public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
-    implements EntityResolver, EntityRegistry
+    implements EntityResolver, EntityRegistry, FileBasedConfiguration
 {
     /**
      * The serial version UID.
@@ -890,6 +890,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         load(new InputSource(in));
     }
 
+    public void read(Reader in) throws ConfigurationException, IOException
+    {
+        load(in);
+    }
+
     /**
      * Loads a configuration file from the specified input source.
      * @param source the input source
@@ -946,6 +951,11 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             throw new ConfigurationException("Unable to save the configuration", e);
         }
+    }
+
+    public void write(Writer out) throws ConfigurationException, IOException
+    {
+        save(out);
     }
 
     /**
