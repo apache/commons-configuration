@@ -159,15 +159,20 @@ public class XMLBeanDeclaration implements BeanDeclaration
     /** Stores the configuration node that contains the bean declaration. */
     private final ConfigurationNode node;
 
+    /** The name of the default bean class. */
+    private final String defaultBeanClassName;
+
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and
-     * initializes it from the given configuration. The passed in key points to
-     * the bean declaration.
+     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it
+     * from the given configuration. The passed in key points to the bean
+     * declaration.
      *
-     * @param config the configuration
+     * @param config the configuration (must not be <b>null</b>)
      * @param key the key to the bean declaration (this key must point to
-     * exactly one bean declaration or a {@code IllegalArgumentException}
-     * exception will be thrown)
+     *        exactly one bean declaration or a {@code IllegalArgumentException}
+     *        exception will be thrown)
+     * @throws IllegalArgumentException if required information is missing to
+     *         construct the bean declaration
      */
     public XMLBeanDeclaration(HierarchicalConfiguration config, String key)
     {
@@ -175,23 +180,48 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
-     * Creates a new instance of {@code XMLBeanDeclaration} and
-     * initializes it from the given configuration. The passed in key points to
-     * the bean declaration. If the key does not exist and the boolean argument
-     * is <b>true</b>, the declaration is initialized with an empty
-     * configuration. It is possible to create objects from such an empty
-     * declaration if a default class is provided. If the key on the other hand
-     * has multiple values or is undefined and the boolean argument is <b>false</b>,
-     * a {@code IllegalArgumentException} exception will be thrown.
+     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it
+     * from the given configuration supporting optional declarations.
      *
-     * @param config the configuration
+     * @param config the configuration (must not be <b>null</b>)
      * @param key the key to the bean declaration
      * @param optional a flag whether this declaration is optional; if set to
-     * <b>true</b>, no exception will be thrown if the passed in key is
-     * undefined
+     *        <b>true</b>, no exception will be thrown if the passed in key is
+     *        undefined
+     * @throws IllegalArgumentException if required information is missing to
+     *         construct the bean declaration
      */
     public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
             boolean optional)
+    {
+        this(config, key, optional, null);
+    }
+
+    /**
+     * Creates a new instance of {@code XMLBeanDeclaration} and initializes it
+     * from the given configuration supporting optional declarations and a
+     * default bean class name. The passed in key points to the bean
+     * declaration. If the key does not exist and the boolean argument is
+     * <b>true</b>, the declaration is initialized with an empty configuration.
+     * It is possible to create objects from such an empty declaration if a
+     * default class is provided. If the key on the other hand has multiple
+     * values or is undefined and the boolean argument is <b>false</b>, a
+     * {@code IllegalArgumentException} exception will be thrown. It is possible
+     * to set a default bean class name; this name is used if the configuration
+     * does not contain a bean class.
+     *
+     * @param config the configuration (must not be <b>null</b>)
+     * @param key the key to the bean declaration
+     * @param optional a flag whether this declaration is optional; if set to
+     *        <b>true</b>, no exception will be thrown if the passed in key is
+     *        undefined
+     * @param defBeanClsName a default bean class name
+     * @throws IllegalArgumentException if required information is missing to
+     *         construct the bean declaration
+     * @since 2.0
+     */
+    public XMLBeanDeclaration(HierarchicalConfiguration config, String key,
+            boolean optional, String defBeanClsName)
     {
         if (config == null)
         {
@@ -218,6 +248,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
         }
         this.node = tmpnode;
         this.configuration = tmpconfiguration;
+        defaultBeanClassName = defBeanClsName;
         initSubnodeConfiguration(getConfiguration());
     }
 
@@ -256,6 +287,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
 
         this.node = node;
         configuration = config;
+        defaultBeanClassName = null;
         initSubnodeConfiguration(config);
     }
 
@@ -267,6 +299,19 @@ public class XMLBeanDeclaration implements BeanDeclaration
     public SubnodeConfiguration getConfiguration()
     {
         return configuration;
+    }
+
+    /**
+     * Returns the name of the default bean class. This class is used if no bean
+     * class is specified in the configuration. It may be <b>null</b> if no
+     * default class was set.
+     *
+     * @return the default bean class name
+     * @since 2.0
+     */
+    public String getDefaultBeanClassName()
+    {
+        return defaultBeanClassName;
     }
 
     /**
@@ -309,7 +354,7 @@ public class XMLBeanDeclaration implements BeanDeclaration
      */
     public String getBeanClassName()
     {
-        return getConfiguration().getString(ATTR_BEAN_CLASS);
+        return getConfiguration().getString(ATTR_BEAN_CLASS, getDefaultBeanClassName());
     }
 
     /**

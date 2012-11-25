@@ -157,6 +157,38 @@ public class TestXMLBeanDeclaration
     }
 
     /**
+     * Tests whether a default bean class name is taken into account.
+     */
+    @Test
+    public void testGetBeanClassNameFromDefault()
+    {
+        BaseHierarchicalConfiguration config =
+                new BaseHierarchicalConfiguration();
+        config.addProperty(KEY + "[@someProperty]", Boolean.TRUE);
+        XMLBeanDeclaration decl =
+                new XMLBeanDeclaration(config, KEY, false, getClass().getName());
+        assertEquals("Wrong class name", getClass().getName(),
+                decl.getBeanClassName());
+    }
+
+    /**
+     * Tests whether a default bean class name is overridden by a value in the
+     * configuration.
+     */
+    @Test
+    public void tetGetBeanClassNameDefaultOverride()
+    {
+        BaseHierarchicalConfiguration config =
+                new BaseHierarchicalConfiguration();
+        config.addProperty(KEY + "[@config-class]", getClass().getName());
+        XMLBeanDeclaration decl =
+                new XMLBeanDeclaration(config, KEY, false,
+                        "someDefaultClassName");
+        assertEquals("Wrong class name", getClass().getName(),
+                decl.getBeanClassName());
+    }
+
+    /**
      * Tests fetching the name of the bean factory.
      */
     @Test
