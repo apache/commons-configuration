@@ -173,6 +173,18 @@ public interface HierarchicalConfiguration
     List<SubnodeConfiguration> configurationsAt(String key);
 
     /**
+     * Returns a list with sub configurations for all child nodes of the node
+     * selected by the given key. This method works like
+     * {@link #immutableChildConfigurationsAt(String)}, but returns a list with
+     * {@code SubnodeConfiguration} objects.
+     *
+     * @param key the key for selecting the desired parent node
+     * @return a collection with {@code SubnodeConfiguration} objects for all
+     *         child nodes of the selected parent node
+     */
+    List<SubnodeConfiguration> childConfigurationsAt(String key);
+
+    /**
      * Removes all values of the property with the given name and of keys that
      * start with this name. So if there is a property with the key
      * &quot;foo&quot; and a property with the key &quot;foo.bar&quot;, a call

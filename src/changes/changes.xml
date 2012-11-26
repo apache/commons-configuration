@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="add" issue="CONFIGURATION-517">
+        Hierarchical configurations now provide methods to obtain sub
+        configurations for all child elements of a given key.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-514">
         Bean declarations now support constructor invocations.
       </action>

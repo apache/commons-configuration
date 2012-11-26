@@ -1080,6 +1080,64 @@ public class TestHierarchicalConfiguration
     }
 
     /**
+     * Tests whether immutable configurations for the children of a given node
+     * can be queried.
+     */
+    @Test
+    public void testImmutableChildConfigurationsAt()
+    {
+        List<ImmutableHierarchicalConfiguration> children =
+                config.immutableChildConfigurationsAt("tables.table(0)");
+        assertEquals("Wrong number of elements", 2, children.size());
+        ImmutableHierarchicalConfiguration c1 = children.get(0);
+        assertEquals("Wrong name (1)", "name", c1.getRootElementName());
+        assertEquals("Wrong table name", tables[0], c1.getString(null));
+        ImmutableHierarchicalConfiguration c2 = children.get(1);
+        assertEquals("Wrong name (2)", "fields", c2.getRootElementName());
+        assertEquals("Wrong field name", fields[0][0],
+                c2.getString("field(0).name"));
+    }
+
+    /**
+     * Tests whether sub configurations for the children of a given node can be
+     * queried.
+     */
+    @Test
+    public void testChildConfigurationsAt()
+    {
+        List<SubnodeConfiguration> children =
+                config.childConfigurationsAt("tables.table(0)");
+        assertEquals("Wrong number of elements", 2, children.size());
+        SubnodeConfiguration sub = children.get(0);
+        String newTabName = "otherTabe";
+        sub.setProperty(null, newTabName);
+        assertEquals("Table name not changed", newTabName,
+                config.getString("tables.table(0).name"));
+    }
+
+    /**
+     * Tests the result of childConfigurationsAt() if the key selects multiple
+     * nodes.
+     */
+    @Test
+    public void testChildConfigurationsAtNoUniqueKey()
+    {
+        assertTrue("Got children", config.childConfigurationsAt("tables.table")
+                .isEmpty());
+    }
+
+    /**
+     * Tests the result of childConfigurationsAt() if the key does not point to
+     * an existing node.
+     */
+    @Test
+    public void testChildConfigurationsAtNotFound()
+    {
+        assertTrue("Got children",
+                config.childConfigurationsAt("not.existing.key").isEmpty());
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()

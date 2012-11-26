@@ -224,6 +224,14 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
+     * {@inheritDoc} This implementation just returns the name of the root node.
+     */
+    public String getRootElementName()
+    {
+        return getRootNode().getName();
+    }
+
+    /**
      * Returns the default expression engine.
      *
      * @return the default expression engine
@@ -629,14 +637,42 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(
             String key)
     {
-        List<SubnodeConfiguration> subs = configurationsAt(key);
-        List<ImmutableHierarchicalConfiguration> res =
-                new ArrayList<ImmutableHierarchicalConfiguration>(subs.size());
-        for (SubnodeConfiguration sub : subs)
+        return toImmutable(configurationsAt(key));
+    }
+
+    /**
+     * {@inheritDoc} This implementation resolves the node(s) selected by the
+     * given key. If not a single node is selected, an empty list is returned.
+     * Otherwise, sub configurations for each child of the node are created.
+     */
+    public List<SubnodeConfiguration> childConfigurationsAt(String key)
+    {
+        List<ConfigurationNode> nodes = fetchNodeList(key);
+        if (nodes.size() != 1)
         {
-            res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
+            return Collections.emptyList();
         }
-        return res;
+
+        ConfigurationNode parent = nodes.get(0);
+        List<SubnodeConfiguration> subs =
+                new ArrayList<SubnodeConfiguration>(parent.getChildrenCount());
+        for (ConfigurationNode c : parent.getChildren())
+        {
+            subs.add(createSubnodeConfiguration(c));
+        }
+        return subs;
+    }
+
+    /**
+     * {@inheritDoc} This implementation first delegates to
+     * {@code childConfigurationsAt()} to create a list of mutable child
+     * configurations. Then a list with immutable wrapper configurations is
+     * created.
+     */
+    public List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
+            String key)
+    {
+        return toImmutable(childConfigurationsAt(key));
     }
 
     /**
@@ -1070,6 +1106,24 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
                 node.setReference(null);
             }
         });
+    }
+
+    /**
+     * Creates a list with immutable configurations from the given input list.
+     *
+     * @param subs a list with mutable configurations
+     * @return a list with corresponding immutable configurations
+     */
+    private static List<ImmutableHierarchicalConfiguration> toImmutable(
+            List<? extends HierarchicalConfiguration> subs)
+    {
+        List<ImmutableHierarchicalConfiguration> res =
+                new ArrayList<ImmutableHierarchicalConfiguration>(subs.size());
+        for (HierarchicalConfiguration sub : subs)
+        {
+            res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
+        }
+        return res;
     }
 
     /**

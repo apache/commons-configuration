@@ -62,6 +62,18 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
     int getMaxIndex(String key);
 
     /**
+     * Returns the name of the root element of this configuration. This
+     * information may be of use in some cases, e.g. for sub configurations
+     * created using the {@code immutableConfigurationsAt()} method. The exact
+     * meaning of the string returned by this method is specific to a concrete
+     * implementation. For instance, an XML configuration might return the name
+     * of the document element.
+     *
+     * @return the name of the root element of this configuration
+     */
+    String getRootElementName();
+
+    /**
      * <p>
      * Returns an immutable hierarchical configuration object that wraps the
      * configuration node specified by the given key. This method provides an
@@ -128,4 +140,20 @@ public interface ImmutableHierarchicalConfiguration extends ImmutableConfigurati
      * configuration represents one of the nodes selected by the passed in key
      */
     List<ImmutableHierarchicalConfiguration> immutableConfigurationsAt(String key);
+
+    /**
+     * Returns a list of immutable configurations for all direct child elements
+     * of the node selected by the given key. With this method it is possible to
+     * inspect the content of a hierarchical structure; all children of a given
+     * node can be queried without having to know their exact names. If the
+     * passed in key does not point to a single node, an empty list is returned.
+     * This is also the result if the node referred to by the key does not have
+     * child elements.
+     *
+     * @param key the key for selecting the desired parent node
+     * @return a collection with immutable configurations for all child nodes of
+     *         the selected parent node
+     */
+    List<ImmutableHierarchicalConfiguration> immutableChildConfigurationsAt(
+            String key);
 }
