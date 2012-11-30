@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
+import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.io.FileHandler;
 
 /**
@@ -189,6 +190,54 @@ public class FileBasedBuilderParameters implements BuilderParameters
     public FileBasedBuilderParameters setPath(String path)
     {
         getFileHandler().setPath(path);
+        return this;
+    }
+
+    /**
+     * Sets the file name of the associated {@code FileHandler}.
+     *
+     * @param name the file name
+     * @return a reference to this object for method chaining
+     */
+    public FileBasedBuilderParameters setFileName(String name)
+    {
+        getFileHandler().setFileName(name);
+        return this;
+    }
+
+    /**
+     * Sets the base path of the associated {@code FileHandler}.
+     *
+     * @param path the base path
+     * @return a reference to this object for method chaining
+     */
+    public FileBasedBuilderParameters setBasePath(String path)
+    {
+        getFileHandler().setBasePath(path);
+        return this;
+    }
+
+    /**
+     * Sets the {@code FileSystem} of the associated {@code FileHandler}.
+     *
+     * @param fs the {@code FileSystem}
+     * @return a reference to this object for method chaining
+     */
+    public FileBasedBuilderParameters setFileSystem(FileSystem fs)
+    {
+        getFileHandler().setFileSystem(fs);
+        return this;
+    }
+
+    /**
+     * Sets the encoding of the associated {@code FileHandler}.
+     *
+     * @param enc the encoding
+     * @return a reference to this object for method chaining
+     */
+    public FileBasedBuilderParameters setEncoding(String enc)
+    {
+        getFileHandler().setEncoding(enc);
         return this;
     }
 

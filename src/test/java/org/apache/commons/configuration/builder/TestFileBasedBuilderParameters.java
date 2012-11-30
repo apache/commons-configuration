@@ -28,7 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationAssert;
+import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.io.FileHandler;
+import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
@@ -115,6 +117,58 @@ public class TestFileBasedBuilderParameters
         FileBasedBuilderParameters params = new FileBasedBuilderParameters();
         assertSame("Wrong result", params, params.setPath(path));
         assertEquals("Wrong path", path, params.getFileHandler().getPath());
+    }
+
+    /**
+     * Tests whether a file name can be set.
+     */
+    @Test
+    public void testSetFileName()
+    {
+        String name = "testConfig.xml";
+        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        assertSame("Wrong result", params, params.setFileName(name));
+        assertEquals("Wrong name", name, params.getFileHandler().getFileName());
+    }
+
+    /**
+     * Tests whether a base path can be set.
+     */
+    @Test
+    public void testSetBasePath()
+    {
+        String path =
+                ConfigurationAssert.getTestFile("test.properties").getParentFile()
+                        .getAbsolutePath();
+        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        assertSame("Wrong result", params, params.setBasePath(path));
+        assertEquals("Wrong path", path, params.getFileHandler().getBasePath());
+    }
+
+    /**
+     * Tests whether a file system can be set.
+     */
+    @Test
+    public void testSetFileSystem()
+    {
+        FileSystem fs = EasyMock.createMock(FileSystem.class);
+        EasyMock.replay(fs);
+        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        assertSame("Wrong result", params, params.setFileSystem(fs));
+        assertSame("Wrong file system", fs, params.getFileHandler()
+                .getFileSystem());
+    }
+
+    /**
+     * Tests whether an encoding can be set.
+     */
+    @Test
+    public void testSetEncoding()
+    {
+        String enc = "ISO-8859-1";
+        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        assertSame("Wrong result", params, params.setEncoding(enc));
+        assertSame("Wrong encoding", enc, params.getFileHandler().getEncoding());
     }
 
     /**
