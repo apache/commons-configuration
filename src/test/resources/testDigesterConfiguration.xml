@@ -17,7 +17,7 @@
 -->
 
 <configuration>
-  <properties fileName="test.properties"/>
+  <properties fileName="test.properties" config-name="props"/>
   <properties fileName="test.properties.xml"/>
-  <xml fileName="test.xml"/>
+  <xml fileName="test.xml" config-name="xml"/>
 </configuration>
