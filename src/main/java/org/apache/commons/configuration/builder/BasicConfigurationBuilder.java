@@ -526,8 +526,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @return the {@code BeanDeclaration} for dynamically creating a result
      *         object
+     * @throws ConfigurationException if an error occurs
      */
     protected synchronized final BeanDeclaration getResultDeclaration()
+            throws ConfigurationException
     {
         if (resultDeclaration == null)
         {
@@ -564,9 +566,10 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      *
      * @param params a snapshot of the current initialization parameters
      * @return the {@code BeanDeclaration} for creating result objects
+     * @throws ConfigurationException if an error occurs
      */
     protected BeanDeclaration createResultDeclaration(
-            final Map<String, Object> params)
+            final Map<String, Object> params) throws ConfigurationException
     {
         return new BeanDeclaration()
         {
