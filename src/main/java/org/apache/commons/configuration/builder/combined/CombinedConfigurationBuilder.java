@@ -34,6 +34,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
+import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
@@ -437,6 +438,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             ENV_PROVIDER*/
     };
 
+    /** A map with the default configuration builder providers. */
+    private static final Map<String, ConfigurationBuilderProvider> DEFAULT_PROVIDERS_MAP;
+
     /**
      * A specialized {@code StrLookup} object which operates on the combined
      * configuration constructed by this builder. This object is used as
@@ -458,9 +462,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 //        }
 //    };
 //
-    /** Stores a map with the registered configuration builder providers. */
-    private final Map<String, ConfigurationBuilderProvider> providers =
-            new HashMap<String, ConfigurationBuilderProvider>();
 
     /** The builder for the definition configuration. */
     private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
@@ -470,6 +471,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /** The object with data about configuration sources. */
     private ConfigurationSourceData sourceData;
+
+    /** Stores the current parameters object. */
+    private CombinedBuilderParameters currentParameters;
 
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;
@@ -481,7 +485,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     public CombinedConfigurationBuilder()
     {
         super(CombinedConfiguration.class);
-        initialize();
     }
 
     /**
@@ -493,7 +496,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     public CombinedConfigurationBuilder(Map<String, Object> params)
     {
         super(CombinedConfiguration.class, params);
-        initialize();
     }
 
     /**
@@ -506,15 +508,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     public CombinedConfigurationBuilder(Map<String, Object> params, boolean allowFailOnInit)
     {
         super(CombinedConfiguration.class, params, allowFailOnInit);
-        initialize();
-    }
-
-    /**
-     * Initializes this instance.
-     */
-    private void initialize()
-    {
-        registerDefaultProviders();
     }
 
     /**
@@ -545,55 +538,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Adds a {@code ConfigurationBuilderProvider} for the specified tag.
-     * Whenever this tag is encountered in the configuration definition file
-     * this provider will be called to create the configuration builder object.
-     *
-     * @param tagName the name of the tag in the configuration definition file
-     *        (must not be <b>null</b>
-     * @param provider the provider for this tag (must not be <b>null</b>
-     * @throws IllegalArgumentException if a required parameter is missing
-     */
-    public void addConfigurationProvider(String tagName,
-            ConfigurationBuilderProvider provider)
-    {
-        if (tagName == null)
-        {
-            throw new IllegalArgumentException("Tag name must not be null!");
-        }
-        if (provider == null)
-        {
-            throw new IllegalArgumentException("Provider must not be null!");
-        }
-
-        providers.put(tagName, provider);
-    }
-
-    /**
-     * Removes the {@code ConfigurationBuilderProvider} for the specified tag name.
-     *
-     * @param tagName the tag name
-     * @return the removed configuration provider or <b>null</b> if none was
-     * registered for that tag
-     */
-    public ConfigurationBuilderProvider removeConfigurationProvider(String tagName)
-    {
-        return providers.remove(tagName);
-    }
-
-    /**
-     * Returns the {@code ConfigurationBuilderProvider} for the given tag.
-     *
-     * @param tagName the name of the tag
-     * @return the provider that was registered for this tag or <b>null</b> if
-     * there is none
-     */
-    public ConfigurationBuilderProvider providerForTag(String tagName)
-    {
-        return providers.get(tagName);
-    }
-
-    /**
      * Returns the configuration provided by this builder. If the boolean
      * parameter is <b>true</b>, the configuration definition file will be
      * loaded. It will then be parsed, and instances for the declared
@@ -612,7 +556,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         initFileSystem();
         initSystemProperties();
         configureEntityResolver();
-        registerConfiguredProviders();
         registerConfiguredLookups();
 
 //        CombinedConfiguration result = createResultConfiguration();
@@ -787,12 +730,15 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
 
         ConfigurationSourceData data = getSourceData();
-        createAndAddConfigurations(result, data.getOverrideBuilders(), data);
+        initNodeCombinerListNodes(result, config, KEY_OVERRIDE_LIST);
+        registerConfiguredProviders(config);
 
+        createAndAddConfigurations(result, data.getOverrideBuilders(), data);
         if (!data.getUnionBuilders().isEmpty())
         {
             CombinedConfiguration addConfig = createAdditionalsConfiguration(result);
             result.addConfiguration(addConfig, ADDITIONAL_NAME);
+            initNodeCombinerListNodes(addConfig, config, KEY_ADDITIONAL_LIST);
             createAndAddConfigurations(addConfig, data.getUnionBuilders(), data);
         }
     }
@@ -821,36 +767,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         addConfig.setIgnoreReloadExceptions(resultConfig
                 .isIgnoreReloadExceptions());
         return addConfig;
-    }
-
-    /**
-     * Registers the default configuration providers supported by this class.
-     * This method will be called during initialization. It registers
-     * configuration providers for the tags that are supported by default.
-     */
-    protected void registerDefaultProviders()
-    {
-        for (int i = 0; i < DEFAULT_TAGS.length; i++)
-        {
-            addConfigurationProvider(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
-        }
-    }
-
-    /**
-     * Registers providers defined in the configuration.
-     *
-     * @throws ConfigurationException if an error occurs
-     */
-    protected void registerConfiguredProviders() throws ConfigurationException
-    {
-//        List<SubnodeConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_PROVIDERS);
-//        for (SubnodeConfiguration config : nodes)
-//        {
-//            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-//            String key = config.getString(KEY_PROVIDER_KEY);
-//            addConfigurationProvider(key, (BaseConfigurationBuilderProvider) BeanHelper
-//                    .createBean(decl));
-//        }
     }
 
     /**
@@ -938,6 +854,34 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 //    }
 
     /**
+     * Returns the {@code ConfigurationBuilderProvider} for the given tag. This
+     * method is called during creation of the result configuration. (It is not
+     * allowed to call it at another point of time; result is then
+     * unpredictable!) It supports all default providers and custom providers
+     * added through the parameters object as well.
+     *
+     * @param tagName the name of the tag
+     * @return the provider that was registered for this tag or <b>null</b> if
+     *         there is none
+     */
+    protected ConfigurationBuilderProvider providerForTag(String tagName)
+    {
+        return currentParameters.providerForTag(tagName);
+    }
+
+    /**
+     * Initializes the current parameters object. This object has either been
+     * passed at builder configuration time or it is newly created. In any
+     * case, it is manipulated during result creation.
+     */
+    private void setUpCurrentParameters()
+    {
+        currentParameters =
+                CombinedBuilderParameters.fromParameters(getParameters(), true);
+        currentParameters.registerMissingProviders(DEFAULT_PROVIDERS_MAP);
+    }
+
+    /**
      * Obtains the data object for the configuration sources and the
      * corresponding builders. This object is created on first access and reset
      * when the definition builder sends a change event. This method is called
@@ -966,9 +910,31 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private ConfigurationSourceData createSourceData()
             throws ConfigurationException
     {
+        setUpCurrentParameters();
         ConfigurationSourceData result = new ConfigurationSourceData();
         result.initFromDefinitionConfiguration(getDefinitionConfiguration());
         return result;
+    }
+
+    /**
+     * Registers providers defined in the configuration.
+     *
+     * @param defConfig the definition configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private void registerConfiguredProviders(HierarchicalConfiguration defConfig)
+            throws ConfigurationException
+    {
+        List<SubnodeConfiguration> nodes =
+                defConfig.configurationsAt(KEY_CONFIGURATION_PROVIDERS);
+        for (SubnodeConfiguration config : nodes)
+        {
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            String key = config.getString(KEY_PROVIDER_KEY);
+            currentParameters.registerProvider(key,
+                    (BaseConfigurationBuilderProvider) BeanHelper
+                            .createBean(decl));
+        }
     }
 
     /**
@@ -994,6 +960,26 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 }
             }
         });
+    }
+
+    /**
+     * Initializes the list nodes of the node combiner for the given combined
+     * configuration. This information can be set in the header section of the
+     * configuration definition file for both the override and the union
+     * combiners.
+     *
+     * @param cc the combined configuration to initialize
+     * @param defConfig the definition configuration
+     * @param key the key for the list nodes
+     */
+    private static void initNodeCombinerListNodes(CombinedConfiguration cc,
+            HierarchicalConfiguration defConfig, String key)
+    {
+        List<Object> listNodes = defConfig.getList(key);
+        for (Object listNode : listNodes)
+        {
+            cc.getNodeCombiner().addListNode((String) listNode);
+        }
     }
 
     /**
@@ -1028,6 +1014,27 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 }
             }
         }
+    }
+
+    /**
+     * Creates the map with the default configuration builder providers.
+     *
+     * @return the map with default providers
+     */
+    private static Map<String, ConfigurationBuilderProvider> createDefaultProviders()
+    {
+        Map<String, ConfigurationBuilderProvider> providers =
+                new HashMap<String, ConfigurationBuilderProvider>();
+        for (int i = 0; i < DEFAULT_TAGS.length; i++)
+        {
+            providers.put(DEFAULT_TAGS[i], DEFAULT_PROVIDERS[i]);
+        }
+        return providers;
+    }
+
+    static
+    {
+        DEFAULT_PROVIDERS_MAP = createDefaultProviders();
     }
 
     /**

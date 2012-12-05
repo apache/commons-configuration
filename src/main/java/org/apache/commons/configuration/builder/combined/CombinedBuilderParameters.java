@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.builder.combined;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
@@ -52,6 +53,17 @@ public class CombinedBuilderParameters implements BuilderParameters
 
     /** The definition configuration builder. */
     private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
+
+    /** A map with registered configuration builder providers. */
+    private final Map<String, ConfigurationBuilderProvider> providers;
+
+    /**
+     * Creates a new instance of {@code CombinedBuilderParameters}.
+     */
+    public CombinedBuilderParameters()
+    {
+        providers = new HashMap<String, ConfigurationBuilderProvider>();
+    }
 
     /**
      * Looks up an instance of this class in the specified parameters map. This
@@ -116,6 +128,94 @@ public class CombinedBuilderParameters implements BuilderParameters
     {
         definitionBuilder = builder;
         return this;
+    }
+
+    /**
+     * Registers the given {@code ConfigurationBuilderProvider} for the
+     * specified tag name. This means that whenever this tag is encountered in a
+     * configuration definition file, the corresponding builder provider is
+     * invoked.
+     *
+     * @param tagName the name of the tag (must not be <b>null</b>)
+     * @param provider the {@code ConfigurationBuilderProvider} (must not be
+     *        <b>null</b>)
+     * @return a reference to this object for method chaining
+     * @throws IllegalArgumentException if a required parameter is missing
+     */
+    public CombinedBuilderParameters registerProvider(String tagName,
+            ConfigurationBuilderProvider provider)
+    {
+        if (tagName == null)
+        {
+            throw new IllegalArgumentException("Tag name must not be null!");
+        }
+        if (provider == null)
+        {
+            throw new IllegalArgumentException("Provider must not be null!");
+        }
+
+        providers.put(tagName, provider);
+        return this;
+    }
+
+    /**
+     * Registers all {@code ConfigurationBuilderProvider}s in the given map to
+     * this object which have not yet been registered. This method is mainly
+     * used for internal purposes: a {@code CombinedConfigurationBuilder} takes
+     * the providers contained in a parameters object and adds all standard
+     * providers. This way it is possible to override a standard provider by
+     * registering a provider object for the same tag name at the parameters
+     * object.
+     *
+     * @param providers a map with tag names and corresponding providers
+     * @return a reference to this object for method chaining (must not be
+     *         <b>null</b> or contain <b>null</b> entries
+     * @throws IllegalArgumentException if the map with providers is <b>null</b>
+     *         or contains <b>null</b> entries
+     */
+    public CombinedBuilderParameters registerMissingProviders(
+            Map<String, ConfigurationBuilderProvider> providers)
+    {
+        if (providers == null)
+        {
+            throw new IllegalArgumentException(
+                    "Map with providers must not be null!");
+        }
+
+        for (Map.Entry<String, ConfigurationBuilderProvider> e : providers
+                .entrySet())
+        {
+            if (!this.providers.containsKey(e.getKey()))
+            {
+                registerProvider(e.getKey(), e.getValue());
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Returns an (unmodifiable) map with the currently registered
+     * {@code ConfigurationBuilderProvider} objects.
+     *
+     * @return the map with {@code ConfigurationBuilderProvider} objects (the
+     *         keys are the tag names)
+     */
+    public Map<String, ConfigurationBuilderProvider> getProviders()
+    {
+        return Collections.unmodifiableMap(providers);
+    }
+
+    /**
+     * Returns the {@code ConfigurationBuilderProvider} which is registered for
+     * the specified tag name or <b>null</b> if there is no registration for
+     * this tag.
+     *
+     * @param tagName the tag name
+     * @return the provider registered for this tag or <b>null</b>
+     */
+    public ConfigurationBuilderProvider providerForTag(String tagName)
+    {
+        return providers.get(tagName);
     }
 
     /**
