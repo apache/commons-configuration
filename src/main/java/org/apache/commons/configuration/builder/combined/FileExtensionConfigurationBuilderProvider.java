@@ -19,9 +19,8 @@ package org.apache.commons.configuration.builder.combined;
 import java.util.Collection;
 
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
-import org.apache.commons.configuration.builder.FileBasedBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 
 /**
  * <p>
@@ -75,7 +74,7 @@ public class FileExtensionConfigurationBuilderProvider extends
      * @param ext the file extension to select the configuration class (must not
      *        be <b>null</b>)
      * @param paramCls a collection with the names of parameters classes; an
-     *        instance of {@link BasicBuilderParameters} is created
+     *        instance of {@link BasicBuilderParametersImpl} is created
      *        automatically and does not need to be contained in this list; the
      *        collection can be <b>null</b> if no additional parameter objects
      *        are needed
@@ -124,7 +123,7 @@ public class FileExtensionConfigurationBuilderProvider extends
 
     /**
      * {@inheritDoc} This implementation tries to find a
-     * {@link FileBasedBuilderParameters} object in the parameter objects. If
+     * {@link FileBasedBuilderParametersImpl} object in the parameter objects. If
      * one is found, the extension of the file name is obtained and compared
      * against the stored file extension. In case of a match, the matching
      * configuration class is selected, otherwise the default one.
@@ -150,9 +149,9 @@ public class FileExtensionConfigurationBuilderProvider extends
     {
         for (BuilderParameters p : params)
         {
-            if (p instanceof FileBasedBuilderParameters)
+            if (p instanceof FileBasedBuilderParametersImpl)
             {
-                FileBasedBuilderParameters fp = (FileBasedBuilderParameters) p;
+                FileBasedBuilderParametersImpl fp = (FileBasedBuilderParametersImpl) p;
                 return fp.getFileHandler().getFileName();
             }
         }

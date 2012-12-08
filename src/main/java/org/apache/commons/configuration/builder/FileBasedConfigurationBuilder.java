@@ -29,7 +29,7 @@ import org.apache.commons.configuration.io.FileHandler;
  * </p>
  * <p>
  * This class extends its base class by the support of a
- * {@link FileBasedBuilderParameters} object, and especially of the
+ * {@link FileBasedBuilderParametersImpl} object, and especially of the
  * {@link FileHandler} contained in this object. When the builder creates a new
  * object the resulting {@code Configuration} instance is associated with the
  * {@code FileHandler}. If the {@code FileHandler} has a location set, the
@@ -174,7 +174,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
      */
     private FileHandler fetchFileHandlerFromParameters()
     {
-        return FileBasedBuilderParameters.fromParameters(getParameters(), true)
+        return FileBasedBuilderParametersImpl.fromParameters(getParameters(), true)
                 .getFileHandler();
     }
 }

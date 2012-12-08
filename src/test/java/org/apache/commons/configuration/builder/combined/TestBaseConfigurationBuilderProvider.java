@@ -30,7 +30,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
-import org.apache.commons.configuration.builder.FileBasedBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.junit.Test;
@@ -93,7 +93,7 @@ public class TestBaseConfigurationBuilderProvider
                 FileBasedConfigurationBuilder.class.getName(),
                 ReloadingFileBasedConfigurationBuilder.class.getName(),
                 PropertiesConfiguration.class.getName(),
-                Arrays.asList(FileBasedBuilderParameters.class.getName()));
+                Arrays.asList(FileBasedBuilderParametersImpl.class.getName()));
     }
 
     /**
@@ -180,7 +180,7 @@ public class TestBaseConfigurationBuilderProvider
                 new BaseConfigurationBuilderProvider(
                         FileBasedConfigurationBuilder.class.getName(), null,
                         PropertiesConfiguration.class.getName(),
-                        Arrays.asList(FileBasedBuilderParameters.class
+                        Arrays.asList(FileBasedBuilderParametersImpl.class
                                 .getName()));
         HierarchicalConfiguration declConfig = setUpConfig(true);
         ConfigurationDeclaration decl = createDeclaration(declConfig);

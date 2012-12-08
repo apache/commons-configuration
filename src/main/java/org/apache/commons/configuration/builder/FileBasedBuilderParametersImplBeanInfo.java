@@ -17,19 +17,19 @@
 package org.apache.commons.configuration.builder;
 
 /**
- * An additional {@code BeanInfo} class for {@link FileBasedBuilderParameters}.
+ * An additional {@code BeanInfo} class for {@link FileBasedBuilderParametersImpl}.
  *
  * @version $Id$
  * @since 2.0
  */
-public class FileBasedBuilderParametersBeanInfo extends
+public class FileBasedBuilderParametersImplBeanInfo extends
         BuilderParametersBeanInfo
 {
     /**
-     * Creates a new instance of {@code FileBasedBuilderParametersBeanInfo}.
+     * Creates a new instance of {@code FileBasedBuilderParametersImplBeanInfo}.
      */
-    public FileBasedBuilderParametersBeanInfo()
+    public FileBasedBuilderParametersImplBeanInfo()
     {
-        super(FileBasedBuilderParameters.class);
+        super(FileBasedBuilderParametersImpl.class);
     }
 }

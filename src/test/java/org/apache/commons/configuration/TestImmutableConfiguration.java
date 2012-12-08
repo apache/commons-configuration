@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.apache.commons.configuration.builder.FileBasedBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.junit.Test;
 
@@ -58,7 +58,7 @@ public class TestImmutableConfiguration
     {
         return new FileBasedConfigurationBuilder<PropertiesConfiguration>(
                 PropertiesConfiguration.class).configure(
-                new FileBasedBuilderParameters().setFile(ConfigurationAssert
+                new FileBasedBuilderParametersImpl().setFile(ConfigurationAssert
                         .getTestFile(TEST_FILE))).getConfiguration();
     }
 

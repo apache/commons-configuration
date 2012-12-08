@@ -149,7 +149,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
      * @return a {@code ReloadingDetector} for this {@code FileHandler}
      */
     protected ReloadingDetector createReloadingDetector(FileHandler handler,
-            FileBasedBuilderParameters fbparams)
+            FileBasedBuilderParametersImpl fbparams)
     {
         return new FileHandlerReloadingDetector(handler,
                 fbparams.getReloadingRefreshDelay());
@@ -170,7 +170,7 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
 
         resultReloadingDetector =
                 createReloadingDetector(handler,
-                        FileBasedBuilderParameters.fromParameters(
+                        FileBasedBuilderParametersImpl.fromParameters(
                                 getParameters(), true));
         getReloadingController().resetReloadingState();
     }

@@ -41,7 +41,8 @@ import org.apache.commons.logging.Log;
  * @version $Id$
  * @since 2.0
  */
-public class BasicBuilderParameters implements BuilderParameters
+public class BasicBuilderParameters implements BuilderParameters,
+        BasicBuilderProperties<BasicBuilderParameters>
 {
     /** The key of the <em>throwExceptionOnMissing</em> property. */
     private static final String PROP_THROW_EXCEPTION_ON_MISSING =

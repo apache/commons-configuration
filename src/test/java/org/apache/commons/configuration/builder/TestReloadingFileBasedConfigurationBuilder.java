@@ -67,7 +67,7 @@ public class TestReloadingFileBasedConfigurationBuilder
                 new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class);
         FileHandler handler = new FileHandler();
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         long refreshDelay = 60000L;
         params.setReloadingRefreshDelay(refreshDelay);
         FileHandlerReloadingDetector detector =
@@ -241,7 +241,7 @@ public class TestReloadingFileBasedConfigurationBuilder
          */
         @Override
         protected ReloadingDetector createReloadingDetector(
-                FileHandler handler, FileBasedBuilderParameters fbparams)
+                FileHandler handler, FileBasedBuilderParametersImpl fbparams)
         {
             handlerForDetector = handler;
             return mockDetector;

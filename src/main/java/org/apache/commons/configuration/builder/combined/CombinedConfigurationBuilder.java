@@ -39,7 +39,7 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
-import org.apache.commons.configuration.builder.FileBasedBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -378,7 +378,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /** Constant for the name of the file-based builder parameters class. */
     private static final String FILE_PARAMS =
-            "org.apache.commons.configuration.builder.FileBasedBuilderParameters";
+            "org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl";
 
     /** Constant for the provider for properties files. */
     private static final ConfigurationBuilderProvider PROPERTIES_PROVIDER =
@@ -583,19 +583,24 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the configuration builder with the given name. With this method
-     * a builder of a child configuration which was given a name in the
+     * Returns the configuration builder with the given name. With this method a
+     * builder of a child configuration which was given a name in the
      * configuration definition file can be accessed directly.
+     *
      * @param name the name of the builder in question
      * @return the child configuration builder with this name
-     * @throws ConfigurationException if an error occurs setting up the definition configuration or no builder with this name exists
+     * @throws ConfigurationException if an error occurs setting up the
+     *         definition configuration or no builder with this name exists
      */
-    public synchronized ConfigurationBuilder<? extends Configuration> getNamedBuilder(String name) throws ConfigurationException
+    public synchronized ConfigurationBuilder<? extends Configuration> getNamedBuilder(
+            String name) throws ConfigurationException
     {
-        ConfigurationBuilder<? extends Configuration> builder = getSourceData().getNamedBuilder(name);
-        if(builder == null)
+        ConfigurationBuilder<? extends Configuration> builder =
+                getSourceData().getNamedBuilder(name);
+        if (builder == null)
         {
-            throw new ConfigurationException("Builder cannot be resolved: " + name);
+            throw new ConfigurationException("Builder cannot be resolved: "
+                    + name);
         }
         return builder;
     }
@@ -603,14 +608,17 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /**
      * Returns a set with the names of all child configuration builders. A tag
      * defining a configuration source in the configuration definition file can
-     * have the {@code config-name} attribute. If this attribute is present,
-     * the corresponding builder is assigned this name and can be directly
-     * accessed through the {@link #getNamedBuilder(String)} method. This
-     * method returns a collection with all available builder names.
+     * have the {@code config-name} attribute. If this attribute is present, the
+     * corresponding builder is assigned this name and can be directly accessed
+     * through the {@link #getNamedBuilder(String)} method. This method returns
+     * a collection with all available builder names.
+     *
      * @return a collection with the names of all builders
-     * @throws ConfigurationException if an error occurs setting up the definition configuration
+     * @throws ConfigurationException if an error occurs setting up the
+     *         definition configuration
      */
-    public synchronized Set<String> builderNames() throws ConfigurationException
+    public synchronized Set<String> builderNames()
+            throws ConfigurationException
     {
         return Collections.unmodifiableSet(getSourceData().builderNames());
     }
@@ -625,6 +633,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         super.resetParameters();
         definitionBuilder = null;
         definitionConfiguration = null;
+        currentParameters = null;
 
         if (sourceData != null)
         {
@@ -660,8 +669,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             }
         }
 
-        FileBasedBuilderParameters fileParams =
-                FileBasedBuilderParameters.fromParameters(params);
+        FileBasedBuilderParametersImpl fileParams =
+                FileBasedBuilderParametersImpl.fromParameters(params);
         if (fileParams != null)
         {
             return new FileBasedConfigurationBuilder<XMLConfiguration>(
@@ -729,9 +738,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             result.setNodeCombiner(new OverrideCombiner());
         }
 
-        ConfigurationSourceData data = getSourceData();
+        setUpCurrentParameters();
         initNodeCombinerListNodes(result, config, KEY_OVERRIDE_LIST);
         registerConfiguredProviders(config);
+        ConfigurationSourceData data = getSourceData();
 
         createAndAddConfigurations(result, data.getOverrideBuilders(), data);
         if (!data.getUnionBuilders().isEmpty())
@@ -895,6 +905,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     {
         if (sourceData == null)
         {
+            if (currentParameters == null)
+            {
+                setUpCurrentParameters();
+            }
             sourceData = createSourceData();
         }
         return sourceData;
@@ -910,7 +924,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private ConfigurationSourceData createSourceData()
             throws ConfigurationException
     {
-        setUpCurrentParameters();
         ConfigurationSourceData result = new ConfigurationSourceData();
         result.initFromDefinitionConfiguration(getDefinitionConfiguration());
         return result;
@@ -932,8 +945,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_PROVIDER_KEY);
             currentParameters.registerProvider(key,
-                    (BaseConfigurationBuilderProvider) BeanHelper
-                            .createBean(decl));
+                    (ConfigurationBuilderProvider) BeanHelper.createBean(decl));
         }
     }
 

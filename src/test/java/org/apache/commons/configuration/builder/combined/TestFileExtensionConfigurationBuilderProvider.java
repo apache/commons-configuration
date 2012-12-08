@@ -27,7 +27,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
-import org.apache.commons.configuration.builder.FileBasedBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -156,7 +156,7 @@ public class TestFileExtensionConfigurationBuilderProvider
     {
         ConfigurationDeclaration decl = setUpDecl();
         BuilderParameters params =
-                new FileBasedBuilderParameters()
+                new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration");
         FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
@@ -176,7 +176,7 @@ public class TestFileExtensionConfigurationBuilderProvider
     {
         ConfigurationDeclaration decl = setUpDecl();
         BuilderParameters params =
-                new FileBasedBuilderParameters()
+                new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration.properties");
         FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
@@ -195,7 +195,7 @@ public class TestFileExtensionConfigurationBuilderProvider
             throws ConfigurationException
     {
         ConfigurationDeclaration decl = setUpDecl();
-        BuilderParameters params = new FileBasedBuilderParameters();
+        BuilderParameters params = new FileBasedBuilderParametersImpl();
         FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
                 "Wrong class",
@@ -214,7 +214,7 @@ public class TestFileExtensionConfigurationBuilderProvider
     {
         ConfigurationDeclaration decl = setUpDecl();
         BuilderParameters params =
-                new FileBasedBuilderParameters()
+                new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration." + EXT);
         FileExtensionConfigurationBuilderProvider provider = setUpProvider();
         assertEquals(
@@ -233,7 +233,7 @@ public class TestFileExtensionConfigurationBuilderProvider
     {
         ConfigurationDeclaration decl = setUpDecl();
         BuilderParameters params =
-                new FileBasedBuilderParameters()
+                new FileBasedBuilderParametersImpl()
                         .setPath("C:\\Test\\someTestConfiguration."
                                 + EXT.toUpperCase(Locale.ENGLISH));
         FileExtensionConfigurationBuilderProvider provider = setUpProvider();

@@ -18,7 +18,6 @@ package org.apache.commons.configuration.builder;
 
 import java.io.File;
 import java.net.URL;
-import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.configuration.FileSystem;
@@ -46,12 +45,13 @@ import org.apache.commons.configuration.io.FileHandler;
  * @version $Id$
  * @since 2.0
  */
-public class FileBasedBuilderParameters implements BuilderParameters
+public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
+        implements FileBasedBuilderProperties<FileBasedBuilderParametersImpl>
 {
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY =
             BasicConfigurationBuilder.RESERVED_PARAMETER
-                    + FileBasedBuilderParameters.class.getName();
+                    + FileBasedBuilderParametersImpl.class.getName();
 
     /**
      * Stores the associated file handler for the location of the configuration.
@@ -62,22 +62,22 @@ public class FileBasedBuilderParameters implements BuilderParameters
     private long reloadingRefreshDelay;
 
     /**
-     * Creates a new instance of {@code FileBasedBuilderParameters} with an
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an
      * uninitialized {@code FileHandler} object.
      */
-    public FileBasedBuilderParameters()
+    public FileBasedBuilderParametersImpl()
     {
         this(null);
     }
 
     /**
-     * Creates a new instance of {@code FileBasedBuilderParameters} and
+     * Creates a new instance of {@code FileBasedBuilderParametersImpl} and
      * associates it with the given {@code FileHandler} object. If the handler
      * is <b>null</b>, a new handler instance is created.
      *
      * @param handler the associated {@code FileHandler} (can be <b>null</b>)
      */
-    public FileBasedBuilderParameters(FileHandler handler)
+    public FileBasedBuilderParametersImpl(FileHandler handler)
     {
         fileHandler = (handler != null) ? handler : new FileHandler();
     }
@@ -90,7 +90,7 @@ public class FileBasedBuilderParameters implements BuilderParameters
      * @return the instance obtained from the map or <b>null</b>
      * @throws NullPointerException if the map is <b>null</b>
      */
-    public static FileBasedBuilderParameters fromParameters(
+    public static FileBasedBuilderParametersImpl fromParameters(
             Map<String, Object> params)
     {
         return fromParameters(params, false);
@@ -109,22 +109,23 @@ public class FileBasedBuilderParameters implements BuilderParameters
      * @return the instance obtained from the map or <b>null</b>
      * @throws NullPointerException if the map is <b>null</b>
      */
-    public static FileBasedBuilderParameters fromParameters(
+    public static FileBasedBuilderParametersImpl fromParameters(
             Map<String, Object> params, boolean createIfMissing)
     {
-        FileBasedBuilderParameters instance =
-                (FileBasedBuilderParameters) params.get(PARAM_KEY);
+        FileBasedBuilderParametersImpl instance =
+                (FileBasedBuilderParametersImpl) params.get(PARAM_KEY);
         if (instance == null && createIfMissing)
         {
-            instance = new FileBasedBuilderParameters();
+            instance = new FileBasedBuilderParametersImpl();
         }
         return instance;
     }
 
     /**
-     * Returns the {@code FileHandler} associated with this parameters object.
+     * Returns the {@code FileHandler} managed by this object. This object is
+     * updated every time the file location is changed.
      *
-     * @return the {@code FileHandler}
+     * @return the managed {@code FileHandler}
      */
     public FileHandler getFileHandler()
     {
@@ -132,110 +133,59 @@ public class FileBasedBuilderParameters implements BuilderParameters
     }
 
     /**
-     * Returns the refresh delay for reloading support.
+     * Returns the refresh delay for reload operations.
      *
-     * @return the refresh delay (in milliseconds)
+     * @return the reloading refresh delay
      */
     public long getReloadingRefreshDelay()
     {
         return reloadingRefreshDelay;
     }
 
-    /**
-     * Sets the refresh delay for reloading support
-     *
-     * @param reloadingRefreshDelay the refresh delay (in milliseconds)
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setReloadingRefreshDelay(
+    public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
             long reloadingRefreshDelay)
     {
         this.reloadingRefreshDelay = reloadingRefreshDelay;
         return this;
     }
 
-    /**
-     * Sets the location of the associated {@code FileHandler} as a {@code File}
-     * object.
-     *
-     * @param file the {@code File} location
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setFile(File file)
+    public FileBasedBuilderParametersImpl setFile(File file)
     {
         getFileHandler().setFile(file);
         return this;
     }
 
-    /**
-     * Sets the location of the associated {@code FileHandler} as a {@code URL}
-     * object.
-     *
-     * @param url the {@code URL} location
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setURL(URL url)
+    public FileBasedBuilderParametersImpl setURL(URL url)
     {
         getFileHandler().setURL(url);
         return this;
     }
 
-    /**
-     * Sets the location of the associated {@code FileHandler} as an absolute
-     * file path.
-     *
-     * @param path the path location
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setPath(String path)
+    public FileBasedBuilderParametersImpl setPath(String path)
     {
         getFileHandler().setPath(path);
         return this;
     }
 
-    /**
-     * Sets the file name of the associated {@code FileHandler}.
-     *
-     * @param name the file name
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setFileName(String name)
+    public FileBasedBuilderParametersImpl setFileName(String name)
     {
         getFileHandler().setFileName(name);
         return this;
     }
 
-    /**
-     * Sets the base path of the associated {@code FileHandler}.
-     *
-     * @param path the base path
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setBasePath(String path)
+    public FileBasedBuilderParametersImpl setBasePath(String path)
     {
         getFileHandler().setBasePath(path);
         return this;
     }
 
-    /**
-     * Sets the {@code FileSystem} of the associated {@code FileHandler}.
-     *
-     * @param fs the {@code FileSystem}
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setFileSystem(FileSystem fs)
+    public FileBasedBuilderParametersImpl setFileSystem(FileSystem fs)
     {
         getFileHandler().setFileSystem(fs);
         return this;
     }
 
-    /**
-     * Sets the encoding of the associated {@code FileHandler}.
-     *
-     * @param enc the encoding
-     * @return a reference to this object for method chaining
-     */
-    public FileBasedBuilderParameters setEncoding(String enc)
+    public FileBasedBuilderParametersImpl setEncoding(String enc)
     {
         getFileHandler().setEncoding(enc);
         return this;
@@ -244,10 +194,15 @@ public class FileBasedBuilderParameters implements BuilderParameters
     /**
      * {@inheritDoc} This implementation returns a map which contains this
      * object itself under a specific key. The static {@code fromParameters()}
-     * method can be used to extract an instance from a parameters map.
+     * method can be used to extract an instance from a parameters map. Of
+     * course, the properties inherited from the base class are also added to
+     * the result map.
      */
+    @Override
     public Map<String, Object> getParameters()
     {
-        return Collections.singletonMap(PARAM_KEY, (Object) this);
+        Map<String, Object> params = super.getParameters();
+        params.put(PARAM_KEY, this);
+        return params;
     }
 }

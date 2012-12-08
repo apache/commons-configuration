@@ -26,7 +26,6 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.beanutils.BeanHelper;
-import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
@@ -97,11 +96,7 @@ public class BaseConfigurationBuilderProvider implements
      *        support is required (<b>null</b> if reloading is not supported)
      * @param configCls the name of the configuration class (must not be
      *        <b>null</b>)
-     * @param paramCls a collection with the names of parameters classes; an
-     *        instance of {@link BasicBuilderParameters} is created
-     *        automatically and does not need to be contained in this list; the
-     *        collection can be <b>null</b> if no additional parameter objects
-     *        are needed
+     * @param paramCls a collection with the names of parameters classes
      * @throws IllegalArgumentException if a required parameter is missing
      */
     public BaseConfigurationBuilderProvider(String bldrCls,
@@ -213,8 +208,7 @@ public class BaseConfigurationBuilderProvider implements
     /**
      * Creates a collection of parameter objects to be used for configuring the
      * builder. This method creates instances of the parameter classes passed to
-     * the constructor. An instance of {@link BasicBuilderParameters} is added
-     * automatically.
+     * the constructor.
      *
      * @return a collection with parameter objects for the builder
      * @throws Exception if an error occurs while creating parameter objects via
@@ -225,8 +219,7 @@ public class BaseConfigurationBuilderProvider implements
     {
         Collection<BuilderParameters> params =
                 new ArrayList<BuilderParameters>(
-                        getParameterClasses().size() + 1);
-        params.add(new BasicBuilderParameters());
+                        getParameterClasses().size());
         for (String paramcls : getParameterClasses())
         {
             params.add(createParameterObject(paramcls));

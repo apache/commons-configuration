@@ -27,6 +27,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.io.FileHandler;
@@ -34,7 +35,7 @@ import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
- * Test class for {@code FileBasedBuilderParameters}.
+ * Test class for {@code FileBasedBuilderParametersImpl}.
  *
  * @version $Id$
  */
@@ -46,7 +47,7 @@ public class TestFileBasedBuilderParameters
     @Test
     public void testInitDefaults()
     {
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertFalse("Got a location", params.getFileHandler()
                 .isLocationDefined());
         assertEquals("Got a refresh delay", 0,
@@ -60,8 +61,8 @@ public class TestFileBasedBuilderParameters
     public void testInitFileHandler()
     {
         FileHandler handler = new FileHandler();
-        FileBasedBuilderParameters params =
-                new FileBasedBuilderParameters(handler);
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl(handler);
         assertSame("Wrong handler", handler, params.getFileHandler());
     }
 
@@ -71,7 +72,7 @@ public class TestFileBasedBuilderParameters
     @Test
     public void testSetReloadingRefreshDelay()
     {
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         final int delay = 10000;
         assertSame("Wrong result", params,
                 params.setReloadingRefreshDelay(delay));
@@ -87,7 +88,7 @@ public class TestFileBasedBuilderParameters
         File file =
                 ConfigurationAssert.getTestFile("test.properties")
                         .getAbsoluteFile();
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setFile(file));
         assertEquals("Wrong file", file, params.getFileHandler().getFile());
     }
@@ -99,7 +100,7 @@ public class TestFileBasedBuilderParameters
     public void testSetURL()
     {
         URL url = ConfigurationAssert.getTestURL("test.properties");
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setURL(url));
         assertEquals("Wrong URL", url.toExternalForm(), params.getFileHandler()
                 .getURL().toExternalForm());
@@ -114,7 +115,7 @@ public class TestFileBasedBuilderParameters
         String path =
                 ConfigurationAssert.getTestFile("test.properties")
                         .getAbsolutePath();
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setPath(path));
         assertEquals("Wrong path", path, params.getFileHandler().getPath());
     }
@@ -126,7 +127,7 @@ public class TestFileBasedBuilderParameters
     public void testSetFileName()
     {
         String name = "testConfig.xml";
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setFileName(name));
         assertEquals("Wrong name", name, params.getFileHandler().getFileName());
     }
@@ -140,7 +141,7 @@ public class TestFileBasedBuilderParameters
         String path =
                 ConfigurationAssert.getTestFile("test.properties").getParentFile()
                         .getAbsolutePath();
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setBasePath(path));
         assertEquals("Wrong path", path, params.getFileHandler().getBasePath());
     }
@@ -153,7 +154,7 @@ public class TestFileBasedBuilderParameters
     {
         FileSystem fs = EasyMock.createMock(FileSystem.class);
         EasyMock.replay(fs);
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setFileSystem(fs));
         assertSame("Wrong file system", fs, params.getFileHandler()
                 .getFileSystem());
@@ -166,7 +167,7 @@ public class TestFileBasedBuilderParameters
     public void testSetEncoding()
     {
         String enc = "ISO-8859-1";
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertSame("Wrong result", params, params.setEncoding(enc));
         assertSame("Wrong encoding", enc, params.getFileHandler().getEncoding());
     }
@@ -177,11 +178,16 @@ public class TestFileBasedBuilderParameters
     @Test
     public void testGetParameters()
     {
-        FileBasedBuilderParameters params =
-                new FileBasedBuilderParameters().setReloadingRefreshDelay(1000);
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl()
+                        .setReloadingRefreshDelay(1000);
+        params.setListDelimiter('*');
         Map<String, Object> map = params.getParameters();
-        assertEquals("Wrong number of items", 1, map.size());
         assertTrue("Object not stored", map.values().contains(params));
+        assertEquals("Wrong delimiter parsing flag", Boolean.TRUE,
+                map.get("delimiterParsingDisabled"));
+        assertEquals("Wrong delimiter", Character.valueOf('*'), params
+                .getParameters().get("listDelimiter"));
     }
 
     /**
@@ -191,7 +197,7 @@ public class TestFileBasedBuilderParameters
     public void testFromParametersNotFound()
     {
         assertNull("Got an instance",
-                FileBasedBuilderParameters
+                FileBasedBuilderParametersImpl
                         .fromParameters(new HashMap<String, Object>()));
     }
 
@@ -202,8 +208,8 @@ public class TestFileBasedBuilderParameters
     @Test
     public void testFromParametersDefaultInstance()
     {
-        FileBasedBuilderParameters params =
-                FileBasedBuilderParameters.fromParameters(
+        FileBasedBuilderParametersImpl params =
+                FileBasedBuilderParametersImpl.fromParameters(
                         new HashMap<String, Object>(), true);
         assertFalse("Got a location", params.getFileHandler()
                 .isLocationDefined());
@@ -215,9 +221,28 @@ public class TestFileBasedBuilderParameters
     @Test
     public void testFromParametersExtract()
     {
-        FileBasedBuilderParameters params = new FileBasedBuilderParameters();
+        FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         Map<String, Object> map = params.getParameters();
         assertSame("Wrong parameters", params,
-                FileBasedBuilderParameters.fromParameters(map));
+                FileBasedBuilderParametersImpl.fromParameters(map));
+    }
+
+    /**
+     * Tests whether reflection-based property access through BeanUtils is
+     * possible.
+     */
+    @Test
+    public void testBeanPropertiesAccess() throws Exception
+    {
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        PropertyUtils.setProperty(params, "throwExceptionOnMissing",
+                Boolean.TRUE);
+        PropertyUtils.setProperty(params, "fileName", "test.xml");
+        assertEquals("File name not set", "test.xml", params.getFileHandler()
+                .getFileName());
+        Map<String, Object> map = params.getParameters();
+        assertEquals("Property not stored", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
     }
 }
