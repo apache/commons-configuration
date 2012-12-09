@@ -56,6 +56,9 @@ public class TestBuilderParametersBeanInfo
         fetchDescriptor(properties, "throwExceptionOnMissing");
         pd = fetchDescriptor(properties, "fluentProperty");
         assertNull("Got a read method for fluentProperty", pd.getReadMethod());
+        pd = fetchDescriptor(properties, "fluentPropertyWithGet");
+        assertNotNull("No read method for fluent property", pd.getReadMethod());
+        assertNotNull("No write method for fluent property", pd.getWriteMethod());
     }
 
     /**

@@ -23,10 +23,10 @@ import java.beans.PropertyDescriptor;
 import java.beans.SimpleBeanInfo;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Set;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -136,7 +136,8 @@ public abstract class BuilderParametersBeanInfo extends SimpleBeanInfo
     private static PropertyDescriptor[] extractPropertyDescriptors(
             Class<?> beanClass, BeanInfo stdBeanInfo)
     {
-        Set<String> propertyNames = fetchPropertyNames(stdBeanInfo);
+        Map<String, PropertyDescriptor> propertyDescs =
+                fetchPropertyDescriptors(stdBeanInfo);
         Collection<PropertyDescriptor> descriptors =
                 new LinkedList<PropertyDescriptor>();
 
@@ -145,18 +146,23 @@ public abstract class BuilderParametersBeanInfo extends SimpleBeanInfo
             if (m.getName().startsWith(PREFIX_SET_METHOD))
             {
                 String propertyName = propertyName(m);
-                if (!propertyNames.contains(propertyName))
+                PropertyDescriptor pd = propertyDescs.get(propertyName);
+                try
                 {
-                    try
+                    if (pd == null)
                     {
                         descriptors.add(createFluentPropertyDescritor(m,
                                 propertyName));
                     }
-                    catch (IntrospectionException e)
+                    else if (pd.getWriteMethod() == null)
                     {
-                        LOG.warn("Error when creating PropertyDescriptor for "
-                                + m + "! Ignoring this property.", e);
+                        pd.setWriteMethod(m);
                     }
+                }
+                catch (IntrospectionException e)
+                {
+                    LOG.warn("Error when creating PropertyDescriptor for " + m
+                            + "! Ignoring this property.", e);
                 }
             }
         }
@@ -165,15 +171,16 @@ public abstract class BuilderParametersBeanInfo extends SimpleBeanInfo
     }
 
     /**
-     * Obtains the names of all properties from the given {@code BeanInfo}
-     * object.
+     * Obtains a map of all properties from the given {@code BeanInfo} object.
      *
      * @param info the {@code BeanInfo} (may be <b>null</b>)
-     * @return a set with all property names
+     * @return a map allowing direct access to property descriptors by name
      */
-    private static Set<String> fetchPropertyNames(BeanInfo info)
+    private static Map<String, PropertyDescriptor> fetchPropertyDescriptors(
+            BeanInfo info)
     {
-        Set<String> propertyNames = new HashSet<String>();
+        Map<String, PropertyDescriptor> propDescs =
+                new HashMap<String, PropertyDescriptor>();
         if (info != null)
         {
             PropertyDescriptor[] descs = info.getPropertyDescriptors();
@@ -181,12 +188,12 @@ public abstract class BuilderParametersBeanInfo extends SimpleBeanInfo
             {
                 for (PropertyDescriptor pd : descs)
                 {
-                    propertyNames.add(pd.getName());
+                    propDescs.put(pd.getName(), pd);
                 }
             }
         }
 
-        return propertyNames;
+        return propDescs;
     }
 
     /**
