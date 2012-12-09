@@ -419,8 +419,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for environment properties. */
-    private static final BaseConfigurationBuilderProvider ENV_PROVIDER = null;/*
-            new BaseConfigurationBuilderProvider(EnvironmentConfiguration.class);*/
+    private static final BaseConfigurationBuilderProvider ENV_PROVIDER =
+            new BaseConfigurationBuilderProvider(
+                    BASIC_BUILDER,
+                    null,
+                    "org.apache.commons.configuration.EnvironmentConfiguration",
+                    Arrays.asList("org.apache.commons.configuration.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for plist files. */
     private static final BaseConfigurationBuilderProvider PLIST_PROVIDER =
@@ -437,14 +441,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini", "system"/*, "configuration", "env", "jndi"*/
+            "ini", "system", "env"/*, "configuration", "jndi"*/
     };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationBuilderProvider[] DEFAULT_PROVIDERS = {
             PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER,
-            SYSTEM_PROVIDER/*, JNDI_PROVIDER, BUILDER_PROVIDER,
-            ENV_PROVIDER*/
+            SYSTEM_PROVIDER, ENV_PROVIDER/*, JNDI_PROVIDER, BUILDER_PROVIDER */
     };
 
     /** A map with the default configuration builder providers. */
