@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 
 /**
@@ -101,6 +102,17 @@ public final class Parameters
     {
         return createParametersProxy(CombinedBuilderParameters.class,
                 new CombinedBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for JNDI configurations.
+     *
+     * @return the new parameters object
+     */
+    public static JndiBuilderParameters jndi()
+    {
+        return createParametersProxy(JndiBuilderParameters.class,
+                new JndiBuilderParametersImpl());
     }
 
     /**

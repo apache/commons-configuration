@@ -45,6 +45,22 @@ public class TestParameters
     }
 
     /**
+     * Checks whether the given parameters map contains the standard values for
+     * basic properties.
+     *
+     * @param map the map to be tested
+     */
+    private static void checkBasicProperties(Map<String, Object> map)
+    {
+        assertEquals("Delimiter flag not set", Boolean.TRUE,
+                map.get("delimiterParsingDisabled"));
+        assertEquals("Wrong delimiter", Character.valueOf('#'),
+                map.get("listDelimiter"));
+        assertEquals("Wrong exception flag value", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
+    }
+
+    /**
      * Tests whether a file-based parameters object can be created.
      */
     @Test
@@ -60,12 +76,7 @@ public class TestParameters
                 .getFileName());
         assertEquals("Wrong encoding", "UTF-8", fbparams.getFileHandler()
                 .getEncoding());
-        assertEquals("Delimiter flag not set", Boolean.TRUE,
-                map.get("delimiterParsingDisabled"));
-        assertEquals("Wrong delimiter", Character.valueOf('#'),
-                map.get("listDelimiter"));
-        assertEquals("Wrong exception flag value", Boolean.TRUE,
-                map.get("throwExceptionOnMissing"));
+        checkBasicProperties(map);
     }
 
     /**
@@ -91,16 +102,25 @@ public class TestParameters
     {
         Map<String, Object> map =
                 Parameters.combined().setThrowExceptionOnMissing(true)
-                        .setBasePath("test").setListDelimiter('~')
+                        .setBasePath("test").setListDelimiter('#')
                         .getParameters();
         CombinedBuilderParametersImpl cparams =
                 CombinedBuilderParametersImpl.fromParameters(map);
         assertEquals("Wrong base path", "test", cparams.getBasePath());
-        assertEquals("Delimiter flag not set", Boolean.TRUE,
-                map.get("delimiterParsingDisabled"));
-        assertEquals("Wrong delimiter", Character.valueOf('~'),
-                map.get("listDelimiter"));
-        assertEquals("Wrong exception flag value", Boolean.TRUE,
-                map.get("throwExceptionOnMissing"));
+        checkBasicProperties(map);
+    }
+
+    /**
+     * Tests whether a JNDI parameters object can be created.
+     */
+    @Test
+    public void testJndi()
+    {
+        Map<String, Object> map =
+                Parameters.jndi().setThrowExceptionOnMissing(true)
+                        .setPrefix("test").setListDelimiter('#')
+                        .getParameters();
+        assertEquals("Wrong prefix", "test", map.get("prefix"));
+        checkBasicProperties(map);
     }
 }
