@@ -32,6 +32,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
@@ -368,6 +369,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** Constant for the XML file extension. */
     static final String EXT_XML = "xml";
 
+    /** Constant for the basic configuration builder class. */
+    private static final String BASIC_BUILDER =
+            "org.apache.commons.configuration.builder.BasicConfigurationBuilder";
+
     /** Constant for the file-based configuration builder class. */
     private static final String FILE_BUILDER =
             "org.apache.commons.configuration.builder.FileBasedConfigurationBuilder";
@@ -400,8 +405,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             JNDIConfiguration.class);*/
 
     /** Constant for the provider for system properties. */
-    private static final BaseConfigurationBuilderProvider SYSTEM_PROVIDER = null;/*new BaseConfigurationBuilderProvider(
-            SystemConfiguration.class);*/
+    private static final BaseConfigurationBuilderProvider SYSTEM_PROVIDER =
+            new BaseConfigurationBuilderProvider(
+                    BASIC_BUILDER,
+                    null,
+                    "org.apache.commons.configuration.SystemConfiguration",
+                    Arrays.asList("org.apache.commons.configuration.builder.BasicBuilderParameters"));
 
     /** Constant for the provider for ini files. */
     private static final BaseConfigurationBuilderProvider INI_PROVIDER =
@@ -428,13 +437,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini"/*, "configuration", "env", "jndi", "system"*/
+            "ini", "system"/*, "configuration", "env", "jndi"*/
     };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationBuilderProvider[] DEFAULT_PROVIDERS = {
-            PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER/*, JNDI_PROVIDER,
-            SYSTEM_PROVIDER, BUILDER_PROVIDER,
+            PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER,
+            SYSTEM_PROVIDER/*, JNDI_PROVIDER, BUILDER_PROVIDER,
             ENV_PROVIDER*/
     };
 
@@ -554,7 +563,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             throws ConfigurationException
     {
         initFileSystem();
-        initSystemProperties();
         configureEntityResolver();
         registerConfiguredLookups();
 
@@ -741,6 +749,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         setUpCurrentParameters();
         initNodeCombinerListNodes(result, config, KEY_OVERRIDE_LIST);
         registerConfiguredProviders(config);
+        initSystemProperties(config);
         ConfigurationSourceData data = getSourceData();
 
         createAndAddConfigurations(result, data.getOverrideBuilders(), data);
@@ -809,24 +818,31 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * If a property file is configured add the properties to the System properties.
+     * Handles a file with system properties that may be defined in the
+     * definition configuration. If such property file is configured, all of its
+     * properties are added to the system properties.
+     *
+     * @param config the definition configuration
      * @throws ConfigurationException if an error occurs.
      */
-    protected void initSystemProperties() throws ConfigurationException
+    protected void initSystemProperties(HierarchicalConfiguration config)
+            throws ConfigurationException
     {
-//        String fileName = getString(KEY_SYSTEM_PROPS);
-//        if (fileName != null)
-//        {
-//            try
-//            {
-//               SystemConfiguration.setSystemProperties(getConfigurationBasePath(), fileName);
-//            }
-//            catch (Exception ex)
-//            {
-//                throw new ConfigurationException("Error setting system properties from " + fileName, ex);
-//            }
-//
-//        }
+        String fileName = config.getString(KEY_SYSTEM_PROPS);
+        if (fileName != null)
+        {
+            try
+            {
+                SystemConfiguration.setSystemProperties(
+                        getConfigurationBasePath(), fileName);
+            }
+            catch (Exception ex)
+            {
+                throw new ConfigurationException(
+                        "Error setting system properties from " + fileName, ex);
+            }
+
+        }
     }
 
     protected void configureEntityResolver() throws ConfigurationException
