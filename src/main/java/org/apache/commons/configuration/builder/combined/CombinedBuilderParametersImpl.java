@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
@@ -44,23 +45,30 @@ import org.apache.commons.configuration.builder.ConfigurationBuilder;
  * @version $Id$
  * @since 2.0
  */
-public class CombinedBuilderParameters implements BuilderParameters
+public class CombinedBuilderParametersImpl extends BasicBuilderParameters
+        implements CombinedBuilderProperties<CombinedBuilderParametersImpl>
 {
     /** Constant for the key in the parameters map used by this class. */
     private static final String PARAM_KEY =
             BasicConfigurationBuilder.RESERVED_PARAMETER
-                    + CombinedBuilderParameters.class.getName();
+                    + CombinedBuilderParametersImpl.class.getName();
 
     /** The definition configuration builder. */
     private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
 
+    /** A parameters object for the definition configuration builder. */
+    private BuilderParameters definitionBuilderParameters;
+
     /** A map with registered configuration builder providers. */
     private final Map<String, ConfigurationBuilderProvider> providers;
 
+    /** The base path for configuration sources to be loaded. */
+    private String basePath;
+
     /**
-     * Creates a new instance of {@code CombinedBuilderParameters}.
+     * Creates a new instance of {@code CombinedBuilderParametersImpl}.
      */
-    public CombinedBuilderParameters()
+    public CombinedBuilderParametersImpl()
     {
         providers = new HashMap<String, ConfigurationBuilderProvider>();
     }
@@ -73,7 +81,7 @@ public class CombinedBuilderParameters implements BuilderParameters
      * @return the instance obtained from the map or <b>null</b>
      * @throws NullPointerException if the map is <b>null</b>
      */
-    public static CombinedBuilderParameters fromParameters(
+    public static CombinedBuilderParametersImpl fromParameters(
             Map<String, Object> params)
     {
         return fromParameters(params, false);
@@ -92,14 +100,14 @@ public class CombinedBuilderParameters implements BuilderParameters
      * @return the instance obtained from the map or <b>null</b>
      * @throws NullPointerException if the map is <b>null</b>
      */
-    public static CombinedBuilderParameters fromParameters(
+    public static CombinedBuilderParametersImpl fromParameters(
             Map<String, Object> params, boolean createIfMissing)
     {
-        CombinedBuilderParameters result =
-                (CombinedBuilderParameters) params.get(PARAM_KEY);
+        CombinedBuilderParametersImpl result =
+                (CombinedBuilderParametersImpl) params.get(PARAM_KEY);
         if (result == null && createIfMissing)
         {
-            result = new CombinedBuilderParameters();
+            result = new CombinedBuilderParametersImpl();
         }
         return result;
     }
@@ -123,7 +131,7 @@ public class CombinedBuilderParameters implements BuilderParameters
      * @param builder the definition {@code ConfigurationBuilder}
      * @return a reference to this object for method chaining
      */
-    public CombinedBuilderParameters setDefinitionBuilder(
+    public CombinedBuilderParametersImpl setDefinitionBuilder(
             ConfigurationBuilder<? extends HierarchicalConfiguration> builder)
     {
         definitionBuilder = builder;
@@ -142,7 +150,7 @@ public class CombinedBuilderParameters implements BuilderParameters
      * @return a reference to this object for method chaining
      * @throws IllegalArgumentException if a required parameter is missing
      */
-    public CombinedBuilderParameters registerProvider(String tagName,
+    public CombinedBuilderParametersImpl registerProvider(String tagName,
             ConfigurationBuilderProvider provider)
     {
         if (tagName == null)
@@ -167,13 +175,13 @@ public class CombinedBuilderParameters implements BuilderParameters
      * registering a provider object for the same tag name at the parameters
      * object.
      *
-     * @param providers a map with tag names and corresponding providers
-     * @return a reference to this object for method chaining (must not be
-     *         <b>null</b> or contain <b>null</b> entries
+     * @param providers a map with tag names and corresponding providers (must
+     *        not be <b>null</b> or contain <b>null</b> entries)
+     * @return a reference to this object for method chaining
      * @throws IllegalArgumentException if the map with providers is <b>null</b>
      *         or contains <b>null</b> entries
      */
-    public CombinedBuilderParameters registerMissingProviders(
+    public CombinedBuilderParametersImpl registerMissingProviders(
             Map<String, ConfigurationBuilderProvider> providers)
     {
         if (providers == null)
@@ -219,12 +227,74 @@ public class CombinedBuilderParameters implements BuilderParameters
     }
 
     /**
+     * Returns the base path for relative names of configuration sources. Result
+     * may be <b>null</b> if no base path has been set.
+     *
+     * @return the base path for resolving relative file names
+     */
+    public String getBasePath()
+    {
+        return basePath;
+    }
+
+    /**
+     * Sets the base path for this combined configuration builder. Normally it
+     * it not necessary to set the base path explicitly. Per default, relative
+     * file names of configuration sources are resolved based on the location of
+     * the definition file. If this is not desired or if the definition
+     * configuration is loaded by a different means, the base path for relative
+     * file names can be specified using this method.
+     *
+     * @param path the base path for resolving relative file names
+     * @return a reference to this object for method chaining
+     */
+    public CombinedBuilderParametersImpl setBasePath(String path)
+    {
+        basePath = path;
+        return this;
+    }
+
+    /**
+     * Returns the parameters object for the definition configuration builder if
+     * present.
+     *
+     * @return the parameters object for the definition configuration builder or
+     *         <b>null</b>
+     */
+    public BuilderParameters getDefinitionBuilderParameters()
+    {
+        return definitionBuilderParameters;
+    }
+
+    /**
+     * Sets the parameters object for the definition configuration builder. This
+     * property is evaluated only if the definition configuration builder is not
+     * set explicitly (using the
+     * {@link #setDefinitionBuilder(ConfigurationBuilder)} method). In this
+     * case, a builder for an XML configuration is created and configured with
+     * this parameters object.
+     *
+     * @param params the parameters object for the definition configuration
+     *        builder
+     * @return a reference to this object for method chaining
+     */
+    public CombinedBuilderParametersImpl setDefinitionBuilderParameters(
+            BuilderParameters params)
+    {
+        definitionBuilderParameters = params;
+        return this;
+    }
+
+    /**
      * {@inheritDoc} This implementation returns a map which contains this
      * object itself under a specific key. The static {@code fromParameters()}
      * method can be used to extract an instance from a parameters map.
      */
+    @Override
     public Map<String, Object> getParameters()
     {
-        return Collections.singletonMap(PARAM_KEY, (Object) this);
+        Map<String, Object> params = super.getParameters();
+        params.put(PARAM_KEY, this);
+        return params;
     }
 }

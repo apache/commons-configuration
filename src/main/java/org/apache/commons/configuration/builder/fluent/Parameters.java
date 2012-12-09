@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 
 /**
  * <p>
@@ -88,6 +89,18 @@ public final class Parameters
     {
         return createParametersProxy(FileBasedBuilderParameters.class,
                 new FileBasedBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for combined configuration
+     * builder properties.
+     *
+     * @return the new parameters object
+     */
+    public static CombinedBuilderParameters combined()
+    {
+        return createParametersProxy(CombinedBuilderParameters.class,
+                new CombinedBuilderParametersImpl());
     }
 
     /**

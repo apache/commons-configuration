@@ -24,6 +24,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 import org.junit.Test;
 
 /**
@@ -80,5 +81,26 @@ public class TestParameters
                 "Wrong string: " + s,
                 s.indexOf(FileBasedBuilderParametersImpl.class.getSimpleName()) >= 0);
         assertTrue("No hash code", params.hashCode() != 0);
+    }
+
+    /**
+     * Tests whether a combined parameters object can be created.
+     */
+    @Test
+    public void testCombined()
+    {
+        Map<String, Object> map =
+                Parameters.combined().setThrowExceptionOnMissing(true)
+                        .setBasePath("test").setListDelimiter('~')
+                        .getParameters();
+        CombinedBuilderParametersImpl cparams =
+                CombinedBuilderParametersImpl.fromParameters(map);
+        assertEquals("Wrong base path", "test", cparams.getBasePath());
+        assertEquals("Delimiter flag not set", Boolean.TRUE,
+                map.get("delimiterParsingDisabled"));
+        assertEquals("Wrong delimiter", Character.valueOf('~'),
+                map.get("listDelimiter"));
+        assertEquals("Wrong exception flag value", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
     }
 }

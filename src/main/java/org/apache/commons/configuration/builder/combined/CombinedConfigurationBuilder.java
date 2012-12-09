@@ -485,7 +485,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private ConfigurationSourceData sourceData;
 
     /** Stores the current parameters object. */
-    private CombinedBuilderParameters currentParameters;
+    private CombinedBuilderParametersImpl currentParameters;
 
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;
@@ -668,8 +668,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     protected ConfigurationBuilder<? extends HierarchicalConfiguration> setupDefinitionBuilder(
             Map<String, Object> params) throws ConfigurationException
     {
-        CombinedBuilderParameters cbParams =
-                CombinedBuilderParameters.fromParameters(params);
+        CombinedBuilderParametersImpl cbParams =
+                CombinedBuilderParametersImpl.fromParameters(params);
         if (cbParams != null)
         {
             ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
@@ -906,7 +906,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private void setUpCurrentParameters()
     {
         currentParameters =
-                CombinedBuilderParameters.fromParameters(getParameters(), true);
+                CombinedBuilderParametersImpl.fromParameters(getParameters(), true);
         currentParameters.registerMissingProviders(DEFAULT_PROVIDERS_MAP);
     }
 
