@@ -202,7 +202,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * @since 1.6
  */
 public class HierarchicalINIConfiguration extends
-        AbstractHierarchicalFileConfiguration
+        AbstractHierarchicalFileConfiguration implements FileBasedConfiguration
 {
     /**
      * The characters that signal the start of a comment line.
@@ -337,6 +337,11 @@ public class HierarchicalINIConfiguration extends
         out.flush();
     }
 
+    public void write(Writer out) throws ConfigurationException, IOException
+    {
+        save(out);
+    }
+
     /**
      * Load the configuration from the given reader. Note that the
      * {@code clear()} method is not called so the configuration read in will
@@ -397,6 +402,11 @@ public class HierarchicalINIConfiguration extends
             throw new ConfigurationException(
                     "Unable to load the configuration", e);
         }
+    }
+
+    public void read(Reader in) throws ConfigurationException, IOException
+    {
+        load(in);
     }
 
     /**
