@@ -39,6 +39,7 @@ import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
+import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
@@ -401,8 +402,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for JNDI sources. */
-    private static final BaseConfigurationBuilderProvider JNDI_PROVIDER = null;/*new BaseConfigurationBuilderProvider(
-            JNDIConfiguration.class);*/
+    private static final BaseConfigurationBuilderProvider JNDI_PROVIDER =
+            new BaseConfigurationBuilderProvider(
+                    BASIC_BUILDER,
+                    null,
+                    "org.apache.commons.configuration.JNDIConfiguration",
+                    Arrays.asList("org.apache.commons.configuration.builder.JndiBuilderParametersImpl"));
 
     /** Constant for the provider for system properties. */
     private static final BaseConfigurationBuilderProvider SYSTEM_PROVIDER =
@@ -441,13 +446,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini", "system", "env"/*, "configuration", "jndi"*/
+            "ini", "system", "env", "jndi"/*, "configuration"*/
     };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationBuilderProvider[] DEFAULT_PROVIDERS = {
             PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER,
-            SYSTEM_PROVIDER, ENV_PROVIDER/*, JNDI_PROVIDER, BUILDER_PROVIDER */
+            SYSTEM_PROVIDER, ENV_PROVIDER, JNDI_PROVIDER/*, BUILDER_PROVIDER */
     };
 
     /** A map with the default configuration builder providers. */
@@ -657,9 +662,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * Obtains the {@code ConfigurationBuilder} object which provides access to
      * the configuration containing the definition of the combined configuration
      * to create. If a definition builder is defined in the parameters, it is
-     * used. Otherwise, a file specification must be available. Then a builder
-     * which opens this file is created. Note: This method is called from a
-     * synchronized block.
+     * used. Otherwise, we check whether the combined builder parameters object
+     * contains a parameters object for the definition builder. If this is the
+     * case, a builder for an {@code XMLConfiguration} is created and configured
+     * with this object. As a last resort, it is looked for a
+     * {@link FileBasedBuilderParametersImpl} object in the properties. If
+     * found, also a XML configuration builder is created which loads this file.
+     * Note: This method is called from a synchronized block.
      *
      * @param params the current parameters for this builder
      * @return the builder for the definition configuration
@@ -678,14 +687,19 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             {
                 return defBuilder;
             }
+
+            if (cbParams.getDefinitionBuilderParameters() != null)
+            {
+                return createXMLDefinitionBuilder(cbParams
+                        .getDefinitionBuilderParameters());
+            }
         }
 
-        FileBasedBuilderParametersImpl fileParams =
+        BuilderParameters fileParams =
                 FileBasedBuilderParametersImpl.fromParameters(params);
         if (fileParams != null)
         {
-            return new FileBasedConfigurationBuilder<XMLConfiguration>(
-                    XMLConfiguration.class).configure(fileParams);
+            return createXMLDefinitionBuilder(fileParams);
         }
 
         throw new ConfigurationException(
@@ -844,7 +858,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 throw new ConfigurationException(
                         "Error setting system properties from " + fileName, ex);
             }
-
         }
     }
 
@@ -991,6 +1004,21 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 }
             }
         });
+    }
+
+    /**
+     * Creates a default builder for the definition configuration and
+     * initializes it with a parameters object. The default builder creates an
+     * {@code XMLConfiguration}; it expects a corresponding file specification.
+     *
+     * @param builderParams the parameters object for the builder
+     * @return the standard builder for the definition configuration
+     */
+    private static ConfigurationBuilder<? extends HierarchicalConfiguration> createXMLDefinitionBuilder(
+            BuilderParameters builderParams)
+    {
+        return new FileBasedConfigurationBuilder<XMLConfiguration>(
+                XMLConfiguration.class).configure(builderParams);
     }
 
     /**
