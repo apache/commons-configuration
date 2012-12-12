@@ -138,6 +138,48 @@ public class BasicBuilderParameters implements BuilderParameters,
     }
 
     /**
+     * Merges this object with the given parameters object. This method adds all
+     * property values defined by the passed in parameters object to the
+     * internal storage which are not already in. So properties already defined
+     * in this object take precedence. Property names starting with the reserved
+     * parameter prefix are ignored.
+     *
+     * @param p the object whose properties should be merged (must not be
+     *        <b>null</b>)
+     * @throws IllegalArgumentException if the passed in object is <b>null</b>
+     */
+    public void merge(BuilderParameters p)
+    {
+        if (p == null)
+        {
+            throw new IllegalArgumentException(
+                    "Parameters to merge must not be null!");
+        }
+
+        for (Map.Entry<String, Object> e : p.getParameters().entrySet())
+        {
+            if (!properties.containsKey(e.getKey())
+                    && !e.getKey().startsWith(RESERVED_PARAMETER_PREFIX))
+            {
+                storeProperty(e.getKey(), e.getValue());
+            }
+        }
+    }
+
+    /**
+     * Sets a property for this parameters object. Properties are stored in an
+     * internal map. With this method a new entry can be added to this map. It
+     * can be used by sub classes which also store properties in a map.
+     *
+     * @param key the key of the property
+     * @param value the value of the property
+     */
+    protected void storeProperty(String key, Object value)
+    {
+        properties.put(key, value);
+    }
+
+    /**
      * Sets default parameter values.
      */
     private void initDefaults()
@@ -154,7 +196,7 @@ public class BasicBuilderParameters implements BuilderParameters,
      */
     private BasicBuilderParameters setProperty(String key, Object value)
     {
-        properties.put(key, value);
+        storeProperty(key, value);
         return this;
     }
 }

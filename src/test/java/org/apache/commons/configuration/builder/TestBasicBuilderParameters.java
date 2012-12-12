@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.builder;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
@@ -117,5 +118,43 @@ public class TestBasicBuilderParameters
         assertSame("Wrong result", params, params.setListDelimiter(';'));
         assertEquals("Wrong delimiter", Character.valueOf(';'), params
                 .getParameters().get("listDelimiter"));
+    }
+
+    /**
+     * Tries a merge with a null object.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testMergeNull()
+    {
+        params.merge(null);
+    }
+
+    /**
+     * Tests whether properties of other parameter objects can be merged.
+     */
+    @Test
+    public void testMerge()
+    {
+        Map<String, Object> props = new HashMap<String, Object>();
+        props.put("throwExceptionOnMissing", Boolean.TRUE);
+        props.put("listDelimiter", Character.valueOf('-'));
+        props.put("other", "test");
+        props.put(BuilderParameters.RESERVED_PARAMETER_PREFIX + "test",
+                "reserved");
+        BuilderParameters p = EasyMock.createMock(BuilderParameters.class);
+        EasyMock.expect(p.getParameters()).andReturn(props);
+        EasyMock.replay(p);
+        params.setListDelimiter('+');
+        params.merge(p);
+        Map<String, Object> map = params.getParameters();
+        assertEquals("Wrong list delimiter", Character.valueOf('+'),
+                map.get("listDelimiter"));
+        assertEquals("Wrong exception flag", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
+        assertEquals("Wrong other property", "test", map.get("other"));
+        assertFalse(
+                "Reserved property was copied",
+                map.containsKey(BuilderParameters.RESERVED_PARAMETER_PREFIX
+                        + "test"));
     }
 }

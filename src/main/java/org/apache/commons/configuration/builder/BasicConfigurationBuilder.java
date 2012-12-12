@@ -100,16 +100,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         ConfigurationBuilder<T>
 {
     /**
-     * Constant for a prefix for reserved initialization parameter keys. If a
-     * parameter was set whose key starts with this prefix, it is filtered out
-     * before the initialization of a newly created result object. This
-     * mechanism allows derived classes to store specific configuration data in
-     * the parameters map which does not represent a property value for the
-     * result object.
-     */
-    public static final String RESERVED_PARAMETER = "config-";
-
-    /**
      * A dummy event source that is used for registering listeners if no
      * compatible result object is available. This source has empty dummy
      * implementations for listener registration methods.
@@ -686,7 +676,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
                 .hasNext();)
         {
             String key = it.next();
-            if (key.startsWith(RESERVED_PARAMETER))
+            if (key.startsWith(BuilderParameters.RESERVED_PARAMETER_PREFIX))
             {
                 it.remove();
             }

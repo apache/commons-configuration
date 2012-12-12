@@ -40,6 +40,16 @@ import java.util.Map;
 public interface BuilderParameters
 {
     /**
+     * Constant for a prefix for reserved initialization parameter keys. If a
+     * parameter was set whose key starts with this prefix, it is filtered out
+     * before the initialization of a newly created result object. This
+     * mechanism allows implementing classes to store specific configuration
+     * data in the parameters map which does not represent a property value for
+     * the result object.
+     */
+    String RESERVED_PARAMETER_PREFIX = "config-";
+
+    /**
      * Returns a map with all parameters defined by this objects. The keys of
      * the map correspond to concrete properties supported by the
      * {@code Configuration} implementation class the builder produces. The
