@@ -22,7 +22,6 @@ import java.util.Map;
 
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
-import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 
@@ -49,9 +48,8 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
         implements CombinedBuilderProperties<CombinedBuilderParametersImpl>
 {
     /** Constant for the key in the parameters map used by this class. */
-    private static final String PARAM_KEY =
-            BasicConfigurationBuilder.RESERVED_PARAMETER
-                    + CombinedBuilderParametersImpl.class.getName();
+    private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX
+            + CombinedBuilderParametersImpl.class.getName();
 
     /** The definition configuration builder. */
     private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;

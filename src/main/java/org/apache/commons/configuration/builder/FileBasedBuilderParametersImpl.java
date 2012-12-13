@@ -49,9 +49,8 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         implements FileBasedBuilderProperties<FileBasedBuilderParametersImpl>
 {
     /** Constant for the key in the parameters map used by this class. */
-    private static final String PARAM_KEY =
-            BasicConfigurationBuilder.RESERVED_PARAMETER
-                    + FileBasedBuilderParametersImpl.class.getName();
+    private static final String PARAM_KEY = RESERVED_PARAMETER_PREFIX
+            + FileBasedBuilderParametersImpl.class.getName();
 
     /**
      * Stores the associated file handler for the location of the configuration.
