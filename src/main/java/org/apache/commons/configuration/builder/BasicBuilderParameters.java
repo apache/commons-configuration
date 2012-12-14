@@ -180,6 +180,19 @@ public class BasicBuilderParameters implements BuilderParameters,
     }
 
     /**
+     * Obtains the value of the specified property from the internal map. This
+     * method can be used by derived classes if a specific property is to be
+     * accessed. If the given key is not found, result is <b>null</b>.
+     *
+     * @param key the key of the property in question
+     * @return the value of the property with this key or <b>null</b>
+     */
+    protected Object fetchProperty(String key)
+    {
+        return properties.get(key);
+    }
+
+    /**
      * Sets default parameter values.
      */
     private void initDefaults()

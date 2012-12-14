@@ -123,4 +123,27 @@ public class TestParameters
         assertEquals("Wrong prefix", "test", map.get("prefix"));
         checkBasicProperties(map);
     }
+
+    /**
+     * Tests whether a parameters object for an XML configuration can be
+     * created.
+     */
+    @Test
+    public void testXml()
+    {
+        Map<String, Object> map =
+                Parameters.xml().setThrowExceptionOnMissing(true)
+                        .setFileName("test.xml").setValidating(true)
+                        .setListDelimiter('#').setSchemaValidation(true)
+                        .getParameters();
+        checkBasicProperties(map);
+        FileBasedBuilderParametersImpl fbp =
+                FileBasedBuilderParametersImpl.fromParameters(map);
+        assertEquals("Wrong file name", "test.xml", fbp.getFileHandler()
+                .getFileName());
+        assertEquals("Wrong validation flag", Boolean.TRUE,
+                map.get("validating"));
+        assertEquals("Wrong schema flag", Boolean.TRUE,
+                map.get("schemaValidation"));
+    }
 }

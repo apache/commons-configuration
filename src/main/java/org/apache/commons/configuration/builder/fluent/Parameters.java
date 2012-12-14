@@ -24,6 +24,7 @@ import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
+import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 
 /**
@@ -113,6 +114,17 @@ public final class Parameters
     {
         return createParametersProxy(JndiBuilderParameters.class,
                 new JndiBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for XML configurations.
+     *
+     * @return the new parameters object
+     */
+    public static XMLBuilderParameters xml()
+    {
+        return createParametersProxy(XMLBuilderParameters.class,
+                new XMLBuilderParametersImpl());
     }
 
     /**
