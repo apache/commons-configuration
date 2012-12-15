@@ -43,8 +43,10 @@ import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.builder.XMLBuilderProperties;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -499,9 +501,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** The current XML parameters object. */
     private XMLBuilderParametersImpl currentXMLParameters;
 
-    /** Stores the base path to the configuration sources to load. */
-    private String configurationBasePath;
-
     /**
      * Creates a new instance of {@code CombinedConfigurationBuilder}. No parameters
      * are set.
@@ -535,33 +534,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the base path for the configuration sources to load. This path is
-     * used to resolve relative paths in the configuration definition file.
-     *
-     * @return the base path for configuration sources
-     */
-    public String getConfigurationBasePath()
-    {
-        return configurationBasePath;
-    }
-
-    /**
-     * Sets the base path for the configuration sources to load. Normally a base
-     * path need not to be set because it is determined by the location of the
-     * configuration definition file to load. All relative paths in this file
-     * are resolved relative to this file. Setting a base path makes sense if
-     * such relative paths should be otherwise resolved, e.g. if the
-     * configuration file is loaded from the class path and all sub
-     * configurations it refers to are stored in a special config directory.
-     *
-     * @param configurationBasePath the new base path to set
-     */
-    public void setConfigurationBasePath(String configurationBasePath)
-    {
-        this.configurationBasePath = configurationBasePath;
-    }
-
-    /**
      * Returns the configuration provided by this builder. If the boolean
      * parameter is <b>true</b>, the configuration definition file will be
      * loaded. It will then be parsed, and instances for the declared
@@ -577,7 +549,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     public CombinedConfiguration getConfiguration(boolean load)
             throws ConfigurationException
     {
-        initFileSystem();
         registerConfiguredLookups();
 
 //        CombinedConfiguration result = createResultConfiguration();
@@ -773,8 +744,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         setUpCurrentParameters();
         initNodeCombinerListNodes(result, config, KEY_OVERRIDE_LIST);
         registerConfiguredProviders(config);
-        initSystemProperties(config);
         setUpCurrentXMLParameters();
+        currentXMLParameters.setFileSystem(initFileSystem(config));
+        initSystemProperties(config, getBasePath());
         configureEntityResolver(config, currentXMLParameters);
 
         ConfigurationSourceData data = getSourceData();
@@ -833,14 +805,26 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 //        }
     }
 
-    protected void initFileSystem() throws ConfigurationException
+    /**
+     * Creates and initializes a default {@code FileSystem} if the definition
+     * configuration contains a corresponding declaration. The file system
+     * returned by this method is used as default for all file-based child
+     * configuration sources.
+     *
+     * @param config the definition configuration
+     * @return the default {@code FileSystem} (may be <b>null</b>)
+     * @throws ConfigurationException if an error occurs
+     */
+    protected FileSystem initFileSystem(HierarchicalConfiguration config)
+            throws ConfigurationException
     {
-//        if (getMaxIndex(FILE_SYSTEM) == 0)
-//        {
-//            HierarchicalConfiguration config = configurationAt(FILE_SYSTEM);
-//            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-//            setFileSystem((FileSystem) BeanHelper.createBean(decl));
-//        }
+        if (config.getMaxIndex(FILE_SYSTEM) == 0)
+        {
+            XMLBeanDeclaration decl =
+                    new XMLBeanDeclaration(config, FILE_SYSTEM);
+            return (FileSystem) BeanHelper.createBean(decl);
+        }
+        return null;
     }
 
     /**
@@ -849,18 +833,19 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * properties are added to the system properties.
      *
      * @param config the definition configuration
+     * @param basePath the base path defined for this builder (may be
+     *        <b>null</b>)
      * @throws ConfigurationException if an error occurs.
      */
-    protected void initSystemProperties(HierarchicalConfiguration config)
-            throws ConfigurationException
+    protected void initSystemProperties(HierarchicalConfiguration config,
+            String basePath) throws ConfigurationException
     {
         String fileName = config.getString(KEY_SYSTEM_PROPS);
         if (fileName != null)
         {
             try
             {
-                SystemConfiguration.setSystemProperties(
-                        getConfigurationBasePath(), fileName);
+                SystemConfiguration.setSystemProperties(basePath, fileName);
             }
             catch (Exception ex)
             {
@@ -956,9 +941,13 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     protected void initChildBuilderParameters(BuilderParameters params)
     {
-        if (params instanceof XMLBuilderParametersImpl)
+        if (params instanceof XMLBuilderProperties<?>)
         {
-            initChildXMLParameters((XMLBuilderParametersImpl) params);
+            initChildXMLParameters((XMLBuilderProperties<?>) params);
+        }
+        if(params instanceof FileBasedBuilderProperties<?>)
+        {
+            initChildFileBasedParameters((FileBasedBuilderProperties<?>) params);
         }
     }
 
@@ -979,20 +968,65 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      * related to XML and file-based configurations during creation of the
      * result configuration. The properties stored in this object can be
      * inherited to child configurations.
+     *
+     * @throws ConfigurationException if an error occurs
      */
-    private void setUpCurrentXMLParameters()
+    private void setUpCurrentXMLParameters() throws ConfigurationException
     {
         currentXMLParameters = new XMLBuilderParametersImpl();
+        initDefaultBasePath();
+    }
+
+    /**
+     * Initializes the default base path for all file-based child configuration
+     * sources. The base path can be explicitly defined in the parameters of
+     * this builder. Otherwise, if the definition builder is a file-based
+     * builder, it is obtained from there.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    private void initDefaultBasePath() throws ConfigurationException
+    {
+        assert currentParameters != null : "Current parameters undefined!";
+        if (currentParameters.getBasePath() != null)
+        {
+            currentXMLParameters.setBasePath(currentParameters.getBasePath());
+        }
+        else
+        {
+            ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
+                    getDefinitionBuilder();
+            if (defBuilder instanceof FileBasedConfigurationBuilder<?>)
+            {
+                currentXMLParameters
+                        .setBasePath(((FileBasedConfigurationBuilder<?>) defBuilder)
+                                .getFileHandler().getBasePath());
+            }
+        }
+    }
+
+    /**
+     * Initializes a parameters object for a file-based configuration with
+     * properties already set for this parent builder. This method handles
+     * properties like a default file system or a base path.
+     *
+     * @param params the parameters object
+     */
+    private void initChildFileBasedParameters(
+            FileBasedBuilderProperties<?> params)
+    {
+        params.setBasePath(getBasePath());
+        params.setFileSystem(currentXMLParameters.getFileHandler()
+                .getFileSystem());
     }
 
     /**
      * Initializes a parameters object for an XML configuration with properties
-     * already set for this parent builder. Only properties that are not set in
-     * the parameters object are updated.
+     * already set for this parent builder.
      *
      * @param params the parameters object
      */
-    private void initChildXMLParameters(XMLBuilderParametersImpl params)
+    private void initChildXMLParameters(XMLBuilderProperties<?> params)
     {
         params.setEntityResolver(currentXMLParameters.getEntityResolver());
     }
@@ -1034,6 +1068,17 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         ConfigurationSourceData result = new ConfigurationSourceData();
         result.initFromDefinitionConfiguration(getDefinitionConfiguration());
         return result;
+    }
+
+    /**
+     * Returns the current base path of this configuration builder. This is used
+     * for instance by all file-based child configurations.
+     *
+     * @return the base path
+     */
+    private String getBasePath()
+    {
+        return currentXMLParameters.getFileHandler().getBasePath();
     }
 
     /**
