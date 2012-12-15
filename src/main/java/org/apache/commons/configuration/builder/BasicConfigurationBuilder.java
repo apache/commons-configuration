@@ -329,7 +329,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param l the listener to be registered
      * @return a reference to this builder for method chaining
      */
-    public BasicConfigurationBuilder<T> addErrorListener(
+    public synchronized BasicConfigurationBuilder<T> addErrorListener(
             ConfigurationErrorListener l)
     {
         errorListeners.add(l);
@@ -345,7 +345,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      * @param l the listener to be removed
      * @return a reference to this builder for method chaining
      */
-    public BasicConfigurationBuilder<T> removeErrorListener(
+    public synchronized BasicConfigurationBuilder<T> removeErrorListener(
             ConfigurationErrorListener l)
     {
         errorListeners.remove(l);
@@ -596,6 +596,29 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
                 return getResultClass().getName();
             }
         };
+    }
+
+    /**
+     * Copies all {@code ConfigurationListener} and
+     * {@code ConfigurationErrorListener} objects to the specified target
+     * configuration builder. This method is intended to be used by derived
+     * classes which support inheritance of their properties to other builder
+     * objects.
+     *
+     * @param target the target configuration builder (must not be <b>null</b>)
+     * @throws NullPointerException if the target builder is <b>null</b>
+     */
+    protected synchronized void copyEventListeners(
+            BasicConfigurationBuilder<?> target)
+    {
+        for (ConfigurationListener l : configListeners)
+        {
+            target.addConfigurationListener(l);
+        }
+        for (ConfigurationErrorListener l : errorListeners)
+        {
+            target.addErrorListener(l);
+        }
     }
 
     /**

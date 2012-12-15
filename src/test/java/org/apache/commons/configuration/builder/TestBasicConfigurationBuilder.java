@@ -34,6 +34,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -441,6 +442,31 @@ public class TestBasicConfigurationBuilder
         builder.removeBuilderListener(l2);
         builder.resetResult();
         EasyMock.verify(l1, l2);
+    }
+
+    /**
+     * Tests whether event listeners can be copied to another builder.
+     */
+    @Test
+    public void testCopyEventListeners() throws ConfigurationException
+    {
+        ConfigurationListener cl =
+                EasyMock.createMock(ConfigurationListener.class);
+        ConfigurationErrorListener el =
+                EasyMock.createMock(ConfigurationErrorListener.class);
+        BasicConfigurationBuilder<PropertiesConfiguration> builder =
+                new BasicConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.addConfigurationListener(cl).addErrorListener(el);
+        BasicConfigurationBuilder<XMLConfiguration> builder2 =
+                new BasicConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class);
+        builder.copyEventListeners(builder2);
+        XMLConfiguration config = builder2.getConfiguration();
+        assertTrue("Configuration listener not found", config
+                .getConfigurationListeners().contains(cl));
+        assertTrue("Error listener not found", config.getErrorListeners()
+                .contains(el));
     }
 
     /**
