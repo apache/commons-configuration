@@ -30,6 +30,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
@@ -43,9 +44,12 @@ import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
+import org.xml.sax.EntityResolver;
 
 /**
  * <p>
@@ -399,7 +403,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private static final ConfigurationBuilderProvider XML_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
                     "org.apache.commons.configuration.XMLConfiguration",
-                    Arrays.asList(FILE_PARAMS));
+                    Arrays.asList("org.apache.commons.configuration.builder.XMLBuilderParametersImpl"));
 
     /** Constant for the provider for JNDI sources. */
     private static final BaseConfigurationBuilderProvider JNDI_PROVIDER =
@@ -492,6 +496,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** Stores the current parameters object. */
     private CombinedBuilderParametersImpl currentParameters;
 
+    /** The current XML parameters object. */
+    private XMLBuilderParametersImpl currentXMLParameters;
+
     /** Stores the base path to the configuration sources to load. */
     private String configurationBasePath;
 
@@ -571,7 +578,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             throws ConfigurationException
     {
         initFileSystem();
-        configureEntityResolver();
         registerConfiguredLookups();
 
 //        CombinedConfiguration result = createResultConfiguration();
@@ -650,6 +656,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         definitionBuilder = null;
         definitionConfiguration = null;
         currentParameters = null;
+        currentXMLParameters = null;
 
         if (sourceData != null)
         {
@@ -767,8 +774,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         initNodeCombinerListNodes(result, config, KEY_OVERRIDE_LIST);
         registerConfiguredProviders(config);
         initSystemProperties(config);
-        ConfigurationSourceData data = getSourceData();
+        setUpCurrentXMLParameters();
+        configureEntityResolver(config, currentXMLParameters);
 
+        ConfigurationSourceData data = getSourceData();
         createAndAddConfigurations(result, data.getOverrideBuilders(), data);
         if (!data.getUnionBuilders().isEmpty())
         {
@@ -861,17 +870,40 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         }
     }
 
-    protected void configureEntityResolver() throws ConfigurationException
+    /**
+     * Creates and initializes a default {@code EntityResolver} if the
+     * definition configuration contains a corresponding declaration.
+     *
+     * @param config the definition configuration
+     * @param xmlParams the (already partly initialized) object with XML
+     *        parameters; here the new resolver is to be stored
+     * @throws ConfigurationException if an error occurs
+     */
+    protected void configureEntityResolver(HierarchicalConfiguration config,
+            XMLBuilderParametersImpl xmlParams) throws ConfigurationException
     {
-//        if (getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
-//        {
-//            XMLBeanDeclaration decl = new XMLBeanDeclaration(this, KEY_ENTITY_RESOLVER, true);
-//            EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
-//            BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
-//            BeanHelper.setProperty(resolver, "baseDir", getBasePath());
-//            BeanHelper.setProperty(resolver, "substitutor", getSubstitutor());
-//            setEntityResolver(resolver);
-//        }
+        if (config.getMaxIndex(KEY_ENTITY_RESOLVER) == 0)
+        {
+            XMLBeanDeclaration decl =
+                    new XMLBeanDeclaration(config, KEY_ENTITY_RESOLVER, true);
+            EntityResolver resolver =
+                    (EntityResolver) BeanHelper.createBean(decl,
+                            CatalogResolver.class);
+            FileSystem fileSystem = xmlParams.getFileHandler().getFileSystem();
+            if (fileSystem != null)
+            {
+                BeanHelper.setProperty(resolver, "fileSystem", fileSystem);
+            }
+            String basePath = xmlParams.getFileHandler().getBasePath();
+            if (basePath != null)
+            {
+                BeanHelper.setProperty(resolver, "baseDir", basePath);
+            }
+            // BeanHelper.setProperty(resolver, "substitutor",
+            // getSubstitutor());
+            // setEntityResolver(resolver);
+            xmlParams.setEntityResolver(resolver);
+        }
     }
 
     /**
@@ -912,6 +944,25 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
+     * Initializes a parameters object for a child builder. This combined
+     * configuration builder has a bunch of properties which may be inherited by
+     * child configurations, e.g. the base path, the file system, etc. While
+     * processing the builders for child configurations, this method is called
+     * for each parameters object for a child builder. It initializes some
+     * properties of the passed in parameters objects which are derived from
+     * this parent builder.
+     *
+     * @param params the parameters object to be initialized
+     */
+    protected void initChildBuilderParameters(BuilderParameters params)
+    {
+        if (params instanceof XMLBuilderParametersImpl)
+        {
+            initChildXMLParameters((XMLBuilderParametersImpl) params);
+        }
+    }
+
+    /**
      * Initializes the current parameters object. This object has either been
      * passed at builder configuration time or it is newly created. In any
      * case, it is manipulated during result creation.
@@ -921,6 +972,29 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         currentParameters =
                 CombinedBuilderParametersImpl.fromParameters(getParameters(), true);
         currentParameters.registerMissingProviders(DEFAULT_PROVIDERS_MAP);
+    }
+
+    /**
+     * Sets up an XML parameters object which is used to store properties
+     * related to XML and file-based configurations during creation of the
+     * result configuration. The properties stored in this object can be
+     * inherited to child configurations.
+     */
+    private void setUpCurrentXMLParameters()
+    {
+        currentXMLParameters = new XMLBuilderParametersImpl();
+    }
+
+    /**
+     * Initializes a parameters object for an XML configuration with properties
+     * already set for this parent builder. Only properties that are not set in
+     * the parameters object are updated.
+     *
+     * @param params the parameters object
+     */
+    private void initChildXMLParameters(XMLBuilderParametersImpl params)
+    {
+        params.setEntityResolver(currentXMLParameters.getEntityResolver());
     }
 
     /**
@@ -940,6 +1014,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             if (currentParameters == null)
             {
                 setUpCurrentParameters();
+                setUpCurrentXMLParameters();
             }
             sourceData = createSourceData();
         }

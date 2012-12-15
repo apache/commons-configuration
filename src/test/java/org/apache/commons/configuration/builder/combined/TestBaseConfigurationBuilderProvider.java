@@ -29,6 +29,7 @@ import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
+import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
@@ -70,8 +71,24 @@ public class TestBaseConfigurationBuilderProvider
     private ConfigurationDeclaration createDeclaration(
             HierarchicalConfiguration declConfig)
     {
+        CombinedConfigurationBuilder parentBuilder =
+                new CombinedConfigurationBuilder()
+                {
+                    @Override
+                    protected void initChildBuilderParameters(
+                            BuilderParameters params)
+                    {
+                        // set a property value; this should be overridden by
+                        // child builders
+                        if (params instanceof BasicBuilderParameters)
+                        {
+                            ((BasicBuilderParameters) params)
+                                    .setListDelimiter('!');
+                        }
+                    }
+                };
         ConfigurationDeclaration decl =
-                new ConfigurationDeclaration(null, declConfig)
+                new ConfigurationDeclaration(parentBuilder, declConfig)
                 {
                     @Override
                     protected Object interpolate(Object value)

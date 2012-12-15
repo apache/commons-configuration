@@ -231,7 +231,10 @@ public class BaseConfigurationBuilderProvider implements
      * Initializes the parameter objects with data stored in the current bean
      * declaration. This method is called before the newly created builder
      * instance is configured with the parameter objects. It maps attributes of
-     * the bean declaration to properties of parameter objects.
+     * the bean declaration to properties of parameter objects. In addition,
+     * it invokes the parent {@code CombinedConfigurationBuilder} so that the
+     * parameters object can inherit properties already defined for this
+     * builder.
      *
      * @param decl the current {@code ConfigurationDeclaration}
      * @param params the collection with (uninitialized) parameter objects
@@ -240,8 +243,29 @@ public class BaseConfigurationBuilderProvider implements
     protected void initializeParameterObjects(ConfigurationDeclaration decl,
             Collection<BuilderParameters> params) throws Exception
     {
+        inheritParentBuilderProperties(decl, params);
         MultiWrapDynaBean wrapBean = new MultiWrapDynaBean(params);
         BeanHelper.initBean(wrapBean, decl);
+    }
+
+    /**
+     * Passes all parameter objects to the parent
+     * {@code CombinedConfigurationBuilder} so that properties already defined
+     * for the parent builder can be added. This method is called before the
+     * parameter objects are initialized from the definition configuration. This
+     * way properties from the parent builder are inherited, but can be
+     * overridden for child configurations.
+     *
+     * @param decl the current {@code ConfigurationDeclaration}
+     * @param params the collection with (uninitialized) parameter objects
+     */
+    protected void inheritParentBuilderProperties(
+            ConfigurationDeclaration decl, Collection<BuilderParameters> params)
+    {
+        for (BuilderParameters p : params)
+        {
+            decl.getConfigurationBuilder().initChildBuilderParameters(p);
+        }
     }
 
     /**
