@@ -37,6 +37,7 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.beanutils.CombinedBeanDeclaration;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
@@ -708,17 +709,20 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * {@inheritDoc} This implementation creates a bean declaration from the
-     * {@code result} property of the definition configuration. This might be
-     * undefined. In this case, an empty declaration with only the result class
-     * name is returned.
+     * {@inheritDoc} This implementation evaluates the {@code result} property
+     * of the definition configuration. It creates a combined bean declaration
+     * with both the properties specified in the definition file and the
+     * properties defined as initialization parameters.
      */
     @Override
     protected BeanDeclaration createResultDeclaration(Map<String, Object> params)
             throws ConfigurationException
     {
-        return new XMLBeanDeclaration(getDefinitionConfiguration(), KEY_RESULT,
-                true, CombinedConfiguration.class.getName());
+        BeanDeclaration paramsDecl = super.createResultDeclaration(params);
+        XMLBeanDeclaration resultDecl =
+                new XMLBeanDeclaration(getDefinitionConfiguration(),
+                        KEY_RESULT, true, CombinedConfiguration.class.getName());
+        return new CombinedBeanDeclaration(resultDecl, paramsDecl);
     }
 
     /**

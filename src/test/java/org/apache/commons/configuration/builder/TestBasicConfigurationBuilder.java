@@ -30,12 +30,14 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
+import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.easymock.EasyMock;
@@ -304,12 +306,9 @@ public class TestBasicConfigurationBuilder
                     protected BeanDeclaration createResultDeclaration(
                             Map<String, Object> params)
                     {
-                        BeanDeclaration decl =
-                                EasyMock.createMock(BeanDeclaration.class);
-                        EasyMock.expect(decl.getBeanClassName())
-                                .andReturn(Object.class.getName()).anyTimes();
-                        EasyMock.replay(decl);
-                        return decl;
+                        return new XMLBeanDeclaration(
+                                new BaseHierarchicalConfiguration(), "bean",
+                                true, Object.class.getName());
                     }
                 };
         builder.getConfiguration();

@@ -487,8 +487,9 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     protected T createResultInstance() throws ConfigurationException
     {
-        return getResultClass().cast(
-                BeanHelper.createBean(getResultDeclaration()));
+        Object bean = BeanHelper.createBean(getResultDeclaration());
+        checkResultInstance(bean);
+        return getResultClass().cast(bean);
     }
 
     /**
@@ -524,7 +525,6 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
         if (resultDeclaration == null)
         {
             resultDeclaration = createResultDeclaration(getFilteredParameters());
-            checkResultClass(resultDeclaration);
         }
         return resultDeclaration;
     }
@@ -668,20 +668,20 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     }
 
     /**
-     * Checks whether the bean class of the given {@code BeanDeclaration} equals
+     * Checks whether the class of the result configuration is compatible with
      * this builder's result class. This is done to ensure that only objects of
      * the expected result class are created.
      *
-     * @param decl the declaration to be checked
-     * @throws ConfigurationRuntimeException if an invalid bean class is
+     * @param inst the result instance to be checked
+     * @throws ConfigurationRuntimeException if an invalid result class is
      *         detected
      */
-    private void checkResultClass(BeanDeclaration decl)
+    private void checkResultInstance(Object inst)
     {
-        if (!getResultClass().getName().equals(decl.getBeanClassName()))
+        if (!getResultClass().isInstance(inst))
         {
-            throw new ConfigurationRuntimeException("Unexpected bean class: "
-                    + decl.getBeanClassName());
+            throw new ConfigurationRuntimeException(
+                    "Incompatible result object: " + inst);
         }
     }
 
