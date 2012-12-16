@@ -70,7 +70,11 @@ class MultiWrapDynaBean implements DynaBean
             DynaClass beanClass = dynaBean.getDynaClass();
             for (DynaProperty prop : beanClass.getDynaProperties())
             {
-                propsToBeans.put(prop.getName(), dynaBean);
+                // ensure an order of properties
+                if (!propsToBeans.containsKey(prop.getName()))
+                {
+                    propsToBeans.put(prop.getName(), dynaBean);
+                }
             }
             beanClasses.add(beanClass);
         }

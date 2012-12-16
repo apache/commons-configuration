@@ -29,6 +29,7 @@ import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.junit.Test;
 
 /**
@@ -205,6 +206,33 @@ public class TestMultiWrapDynaBean
     public void testContains()
     {
         createBean(false).contains(MAPPED_PROPERTY, "someKey");
+    }
+
+    /**
+     * Tests that the order of properties is relevant when adding beans to a
+     * MultiWrapDynaBean.
+     */
+    @Test
+    public void testOrderOfProperties() throws Exception
+    {
+        Collection<Object> beans = new ArrayList<Object>();
+        params = new BasicBuilderParameters();
+        beans.add(params);
+        beans.add(new FileBasedBuilderParametersImpl());
+        for (int i = 0; i < 32; i++)
+        {
+            beans.add(new BasicBuilderParameters());
+        }
+        MultiWrapDynaBean bean = new MultiWrapDynaBean(beans);
+        PropertyUtils
+                .setProperty(bean, "throwExceptionOnMissing", Boolean.TRUE);
+        PropertyUtils
+                .setProperty(bean, "listDelimiter", Character.valueOf('+'));
+        Map<String, Object> map = params.getParameters();
+        assertEquals("Exception flag not set", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
+        assertEquals("List delimiter not set", Character.valueOf('+'),
+                map.get("listDelimiter"));
     }
 
     /**
