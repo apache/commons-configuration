@@ -447,19 +447,20 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     "org.apache.commons.configuration.plist.PropertyListConfiguration",
                     EXT_XML, Arrays.asList(FILE_PARAMS));
 
-    /** Constant for the provider for configuration definition files.*/
-    private static final BaseConfigurationBuilderProvider BUILDER_PROVIDER = null;
+    /** Constant for the provider for configuration definition files. */
+    private static final BaseConfigurationBuilderProvider COMBINED_PROVIDER =
+            new CombinedConfigurationBuilderProvider();
 
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini", "system", "env", "jndi"/*, "configuration"*/
+            "ini", "system", "env", "jndi", "configuration"
     };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationBuilderProvider[] DEFAULT_PROVIDERS = {
             PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER,
-            SYSTEM_PROVIDER, ENV_PROVIDER, JNDI_PROVIDER/*, BUILDER_PROVIDER */
+            SYSTEM_PROVIDER, ENV_PROVIDER, JNDI_PROVIDER, COMBINED_PROVIDER
     };
 
     /** A map with the default configuration builder providers. */
@@ -501,6 +502,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
 
     /** The current XML parameters object. */
     private XMLBuilderParametersImpl currentXMLParameters;
+
+    /** The configuration that is currently constructed. */
+    private CombinedConfiguration currentConfiguration;
 
     /**
      * Creates a new instance of {@code CombinedConfigurationBuilder}. No parameters
@@ -738,6 +742,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     protected void initResultInstance(CombinedConfiguration result)
             throws ConfigurationException
     {
+        super.initResultInstance(result);
+
+        currentConfiguration = result;
         HierarchicalConfiguration config = getDefinitionConfiguration();
         if (config.getMaxIndex(KEY_COMBINER) < 0)
         {
@@ -762,6 +769,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             initNodeCombinerListNodes(addConfig, config, KEY_ADDITIONAL_LIST);
             createAndAddConfigurations(addConfig, data.getUnionBuilders(), data);
         }
+        currentConfiguration = null;
     }
 
     /**
@@ -953,6 +961,35 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             initChildFileBasedParameters((FileBasedBuilderProperties<?>) params);
         }
+        if(params instanceof CombinedBuilderParametersImpl) {
+            initChildCombinedParameters((CombinedBuilderParametersImpl) params);
+        }
+    }
+
+    /**
+     * Initializes the event listeners of the specified builder from this
+     * object. This method is used to inherit all listeners from a parent
+     * builder.
+     *
+     * @param dest the destination builder object which is to be initialized
+     */
+    void initChildEventListeners(
+            BasicConfigurationBuilder<? extends Configuration> dest)
+    {
+        copyEventListeners(dest);
+    }
+
+    /**
+     * Returns the configuration object that is currently constructed. This
+     * method can be called during construction of the result configuration. It
+     * is intended for internal usage, e.g. some specialized builder providers
+     * need access to this configuration to perform advanced initialization.
+     *
+     * @return the configuration that us currently under construction
+     */
+    CombinedConfiguration getConfigurationUnderConstruction()
+    {
+        return currentConfiguration;
     }
 
     /**
@@ -1033,6 +1070,21 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private void initChildXMLParameters(XMLBuilderProperties<?> params)
     {
         params.setEntityResolver(currentXMLParameters.getEntityResolver());
+    }
+
+    /**
+     * Initializes a parameters object for a combined configuration builder with
+     * properties already set for this parent builder. This implementation deals
+     * only with a subset of properties. Other properties are already handled by
+     * the specialized builder provider.
+     *
+     * @param params the parameters object
+     */
+    private void initChildCombinedParameters(
+            CombinedBuilderParametersImpl params)
+    {
+        params.registerMissingProviders(currentParameters);
+        params.setBasePath(getBasePath());
     }
 
     /**

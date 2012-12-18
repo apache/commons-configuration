@@ -200,6 +200,29 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     /**
+     * Registers all {@code ConfigurationBuilderProvider}s in the given
+     * parameters object which have not yet been registered. This method works
+     * like the method with the same name, but the map with providers is
+     * obtained from the passed in parameters object.
+     *
+     * @param params the parameters object from which to copy providers(must not
+     *        be <b>null</b>)
+     * @return a reference to this object for method chaining
+     * @throws IllegalArgumentException if the source parameters object is
+     *         <b>null</b>
+     */
+    public CombinedBuilderParametersImpl registerMissingProviders(
+            CombinedBuilderParametersImpl params)
+    {
+        if (params == null)
+        {
+            throw new IllegalArgumentException(
+                    "Source parameters must not be null!");
+        }
+        return registerMissingProviders(params.getProviders());
+    }
+
+    /**
      * Returns an (unmodifiable) map with the currently registered
      * {@code ConfigurationBuilderProvider} objects.
      *

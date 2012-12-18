@@ -205,7 +205,8 @@ public class TestCombinedBuilderParametersImpl
     @Test(expected = IllegalArgumentException.class)
     public void testRegisterMissingProvidersNullMap()
     {
-        new CombinedBuilderParametersImpl().registerMissingProviders(null);
+        Map<String, ConfigurationBuilderProvider> map = null;
+        new CombinedBuilderParametersImpl().registerMissingProviders(map);
     }
 
     /**
@@ -218,6 +219,46 @@ public class TestCombinedBuilderParametersImpl
                 new HashMap<String, ConfigurationBuilderProvider>();
         map.put("tag", null);
         new CombinedBuilderParametersImpl().registerMissingProviders(map);
+    }
+
+    /**
+     * Tests whether missing providers can be copied from a parameters object.
+     */
+    @Test
+    public void testRegisterMissingProvidersParams()
+    {
+        ConfigurationBuilderProvider provider1 =
+                EasyMock.createMock(ConfigurationBuilderProvider.class);
+        ConfigurationBuilderProvider provider2 =
+                EasyMock.createMock(ConfigurationBuilderProvider.class);
+        ConfigurationBuilderProvider provider3 =
+                EasyMock.createMock(ConfigurationBuilderProvider.class);
+        String tagPrefix = "testTag";
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        CombinedBuilderParametersImpl params2 =
+                new CombinedBuilderParametersImpl();
+        params.registerProvider(tagPrefix, provider1);
+        params2.registerProvider(tagPrefix, provider2);
+        params2.registerProvider(tagPrefix + 1, provider3);
+        assertSame("Wrong result", params,
+                params.registerMissingProviders(params2));
+        assertEquals("Wrong number of providers", 2, params.getProviders()
+                .size());
+        assertSame("Wrong provider (1)", provider1,
+                params.providerForTag(tagPrefix));
+        assertSame("Wrong provider (2)", provider3,
+                params.providerForTag(tagPrefix + 1));
+    }
+
+    /**
+     * Tries to copy providers from a null parameters object.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testRegisterMissingProvidersParamsNull()
+    {
+        new CombinedBuilderParametersImpl()
+                .registerMissingProviders((CombinedBuilderParametersImpl) null);
     }
 
     /**
