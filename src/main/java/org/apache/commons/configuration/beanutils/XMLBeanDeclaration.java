@@ -538,6 +538,20 @@ public class XMLBeanDeclaration implements BeanDeclaration
     }
 
     /**
+     * Helper method for obtaining an attribute of a configuration node.
+     *
+     * @param nd the node
+     * @param attr the name of the attribute
+     * @return the string value of this attribute (can be <b>null</b>)
+     */
+    private String getAttribute(ConfigurationNode nd, String attr)
+    {
+        List<ConfigurationNode> attributes = nd.getAttributes(attr);
+        return attributes.isEmpty() ? null : String
+                .valueOf(interpolate(attributes.get(0).getValue()));
+    }
+
+    /**
      * Checks whether the constructor argument represented by the given
      * configuration node is a bean declaration.
      *
@@ -547,19 +561,5 @@ public class XMLBeanDeclaration implements BeanDeclaration
     private static boolean isBeanDeclarationArgument(ConfigurationNode nd)
     {
         return nd.getAttributes(ATTR_BEAN_CLASS_NAME).isEmpty();
-    }
-
-    /**
-     * Helper method for obtaining an attribute of a configuration node.
-     *
-     * @param nd the node
-     * @param attr the name of the attribute
-     * @return the string value of this attribute (can be <b>null</b>)
-     */
-    private static String getAttribute(ConfigurationNode nd, String attr)
-    {
-        List<ConfigurationNode> attributes = nd.getAttributes(attr);
-        return attributes.isEmpty() ? null : String.valueOf(attributes.get(0)
-                .getValue());
     }
 }

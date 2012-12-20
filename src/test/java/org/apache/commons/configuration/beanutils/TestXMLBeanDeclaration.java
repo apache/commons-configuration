@@ -467,6 +467,23 @@ public class TestXMLBeanDeclaration
     }
 
     /**
+     * Tests whether interpolation is done on constructor arguments.
+     */
+    @Test
+    public void testGetInterpolatedConstructorArgs()
+    {
+        HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
+        String expectedValue = "ctorArg";
+        config.addProperty("value", expectedValue);
+        setupBeanDeclaration(config, KEY, TEST_PROPS, TEST_VALUES);
+        config.addProperty(KEY + ".config-constrarg[@config-value]", "${value}");
+        XMLBeanDeclaration decl = new XMLBeanDeclaration(config, KEY);
+        Collection<ConstructorArg> args = decl.getConstructorArgs();
+        ConstructorArg arg = args.iterator().next();
+        assertEquals("Wrong interpolated value", expectedValue, arg.getValue());
+    }
+
+    /**
      * Initializes a configuration object with a bean declaration. Under the
      * specified key the given properties will be added.
      *
