@@ -1037,10 +1037,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             ConfigurationBuilder<? extends HierarchicalConfiguration> defBuilder =
                     getDefinitionBuilder();
-            if (defBuilder instanceof FileBasedConfigurationBuilder<?>)
+            if (defBuilder instanceof FileBasedConfigurationBuilder)
             {
+                @SuppressWarnings("rawtypes")
+                FileBasedConfigurationBuilder fileBuilder = (FileBasedConfigurationBuilder) defBuilder;
                 currentXMLParameters
-                        .setBasePath(((FileBasedConfigurationBuilder<?>) defBuilder)
+                        .setBasePath(fileBuilder
                                 .getFileHandler().getBasePath());
             }
         }
