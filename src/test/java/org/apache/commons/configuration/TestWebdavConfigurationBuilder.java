@@ -841,7 +841,7 @@ public class TestWebdavConfigurationBuilder
     {
         factory.setFileName(GLOBAL_LOOKUP_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        String value = cc.getInterpolator().lookup("test:test_key");
+        Object value = cc.getInterpolator().resolve("test:test_key");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","test.value",value);
     }

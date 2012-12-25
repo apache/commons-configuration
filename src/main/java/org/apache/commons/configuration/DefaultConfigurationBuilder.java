@@ -33,6 +33,7 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.resolver.EntityResolverSupport;
@@ -40,7 +41,6 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
@@ -189,7 +189,7 @@ import org.xml.sax.EntityResolver;
  * section.
  * <pre>
  * &lt;lookups&gt;
- *   &lt;lookup config-prefix="prefix" config-class="StrLookup fully qualified class name"/&gt;
+ *   &lt;lookup config-prefix="prefix" config-class="Lookup fully qualified class name"/&gt;
  * &lt;/lookups&gt;
  * </pre>
  * </p>
@@ -415,21 +415,18 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
     private static final long serialVersionUID = -3113777854714492123L;
 
     /**
-     * A specialized {@code StrLookup} object which operates on the combined
+     * A specialized {@code Lookup} object which operates on the combined
      * configuration constructed by this builder. This object is used as
      * default lookup for {@code ConfigurationInterpolator} objects assigned to
      * newly created configuration objects.
      */
-    private final StrLookup combinedConfigLookup = new StrLookup()
+    private final Lookup combinedConfigLookup = new Lookup()
     {
-        @Override
-        public String lookup(String key)
+        public Object lookup(String key)
         {
             if (constructedConfiguration != null)
             {
-                Object value =
-                        constructedConfiguration.resolveContainerStore(key);
-                return (value != null) ? value.toString() : null;
+                return constructedConfiguration.resolveContainerStore(key);
             }
             return null;
         }
@@ -657,6 +654,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             result.setNodeCombiner(new OverrideCombiner());
         }
 
+        result.getInterpolator().registerLookups(getInterpolator().getLookups());
         return result;
     }
 
@@ -767,9 +765,8 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
         {
             XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
             String key = config.getString(KEY_LOOKUP_KEY);
-            StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
+            Lookup lookup = (Lookup) BeanHelper.createBean(decl);
             BeanHelper.setProperty(lookup, "configuration", this);
-            ConfigurationInterpolator.registerGlobalLookup(key, lookup);
             this.getInterpolator().registerLookup(key, lookup);
         }
     }
@@ -813,7 +810,6 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
             BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
             BeanHelper.setProperty(resolver, "baseDir", getBasePath());
-            BeanHelper.setProperty(resolver, "substitutor", getSubstitutor());
             setEntityResolver(resolver);
         }
     }
@@ -1387,7 +1383,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
                 AbstractConfiguration config)
         {
             ConfigurationInterpolator parent = new ConfigurationInterpolator();
-            parent.setDefaultLookup(decl.getConfigurationBuilder().combinedConfigLookup);
+            parent.addDefaultLookup(decl.getConfigurationBuilder().combinedConfigLookup);
             config.getInterpolator().setParentInterpolator(parent);
         }
     }

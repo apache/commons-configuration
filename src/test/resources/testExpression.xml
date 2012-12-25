@@ -26,7 +26,7 @@
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>
     <lookups>
-      <lookup config-prefix="mdc" config-class="org.slf4j.ext.MDCStrLookup"/>
+      <lookup config-prefix="mdc" config-class="org.apache.commons.configuration.TestVFSConfigurationBuilder$MDCStrLookup"/>
       <lookup config-prefix="expr"
               config-class="org.apache.commons.configuration.interpol.ExprLookup">
         <variables>

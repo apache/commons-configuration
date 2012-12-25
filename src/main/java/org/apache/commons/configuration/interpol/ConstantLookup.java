@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.text.StrLookup;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -52,13 +51,13 @@ import org.apache.commons.logging.LogFactory;
  * href="http://commons.apache.org/configuration/team-list.html">Commons
  * Configuration team</a>
  */
-public class ConstantLookup extends StrLookup
+public class ConstantLookup implements Lookup
 {
     /** Constant for the field separator. */
     private static final char FIELD_SEPRATOR = '.';
 
     /** An internally used cache for already retrieved values. */
-    private static Map<String, String> constantCache = new HashMap<String, String>();
+    private static Map<String, Object> constantCache = new HashMap<String, Object>();
 
     /** The logger. */
     private Log log = LogFactory.getLog(getClass());
@@ -75,15 +74,14 @@ public class ConstantLookup extends StrLookup
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
-    @Override
-    public String lookup(String var)
+    public Object lookup(String var)
     {
         if (var == null)
         {
             return null;
         }
 
-        String result;
+        Object result;
         synchronized (constantCache)
         {
             result = constantCache.get(var);
@@ -107,11 +105,11 @@ public class ConstantLookup extends StrLookup
                 synchronized (constantCache)
                 {
                     // In worst case, the value will be fetched multiple times
-                    // because of this lax synchronisation, but for constant
+                    // because of this lax synchronization, but for constant
                     // values this shouldn't be a problem.
-                    constantCache.put(var, String.valueOf(value));
+                    constantCache.put(var, value);
                 }
-                result = value.toString();
+                result = value;
             }
         }
         catch (Exception ex)

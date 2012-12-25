@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 
@@ -152,6 +151,7 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
         setRootNode(root);
         this.parent = parent;
         initFromParent(parent);
+        initInterpolator();
     }
 
     /**
@@ -350,16 +350,12 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     }
 
     /**
-     * Creates a ConfigurationInterpolator with a chain to the parent's
-     * interpolator.
-     *
-     * @return the new interpolator
+     * Initializes the {@code ConfigurationInterpolator} for this sub configuration.
+     * This is a standard {@code ConfigurationInterpolator} which also references
+     * the {@code ConfigurationInterpolator} of the parent configuration.
      */
-    @Override
-    protected ConfigurationInterpolator createInterpolator()
+    private void initInterpolator()
     {
-        ConfigurationInterpolator interpolator = super.createInterpolator();
-        interpolator.setParentInterpolator(getParent().getInterpolator());
-        return interpolator;
+        getInterpolator().setParentInterpolator(getParent().getInterpolator());
     }
 }

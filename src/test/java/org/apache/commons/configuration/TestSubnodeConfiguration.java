@@ -33,10 +33,10 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.apache.commons.lang.text.StrLookup;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -371,9 +371,8 @@ public class TestSubnodeConfiguration
         parent.addProperty("tables.table(0).var", "${brackets:x}");
 
         ConfigurationInterpolator interpolator = parent.getInterpolator();
-        interpolator.registerLookup("brackets", new StrLookup(){
+        interpolator.registerLookup("brackets", new Lookup(){
 
-            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }

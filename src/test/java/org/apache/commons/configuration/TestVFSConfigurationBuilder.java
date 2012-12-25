@@ -37,12 +37,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.beanutils.BeanHelper;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.slf4j.MDC;
 
 /**
  * Test class for VFSConfigurationBuilder.
@@ -858,7 +861,7 @@ public class TestVFSConfigurationBuilder
     {
         factory.setFile(GLOBAL_LOOKUP_FILE);
         CombinedConfiguration cc = factory.getConfiguration(true);
-        String value = cc.getInterpolator().lookup("test:test_key");
+        Object value = cc.getInterpolator().resolve("test:test_key");
         assertNotNull("The test key was not located", value);
         assertEquals("Incorrect value retrieved","test.value",value);
     }
@@ -883,7 +886,7 @@ public class TestVFSConfigurationBuilder
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
-    @Test
+    @Test @Ignore
     public void testValidation2() throws Exception
     {
         factory.setFile(VALIDATION2_FILE);
@@ -1195,5 +1198,23 @@ public class TestVFSConfigurationBuilder
         }
         int actual = config.getInt("rowsPerPage");
         assertTrue("expected: " + rows + " actual: " + actual, actual == rows);
+    }
+
+    /**
+     * A specialized lookup class reading properties from the MDC.
+     */
+    public static class MDCStrLookup implements Lookup {
+        /**
+         * Looks up up a value in the MDC.
+         *
+         * @param key the key to be looked up, may be null
+         * @return the matching value, null if no match
+         */
+        public String lookup(String key) {
+            if (key == null) {
+                return null;
+            }
+            return MDC.get(key);
+        }
     }
 }

@@ -41,7 +41,6 @@ import org.apache.commons.configuration.reloading.ReloadingStrategy;
 import org.apache.commons.configuration.resolver.EntityResolverSupport;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.xml.sax.EntityResolver;
@@ -106,7 +105,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
     private EntityResolver entityResolver;
 
     /** The internally used helper object for variable substitution. */
-    private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
+    private final ConfigurationInterpolator localSubst;
 
     /**
      * Default Constructor.
@@ -116,6 +115,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         super();
         this.init = true;
         setLogger(LogFactory.getLog(loggerName));
+        localSubst = initLocalInterpolator();
     }
 
     /**
@@ -128,6 +128,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         this.pattern = pathPattern;
         this.init = true;
         setLogger(LogFactory.getLog(loggerName));
+        localSubst = initLocalInterpolator();
     }
 
     public void setLoggerName(String name)
@@ -730,7 +731,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
      */
     public void removeConfiguration()
     {
-        String path = getSubstitutor().replace(pattern);
+        String path = String.valueOf(getInterpolator().interpolate(pattern));
         configurationsMap.remove(path);
     }
 
@@ -746,7 +747,7 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         {
             throw new ConfigurationRuntimeException("File pattern must be defined");
         }
-        String path = localSubst.replace(pattern);
+        String path = String.valueOf(localSubst.interpolate(pattern));
 
         if (configurationsMap.containsKey(path))
         {
@@ -848,4 +849,16 @@ public class MultiFileHierarchicalConfiguration extends AbstractHierarchicalFile
         }
     }
 
+    /**
+     * Creates a {@code ConfigurationInterpolator} instance for performing local
+     * variable substitutions.
+     *
+     * @return the {@code ConfigurationInterpolator}
+     */
+    private ConfigurationInterpolator initLocalInterpolator()
+    {
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.registerLookups(getInterpolator().getLookups());
+        return ci;
+    }
 }

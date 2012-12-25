@@ -17,7 +17,6 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -278,21 +277,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         AbstractConfiguration config = new TestConfigurationImpl(
                 new PropertiesConfiguration());
-        EnvironmentConfiguration envConfig = new EnvironmentConfiguration();
-        Map<String, Object> env = new HashMap<String, Object>();
-        for (Iterator<String> it = envConfig.getKeys(); it.hasNext();)
-        {
-            String key = it.next();
-            String propKey = "envtest." + key;
-            env.put(propKey, envConfig.getString(key));
-            config.addProperty(propKey, "${env:" + key + "}");
-        }
-        assertFalse("No environment properties", env.isEmpty());
-        for (Map.Entry<String, Object> e : env.entrySet())
-        {
-            assertEquals("Wrong value for " + e.getKey(), e.getValue(), config
-                    .getString(e.getKey()));
-        }
+        InterpolationTestHelper.testInterpolationEnvironment(config);
     }
 
     /**
@@ -360,7 +345,7 @@ public class TestAbstractConfigurationBasicFeatures
     public void testNestedVariableInterpolation()
     {
         BaseConfiguration config = new BaseConfiguration();
-        config.getSubstitutor().setEnableSubstitutionInVariables(true);
+        config.getInterpolator().setEnableSubstitutionInVariables(true);
         config.addProperty("java.version", "1.4");
         config.addProperty("jre-1.4", "C:\\java\\1.4");
         config.addProperty("jre.path", "${jre-${java.version}}");

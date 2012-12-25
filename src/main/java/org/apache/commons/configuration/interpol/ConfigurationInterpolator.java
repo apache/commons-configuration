@@ -16,11 +16,18 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.lang3.text.StrLookup;
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 /**
  * <p>
@@ -28,140 +35,109 @@ import org.apache.commons.lang.text.StrLookup;
  * objects.
  * </p>
  * <p>
- * Each instance of {@code AbstractConfiguration} is associated with an
- * object of this class. All interpolation tasks are delegated to this object.
+ * Each instance of {@code AbstractConfiguration} is associated with an object
+ * of this class. All interpolation tasks are delegated to this object.
  * </p>
  * <p>
- * {@code ConfigurationInterpolator} works together with the
- * {@code StrSubstitutor} class from <a
- * href="http://commons.apache.org/lang">Commons Lang</a>. By extending
- * {@code StrLookup} it is able to provide values for variables that
- * appear in expressions.
+ * {@code ConfigurationInterpolator} internally uses the {@code StrSubstitutor}
+ * class from <a href="http://commons.apache.org/lang">Commons Lang</a>. Thus it
+ * supports the same syntax of variable expressions.
  * </p>
  * <p>
  * The basic idea of this class is that it can maintain a set of primitive
- * {@code StrLookup} objects, each of which is identified by a special
- * prefix. The variables to be processed have the form
- * <code>${prefix:name}</code>. {@code ConfigurationInterpolator} will
- * extract the prefix and determine, which primitive lookup object is registered
- * for it. Then the name of the variable is passed to this object to obtain the
- * actual value. It is also possible to define a default lookup object, which
- * will be used for variables that do not have a prefix or that cannot be
- * resolved by their associated lookup object.
+ * {@link Lookup} objects, each of which is identified by a special prefix. The
+ * variables to be processed have the form <code>${prefix:name}</code>.
+ * {@code ConfigurationInterpolator} will extract the prefix and determine,
+ * which primitive lookup object is registered for it. Then the name of the
+ * variable is passed to this object to obtain the actual value. It is also
+ * possible to define an arbitrary number of default lookup objects, which are
+ * used for variables that do not have a prefix or that cannot be resolved by
+ * their associated lookup object. When adding default lookup objects their
+ * order matters; they are queried in this order, and the first non-<b>null</b>
+ * variable value is used.
  * </p>
  * <p>
- * When a new instance of this class is created it is initialized with a default
- * set of primitive lookup objects. This set can be customized using the static
- * methods {@code registerGlobalLookup()} and
- * {@code deregisterGlobalLookup()}. Per default it contains the
- * following standard lookup objects:
+ * After an instance has been created it does not contain any {@code Lookup}
+ * objects. The current set of lookup objects can be modified using the
+ * {@code registerLookup()} and {@code deregisterLookup()} methods. Default
+ * lookup objects (that are invoked for variables without a prefix) can be added
+ * or removed with the {@code addDefaultLookup()} and
+ * {@code removeDefaultLookup()} methods respectively. (When a
+ * {@code ConfigurationInterpolator} instance is created by a configuration
+ * object, a default lookup object is added pointing to the configuration
+ * itself, so that variables are resolved using the configuration's properties.)
  * </p>
  * <p>
- * <table border="1">
- * <tr>
- * <th>Prefix</th>
- * <th>Lookup object</th>
- * </tr>
- * <tr>
- * <td valign="top">sys</td>
- * <td>With this prefix a lookup object is associated that is able to resolve
- * system properties.</td>
- * </tr>
- * <tr>
- * <td valign="top">const</td>
- * <td>The {@code const} prefix indicates that a variable is to be
- * interpreted as a constant member field of a class (i.e. a field with the
- * <b>static final</b> modifiers). The name of the variable must be of the form
- * {@code <full qualified class name>.<field name>}, e.g.
- * {@code org.apache.commons.configuration.interpol.ConfigurationInterpolator.PREFIX_CONSTANTS}.
- * </td>
- * </tr>
- * </table>
+ * The default usage scenario is that on a fully initialized instance the
+ * {@code interpolate()} method is called. It is passed an object value which
+ * may contain variables. All these variables are substituted if they can be
+ * resolved. The result is the passed in value with variables replaced.
+ * Alternatively, the {@code resolve()} method can be called to obtain the
+ * values of specific variables without performing interpolation.
  * </p>
  * <p>
- * After an instance has been created the current set of lookup objects can be
- * modified using the {@code registerLookup()} and
- * {@code deregisterLookup()} methods. The default lookup object (that is
- * invoked for variables without a prefix) can be set with the
- * {@code setDefaultLookup()} method. (If a
- * {@code ConfigurationInterpolator} instance is created by a
- * configuration object, this lookup points to the configuration itself, so that
- * variables are resolved using the configuration's properties. This ensures
- * backward compatibility to earlier version of Commons Configuration.)
- * </p>
- * <p>
- * Implementation node: Instances of this class are not thread-safe related to
- * modifications of their current set of registered lookup objects. It is
- * intended that each instance is associated with a single
- * {@code Configuration} object and used for its interpolation tasks.
+ * Implementation node: This class is thread-safe. Lookup objects can be added
+ * or removed at any time concurrent to interpolation operations.
  * </p>
  *
  * @version $Id$
  * @since 1.4
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  */
-public class ConfigurationInterpolator extends StrLookup
+public class ConfigurationInterpolator
 {
-    /**
-     * Constant for the prefix of the standard lookup object for resolving
-     * system properties.
-     */
-    public static final String PREFIX_SYSPROPERTIES = "sys";
-
-    /**
-     * Constant for the prefix of the standard lookup object for resolving
-     * constant values.
-     */
-    public static final String PREFIX_CONSTANTS = "const";
-
-    /**
-     * Constant for the prefix of the standard lookup object for resolving
-     * environment properties.
-     * @since 1.7
-     */
-    public static final String PREFIX_ENVIRONMENT = "env";
-
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
-    /** A map with the globally registered lookup objects. */
-    private static Map<String, StrLookup> globalLookups;
+    /** A map with the currently registered lookup objects. */
+    private final Map<String, Lookup> prefixLookups;
 
-    /** A map with the locally registered lookup objects. */
-    private Map<String, StrLookup> localLookups;
+    /** Stores the default lookup objects. */
+    private final List<Lookup> defaultLookups;
 
-    /** Stores the default lookup object. */
-    private StrLookup defaultLookup;
+    /** The helper object performing variable substitution. */
+    private final StrSubstitutor substitutor;
 
     /** Stores a parent interpolator objects if the interpolator is nested hierarchically. */
-    private ConfigurationInterpolator parentInterpolator;
+    private volatile ConfigurationInterpolator parentInterpolator;
 
     /**
      * Creates a new instance of {@code ConfigurationInterpolator}.
      */
     public ConfigurationInterpolator()
     {
-        synchronized (globalLookups)
-        {
-            localLookups = new HashMap<String, StrLookup>(globalLookups);
-        }
+        prefixLookups = new ConcurrentHashMap<String, Lookup>();
+        defaultLookups = new CopyOnWriteArrayList<Lookup>();
+        substitutor = initSubstitutor();
     }
 
     /**
-     * Registers the given lookup object for the specified prefix globally. This
-     * means that all instances that are created later will use this lookup
-     * object for this prefix. If for this prefix a lookup object is already
-     * registered, the new lookup object will replace the old one. Note that the
-     * lookup objects registered here will be shared between multiple clients.
-     * So they should be thread-safe.
+     * Returns a map with the currently registered {@code Lookup} objects and
+     * their prefixes. This is a snapshot copy of the internally used map. So
+     * modifications of this map do not effect this instance.
+     *
+     * @return a copy of the map with the currently registered {@code Lookup}
+     *         objects
+     */
+    public Map<String, Lookup> getLookups()
+    {
+        return new HashMap<String, Lookup>(prefixLookups);
+    }
+
+    /**
+     * Registers the given {@code Lookup} object for the specified prefix at
+     * this instance. From now on this lookup object will be used for variables
+     * that have the specified prefix.
      *
      * @param prefix the variable prefix (must not be <b>null</b>)
-     * @param lookup the lookup object to be used for this prefix (must not be
-     * <b>null</b>)
+     * @param lookup the {@code Lookup} object to be used for this prefix (must
+     *        not be <b>null</b>)
+     * @throws IllegalArgumentException if either the prefix or the
+     *         {@code Lookup} object is <b>null</b>
      */
-    public static void registerGlobalLookup(String prefix, StrLookup lookup)
+    public void registerLookup(String prefix, Lookup lookup)
     {
         if (prefix == null)
         {
@@ -173,115 +149,191 @@ public class ConfigurationInterpolator extends StrLookup
             throw new IllegalArgumentException(
                     "Lookup object must not be null!");
         }
-        synchronized (globalLookups)
+        prefixLookups.put(prefix, lookup);
+    }
+
+    /**
+     * Registers all {@code Lookup} objects in the given map with their prefixes
+     * at this {@code ConfigurationInterpolator}. Using this method multiple
+     * {@code Lookup} objects can be registered at once. If the passed in map is
+     * <b>null</b>, this method does not have any effect.
+     *
+     * @param lookups the map with lookups to register (may be <b>null</b>)
+     * @throws IllegalArgumentException if the map contains <b>entries</b>
+     */
+    public void registerLookups(Map<String, ? extends Lookup> lookups)
+    {
+        if (lookups != null)
         {
-            globalLookups.put(prefix, lookup);
+            prefixLookups.putAll(lookups);
         }
     }
 
     /**
-     * Deregisters the global lookup object for the specified prefix. This means
-     * that this lookup object won't be available for later created instances
-     * any more. For already existing instances this operation does not have any
-     * impact.
+     * Deregisters the {@code Lookup} object for the specified prefix at this
+     * instance. It will be removed from this instance.
      *
      * @param prefix the variable prefix
      * @return a flag whether for this prefix a lookup object had been
-     * registered
-     */
-    public static boolean deregisterGlobalLookup(String prefix)
-    {
-        synchronized (globalLookups)
-        {
-            return globalLookups.remove(prefix) != null;
-        }
-    }
-
-    /**
-     * Registers the given lookup object for the specified prefix at this
-     * instance. From now on this lookup object will be used for variables that
-     * have the specified prefix.
-     *
-     * @param prefix the variable prefix (must not be <b>null</b>)
-     * @param lookup the lookup object to be used for this prefix (must not be
-     * <b>null</b>)
-     */
-    public void registerLookup(String prefix, StrLookup lookup)
-    {
-        if (prefix == null)
-        {
-            throw new IllegalArgumentException(
-                    "Prefix for lookup object must not be null!");
-        }
-        if (lookup == null)
-        {
-            throw new IllegalArgumentException(
-                    "Lookup object must not be null!");
-        }
-        localLookups.put(prefix, lookup);
-    }
-
-    /**
-     * Deregisters the lookup object for the specified prefix at this instance.
-     * It will be removed from this instance.
-     *
-     * @param prefix the variable prefix
-     * @return a flag whether for this prefix a lookup object had been
-     * registered
+     *         registered
      */
     public boolean deregisterLookup(String prefix)
     {
-        return localLookups.remove(prefix) != null;
+        return prefixLookups.remove(prefix) != null;
     }
 
     /**
-     * Returns a set with the prefixes, for which lookup objects are registered
-     * at this instance. This means that variables with these prefixes can be
-     * processed.
+     * Returns an unmodifiable set with the prefixes, for which {@code Lookup}
+     * objects are registered at this instance. This means that variables with
+     * these prefixes can be processed.
      *
      * @return a set with the registered variable prefixes
      */
     public Set<String> prefixSet()
     {
-        return localLookups.keySet();
+        return Collections.unmodifiableSet(prefixLookups.keySet());
     }
 
     /**
-     * Returns the default lookup object.
+     * Returns a collection with the default {@code Lookup} objects
+     * added to this {@code ConfigurationInterpolator}. These objects are not
+     * associated with a variable prefix. The returned list is a snapshot copy
+     * of the internal collection of default lookups; so manipulating it does
+     * not affect this instance.
      *
-     * @return the default lookup object
+     * @return the default lookup objects
      */
-    public StrLookup getDefaultLookup()
+    public List<Lookup> getDefaultLookups()
     {
-        return defaultLookup;
+        return new ArrayList<Lookup>(defaultLookups);
     }
 
     /**
-     * Sets the default lookup object. This lookup object will be used for all
-     * variables without a special prefix. If it is set to <b>null</b>, such
+     * Adds a default {@code Lookup} object. Default {@code Lookup} objects are
+     * queried (in the order they were added) for all variables without a
+     * special prefix. If no default {@code Lookup} objects are present, such
      * variables won't be processed.
      *
-     * @param defaultLookup the new default lookup object
+     * @param defaultLookup the default {@code Lookup} object to be added (must
+     *        not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code Lookup} object is
+     *         <b>null</b>
      */
-    public void setDefaultLookup(StrLookup defaultLookup)
+    public void addDefaultLookup(Lookup defaultLookup)
     {
-        this.defaultLookup = defaultLookup;
+        defaultLookups.add(defaultLookup);
     }
 
     /**
-     * Resolves the specified variable. This implementation will try to extract
+     * Adds all {@code Lookup} objects in the given collection as default
+     * lookups. The collection can be <b>null</b>, then this method has no
+     * effect. It must not contain <b>null</b> entries.
+     *
+     * @param lookups the {@code Lookup} objects to be added as default lookups
+     * @throws IllegalArgumentException if the collection contains a <b>null</b>
+     *         entry
+     */
+    public void addDefaultLookups(Collection<? extends Lookup> lookups)
+    {
+        if (lookups != null)
+        {
+            defaultLookups.addAll(lookups);
+        }
+    }
+
+    /**
+     * Removes the specified {@code Lookup} object from the list of default
+     * {@code Lookup}s.
+     *
+     * @param lookup the {@code Lookup} object to be removed
+     * @return a flag whether this {@code Lookup} object actually existed and
+     *         was removed
+     */
+    public boolean removeDefaultLookup(Lookup lookup)
+    {
+        return defaultLookups.remove(lookup);
+    }
+
+    /**
+     * Sets the parent {@code ConfigurationInterpolator}. This object is used if
+     * the {@code Lookup} objects registered at this object cannot resolve a
+     * variable.
+     *
+     * @param parentInterpolator the parent {@code ConfigurationInterpolator}
+     *        object (can be <b>null</b>)
+     */
+    public void setParentInterpolator(
+            ConfigurationInterpolator parentInterpolator)
+    {
+        this.parentInterpolator = parentInterpolator;
+    }
+
+    /**
+     * Returns the parent {@code ConfigurationInterpolator}.
+     *
+     * @return the parent {@code ConfigurationInterpolator} (can be <b>null</b>)
+     */
+    public ConfigurationInterpolator getParentInterpolator()
+    {
+        return this.parentInterpolator;
+    }
+
+    /**
+     * Sets a flag that variable names can contain other variables. If enabled,
+     * variable substitution is also done in variable names.
+     *
+     * @return the substitution in variables flag
+     */
+    public boolean isEnableSubstitutionInVariables()
+    {
+        return substitutor.isEnableSubstitutionInVariables();
+    }
+
+    /**
+     * Sets the flag whether variable names can contain other variables. This
+     * flag corresponds to the {@code enableSubstitutionInVariables} property of
+     * the underlying {@code StrSubstitutor} object.
+     *
+     * @param f the new value of the flag
+     */
+    public void setEnableSubstitutionInVariables(boolean f)
+    {
+        substitutor.setEnableSubstitutionInVariables(f);
+    }
+
+    /**
+     * Performs interpolation of the passed in value. If the value is of type
+     * String, this method checks whether it contains variables. If so, all
+     * variables are replaced by their current values (if possible). For non
+     * string arguments, the value is returned without changes.
+     *
+     * @param value the value to be interpolated
+     * @return the interpolated value
+     */
+    public Object interpolate(Object value)
+    {
+        if (value instanceof String)
+        {
+            return substitutor.replace((String) value);
+        }
+        return value;
+    }
+
+    /**
+     * Resolves the specified variable. This implementation tries to extract
      * a variable prefix from the given variable name (the first colon (':') is
      * used as prefix separator). It then passes the name of the variable with
      * the prefix stripped to the lookup object registered for this prefix. If
      * no prefix can be found or if the associated lookup object cannot resolve
-     * this variable, the default lookup object will be used.
+     * this variable, the default lookup objects are used. If this is not
+     * successful either and a parent {@code ConfigurationInterpolator} is
+     * available, this object is asked to resolve the variable.
      *
      * @param var the name of the variable whose value is to be looked up
      * @return the value of this variable or <b>null</b> if it cannot be
      * resolved
      */
-    @Override
-    public String lookup(String var)
+    public Object resolve(String var)
     {
         if (var == null)
         {
@@ -293,35 +345,28 @@ public class ConfigurationInterpolator extends StrLookup
         {
             String prefix = var.substring(0, prefixPos);
             String name = var.substring(prefixPos + 1);
-            String value = fetchLookupForPrefix(prefix).lookup(name);
-            if (value == null && getParentInterpolator() != null)
-            {
-                value = getParentInterpolator().lookup(name);
-            }
+            Object value = fetchLookupForPrefix(prefix).lookup(name);
             if (value != null)
             {
                 return value;
             }
         }
-        String value = fetchNoPrefixLookup().lookup(var);
-        if (value == null && getParentInterpolator() != null)
-        {
-            value = getParentInterpolator().lookup(var);
-        }
-        return value;
-    }
 
-    /**
-     * Returns the lookup object to be used for variables without a prefix. This
-     * implementation will check whether a default lookup object was set. If
-     * this is the case, it will be returned. Otherwise a <b>null</b> lookup
-     * object will be returned (never <b>null</b>).
-     *
-     * @return the lookup object to be used for variables without a prefix
-     */
-    protected StrLookup fetchNoPrefixLookup()
-    {
-        return (getDefaultLookup() != null) ? getDefaultLookup() : StrLookup.noneLookup();
+        for (Lookup l : defaultLookups)
+        {
+            Object value = l.lookup(var);
+            if (value != null)
+            {
+                return value;
+            }
+        }
+
+        ConfigurationInterpolator parent = getParentInterpolator();
+        if (parent != null)
+        {
+            return getParentInterpolator().resolve(var);
+        }
+        return null;
     }
 
     /**
@@ -333,57 +378,34 @@ public class ConfigurationInterpolator extends StrLookup
      * @param prefix the prefix
      * @return the lookup object to be used for this prefix
      */
-    protected StrLookup fetchLookupForPrefix(String prefix)
+    protected Lookup fetchLookupForPrefix(String prefix)
     {
-        StrLookup lookup = localLookups.get(prefix);
+        Lookup lookup = prefixLookups.get(prefix);
         if (lookup == null)
         {
-            lookup = StrLookup.noneLookup();
+            lookup = DummyLookup.INSTANCE;
         }
         return lookup;
     }
 
     /**
-     * Registers the local lookup instances for the given interpolator.
+     * Creates and initializes a {@code StrSubstitutor} object which is used for
+     * variable substitution. This {@code StrSubstitutor} is assigned a
+     * specialized lookup object implementing the correct variable resolving
+     * algorithm.
      *
-     * @param interpolator the instance receiving the local lookups
-     * @since upcoming
+     * @return the {@code StrSubstitutor} used by this object
      */
-    public void registerLocalLookups(ConfigurationInterpolator interpolator)
+    private StrSubstitutor initSubstitutor()
     {
-        interpolator.localLookups.putAll(localLookups);
-    }
-
-    /**
-     * Sets the parent interpolator. This object is used if the interpolation is nested
-     * hierarchically and the current interpolation object cannot resolve a variable.
-     *
-     * @param parentInterpolator the parent interpolator object or <b>null</b>
-     * @since upcoming
-     */
-    public void setParentInterpolator(ConfigurationInterpolator parentInterpolator)
-    {
-        this.parentInterpolator = parentInterpolator;
-    }
-
-    /**
-     * Requests the parent interpolator. This object is used if the interpolation is nested
-     * hierarchically and the current interpolation
-     *
-     * @return the parent interpolator or <b>null</b>
-     * @since upcoming
-     */
-    public ConfigurationInterpolator getParentInterpolator()
-    {
-        return this.parentInterpolator;
-    }
-
-    // static initializer, sets up the map with the standard lookups
-    static
-    {
-        globalLookups = new HashMap<String, StrLookup>();
-        globalLookups.put(PREFIX_SYSPROPERTIES, StrLookup.systemPropertiesLookup());
-        globalLookups.put(PREFIX_CONSTANTS, new ConstantLookup());
-        globalLookups.put(PREFIX_ENVIRONMENT, new EnvironmentLookup());
+        return new StrSubstitutor(new StrLookup<Object>()
+        {
+            @Override
+            public String lookup(String key)
+            {
+                Object result = resolve(key);
+                return (result != null) ? result.toString() : null;
+            }
+        });
     }
 }

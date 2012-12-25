@@ -222,6 +222,22 @@ public class TestPropertyConverter
     }
 
     /**
+     * Tests interpolate() if the configuration does not have a
+     * {@code ConfigurationInterpolator}.
+     */
+    @Test
+    public void testInterpolationNoInterpolator()
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("animal", "quick brown fox");
+        config.addProperty("target", "lazy dog");
+        config.setInterpolator(null);
+        String txt = "The ${animal} jumps over the ${target}.";
+        assertEquals("Interpolation was performed", txt,
+                PropertyConverter.interpolate(txt, config));
+    }
+
+    /**
      * Tests conversion to numbers when the passed in objects are already
      * numbers.
      */

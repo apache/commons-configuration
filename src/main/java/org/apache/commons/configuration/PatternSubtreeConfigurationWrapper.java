@@ -495,7 +495,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     private String makePath()
     {
         String pathPattern = trailing ? path.substring(0, path.length() - 1) : path;
-        return getSubstitutor().replace(pathPattern);
+        return substitute(pathPattern);
     }
 
     /*
@@ -517,6 +517,19 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         {
             pathPattern = path;
         }
-        return getSubstitutor().replace(pathPattern) + item;
+        return substitute(pathPattern) + item;
+    }
+
+    /**
+     * Uses this configuration's {@code ConfigurationInterpolator} to perform
+     * variable substitution on the given pattern string.
+     *
+     * @param pattern the pattern string
+     * @return the string with variables replaced
+     */
+    private String substitute(String pattern)
+    {
+        Object value = getInterpolator().interpolate(pattern);
+        return (value != null) ? value.toString() : null;
     }
 }

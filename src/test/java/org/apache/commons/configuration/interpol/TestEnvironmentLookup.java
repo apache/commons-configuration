@@ -51,6 +51,7 @@ public class TestEnvironmentLookup
     public void testLookup()
     {
         EnvironmentConfiguration envConf = new EnvironmentConfiguration();
+        envConf.setDelimiterParsingDisabled(true);
         for (Iterator<String> it = envConf.getKeys(); it.hasNext();)
         {
             String var = it.next();

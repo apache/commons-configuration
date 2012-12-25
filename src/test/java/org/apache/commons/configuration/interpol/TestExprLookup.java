@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.interpol;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -67,7 +68,19 @@ public class TestExprLookup
         str = lookup.lookup(PATTERN2);
         assertTrue("Incorrect value: " + str, str.equals("value Some text"));
         logger.removeAppender(app);
+    }
 
+    /**
+     * Tests a lookup() operation if no configuration object has been set.
+     */
+    @Test
+    public void testLookupNoConfiguration()
+    {
+        ExprLookup.Variables vars = new ExprLookup.Variables();
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
+        ExprLookup lookup = new ExprLookup(vars);
+        String value = "test";
+        assertEquals("Wrong result", value, lookup.lookup(value));
     }
 
     public static class Utility

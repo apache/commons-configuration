@@ -20,15 +20,18 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 import java.util.Set;
@@ -38,6 +41,9 @@ import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -522,6 +528,16 @@ public class TestBaseConfiguration
     }
 
     /**
+     * Tests interpolation of environment properties.
+     */
+    @Test
+    public void testInterpolationEnvironment()
+    {
+        config.setDelimiterParsingDisabled(true);
+        InterpolationTestHelper.testInterpolationEnvironment(config);
+    }
+
+    /**
      * Tests interpolation of constant values.
      */
     @Test
@@ -557,6 +573,60 @@ public class TestBaseConfiguration
     public void testInterpolatedConfiguration()
     {
         InterpolationTestHelper.testInterpolatedConfiguration(config);
+    }
+
+    /**
+     * Tests whether a {@code ConfigurationInterpolator} can be set.
+     */
+    @Test
+    public void testSetInterpolator()
+    {
+        ConfigurationInterpolator interpolator =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(interpolator);
+        config.setInterpolator(interpolator);
+        assertSame("Interpolator not set", interpolator,
+                config.getInterpolator());
+    }
+
+    /**
+     * Tests whether a {@code ConfigurationInterpolator} can be created and
+     * installed.
+     */
+    @Test
+    public void testInstallInterpolator()
+    {
+        Lookup prefixLookup = EasyMock.createMock(Lookup.class);
+        Lookup defLookup = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(prefixLookup, defLookup);
+        Map<String, Lookup> prefixLookups = new HashMap<String, Lookup>();
+        prefixLookups.put("test", prefixLookup);
+        List<Lookup> defLookups = new ArrayList<Lookup>();
+        defLookups.add(defLookup);
+        config.installInterpolator(prefixLookups, defLookups);
+        ConfigurationInterpolator interpolator = config.getInterpolator();
+        assertEquals("Wrong prefix lookups", prefixLookups,
+                interpolator.getLookups());
+        List<Lookup> defLookups2 = interpolator.getDefaultLookups();
+        assertEquals("Wrong number of default lookups", 2, defLookups2.size());
+        assertSame("Wrong default lookup 1", defLookup, defLookups2.get(0));
+        String var = "testVariable";
+        Object value = 42;
+        config.addProperty(var, value);
+        assertEquals("Wrong lookup result", value,
+                defLookups2.get(1).lookup(var));
+    }
+
+    /**
+     * Tests whether property access is possible without a
+     * {@code ConfigurationInterpolator}.
+     */
+    @Test
+    public void testNoInterpolator()
+    {
+        config.setProperty("test", "${value}");
+        config.setInterpolator(null);
+        assertEquals("Wrong result", "${value}", config.getString("test"));
     }
 
     @Test

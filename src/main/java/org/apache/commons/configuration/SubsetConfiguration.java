@@ -19,8 +19,6 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 
-import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-
 /**
  * <p>A subset of another configuration. The new Configuration object contains
  * every key from the parent Configuration that starts with prefix. The prefix
@@ -46,27 +44,35 @@ public class SubsetConfiguration extends AbstractConfiguration
     /**
      * Create a subset of the specified configuration
      *
-     * @param parent The parent configuration
+     * @param parent The parent configuration (must not be <b>null</b>)
      * @param prefix The prefix used to select the properties
+     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
      */
     public SubsetConfiguration(Configuration parent, String prefix)
     {
-        this.parent = parent;
-        this.prefix = prefix;
+        this(parent, prefix, null);
     }
 
     /**
      * Create a subset of the specified configuration
      *
-     * @param parent    The parent configuration
+     * @param parent The parent configuration (must not be <b>null</b>)
      * @param prefix    The prefix used to select the properties
      * @param delimiter The prefix delimiter
+     * @throws IllegalArgumentException if the parent configuration is <b>null</b>
      */
     public SubsetConfiguration(Configuration parent, String prefix, String delimiter)
     {
+        if (parent == null)
+        {
+            throw new IllegalArgumentException(
+                    "Parent configuration must not be null!");
+        }
+
         this.parent = parent;
         this.prefix = prefix;
         this.delimiter = delimiter;
+        initInterpolator();
     }
 
     /**
@@ -192,32 +198,6 @@ public class SubsetConfiguration extends AbstractConfiguration
         return new SubsetIterator(parent.getKeys(prefix));
     }
 
-    @Override
-    protected Object interpolate(Object base)
-    {
-        if (delimiter == null && "".equals(prefix))
-        {
-            return super.interpolate(base);
-        }
-        else
-        {
-            SubsetConfiguration config = new SubsetConfiguration(parent, "");
-            ConfigurationInterpolator interpolator = config.getInterpolator();
-            getInterpolator().registerLocalLookups(interpolator);
-            if (parent instanceof AbstractConfiguration)
-            {
-                interpolator.setParentInterpolator(((AbstractConfiguration) parent).getInterpolator());
-            }
-            return config.interpolate(base);
-        }
-    }
-
-    @Override
-    protected String interpolate(String base)
-    {
-        return super.interpolate(base);
-    }
-
     /**
      * {@inheritDoc}
      *
@@ -328,6 +308,15 @@ public class SubsetConfiguration extends AbstractConfiguration
         }
     }
 
+    /**
+     * Initializes the {@code ConfigurationInterpolator} for this sub configuration.
+     * This is a standard {@code ConfigurationInterpolator} which also references
+     * the {@code ConfigurationInterpolator} of the parent configuration.
+     */
+    private void initInterpolator()
+    {
+        getInterpolator().setParentInterpolator(getParent().getInterpolator());
+    }
 
     /**
      * A specialized iterator to be returned by the {@code getKeys()}

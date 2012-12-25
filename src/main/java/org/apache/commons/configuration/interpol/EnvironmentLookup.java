@@ -16,8 +16,6 @@
  */
 package org.apache.commons.configuration.interpol;
 
-import org.apache.commons.configuration.EnvironmentConfiguration;
-import org.apache.commons.lang.text.StrLookup;
 
 /**
  * <p>
@@ -25,7 +23,7 @@ import org.apache.commons.lang.text.StrLookup;
  * variables.
  * </p>
  * <p>
- * This implementation relies on {@link EnvironmentConfiguration} to resolve
+ * This implementation relies on {@link System.getenv()} to resolve
  * environment variables. It can be used for referencing environment variables
  * in configuration files in an easy way, for instance:
  *
@@ -45,21 +43,17 @@ import org.apache.commons.lang.text.StrLookup;
  * @since 1.7
  * @version $Id$
  */
-public class EnvironmentLookup extends StrLookup
+public class EnvironmentLookup implements Lookup
 {
-    /** Stores the underlying {@code EnvironmentConfiguration}. */
-    private final EnvironmentConfiguration environmentConfig = new EnvironmentConfiguration();
-
     /**
      * Performs a lookup for the specified variable. This implementation
-     * directly delegates to a {@code EnvironmentConfiguration}.
+     * directly delegates to a {@code System.getenv()}.
      *
      * @param key the key to lookup
      * @return the value of this key or <b>null</b> if it cannot be resolved
      */
-    @Override
     public String lookup(String key)
     {
-        return environmentConfig.getString(key);
+        return System.getenv(key);
     }
 }

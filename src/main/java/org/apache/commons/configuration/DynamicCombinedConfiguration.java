@@ -35,7 +35,6 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -84,7 +83,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private String loggerName = DynamicCombinedConfiguration.class.getName();
 
     /** The object for handling variable substitution in key patterns. */
-    private StrSubstitutor localSubst = new StrSubstitutor(new ConfigurationInterpolator());
+    private final ConfigurationInterpolator localSubst;
 
     /**
      * Creates a new instance of {@code DynamicCombinedConfiguration} and
@@ -99,6 +98,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         setNodeCombiner(comb);
         setIgnoreReloadExceptions(false);
         setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
+        localSubst = initLocalInterpolator();
     }
 
     /**
@@ -112,6 +112,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         super();
         setIgnoreReloadExceptions(false);
         setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
+        localSubst = initLocalInterpolator();
     }
 
     public void setKeyPattern(String pattern)
@@ -805,7 +806,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     private CombinedConfiguration getCurrentConfig()
     {
-        String key = localSubst.replace(keyPattern);
+        String key = String.valueOf(localSubst.interpolate(keyPattern));
         CombinedConfiguration config = configs.get(key);
         // The double-checked works here due to the Thread guarantees of ConcurrentMap.
         if (config == null)
@@ -851,6 +852,19 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             getLogger().debug("Returning config for " + key + ": " + config);
         }
         return config;
+    }
+
+    /**
+     * Creates a {@code ConfigurationInterpolator} instance for performing local
+     * variable substitutions.
+     *
+     * @return the {@code ConfigurationInterpolator}
+     */
+    private ConfigurationInterpolator initLocalInterpolator()
+    {
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.registerLookups(getInterpolator().getLookups());
+        return ci;
     }
 
     /**

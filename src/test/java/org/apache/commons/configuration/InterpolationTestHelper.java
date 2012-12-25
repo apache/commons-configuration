@@ -21,9 +21,10 @@ import static org.junit.Assert.fail;
 
 import java.awt.event.KeyEvent;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.configuration.interpol.Lookup;
 
 /**
  * A helper class that defines a bunch of tests related to variable
@@ -63,7 +64,8 @@ public class InterpolationTestHelper
         config.addProperty("path", "/temp,C:\\Temp,/usr/local/tmp");
         config.setProperty("path.current", "${path}");
         assertEquals("Interpolation with multi-valued property",
-                "/temp", config.getString("path.current"));
+                String.valueOf(config.getProperty("path")),
+                config.getString("path.current"));
     }
 
     /**
@@ -164,6 +166,26 @@ public class InterpolationTestHelper
     }
 
     /**
+     * Tests interpolation of environment properties.
+     *
+     * @param config the configuration to test
+     */
+    public static void testInterpolationEnvironment(Configuration config)
+    {
+        Map<String, String> env = System.getenv();
+        for (Map.Entry<String, String> e : env.entrySet())
+        {
+            config.addProperty("prop" + e.getKey(), "${env:" + e.getKey() + "}");
+        }
+
+        for (Map.Entry<String, String> e : env.entrySet())
+        {
+            assertEquals("Wrong value for environment property " + e.getKey(),
+                    e.getValue(), config.getString("prop" + e.getKey()));
+        }
+    }
+
+    /**
      * Tests interpolation of constant values.
      *
      * @param config the configuration to test
@@ -201,10 +223,9 @@ public class InterpolationTestHelper
     {
         config.addProperty("var", "${echo:testVar}");
         ConfigurationInterpolator interpol = config.getInterpolator();
-        interpol.registerLookup("echo", new StrLookup()
+        interpol.registerLookup("echo", new Lookup()
         {
-            @Override
-            public String lookup(String varName)
+            public Object lookup(String varName)
             {
                 return "Value of variable " + varName;
             }

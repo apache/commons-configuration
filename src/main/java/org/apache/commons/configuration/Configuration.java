@@ -17,6 +17,12 @@
 
 package org.apache.commons.configuration;
 
+import java.util.Collection;
+import java.util.Map;
+
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
+
 
 /**
  * <p>The main Configuration interface.</p>
@@ -124,4 +130,43 @@ public interface Configuration extends ImmutableConfiguration
      * Remove all properties from the configuration.
      */
     void clear();
+
+    /**
+     * Returns the {@code ConfigurationInterpolator} object used by this
+     * {@code Configuration}. This object is responsible for variable
+     * substitution.
+     *
+     * @return the {@code ConfigurationInterpolator} (can be <b>null</b>)
+     */
+    ConfigurationInterpolator getInterpolator();
+
+    /**
+     * Sets the {@code ConfigurationInterpolator} object to be used by this
+     * {@code Configuration}. This object is invoked for each access of a string
+     * property in order to substitute variables which may be contained. The
+     * argument can be <b>null</b> to disable interpolation at all.
+     *
+     * @param ci the new {@code ConfigurationInterpolator}
+     */
+    void setInterpolator(ConfigurationInterpolator ci);
+
+    /**
+     * Creates and installs a new {@code ConfigurationInterpolator} for this
+     * {@code Configuration} based on the passed in arguments. This method
+     * creates a default {@code ConfigurationInterpolator} instance and
+     * initializes it with the passed in {@code Lookup} objects. It also adds a
+     * special default {@code Lookup} object that tries to resolve variables by
+     * matching them with properties contained in this {@code Configuration}.
+     * This is also the main difference to the
+     * {@link #setConfigurationInterpolator(ConfigurationInterpolator)} method
+     * which sets the passed in object as is without adding this special lookup.
+     *
+     * @param prefixLookups the map with {@code Lookup} objects associated with
+     *        specific prefixes (can be <b>null</b>)
+     * @param defLookups a collection with default {@code Lookup} objects (can
+     *        be <b>null</b>)
+     * @see ConfigurationInterpolator
+     */
+    void installInterpolator(Map<String, ? extends Lookup> prefixLookups,
+            Collection<? extends Lookup> defLookups);
 }

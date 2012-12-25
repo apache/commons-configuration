@@ -64,7 +64,7 @@ import org.apache.commons.lang.text.StrSubstitutor;
  * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
  * @version $Id$
  */
-public class ExprLookup extends StrLookup
+public class ExprLookup implements Lookup
 {
     /** Prefix to identify a Java Class object */
     private static final String CLASS = "Class:";
@@ -77,6 +77,9 @@ public class ExprLookup extends StrLookup
 
     /** Configuration being operated on */
     private AbstractConfiguration configuration;
+
+    /** The StrSubstitutor for performing replace operations. */
+    private StrSubstitutor substitutor;
 
     /** The engine. */
     private final JexlEngine engine = new JexlEngine();
@@ -166,6 +169,7 @@ public class ExprLookup extends StrLookup
     public void setConfiguration(AbstractConfiguration config)
     {
         this.configuration = config;
+        installSubstitutor(config);
     }
 
     /**
@@ -173,15 +177,14 @@ public class ExprLookup extends StrLookup
      * @param var The expression.
      * @return The String result of the expression.
      */
-    @Override
     public String lookup(String var)
     {
-        ConfigurationInterpolator interp = configuration.getInterpolator();
-        StrSubstitutor subst = new StrSubstitutor(interp, prefixMatcher, suffixMatcher,
-                StrSubstitutor.DEFAULT_ESCAPE);
+        if(substitutor == null)
+        {
+            return var;
+        }
 
-        String result = subst.replace(var);
-
+        String result = substitutor.replace(var);
         try
         {
             Expression exp = engine.createExpression(result);
@@ -193,6 +196,38 @@ public class ExprLookup extends StrLookup
         }
 
         return result;
+    }
+
+    /**
+     * Creates a {@code StrSubstitutor} object which uses the
+     * {@code ConfigurationInterpolator} of the passed in configuration as
+     * lookup object.
+     *
+     * @param config the associated configuration
+     */
+    private void installSubstitutor(AbstractConfiguration config)
+    {
+        final ConfigurationInterpolator interpolator =
+                (config == null) ? null : config.getInterpolator();
+        if (interpolator == null)
+        {
+            substitutor = null;
+        }
+        else
+        {
+            StrLookup variableResolver = new StrLookup()
+            {
+                @Override
+                public String lookup(String key)
+                {
+                    Object value = interpolator.resolve(key);
+                    return (value != null) ? value.toString() : null;
+                }
+            };
+            substitutor =
+                    new StrSubstitutor(variableResolver, prefixMatcher,
+                            suffixMatcher, StrSubstitutor.DEFAULT_ESCAPE);
+        }
     }
 
     /**

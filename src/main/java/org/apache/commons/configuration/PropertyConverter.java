@@ -38,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -994,25 +995,20 @@ public final class PropertyConverter
     }
 
     /**
-     * Performs interpolation of the specified value. This method checks if the
-     * given value contains variables of the form <code>${...}</code>. If
-     * this is the case, all occurrences will be substituted by their current
-     * values.
+     * Performs interpolation of the specified value using the given
+     * {@code Configuration} object. This method checks if the given
+     * {@code Configuration} has a {@link ConfigurationInterpolator} object. If
+     * so, it is called to perform interpolation. Otherwise, the passed in value
+     * is return unchanged.
      *
      * @param value the value to be interpolated
      * @param config the current configuration object
      * @return the interpolated value
      */
-    public static Object interpolate(Object value, AbstractConfiguration config)
+    public static Object interpolate(Object value, Configuration config)
     {
-        if (value instanceof String)
-        {
-            return config.getSubstitutor().replace((String) value);
-        }
-        else
-        {
-            return value;
-        }
+        ConfigurationInterpolator interpolator = config.getInterpolator();
+        return (interpolator != null) ? interpolator.interpolate(value) : value;
     }
 
     /**

@@ -24,8 +24,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
 
@@ -33,11 +35,11 @@ import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.DefaultLookups;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.text.StrLookup;
-import org.apache.commons.lang.text.StrSubstitutor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
 
@@ -142,8 +144,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     private boolean throwExceptionOnMissing;
 
-    /** Stores a reference to the object that handles variable interpolation.*/
-    private StrSubstitutor substitutor;
+    /** Stores a reference to the object that handles variable interpolation. */
+    private volatile ConfigurationInterpolator interpolator;
 
     /** Stores the logger.*/
     private Log log;
@@ -154,6 +156,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public AbstractConfiguration()
     {
         setLogger(null);
+        installDefaultInterpolator();
     }
 
     /**
@@ -282,62 +285,63 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the object that is responsible for variable interpolation.
-     *
-     * @return the object responsible for variable interpolation
-     * @since 1.4
-     */
-    public synchronized StrSubstitutor getSubstitutor()
-    {
-        if (substitutor == null)
-        {
-            substitutor = new StrSubstitutor(createInterpolator());
-        }
-        return substitutor;
-    }
-
-    /**
-     * Returns the {@code ConfigurationInterpolator} object that manages
-     * the lookup objects for resolving variables. <em>Note:</em> If this
-     * object is manipulated (e.g. new lookup objects added), synchronization
-     * has to be manually ensured. Because
-     * {@code ConfigurationInterpolator} is not thread-safe concurrent
-     * access to properties of this configuration instance (which causes the
-     * interpolator to be invoked) may cause race conditions.
+     * Returns the {@code ConfigurationInterpolator} object that manages the
+     * lookup objects for resolving variables.
      *
      * @return the {@code ConfigurationInterpolator} associated with this
-     * configuration
+     *         configuration
      * @since 1.4
      */
     public ConfigurationInterpolator getInterpolator()
     {
-        return (ConfigurationInterpolator) getSubstitutor()
-                .getVariableResolver();
+        return interpolator;
     }
 
     /**
-     * Creates the interpolator object that is responsible for variable
-     * interpolation. This method is invoked on first access of the
-     * interpolation features. It creates a new instance of
-     * {@code ConfigurationInterpolator} and sets the default lookup
-     * object to an implementation that queries this configuration.
+     * {@inheritDoc} This implementation sets the passed in object without
+     * further modifications. A <b>null</b> argument is allowed; this disables
+     * interpolation.
      *
-     * @return the newly created interpolator object
-     * @since 1.4
+     * @since 2.0
      */
-    protected ConfigurationInterpolator createInterpolator()
+    public final void setInterpolator(ConfigurationInterpolator ci)
     {
-        ConfigurationInterpolator interpol = new ConfigurationInterpolator();
-        interpol.setDefaultLookup(new StrLookup()
+        interpolator = ci;
+    }
+
+    /**
+     * {@inheritDoc} This implementation creates a new
+     * {@code ConfigurationInterpolator} instance and initializes it with the
+     * given {@code Lookup} objects. In addition, it adds a specialized default
+     * {@code Lookup} object which queries this {@code Configuration}.
+     *
+     * @since 2.0
+     */
+    public final void installInterpolator(
+            Map<String, ? extends Lookup> prefixLookups,
+            Collection<? extends Lookup> defLookups)
+    {
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.registerLookups(prefixLookups);
+        ci.addDefaultLookups(defLookups);
+        ci.addDefaultLookup(new ConfigurationLookup(this));
+        setInterpolator(ci);
+    }
+
+    /**
+     * Creates a default {@code ConfigurationInterpolator} which is initialized
+     * with all default {@code Lookup} objects. This method is called by the
+     * constructor. It ensures that default interpolation works for every new
+     * configuration instance.
+     */
+    private void installDefaultInterpolator()
+    {
+        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        for (DefaultLookups l : DefaultLookups.values())
         {
-            @Override
-            public String lookup(String var)
-            {
-                Object prop = resolveContainerStore(var);
-                return (prop != null) ? prop.toString() : null;
-            }
-        });
-        return interpol;
+            lookups.put(l.getPrefix(), l.getLookup());
+        }
+        installInterpolator(lookups, null);
     }
 
     /**
@@ -438,37 +442,18 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
-     * Returns the interpolated value. Non String values are returned without change.
+     * Returns the interpolated value. This implementation delegates to the
+     * current {@code ConfigurationInterpolator}. If no
+     * {@code ConfigurationInterpolator} is set, the passed in value is returned
+     * without changes.
      *
      * @param value the value to interpolate
-     *
-     * @return returns the value with variables substituted
+     * @return the value with variables substituted
      */
     protected Object interpolate(Object value)
     {
-        return PropertyConverter.interpolate(value, this);
-    }
-
-    /**
-     * Recursive handler for multple levels of interpolation.
-     *
-     * When called the first time, priorVariables should be null.
-     *
-     * @param base string with the ${key} variables
-     * @param priorVariables serves two purposes: to allow checking for loops,
-     * and creating a meaningful exception message should a loop occur. It's
-     * 0'th element will be set to the value of base from the first call. All
-     * subsequent interpolated variables are added afterward.
-     *
-     * @return the string with the interpolation taken care of
-     * @deprecated Interpolation is now handled by
-     * {@link PropertyConverter}; this method will no longer be
-     * called
-     */
-    @Deprecated
-    protected String interpolateHelper(String base, List<?> priorVariables)
-    {
-        return base; // just a dummy implementation
+        ConfigurationInterpolator ci = getInterpolator();
+        return (ci != null) ? ci.interpolate(value) : value;
     }
 
     public Configuration subset(String prefix)

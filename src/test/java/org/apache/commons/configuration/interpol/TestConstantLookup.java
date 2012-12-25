@@ -21,6 +21,7 @@ import static org.junit.Assert.assertNull;
 
 import java.awt.event.KeyEvent;
 
+import org.apache.commons.configuration.AbstractConfiguration;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,11 +34,11 @@ import org.junit.Test;
 public class TestConstantLookup
 {
     /** Constant for the name of the test class. */
-    private static final String CLS_NAME = ConfigurationInterpolator.class
+    private static final String CLS_NAME = AbstractConfiguration.class
             .getName() + '.';
 
     /** Constant for the name of the test field. */
-    private static final String FIELD = "PREFIX_CONSTANTS";
+    private static final String FIELD = "EVENT_READ_PROPERTY";
 
     /** Constant for the test variable name. */
     private static final String VARNAME = CLS_NAME + FIELD;
@@ -68,7 +69,7 @@ public class TestConstantLookup
     public void testLookupConstant()
     {
         assertEquals("Wrong value of constant",
-                ConfigurationInterpolator.PREFIX_CONSTANTS, lookup
+                AbstractConfiguration.EVENT_READ_PROPERTY, lookup
                         .lookup(VARNAME));
     }
 
@@ -90,7 +91,7 @@ public class TestConstantLookup
     public void testLookupPrivate()
     {
         assertNull("Non null return value for non accessable field", lookup
-                .lookup(CLS_NAME + "PREFIX_SEPARATOR"));
+                .lookup(CLS_NAME + "DISABLED_DELIMITER"));
     }
 
     /**
@@ -143,7 +144,7 @@ public class TestConstantLookup
     public void testLookupNonStringFromCache()
     {
         final String var = KeyEvent.class.getName() + ".VK_ESCAPE";
-        final String expected = String.valueOf(KeyEvent.VK_ESCAPE);
+        final Object expected = KeyEvent.VK_ESCAPE;
         assertEquals("Wrong result of first lookup", expected, lookup
                 .lookup(var));
         assertEquals("Wrong result of 2nd lookup", expected, lookup.lookup(var));

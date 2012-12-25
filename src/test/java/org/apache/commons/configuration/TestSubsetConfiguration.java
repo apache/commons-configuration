@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.lang.text.StrLookup;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.junit.Test;
 
 /**
@@ -45,6 +45,14 @@ public class TestSubsetConfiguration
 {
     static final String TEST_DIR = ConfigurationAssert.TEST_DIR_NAME;
     static final String TEST_FILE = "testDigesterConfiguration2.xml";
+
+    /**
+     * Tries to create an instance without a parent configuration.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testInitNoParent() {
+        new SubsetConfiguration(null, "");
+    }
 
     @Test
     public void testGetProperty()
@@ -79,13 +87,14 @@ public class TestSubsetConfiguration
     @Test
     public void testGetParentKey()
     {
+        Configuration conf = new BaseConfiguration();
         // subset with delimiter
-        SubsetConfiguration subset = new SubsetConfiguration(null, "prefix", ".");
+        SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
         assertEquals("parent key for \"key\"", "prefix.key", subset.getParentKey("key"));
         assertEquals("parent key for \"\"", "prefix", subset.getParentKey(""));
 
         // subset without delimiter
-        subset = new SubsetConfiguration(null, "prefix", null);
+        subset = new SubsetConfiguration(conf, "prefix", null);
         assertEquals("parent key for \"key\"", "prefixkey", subset.getParentKey("key"));
         assertEquals("parent key for \"\"", "prefix", subset.getParentKey(""));
     }
@@ -93,13 +102,14 @@ public class TestSubsetConfiguration
     @Test
     public void testGetChildKey()
     {
+        Configuration conf = new BaseConfiguration();
         // subset with delimiter
-        SubsetConfiguration subset = new SubsetConfiguration(null, "prefix", ".");
+        SubsetConfiguration subset = new SubsetConfiguration(conf, "prefix", ".");
         assertEquals("parent key for \"prefixkey\"", "key", subset.getChildKey("prefix.key"));
         assertEquals("parent key for \"prefix\"", "", subset.getChildKey("prefix"));
 
         // subset without delimiter
-        subset = new SubsetConfiguration(null, "prefix", null);
+        subset = new SubsetConfiguration(conf, "prefix", null);
         assertEquals("parent key for \"prefixkey\"", "key", subset.getChildKey("prefixkey"));
         assertEquals("parent key for \"prefix\"", "", subset.getChildKey("prefix"));
     }
@@ -324,9 +334,8 @@ public class TestSubsetConfiguration
     public void testLocalLookupsInInterpolatorAreInherited() {
         BaseConfiguration config = new BaseConfiguration();
         ConfigurationInterpolator interpolator = config.getInterpolator();
-        interpolator.registerLookup("brackets", new StrLookup(){
+        interpolator.registerLookup("brackets", new Lookup(){
 
-            @Override
             public String lookup(String key) {
                 return "(" + key +")";
             }
