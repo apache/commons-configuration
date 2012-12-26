@@ -17,11 +17,13 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +32,8 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.Lookup;
+import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
@@ -278,6 +282,103 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config = new TestConfigurationImpl(
                 new PropertiesConfiguration());
         InterpolationTestHelper.testInterpolationEnvironment(config);
+    }
+
+    /**
+     * Tests whether prefix lookups can be added to an existing
+     * {@code ConfigurationInterpolator}.
+     */
+    @Test
+    public void testSetPrefixLookupsExistingInterpolator()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(look);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        int count = config.getInterpolator().getLookups().size();
+        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        lookups.put("test", look);
+        config.setPrefixLookups(lookups);
+        Map<String, Lookup> lookups2 = config.getInterpolator().getLookups();
+        assertEquals("Not added", count + 1, lookups2.size());
+        assertSame("Not found", look, lookups2.get("test"));
+    }
+
+    /**
+     * Tests whether prefix lookups can be added if no
+     * {@code ConfigurationInterpolator} exists yet.
+     */
+    @Test
+    public void testSetPrefixLookupsNoInterpolator()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(look);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        config.setInterpolator(null);
+        config.setPrefixLookups(Collections.singletonMap("test", look));
+        Map<String, Lookup> lookups = config.getInterpolator().getLookups();
+        assertEquals("Wrong number of lookups", 1, lookups.size());
+        assertSame("Not found", look, lookups.get("test"));
+    }
+
+    /**
+     * Tests whether default lookups can be added to an already existing
+     * {@code ConfigurationInterpolator}.
+     */
+    @Test
+    public void testSetDefaultLookupsExistingInterpolator()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(look);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        config.getInterpolator().addDefaultLookup(
+                new ConfigurationLookup(new PropertiesConfiguration()));
+        config.setDefaultLookups(Collections.singleton(look));
+        List<Lookup> lookups = config.getInterpolator().getDefaultLookups();
+        assertEquals("Wrong number of default lookups", 3, lookups.size());
+        assertSame("Wrong lookup at 1", look, lookups.get(1));
+        assertTrue("Wrong lookup at 2: " + lookups,
+                lookups.get(2) instanceof ConfigurationLookup);
+    }
+
+    /**
+     * Tests whether default lookups can be added if not
+     * {@code ConfigurationInterpolator} exists yet.
+     */
+    @Test
+    public void testSetDefaultLookupsNoInterpolator()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(look);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        config.setInterpolator(null);
+        config.setDefaultLookups(Collections.singleton(look));
+        List<Lookup> lookups = config.getInterpolator().getDefaultLookups();
+        assertEquals("Wrong number of default lookups", 2, lookups.size());
+        assertSame("Wrong lookup at 0", look, lookups.get(0));
+        assertTrue("Wrong lookup at 1",
+                lookups.get(1) instanceof ConfigurationLookup);
+    }
+
+    /**
+     * Tests whether a new {@code ConfigurationInterpolator} can be installed
+     * without providing custom lookups.
+     */
+    @Test
+    public void testInstallInterpolatorNull()
+    {
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        config.installInterpolator(null, null);
+        assertTrue("Got prefix lookups", config.getInterpolator().getLookups()
+                .isEmpty());
+        List<Lookup> defLookups = config.getInterpolator().getDefaultLookups();
+        assertEquals("Wrong number of default lookups", 1, defLookups.size());
+        assertTrue("Wrong default lookup",
+                defLookups.get(0) instanceof ConfigurationLookup);
     }
 
     /**

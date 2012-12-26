@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Properties;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
@@ -145,7 +146,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private boolean throwExceptionOnMissing;
 
     /** Stores a reference to the object that handles variable interpolation. */
-    private volatile ConfigurationInterpolator interpolator;
+    private final AtomicReference<ConfigurationInterpolator> interpolator;
 
     /** Stores the logger.*/
     private Log log;
@@ -155,6 +156,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public AbstractConfiguration()
     {
+        interpolator = new AtomicReference<ConfigurationInterpolator>();
         setLogger(null);
         installDefaultInterpolator();
     }
@@ -294,7 +296,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public ConfigurationInterpolator getInterpolator()
     {
-        return interpolator;
+        return interpolator.get();
     }
 
     /**
@@ -306,7 +308,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final void setInterpolator(ConfigurationInterpolator ci)
     {
-        interpolator = ci;
+        interpolator.set(ci);
     }
 
     /**
@@ -329,6 +331,74 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * Registers all {@code Lookup} objects in the given map at the current
+     * {@code ConfigurationInterpolator} of this configuration. The set of
+     * default lookup objects (for variables without a prefix) is not modified
+     * by this method. If this configuration does not have a
+     * {@code ConfigurationInterpolator}, a new instance is created. Note: This
+     * method is mainly intended to be used for initializing a configuration
+     * when it is created by a builder. Normal client code should better call
+     * {@link #installInterpolator(Map, Collection)} to define the
+     * {@code ConfigurationInterpolator} in a single step.
+     *
+     * @param lookups a map with new {@code Lookup} objects and their prefixes
+     *        (may be <b>null</b>)
+     */
+    public final void setPrefixLookups(Map<String, ? extends Lookup> lookups)
+    {
+        boolean success;
+        do
+        {
+            // do this in a loop because the ConfigurationInterpolator
+            // instance may be changed by another thread
+            ConfigurationInterpolator ciOld = getInterpolator();
+            ConfigurationInterpolator ciNew =
+                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+            ciNew.registerLookups(lookups);
+            success = interpolator.compareAndSet(ciOld, ciNew);
+        } while (!success);
+    }
+
+    /**
+     * Adds all {@code Lookup} objects in the given collection as default
+     * lookups (i.e. lookups without a variable prefix) to the
+     * {@code ConfigurationInterpolator} object of this configuration. In
+     * addition, it adds a specialized default {@code Lookup} object which
+     * queries this {@code Configuration}. The set of {@code Lookup} objects
+     * with prefixes is not modified by this method. If this configuration does
+     * not have a {@code ConfigurationInterpolator}, a new instance is created.
+     * Note: This method is mainly intended to be used for initializing a
+     * configuration when it is created by a builder. Normal client code should
+     * better call {@link #installInterpolator(Map, Collection)} to define the
+     * {@code ConfigurationInterpolator} in a single step.
+     *
+     * @param lookups the collection with default {@code Lookup} objects to be
+     *        added
+     */
+    public final void setDefaultLookups(Collection<? extends Lookup> lookups)
+    {
+        boolean success;
+        do
+        {
+            ConfigurationInterpolator ciOld = getInterpolator();
+            ConfigurationInterpolator ciNew =
+                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+            Lookup confLookup = findConfigurationLookup(ciNew);
+            if (confLookup == null)
+            {
+                confLookup = new ConfigurationLookup(this);
+            }
+            else
+            {
+                ciNew.removeDefaultLookup(confLookup);
+            }
+            ciNew.addDefaultLookups(lookups);
+            ciNew.addDefaultLookup(confLookup);
+            success = interpolator.compareAndSet(ciOld, ciNew);
+        } while (!success);
+    }
+
+    /**
      * Creates a default {@code ConfigurationInterpolator} which is initialized
      * with all default {@code Lookup} objects. This method is called by the
      * constructor. It ensures that default interpolation works for every new
@@ -342,6 +412,30 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             lookups.put(l.getPrefix(), l.getLookup());
         }
         installInterpolator(lookups, null);
+    }
+
+    /**
+     * Finds a {@code ConfigurationLookup} pointing to this configuration in the
+     * default lookups of the specified {@code ConfigurationInterpolator}. This
+     * method is called to ensure that there is exactly one default lookup
+     * querying this configuration.
+     *
+     * @param ci the {@code ConfigurationInterpolator} in question
+     * @return the found {@code Lookup} object or <b>null</b>
+     */
+    private Lookup findConfigurationLookup(ConfigurationInterpolator ci)
+    {
+        for (Lookup l : ci.getDefaultLookups())
+        {
+            if (l instanceof ConfigurationLookup)
+            {
+                if (this == ((ConfigurationLookup) l).getConfiguration())
+                {
+                    return l;
+                }
+            }
+        }
+        return null;
     }
 
     /**
