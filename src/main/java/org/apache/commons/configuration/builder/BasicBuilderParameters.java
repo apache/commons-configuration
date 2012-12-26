@@ -16,9 +16,13 @@
  */
 package org.apache.commons.configuration.builder;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.logging.Log;
 
 /**
@@ -58,6 +62,15 @@ public class BasicBuilderParameters implements BuilderParameters,
     /** The key of the <em>logger</em> property. */
     private static final String PROP_LOGGER = "logger";
 
+    /** The key for the <em>interpolator</em> property. */
+    private static final String PROP_INTERPOLATOR = "interpolator";
+
+    /** The key for the <em>prefixLookups</em> property. */
+    private static final String PROP_PREFIX_LOOKUPS = "prefixLookups";
+
+    /** The key for the <em>defaultLookups</em> property. */
+    private static final String PROP_DEFAULT_LOOKUPS = "defaultLookups";
+
     /** The map for storing the current property values. */
     private final Map<String, Object> properties;
 
@@ -76,7 +89,15 @@ public class BasicBuilderParameters implements BuilderParameters,
      */
     public Map<String, Object> getParameters()
     {
-        return new HashMap<String, Object>(properties);
+        HashMap<String, Object> result =
+                new HashMap<String, Object>(properties);
+        if (result.containsKey(PROP_INTERPOLATOR))
+        {
+            // A custom ConfigurationInterpolator overrides lookups
+            result.remove(PROP_PREFIX_LOOKUPS);
+            result.remove(PROP_DEFAULT_LOOKUPS);
+        }
+        return result;
     }
 
     /**
@@ -135,6 +156,55 @@ public class BasicBuilderParameters implements BuilderParameters,
     public BasicBuilderParameters setListDelimiter(char c)
     {
         return setProperty(PROP_LIST_DELIMITER, Character.valueOf(c));
+    }
+
+    /**
+     * {@inheritDoc} The passed in {@code ConfigurationInterpolator} is set
+     * without modifications.
+     */
+    public BasicBuilderParameters setInterpolator(ConfigurationInterpolator ci)
+    {
+        return setProperty(PROP_INTERPOLATOR, ci);
+    }
+
+    /**
+     * {@inheritDoc} A defensive copy of the passed in map is created. A
+     * <b>null</b> argument causes all prefix lookups to be removed from the
+     * internal parameters map.
+     */
+    public BasicBuilderParameters setPrefixLookups(
+            Map<String, ? extends Lookup> lookups)
+    {
+        if (lookups == null)
+        {
+            properties.remove(PROP_PREFIX_LOOKUPS);
+            return this;
+        }
+        else
+        {
+            return setProperty(PROP_PREFIX_LOOKUPS,
+                    new HashMap<String, Lookup>(lookups));
+        }
+    }
+
+    /**
+     * {@inheritDoc} A defensive copy of the passed in collection is created. A
+     * <b>null</b> argument causes all default lookups to be removed from the
+     * internal parameters map.
+     */
+    public BasicBuilderParameters setDefaultLookups(
+            Collection<? extends Lookup> lookups)
+    {
+        if (lookups == null)
+        {
+            properties.remove(PROP_DEFAULT_LOOKUPS);
+            return this;
+        }
+        else
+        {
+            return setProperty(PROP_DEFAULT_LOOKUPS, new ArrayList<Lookup>(
+                    lookups));
+        }
     }
 
     /**

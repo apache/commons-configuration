@@ -21,9 +21,14 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.logging.Log;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -118,6 +123,94 @@ public class TestBasicBuilderParameters
         assertSame("Wrong result", params, params.setListDelimiter(';'));
         assertEquals("Wrong delimiter", Character.valueOf(';'), params
                 .getParameters().get("listDelimiter"));
+    }
+
+    /**
+     * Tests whether a {@code ConfigurationInterpolator} can be set.
+     */
+    @Test
+    public void testSetInterpolator()
+    {
+        ConfigurationInterpolator ci =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(ci);
+        assertSame("Wrong result", params, params.setInterpolator(ci));
+        assertSame("Wrong interpolator", ci,
+                params.getParameters().get("interpolator"));
+    }
+
+    /**
+     * Tests whether prefix lookups can be set.
+     */
+    @Test
+    public void testSetPrefixLookups()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        Map<String, Lookup> lookups = Collections.singletonMap("test", look);
+        assertSame("Wrong result", params, params.setPrefixLookups(lookups));
+        Map<?, ?> map = (Map<?, ?>) params.getParameters().get("prefixLookups");
+        assertNotSame("No copy was created", lookups, map);
+        assertEquals("Wrong lookup", look, map.get("test"));
+        assertEquals("Wrong number of lookups", 1, map.size());
+    }
+
+    /**
+     * Tests whether null values are handled by setPrefixLookups().
+     */
+    @Test
+    public void testSetPrefixLookupsNull()
+    {
+        params.setPrefixLookups(new HashMap<String, Lookup>());
+        params.setPrefixLookups(null);
+        assertFalse("Found key",
+                params.getParameters().containsKey("prefixLookups"));
+    }
+
+    /**
+     * Tests whether default lookups can be set.
+     */
+    @Test
+    public void testSetDefaultLookups()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        Collection<Lookup> looks = Collections.singleton(look);
+        assertSame("Wrong result", params, params.setDefaultLookups(looks));
+        Collection<?> col =
+                (Collection<?>) params.getParameters().get("defaultLookups");
+        assertNotSame("No copy was created", col, looks);
+        assertEquals("Wrong number of lookups", 1, col.size());
+        assertSame("Wrong lookup", look, col.iterator().next());
+    }
+
+    /**
+     * Tests whether null values are handled by setDefaultLookups().
+     */
+    @Test
+    public void testSetDefaultLookupsNull()
+    {
+        params.setDefaultLookups(new ArrayList<Lookup>());
+        params.setDefaultLookups(null);
+        assertFalse("Found key",
+                params.getParameters().containsKey("defaultLookups"));
+    }
+
+    /**
+     * Tests whether a custom {@code ConfigurationInterpolator} overrides
+     * settings for custom lookups.
+     */
+    @Test
+    public void testSetLookupsAndInterpolator()
+    {
+        Lookup look1 = EasyMock.createMock(Lookup.class);
+        Lookup look2 = EasyMock.createMock(Lookup.class);
+        ConfigurationInterpolator ci =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        params.setDefaultLookups(Collections.singleton(look1));
+        params.setPrefixLookups(Collections.singletonMap("test", look2));
+        params.setInterpolator(ci);
+        Map<String, Object> map = params.getParameters();
+        assertFalse("Got prefix lookups", map.containsKey("prefixLookups"));
+        assertFalse("Got default lookups", map.containsKey("defaultLookups"));
     }
 
     /**

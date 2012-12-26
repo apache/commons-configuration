@@ -16,6 +16,11 @@
  */
 package org.apache.commons.configuration.builder;
 
+import java.util.Collection;
+import java.util.Map;
+
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.logging.Log;
 
 /**
@@ -81,4 +86,46 @@ public interface BasicBuilderProperties<T>
      * @see #setDelimiterParsingDisabled(boolean)
      */
     T setListDelimiter(char c);
+
+    /**
+     * Sets the {@code ConfigurationInterpolator} to be used for this
+     * configuration. Using this method a custom
+     * {@code ConfigurationInterpolator} can be set which can be freely
+     * configured. Alternatively, it is possible to add custom {@code Lookup}
+     * objects using other methods provided by this interface.
+     *
+     * @param ci the {@code ConfigurationInterpolator} for this configuration
+     * @return a reference to this object for method chaining
+     */
+    T setInterpolator(ConfigurationInterpolator ci);
+
+    /**
+     * Sets additional {@code Lookup} objects for specific prefixes for this
+     * configuration object. All {@code Lookup} objects contained in the given
+     * map are added to the configuration's {@code ConfigurationInterpolator}.
+     * Note: This method only takes effect if no
+     * {@code ConfigurationInterpolator} is set using the
+     * {@link #setInterpolator(ConfigurationInterpolator)} method.
+     *
+     * @param lookups a map with {@code Lookup} objects and their associated
+     *        prefixes
+     * @return a reference to this object for method chaining
+     * @see ConfigurationInterpolator#registerLookups(Map)
+     */
+    T setPrefixLookups(Map<String, ? extends Lookup> lookups);
+
+    /**
+     * Adds additional default {@code Lookup} objects (i.e. lookups which are
+     * not associated with a specific prefix) to this configuration object.
+     * Note: This method only takes effect if no
+     * {@code ConfigurationInterpolator} is set using the
+     * {@link #setInterpolator(ConfigurationInterpolator)} method.
+     *
+     * @param lookups a collection with {@code Lookup} objects to be added as
+     *        default lookups at the configuration's
+     *        {@code ConfigurationInterpolator}
+     * @return a reference to this object for method chaining
+     * @see ConfigurationInterpolator#addDefaultLookups(Collection)
+     */
+    T setDefaultLookups(Collection<? extends Lookup> lookups);
 }
