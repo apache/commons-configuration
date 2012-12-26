@@ -48,6 +48,8 @@ import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderProperties;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -896,9 +898,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             {
                 BeanHelper.setProperty(resolver, "baseDir", basePath);
             }
-            // BeanHelper.setProperty(resolver, "substitutor",
-            // getSubstitutor());
-            // setEntityResolver(resolver);
+            ConfigurationInterpolator ci = new ConfigurationInterpolator();
+            ci.registerLookups(fetchPrefixLookups());
+            BeanHelper.setProperty(resolver, "interpolator", ci);
+
             xmlParams.setEntityResolver(resolver);
         }
     }
@@ -1182,6 +1185,19 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 }
             }
         });
+    }
+
+    /**
+     * Returns a map with the current prefix lookup objects. This map is
+     * obtained from the {@code ConfigurationInterpolator} of the configuration
+     * under construction.
+     *
+     * @return the map with current prefix lookups (may be <b>null</b>)
+     */
+    private Map<String, ? extends Lookup> fetchPrefixLookups()
+    {
+        CombinedConfiguration cc = getConfigurationUnderConstruction();
+        return (cc != null) ? cc.getInterpolator().getLookups() : null;
     }
 
     /**

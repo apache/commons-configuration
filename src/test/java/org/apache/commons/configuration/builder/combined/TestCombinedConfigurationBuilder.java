@@ -51,8 +51,8 @@ import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationB
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.resolver.CatalogResolver;
-import org.apache.commons.configuration.resolver.DefaultEntityResolver;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -659,8 +659,11 @@ public class TestCombinedConfigurationBuilder
         CombinedConfiguration cc = factory.getConfiguration();
         XMLConfiguration xmlConf =
                 (XMLConfiguration) cc.getConfiguration("xml");
-        assertTrue("Wrong entity resolver: " + xmlConf.getEntityResolver(),
-                xmlConf.getEntityResolver() instanceof EntityResolverTestImpl);
+        EntityResolverWithPropertiesTestImpl resolver =
+                (EntityResolverWithPropertiesTestImpl) xmlConf
+                        .getEntityResolver();
+        assertFalse("No lookups", resolver.getInterpolator().getLookups()
+                .isEmpty());
     }
 
     /**
@@ -946,14 +949,6 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
-     * A special entity resolver implementation for testing whether a resolver
-     * can be defined in the definition file.
-     */
-    public static class EntityResolverTestImpl extends DefaultEntityResolver
-    {
-    }
-
-    /**
      * A specialized entity resolver implementation for testing whether
      * properties of a catalog resolver are correctly set.
      */
@@ -965,6 +960,9 @@ public class TestCombinedConfigurationBuilder
 
         /** The file system. */
         private FileSystem fileSystem;
+
+        /** The ConfigurationInterpolator. */
+        private ConfigurationInterpolator interpolator;
 
         public FileSystem getFileSystem()
         {
@@ -988,6 +986,18 @@ public class TestCombinedConfigurationBuilder
         {
             super.setBaseDir(baseDir);
             baseDirectory = baseDir;
+        }
+
+        public ConfigurationInterpolator getInterpolator()
+        {
+            return interpolator;
+        }
+
+        @Override
+        public void setInterpolator(ConfigurationInterpolator interpolator)
+        {
+            super.setInterpolator(interpolator);
+            this.interpolator = interpolator;
         }
     }
 

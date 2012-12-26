@@ -23,7 +23,7 @@
 <configuration>
   <header>
     <entity-resolver
-      config-class="org.apache.commons.configuration.builder.combined.TestCombinedConfigurationBuilder$EntityResolverTestImpl"/>
+      config-class="org.apache.commons.configuration.builder.combined.TestCombinedConfigurationBuilder$EntityResolverWithPropertiesTestImpl"/>
   </header>
   <xml fileName="test.xml" config-name="xml"/>
 </configuration>
