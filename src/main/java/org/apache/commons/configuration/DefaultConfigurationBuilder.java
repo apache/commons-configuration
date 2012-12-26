@@ -810,6 +810,7 @@ public class DefaultConfigurationBuilder extends XMLConfiguration implements
             EntityResolver resolver = (EntityResolver) BeanHelper.createBean(decl, CatalogResolver.class);
             BeanHelper.setProperty(resolver, "fileSystem", getFileSystem());
             BeanHelper.setProperty(resolver, "baseDir", getBasePath());
+            BeanHelper.setProperty(resolver, "interpolator", getInterpolator());
             setEntityResolver(resolver);
         }
     }

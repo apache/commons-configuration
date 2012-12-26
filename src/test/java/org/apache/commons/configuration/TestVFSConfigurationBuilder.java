@@ -43,7 +43,6 @@ import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.MDC;
 
@@ -886,7 +885,7 @@ public class TestVFSConfigurationBuilder
         assertEquals("Incorrect value retrieved","value1",value);
     }
 
-    @Test @Ignore
+    @Test
     public void testValidation2() throws Exception
     {
         factory.setFile(VALIDATION2_FILE);

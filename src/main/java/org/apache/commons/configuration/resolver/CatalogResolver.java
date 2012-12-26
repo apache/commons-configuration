@@ -26,7 +26,7 @@ import java.util.Vector;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileSystem;
-import org.apache.commons.lang.text.StrSubstitutor;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.resolver.CatalogException;
@@ -122,12 +122,12 @@ public class CatalogResolver implements EntityResolver
     }
 
     /**
-     * Set the StrSubstitutor.
-     * @param substitutor The StrSubstitutor.
+     * Set the {@code ConfigurationInterpolator}.
+     * @param ci the {@code ConfigurationInterpolator}
      */
-    public void setSubstitutor(StrSubstitutor substitutor)
+    public void setInterpolator(ConfigurationInterpolator ci)
     {
-        manager.setSubstitutor(substitutor);
+        manager.setInterpolator(ci);
     }
 
     /**
@@ -254,8 +254,8 @@ public class CatalogResolver implements EntityResolver
         /** The base directory */
         private String baseDir = System.getProperty("user.dir");
 
-        /** The String Substitutor */
-        private StrSubstitutor substitutor;
+        /** The object for handling interpolation. */
+        private ConfigurationInterpolator interpolator;
 
         /**
          * Set the FileSystem
@@ -296,14 +296,14 @@ public class CatalogResolver implements EntityResolver
             return this.baseDir;
         }
 
-        public void setSubstitutor(StrSubstitutor substitutor)
+        public void setInterpolator(ConfigurationInterpolator ci)
         {
-            this.substitutor = substitutor;
+            interpolator = ci;
         }
 
-        public StrSubstitutor getStrSubstitutor()
+        public ConfigurationInterpolator getInterpolator()
         {
-            return this.substitutor;
+            return interpolator;
         }
 
 
@@ -513,8 +513,8 @@ public class CatalogResolver implements EntityResolver
         @Override
         protected String normalizeURI(String uriref)
         {
-            StrSubstitutor substitutor = ((CatalogManager) catalogManager).getStrSubstitutor();
-            String resolved = substitutor != null ? substitutor.replace(uriref) : uriref;
+            ConfigurationInterpolator ci = ((CatalogManager) catalogManager).getInterpolator();
+            String resolved = (ci != null) ? String.valueOf(ci.interpolate(uriref)) : uriref;
             return super.normalizeURI(resolved);
         }
     }
