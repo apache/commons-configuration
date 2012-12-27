@@ -52,6 +52,7 @@ import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -897,6 +898,24 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests whether a Lookup object can be declared in the definition
+     * configuration.
+     */
+    @Test
+    public void testCustomLookup() throws ConfigurationException
+    {
+        File testFile = ConfigurationAssert.getTestFile("testCCLookup.xml");
+        factory.configure(new FileBasedBuilderParametersImpl()
+                .setFile(testFile));
+        CombinedConfiguration cc = factory.getConfiguration();
+        assertTrue("Lookup not registered in CC", cc.getInterpolator()
+                .getLookups().containsKey("test"));
+        Configuration xmlConf = cc.getConfiguration("xml");
+        assertTrue("Lookup not registered in sub config", xmlConf
+                .getInterpolator().getLookups().containsKey("test"));
+    }
+
+    /**
      * A test builder provider implementation for testing whether providers can
      * be defined in the definition file.
      */
@@ -1020,5 +1039,27 @@ public class TestCombinedConfigurationBuilder
          * The serial version UID.
          */
         private static final long serialVersionUID = 20121216L;
+    }
+
+    /**
+     * A custom Lookup implementation for testing whether lookups can be defined
+     * in the definition configuration. This lookup supports some variables
+     * referencing test files.
+     */
+    public static class TestLookup implements Lookup
+    {
+        private final Map<String, String> map = new HashMap<String, String>();
+
+        public TestLookup()
+        {
+            map.put("test_file_xml", "test.xml");
+            map.put("test_file_combine", "testcombine1.xml");
+            map.put("test_key", "test.value");
+        }
+
+        public String lookup(String key)
+        {
+            return map.get(key);
+        }
     }
 }

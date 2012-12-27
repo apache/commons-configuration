@@ -39,6 +39,7 @@ import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.CombinedBeanDeclaration;
 import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
+import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
@@ -541,30 +542,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Returns the configuration provided by this builder. If the boolean
-     * parameter is <b>true</b>, the configuration definition file will be
-     * loaded. It will then be parsed, and instances for the declared
-     * configurations will be created.
-     *
-     * @param load a flag whether the configuration definition file should be
-     * loaded; a value of <b>false</b> would make sense if the file has already
-     * been created or its content was manipulated using some of the property
-     * accessor methods
-     * @return the configuration
-     * @throws ConfigurationException if an error occurs
-     */
-    public CombinedConfiguration getConfiguration(boolean load)
-            throws ConfigurationException
-    {
-        registerConfiguredLookups();
-
-//        CombinedConfiguration result = createResultConfiguration();
-//        constructedConfiguration = result;
-
-        return null;
-    }
-
-    /**
      * Returns the {@code ConfigurationBuilder} which creates the definition
      * configuration.
      *
@@ -760,6 +737,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         setUpCurrentXMLParameters();
         currentXMLParameters.setFileSystem(initFileSystem(config));
         initSystemProperties(config, getBasePath());
+        registerConfiguredLookups(config, result);
         configureEntityResolver(config, currentXMLParameters);
 
         ConfigurationSourceData data = getSourceData();
@@ -801,22 +779,40 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Registers StrLookups defined in the configuration.
+     * Processes custom {@link Lookup} objects that might be declared in the
+     * definition configuration. Each {@code Lookup} object is registered at the
+     * definition configuration and at the result configuration. It is also
+     * added to all child configurations added to the resulting combined
+     * configuration.
      *
+     * @param defConfig the definition configuration
+     * @param resultConfig the resulting configuration
      * @throws ConfigurationException if an error occurs
      */
-    protected void registerConfiguredLookups() throws ConfigurationException
+    protected void registerConfiguredLookups(
+            HierarchicalConfiguration defConfig, Configuration resultConfig)
+            throws ConfigurationException
     {
-//        List<SubnodeConfiguration> nodes = configurationsAt(KEY_CONFIGURATION_LOOKUPS);
-//        for (SubnodeConfiguration config : nodes)
-//        {
-//            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
-//            String key = config.getString(KEY_LOOKUP_KEY);
-//            StrLookup lookup = (StrLookup) BeanHelper.createBean(decl);
-//            BeanHelper.setProperty(lookup, "configuration", this);
-//            ConfigurationInterpolator.registerGlobalLookup(key, lookup);
-//            this.getInterpolator().registerLookup(key, lookup);
-//        }
+        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        List<SubnodeConfiguration> nodes =
+                defConfig.configurationsAt(KEY_CONFIGURATION_LOOKUPS);
+        for (SubnodeConfiguration config : nodes)
+        {
+            XMLBeanDeclaration decl = new XMLBeanDeclaration(config);
+            String key = config.getString(KEY_LOOKUP_KEY);
+            Lookup lookup = (Lookup) BeanHelper.createBean(decl);
+            lookups.put(key, lookup);
+        }
+
+        if (!lookups.isEmpty())
+        {
+            ConfigurationInterpolator defCI = defConfig.getInterpolator();
+            if (defCI != null)
+            {
+                defCI.registerLookups(lookups);
+            }
+            resultConfig.getInterpolator().registerLookups(lookups);
+        }
     }
 
     /**
@@ -956,6 +952,10 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     protected void initChildBuilderParameters(BuilderParameters params)
     {
+        if (params instanceof BasicBuilderParameters)
+        {
+            initChildBasicParameters((BasicBuilderParameters) params);
+        }
         if (params instanceof XMLBuilderProperties<?>)
         {
             initChildXMLParameters((XMLBuilderProperties<?>) params);
@@ -964,7 +964,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         {
             initChildFileBasedParameters((FileBasedBuilderProperties<?>) params);
         }
-        if(params instanceof CombinedBuilderParametersImpl) {
+        if (params instanceof CombinedBuilderParametersImpl)
+        {
             initChildCombinedParameters((CombinedBuilderParametersImpl) params);
         }
     }
@@ -1049,6 +1050,18 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                                 .getFileHandler().getBasePath());
             }
         }
+    }
+
+    /**
+     * Initializes basic builder parameters for a child configuration with
+     * default settings set for this builder. This implementation ensures that
+     * all {@code Lookup} objects are propagated to child configurations.
+     *
+     * @param params the parameters object
+     */
+    private void initChildBasicParameters(BasicBuilderParameters params)
+    {
+        params.setPrefixLookups(fetchPrefixLookups());
     }
 
     /**
