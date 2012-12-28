@@ -128,4 +128,16 @@ public interface BasicBuilderProperties<T>
      * @see ConfigurationInterpolator#addDefaultLookups(Collection)
      */
     T setDefaultLookups(Collection<? extends Lookup> lookups);
+
+    /**
+     * Sets the parent {@code ConfigurationInterpolator} for this
+     * configuration's {@code ConfigurationInterpolator}. Setting a parent
+     * {@code ConfigurationInterpolator} can be used for defining a default
+     * behavior for variables which cannot be resolved.
+     *
+     * @param parent the new parent {@code ConfigurationInterpolator}
+     * @return a reference to this object for method chaining
+     * @see ConfigurationInterpolator#setParentInterpolator(ConfigurationInterpolator)
+     */
+    T setParentInterpolator(ConfigurationInterpolator parent);
 }

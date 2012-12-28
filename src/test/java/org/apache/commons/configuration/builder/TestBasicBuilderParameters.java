@@ -195,6 +195,20 @@ public class TestBasicBuilderParameters
     }
 
     /**
+     * Tests whether a parent {@code ConfigurationInterpolator} can be set.
+     */
+    @Test
+    public void testSetParentInterpolator()
+    {
+        ConfigurationInterpolator parent =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(parent);
+        assertSame("Wrong result", params, params.setParentInterpolator(parent));
+        assertSame("Wrong parent", parent,
+                params.getParameters().get("parentInterpolator"));
+    }
+
+    /**
      * Tests whether a custom {@code ConfigurationInterpolator} overrides
      * settings for custom lookups.
      */
@@ -203,14 +217,19 @@ public class TestBasicBuilderParameters
     {
         Lookup look1 = EasyMock.createMock(Lookup.class);
         Lookup look2 = EasyMock.createMock(Lookup.class);
+        ConfigurationInterpolator parent =
+                EasyMock.createMock(ConfigurationInterpolator.class);
         ConfigurationInterpolator ci =
                 EasyMock.createMock(ConfigurationInterpolator.class);
         params.setDefaultLookups(Collections.singleton(look1));
         params.setPrefixLookups(Collections.singletonMap("test", look2));
         params.setInterpolator(ci);
+        params.setParentInterpolator(parent);
         Map<String, Object> map = params.getParameters();
         assertFalse("Got prefix lookups", map.containsKey("prefixLookups"));
         assertFalse("Got default lookups", map.containsKey("defaultLookups"));
+        assertFalse("Got a parent interpolator",
+                map.containsKey("parentInterpolator"));
     }
 
     /**

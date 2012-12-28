@@ -71,6 +71,9 @@ public class BasicBuilderParameters implements BuilderParameters,
     /** The key for the <em>defaultLookups</em> property. */
     private static final String PROP_DEFAULT_LOOKUPS = "defaultLookups";
 
+    /** The key for the <em>parentInterpolator</em> property. */
+    private static final String PROP_PARENT_INTERPOLATOR = "parentInterpolator";
+
     /** The map for storing the current property values. */
     private final Map<String, Object> properties;
 
@@ -96,6 +99,7 @@ public class BasicBuilderParameters implements BuilderParameters,
             // A custom ConfigurationInterpolator overrides lookups
             result.remove(PROP_PREFIX_LOOKUPS);
             result.remove(PROP_DEFAULT_LOOKUPS);
+            result.remove(PROP_PARENT_INTERPOLATOR);
         }
         return result;
     }
@@ -208,6 +212,16 @@ public class BasicBuilderParameters implements BuilderParameters,
     }
 
     /**
+     * {@inheritDoc} This implementation stores the passed in
+     * {@code ConfigurationInterpolator} object in the internal parameters map.
+     */
+    public BasicBuilderParameters setParentInterpolator(
+            ConfigurationInterpolator parent)
+    {
+        return setProperty(PROP_PARENT_INTERPOLATOR, parent);
+    }
+
+    /**
      * Merges this object with the given parameters object. This method adds all
      * property values defined by the passed in parameters object to the
      * internal storage which are not already in. So properties already defined
@@ -238,15 +252,23 @@ public class BasicBuilderParameters implements BuilderParameters,
 
     /**
      * Sets a property for this parameters object. Properties are stored in an
-     * internal map. With this method a new entry can be added to this map. It
-     * can be used by sub classes which also store properties in a map.
+     * internal map. With this method a new entry can be added to this map. If
+     * the value is <b>null</b>, the key is removed from the internal map. This
+     * method can be used by sub classes which also store properties in a map.
      *
      * @param key the key of the property
      * @param value the value of the property
      */
     protected void storeProperty(String key, Object value)
     {
-        properties.put(key, value);
+        if (value == null)
+        {
+            properties.remove(key);
+        }
+        else
+        {
+            properties.put(key, value);
+        }
     }
 
     /**
