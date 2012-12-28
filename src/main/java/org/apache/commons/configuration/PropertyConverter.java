@@ -1002,13 +1002,21 @@ public final class PropertyConverter
      * is return unchanged.
      *
      * @param value the value to be interpolated
-     * @param config the current configuration object
+     * @param config the current configuration object (may be <b>null</b>)
      * @return the interpolated value
      */
     public static Object interpolate(Object value, Configuration config)
     {
-        ConfigurationInterpolator interpolator = config.getInterpolator();
-        return (interpolator != null) ? interpolator.interpolate(value) : value;
+        Object result = value;
+        if (config != null)
+        {
+            ConfigurationInterpolator interpolator = config.getInterpolator();
+            if (interpolator != null)
+            {
+                result = interpolator.interpolate(value);
+            }
+        }
+        return result;
     }
 
     /**
