@@ -30,6 +30,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationLookup;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -510,6 +511,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private CombinedConfiguration currentConfiguration;
 
     /**
+     * A {@code ConfigurationInterpolator} to be used as parent for all child
+     * configurations to enable cross-source interpolation.
+     */
+    private ConfigurationInterpolator parentInterpolator;
+
+    /**
      * Creates a new instance of {@code CombinedConfigurationBuilder}. No parameters
      * are set.
      */
@@ -739,6 +746,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         initSystemProperties(config, getBasePath());
         registerConfiguredLookups(config, result);
         configureEntityResolver(config, currentXMLParameters);
+        setUpParentInterpolator(currentConfiguration, config);
 
         ConfigurationSourceData data = getSourceData();
         createAndAddConfigurations(result, data.getOverrideBuilders(), data);
@@ -1023,6 +1031,28 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
+     * Sets up a parent {@code ConfigurationInterpolator} object. This object
+     * has a default {@link Lookup} querying the resulting combined
+     * configuration. Thus interpolation works globally across all configuration
+     * sources.
+     *
+     * @param resultConfig the result configuration
+     * @param defConfig the definition configuration
+     */
+    private void setUpParentInterpolator(Configuration resultConfig,
+            Configuration defConfig)
+    {
+        parentInterpolator = new ConfigurationInterpolator();
+        parentInterpolator.addDefaultLookup(new ConfigurationLookup(
+                resultConfig));
+        ConfigurationInterpolator defInterpolator = defConfig.getInterpolator();
+        if (defInterpolator != null)
+        {
+            defInterpolator.setParentInterpolator(parentInterpolator);
+        }
+    }
+
+    /**
      * Initializes the default base path for all file-based child configuration
      * sources. The base path can be explicitly defined in the parameters of
      * this builder. Otherwise, if the definition builder is a file-based
@@ -1055,13 +1085,15 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /**
      * Initializes basic builder parameters for a child configuration with
      * default settings set for this builder. This implementation ensures that
-     * all {@code Lookup} objects are propagated to child configurations.
+     * all {@code Lookup} objects are propagated to child configurations and
+     * interpolation is setup correctly.
      *
      * @param params the parameters object
      */
     private void initChildBasicParameters(BasicBuilderParameters params)
     {
         params.setPrefixLookups(fetchPrefixLookups());
+        params.setParentInterpolator(parentInterpolator);
     }
 
     /**

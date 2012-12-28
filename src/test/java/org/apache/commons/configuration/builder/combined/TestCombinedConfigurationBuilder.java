@@ -41,6 +41,7 @@ import org.apache.commons.configuration.DefaultFileSystem;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
@@ -913,6 +914,31 @@ public class TestCombinedConfigurationBuilder
         Configuration xmlConf = cc.getConfiguration("xml");
         assertTrue("Lookup not registered in sub config", xmlConf
                 .getInterpolator().getLookups().containsKey("test"));
+    }
+
+    /**
+     * Tests whether variable substitution works across multiple child
+     * configurations and also in the definition configuration.
+     */
+    @Test
+    public void testInterpolationOverMultipleSources()
+            throws ConfigurationException
+    {
+        File testFile =
+                ConfigurationAssert.getTestFile("testInterpolationBuilder.xml");
+        factory.configure(new FileBasedBuilderParametersImpl().setFile(testFile));
+        CombinedConfiguration combConfig = factory.getConfiguration();
+        assertEquals("Wrong value", "abc-product",
+                combConfig.getString("products.product.desc"));
+        XMLConfiguration xmlConfig =
+                (XMLConfiguration) combConfig.getConfiguration("test");
+        assertEquals("Wrong value from XML config", "abc-product",
+                xmlConfig.getString("products/product/desc"));
+        SubnodeConfiguration subConfig =
+                xmlConfig
+                        .configurationAt("products/product[@name='abc']", true);
+        assertEquals("Wrong value from sub config", "abc-product",
+                subConfig.getString("desc"));
     }
 
     /**
