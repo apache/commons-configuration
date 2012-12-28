@@ -127,7 +127,7 @@ public class TestBaseConfigurationBuilderProvider
         HierarchicalConfiguration declConfig = setUpConfig(reload);
         ConfigurationDeclaration decl = createDeclaration(declConfig);
         ConfigurationBuilder<? extends Configuration> builder =
-                createProvider().getConfiguration(decl);
+                createProvider().getConfigurationBuilder(decl);
         Configuration config = builder.getConfiguration();
         assertEquals("Wrong configuration class",
                 PropertiesConfiguration.class, config.getClass());
@@ -201,7 +201,7 @@ public class TestBaseConfigurationBuilderProvider
                                 .getName()));
         HierarchicalConfiguration declConfig = setUpConfig(true);
         ConfigurationDeclaration decl = createDeclaration(declConfig);
-        provider.getConfiguration(decl);
+        provider.getConfigurationBuilder(decl);
     }
 
     /**
@@ -224,7 +224,7 @@ public class TestBaseConfigurationBuilderProvider
         ConfigurationDeclaration decl = createDeclaration(declConfig);
         BasicConfigurationBuilder<? extends Configuration> builder =
                 (BasicConfigurationBuilder<? extends Configuration>) createProvider()
-                        .getConfiguration(decl);
+                        .getConfigurationBuilder(decl);
         assertEquals("Wrong flag value", expFlag, builder.isAllowFailOnInit());
     }
 

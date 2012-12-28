@@ -548,7 +548,7 @@ public class TestCombinedConfigurationBuilder
                                 attrs))).registerProvider(tagName,
                         new ConfigurationBuilderProvider()
                         {
-                            public ConfigurationBuilder<? extends Configuration> getConfiguration(
+                            public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
                                     ConfigurationDeclaration decl)
                                     throws ConfigurationException
                             {
@@ -961,7 +961,7 @@ public class TestCombinedConfigurationBuilder
             this.propertyKey = propertyKey;
         }
 
-        public ConfigurationBuilder<? extends Configuration> getConfiguration(
+        public ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
                 ConfigurationDeclaration decl) throws ConfigurationException
         {
             HierarchicalConfiguration config =

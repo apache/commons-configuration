@@ -48,7 +48,7 @@ public interface ConfigurationBuilderProvider
      * @return the {@code ConfigurationBuilder} object created by this provider
      * @throws ConfigurationException if an error occurs
      */
-    ConfigurationBuilder<? extends Configuration> getConfiguration(
+    ConfigurationBuilder<? extends Configuration> getConfigurationBuilder(
             ConfigurationDeclaration decl)
             throws ConfigurationException;
 }

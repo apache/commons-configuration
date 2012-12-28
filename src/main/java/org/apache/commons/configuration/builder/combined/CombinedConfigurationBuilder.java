@@ -1554,7 +1554,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                         new ConfigurationDeclaration(
                                 CombinedConfigurationBuilder.this, src);
                 ConfigurationBuilder<? extends Configuration> builder =
-                        provider.getConfiguration(decl);
+                        provider.getConfigurationBuilder(decl);
                 builders.add(builder);
                 declarations.put(builder, decl);
                 if (decl.getName() != null)
