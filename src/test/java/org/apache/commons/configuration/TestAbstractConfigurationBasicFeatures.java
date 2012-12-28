@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -379,6 +380,43 @@ public class TestAbstractConfigurationBasicFeatures
         assertEquals("Wrong number of default lookups", 1, defLookups.size());
         assertTrue("Wrong default lookup",
                 defLookups.get(0) instanceof ConfigurationLookup);
+    }
+
+    /**
+     * Tests whether a parent {@code ConfigurationInterpolator} can be set if
+     * already a {@code ConfigurationInterpolator} is available.
+     */
+    @Test
+    public void testSetParentInterpolatorExistingInterpolator()
+    {
+        ConfigurationInterpolator parent =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(parent);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        ConfigurationInterpolator ci = config.getInterpolator();
+        config.setParentInterpolator(parent);
+        assertSame("Parent was not set", parent, config.getInterpolator()
+                .getParentInterpolator());
+        assertSame("Interpolator was changed", ci, config.getInterpolator());
+    }
+
+    /**
+     * Tests whether a parent {@code ConfigurationInterpolator} can be set if
+     * currently no {@code ConfigurationInterpolator} is available.
+     */
+    @Test
+    public void testSetParentInterpolatorNoInterpolator()
+    {
+        ConfigurationInterpolator parent =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(parent);
+        AbstractConfiguration config =
+                new TestConfigurationImpl(new PropertiesConfiguration());
+        config.setInterpolator(null);
+        config.setParentInterpolator(parent);
+        assertSame("Parent was not set", parent, config.getInterpolator()
+                .getParentInterpolator());
     }
 
     /**

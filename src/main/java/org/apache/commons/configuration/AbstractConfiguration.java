@@ -343,8 +343,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param lookups a map with new {@code Lookup} objects and their prefixes
      *        (may be <b>null</b>)
+     * @since 2.0
      */
-    public final void setPrefixLookups(Map<String, ? extends Lookup> lookups)
+    public void setPrefixLookups(Map<String, ? extends Lookup> lookups)
     {
         boolean success;
         do
@@ -374,8 +375,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param lookups the collection with default {@code Lookup} objects to be
      *        added
+     * @since 2.0
      */
-    public final void setDefaultLookups(Collection<? extends Lookup> lookups)
+    public void setDefaultLookups(Collection<? extends Lookup> lookups)
     {
         boolean success;
         do
@@ -394,6 +396,30 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             }
             ciNew.addDefaultLookups(lookups);
             ciNew.addDefaultLookup(confLookup);
+            success = interpolator.compareAndSet(ciOld, ciNew);
+        } while (!success);
+    }
+
+    /**
+     * Sets the specified {@code ConfigurationInterpolator} as the parent of
+     * this configuration's {@code ConfigurationInterpolator}. If this
+     * configuration does not have a {@code ConfigurationInterpolator}, a new
+     * instance is created. Note: This method is mainly intended to be used for
+     * initializing a configuration when it is created by a builder. Normal
+     * client code can directly update the {@code ConfigurationInterpolator}.
+     *
+     * @param parent the parent {@code ConfigurationInterpolator} to be set
+     * @since 2.0
+     */
+    public void setParentInterpolator(ConfigurationInterpolator parent)
+    {
+        boolean success;
+        do
+        {
+            ConfigurationInterpolator ciOld = getInterpolator();
+            ConfigurationInterpolator ciNew =
+                    (ciOld != null) ? ciOld : new ConfigurationInterpolator();
+            ciNew.setParentInterpolator(parent);
             success = interpolator.compareAndSet(ciOld, ciNew);
         } while (!success);
     }
