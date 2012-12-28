@@ -23,6 +23,7 @@ import java.lang.reflect.Proxy;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
@@ -114,6 +115,18 @@ public final class Parameters
     {
         return createParametersProxy(JndiBuilderParameters.class,
                 new JndiBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for hierarchical
+     * configurations.
+     *
+     * @return the new parameters object
+     */
+    public static HierarchicalBuilderParameters hierarchical()
+    {
+        return createParametersProxy(HierarchicalBuilderParameters.class,
+                new HierarchicalBuilderParametersImpl());
     }
 
     /**

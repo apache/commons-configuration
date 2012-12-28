@@ -20,21 +20,20 @@ import org.apache.commons.configuration.builder.BasicBuilderProperties;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
 import org.apache.commons.configuration.builder.HierarchicalBuilderProperties;
-import org.apache.commons.configuration.builder.XMLBuilderProperties;
 
 /**
  * <p>
  * Definition of a parameters interface providing a fluent API for setting all
- * properties for a XML configuration.
+ * properties for a hierarchical configuration.
  * </p>
  *
  * @version $Id$
  * @since 2.0
  */
-public interface XMLBuilderParameters extends
-        BasicBuilderProperties<XMLBuilderParameters>,
-        FileBasedBuilderProperties<XMLBuilderParameters>,
-        HierarchicalBuilderProperties<XMLBuilderParameters>,
-        XMLBuilderProperties<XMLBuilderParameters>, BuilderParameters
+public interface HierarchicalBuilderParameters extends
+        BasicBuilderProperties<HierarchicalBuilderParameters>,
+        FileBasedBuilderProperties<HierarchicalBuilderParameters>,
+        HierarchicalBuilderProperties<HierarchicalBuilderParameters>,
+        BuilderParameters
 {
 }

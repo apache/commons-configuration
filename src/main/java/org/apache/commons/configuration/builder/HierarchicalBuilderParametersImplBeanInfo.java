@@ -14,27 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration.builder.fluent;
-
-import org.apache.commons.configuration.builder.BasicBuilderProperties;
-import org.apache.commons.configuration.builder.BuilderParameters;
-import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
-import org.apache.commons.configuration.builder.HierarchicalBuilderProperties;
-import org.apache.commons.configuration.builder.XMLBuilderProperties;
+package org.apache.commons.configuration.builder;
 
 /**
  * <p>
- * Definition of a parameters interface providing a fluent API for setting all
- * properties for a XML configuration.
+ * A specialized {@code BeanInfo} class providing additional property
+ * descriptors for the {@link HierarchicalBuilderParametersImpl} class.
  * </p>
  *
  * @version $Id$
  * @since 2.0
  */
-public interface XMLBuilderParameters extends
-        BasicBuilderProperties<XMLBuilderParameters>,
-        FileBasedBuilderProperties<XMLBuilderParameters>,
-        HierarchicalBuilderProperties<XMLBuilderParameters>,
-        XMLBuilderProperties<XMLBuilderParameters>, BuilderParameters
+public class HierarchicalBuilderParametersImplBeanInfo extends
+        BuilderParametersBeanInfo
 {
+    /**
+     * Creates a new instance of {@code HierarchicalBuilderParametersImplBeanInfo}.
+     */
+    public HierarchicalBuilderParametersImplBeanInfo()
+    {
+        super(HierarchicalBuilderParametersImpl.class);
+    }
 }

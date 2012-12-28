@@ -14,27 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration.builder.fluent;
+package org.apache.commons.configuration.builder;
 
-import org.apache.commons.configuration.builder.BasicBuilderProperties;
-import org.apache.commons.configuration.builder.BuilderParameters;
-import org.apache.commons.configuration.builder.FileBasedBuilderProperties;
-import org.apache.commons.configuration.builder.HierarchicalBuilderProperties;
-import org.apache.commons.configuration.builder.XMLBuilderProperties;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 
 /**
  * <p>
- * Definition of a parameters interface providing a fluent API for setting all
- * properties for a XML configuration.
+ * Definition of a parameters interface for hierarchical configurations.
+ * </p>
+ * <p>
+ * This interface defines set methods for additional properties common to all
+ * hierarchical configurations.
  * </p>
  *
  * @version $Id$
  * @since 2.0
+ * @param <T> the type of the result of all set methods for method chaining
  */
-public interface XMLBuilderParameters extends
-        BasicBuilderProperties<XMLBuilderParameters>,
-        FileBasedBuilderProperties<XMLBuilderParameters>,
-        HierarchicalBuilderProperties<XMLBuilderParameters>,
-        XMLBuilderProperties<XMLBuilderParameters>, BuilderParameters
+public interface HierarchicalBuilderProperties<T>
 {
+    /**
+     * Sets the {@code ExpressionEngine} to be used when querying the
+     * configuration.
+     *
+     * @param engine the {@code ExpressionEngine}
+     * @return a reference to this object for method chaining
+     */
+    T setExpressionEngine(ExpressionEngine engine);
 }

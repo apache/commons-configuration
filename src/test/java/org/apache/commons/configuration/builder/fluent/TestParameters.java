@@ -25,6 +25,8 @@ import java.util.Map;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
+import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
@@ -125,17 +127,39 @@ public class TestParameters
     }
 
     /**
+     * Tests whether a parameters object for a hierarchical configuration can be
+     * created.
+     */
+    @Test
+    public void testHierarchical()
+    {
+        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        Map<String, Object> map =
+                Parameters.hierarchical().setThrowExceptionOnMissing(true)
+                        .setExpressionEngine(engine).setFileName("test.xml")
+                        .setListDelimiter('#').getParameters();
+        checkBasicProperties(map);
+        FileBasedBuilderParametersImpl fbp =
+                FileBasedBuilderParametersImpl.fromParameters(map);
+        assertEquals("Wrong file name", "test.xml", fbp.getFileHandler()
+                .getFileName());
+        assertEquals("Wrong expression engine", engine,
+                map.get("expressionEngine"));
+    }
+
+    /**
      * Tests whether a parameters object for an XML configuration can be
      * created.
      */
     @Test
     public void testXml()
     {
+        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
         Map<String, Object> map =
                 Parameters.xml().setThrowExceptionOnMissing(true)
                         .setFileName("test.xml").setValidating(true)
-                        .setListDelimiter('#').setSchemaValidation(true)
-                        .getParameters();
+                        .setExpressionEngine(engine).setListDelimiter('#')
+                        .setSchemaValidation(true).getParameters();
         checkBasicProperties(map);
         FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
@@ -145,5 +169,7 @@ public class TestParameters
                 map.get("validating"));
         assertEquals("Wrong schema flag", Boolean.TRUE,
                 map.get("schemaValidation"));
+        assertEquals("Wrong expression engine", engine,
+                map.get("expressionEngine"));
     }
 }

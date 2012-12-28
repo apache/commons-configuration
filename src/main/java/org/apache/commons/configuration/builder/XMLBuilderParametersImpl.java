@@ -38,7 +38,7 @@ import org.xml.sax.EntityResolver;
  * @version $Id$
  * @since 2.0
  */
-public class XMLBuilderParametersImpl extends FileBasedBuilderParametersImpl
+public class XMLBuilderParametersImpl extends HierarchicalBuilderParametersImpl
         implements XMLBuilderProperties<XMLBuilderParametersImpl>
 {
     /** The key for the entity resolver property. */
