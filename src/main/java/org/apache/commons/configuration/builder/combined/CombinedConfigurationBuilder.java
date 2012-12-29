@@ -470,28 +470,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** A map with the default configuration builder providers. */
     private static final Map<String, ConfigurationBuilderProvider> DEFAULT_PROVIDERS_MAP;
 
-    /**
-     * A specialized {@code StrLookup} object which operates on the combined
-     * configuration constructed by this builder. This object is used as
-     * default lookup for {@code ConfigurationInterpolator} objects assigned to
-     * newly created configuration objects.
-     */
-//    private final StrLookup combinedConfigLookup = new StrLookup()
-//    {
-//        @Override
-//        public String lookup(String key)
-//        {
-//            if (constructedConfiguration != null)
-//            {
-//                Object value =
-//                        constructedConfiguration.resolveContainerStore(key);
-//                return (value != null) ? value.toString() : null;
-//            }
-//            return null;
-//        }
-//    };
-//
-
     /** The builder for the definition configuration. */
     private ConfigurationBuilder<? extends HierarchicalConfiguration> definitionBuilder;
 
@@ -934,27 +912,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             xmlParams.setEntityResolver(resolver);
         }
     }
-
-    /**
-     * Performs interpolation. This method will not only take this configuration
-     * instance into account (which is the one that loaded the configuration
-     * definition file), but also the so far constructed combined configuration.
-     * So variables can be used that point to properties that are defined in
-     * configuration sources loaded by this builder.
-     *
-     * @param value the value to be interpolated
-     * @return the interpolated value
-     */
-//    @Override
-//    protected Object interpolate(Object value)
-//    {
-//        Object result = super.interpolate(value);
-//        if (constructedConfiguration != null)
-//        {
-//            result = constructedConfiguration.interpolate(result);
-//        }
-//        return result;
-//    }
 
     /**
      * Returns the {@code ConfigurationBuilderProvider} for the given tag. This
