@@ -299,6 +299,19 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests the behavior of builderNames() before the result configuration has
+     * been created.
+     */
+    @Test
+    public void testBuilderNamesBeforeConfigurationAccess()
+    {
+        assertTrue("Got builders (1)", factory.builderNames().isEmpty());
+        factory.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        assertTrue("Got builders (2)", factory.builderNames().isEmpty());
+    }
+
+    /**
      * Tests whether the names of sub builders can be queried.
      */
     @Test
@@ -306,6 +319,7 @@ public class TestCombinedConfigurationBuilder
     {
         factory.configure(new FileBasedBuilderParametersImpl()
                 .setFile(TEST_FILE));
+        factory.getConfiguration();
         Set<String> names = factory.builderNames();
         List<String> expected = Arrays.asList("props", "xml");
         assertEquals("Wrong number of named builders", expected.size(),
@@ -321,8 +335,9 @@ public class TestCombinedConfigurationBuilder
     {
         factory.configure(new FileBasedBuilderParametersImpl()
                 .setFile(TEST_FILE));
+        factory.getConfiguration();
         Set<String> names = factory.builderNames();
-        names.clear();
+        names.add(BUILDER_NAME);
     }
 
     /**
@@ -333,6 +348,7 @@ public class TestCombinedConfigurationBuilder
     {
         factory.configure(new FileBasedBuilderParametersImpl()
                 .setFile(TEST_FILE));
+        factory.getConfiguration();
         ConfigurationBuilder<? extends Configuration> propBuilder =
                 factory.getNamedBuilder("props");
         assertTrue("Wrong builder class",
@@ -347,6 +363,20 @@ public class TestCombinedConfigurationBuilder
      */
     @Test(expected = ConfigurationException.class)
     public void testGetNamedBuilderUnknown() throws ConfigurationException
+    {
+        factory.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        factory.getConfiguration();
+        factory.getNamedBuilder("nonExistingBuilder");
+    }
+
+    /**
+     * Tries to query a named builder before the result configuration has been
+     * created.
+     */
+    @Test(expected = ConfigurationException.class)
+    public void testGetNamedBuilderBeforeConfigurationAccess()
+            throws ConfigurationException
     {
         factory.configure(new FileBasedBuilderParametersImpl()
                 .setFile(TEST_FILE));
@@ -406,6 +436,7 @@ public class TestCombinedConfigurationBuilder
         Map<String, Object> attrs = new HashMap<String, Object>();
         attrs.put("config-reload", Boolean.TRUE);
         prepareSubBuilderTest(attrs);
+        factory.getConfiguration();
         assertTrue(
                 "Not a reloading builder",
                 factory.getNamedBuilder(BUILDER_NAME) instanceof ReloadingFileBasedConfigurationBuilder);
@@ -438,6 +469,7 @@ public class TestCombinedConfigurationBuilder
     {
         Map<String, Object> attrs = new HashMap<String, Object>();
         prepareSubBuilderTest(attrs);
+        factory.getConfiguration();
         BasicConfigurationBuilder<?> subBuilder =
                 (BasicConfigurationBuilder<?>) factory
                         .getNamedBuilder(BUILDER_NAME);
