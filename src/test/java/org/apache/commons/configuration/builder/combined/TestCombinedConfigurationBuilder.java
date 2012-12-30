@@ -974,6 +974,20 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests whether all child builders can be obtained.
+     */
+    @Test
+    public void testGetChildBuilders() throws ConfigurationException
+    {
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        builder.getConfiguration();
+        Collection<ConfigurationBuilder<? extends Configuration>> childBuilders =
+                builder.getChildBuilders();
+        assertEquals("Wrong number of child builders", 3, childBuilders.size());
+    }
+
+    /**
      * A test builder provider implementation for testing whether providers can
      * be defined in the definition file.
      */

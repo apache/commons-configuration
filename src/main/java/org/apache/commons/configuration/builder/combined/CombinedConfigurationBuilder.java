@@ -679,6 +679,24 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
+     * Creates a default builder for the definition configuration and
+     * initializes it with a parameters object. This method is called if no
+     * definition builder is defined in this builder's parameters. This
+     * implementation creates a default file-based builder which produces an
+     * {@code XMLConfiguration}; it expects a corresponding file specification.
+     * Note: This method is called in a synchronized block.
+     *
+     * @param builderParams the parameters object for the builder
+     * @return the standard builder for the definition configuration
+     */
+    protected ConfigurationBuilder<? extends HierarchicalConfiguration> createXMLDefinitionBuilder(
+            BuilderParameters builderParams)
+    {
+        return new FileBasedConfigurationBuilder<XMLConfiguration>(
+                XMLConfiguration.class).configure(builderParams);
+    }
+
+    /**
      * Returns the configuration containing the definition of the combined
      * configuration to be created. This method only returns a defined result
      * during construction of the result configuration. The definition
@@ -699,6 +717,20 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             definitionConfiguration = getDefinitionBuilder().getConfiguration();
         }
         return definitionConfiguration;
+    }
+
+    /**
+     * Returns a collection with the builders for all child configuration
+     * sources. This method can be used by derived classes providing additional
+     * functionality on top of the declared configuration sources. It only
+     * returns a defined value during construction of the result configuration
+     * instance.
+     *
+     * @return a collection with the builders for child configuration sources
+     */
+    protected Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders()
+    {
+        return sourceData.getChildBuilders();
     }
 
     /**
@@ -1228,21 +1260,6 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     }
 
     /**
-     * Creates a default builder for the definition configuration and
-     * initializes it with a parameters object. The default builder creates an
-     * {@code XMLConfiguration}; it expects a corresponding file specification.
-     *
-     * @param builderParams the parameters object for the builder
-     * @return the standard builder for the definition configuration
-     */
-    private static ConfigurationBuilder<? extends HierarchicalConfiguration> createXMLDefinitionBuilder(
-            BuilderParameters builderParams)
-    {
-        return new FileBasedConfigurationBuilder<XMLConfiguration>(
-                XMLConfiguration.class).configure(builderParams);
-    }
-
-    /**
      * Initializes the list nodes of the node combiner for the given combined
      * configuration. This information can be set in the header section of the
      * configuration definition file for both the override and the union
@@ -1298,6 +1315,9 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         /** A map for direct access to a builder by its name. */
         private final Map<String, ConfigurationBuilder<? extends Configuration>> namedBuilders;
 
+        /** A collection with all child builders. */
+        private final Collection<ConfigurationBuilder<? extends Configuration>> allBuilders;
+
         /** A listener for reacting on changes of sub builders. */
         private BuilderListener changeListener;
 
@@ -1312,6 +1332,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                     new LinkedList<SubnodeConfiguration>();
             namedBuilders =
                     new HashMap<String, ConfigurationBuilder<? extends Configuration>>();
+            allBuilders =
+                    new LinkedList<ConfigurationBuilder<? extends Configuration>>();
         }
 
         /**
@@ -1360,11 +1382,22 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
          */
         public void cleanUp()
         {
-            for (ConfigurationBuilder<?> b : namedBuilders.values())
+            for (ConfigurationBuilder<?> b : getChildBuilders())
             {
                 b.removeBuilderListener(changeListener);
             }
             namedBuilders.clear();
+        }
+
+        /**
+         * Returns a collection containing the builders for all child
+         * configuration sources.
+         *
+         * @return the child configuration builders
+         */
+        public Collection<ConfigurationBuilder<? extends Configuration>> getChildBuilders()
+        {
+            return allBuilders;
         }
 
         /**
@@ -1441,6 +1474,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             {
                 namedBuilders.put(decl.getName(), builder);
             }
+            allBuilders.add(builder);
             builder.addBuilderListener(changeListener);
             return builder;
         }
