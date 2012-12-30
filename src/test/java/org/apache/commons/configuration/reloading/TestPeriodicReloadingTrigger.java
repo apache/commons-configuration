@@ -146,7 +146,8 @@ public class TestPeriodicReloadingTrigger
                         return future;
                     }
                 });
-        controller.checkForReloading(CTRL_PARAM);
+        EasyMock.expect(controller.checkForReloading(CTRL_PARAM)).andReturn(
+                Boolean.FALSE);
         EasyMock.replay(future, controller, executor);
         PeriodicReloadingTrigger trigger = createTrigger();
         trigger.start();
