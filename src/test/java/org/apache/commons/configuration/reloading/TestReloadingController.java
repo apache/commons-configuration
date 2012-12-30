@@ -112,7 +112,7 @@ public class TestReloadingController
         ctrl.addReloadingListener(l);
         ctrl.removeReloadingListener(lRemoved);
         Object testData = "Some test data";
-        ctrl.checkForReloading(testData);
+        assertTrue("Wrong result", ctrl.checkForReloading(testData));
         assertTrue("Not in reloading state", ctrl.isInReloadingState());
         assertSame("Wrong event source", ctrl, evRef.getValue().getSource());
         assertSame("Wrong controller", ctrl, evRef.getValue().getController());
@@ -132,7 +132,7 @@ public class TestReloadingController
         EasyMock.replay(detector, l);
         ReloadingController ctrl = createController();
         ctrl.addReloadingListener(l);
-        ctrl.checkForReloading(null);
+        assertFalse("Wrong result", ctrl.checkForReloading(null));
         assertFalse("In reloading state", ctrl.isInReloadingState());
         EasyMock.verify(detector, l);
     }
@@ -150,8 +150,8 @@ public class TestReloadingController
         EasyMock.replay(detector, l);
         ReloadingController ctrl = createController();
         ctrl.addReloadingListener(l);
-        ctrl.checkForReloading(1);
-        ctrl.checkForReloading(2);
+        assertTrue("Wrong result (1)", ctrl.checkForReloading(1));
+        assertFalse("Wrong result (2)", ctrl.checkForReloading(2));
         EasyMock.verify(detector, l);
     }
 

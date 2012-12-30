@@ -142,11 +142,12 @@ public class ReloadingController
      * to the associated {@link ReloadingDetector} and sends out notifications
      * if necessary. The argument can be an arbitrary data object; it will be
      * part of the event notification sent out when a reload operation should be
-     * performed.
+     * performed. The return value indicates whether a change was detected and
+     * an event was sent.
      *
      * @param data additional data for an event notification
      */
-    public void checkForReloading(Object data)
+    public boolean checkForReloading(Object data)
     {
         boolean sendEvent = false;
         synchronized (this)
@@ -164,7 +165,9 @@ public class ReloadingController
         if (sendEvent)
         {
             listeners.fire().reloadingRequired(new ReloadingEvent(this, data));
+            return true;
         }
+        return false;
     }
 
     /**
