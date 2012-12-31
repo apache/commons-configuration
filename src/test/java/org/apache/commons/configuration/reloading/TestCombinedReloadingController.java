@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.reloading;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -176,5 +177,31 @@ public class TestCombinedReloadingController
         ctrl.checkForReloading(null);
         ctrl.resetReloadingState();
         verifySubSontrollers();
+    }
+
+    /**
+     * Tests whether the sub controllers can be accessed.
+     */
+    @Test
+    public void testGetSubControllers()
+    {
+        CombinedReloadingController ctrl = setUpController();
+        replaySubControllers();
+        Collection<ReloadingController> subs = ctrl.getSubControllers();
+        assertEquals("Wrong number of sub controllers", subControllers.length,
+                subs.size());
+        assertTrue("Wrong sub controllers",
+                subs.containsAll(Arrays.asList(subControllers)));
+    }
+
+    /**
+     * Tests that the list of sub controllers cannot be manipulated.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetSubControllersModify()
+    {
+        Collection<ReloadingController> subs =
+                setUpController().getSubControllers();
+        subs.clear();
     }
 }

@@ -18,6 +18,7 @@ package org.apache.commons.configuration.reloading;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * <p>
@@ -62,6 +63,18 @@ public class CombinedReloadingController extends ReloadingController
     }
 
     /**
+     * Returns a (unmodifiable) collection with the sub controllers managed by
+     * this combined controller.
+     *
+     * @return a collection with sub controllers
+     */
+    public Collection<ReloadingController> getSubControllers()
+    {
+        return ((MultiReloadingControllerDetector) getDetector())
+                .getControllers();
+    }
+
+    /**
      * Creates a specialized detector object which manages the passed in sub
      * controllers. The collection with controllers is also checked for
      * validity.
@@ -91,7 +104,8 @@ public class CombinedReloadingController extends ReloadingController
             }
         }
 
-        return new MultiReloadingControllerDetector(ctrls);
+        return new MultiReloadingControllerDetector(
+                Collections.unmodifiableCollection(ctrls));
     }
 
     /**
@@ -125,7 +139,7 @@ public class CombinedReloadingController extends ReloadingController
          */
         public boolean isReloadingRequired()
         {
-            for (ReloadingController rc : controllers)
+            for (ReloadingController rc : getControllers())
             {
                 if (rc.checkForReloading(null) || rc.isInReloadingState())
                 {
@@ -141,10 +155,20 @@ public class CombinedReloadingController extends ReloadingController
          */
         public void reloadingPerformed()
         {
-            for (ReloadingController rc : controllers)
+            for (ReloadingController rc : getControllers())
             {
                 rc.resetReloadingState();
             }
+        }
+
+        /**
+         * Returns the collection with managed sub controllers.
+         *
+         * @return the controllers the sub controllers
+         */
+        Collection<ReloadingController> getControllers()
+        {
+            return controllers;
         }
     }
 }
