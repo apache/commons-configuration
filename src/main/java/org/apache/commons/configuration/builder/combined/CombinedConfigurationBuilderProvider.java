@@ -47,6 +47,10 @@ public class CombinedConfigurationBuilderProvider extends
     private static final String BUILDER_CLASS =
             "org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder";
 
+    /** Constant for the name of the supported reloading builder class. */
+    private static final String RELOADING_BUILDER_CLASS =
+            "org.apache.commons.configuration.builder.combined.ReloadingCombinedConfigurationBuilder";
+
     /** Constant for the name of the supported configuration class. */
     private static final String CONFIGURATION_CLASS =
             "org.apache.commons.configuration.CombinedConfiguration";
@@ -64,8 +68,8 @@ public class CombinedConfigurationBuilderProvider extends
      */
     public CombinedConfigurationBuilderProvider()
     {
-        super(BUILDER_CLASS, BUILDER_CLASS, CONFIGURATION_CLASS, Arrays.asList(
-                COMBINED_PARAMS, FILE_PARAMS));
+        super(BUILDER_CLASS, RELOADING_BUILDER_CLASS, CONFIGURATION_CLASS,
+                Arrays.asList(COMBINED_PARAMS, FILE_PARAMS));
     }
 
     /**
@@ -80,8 +84,15 @@ public class CombinedConfigurationBuilderProvider extends
             ConfigurationDeclaration decl, Collection<BuilderParameters> params)
             throws Exception
     {
-        CombinedConfigurationBuilder builder =
-                new CombinedConfigurationBuilder();
+        CombinedConfigurationBuilder builder;
+        if (decl.isReload())
+        {
+            builder = new ReloadingCombinedConfigurationBuilder();
+        }
+        else
+        {
+            builder = new CombinedConfigurationBuilder();
+        }
         decl.getConfigurationBuilder().initChildEventListeners(builder);
         return builder;
     }
