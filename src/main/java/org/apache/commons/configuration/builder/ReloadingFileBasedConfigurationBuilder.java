@@ -23,6 +23,7 @@ import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.FileHandlerReloadingDetector;
 import org.apache.commons.configuration.reloading.ReloadingController;
+import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.reloading.ReloadingDetector;
 import org.apache.commons.configuration.reloading.ReloadingEvent;
 import org.apache.commons.configuration.reloading.ReloadingListener;
@@ -62,7 +63,7 @@ import org.apache.commons.configuration.reloading.ReloadingListener;
  *        builder
  */
 public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfiguration>
-        extends FileBasedConfigurationBuilder<T>
+        extends FileBasedConfigurationBuilder<T> implements ReloadingControllerSupport
 {
     /** The reloading controller associated with this object. */
     private final ReloadingController reloadingController;
