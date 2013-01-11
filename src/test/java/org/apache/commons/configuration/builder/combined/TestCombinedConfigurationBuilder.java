@@ -77,7 +77,7 @@ public class TestCombinedConfigurationBuilder
     private static final String BUILDER_NAME = "subBuilderName";
 
     /** Stores the object to be tested. */
-    private CombinedConfigurationBuilder builder;
+    protected CombinedConfigurationBuilder builder;
 
     @Before
     public void setUp() throws Exception
@@ -96,7 +96,7 @@ public class TestCombinedConfigurationBuilder
      * @param defConfig the definition configuration
      * @return the definition builder
      */
-    private static BasicConfigurationBuilder<? extends HierarchicalConfiguration> createDefinitionBuilder(
+    protected static BasicConfigurationBuilder<? extends HierarchicalConfiguration> createDefinitionBuilder(
             HierarchicalConfiguration defConfig)
     {
         return new ConstantConfigurationBuilder(defConfig);
@@ -111,7 +111,7 @@ public class TestCombinedConfigurationBuilder
      * @param attrs the attributes of this tag
      * @return the definition configuration
      */
-    private static HierarchicalConfiguration createDefinitionConfig(String tag,
+    protected static HierarchicalConfiguration createDefinitionConfig(String tag,
             Map<String, Object> attrs)
     {
         HierarchicalConfiguration defConfig =
