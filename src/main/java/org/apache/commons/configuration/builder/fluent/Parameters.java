@@ -27,6 +27,7 @@ import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImp
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;
 
 /**
  * <p>
@@ -138,6 +139,18 @@ public final class Parameters
     {
         return createParametersProxy(XMLBuilderParameters.class,
                 new XMLBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for a builder for multiple
+     * file-based configurations.
+     *
+     * @return the new parameters object
+     */
+    public static MultiFileBuilderParameters multiFile()
+    {
+        return createParametersProxy(MultiFileBuilderParameters.class,
+                new MultiFileBuilderParametersImpl());
     }
 
     /**

@@ -18,19 +18,22 @@ package org.apache.commons.configuration.builder.fluent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
+import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
- * Test class for parameters.
+ * Test class for {@code Parameters}.
  *
  * @version $Id$
  */
@@ -171,5 +174,25 @@ public class TestParameters
                 map.get("schemaValidation"));
         assertEquals("Wrong expression engine", engine,
                 map.get("expressionEngine"));
+    }
+
+    /**
+     * Tests whether a {@code MultiFileBuilderParameters} object can be created.
+     */
+    @Test
+    public void testMultiFile()
+    {
+        BuilderParameters bp = EasyMock.createMock(BuilderParameters.class);
+        String pattern = "a pattern";
+        Map<String, Object> map =
+                Parameters.multiFile().setThrowExceptionOnMissing(true)
+                        .setFilePattern(pattern).setListDelimiter('#')
+                        .setManagedBuilderParameters(bp).getParameters();
+        checkBasicProperties(map);
+        MultiFileBuilderParametersImpl params =
+                MultiFileBuilderParametersImpl.fromParameters(map);
+        assertSame("Wrong builder parameters", bp,
+                params.getManagedBuilderParameters());
+        assertEquals("Wrong pattern", pattern, params.getFilePattern());
     }
 }
