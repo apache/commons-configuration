@@ -140,6 +140,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     @Override
     protected void initResultInstance(T obj) throws ConfigurationException
     {
+        super.initResultInstance(obj);
         FileHandler srcHandler =
                 (currentFileHandler != null && !resetParameters) ? currentFileHandler
                         : fetchFileHandlerFromParameters();
