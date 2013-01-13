@@ -251,6 +251,22 @@ public class BasicBuilderParameters implements BuilderParameters,
     }
 
     /**
+     * Obtains the {@code ConfigurationInterpolator} from the given map with
+     * parameters. If such an object is stored in the map under the correct key,
+     * it is returned. Otherwise, result is <b>null</b>.
+     *
+     * @param params the map with parameters (must not be <b>null</b>)
+     * @return the {@code ConfigurationInterpolator} obtained from this map or
+     *         <b>null</b>
+     * @throws NullPointerException if the map is <b>null</b>
+     */
+    public static ConfigurationInterpolator fetchInterpolator(
+            Map<String, Object> params)
+    {
+        return (ConfigurationInterpolator) params.get(PROP_INTERPOLATOR);
+    }
+
+    /**
      * Sets a property for this parameters object. Properties are stored in an
      * internal map. With this method a new entry can be added to this map. If
      * the value is <b>null</b>, the key is removed from the internal map. This

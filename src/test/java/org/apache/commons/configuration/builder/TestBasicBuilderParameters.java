@@ -19,6 +19,7 @@ package org.apache.commons.configuration.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
 import java.util.ArrayList;
@@ -268,5 +269,30 @@ public class TestBasicBuilderParameters
                 "Reserved property was copied",
                 map.containsKey(BuilderParameters.RESERVED_PARAMETER_PREFIX
                         + "test"));
+    }
+
+    /**
+     * Tests fetchInterpolator() if the map does not contain an object.
+     */
+    @Test
+    public void testFetchInterpolatorNotFound()
+    {
+        Map<String, Object> params = new HashMap<String, Object>();
+        assertNull("Got an interpolator",
+                BasicBuilderParameters.fetchInterpolator(params));
+    }
+
+    /**
+     * Tests whether a {@code ConfigurationInterpolator} can be obtained from a
+     * parameters map.
+     */
+    @Test
+    public void testFetchInterpolatorFound()
+    {
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        params.setInterpolator(ci);
+        Map<String, Object> map = params.getParameters();
+        assertSame("Wrong interpolator", ci,
+                BasicBuilderParameters.fetchInterpolator(map));
     }
 }
