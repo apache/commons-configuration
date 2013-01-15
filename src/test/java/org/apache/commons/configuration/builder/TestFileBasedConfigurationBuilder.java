@@ -218,4 +218,20 @@ public class TestFileBasedConfigurationBuilder
                         PropertiesConfiguration.class, null, true);
         assertTrue("Flag not set", builder.isAllowFailOnInit());
     }
+
+    /**
+     * Tests whether a file handler can be accessed and manipulated even if no
+     * file-based parameters are part of the initialization parameters.
+     */
+    @Test
+    public void testSetLocationNoFileHandler() throws ConfigurationException
+    {
+        File file = createTestFile(1);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.getFileHandler().setFile(file);
+        PropertiesConfiguration config = builder.getConfiguration();
+        assertFalse("No data was loaded", config.isEmpty());
+    }
 }

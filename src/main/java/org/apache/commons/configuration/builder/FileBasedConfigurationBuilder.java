@@ -169,13 +169,24 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
-     * Obtains the {@code FileHandler} from this builder's parameters.
+     * Obtains the {@code FileHandler} from this builder's parameters. If no
+     * {@code FileBasedBuilderParametersImpl} object is found in this builder's
+     * parameters, a new one is created now and stored. This makes it possible
+     * to change the location of the associated file even if no parameters
+     * object was provided.
      *
      * @return the {@code FileHandler} from initialization parameters
      */
     private FileHandler fetchFileHandlerFromParameters()
     {
-        return FileBasedBuilderParametersImpl.fromParameters(getParameters(), true)
-                .getFileHandler();
+        FileBasedBuilderParametersImpl fileParams =
+                FileBasedBuilderParametersImpl.fromParameters(getParameters(),
+                        false);
+        if (fileParams == null)
+        {
+            fileParams = new FileBasedBuilderParametersImpl();
+            addParameters(fileParams.getParameters());
+        }
+        return fileParams.getFileHandler();
     }
 }
