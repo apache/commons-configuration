@@ -16,9 +16,6 @@
  */
 package org.apache.commons.configuration.builder;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.naming.Context;
 
 /**
@@ -51,38 +48,15 @@ public class JndiBuilderParametersImpl extends BasicBuilderParameters implements
     /** Constant for the name of the prefix property. */
     private static final String PROP_PREFIX = "prefix";
 
-    /** A map for storing the properties. */
-    private final Map<String, Object> properties;
-
-    /**
-     * Creates a new instance of {@code JndiBuilderParametersImpl}.
-     */
-    public JndiBuilderParametersImpl()
-    {
-        properties = new HashMap<String, Object>();
-    }
-
     public JndiBuilderParametersImpl setContext(Context ctx)
     {
-        properties.put(PROP_CONTEXT, ctx);
+        storeProperty(PROP_CONTEXT, ctx);
         return this;
     }
 
     public JndiBuilderParametersImpl setPrefix(String p)
     {
-        properties.put(PROP_PREFIX, p);
+        storeProperty(PROP_PREFIX, p);
         return this;
-    }
-
-    /**
-     * {@inheritDoc} This implementation adds this object's own properties to
-     * the map returned by the base class.
-     */
-    @Override
-    public Map<String, Object> getParameters()
-    {
-        Map<String, Object> result = super.getParameters();
-        result.putAll(properties);
-        return result;
     }
 }
