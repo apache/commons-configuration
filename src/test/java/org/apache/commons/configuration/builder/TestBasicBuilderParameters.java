@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -153,6 +154,8 @@ public class TestBasicBuilderParameters
         assertNotSame("No copy was created", lookups, map);
         assertEquals("Wrong lookup", look, map.get("test"));
         assertEquals("Wrong number of lookups", 1, map.size());
+        Map<?, ?> map2 = (Map<?, ?>) params.getParameters().get("prefixLookups");
+        assertNotSame("No copy in parameters", map, map2);
     }
 
     /**
@@ -181,6 +184,9 @@ public class TestBasicBuilderParameters
         assertNotSame("No copy was created", col, looks);
         assertEquals("Wrong number of lookups", 1, col.size());
         assertSame("Wrong lookup", look, col.iterator().next());
+        Collection<?> col2 =
+                (Collection<?>) params.getParameters().get("defaultLookups");
+        assertNotSame("No copy in parameters", col, col2);
     }
 
     /**
@@ -294,5 +300,66 @@ public class TestBasicBuilderParameters
         Map<String, Object> map = params.getParameters();
         assertSame("Wrong interpolator", ci,
                 BasicBuilderParameters.fetchInterpolator(map));
+    }
+
+    /**
+     * Tests whether a cloned instance contains the same data as the original
+     * object.
+     */
+    @Test
+    public void testCloneValues()
+    {
+        Log log = EasyMock.createMock(Log.class);
+        ConfigurationInterpolator ci =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        params.setListDelimiter('#');
+        params.setLogger(log);
+        params.setInterpolator(ci);
+        params.setThrowExceptionOnMissing(true);
+        BasicBuilderParameters clone = params.clone();
+        params.setListDelimiter('.');
+        params.setThrowExceptionOnMissing(false);
+        Map<String, Object> map = clone.getParameters();
+        assertSame("Wrong logger", log, map.get("logger"));
+        assertSame("Wrong interpolator", ci, map.get("interpolator"));
+        assertEquals("Wrong list delimiter", Character.valueOf('#'),
+                map.get("listDelimiter"));
+        assertEquals("Wrong exception flag", Boolean.TRUE,
+                map.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests whether the map with prefix lookups is cloned, too.
+     */
+    @Test
+    public void testClonePrefixLookups()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        Map<String, Lookup> lookups = Collections.singletonMap("test", look);
+        params.setPrefixLookups(lookups);
+        BasicBuilderParameters clone = params.clone();
+        Map<?, ?> map = (Map<?, ?>) params.getParameters().get("prefixLookups");
+        map.clear();
+        map = (Map<?, ?>) clone.getParameters().get("prefixLookups");
+        assertEquals("Wrong number of lookups", 1, map.size());
+        assertSame("Wrong lookup", look, map.get("test"));
+    }
+
+    /**
+     * Tests whether the collection with default lookups can be cloned, too.
+     */
+    @Test
+    public void testCloneDefaultLookups()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        Collection<Lookup> looks = Collections.singleton(look);
+        params.setDefaultLookups(looks);
+        BasicBuilderParameters clone = params.clone();
+        Collection<?> defLooks =
+                (Collection<?>) params.getParameters().get("defaultLookups");
+        defLooks.clear();
+        defLooks = (Collection<?>) clone.getParameters().get("defaultLookups");
+        assertEquals("Wrong number of default lookups", 1, defLooks.size());
+        assertTrue("Wrong default lookup", defLooks.contains(look));
     }
 }

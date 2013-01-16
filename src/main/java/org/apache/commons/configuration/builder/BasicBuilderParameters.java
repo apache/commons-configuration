@@ -45,7 +45,7 @@ import org.apache.commons.logging.Log;
  * @version $Id$
  * @since 2.0
  */
-public class BasicBuilderParameters implements BuilderParameters,
+public class BasicBuilderParameters implements Cloneable, BuilderParameters,
         BasicBuilderProperties<BasicBuilderParameters>
 {
     /** The key of the <em>throwExceptionOnMissing</em> property. */
@@ -75,7 +75,7 @@ public class BasicBuilderParameters implements BuilderParameters,
     private static final String PROP_PARENT_INTERPOLATOR = "parentInterpolator";
 
     /** The map for storing the current property values. */
-    private final Map<String, Object> properties;
+    private Map<String, Object> properties;
 
     /**
      * Creates a new instance of {@code BasicBuilderParameters}.
@@ -88,7 +88,9 @@ public class BasicBuilderParameters implements BuilderParameters,
 
     /**
      * {@inheritDoc} This implementation returns a copy of the internal
-     * parameters map with the values set so far.
+     * parameters map with the values set so far. Collection structures
+     * (e.g. for lookup objects) are stored as defensive copies, so the
+     * original data cannot be modified.
      */
     public Map<String, Object> getParameters()
     {
@@ -101,6 +103,8 @@ public class BasicBuilderParameters implements BuilderParameters,
             result.remove(PROP_DEFAULT_LOOKUPS);
             result.remove(PROP_PARENT_INTERPOLATOR);
         }
+
+        createDefensiveCopies(result);
         return result;
     }
 
@@ -267,6 +271,36 @@ public class BasicBuilderParameters implements BuilderParameters,
     }
 
     /**
+     * Clones this object. This is useful because multiple builder instances may
+     * use a similar set of parameters. However, single instances of parameter
+     * objects must not assigned to multiple builders. Therefore, cloning a
+     * parameters object provides a solution for this use case. This method
+     * creates a new parameters object with the same content as this one. The
+     * internal map storing the parameter values is cloned, too, also collection
+     * structures contained in this map. However, no a full deep clone operation
+     * is performed. Objects like a {@code ConfigurationInterpolator} or
+     * {@code Lookup}s are shared between this and the newly created instance.
+     *
+     * @return a clone of this object
+     */
+    @Override
+    public BasicBuilderParameters clone()
+    {
+        try
+        {
+            BasicBuilderParameters copy =
+                    (BasicBuilderParameters) super.clone();
+            copy.properties = getParameters();
+            return copy;
+        }
+        catch (CloneNotSupportedException cnex)
+        {
+            // should not happen
+            throw new AssertionError(cnex);
+        }
+    }
+
+    /**
      * Sets a property for this parameters object. Properties are stored in an
      * internal map. With this method a new entry can be added to this map. If
      * the value is <b>null</b>, the key is removed from the internal map. This
@@ -319,5 +353,33 @@ public class BasicBuilderParameters implements BuilderParameters,
     {
         storeProperty(key, value);
         return this;
+    }
+
+    /**
+     * Creates defensive copies for collection structures when constructing the
+     * map with parameters. It should not be possible to modify this object's
+     * internal state when having access to the parameters map.
+     *
+     * @param params the map with parameters to be passed to the caller
+     */
+    public static void createDefensiveCopies(HashMap<String, Object> params)
+    {
+        // This is safe to case because we have full control over the map
+        // and thus know the types of the contained values
+        @SuppressWarnings("unchecked")
+        Map<String, ? extends Lookup> prefixLookups =
+                (Map<String, ? extends Lookup>) params.get(PROP_PREFIX_LOOKUPS);
+        if (prefixLookups != null)
+        {
+            params.put(PROP_PREFIX_LOOKUPS, new HashMap<String, Lookup>(
+                    prefixLookups));
+        }
+        @SuppressWarnings("unchecked")
+        Collection<? extends Lookup> defLookups =
+                (Collection<? extends Lookup>) params.get(PROP_DEFAULT_LOOKUPS);
+        if (defLookups != null)
+        {
+            params.put(PROP_DEFAULT_LOOKUPS, new ArrayList<Lookup>(defLookups));
+        }
     }
 }
