@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -30,6 +31,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.io.FileHandler;
 import org.easymock.EasyMock;
 import org.junit.Test;
@@ -244,5 +246,29 @@ public class TestFileBasedBuilderParameters
         Map<String, Object> map = params.getParameters();
         assertEquals("Property not stored", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
+    }
+
+    /**
+     * Tests a clone operation.
+     */
+    @Test
+    public void testClone()
+    {
+        FileBased content = EasyMock.createMock(FileBased.class);
+        EasyMock.replay(content);
+        FileHandler fh = new FileHandler(content);
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl(fh);
+        params.setThrowExceptionOnMissing(true);
+        params.setFileName("test.xml");
+        FileBasedBuilderParametersImpl clone = params.clone();
+        assertEquals("Wrong exception flag", Boolean.TRUE, clone
+                .getParameters().get("throwExceptionOnMissing"));
+        assertEquals("File name not copied", "test.xml", clone.getFileHandler()
+                .getFileName());
+        assertSame("Content not copied", content, clone.getFileHandler()
+                .getContent());
+        assertNotSame("No copy of file handler", params.getFileHandler(),
+                clone.getFileHandler());
     }
 }

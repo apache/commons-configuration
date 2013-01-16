@@ -55,7 +55,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     /**
      * Stores the associated file handler for the location of the configuration.
      */
-    private final FileHandler fileHandler;
+    private FileHandler fileHandler;
 
     /** The refresh delay for reloading support. */
     private long reloadingRefreshDelay;
@@ -203,5 +203,19 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
         Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
+    }
+
+    /**
+     * {@inheritDoc} This implementation also creates a copy of the
+     * {@code FileHandler}.
+     */
+    @Override
+    public FileBasedBuilderParametersImpl clone()
+    {
+        FileBasedBuilderParametersImpl copy =
+                (FileBasedBuilderParametersImpl) super.clone();
+        copy.fileHandler =
+                new FileHandler(fileHandler.getContent(), fileHandler);
+        return copy;
     }
 }
