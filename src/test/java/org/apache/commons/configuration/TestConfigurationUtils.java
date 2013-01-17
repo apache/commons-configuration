@@ -30,9 +30,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import junitx.framework.ListAssert;
 
+import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.junit.After;
@@ -434,6 +436,68 @@ public class TestConfigurationUtils
     {
         assertNull("Wrong return value", ConfigurationUtils
                 .cloneConfiguration(null));
+    }
+
+    /**
+     * Tests whether an object can be cloned which supports cloning.
+     */
+    @Test
+    public void testCloneIfPossibleSupported()
+    {
+        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
+        params.setPublicID("testID");
+        params.setSchemaValidation(true);
+        XMLBuilderParametersImpl clone =
+                (XMLBuilderParametersImpl) ConfigurationUtils
+                        .cloneIfPossible(params);
+        assertNotSame("No clone was created", params, clone);
+        Map<String, Object> map = clone.getParameters();
+        for (Map.Entry<String, Object> e : params.getParameters().entrySet())
+        {
+            if (!e.getKey().startsWith("config-"))
+            {
+                assertEquals("Wrong value for field " + e.getKey(),
+                        e.getValue(), map.get(e.getKey()));
+            }
+        }
+    }
+
+    /**
+     * Tests cloneIfPossible() if the passed in object does not support cloning.
+     */
+    @Test
+    public void testCloneIfPossibleNotSupported()
+    {
+        Long value = 20130116221714L;
+        assertSame("Wrong result", value,
+                ConfigurationUtils.cloneIfPossible(value));
+    }
+
+    /**
+     * Tests whether errors are handled correctly by cloneIfPossible().
+     */
+    @Test
+    public void testCloneIfPossibleError()
+    {
+        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl()
+        {
+            @Override
+            public XMLBuilderParametersImpl clone()
+            {
+                throw new ConfigurationRuntimeException();
+            }
+        };
+        assertSame("Wrong result", params,
+                ConfigurationUtils.cloneIfPossible(params));
+    }
+
+    /**
+     * Tests whether cloneIfPossible() can handle null parameters.
+     */
+    @Test
+    public void testCloneIfPossibleNull()
+    {
+        assertNull("Wrong result", ConfigurationUtils.cloneIfPossible(null));
     }
 
     /**

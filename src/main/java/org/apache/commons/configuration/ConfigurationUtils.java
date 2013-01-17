@@ -306,6 +306,30 @@ public final class ConfigurationUtils
     }
 
     /**
+     * Returns a clone of the passed in object if cloning is supported or the
+     * object itself if not. This method checks whether the passed in object
+     * implements the {@code Cloneable} interface. If this is the case, the
+     * {@code clone()} method is invoked. Otherwise, the object is directly
+     * returned. Errors that might occur during reflection calls are caught and
+     * also cause this method to return the original object.
+     *
+     * @param obj the object to be cloned
+     * @return the result of the cloning attempt
+     * @since 2.0
+     */
+    public static Object cloneIfPossible(Object obj)
+    {
+        try
+        {
+            return clone(obj);
+        }
+        catch (Exception ex)
+        {
+            return obj;
+        }
+    }
+
+    /**
      * An internally used helper method for cloning objects. This implementation
      * is not very sophisticated nor efficient. Maybe it can be replaced by an
      * implementation from Commons Lang later. The method checks whether the
