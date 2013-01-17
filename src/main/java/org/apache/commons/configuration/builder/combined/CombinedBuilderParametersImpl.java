@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
@@ -317,5 +318,19 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
         Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
+    }
+
+    /**
+     * {@inheritDoc} This implementation also clones the parameters object for
+     * the definition builder if possible.
+     */
+    @Override
+    public CombinedBuilderParametersImpl clone()
+    {
+        CombinedBuilderParametersImpl copy =
+                (CombinedBuilderParametersImpl) super.clone();
+        copy.setDefinitionBuilderParameters((BuilderParameters) ConfigurationUtils
+                .cloneIfPossible(getDefinitionBuilderParameters()));
+        return copy;
     }
 }

@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder.combined;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -31,6 +32,7 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -318,5 +320,31 @@ public class TestCombinedBuilderParametersImpl
         assertEquals("Wrong path", "testPath", params.getBasePath());
         assertSame("Wrong def parameters", defparams,
                 params.getDefinitionBuilderParameters());
+    }
+
+    /**
+     * Tests whether cloning works as expected.
+     */
+    @Test
+    public void testClone()
+    {
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        params.setBasePath("some base path");
+        XMLBuilderParametersImpl defParams = new XMLBuilderParametersImpl();
+        defParams.setSystemID("someSysID");
+        params.setDefinitionBuilderParameters(defParams);
+        CombinedBuilderParametersImpl clone = params.clone();
+        assertEquals("Wrong field value", params.getBasePath(),
+                clone.getBasePath());
+        assertNotSame("Parameters object not cloned",
+                params.getDefinitionBuilderParameters(),
+                clone.getDefinitionBuilderParameters());
+        assertEquals(
+                "Wrong field value in parameters object",
+                params.getDefinitionBuilderParameters().getParameters()
+                        .get("systemID"),
+                clone.getDefinitionBuilderParameters().getParameters()
+                        .get("systemID"));
     }
 }
