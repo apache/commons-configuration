@@ -23,13 +23,13 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
-import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -155,6 +155,24 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     @Override
     public T getConfiguration() throws ConfigurationException
     {
+        return getManagedBuilder().getConfiguration();
+    }
+
+    /**
+     * Returns the managed {@code FileBasedConfigurationBuilder} for the current
+     * file name pattern. It is determined based on the evaluation of the file
+     * name pattern using the configured {@code ConfigurationInterpolator}. If
+     * this is the first access to this configuration file, the builder is
+     * created.
+     *
+     * @return the configuration builder for the configuration corresponding to
+     *         the current evaluation of the file name pattern
+     * @throws ConfigurationException if the builder cannot be determined (e.g.
+     *         due to missing initialization parameters)
+     */
+    public FileBasedConfigurationBuilder<T> getManagedBuilder()
+            throws ConfigurationException
+    {
         Map<String, Object> params = getParameters();
         MultiFileBuilderParametersImpl multiParams =
                 MultiFileBuilderParametersImpl.fromParameters(params, true);
@@ -183,8 +201,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
                 builder = newBuilder;
             }
         }
-
-        return builder.getConfiguration();
+        return builder;
     }
 
     /**
@@ -363,14 +380,11 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
                 multiParams.getManagedBuilderParameters();
         if (managedBuilderParameters != null)
         {
-            newParams.putAll(managedBuilderParameters.getParameters());
-        }
-
-        // ensure that file-based parameters are available
-        if (FileBasedBuilderParametersImpl.fromParameters(newParams) == null)
-        {
-            newParams.putAll(new FileBasedBuilderParametersImpl()
-                    .getParameters());
+            // clone parameters as they are applied to multiple builders
+            BuilderParameters copy =
+                    (BuilderParameters) ConfigurationUtils
+                            .cloneIfPossible(managedBuilderParameters);
+            newParams.putAll(copy.getParameters());
         }
         return newParams;
     }

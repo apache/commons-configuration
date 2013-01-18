@@ -426,4 +426,25 @@ public class TestMultiFileConfigurationBuilder
         managedBuilders.iterator().next().resetResult();
         EasyMock.verify(listener);
     }
+
+    /**
+     * Tests whether initialization parameters of managed builders are cloned
+     * before they are applied.
+     */
+    @Test
+    public void testGetManagedBuilderClonedParameters()
+            throws ConfigurationException
+    {
+        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+                createTestBuilder(new XMLBuilderParametersImpl());
+        switchToConfig(1);
+        FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder1 =
+                builder.getManagedBuilder();
+        switchToConfig(2);
+        FileBasedConfigurationBuilder<XMLConfiguration> managedBuilder2 =
+                builder.getManagedBuilder();
+        assertNotSame("Managed parameters not cloned",
+                managedBuilder1.getFileHandler(),
+                managedBuilder2.getFileHandler());
+    }
 }
