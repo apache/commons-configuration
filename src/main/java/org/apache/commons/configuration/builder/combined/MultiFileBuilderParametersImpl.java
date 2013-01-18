@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder.combined;
 
 import java.util.Map;
 
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -151,5 +152,19 @@ public class MultiFileBuilderParametersImpl extends BasicBuilderParameters
         Map<String, Object> params = super.getParameters();
         params.put(PARAM_KEY, this);
         return params;
+    }
+
+    /**
+     * {@inheritDoc} This implementation also tries to clone the parameters
+     * object for managed builders if possible.
+     */
+    @Override
+    public MultiFileBuilderParametersImpl clone()
+    {
+        MultiFileBuilderParametersImpl copy =
+                (MultiFileBuilderParametersImpl) super.clone();
+        copy.setManagedBuilderParameters((BuilderParameters) ConfigurationUtils
+                .cloneIfPossible(getManagedBuilderParameters()));
+        return copy;
     }
 }

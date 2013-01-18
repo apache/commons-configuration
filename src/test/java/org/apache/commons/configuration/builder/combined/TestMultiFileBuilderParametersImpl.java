@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder.combined;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.builder.BuilderParameters;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,5 +129,29 @@ public class TestMultiFileBuilderParametersImpl
         assertEquals("Wrong pattern", pattern, params.getFilePattern());
         assertSame("Wrong managed parameters", bp,
                 params.getManagedBuilderParameters());
+    }
+
+    /**
+     * Tests extended cloning functionality.
+     */
+    @Test
+    public void testClone()
+    {
+        FileBasedBuilderParametersImpl managedParams =
+                new FileBasedBuilderParametersImpl();
+        managedParams.setFileName("test.xml");
+        params.setManagedBuilderParameters(managedParams);
+        params.setFilePattern("somePattern");
+        MultiFileBuilderParametersImpl clone = params.clone();
+        assertEquals("Wrong pattern", params.getFilePattern(),
+                clone.getFilePattern());
+        assertNotSame("Managed parameters not cloned",
+                params.getManagedBuilderParameters(),
+                clone.getManagedBuilderParameters());
+        assertEquals("Wrong file name", managedParams.getFileHandler()
+                .getFileName(),
+                ((FileBasedBuilderParametersImpl) clone
+                        .getManagedBuilderParameters()).getFileHandler()
+                        .getFileName());
     }
 }
