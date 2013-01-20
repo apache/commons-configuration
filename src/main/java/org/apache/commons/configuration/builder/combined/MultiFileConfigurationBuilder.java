@@ -183,14 +183,14 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
         String fileName = constructFileName(params, multiParams);
 
         FileBasedConfigurationBuilder<T> builder =
-                managedBuilders.get(fileName);
+                getManagedBuilders().get(fileName);
         if (builder == null)
         {
             builder =
                     createInitializedManagedBuilder(fileName,
                             createManagedBuilderParameters(params, multiParams));
             FileBasedConfigurationBuilder<T> newBuilder =
-                    ConcurrentUtils.putIfAbsent(managedBuilders, fileName,
+                    ConcurrentUtils.putIfAbsent(getManagedBuilders(), fileName,
                             builder);
             if (newBuilder == builder)
             {
@@ -213,7 +213,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             ConfigurationListener l)
     {
         super.addConfigurationListener(l);
-        for (FileBasedConfigurationBuilder<T> b : managedBuilders.values())
+        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.addConfigurationListener(l);
         }
@@ -229,7 +229,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             ConfigurationListener l)
     {
         super.removeConfigurationListener(l);
-        for (FileBasedConfigurationBuilder<T> b : managedBuilders.values())
+        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.removeConfigurationListener(l);
         }
@@ -245,7 +245,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             ConfigurationErrorListener l)
     {
         super.addErrorListener(l);
-        for (FileBasedConfigurationBuilder<T> b : managedBuilders.values())
+        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.addErrorListener(l);
         }
@@ -261,7 +261,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             ConfigurationErrorListener l)
     {
         super.removeErrorListener(l);
-        for (FileBasedConfigurationBuilder<T> b : managedBuilders.values())
+        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.removeErrorListener(l);
         }
@@ -275,11 +275,11 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     @Override
     public synchronized void resetParameters()
     {
-        for (FileBasedConfigurationBuilder<T> b : managedBuilders.values())
+        for (FileBasedConfigurationBuilder<T> b : getManagedBuilders().values())
         {
             b.removeBuilderListener(managedBuilderDelegationListener);
         }
-        managedBuilders.clear();
+        getManagedBuilders().clear();
         super.resetParameters();
     }
 
@@ -344,6 +344,19 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
                 createManagedBuilder(fileName, params);
         managedBuilder.getFileHandler().setFileName(fileName);
         return managedBuilder;
+    }
+
+    /**
+     * Returns the map with the managed builders created so far by this
+     * {@code MultiFileConfigurationBuilder}. This map is exposed to derived
+     * classes so they can access managed builders directly. However, derived
+     * classes are not expected to manipulate this map.
+     *
+     * @return the map with the managed builders
+     */
+    protected ConcurrentMap<String, FileBasedConfigurationBuilder<T>> getManagedBuilders()
+    {
+        return managedBuilders;
     }
 
     /**

@@ -36,11 +36,9 @@ import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.interpol.DefaultLookups;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
-import org.junit.After;
 import org.junit.Test;
 import org.xml.sax.SAXParseException;
 
@@ -49,72 +47,8 @@ import org.xml.sax.SAXParseException;
  *
  * @version $Id$
  */
-public class TestMultiFileConfigurationBuilder
+public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigurationBuilderTest
 {
-    /** The system property which selects a sub configuration. */
-    private static final String PROP = "Id";
-
-    /** The pattern for file names. */
-    private static String PATTERN =
-            "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
-
-    @After
-    public void tearDown() throws Exception
-    {
-        System.getProperties().remove(PROP);
-    }
-
-    /**
-     * Sets a system property for accessing a specific configuration file from
-     * the test builder.
-     *
-     * @param id the ID of the managed configuration to load
-     */
-    private static void switchToConfig(String id)
-    {
-        System.setProperty(PROP, id);
-    }
-
-    /**
-     * Selects a specific configuration to be obtained from the builder.
-     *
-     * @param index the index of the configuration to be accessed (valid indices
-     *        are 1-3)
-     */
-    private static void switchToConfig(int index)
-    {
-        switchToConfig("100" + index);
-    }
-
-    /**
-     * Creates a {@code ConfigurationInterpolator} to be used by tests. This
-     * object contains a lookup for system properties.
-     *
-     * @return the new {@code ConfigurationInterpolator}
-     */
-    private static ConfigurationInterpolator createInterpolator()
-    {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
-        ci.registerLookup(DefaultLookups.SYSTEM_PROPERTIES.getPrefix(),
-                DefaultLookups.SYSTEM_PROPERTIES.getLookup());
-        return ci;
-    }
-
-    /**
-     * Creates a parameters object with default settings for a test builder
-     * instance.
-     *
-     * @param managedParams the parameters for managed configurations
-     * @return the test parameters
-     */
-    private static BasicBuilderParameters createTestBuilderParameters(
-            BuilderParameters managedParams)
-    {
-        return new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
-                .setManagedBuilderParameters(managedParams)
-                .setInterpolator(createInterpolator());
-    }
-
     /**
      * Creates a test builder object with default settings.
      *
