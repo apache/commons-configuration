@@ -143,22 +143,28 @@ public class ReloadingController
      * if necessary. The argument can be an arbitrary data object; it will be
      * part of the event notification sent out when a reload operation should be
      * performed. The return value indicates whether a change was detected and
-     * an event was sent.
+     * an event was sent. Once a need for a reload is detected, this controller
+     * is in <em>reloading state</em>. Until this state is reset (by calling
+     * {@link #resetReloadingState()}), no further reloading checks are
+     * performed by this method, and no events are fired; it then returns always
+     * <b>true</b>.
      *
      * @param data additional data for an event notification
+     * @return a flag whether a reload operation is necessary
      */
     public boolean checkForReloading(Object data)
     {
         boolean sendEvent = false;
         synchronized (this)
         {
-            if (!isInReloadingState())
+            if (isInReloadingState())
             {
-                if (getDetector().isReloadingRequired())
-                {
-                    sendEvent = true;
-                    reloadingState = true;
-                }
+                return true;
+            }
+            if (getDetector().isReloadingRequired())
+            {
+                sendEvent = true;
+                reloadingState = true;
             }
         }
 

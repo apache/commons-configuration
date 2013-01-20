@@ -151,7 +151,7 @@ public class TestReloadingController
         ReloadingController ctrl = createController();
         ctrl.addReloadingListener(l);
         assertTrue("Wrong result (1)", ctrl.checkForReloading(1));
-        assertFalse("Wrong result (2)", ctrl.checkForReloading(2));
+        assertTrue("Wrong result (2)", ctrl.checkForReloading(2));
         EasyMock.verify(detector, l);
     }
 
