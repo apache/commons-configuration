@@ -40,12 +40,30 @@ import java.util.Collections;
  * objects. Its operations are implemented by delegating to all child
  * controllers.
  * </p>
+ * <p>
+ * This class expects the managed controller objects to be passed to the
+ * constructor. From this list a defensive copy is created so that it cannot be
+ * changed later on. Derived classes can override the
+ * {@link #getSubControllers()} method if they need another way to handle child
+ * controllers (e.g. a more dynamic way). However, they are then responsible to
+ * ensure a safe access to this list in a multi-threaded environment.
+ * </p>
  *
  * @version $Id$
  * @since 2.0
  */
 public class CombinedReloadingController extends ReloadingController
 {
+    /** Constant for a dummy reloading detector. */
+    private static final ReloadingDetector DUMMY =
+            new MultiReloadingControllerDetector(null);
+
+    /** The collection with managed reloading controllers. */
+    private final Collection<ReloadingController> controllers;
+
+    /** The reloading detector used by this instance. */
+    private final ReloadingDetector detector;
+
     /**
      * Creates a new instance of {@code CombinedReloadingController} and
      * initializes it with the {@code ReloadingController} objects to be
@@ -59,7 +77,9 @@ public class CombinedReloadingController extends ReloadingController
     public CombinedReloadingController(
             Collection<? extends ReloadingController> subCtrls)
     {
-        super(createDetector(subCtrls));
+        super(DUMMY);
+        controllers = checkManagedControllers(subCtrls);
+        detector = new MultiReloadingControllerDetector(this);
     }
 
     /**
@@ -70,22 +90,30 @@ public class CombinedReloadingController extends ReloadingController
      */
     public Collection<ReloadingController> getSubControllers()
     {
-        return ((MultiReloadingControllerDetector) getDetector())
-                .getControllers();
+        return controllers;
     }
 
     /**
-     * Creates a specialized detector object which manages the passed in sub
-     * controllers. The collection with controllers is also checked for
-     * validity.
+     * {@inheritDoc} This implementation returns a special reloading detector
+     * which operates on all managed controllers.
+     */
+    @Override
+    public ReloadingDetector getDetector()
+    {
+        return detector;
+    }
+
+    /**
+     * Checks the collection with the passed in sub controllers and creates a
+     * defensive copy.
      *
      * @param subCtrls the collection with sub controllers
-     * @return the {@code ReloadingDetector} to be used by the combined
-     *         controller
+     * @return a copy of the collection to be stored in the newly created
+     *         instance
      * @throws IllegalArgumentException if the passed in collection is
      *         <b>null</b> or contains <b>null</b> entries
      */
-    private static ReloadingDetector createDetector(
+    private static Collection<ReloadingController> checkManagedControllers(
             Collection<? extends ReloadingController> subCtrls)
     {
         if (subCtrls == null)
@@ -104,8 +132,7 @@ public class CombinedReloadingController extends ReloadingController
             }
         }
 
-        return new MultiReloadingControllerDetector(
-                Collections.unmodifiableCollection(ctrls));
+        return Collections.unmodifiableCollection(ctrls);
     }
 
     /**
@@ -117,19 +144,17 @@ public class CombinedReloadingController extends ReloadingController
     private static class MultiReloadingControllerDetector implements
             ReloadingDetector
     {
-        /** Stores the managed sub controllers. */
-        private final Collection<ReloadingController> controllers;
+        /** A reference to the owning combined reloading controller. */
+        private final CombinedReloadingController owner;
 
         /**
-         * Creates a new instance of {@code MultiReloadingControllerDetector}
-         * and sets the managed controllers.
+         * Creates a new instance of {@code MultiReloadingControllerDetector}.
          *
-         * @param ctrls a collection with the managed controllers
+         * @param o the owner
          */
-        public MultiReloadingControllerDetector(
-                Collection<ReloadingController> ctrls)
+        public MultiReloadingControllerDetector(CombinedReloadingController o)
         {
-            controllers = ctrls;
+            owner = o;
         }
 
         /**
@@ -139,9 +164,9 @@ public class CombinedReloadingController extends ReloadingController
          */
         public boolean isReloadingRequired()
         {
-            for (ReloadingController rc : getControllers())
+            for (ReloadingController rc : owner.getSubControllers())
             {
-                if (rc.checkForReloading(null) || rc.isInReloadingState())
+                if (rc.checkForReloading(null))
                 {
                     return true;
                 }
@@ -155,20 +180,10 @@ public class CombinedReloadingController extends ReloadingController
          */
         public void reloadingPerformed()
         {
-            for (ReloadingController rc : getControllers())
+            for (ReloadingController rc : owner.getSubControllers())
             {
                 rc.resetReloadingState();
             }
-        }
-
-        /**
-         * Returns the collection with managed sub controllers.
-         *
-         * @return the controllers the sub controllers
-         */
-        Collection<ReloadingController> getControllers()
-        {
-            return controllers;
         }
     }
 }

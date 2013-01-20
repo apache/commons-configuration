@@ -116,26 +116,7 @@ public class TestCombinedReloadingController
         CombinedReloadingController ctrl = setUpController();
         EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(
                 Boolean.FALSE);
-        EasyMock.expect(subControllers[0].isInReloadingState()).andReturn(
-                Boolean.FALSE);
         EasyMock.expect(subControllers[1].checkForReloading(null)).andReturn(
-                Boolean.TRUE);
-        replaySubControllers();
-        assertTrue("Wrong result", ctrl.checkForReloading("someData"));
-        verifySubSontrollers();
-    }
-
-    /**
-     * Tests a reloading check if a sub controller is already in reloading
-     * state.
-     */
-    @Test
-    public void testCheckForReloadingTrueAlreadyInReloadingState()
-    {
-        CombinedReloadingController ctrl = setUpController();
-        EasyMock.expect(subControllers[0].checkForReloading(null)).andReturn(
-                Boolean.FALSE);
-        EasyMock.expect(subControllers[0].isInReloadingState()).andReturn(
                 Boolean.TRUE);
         replaySubControllers();
         assertTrue("Wrong result", ctrl.checkForReloading("someData"));
@@ -153,7 +134,6 @@ public class TestCombinedReloadingController
         {
             EasyMock.expect(rc.checkForReloading(null))
                     .andReturn(Boolean.FALSE);
-            EasyMock.expect(rc.isInReloadingState()).andReturn(Boolean.FALSE);
         }
         replaySubControllers();
         assertFalse("Wrong result", ctrl.checkForReloading("someParam"));
