@@ -114,6 +114,31 @@ public class ConfigurationInterpolator
     }
 
     /**
+     * Creates a new {@code ConfigurationInterpolator} instance based on the
+     * passed in specification object. If the {@code InterpolatorSpecification}
+     * already contains a {@code ConfigurationInterpolator} object, it is used
+     * directly. Otherwise, a new instance is created and initialized with the
+     * properties stored in the specification.
+     *
+     * @param spec the {@code InterpolatorSpecification} (must not be
+     *        <b>null</b>)
+     * @return the {@code ConfigurationInterpolator} obtained or created based
+     *         on the given specification
+     * @throws IllegalArgumentException if the specification is <b>null</b>
+     */
+    public static ConfigurationInterpolator fromSpecification(
+            InterpolatorSpecification spec)
+    {
+        if (spec == null)
+        {
+            throw new IllegalArgumentException(
+                    "InterpolatorSpecification must not be null!");
+        }
+        return (spec.getInterpolator() != null) ? spec.getInterpolator()
+                : createInterpolator(spec);
+    }
+
+    /**
      * Returns a map with the currently registered {@code Lookup} objects and
      * their prefixes. This is a snapshot copy of the internally used map. So
      * modifications of this map do not effect this instance.
@@ -407,5 +432,22 @@ public class ConfigurationInterpolator
                 return (result != null) ? result.toString() : null;
             }
         });
+    }
+
+    /**
+     * Creates a new instance based on the properties in the given specification
+     * object.
+     *
+     * @param spec the {@code InterpolatorSpecification}
+     * @return the newly created instance
+     */
+    private static ConfigurationInterpolator createInterpolator(
+            InterpolatorSpecification spec)
+    {
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.addDefaultLookups(spec.getDefaultLookups());
+        ci.registerLookups(spec.getPrefixLookups());
+        ci.setParentInterpolator(spec.getParentInterpolator());
+        return ci;
     }
 }

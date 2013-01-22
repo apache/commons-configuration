@@ -484,4 +484,57 @@ public class TestConfigurationInterpolator
         assertEquals("Wrong result (2)", "C:\\java\\1.4",
                 interpolator.interpolate(var));
     }
+
+    /**
+     * Tries to obtain an instance from a null specification.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFromSpecificationNull()
+    {
+        ConfigurationInterpolator.fromSpecification(null);
+    }
+
+    /**
+     * Tests fromSpecification() if the specification contains an instance.
+     */
+    @Test
+    public void testFromSpecificationInterpolator()
+    {
+        ConfigurationInterpolator ci =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        EasyMock.replay(ci);
+        InterpolatorSpecification spec =
+                new InterpolatorSpecification.Builder()
+                        .withDefaultLookup(EasyMock.createMock(Lookup.class))
+                        .withParentInterpolator(interpolator)
+                        .withInterpolator(ci).create();
+        assertSame("Wrong result", ci,
+                ConfigurationInterpolator.fromSpecification(spec));
+    }
+
+    /**
+     * Tests fromSpecification() if a new instance has to be created.
+     */
+    @Test
+    public void testFromSpecificationNewInstance()
+    {
+        Lookup defLookup = EasyMock.createMock(Lookup.class);
+        Lookup preLookup = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(defLookup, preLookup);
+        InterpolatorSpecification spec =
+                new InterpolatorSpecification.Builder()
+                        .withDefaultLookup(defLookup)
+                        .withPrefixLookup("p", preLookup)
+                        .withParentInterpolator(interpolator).create();
+        ConfigurationInterpolator ci =
+                ConfigurationInterpolator.fromSpecification(spec);
+        assertEquals("Wrong number of default lookups", 1, ci
+                .getDefaultLookups().size());
+        assertTrue("Wrong default lookup",
+                ci.getDefaultLookups().contains(defLookup));
+        assertEquals("Wrong number of prefix lookups", 1, ci.getLookups()
+                .size());
+        assertSame("Wrong prefix lookup", preLookup, ci.getLookups().get("p"));
+        assertSame("Wrong parent", interpolator, ci.getParentInterpolator());
+    }
 }
