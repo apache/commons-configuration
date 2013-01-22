@@ -91,6 +91,9 @@ public class ConfigurationInterpolator
     /** Constant for the prefix separator. */
     private static final char PREFIX_SEPARATOR = ':';
 
+    /** A map containing the default prefix lookups. */
+    private static final Map<String, Lookup> DEFAULT_PREFIX_LOOKUPS;
+
     /** A map with the currently registered lookup objects. */
     private final Map<String, Lookup> prefixLookups;
 
@@ -136,6 +139,20 @@ public class ConfigurationInterpolator
         }
         return (spec.getInterpolator() != null) ? spec.getInterpolator()
                 : createInterpolator(spec);
+    }
+
+    /**
+     * Returns a map containing the default prefix lookups. Every configuration
+     * object derived from {@code AbstractConfiguration} is by default
+     * initialized with a {@code ConfigurationInterpolator} containing these
+     * {@code Lookup} objects and their prefixes. The map cannot be modified
+     *
+     * @return a map with the default prefix {@code Lookup} objects and their
+     *         prefixes
+     */
+    public static Map<String, Lookup> getDefaultPrefixLookups()
+    {
+        return DEFAULT_PREFIX_LOOKUPS;
     }
 
     /**
@@ -449,5 +466,15 @@ public class ConfigurationInterpolator
         ci.registerLookups(spec.getPrefixLookups());
         ci.setParentInterpolator(spec.getParentInterpolator());
         return ci;
+    }
+
+    static
+    {
+        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
+        for (DefaultLookups l : DefaultLookups.values())
+        {
+            lookups.put(l.getPrefix(), l.getLookup());
+        }
+        DEFAULT_PREFIX_LOOKUPS = Collections.unmodifiableMap(lookups);
     }
 }

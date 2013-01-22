@@ -537,4 +537,31 @@ public class TestConfigurationInterpolator
         assertSame("Wrong prefix lookup", preLookup, ci.getLookups().get("p"));
         assertSame("Wrong parent", interpolator, ci.getParentInterpolator());
     }
+
+    /**
+     * Tests whether default prefix lookups can be queried as a map.
+     */
+    @Test
+    public void testGetDefaultPrefixLookups()
+    {
+        Map<String, Lookup> lookups =
+                ConfigurationInterpolator.getDefaultPrefixLookups();
+        assertEquals("Wrong number of lookups", DefaultLookups.values().length,
+                lookups.size());
+        for (DefaultLookups l : DefaultLookups.values())
+        {
+            assertSame("Wrong entry for " + l, l.getLookup(),
+                    lookups.get(l.getPrefix()));
+        }
+    }
+
+    /**
+     * Tests that the map with default lookups cannot be modified.
+     */
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGetDefaultPrefixLookupsModify()
+    {
+        ConfigurationInterpolator.getDefaultPrefixLookups().put("test",
+                EasyMock.createMock(Lookup.class));
+    }
 }
