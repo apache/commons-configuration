@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ import org.apache.commons.configuration.event.BaseEventSource;
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
-import org.apache.commons.configuration.interpol.DefaultLookups;
+import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
@@ -323,11 +322,13 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             Map<String, ? extends Lookup> prefixLookups,
             Collection<? extends Lookup> defLookups)
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
-        ci.registerLookups(prefixLookups);
-        ci.addDefaultLookups(defLookups);
-        ci.addDefaultLookup(new ConfigurationLookup(this));
-        setInterpolator(ci);
+        InterpolatorSpecification spec =
+                new InterpolatorSpecification.Builder()
+                        .withPrefixLookups(prefixLookups)
+                        .withDefaultLookups(defLookups)
+                        .withDefaultLookup(new ConfigurationLookup(this))
+                        .create();
+        setInterpolator(ConfigurationInterpolator.fromSpecification(spec));
     }
 
     /**
@@ -432,12 +433,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     private void installDefaultInterpolator()
     {
-        Map<String, Lookup> lookups = new HashMap<String, Lookup>();
-        for (DefaultLookups l : DefaultLookups.values())
-        {
-            lookups.put(l.getPrefix(), l.getLookup());
-        }
-        installInterpolator(lookups, null);
+        installInterpolator(
+                ConfigurationInterpolator.getDefaultPrefixLookups(), null);
     }
 
     /**
