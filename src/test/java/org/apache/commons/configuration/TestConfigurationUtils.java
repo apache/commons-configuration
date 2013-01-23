@@ -232,6 +232,19 @@ public class TestConfigurationUtils
     }
 
     /**
+     * Tests whether an encoded "%" character in the file name is handled correctly by
+     * fileFromURL(). This test is related to CONFIGURATION-521.
+     */
+    @Test
+    public void testFileFromURLWithEncodedPercent() throws MalformedURLException
+    {
+        File file = new File("https%3A%2F%2Fwww.apache.org%2F.url").getAbsoluteFile();
+        URL fileURL = file.toURI().toURL();
+        File file2 = ConfigurationUtils.fileFromURL(fileURL);
+        assertEquals("Wrong file", file, file2);
+    }
+
+    /**
      * Tests whether a "+" character in the file name is handled correctly by
      * fileFromURL(). This test is related to CONFIGURATION-415.
      */

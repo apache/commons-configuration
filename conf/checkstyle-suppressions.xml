@@ -30,4 +30,6 @@
 
     <suppress checks="DoubleCheckedLocking" files="DynamicCombinedConfiguration.java"
       lines="800-900"/>
+
+    <suppress files="FileUtils\.java" checks="[a-zA-Z0-9]*"/>
 </suppressions>

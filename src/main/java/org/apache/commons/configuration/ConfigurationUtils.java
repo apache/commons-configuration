@@ -60,9 +60,6 @@ public final class ConfigurationUtils
     /** Constant for the name of the clone() method.*/
     private static final String METHOD_CLONE = "clone";
 
-    /** Constant for parsing numbers in hex format. */
-    private static final int HEX = 16;
-
     /**
      * An array with interfaces to be implemented by a proxy for an immutable
      * configuration.
@@ -722,34 +719,14 @@ public final class ConfigurationUtils
 
     /**
      * Tries to convert the specified URL to a file object. If this fails,
-     * <b>null</b> is returned. Note: This code has been copied from the
-     * {@code FileUtils} class from <em>Commons IO</em>.
+     * <b>null</b> is returned.
      *
      * @param url the URL
      * @return the resulting file object
      */
     public static File fileFromURL(URL url)
     {
-        if (url == null || !url.getProtocol().equals(PROTOCOL_FILE))
-        {
-            return null;
-        }
-        else
-        {
-            String filename = url.getFile().replace('/', File.separatorChar);
-            int pos = 0;
-            while ((pos = filename.indexOf('%', pos)) >= 0)
-            {
-                if (pos + 2 < filename.length())
-                {
-                    String hexStr = filename.substring(pos + 1, pos + 3);
-                    char ch = (char) Integer.parseInt(hexStr, HEX);
-                    filename = filename.substring(0, pos) + ch
-                            + filename.substring(pos + 3);
-                }
-            }
-            return new File(filename);
-        }
+        return FileUtils.toFile(url);
     }
 
     /**

@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-521" due-to="Oliver Kopp">
+        ConfigurationUtils.fileFromUrl() now correctly handles URL containing
+        encoded percent characters.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-517">
         Hierarchical configurations now provide methods to obtain sub
         configurations for all child elements of a given key.
