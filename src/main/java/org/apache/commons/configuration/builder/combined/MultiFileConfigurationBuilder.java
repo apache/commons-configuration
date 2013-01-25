@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -34,6 +35,7 @@ import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.lang3.concurrent.ConcurrentUtils;
 
 /**
@@ -86,6 +88,10 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     /** A cache for already created managed builders. */
     private final ConcurrentMap<String, FileBasedConfigurationBuilder<T>> managedBuilders =
             new ConcurrentHashMap<String, FileBasedConfigurationBuilder<T>>();
+
+    /** Stores the {@code ConfigurationInterpolator} object. */
+    private final AtomicReference<ConfigurationInterpolator> interpolator =
+            new AtomicReference<ConfigurationInterpolator>();
 
     /**
      * A specialized builder listener which gets registered at all managed
@@ -180,7 +186,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
         {
             throw new ConfigurationException("No file name pattern is set!");
         }
-        String fileName = constructFileName(params, multiParams);
+        String fileName = constructFileName(multiParams);
 
         FileBasedConfigurationBuilder<T> builder =
                 getManagedBuilders().get(fileName);
@@ -280,7 +286,58 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             b.removeBuilderListener(managedBuilderDelegationListener);
         }
         getManagedBuilders().clear();
+        interpolator.set(null);
         super.resetParameters();
+    }
+
+    /**
+     * Returns the {@code ConfigurationInterpolator} used by this instance. This
+     * is the object used for evaluating the file name pattern. It is created on
+     * demand.
+     *
+     * @return the {@code ConfigurationInterpolator}
+     */
+    protected ConfigurationInterpolator getInterpolator()
+    {
+        ConfigurationInterpolator result;
+        boolean done;
+
+        // This might create multiple instances under high load,
+        // however, always the same instance is returned.
+        do
+        {
+            result = interpolator.get();
+            if (result != null)
+            {
+                done = true;
+            }
+            else
+            {
+                result = createInterpolator();
+                done = interpolator.compareAndSet(null, result);
+            }
+        } while (!done);
+
+        return result;
+    }
+
+    /**
+     * Creates the {@code ConfigurationInterpolator} to be used by this
+     * instance. This method is called when a file name is to be constructed,
+     * but no current {@code ConfigurationInterpolator} instance is available.
+     * It obtains an instance from this builder's parameters. If no properties
+     * of the {@code ConfigurationInterpolator} are specified in the parameters,
+     * a default instance without lookups is returned (which is probably not
+     * very helpful).
+     *
+     * @return the {@code ConfigurationInterpolator} to be used
+     */
+    protected ConfigurationInterpolator createInterpolator()
+    {
+        InterpolatorSpecification spec =
+                BasicBuilderParameters
+                        .fetchInterpolatorSpecification(getParameters());
+        return ConfigurationInterpolator.fromSpecification(spec);
     }
 
     /**
@@ -289,16 +346,13 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
      * configuration. It obtains the {@link ConfigurationInterpolator} from this
      * builder's parameters and uses it to interpolate the file name pattern.
      *
-     * @param paramsMap the map with the current parameters of this builder
      * @param multiParams the parameters object for this builder
      * @return the name of the configuration file to be loaded
      */
-    protected String constructFileName(Map<String, Object> paramsMap,
+    protected String constructFileName(
             MultiFileBuilderParametersImpl multiParams)
     {
-        ConfigurationInterpolator ci =
-                BasicBuilderParameters.fetchInterpolator(paramsMap);
-        // TODO Make this more generic, handle missing CI
+        ConfigurationInterpolator ci = getInterpolator();
         return String.valueOf(ci.interpolate(multiParams.getFilePattern()));
     }
 

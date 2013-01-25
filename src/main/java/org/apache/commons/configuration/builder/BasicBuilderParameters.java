@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.logging.Log;
 
@@ -255,19 +256,30 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     }
 
     /**
-     * Obtains the {@code ConfigurationInterpolator} from the given map with
-     * parameters. If such an object is stored in the map under the correct key,
-     * it is returned. Otherwise, result is <b>null</b>.
+     * Obtains a specification for a {@link ConfigurationInterpolator} from the
+     * specified map with parameters. All properties related to interpolation
+     * are evaluated and added to the specification object.
      *
      * @param params the map with parameters (must not be <b>null</b>)
-     * @return the {@code ConfigurationInterpolator} obtained from this map or
-     *         <b>null</b>
-     * @throws NullPointerException if the map is <b>null</b>
+     * @return an {@code InterpolatorSpecification} object constructed with data
+     *         from the map
+     * @throws IllegalArgumentException if the map is <b>null</b> or contains
+     *         invalid data
      */
-    public static ConfigurationInterpolator fetchInterpolator(
+    public static InterpolatorSpecification fetchInterpolatorSpecification(
             Map<String, Object> params)
     {
-        return (ConfigurationInterpolator) params.get(PROP_INTERPOLATOR);
+        checkParameters(params);
+        return new InterpolatorSpecification.Builder()
+                .withInterpolator(
+                        fetchParameter(params, PROP_INTERPOLATOR,
+                                ConfigurationInterpolator.class))
+                .withParentInterpolator(
+                        fetchParameter(params, PROP_PARENT_INTERPOLATOR,
+                                ConfigurationInterpolator.class))
+                .withPrefixLookups(fetchAndCheckPrefixLookups(params))
+                .withDefaultLookups(fetchAndCheckDefaultLookups(params))
+                .create();
     }
 
     /**
@@ -362,24 +374,165 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
      *
      * @param params the map with parameters to be passed to the caller
      */
-    public static void createDefensiveCopies(HashMap<String, Object> params)
+    private static void createDefensiveCopies(HashMap<String, Object> params)
     {
-        // This is safe to case because we have full control over the map
-        // and thus know the types of the contained values
-        @SuppressWarnings("unchecked")
         Map<String, ? extends Lookup> prefixLookups =
-                (Map<String, ? extends Lookup>) params.get(PROP_PREFIX_LOOKUPS);
+                fetchPrefixLookups(params);
         if (prefixLookups != null)
         {
             params.put(PROP_PREFIX_LOOKUPS, new HashMap<String, Lookup>(
                     prefixLookups));
         }
-        @SuppressWarnings("unchecked")
-        Collection<? extends Lookup> defLookups =
-                (Collection<? extends Lookup>) params.get(PROP_DEFAULT_LOOKUPS);
+        Collection<? extends Lookup> defLookups = fetchDefaultLookups(params);
         if (defLookups != null)
         {
             params.put(PROP_DEFAULT_LOOKUPS, new ArrayList<Lookup>(defLookups));
+        }
+    }
+
+    /**
+     * Obtains the map with prefix lookups from the parameters map.
+     *
+     * @param params the map with parameters
+     * @return the map with prefix lookups (may be <b>null</b>)
+     */
+    private static Map<String, ? extends Lookup> fetchPrefixLookups(
+            Map<String, Object> params)
+    {
+        // This is safe to cast because we either have full control over the map
+        // and thus know the types of the contained values or have checked
+        // the content before
+        @SuppressWarnings("unchecked")
+        Map<String, ? extends Lookup> prefixLookups =
+                (Map<String, ? extends Lookup>) params.get(PROP_PREFIX_LOOKUPS);
+        return prefixLookups;
+    }
+
+    /**
+     * Tests whether the passed in map with parameters contains a map with
+     * prefix lookups. This method is used if the parameters map is from an
+     * insecure source and we cannot be sure that it contains valid data.
+     * Therefore, we have to map that the key for the prefix lookups actually
+     * points to a map containing keys and values of expected data types.
+     *
+     * @param params the parameters map
+     * @return the obtained map with prefix lookups
+     * @throws IllegalArgumentException if the map contains invalid data
+     */
+    private static Map<String, ? extends Lookup> fetchAndCheckPrefixLookups(
+            Map<String, Object> params)
+    {
+        Map<?, ?> prefixes =
+                fetchParameter(params, PROP_PREFIX_LOOKUPS, Map.class);
+        if (prefixes == null)
+        {
+            return null;
+        }
+
+        for (Map.Entry<?, ?> e : prefixes.entrySet())
+        {
+            if (!(e.getKey() instanceof String)
+                    || !(e.getValue() instanceof Lookup))
+            {
+                throw new IllegalArgumentException(
+                        "Map with prefix lookups contains invalid data: "
+                                + prefixes);
+            }
+        }
+        return fetchPrefixLookups(params);
+    }
+
+    /**
+     * Obtains the collection with default lookups from the parameters map.
+     *
+     * @param params the map with parameters
+     * @return the collection with default lookups (may be <b>null</b>)
+     */
+    private static Collection<? extends Lookup> fetchDefaultLookups(
+            Map<String, Object> params)
+    {
+        // This is safe to cast because we either have full control over the map
+        // and thus know the types of the contained values or have checked
+        // the content before
+        @SuppressWarnings("unchecked")
+        Collection<? extends Lookup> defLookups =
+                (Collection<? extends Lookup>) params.get(PROP_DEFAULT_LOOKUPS);
+        return defLookups;
+    }
+
+    /**
+     * Tests whether the passed in map with parameters contains a valid
+     * collection with default lookups. This method works like
+     * {@link #fetchAndCheckPrefixLookups(Map)}, but tests the default lookups
+     * collection.
+     *
+     * @param params the map with parameters
+     * @return the collection with default lookups (may be <b>null</b>)
+     * @throws IllegalArgumentException if invalid data is found
+     */
+    private static Collection<? extends Lookup> fetchAndCheckDefaultLookups(
+            Map<String, Object> params)
+    {
+        Collection<?> col =
+                fetchParameter(params, PROP_DEFAULT_LOOKUPS, Collection.class);
+        if (col == null)
+        {
+            return null;
+        }
+
+        for (Object o : col)
+        {
+            if (!(o instanceof Lookup))
+            {
+                throw new IllegalArgumentException(
+                        "Collection with default lookups contains invalid data: "
+                                + col);
+            }
+        }
+        return fetchDefaultLookups(params);
+    }
+
+    /**
+     * Obtains a parameter from a map and performs a type check.
+     *
+     * @param params the map with parameters
+     * @param key the key of the parameter
+     * @param expClass the expected class of the parameter value
+     * @param <T> the parameter type
+     * @return the value of the parameter in the correct data type
+     * @throws IllegalArgumentException if the parameter is not of the expected
+     *         type
+     */
+    private static <T> T fetchParameter(Map<String, Object> params, String key,
+            Class<T> expClass)
+    {
+        Object value = params.get(key);
+        if (value == null)
+        {
+            return null;
+        }
+        if (!expClass.isInstance(value))
+        {
+            throw new IllegalArgumentException(String.format(
+                    "Parameter %s is not of type %s!", key,
+                    expClass.getSimpleName()));
+        }
+        return expClass.cast(value);
+    }
+
+    /**
+     * Checks whether a map with parameters is present. Throws an exception if
+     * not.
+     *
+     * @param params the map with parameters to check
+     * @throws IllegalArgumentException if the map is <b>null</b>
+     */
+    private static void checkParameters(Map<String, Object> params)
+    {
+        if (params == null)
+        {
+            throw new IllegalArgumentException(
+                    "Parameters map must not be null!");
         }
     }
 }

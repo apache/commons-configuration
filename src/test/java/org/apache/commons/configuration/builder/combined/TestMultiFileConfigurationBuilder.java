@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder.combined;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -25,6 +26,7 @@ import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -36,6 +38,7 @@ import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.DefaultLookups;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
@@ -116,6 +119,30 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         switchToConfig(3);
         assertEquals("Wrong property (3)", 35, builder.getConfiguration()
                 .getInt(key));
+    }
+
+    /**
+     * Tests whether a {@code ConfigurationInterpolator} is created from
+     * properties defined in the parameters object if necessary.
+     */
+    @Test
+    public void testInterpolatorFromParameters() throws ConfigurationException
+    {
+        BasicBuilderParameters params =
+                new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
+                        .setPrefixLookups(
+                                Collections.singletonMap(
+                                        DefaultLookups.SYSTEM_PROPERTIES
+                                                .getPrefix(),
+                                        DefaultLookups.SYSTEM_PROPERTIES
+                                                .getLookup()));
+        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class);
+        builder.configure(params);
+        switchToConfig(1);
+        assertEquals("Wrong property", 15,
+                builder.getConfiguration().getInt("rowsPerPage"));
     }
 
     /**
@@ -317,6 +344,25 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         builder.getConfiguration();
         assertEquals("Wrong number of managed builders", 2,
                 managedBuilders.size());
+    }
+
+    /**
+     * Tests whether the ConfigurationInterpolator is reset, too.
+     */
+    @Test
+    public void testInterpolatorReset()
+    {
+        BasicBuilderParameters params =
+                new MultiFileBuilderParametersImpl().setFilePattern(PATTERN);
+        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class);
+        builder.configure(params);
+        ConfigurationInterpolator interpolator = builder.getInterpolator();
+        assertNotNull("No interpolator", interpolator);
+        builder.resetParameters();
+        assertNotSame("No new interpolator", interpolator,
+                builder.getInterpolator());
     }
 
     /**

@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.logging.Log;
 import org.easymock.EasyMock;
@@ -278,28 +279,124 @@ public class TestBasicBuilderParameters
     }
 
     /**
-     * Tests fetchInterpolator() if the map does not contain an object.
+     * Tests whether a specification object for interpolation can be obtained.
      */
     @Test
-    public void testFetchInterpolatorNotFound()
+    public void testFetchInterpolatorSpecification()
     {
-        Map<String, Object> params = new HashMap<String, Object>();
-        assertNull("Got an interpolator",
-                BasicBuilderParameters.fetchInterpolator(params));
+        ConfigurationInterpolator parent =
+                EasyMock.createMock(ConfigurationInterpolator.class);
+        Lookup l1 = EasyMock.createMock(Lookup.class);
+        Lookup l2 = EasyMock.createMock(Lookup.class);
+        Lookup l3 = EasyMock.createMock(Lookup.class);
+        Map<String, Lookup> prefixLookups = new HashMap<String, Lookup>();
+        prefixLookups.put("p1", l1);
+        prefixLookups.put("p2", l2);
+        Collection<Lookup> defLookups = Collections.singleton(l3);
+        params.setParentInterpolator(parent);
+        params.setPrefixLookups(prefixLookups);
+        params.setDefaultLookups(defLookups);
+        Map<String, Object> map = params.getParameters();
+        InterpolatorSpecification spec =
+                BasicBuilderParameters.fetchInterpolatorSpecification(map);
+        assertSame("Wrong parent", parent, spec.getParentInterpolator());
+        assertEquals("Wrong prefix lookups", prefixLookups,
+                spec.getPrefixLookups());
+        assertEquals("Wrong number of default lookups", 1, spec
+                .getDefaultLookups().size());
+        assertTrue("Wrong default lookup", spec.getDefaultLookups()
+                .contains(l3));
     }
 
     /**
-     * Tests whether a {@code ConfigurationInterpolator} can be obtained from a
-     * parameters map.
+     * Tests whether an InterpolatorSpecification can be fetched if a
+     * ConfigurationInterpolator is present.
      */
     @Test
-    public void testFetchInterpolatorFound()
+    public void testFetchInterpolatorSpecificationWithInterpolator()
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ConfigurationInterpolator ci =
+                EasyMock.createMock(ConfigurationInterpolator.class);
         params.setInterpolator(ci);
-        Map<String, Object> map = params.getParameters();
-        assertSame("Wrong interpolator", ci,
-                BasicBuilderParameters.fetchInterpolator(map));
+        InterpolatorSpecification spec =
+                BasicBuilderParameters.fetchInterpolatorSpecification(params
+                        .getParameters());
+        assertSame("Wrong interpolator", ci, spec.getInterpolator());
+        assertNull("Got a parent", spec.getParentInterpolator());
+    }
+
+    /**
+     * Tests fetchInterpolatorSpecification() if the map contains a property of
+     * an invalid data type.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchInterpolatorSpecificationInvalidDataType()
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("interpolator", this);
+        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+    }
+
+    /**
+     * Tests fetchInterpolatorSpecification() if the map with prefix lookups
+     * contains an invalid key.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchInterpolatorSpecificationInvalidMapKey()
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Map<Object, Object> prefix = new HashMap<Object, Object>();
+        prefix.put(42, EasyMock.createMock(Lookup.class));
+        map.put("prefixLookups", prefix);
+        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+    }
+
+    /**
+     * Tests fetchInterpolatorSpecification() if the map with prefix lookups
+     * contains an invalid value.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchInterpolatorSpecificationInvalidMapValue()
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Map<Object, Object> prefix = new HashMap<Object, Object>();
+        prefix.put("test", this);
+        map.put("prefixLookups", prefix);
+        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+    }
+
+    /**
+     * Tests fetchInterpolatorSpecification() if the collection with default
+     * lookups contains an invalid value.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchInterpolatorSpecificationInvalidCollectionValue()
+    {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("defaultLookups", Collections.singleton("not a lookup"));
+        BasicBuilderParameters.fetchInterpolatorSpecification(map);
+    }
+
+    /**
+     * Tests that an empty map does not cause any problems.
+     */
+    @Test
+    public void testFetchInterpolatorSpecificationEmpty()
+    {
+        InterpolatorSpecification spec =
+                BasicBuilderParameters.fetchInterpolatorSpecification(params
+                        .getParameters());
+        assertNull("Got an interpolator", spec.getInterpolator());
+        assertTrue("Got lookups", spec.getDefaultLookups().isEmpty());
+    }
+
+    /**
+     * Tries to obtain an {@code InterpolatorSpecification} from a null map.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testFetchInterpolatorSpecificationNull()
+    {
+        BasicBuilderParameters.fetchInterpolatorSpecification(null);
     }
 
     /**
