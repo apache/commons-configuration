@@ -45,8 +45,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.mockobjects.dynamic.Mock;
-
 /**
  * Tests the ConfigurationUtils class
  *
@@ -545,8 +543,9 @@ public class TestConfigurationUtils
     @Test(expected = IllegalArgumentException.class)
     public void testEnableRuntimeExceptionsInvalid()
     {
-        ConfigurationUtils.enableRuntimeExceptions((Configuration) new Mock(
-                Configuration.class).proxy());
+        Configuration c = EasyMock.createMock(Configuration.class);
+        EasyMock.replay(c);
+        ConfigurationUtils.enableRuntimeExceptions(c);
     }
 
     /**
