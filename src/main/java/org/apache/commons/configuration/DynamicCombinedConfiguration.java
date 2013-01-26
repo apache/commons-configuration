@@ -70,8 +70,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     private List<ConfigData> configurations = new ArrayList<ConfigData>();
 
     /** Stores a map with the named configurations. */
-    private Map<String, AbstractConfiguration> namedConfigurations =
-            new HashMap<String, AbstractConfiguration>();
+    private Map<String, Configuration> namedConfigurations =
+            new HashMap<String, Configuration>();
 
     /** The key pattern for the CombinedConfiguration map */
     private String keyPattern;
@@ -183,7 +183,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
      * <b>null</b>)
      */
     @Override
-    public void addConfiguration(AbstractConfiguration config, String name,
+    public void addConfiguration(Configuration config, String name,
             String at)
     {
         ConfigData cd = new ConfigData(config, name, at);
@@ -873,7 +873,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     static class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private AbstractConfiguration configuration;
+        private Configuration configuration;
 
         /** Stores the name under which the configuration is stored. */
         private String name;
@@ -889,7 +889,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(AbstractConfiguration config, String n, String at)
+        public ConfigData(Configuration config, String n, String at)
         {
             configuration = config;
             name = n;
@@ -901,7 +901,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
          *
          * @return the configuration
          */
-        public AbstractConfiguration getConfiguration()
+        public Configuration getConfiguration()
         {
             return configuration;
         }

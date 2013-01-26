@@ -28,6 +28,7 @@ import java.util.Set;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
@@ -202,7 +203,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     private List<ConfigData> configurations;
 
     /** Stores a map with the named configurations. */
-    private Map<String, AbstractConfiguration> namedConfigurations;
+    private Map<String, Configuration> namedConfigurations;
 
     /** The default behavior is to ignore exceptions that occur during reload */
     private boolean ignoreReloadExceptions = true;
@@ -383,7 +384,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @param at the position of this configuration in the combined tree (can be
      * <b>null</b>)
      */
-    public void addConfiguration(AbstractConfiguration config, String name,
+    public void addConfiguration(Configuration config, String name,
             String at)
     {
         if (config == null)
@@ -410,7 +411,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             namedConfigurations.put(name, config);
         }
 
-        config.addConfigurationListener(this);
+        registerListenerAt(config);
         invalidate();
     }
 
@@ -422,7 +423,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @param config the configuration to add (must not be <b>null</b>)
      * @param name the name of this configuration (can be <b>null</b>)
      */
-    public void addConfiguration(AbstractConfiguration config, String name)
+    public void addConfiguration(Configuration config, String name)
     {
         addConfiguration(config, name, null);
     }
@@ -434,7 +435,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      *
      * @param config the configuration to add (must not be <b>null</b>)
      */
-    public void addConfiguration(AbstractConfiguration config)
+    public void addConfiguration(Configuration config)
     {
         addConfiguration(config, null, null);
     }
@@ -481,9 +482,9 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * @return A List of all the configurations.
      * @since 1.7
      */
-    public List<AbstractConfiguration> getConfigurations()
+    public List<Configuration> getConfigurations()
     {
-        List<AbstractConfiguration> list = new ArrayList<AbstractConfiguration>(configurations.size());
+        List<Configuration> list = new ArrayList<Configuration>(configurations.size());
         for (ConfigData cd : configurations)
         {
             list.add(cd.getConfiguration());
@@ -541,7 +542,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         {
             namedConfigurations.remove(cd.getName());
         }
-        cd.getConfiguration().removeConfigurationListener(this);
+        unregisterListenerAt(cd.getConfiguration());
         invalidate();
         return cd.getConfiguration();
     }
@@ -638,7 +639,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     {
         fireEvent(EVENT_CLEAR, null, null, true);
         configurations = new ArrayList<ConfigData>();
-        namedConfigurations = new HashMap<String, AbstractConfiguration>();
+        namedConfigurations = new HashMap<String, Configuration>();
         fireEvent(EVENT_CLEAR, null, null, false);
         invalidate();
     }
@@ -659,7 +660,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         copy.clear();
         for (ConfigData cd : configurations)
         {
-            copy.addConfiguration((AbstractConfiguration) ConfigurationUtils
+            copy.addConfiguration(ConfigurationUtils
                     .cloneConfiguration(cd.getConfiguration()), cd.getName(),
                     cd.getAt());
         }
@@ -838,13 +839,41 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     }
 
     /**
+     * Registers this combined configuration as listener at the given child
+     * configuration.
+     *
+     * @param configuration the child configuration
+     */
+    private void registerListenerAt(Configuration configuration)
+    {
+        if (configuration instanceof EventSource)
+        {
+            ((EventSource) configuration).addConfigurationListener(this);
+        }
+    }
+
+    /**
+     * Removes this combined configuration as listener from the given child
+     * configuration.
+     *
+     * @param configuration the child configuration
+     */
+    private void unregisterListenerAt(Configuration configuration)
+    {
+        if (configuration instanceof EventSource)
+        {
+            ((EventSource) configuration).removeConfigurationListener(this);
+        }
+    }
+
+    /**
      * An internal helper class for storing information about contained
      * configurations.
      */
     class ConfigData
     {
         /** Stores a reference to the configuration. */
-        private AbstractConfiguration configuration;
+        private Configuration configuration;
 
         /** Stores the name under which the configuration is stored. */
         private String name;
@@ -866,7 +895,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
          * @param n the name
          * @param at the at position
          */
-        public ConfigData(AbstractConfiguration config, String n, String at)
+        public ConfigData(Configuration config, String n, String at)
         {
             configuration = config;
             name = n;
@@ -879,7 +908,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
          *
          * @return the configuration
          */
-        public AbstractConfiguration getConfiguration()
+        public Configuration getConfiguration()
         {
             return configuration;
         }

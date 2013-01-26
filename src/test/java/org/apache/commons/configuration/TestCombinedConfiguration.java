@@ -734,10 +734,10 @@ public class TestCombinedConfiguration
         config.addConfiguration(setUpTestConfiguration(), TEST_NAME, "conf2");
         AbstractConfiguration pc = new PropertiesConfiguration();
         config.addConfiguration(pc, "props");
-        List<AbstractConfiguration> list = config.getConfigurations();
+        List<Configuration> list = config.getConfigurations();
         assertNotNull("No list of configurations returned", list);
         assertTrue("Incorrect number of configurations", list.size() == 3);
-        AbstractConfiguration c = list.get(2);
+        Configuration c = list.get(2);
         assertTrue("Incorrect configuration", c == pc);
     }
 

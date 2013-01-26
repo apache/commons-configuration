@@ -954,9 +954,9 @@ public class TestVFSConfigurationBuilder
         System.getProperties().remove("Id");
 
         CombinedConfiguration config = factory.getConfiguration(true);
-        List<AbstractConfiguration> list = config.getConfigurations();
+        List<Configuration> list = config.getConfigurations();
         assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
-        Iterator<AbstractConfiguration> iter = list.iterator();
+        Iterator<Configuration> iter = list.iterator();
         while (iter.hasNext())
         {
             Configuration conf = iter.next();
@@ -967,7 +967,7 @@ public class TestVFSConfigurationBuilder
             }
             else if (conf instanceof CombinedConfiguration)
             {
-                Iterator<AbstractConfiguration> it = ((CombinedConfiguration)conf).getConfigurations().iterator();
+                Iterator<Configuration> it = ((CombinedConfiguration)conf).getConfigurations().iterator();
                 while (it.hasNext())
                 {
                     conf = it.next();
@@ -992,9 +992,9 @@ public class TestVFSConfigurationBuilder
         FileSystem fs = factory.getFileSystem();
         assertNotNull("No File System",fs);
         assertTrue("Incorrect File System", fs instanceof VFSFileSystem);
-        List<AbstractConfiguration> list = config.getConfigurations();
+        List<Configuration> list = config.getConfigurations();
         assertTrue("Incorrect number of configurations - " + list.size(), list.size() == 4);
-        Iterator<AbstractConfiguration> iter = list.iterator();
+        Iterator<Configuration> iter = list.iterator();
         while (iter.hasNext())
         {
             Configuration conf = iter.next();
@@ -1005,7 +1005,7 @@ public class TestVFSConfigurationBuilder
             }
             else if (conf instanceof CombinedConfiguration)
             {
-                Iterator<AbstractConfiguration> it = ((CombinedConfiguration)conf).getConfigurations().iterator();
+                Iterator<Configuration> it = ((CombinedConfiguration)conf).getConfigurations().iterator();
                 while (it.hasNext())
                 {
                     conf = it.next();
