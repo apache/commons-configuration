@@ -26,6 +26,7 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
@@ -99,32 +100,6 @@ import org.apache.commons.lang3.event.EventListenerSupport;
 public class BasicConfigurationBuilder<T extends Configuration> implements
         ConfigurationBuilder<T>
 {
-    /**
-     * A dummy event source that is used for registering listeners if no
-     * compatible result object is available. This source has empty dummy
-     * implementations for listener registration methods.
-     */
-    private static final EventSource DUMMY_EVENT_SOURCE = new EventSource()
-    {
-        public void addConfigurationListener(ConfigurationListener l)
-        {
-        }
-
-        public boolean removeConfigurationListener(ConfigurationListener l)
-        {
-            return false;
-        }
-
-        public void addErrorListener(ConfigurationErrorListener l)
-        {
-        }
-
-        public boolean removeErrorListener(ConfigurationErrorListener l)
-        {
-            return false;
-        }
-    };
-
     /** The class of the objects produced by this builder instance. */
     private final Class<T> resultClass;
 
@@ -644,7 +619,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     private void registerEventListeners(T obj)
     {
-        EventSource evSrc = fetchEventSource(obj);
+        EventSource evSrc = ConfigurationUtils.asEventSource(obj, true);
         for (ConfigurationListener l : configListeners)
         {
             evSrc.addConfigurationListener(l);
@@ -664,7 +639,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
      */
     private EventSource fetchEventSource()
     {
-        return fetchEventSource(result);
+        return ConfigurationUtils.asEventSource(result, true);
     }
 
     /**
@@ -705,19 +680,5 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             }
         }
         return filteredMap;
-    }
-
-    /**
-     * Returns an {@code EventSource} for the specified object. If the object is
-     * an {@code EventSource}, it is returned. Otherwise, a dummy event source
-     * is returned.
-     *
-     * @param obj the object in question
-     * @return an {@code EventSource} for this object
-     */
-    private static EventSource fetchEventSource(Object obj)
-    {
-        return (obj instanceof EventSource) ? (EventSource) obj
-                : DUMMY_EVENT_SOURCE;
     }
 }
