@@ -30,6 +30,7 @@ import java.util.Iterator;
 
 import org.apache.commons.configuration.event.ConfigurationErrorEvent;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.tree.ExpressionEngine;
@@ -74,6 +75,31 @@ public final class ConfigurationUtils
      */
     private static final Class<?>[] IMMUTABLE_HIERARCHICAL_CONFIG_IFCS = {
         ImmutableHierarchicalConfiguration.class
+    };
+    /**
+     * A dummy event source that is returned by {@code asEventSource()} if a
+     * mock object has to be returned. It provides empty dummy implementations
+     * for all interface methods.
+     */
+    private static final EventSource DUMMY_EVENT_SOURCE = new EventSource()
+    {
+        public void addConfigurationListener(ConfigurationListener l)
+        {
+        }
+
+        public boolean removeConfigurationListener(ConfigurationListener l)
+        {
+            return false;
+        }
+
+        public void addErrorListener(ConfigurationErrorListener l)
+        {
+        }
+
+        public boolean removeErrorListener(ConfigurationErrorListener l)
+        {
+            return false;
+        }
     };
 
     /** The logger.*/
@@ -853,8 +879,9 @@ public final class ConfigurationUtils
     }
 
     /**
-     * Helper method for creating a proxy for an unmodifiable configuration.
-     * The interfaces the proxy should implement are passed as argument.
+     * Helper method for creating a proxy for an unmodifiable configuration. The
+     * interfaces the proxy should implement are passed as argument.
+     *
      * @param ifcs an array with the interface classes the proxy must implement
      * @param c the configuration object to be wrapped
      * @return a proxy object for an immutable configuration
@@ -866,5 +893,37 @@ public final class ConfigurationUtils
         return (ImmutableConfiguration) Proxy.newProxyInstance(
                 ConfigurationUtils.class.getClassLoader(), ifcs,
                 new ImmutableConfigurationInvocationHandler(c));
+    }
+
+    /**
+     * Casts the specified object to an {@code EventSource} if possible. The
+     * boolean argument determines the method's behavior if the object does not
+     * implement the {@code EventSource} event: if set to <b>false</b>, a
+     * {@code ConfigurationRuntimeException} is thrown; if set to <b>true</b>, a
+     * dummy {@code EventSource} is returned; on this object all methods can be
+     * called, but they do not have any effect.
+     *
+     * @param obj the object to be cast as {@code EventSource}
+     * @param mockIfUnsupported a flag whether a mock object should be returned
+     *        if necessary
+     * @return an {@code EventSource}
+     * @throws ConfigurationRuntimeException if the object cannot be cast to
+     *         {@code EventSource} and the mock flag is <b>false</b>
+     * @since 2.0
+     */
+    public static EventSource asEventSource(Object obj,
+            boolean mockIfUnsupported)
+    {
+        if (obj instanceof EventSource)
+        {
+            return (EventSource) obj;
+        }
+
+        if (!mockIfUnsupported)
+        {
+            throw new ConfigurationRuntimeException(
+                    "Cannot cast to EventSource: " + obj);
+        }
+        return DUMMY_EVENT_SOURCE;
     }
 }

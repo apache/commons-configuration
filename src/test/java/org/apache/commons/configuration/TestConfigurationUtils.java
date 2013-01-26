@@ -35,8 +35,12 @@ import java.util.Map;
 import junitx.framework.ListAssert;
 
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.event.ConfigurationErrorListener;
+import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.ExpressionEngine;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -604,5 +608,41 @@ public class TestConfigurationUtils
     public void testLoadClassNotFound() throws ClassNotFoundException
     {
         ConfigurationUtils.loadClass("a non existing class!");
+    }
+
+    /**
+     * Tests asEventSource() if the passed in object implements this interface.
+     */
+    @Test
+    public void testAsEventSourceSupported()
+    {
+        XMLConfiguration src = new XMLConfiguration();
+        assertSame("Wrong result", src, ConfigurationUtils.asEventSource(src, true));
+    }
+
+    /**
+     * Tests asEventSource() if an exception is expected.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testAsEventSourceNonSupportedEx()
+    {
+        ConfigurationUtils.asEventSource(this, false);
+    }
+
+    /**
+     * Tests asEventSource() if a mock object has to be returned.
+     */
+    @Test
+    public void testAsEventSourceUnsupportedMock()
+    {
+        ConfigurationListener cl = EasyMock.createMock(ConfigurationListener.class);
+        ConfigurationErrorListener el = EasyMock.createMock(ConfigurationErrorListener.class);
+        EasyMock.replay(cl, el);
+        EventSource source = ConfigurationUtils.asEventSource(this, true);
+        source.addConfigurationListener(cl);
+        source.addErrorListener(el);
+        assertFalse("Wrong result (1)", source.removeConfigurationListener(cl));
+        assertFalse("Wrong result (2)", source.removeErrorListener(el));
+        source.addConfigurationListener(null);
     }
 }
