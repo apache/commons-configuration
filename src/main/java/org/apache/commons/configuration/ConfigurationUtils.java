@@ -808,6 +808,7 @@ public final class ConfigurationUtils
      * @param clsName the name of the class to be loaded
      * @return the loaded class
      * @throws ClassNotFoundException if the class cannot be resolved
+     * @since 2.0
      */
     public static Class<?> loadClass(String clsName)
             throws ClassNotFoundException
@@ -832,6 +833,30 @@ public final class ConfigurationUtils
         }
 
         return ConfigurationUtils.class.getClassLoader().loadClass(clsName);
+    }
+
+    /**
+     * Loads the class with the specified name re-throwing
+     * {@code ClassNotFoundException} exceptions as runtime exceptions. This
+     * method works like {@link #loadClass(String)}. However, checked exceptions
+     * are caught and re-thrown as {@code ConfigurationRuntimeException}.
+     *
+     * @param clsName the name of the class to be loaded
+     * @return the loaded class
+     * @throws ConfigurationRuntimeException if the class cannot be resolved
+     * @since 2.0
+     */
+    public static Class<?> loadClassNoEx(String clsName)
+    {
+        try
+        {
+            return loadClass(clsName);
+        }
+        catch (ClassNotFoundException cnfex)
+        {
+            throw new ConfigurationRuntimeException("Cannot load class "
+                    + clsName, cnfex);
+        }
     }
 
     /**

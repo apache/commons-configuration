@@ -610,6 +610,25 @@ public class TestConfigurationUtils
     }
 
     /**
+     * Tests loadClassNoEx() if the class can be resolved.
+     */
+    @Test
+    public void testLoadClassNoExFound()
+    {
+        assertEquals("Wrong class", CLS_NAME,
+                ConfigurationUtils.loadClassNoEx(CLS_NAME).getName());
+    }
+
+    /**
+     * Tests loadClassNoEx() if the class cannot be resolved.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testLoadClassNoExNotFound()
+    {
+        ConfigurationUtils.loadClassNoEx("a non existing class!");
+    }
+
+    /**
      * Tests asEventSource() if the passed in object implements this interface.
      */
     @Test
