@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
@@ -455,16 +454,23 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     private static final BaseConfigurationBuilderProvider COMBINED_PROVIDER =
             new CombinedConfigurationBuilderProvider();
 
+    /** Constant for the provider for multiple XML configurations. */
+    private static final MultiFileConfigurationBuilderProvider MULTI_XML_PROVIDER =
+            new MultiFileConfigurationBuilderProvider(
+                    "org.apache.commons.configuration.XMLConfiguration",
+                    "org.apache.commons.configuration.builder.XMLBuilderParametersImpl");
+
     /** An array with the names of the default tags. */
     private static final String[] DEFAULT_TAGS = {
             "properties", "xml", "hierarchicalXml", "plist",
-            "ini", "system", "env", "jndi", "configuration"
+            "ini", "system", "env", "jndi", "configuration", "multiXml"
     };
 
     /** An array with the providers for the default tags. */
     private static final ConfigurationBuilderProvider[] DEFAULT_PROVIDERS = {
             PROPERTIES_PROVIDER, XML_PROVIDER, XML_PROVIDER, PLIST_PROVIDER, INI_PROVIDER,
-            SYSTEM_PROVIDER, ENV_PROVIDER, JNDI_PROVIDER, COMBINED_PROVIDER
+            SYSTEM_PROVIDER, ENV_PROVIDER, JNDI_PROVIDER, COMBINED_PROVIDER,
+            MULTI_XML_PROVIDER
     };
 
     /** A map with the default configuration builder providers. */
@@ -1496,7 +1502,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             try
             {
                 ccResult.addConfiguration(
-                        (AbstractConfiguration) builder.getConfiguration(),
+                        builder.getConfiguration(),
                         decl.getName(), decl.getAt());
             }
             catch (ConfigurationException cex)

@@ -38,6 +38,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DefaultFileSystem;
+import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
@@ -55,7 +56,9 @@ import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.resolver.CatalogResolver;
+import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,6 +79,12 @@ public class TestCombinedConfigurationBuilder
     /** Constant for a named builder. */
     private static final String BUILDER_NAME = "subBuilderName";
 
+    /**
+     * The name of the system property for selecting a file managed by a
+     * MultiFileConfigurationBuilder.
+     */
+    private static final String MULTI_FILE_PROPERTY = "Id";
+
     /** Stores the object to be tested. */
     protected CombinedConfigurationBuilder builder;
 
@@ -87,6 +96,12 @@ public class TestCombinedConfigurationBuilder
         System.setProperty("test_file_xml", TEST_SUB_XML);
         System.setProperty("test_file_combine", "testcombine1.xml");
         builder = new CombinedConfigurationBuilder();
+    }
+
+    @After
+    public void tearDown() throws Exception
+    {
+        System.getProperties().remove(MULTI_FILE_PROPERTY);
     }
 
     /**
@@ -985,6 +1000,88 @@ public class TestCombinedConfigurationBuilder
         Collection<ConfigurationBuilder<? extends Configuration>> childBuilders =
                 builder.getChildBuilders();
         assertEquals("Wrong number of child builders", 3, childBuilders.size());
+    }
+
+    /**
+     * Loads a test file which includes a MultiFileConfigurationBuilder
+     * declaration and returns the resulting configuration.
+     *
+     * @return the resulting combined configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private CombinedConfiguration createMultiFileConfig()
+            throws ConfigurationException
+    {
+        File testFile =
+                ConfigurationAssert.getTestFile("testCCMultiTenent.xml");
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(testFile));
+        CombinedConfiguration config = builder.getConfiguration();
+        assertTrue("Incorrect result configuration",
+                config instanceof DynamicCombinedConfiguration);
+        return config;
+    }
+
+    /**
+     * Tests whether a MultiFileConfigurationBuilder can be integrated into a
+     * combined configuration definition.
+     */
+    @Test
+    public void testMultiTenentConfiguration() throws ConfigurationException
+    {
+        CombinedConfiguration config = createMultiFileConfig();
+        checkMultiFile("1001", config, 15);
+        checkMultiFile("1002", config, 25);
+        checkMultiFile("1003", config, 35);
+        checkMultiFile("1004", config, 50);
+    }
+
+    /**
+     * Tests whether a configuration created by a MultiFileConfigurationBuilder
+     * has been initialized correctly.
+     */
+    @Test
+    public void testMultiTenentConfigurationProperties()
+            throws ConfigurationException
+    {
+        CombinedConfiguration config = createMultiFileConfig();
+        switchToMultiFile("1001");
+        HierarchicalConfiguration multiConf =
+                (HierarchicalConfiguration) config
+                        .getConfiguration("clientConfig");
+        assertTrue(
+                "Expression engine not configured",
+                multiConf.getExpressionEngine() instanceof XPathExpressionEngine);
+        assertEquals("Wrong bg color", "#808080",
+                config.getString("colors.background"));
+        assertEquals("Wrong text color", "#000000",
+                multiConf.getString("colors/text"));
+    }
+
+    /**
+     * Helper method for testing whether properties of a MultiFileConfiguration
+     * can be obtained.
+     *
+     * @param key the key of the file to be accessed
+     * @param config the configuration to check
+     * @param rows the expected value of the test property
+     */
+    private void checkMultiFile(String key, CombinedConfiguration config,
+            int rows)
+    {
+        switchToMultiFile(key);
+        assertEquals("Wrong property value", rows, config.getInt("rowsPerPage"));
+    }
+
+    /**
+     * Sets the system property which selects a specific file managed by a
+     * MultiFileConfigurationBuilder.
+     *
+     * @param key the key to select the desired file
+     */
+    private static void switchToMultiFile(String key)
+    {
+        System.setProperty(MULTI_FILE_PROPERTY, key);
     }
 
     /**
