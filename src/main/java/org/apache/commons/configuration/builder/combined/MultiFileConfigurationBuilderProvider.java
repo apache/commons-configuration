@@ -26,6 +26,8 @@ import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFacto
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory.EventSourceSupport;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.reloading.ReloadingController;
+import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 
 /**
  * <p>
@@ -123,33 +125,100 @@ public class MultiFileConfigurationBuilderProvider extends
      * Creates the {@code ConfigurationBuilder} to be returned by this provider.
      * This is a very simple implementation which always returns the same
      * wrapper configuration instance. The handling of builder listeners is
-     * delegated to the wrapped {@code MultiFileConfigurationBuilder}.
+     * delegated to the wrapped {@code MultiFileConfigurationBuilder}. If
+     * reloading is support, the builder returned by this method also implements
+     * the {@link ReloadingControllerSupport} interface.
      *
      * @param multiBuilder the {@code MultiFileConfigurationBuilder}
      * @param wrapConfig the configuration to be returned
      * @return the wrapper builder
      */
     private static ConfigurationBuilder<? extends Configuration> createWrapperBuilder(
-            final ConfigurationBuilder<? extends Configuration> multiBuilder,
-            final Configuration wrapConfig)
+            ConfigurationBuilder<? extends Configuration> multiBuilder,
+            Configuration wrapConfig)
     {
-        return new ConfigurationBuilder<Configuration>()
+        if (multiBuilder instanceof ReloadingControllerSupport)
         {
-            public Configuration getConfiguration()
-                    throws ConfigurationException
-            {
-                return wrapConfig;
-            }
+            return new ReloadableWrapperBuilder(wrapConfig, multiBuilder);
+        }
+        else
+        {
+            return new WrapperBuilder(wrapConfig, multiBuilder);
+        }
+    }
 
-            public void addBuilderListener(BuilderListener l)
-            {
-                multiBuilder.addBuilderListener(l);
-            }
+    /**
+     * A simple wrapper implementation of the {@code ConfigurationBuilder}
+     * interface which returns a fix configuration and delegates to another
+     * builder for event listener management.
+     */
+    private static class WrapperBuilder implements
+            ConfigurationBuilder<Configuration>
+    {
+        /** The configuration managed by this builder. */
+        private final Configuration configuration;
 
-            public void removeBuilderListener(BuilderListener l)
-            {
-                multiBuilder.removeBuilderListener(l);
-            }
-        };
+        /** The builder to which this instance delegates. */
+        private final ConfigurationBuilder<? extends Configuration> builder;
+
+        /**
+         * Creates a new instance of {@code WrapperBuilder}.
+         *
+         * @param conf the managed configuration
+         * @param bldr the underlying builder
+         */
+        public WrapperBuilder(Configuration conf,
+                ConfigurationBuilder<? extends Configuration> bldr)
+        {
+            configuration = conf;
+            builder = bldr;
+        }
+
+        public Configuration getConfiguration() throws ConfigurationException
+        {
+            return configuration;
+        }
+
+        public void addBuilderListener(BuilderListener l)
+        {
+            builder.addBuilderListener(l);
+        }
+
+        public void removeBuilderListener(BuilderListener l)
+        {
+            builder.removeBuilderListener(l);
+        }
+    }
+
+    /**
+     * A wrapper builder implementation which also provides a
+     * {@code ReloadingController}. This class assumes that the wrapped builder
+     * implements {@code ReloadingControllerSupport}. So the reloading
+     * controller can be obtained from this object.
+     */
+    private static class ReloadableWrapperBuilder extends WrapperBuilder
+            implements ReloadingControllerSupport
+    {
+        /** The object for obtaining the reloading controller. */
+        private final ReloadingControllerSupport ctrlSupport;
+
+        /**
+         * Creates a new instance of {@code ReloadableWrapperBuilder}.
+         *
+         * @param conf the managed configuration
+         * @param bldr the underlying builder (must implement
+         *        {@code ReloadingControllerSupport})
+         */
+        public ReloadableWrapperBuilder(Configuration conf,
+                ConfigurationBuilder<? extends Configuration> bldr)
+        {
+            super(conf, bldr);
+            ctrlSupport = (ReloadingControllerSupport) bldr;
+        }
+
+        public ReloadingController getReloadingController()
+        {
+            return ctrlSupport.getReloadingController();
+        }
     }
 }

@@ -28,6 +28,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,6 +47,7 @@ import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
+import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
@@ -55,6 +57,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.reloading.ReloadingController;
+import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
@@ -1006,14 +1010,14 @@ public class TestCombinedConfigurationBuilder
      * Loads a test file which includes a MultiFileConfigurationBuilder
      * declaration and returns the resulting configuration.
      *
+     * @param fileName the name of the file to be loaded
      * @return the resulting combined configuration
      * @throws ConfigurationException if an error occurs
      */
-    private CombinedConfiguration createMultiFileConfig()
+    private CombinedConfiguration createMultiFileConfig(String fileName)
             throws ConfigurationException
     {
-        File testFile =
-                ConfigurationAssert.getTestFile("testCCMultiTenent.xml");
+        File testFile = ConfigurationAssert.getTestFile(fileName);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(testFile));
         CombinedConfiguration config = builder.getConfiguration();
@@ -1029,7 +1033,7 @@ public class TestCombinedConfigurationBuilder
     @Test
     public void testMultiTenentConfiguration() throws ConfigurationException
     {
-        CombinedConfiguration config = createMultiFileConfig();
+        CombinedConfiguration config = createMultiFileConfig("testCCMultiTenent.xml");
         checkMultiFile("1001", config, 15);
         checkMultiFile("1002", config, 25);
         checkMultiFile("1003", config, 35);
@@ -1044,7 +1048,7 @@ public class TestCombinedConfigurationBuilder
     public void testMultiTenentConfigurationProperties()
             throws ConfigurationException
     {
-        CombinedConfiguration config = createMultiFileConfig();
+        CombinedConfiguration config = createMultiFileConfig("testCCMultiTenent.xml");
         switchToMultiFile("1001");
         HierarchicalConfiguration multiConf =
                 (HierarchicalConfiguration) config
@@ -1082,6 +1086,66 @@ public class TestCombinedConfigurationBuilder
     private static void switchToMultiFile(String key)
     {
         System.setProperty(MULTI_FILE_PROPERTY, key);
+    }
+
+    /**
+     * Tests whether reloading support works for MultiFileConfigurationBuilder.
+     */
+    @Test
+    public void testMultiTenentConfigurationReloading()
+            throws ConfigurationException, InterruptedException
+    {
+        CombinedConfiguration config =
+                createMultiFileConfig("testCCMultiTenentReloading.xml");
+        File outFile =
+                ConfigurationAssert.getOutFile("MultiFileReloadingTest.xml");
+        switchToMultiFile(outFile.getAbsolutePath());
+        XMLConfiguration reloadConfig = new XMLConfiguration();
+        final String key = "test.reload";
+        reloadConfig.setProperty(key, "no");
+        reloadConfig.save(outFile);
+        try
+        {
+            assertEquals("Wrong property", "no", config.getString(key));
+            ConfigurationBuilder<? extends Configuration> childBuilder =
+                    builder.getNamedBuilder("clientConfig");
+            assertTrue("Not a reloading builder",
+                    childBuilder instanceof ReloadingControllerSupport);
+            ReloadingController ctrl =
+                    ((ReloadingControllerSupport) childBuilder)
+                            .getReloadingController();
+            ctrl.checkForReloading(null); // initialize reloading
+            BuilderListenerTestImpl l = new BuilderListenerTestImpl();
+            childBuilder.addBuilderListener(l);
+            reloadConfig.setProperty(key, "yes");
+            reloadConfig.save(outFile);
+
+            int attempts = 10;
+            boolean changeDetected;
+            do
+            {
+                changeDetected = ctrl.checkForReloading(null);
+                if (!changeDetected)
+                {
+                    Thread.sleep(1000);
+                }
+            } while (!changeDetected && --attempts > 0);
+            assertTrue("No change detected", changeDetected);
+            assertEquals("Wrong updated property", "yes", builder
+                    .getConfiguration().getString(key));
+            assertEquals("No change event received", 1, l.getBuilders().size());
+            BasicConfigurationBuilder<? extends Configuration> multiBuilder =
+                    (BasicConfigurationBuilder<? extends Configuration>) l
+                            .getBuilders().get(0);
+            childBuilder.removeBuilderListener(l);
+            multiBuilder.resetResult();
+            assertEquals("Got another change event received", 1, l
+                    .getBuilders().size());
+        }
+        finally
+        {
+            outFile.delete();
+        }
     }
 
     /**
@@ -1229,6 +1293,33 @@ public class TestCombinedConfigurationBuilder
         public String lookup(String key)
         {
             return map.get(key);
+        }
+    }
+
+    /**
+     * A test implementation of the BuilderListener interface.
+     */
+    private static class BuilderListenerTestImpl implements BuilderListener
+    {
+        /** A list for the notified builders. */
+        private final List<ConfigurationBuilder<? extends Configuration>> builders =
+                new LinkedList<ConfigurationBuilder<? extends Configuration>>();
+
+        public void builderReset(
+                ConfigurationBuilder<? extends Configuration> builder)
+        {
+            builders.add(builder);
+        }
+
+        /**
+         * Returns a list with builders for which a reset notification was
+         * received.
+         *
+         * @return the list with builders
+         */
+        public List<ConfigurationBuilder<? extends Configuration>> getBuilders()
+        {
+            return builders;
         }
     }
 }
