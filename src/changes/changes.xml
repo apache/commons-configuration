@@ -31,6 +31,12 @@
         ConfigurationUtils.fileFromUrl() now correctly handles URL containing
         encoded percent characters.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-518">
+        Classes and interfaces related to interpolation have been slightly
+        reworked. ConfigurationInterpolator is now thread-safe. There are
+        multiple ways to define the ConfigurationInterpolator object to be
+        used by an AbstractConfiguration instance.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-517">
         Hierarchical configurations now provide methods to obtain sub
         configurations for all child elements of a given key.
