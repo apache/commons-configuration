@@ -59,28 +59,33 @@ import org.xml.sax.EntityResolver;
 
 /**
  * <p>
- * A factory class that creates a composite configuration from an XML based
- * <em>configuration definition file</em>.
+ * A specialized {@code ConfigurationBuilder} implementation that creates a
+ * {@link CombinedConfiguration} from multiple configuration sources defined by
+ * an XML-based <em>configuration definition file</em>.
  * </p>
  * <p>
  * This class provides an easy and flexible means for loading multiple
  * configuration sources and combining the results into a single configuration
  * object. The sources to be loaded are defined in an XML document that can
  * contain certain tags representing the different supported configuration
- * classes. If such a tag is found, the corresponding {@code Configuration}
+ * classes. If such a tag is found, a corresponding {@code ConfigurationBuilder}
  * class is instantiated and initialized using the classes of the
  * {@code beanutils} package (namely
- * {@link org.apache.commons.configuration.beanutils.XMLBeanDeclaration XMLBeanDeclaration}
- * will be used to extract the configuration's initialization parameters, which
- * allows for complex initialization scenarios).
+ * {@link org.apache.commons.configuration.beanutils.XMLBeanDeclaration
+ * XMLBeanDeclaration} will be used to extract the configuration's
+ * initialization parameters, which allows for complex initialization
+ * scenarios).
  * </p>
  * <p>
  * It is also possible to add custom tags to the configuration definition file.
- * For this purpose register your own {@code BaseConfigurationBuilderProvider}
- * implementation for your tag using the {@code addConfigurationProvider()}
- * method. This provider will then be called when the corresponding custom tag
- * is detected. For the default configuration classes providers are already
- * registered.
+ * For this purpose an implementation of
+ * {@link CombinedConfigurationBuilderProvider} has to be created which is
+ * responsible for the creation of a {@code ConfigurationBuilder} associated
+ * with the custom tag. An instance of this class has to be registered at the
+ * {@link CombinedBuilderParametersImpl} object which is used to initialize this
+ * {@code CombinedConfigurationBuilder}. This provider will then be called when
+ * the corresponding custom tag is detected. For many default configuration
+ * classes providers are already registered.
  * </p>
  * <p>
  * The configuration definition file has the following basic structure:
@@ -90,7 +95,7 @@ import org.xml.sax.EntityResolver;
  * <pre>
  * &lt;configuration systemProperties="properties file name"&gt;
  *   &lt;header&gt;
- *     &lt;!-- Optional meta information about the composite configuration --&gt;
+ *     &lt;!-- Optional meta information about the combined configuration --&gt;
  *   &lt;/header&gt;
  *   &lt;override&gt;
  *     &lt;!-- Declarations for override configurations --&gt;
@@ -103,16 +108,16 @@ import org.xml.sax.EntityResolver;
  *
  * </p>
  * <p>
- * The name of the root element (here {@code configuration}) is
- * arbitrary. The optional systemProperties attribute identifies the path to
- * a property file containing properties that should be added to the system
- * properties. If specified on the root element, the system properties are
- * set before the rest of the configuration is processed.
+ * The name of the root element (here {@code configuration}) is arbitrary. The
+ * optional {@code systemProperties} attribute identifies the path to a property
+ * file containing properties that should be added to the system properties. If
+ * specified on the root element, the system properties are set before the rest
+ * of the configuration is processed.
  * </p>
  * <p>
  * There are two sections (both of them are optional) for declaring
- * <em>override</em> and <em>additional</em> configurations. Configurations
- * in the former section are evaluated in the order of their declaration, and
+ * <em>override</em> and <em>additional</em> configurations. Configurations in
+ * the former section are evaluated in the order of their declaration, and
  * properties of configurations declared earlier hide those of configurations
  * declared later. Configurations in the latter section are combined to a union
  * configuration, i.e. all of their properties are added to a large hierarchical
@@ -121,12 +126,12 @@ import org.xml.sax.EntityResolver;
  * </p>
  * <p>
  * Each configuration declaration consists of a tag whose name is associated
- * with a {@code BaseConfigurationBuilderProvider}. This can be one of the
- * predefined tags like {@code properties}, or {@code xml}, or
- * a custom tag, for which a configuration provider was registered. Attributes
- * and sub elements with specific initialization parameters can be added. There
- * are some reserved attributes with a special meaning that can be used in every
- * configuration declaration:
+ * with a {@code CombinedConfigurationBuilderProvider}. This can be one of the
+ * predefined tags like {@code properties}, or {@code xml}, or a custom tag, for
+ * which a configuration builder provider was registered (as described above).
+ * Attributes and sub elements with specific initialization parameters can be
+ * added. There are some reserved attributes with a special meaning that can be
+ * used in every configuration declaration:
  * </p>
  * <p>
  * <table border="1">
@@ -136,9 +141,10 @@ import org.xml.sax.EntityResolver;
  * </tr>
  * <tr>
  * <td valign="top">{@code config-name}</td>
- * <td>Allows to specify a name for this configuration. This name can be used
- * to obtain a reference to the configuration from the resulting combined
- * configuration (see below).</td>
+ * <td>Allows specifying a name for this configuration. This name can be used to
+ * obtain a reference to the configuration from the resulting combined
+ * configuration (see below). It can also be passed to the
+ * {@link #getNamedBuilder(String)} method.</td>
  * </tr>
  * <tr>
  * <td valign="top">{@code config-at}</td>
@@ -147,85 +153,89 @@ import org.xml.sax.EntityResolver;
  * </tr>
  * <tr>
  * <td valign="top">{@code config-optional}</td>
- * <td>Declares a configuration as optional. This means that errors that occur
- * when creating the configuration are ignored. (However
- * {@link org.apache.commons.configuration.event.ConfigurationErrorListener}s
- * registered at the builder instance will get notified about this error: they
- * receive an event of type {@code EVENT_ERR_LOAD_OPTIONAL}. The key
- * property of this event contains the name of the optional configuration source
- * that caused this problem.)</td>
+ * <td>Declares a configuration source as optional. This means that errors that
+ * occur when creating the configuration are ignored.</td>
+ * </tr>
+ * <tr>
+ * <td valign="top">{@code config-reload}</td>
+ * <td>Many configuration sources support a reloading mechanism. For those
+ * sources it is possible to enable reloading by providing this attribute with a
+ * value of <strong>true</strong>.</td>
  * </tr>
  * </table>
  * </p>
  * <p>
  * The optional <em>header</em> section can contain some meta data about the
  * created configuration itself. For instance, it is possible to set further
- * properties of the {@code NodeCombiner} objects used for constructing
- * the resulting configuration.
+ * properties of the {@code NodeCombiner} objects used for constructing the
+ * resulting configuration.
  * </p>
  * <p>
- * The default configuration object returned by this builder is an instance of the
- * {@link CombinedConfiguration} class. The return value of the
- * {@code getConfiguration()} method can be casted to this type, and the
- * {@code getConfiguration(boolean)} method directly declares
- * {@code CombinedConfiguration} as return type. This allows for
- * convenient access to the configuration objects maintained by the combined
- * configuration (e.g. for updates of single configuration objects). It has also
- * the advantage that the properties stored in all declared configuration
- * objects are collected and transformed into a single hierarchical structure,
- * which can be accessed using different expression engines. The actual CombinedConfiguration
- * implementation can be overridden by specifying the class in the <em>config-class</em>
- * attribute of the result element.
+ * The default configuration object returned by this builder is an instance of
+ * the {@link CombinedConfiguration} class. This allows for convenient access to
+ * the configuration objects maintained by the combined configuration (e.g. for
+ * updates of single configuration objects). It has also the advantage that the
+ * properties stored in all declared configuration objects are collected and
+ * transformed into a single hierarchical structure, which can be accessed using
+ * different expression engines. The actual {@code CombinedConfiguration}
+ * implementation can be overridden by specifying the class in the
+ * <em>config-class</em> attribute of the result element.
  * </p>
  * <p>
  * A custom EntityResolver can be used for all XMLConfigurations by adding
+ *
  * <pre>
  * &lt;entity-resolver config-class="EntityResolver fully qualified class name"&gt;
  * </pre>
- * The CatalogResolver can be used for all XMLConfiguration by adding
+ *
+ * A specific CatalogResolver can be specified for all XMLConfiguration sources
+ * by adding
+ *
  * <pre>
  * &lt;entity-resolver catalogFiles="comma separated list of catalog files"&gt;
  * </pre>
+ *
  * </p>
  * <p>
- * Additional ConfigurationProviders can be added by configuring them in the <em>header</em>
- * section.
+ * Additional ConfigurationProviders can be added by configuring them in the
+ * <em>header</em> section.
+ *
  * <pre>
  * &lt;providers&gt;
  *   &lt;provider config-tag="tag name" config-class="provider fully qualified class name"/&gt;
  * &lt;/providers&gt;
  * </pre>
+ *
  * </p>
  * <p>
- * Additional variable resolvers can be added by configuring them in the <em>header</em>
- * section.
+ * Additional variable resolvers can be added by configuring them in the
+ * <em>header</em> section.
+ *
  * <pre>
  * &lt;lookups&gt;
  *   &lt;lookup config-prefix="prefix" config-class="StrLookup fully qualified class name"/&gt;
  * &lt;/lookups&gt;
  * </pre>
+ *
  * </p>
  * <p>
  * All declared override configurations are directly added to the resulting
  * combined configuration. If they are given names (using the
- * {@code config-name} attribute), they can directly be accessed using
- * the {@code getConfiguration(String)} method of
- * {@code CombinedConfiguration}. The additional configurations are
- * altogether added to another combined configuration, which uses a union
- * combiner. Then this union configuration is added to the resulting combined
- * configuration under the name defined by the {@code ADDITIONAL_NAME}
- * constant.
- * </p>
- * <p>
- * Implementation note: This class is not thread-safe. Especially the
- * {@code getConfiguration()} methods should be called by a single thread
- * only.
+ * {@code config-name} attribute), they can directly be accessed using the
+ * {@code getConfiguration(String)} method of {@code CombinedConfiguration}. The
+ * additional configurations are altogether added to another combined
+ * configuration, which uses a union combiner. Then this union configuration is
+ * added to the resulting combined configuration under the name defined by the
+ * {@code ADDITIONAL_NAME} constant. The {@link #getNamedBuilder(String)} method
+ * can be used to access the {@code ConfigurationBuilder} objects for all
+ * configuration sources which have been assigned a name; care has to be taken
+ * that these names are unique.
  * </p>
  *
  * @since 1.3
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<CombinedConfiguration>
