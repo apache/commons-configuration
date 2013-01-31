@@ -1128,6 +1128,7 @@ public class TestCombinedConfigurationBuilder
                 if (!changeDetected)
                 {
                     Thread.sleep(1000);
+                    reloadConfig.save(outFile);
                 }
             } while (!changeDetected && --attempts > 0);
             assertTrue("No change detected", changeDetected);
