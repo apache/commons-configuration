@@ -29,8 +29,12 @@ import java.util.Collection;
 import java.util.Collections;
 
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationLookup;
+import org.apache.commons.configuration.DynamicCombinedConfiguration;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
+import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
 import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
@@ -426,5 +430,32 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         assertNotSame("Managed parameters not cloned",
                 managedBuilder1.getFileHandler(),
                 managedBuilder2.getFileHandler());
+    }
+
+    /**
+     * Tests whether infinite loops on constructing the file name using
+     * interpolation can be handled. This can happen if a pattern cannot be
+     * resolved and the {@code ConfigurationInterpolator} causes again a lookup
+     * of the builder's configuration.
+     */
+    @Test
+    public void testRecursiveInterpolation() throws ConfigurationException
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        config.setKeyPattern(PATTERN_VAR);
+        BasicBuilderParameters params = createTestBuilderParameters(null);
+        ConfigurationInterpolator ci = new ConfigurationInterpolator();
+        ci.addDefaultLookup(new ConfigurationLookup(config));
+        params.setInterpolator(ci);
+        MultiFileConfigurationBuilder<XMLConfiguration> builder =
+                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class, null, true);
+        builder.configure(params);
+        BuilderConfigurationWrapperFactory wrapFactory =
+                new BuilderConfigurationWrapperFactory();
+        config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(
+                HierarchicalConfiguration.class, builder), "Multi");
+        assertTrue("Got configuration data", config.isEmpty());
     }
 }

@@ -94,6 +94,13 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
             new AtomicReference<ConfigurationInterpolator>();
 
     /**
+     * A flag for preventing reentrant access to managed builders on
+     * interpolation of the file name pattern.
+     */
+    private final ThreadLocal<Boolean> inInterpolation =
+            new ThreadLocal<Boolean>();
+
+    /**
      * A specialized builder listener which gets registered at all managed
      * builders. This listener just propagates notifications from managed
      * builders to the listeners registered at this
@@ -186,7 +193,7 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
         {
             throw new ConfigurationException("No file name pattern is set!");
         }
-        String fileName = constructFileName(multiParams);
+        String fileName = fetchFileName(multiParams);
 
         FileBasedConfigurationBuilder<T> builder =
                 getManagedBuilders().get(fileName);
@@ -426,6 +433,39 @@ public class MultiFileConfigurationBuilder<T extends FileBasedConfiguration>
     {
         copyEventListeners(newBuilder);
         newBuilder.addBuilderListener(managedBuilderDelegationListener);
+    }
+
+    /**
+     * Generates a file name for a managed builder based on the file name
+     * pattern. This method prevents infinite loops which could happen if the
+     * file name pattern cannot be resolved and the
+     * {@code ConfigurationInterpolator} used by this object causes a recursive
+     * lookup to this builder's configuration.
+     *
+     * @param multiParams the current builder parameters
+     * @return the file name for a managed builder
+     */
+    private String fetchFileName(MultiFileBuilderParametersImpl multiParams)
+    {
+        String fileName;
+        Boolean reentrant = inInterpolation.get();
+        if (reentrant != null && reentrant.booleanValue())
+        {
+            fileName = multiParams.getFilePattern();
+        }
+        else
+        {
+            inInterpolation.set(Boolean.TRUE);
+            try
+            {
+                fileName = constructFileName(multiParams);
+            }
+            finally
+            {
+                inInterpolation.set(Boolean.FALSE);
+            }
+        }
+        return fileName;
     }
 
     /**

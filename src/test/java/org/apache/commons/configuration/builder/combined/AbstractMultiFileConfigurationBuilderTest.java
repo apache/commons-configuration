@@ -34,25 +34,37 @@ public class AbstractMultiFileConfigurationBuilderTest
     /** The system property which selects a sub configuration. */
     private static final String PROP = "Id";
 
+    /** The part of the pattern containing the variable. */
+    protected static String PATTERN_VAR = "${sys:Id}";
+
     /** The pattern for file names. */
     protected static String PATTERN =
-            "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
+            "target/test-classes/testMultiConfiguration_" + PATTERN_VAR
+                    + ".xml";
 
     /**
      * Sets a system property for accessing a specific configuration file from
-     * the test builder.
+     * the test builder. The passed in id can be null, then the system property
+     * is removed.
      *
      * @param id the ID of the managed configuration to load
      */
     protected static void switchToConfig(String id)
     {
-        System.setProperty(PROP, id);
+        if (id != null)
+        {
+            System.setProperty(PROP, id);
+        }
+        else
+        {
+            System.getProperties().remove(PROP);
+        }
     }
 
     @After
     public void tearDown() throws Exception
     {
-        System.getProperties().remove(PROP);
+        switchToConfig(null);
     }
 
     /**
