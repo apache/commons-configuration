@@ -34,6 +34,8 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.junit.Before;
@@ -517,9 +519,12 @@ public class TestFileConfiguration
     @Test
     public void testLoadFromClassPath() throws ConfigurationException
     {
-        DefaultConfigurationBuilder cf =
-            new DefaultConfigurationBuilder("config/deep/testFileFromClasspath.xml");
-        CombinedConfiguration config = cf.getConfiguration(true);
+        CombinedConfigurationBuilder builder =
+                new CombinedConfigurationBuilder();
+        builder.configure(Parameters.combined().setDefinitionBuilderParameters(
+                Parameters.fileBased().setFileName(
+                        "config/deep/testFileFromClasspath.xml")));
+        CombinedConfiguration config = builder.getConfiguration();
         Configuration config1 = config.getConfiguration("propConf");
         Configuration config2 = config.getConfiguration("propConfDeep");
         compare(config1, config2);
