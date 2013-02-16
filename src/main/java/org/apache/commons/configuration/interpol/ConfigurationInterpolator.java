@@ -128,6 +128,7 @@ public class ConfigurationInterpolator
      * @return the {@code ConfigurationInterpolator} obtained or created based
      *         on the given specification
      * @throws IllegalArgumentException if the specification is <b>null</b>
+     * @since 2.0
      */
     public static ConfigurationInterpolator fromSpecification(
             InterpolatorSpecification spec)
@@ -149,10 +150,31 @@ public class ConfigurationInterpolator
      *
      * @return a map with the default prefix {@code Lookup} objects and their
      *         prefixes
+     * @since 2.0
      */
     public static Map<String, Lookup> getDefaultPrefixLookups()
     {
         return DEFAULT_PREFIX_LOOKUPS;
+    }
+
+    /**
+     * Utility method for obtaining a {@code Lookup} object in a safe way. This
+     * method always returns a non-<b>null</b> {@code Lookup} object. If the
+     * passed in {@code Lookup} is not <b>null</b>, it is directly returned.
+     * Otherwise, result is a dummy {@code Lookup} which does not provide any
+     * values.
+     *
+     * @param lookup the {@code Lookup} to check
+     * @return a non-<b>null</b> {@code Lookup} object
+     * @since 2.0
+     */
+    public static Lookup nullSafeLookup(Lookup lookup)
+    {
+        if (lookup == null)
+        {
+            lookup = DummyLookup.INSTANCE;
+        }
+        return lookup;
     }
 
     /**
@@ -422,12 +444,7 @@ public class ConfigurationInterpolator
      */
     protected Lookup fetchLookupForPrefix(String prefix)
     {
-        Lookup lookup = prefixLookups.get(prefix);
-        if (lookup == null)
-        {
-            lookup = DummyLookup.INSTANCE;
-        }
-        return lookup;
+        return nullSafeLookup(prefixLookups.get(prefix));
     }
 
     /**

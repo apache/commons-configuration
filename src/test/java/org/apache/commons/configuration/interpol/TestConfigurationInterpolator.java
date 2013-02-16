@@ -564,4 +564,26 @@ public class TestConfigurationInterpolator
         ConfigurationInterpolator.getDefaultPrefixLookups().put("test",
                 EasyMock.createMock(Lookup.class));
     }
+
+    /**
+     * Tests nullSafeLookup() if a lookup object was provided.
+     */
+    @Test
+    public void testNullSafeLookupExisting()
+    {
+        Lookup look = EasyMock.createMock(Lookup.class);
+        EasyMock.replay(look);
+        assertSame("Wrong result", look,
+                ConfigurationInterpolator.nullSafeLookup(look));
+    }
+
+    /**
+     * Tests whether nullSafeLookup() can handle null input.
+     */
+    @Test
+    public void testNullSafeLookupNull()
+    {
+        Lookup lookup = ConfigurationInterpolator.nullSafeLookup(null);
+        assertNull("Got a lookup result", lookup.lookup("someVar"));
+    }
 }
