@@ -25,6 +25,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -38,6 +40,7 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.DefaultFileSystem;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.FileSystem;
@@ -787,18 +790,23 @@ public class TestCombinedConfigurationBuilder
      */
     @Test
     public void testDefaultBasePathFromDefinitionBuilder()
-            throws ConfigurationException
+            throws ConfigurationException, IOException
     {
         String testFile = "testCCSystemProperties.xml";
-        String basePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilderParameters(new FileBasedBuilderParametersImpl()
-                        .setBasePath(basePath).setFileName(testFile)));
+                        .setBasePath(
+                                ConfigurationAssert.TEST_DIR.getAbsolutePath())
+                        .setFileName(testFile)));
         builder.getConfiguration();
         XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
         builder.initChildBuilderParameters(xmlParams);
-        assertEquals("Base path not set", basePath, xmlParams.getFileHandler()
-                .getBasePath());
+        File basePathFile =
+                ConfigurationUtils.fileFromURL(new URL(xmlParams
+                        .getFileHandler().getBasePath()));
+        assertEquals("Wrong base path",
+                ConfigurationAssert.getTestFile(testFile).getAbsoluteFile(),
+                basePathFile);
     }
 
     /**

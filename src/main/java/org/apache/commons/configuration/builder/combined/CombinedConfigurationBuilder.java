@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration.builder.combined;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -1104,10 +1105,12 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             if (defBuilder instanceof FileBasedConfigurationBuilder)
             {
                 @SuppressWarnings("rawtypes")
-                FileBasedConfigurationBuilder fileBuilder = (FileBasedConfigurationBuilder) defBuilder;
-                currentXMLParameters
-                        .setBasePath(fileBuilder
-                                .getFileHandler().getBasePath());
+                FileBasedConfigurationBuilder fileBuilder =
+                        (FileBasedConfigurationBuilder) defBuilder;
+                URL url = fileBuilder.getFileHandler().getURL();
+                currentXMLParameters.setBasePath((url != null) ? url
+                        .toExternalForm() : fileBuilder.getFileHandler()
+                        .getBasePath());
             }
         }
     }
