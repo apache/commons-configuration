@@ -28,10 +28,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Random;
 
+import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
+import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration.builder.combined.MultiFileConfigurationBuilder;
+import org.apache.commons.configuration.builder.combined.ReloadingCombinedConfigurationBuilder;
+import org.apache.commons.configuration.builder.fluent.Parameters;
+import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestDynamicCombinedConfiguration
@@ -58,9 +66,20 @@ public class TestDynamicCombinedConfiguration
         config.setExpressionEngine(engine);
         config.setKeyPattern(PATTERN);
         config.setDelimiterParsingDisabled(true);
-        MultiFileHierarchicalConfiguration multi = new MultiFileHierarchicalConfiguration(PATTERN1);
-        multi.setExpressionEngine(engine);
-        config.addConfiguration(multi, "Multi");
+        ConfigurationBuilder<XMLConfiguration> multiBuilder =
+                new MultiFileConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class).configure(Parameters
+                        .multiFile()
+                        .setFilePattern(PATTERN1)
+                        .setPrefixLookups(
+                                ConfigurationInterpolator
+                                        .getDefaultPrefixLookups())
+                        .setManagedBuilderParameters(
+                                Parameters.xml().setExpressionEngine(engine)));
+        BuilderConfigurationWrapperFactory wrapFactory =
+                new BuilderConfigurationWrapperFactory();
+        config.addConfiguration(wrapFactory.createBuilderConfigurationWrapper(
+                HierarchicalConfiguration.class, multiBuilder), "Multi");
         XMLConfiguration xml = new XMLConfiguration();
         xml.setExpressionEngine(engine);
         xml.setDelimiterParsingDisabled(true);
@@ -84,17 +103,17 @@ public class TestDynamicCombinedConfiguration
     public void testConcurrentGetAndReload() throws Exception
     {
         System.getProperties().remove("Id");
-        DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
-        factory.setFile(MULTI_TENENT_FILE);
-        CombinedConfiguration config = factory.getConfiguration(true);
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        CombinedConfiguration config = builder.getConfiguration();
 
-        assertEquals(config.getString("rowsPerPage"), "50");
+        assertEquals("Wrong value", "50", config.getString("rowsPerPage"));
         Thread testThreads[] = new Thread[THREAD_COUNT];
         int failures[] = new int[THREAD_COUNT];
 
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, false, null, "50");
+            testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, false, null, "50");
             testThreads[i].start();
         }
 
@@ -104,26 +123,26 @@ public class TestDynamicCombinedConfiguration
             testThreads[i].join();
             totalFailures += failures[i];
         }
-        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test @Ignore
+    @Test
     public void testConcurrentGetAndReload2() throws Exception
     {
         System.getProperties().remove("Id");
-        DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
-        factory.setFile(MULTI_TENENT_FILE);
-        DynamicCombinedConfiguration config = (DynamicCombinedConfiguration) factory.getConfiguration(true);
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
         Thread testThreads[] = new Thread[THREAD_COUNT];
         int failures[] = new int[THREAD_COUNT];
         System.setProperty("Id", "2002");
-        assertEquals(config.getString("rowsPerPage"), "25");
+        assertEquals("Wrong value", "25", config.getString("rowsPerPage"));
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, false, null, "25");
+            testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, false, null, "25");
             testThreads[i].start();
         }
 
@@ -134,16 +153,16 @@ public class TestDynamicCombinedConfiguration
             totalFailures += failures[i];
         }
         System.getProperties().remove("Id");
-        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test @Ignore
+    @Test
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
         System.getProperties().remove("Id");
-        DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
-        factory.setFile(MULTI_TENENT_FILE);
-        CombinedConfiguration config = factory.getConfiguration(true);
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
 
@@ -153,7 +172,7 @@ public class TestDynamicCombinedConfiguration
         String[] expected = new String[] {"50", "25", "15", "25", "50"};
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReloadThread(config, failures, i, LOOP_COUNT, true, ids[i], expected[i]);
+            testThreads[i] = new ReloadThread(builder, failures, i, LOOP_COUNT, true, ids[i], expected[i]);
             testThreads[i].start();
         }
 
@@ -172,11 +191,11 @@ public class TestDynamicCombinedConfiguration
                 System.out.println("Thread " + i + " " + failures[i]);
             }
         }
-        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+        assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
     @Test
-  public void testConcurrentGetAndReloadFile() throws Exception
+    public void testConcurrentGetAndReloadFile() throws Exception
     {
         final int threadCount = 25;
         System.getProperties().remove("Id");
@@ -187,29 +206,33 @@ public class TestDynamicCombinedConfiguration
         output.getParentFile().mkdir();
         copyFile(input, output);
 
-        DefaultConfigurationBuilder factory = new DefaultConfigurationBuilder();
-        factory.setFile(MULTI_DYNAMIC_FILE);
-        CombinedConfiguration config = factory.getConfiguration(true);
-
-        assertEquals(config.getString("Product/FIIndex/FI[@id='123456781']"), "ID0001");
+        ReloadingCombinedConfigurationBuilder builder = new ReloadingCombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(MULTI_DYNAMIC_FILE));
+        CombinedConfiguration config = builder.getConfiguration();
+        assertEquals("Wrong property value (1)", "ID0001",
+                config.getString("Product/FIIndex/FI[@id='123456781']"));
 
         ReaderThread testThreads[] = new ReaderThread[threadCount];
         for (int i = 0; i < testThreads.length; ++i)
         {
-            testThreads[i] = new ReaderThread(config);
+            testThreads[i] = new ReaderThread(builder);
             testThreads[i].start();
         }
 
+        builder.getReloadingController().checkForReloading(null);
         Thread.sleep(2000);
 
         input = new File("target/test-classes/testMultiDynamic_default2.xml");
         copyFile(input, output);
 
         Thread.sleep(2000);
+        assertTrue("Changed file not detected", builder
+                .getReloadingController().checkForReloading(null));
+        config = builder.getConfiguration();
         String id = config.getString("Product/FIIndex/FI[@id='123456782']");
         assertNotNull("File did not reload, id is null", id);
         String rows = config.getString("rowsPerPage");
-        assertTrue("Incorrect value for rowsPerPage", "25".equals(rows));
+        assertEquals("Incorrect value for rowsPerPage", "25", rows);
 
         for (int i = 0; i < testThreads.length; ++i)
         {
@@ -227,25 +250,28 @@ public class TestDynamicCombinedConfiguration
 
     private class ReloadThread extends Thread
     {
-        CombinedConfiguration combined;
-        int[] failures;
-        int index;
-        int count;
-        String expected;
-        String id;
-        boolean useId;
+        private final CombinedConfigurationBuilder builder;
+        private final int[] failures;
+        private final int index;
+        private final int count;
+        private final String expected;
+        private final String id;
+        private final boolean useId;
+        private final Random random;
 
-        ReloadThread(CombinedConfiguration config, int[] failures, int index, int count,
+        ReloadThread(CombinedConfigurationBuilder b, int[] failures, int index, int count,
                      boolean useId, String id, String expected)
         {
-            combined = config;
+            builder = b;
             this.failures = failures;
             this.index = index;
             this.count = count;
             this.expected = expected;
             this.id = id;
             this.useId = useId;
+            random = new Random();
         }
+
         @Override
         public void run()
         {
@@ -259,6 +285,12 @@ public class TestDynamicCombinedConfiguration
             {
                 try
                 {
+                    if(random.nextBoolean())
+                    {
+                        // simulate a reload
+                        builder.resetResult();
+                    }
+                    CombinedConfiguration combined = builder.getConfiguration();
                     String value = combined.getString("rowsPerPage", null);
                     if (value == null || !value.equals(expected))
                     {
@@ -275,33 +307,42 @@ public class TestDynamicCombinedConfiguration
 
     private class ReaderThread extends Thread
     {
-        private boolean running = true;
-        private boolean failed = false;
-        CombinedConfiguration combined;
+        private volatile boolean running = true;
+        private volatile boolean failed = false;
+        private final CombinedConfigurationBuilder builder;
 
-        public ReaderThread(CombinedConfiguration c)
+        public ReaderThread(CombinedConfigurationBuilder b)
         {
-            combined = c;
+            builder = b;
         }
 
         @Override
         public void run()
         {
-            while (running)
+            try
             {
-                String bcId = combined.getString("Product/FIIndex/FI[@id='123456781']");
-                if ("ID0001".equalsIgnoreCase(bcId))
+                while (running)
                 {
-                    if (failed)
+                    CombinedConfiguration combined = builder.getConfiguration();
+                    String bcId =
+                            combined.getString("Product/FIIndex/FI[@id='123456781']");
+                    if ("ID0001".equalsIgnoreCase(bcId))
                     {
-                        System.out.println("Thread failed, but recovered");
+                        if (failed)
+                        {
+                            System.out.println("Thread failed, but recovered");
+                        }
+                        failed = false;
                     }
-                    failed = false;
+                    else
+                    {
+                        failed = true;
+                    }
                 }
-                else
-                {
-                    failed = true;
-                }
+            }
+            catch (ConfigurationException cex)
+            {
+                failed = true;
             }
         }
 

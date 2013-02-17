@@ -32,6 +32,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
+import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
@@ -856,14 +857,24 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     /**
      * Creates a {@code ConfigurationInterpolator} instance for performing local
-     * variable substitutions.
+     * variable substitutions. This implementation returns an object which
+     * shares the prefix lookups from this configuration's
+     * {@code ConfigurationInterpolator}, but does not define any other lookups.
      *
      * @return the {@code ConfigurationInterpolator}
      */
     private ConfigurationInterpolator initLocalInterpolator()
     {
-        ConfigurationInterpolator ci = new ConfigurationInterpolator();
-        ci.registerLookups(getInterpolator().getLookups());
+        ConfigurationInterpolator ci = new ConfigurationInterpolator()
+        {
+            @Override
+            protected Lookup fetchLookupForPrefix(String prefix)
+            {
+                return ConfigurationInterpolator
+                        .nullSafeLookup(getInterpolator().getLookups().get(
+                                prefix));
+            }
+        };
         return ci;
     }
 
