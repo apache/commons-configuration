@@ -18,7 +18,7 @@
 <!-- Test configuration definition for testing DynamicCombinedConfiguration
      together with reloading. This file defines a configuration which will be
      rewritten during a test run. This should trigger a reload.
-     $Id: testCCMultiTenent.xml 1439172 2013-01-27 20:40:33Z oheger $
+     $Id$
 -->
 <configuration>
   <header>
