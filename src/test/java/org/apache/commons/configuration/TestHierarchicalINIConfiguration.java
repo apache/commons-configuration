@@ -33,6 +33,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.junit.After;
 import org.junit.Test;
 
@@ -140,7 +142,14 @@ public class TestHierarchicalINIConfiguration
             throws ConfigurationException
     {
         StringReader reader = new StringReader(data);
-        instance.load(reader);
+        try
+        {
+            instance.read(reader);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException(e);
+        }
         reader.close();
     }
 
@@ -179,7 +188,7 @@ public class TestHierarchicalINIConfiguration
         instance.addProperty("section3.interpolated", "${section3.var1}");
         instance.addProperty("section3.multi", "foo");
         instance.addProperty("section3.multi", "bar");
-        instance.save(writer);
+        instance.write(writer);
 
         assertEquals("Wrong content of ini file", INI_DATA, writer.toString());
     }
@@ -196,7 +205,14 @@ public class TestHierarchicalINIConfiguration
     {
         HierarchicalINIConfiguration config = setUpConfig(content);
         StringWriter writer = new StringWriter();
-        config.save(writer);
+        try
+        {
+            config.write(writer);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException(e);
+        }
         assertEquals("Wrong content of ini file", content, writer.toString());
     }
 
@@ -239,38 +255,19 @@ public class TestHierarchicalINIConfiguration
     }
 
     /**
-     * Tests loading a configuration from a File.
+     * Tests whether an instance can be created using a file-based builder.
      */
     @Test
-    public void testLoadFile() throws ConfigurationException, IOException
+    public void testLoadFromBuilder() throws ConfigurationException,
+            IOException
     {
         writeTestFile(INI_DATA);
-        HierarchicalINIConfiguration config = new HierarchicalINIConfiguration(
-                TEST_FILE);
-        checkContent(config);
-    }
-
-    /**
-     * Tests loading a configuration from a file name.
-     */
-    @Test
-    public void testLoadFileName() throws ConfigurationException, IOException
-    {
-        writeTestFile(INI_DATA);
-        HierarchicalINIConfiguration config = new HierarchicalINIConfiguration(
-                TEST_FILE.getAbsolutePath());
-        checkContent(config);
-    }
-
-    /**
-     * Tests loading a configuration from a URL.
-     */
-    @Test
-    public void testLoadURL() throws ConfigurationException, IOException
-    {
-        writeTestFile(INI_DATA);
-        HierarchicalINIConfiguration config = new HierarchicalINIConfiguration(
-                TEST_FILE.toURI().toURL());
+        FileBasedConfigurationBuilder<HierarchicalINIConfiguration> builder =
+                new FileBasedConfigurationBuilder<HierarchicalINIConfiguration>(
+                        HierarchicalINIConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        HierarchicalINIConfiguration config = builder.getConfiguration();
         checkContent(config);
     }
 
@@ -390,10 +387,10 @@ public class TestHierarchicalINIConfiguration
         config.setProperty("section.key1", "1;2;3");
 
         StringWriter writer = new StringWriter();
-        config.save(writer);
+        config.write(writer);
 
         HierarchicalINIConfiguration config2 = new HierarchicalINIConfiguration();
-        config2.load(new StringReader(writer.toString()));
+        config2.read(new StringReader(writer.toString()));
 
         assertEquals("value", "1;2;3", config2.getString("section.key1"));
     }
@@ -740,15 +737,16 @@ public class TestHierarchicalINIConfiguration
      * with delimiter characters. This test is related to CONFIGURATION-409.
      */
     @Test
-    public void testSaveKeysWithDelimiters() throws ConfigurationException
+    public void testSaveKeysWithDelimiters() throws ConfigurationException, IOException
     {
         HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration();
         final String section = "Section..with..dots";
         conf.addProperty(section + ".test1", "test1");
         conf.addProperty(section + ".test2", "test2");
-        conf.save(TEST_FILE);
+        StringWriter writer = new StringWriter();
+        conf.write(writer);
         conf = new HierarchicalINIConfiguration();
-        conf.load(TEST_FILE);
+        conf.read(new StringReader(writer.toString()));
         assertEquals("Wrong value (1)", "test1", conf.getString(section + ".test1"));
         assertEquals("Wrong value (2)", "test2", conf.getString(section + ".test2"));
     }
@@ -821,7 +819,7 @@ public class TestHierarchicalINIConfiguration
      * saved later.
      */
     @Test
-    public void testSaveClearedSection() throws ConfigurationException
+    public void testSaveClearedSection() throws ConfigurationException, IOException
     {
         final String data = "[section]\ntest = failed\n";
         HierarchicalINIConfiguration config = setUpConfig(data);
@@ -830,7 +828,7 @@ public class TestHierarchicalINIConfiguration
         sub.clear();
         sub.setProperty("test", "success");
         StringWriter writer = new StringWriter();
-        config.save(writer);
+        config.write(writer);
         HierarchicalConfiguration config2 = setUpConfig(writer.toString());
         assertEquals("Wrong value", "success",
                 config2.getString("section.test"));
@@ -840,7 +838,7 @@ public class TestHierarchicalINIConfiguration
      * Tests whether a duplicate session is merged.
      */
     @Test
-    public void testMergeDuplicateSection() throws ConfigurationException
+    public void testMergeDuplicateSection() throws ConfigurationException, IOException
     {
         final String data =
                 "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
@@ -851,7 +849,7 @@ public class TestHierarchicalINIConfiguration
         assertEquals("Wrong sub value 1", "sec1", sub.getString("var1"));
         assertEquals("Wrong sub value 2", "sec2", sub.getString("var2"));
         StringWriter writer = new StringWriter();
-        config.save(writer);
+        config.write(writer);
         String content = writer.toString();
         int pos = content.indexOf("[section]");
         assertTrue("Section not found: " + content, pos >= 0);
@@ -865,7 +863,7 @@ public class TestHierarchicalINIConfiguration
      */
     @Test
     public void testGetSectionNonExistingManipulate()
-            throws ConfigurationException
+            throws ConfigurationException, IOException
     {
         HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
         SubnodeConfiguration section = config.getSection("newSection");
@@ -873,7 +871,7 @@ public class TestHierarchicalINIConfiguration
         assertEquals("Main config not updated", "success",
                 config.getString("newSection.test"));
         StringWriter writer = new StringWriter();
-        config.save(writer);
+        config.write(writer);
         HierarchicalINIConfiguration config2 = setUpConfig(writer.toString());
         section = config2.getSection("newSection");
         assertEquals("Wrong value", "success", section.getString("test"));

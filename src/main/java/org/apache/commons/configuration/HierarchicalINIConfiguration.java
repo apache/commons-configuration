@@ -17,12 +17,10 @@
 package org.apache.commons.configuration;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -202,7 +200,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * @since 1.6
  */
 public class HierarchicalINIConfiguration extends
-        AbstractHierarchicalFileConfiguration implements FileBasedConfiguration
+        BaseHierarchicalConfiguration implements FileBasedConfiguration
 {
     /**
      * The characters that signal the start of a comment line.
@@ -243,38 +241,15 @@ public class HierarchicalINIConfiguration extends
     }
 
     /**
-     * Create and load the ini configuration from the given file.
+     * Creates a new instance of {@code HierarchicalINIConfiguration} with the
+     * content of the specified {@code HierarchicalConfiguration}.
      *
-     * @param filename The name pr path of the ini file to load.
-     * @throws ConfigurationException If an error occurs while loading the file
+     * @param c the configuration to be copied
+     * @since 2.0
      */
-    public HierarchicalINIConfiguration(String filename)
-            throws ConfigurationException
+    public HierarchicalINIConfiguration(HierarchicalConfiguration c)
     {
-        super(filename);
-    }
-
-    /**
-     * Create and load the ini configuration from the given file.
-     *
-     * @param file The ini file to load.
-     * @throws ConfigurationException If an error occurs while loading the file
-     */
-    public HierarchicalINIConfiguration(File file)
-            throws ConfigurationException
-    {
-        super(file);
-    }
-
-    /**
-     * Create and load the ini configuration from the given url.
-     *
-     * @param url The url of the ini file to load.
-     * @throws ConfigurationException If an error occurs while loading the file
-     */
-    public HierarchicalINIConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
+        super(c);
     }
 
     /**
@@ -283,8 +258,9 @@ public class HierarchicalINIConfiguration extends
      * @param writer - The writer to save the configuration to.
      * @throws ConfigurationException If an error occurs while writing the
      *         configuration
+     * @throws IOException if an I/O error occurs
      */
-    public void save(Writer writer) throws ConfigurationException
+    public void write(Writer writer) throws ConfigurationException, IOException
     {
         PrintWriter out = new PrintWriter(writer);
         Iterator<String> it = getSections().iterator();
@@ -337,11 +313,6 @@ public class HierarchicalINIConfiguration extends
         out.flush();
     }
 
-    public void write(Writer out) throws ConfigurationException, IOException
-    {
-        save(out);
-    }
-
     /**
      * Load the configuration from the given reader. Note that the
      * {@code clear()} method is not called so the configuration read in will
@@ -350,63 +321,53 @@ public class HierarchicalINIConfiguration extends
      * @param reader The reader to read the configuration from.
      * @throws ConfigurationException If an error occurs while reading the
      *         configuration
+     * @throws IOException if an I/O error occurs
      */
-    public void load(Reader reader) throws ConfigurationException
-    {
-        try
-        {
-            BufferedReader bufferedReader = new BufferedReader(reader);
-            ConfigurationNode sectionNode = getRootNode();
-
-            String line = bufferedReader.readLine();
-            while (line != null)
-            {
-                line = line.trim();
-                if (!isCommentLine(line))
-                {
-                    if (isSectionLine(line))
-                    {
-                        String section = line.substring(1, line.length() - 1);
-                        sectionNode = getSectionNode(section);
-                    }
-
-                    else
-                    {
-                        String key = "";
-                        String value = "";
-                        int index = findSeparator(line);
-                        if (index >= 0)
-                        {
-                            key = line.substring(0, index);
-                            value = parseValue(line.substring(index + 1), bufferedReader);
-                        }
-                        else
-                        {
-                            key = line;
-                        }
-                        key = key.trim();
-                        if (key.length() < 1)
-                        {
-                            // use space for properties with no key
-                            key = " ";
-                        }
-                        createValueNodes(sectionNode, key, value);
-                    }
-                }
-
-                line = bufferedReader.readLine();
-            }
-        }
-        catch (IOException e)
-        {
-            throw new ConfigurationException(
-                    "Unable to load the configuration", e);
-        }
-    }
-
     public void read(Reader in) throws ConfigurationException, IOException
     {
-        load(in);
+        BufferedReader bufferedReader = new BufferedReader(in);
+        ConfigurationNode sectionNode = getRootNode();
+
+        String line = bufferedReader.readLine();
+        while (line != null)
+        {
+            line = line.trim();
+            if (!isCommentLine(line))
+            {
+                if (isSectionLine(line))
+                {
+                    String section = line.substring(1, line.length() - 1);
+                    sectionNode = getSectionNode(section);
+                }
+
+                else
+                {
+                    String key = "";
+                    String value = "";
+                    int index = findSeparator(line);
+                    if (index >= 0)
+                    {
+                        key = line.substring(0, index);
+                        value =
+                                parseValue(line.substring(index + 1),
+                                        bufferedReader);
+                    }
+                    else
+                    {
+                        key = line;
+                    }
+                    key = key.trim();
+                    if (key.length() < 1)
+                    {
+                        // use space for properties with no key
+                        key = " ";
+                    }
+                    createValueNodes(sectionNode, key, value);
+                }
+            }
+
+            line = bufferedReader.readLine();
+        }
     }
 
     /**
