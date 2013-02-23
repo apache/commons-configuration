@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-526" due-to="Oliver Kopp">
+        XMLPropertiesConfiguration now supports loading from and saving to DOM
+        nodes.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-521" due-to="Oliver Kopp">
         ConfigurationUtils.fileFromUrl() now correctly handles URL containing
         encoded percent characters.

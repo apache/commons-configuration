@@ -30,6 +30,10 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -72,6 +76,11 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
      * The default encoding (UTF-8 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
      */
     private static final String DEFAULT_ENCODING = "UTF-8";
+
+    /**
+     * Default string used when the XML is malformed
+     */
+    private static final String MALFORMED_XML_EXCEPTION = "Malformed XML";
 
     // initialization block to set the encoding before loading the file in the constructors
     {
@@ -129,6 +138,19 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         super(url);
     }
 
+    /**
+     * Creates and loads the xml properties from the specified DOM node.
+     *
+     * @param element The DOM element
+     * @throws ConfigurationException Error while loading the properties file
+     * @since 2.0
+     */
+    public XMLPropertiesConfiguration(Element element) throws ConfigurationException
+    {
+        super();
+        this.load(element);
+    }
+
     @Override
     public void load(Reader in) throws ConfigurationException
     {
@@ -157,6 +179,44 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         }
 
         // todo: support included properties ?
+    }
+
+    /**
+     * Parses a DOM element containing the properties. The DOM element has to follow
+     * the XML properties format introduced in Java 5.0,
+     * see http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html
+     *
+     * @param element The DOM element
+     * @throws ConfigurationException Error while interpreting the DOM
+     * @since 2.0
+     */
+    public void load(Element element) throws ConfigurationException
+    {
+        if (!element.getNodeName().equals("properties"))
+        {
+            throw new ConfigurationException(MALFORMED_XML_EXCEPTION);
+        }
+        NodeList childNodes = element.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++)
+        {
+            Node item = childNodes.item(i);
+            if (item instanceof Element)
+            {
+                if (item.getNodeName().equals("comment"))
+                {
+                    setHeader(item.getTextContent());
+                }
+                else if (item.getNodeName().equals("entry"))
+                {
+                    String key = ((Element) item).getAttribute("key");
+                    addProperty(key, item.getTextContent());
+                }
+                else
+                {
+                    throw new ConfigurationException(MALFORMED_XML_EXCEPTION);
+                }
+            }
+        }
     }
 
     @Override
@@ -232,6 +292,67 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         for (Object value : values)
         {
             writeProperty(out, key, value);
+        }
+    }
+
+    /**
+     * Writes the configuration as child to the given DOM node
+     *
+     * @param document The DOM document to add the configuration to
+     * @param parent The DOM parent node
+     * @since 2.0
+     */
+    public void save(Document document, Node parent)
+    {
+        Element properties = document.createElement("properties");
+        parent.appendChild(properties);
+        if (getHeader() != null)
+        {
+            Element comment = document.createElement("comment");
+            properties.appendChild(comment);
+            comment.setTextContent(StringEscapeUtils.escapeXml(getHeader()));
+        }
+
+        Iterator<String> keys = getKeys();
+        while (keys.hasNext())
+        {
+            String key = keys.next();
+            Object value = getProperty(key);
+
+            if (value instanceof List)
+            {
+                writeProperty(document, properties, key, (List<?>) value);
+            }
+            else
+            {
+                writeProperty(document, properties, key, value);
+            }
+        }
+    }
+
+    private void writeProperty(Document document, Node properties, String key, Object value)
+    {
+        Element entry = document.createElement("entry");
+        properties.appendChild(entry);
+
+        // escape the key
+        String k = StringEscapeUtils.escapeXml(key);
+        entry.setAttribute("key", k);
+
+        if (value != null)
+        {
+            // escape the value
+            String v = StringEscapeUtils.escapeXml(String.valueOf(value));
+            v = StringUtils.replace(v, String.valueOf(getListDelimiter()), "\\" + getListDelimiter());
+            entry.setTextContent(v);
+        }
+    }
+
+    private void writeProperty(Document document, Node properties, String key, List<?> values)
+    {
+        for (Object value : values)
+        {
+            writeProperty(document, properties, key, value);
         }
     }
 
