@@ -205,6 +205,11 @@
           <email>nicolas.deloof@gmail.com</email>
           <organization>Cap Gemini</organization>
         </contributor>
+
+        <contributor>
+          <name>Oliver Kopp</name>
+          <email>koppdev@gmail.com</email>
+        </contributor>
     </contributors>
 
   <dependencies>
