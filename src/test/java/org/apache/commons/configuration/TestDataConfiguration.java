@@ -42,6 +42,7 @@ import java.util.NoSuchElementException;
 import junitx.framework.ArrayAssert;
 import junitx.framework.ListAssert;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -2398,5 +2399,45 @@ public class TestDataConfiguration
         String value = "someTestValue";
         conf.addProperty(key, value);
         assertEquals("Wrong result", value, conf.get(String.class, key));
+    }
+
+    /**
+     * Tests whether properties can be cleared.
+     */
+    @Test
+    public void testClearProperty()
+    {
+        String key = "test.property";
+        conf.addProperty(key, "someValue");
+        conf.clearProperty(key);
+        assertFalse("Property still found", conf.containsKey(key));
+    }
+
+    /**
+     * Tests the implementation of clearPropertyDirect().
+     */
+    @Test
+    public void testClearPropertyDirect()
+    {
+        String key = "test.property";
+        conf.addProperty(key, "someValue");
+        conf.clearPropertyDirect(key);
+        assertFalse("Property still found", conf.containsKey(key));
+    }
+
+    /**
+     * Tests clearPropertyDirect() if the wrapped configuration does not extend
+     * AbstractConfiguration.
+     */
+    @Test
+    public void testClearPropertyDirectNoAbstractConf()
+    {
+        Configuration wrapped = EasyMock.createMock(Configuration.class);
+        String key = "test.property";
+        wrapped.clearProperty(key);
+        EasyMock.replay(wrapped);
+        conf = new DataConfiguration(wrapped);
+        conf.clearPropertyDirect(key);
+        EasyMock.verify(wrapped);
     }
 }

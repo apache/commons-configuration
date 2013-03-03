@@ -843,17 +843,14 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param key the key of the property to be removed
      */
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
-        fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
         List<ConfigurationNode> nodes = fetchNodeList(key);
 
         for (ConfigurationNode node : nodes)
         {
             clearNode(node);
         }
-
-        fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
     }
 
     /**

@@ -616,15 +616,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /**
      * Removes the specified property from this configuration. This method is
      * called by {@code clearProperty()} after it has done some
-     * preparations. It should be overridden in sub classes. This base
-     * implementation is just left empty.
+     * preparations. It must be overridden in sub classes.
      *
      * @param key the key to be removed
      */
-    protected void clearPropertyDirect(String key)
-    {
-        // override in sub classes
-    }
+    protected abstract void clearPropertyDirect(String key);
 
     public void clear()
     {

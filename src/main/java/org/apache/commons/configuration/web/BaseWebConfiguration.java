@@ -71,7 +71,7 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * allowed
      */
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         throw new UnsupportedOperationException("Read only configuration");
     }

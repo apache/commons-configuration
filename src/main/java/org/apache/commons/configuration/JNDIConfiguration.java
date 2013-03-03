@@ -332,7 +332,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param key the key of the property to remove
      */
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         clearedProperties.add(key);
     }

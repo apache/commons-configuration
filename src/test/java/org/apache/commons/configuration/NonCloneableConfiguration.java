@@ -67,4 +67,9 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     {
         return null;
     }
+
+    @Override
+    protected void clearPropertyDirect(String key)
+    {
+    }
 }
