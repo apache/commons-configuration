@@ -68,6 +68,9 @@ public class TestPropertiesConfiguration
     /** Constant for a test property value.*/
     private static final String PROP_VALUE = "value";
 
+    /** Constant for the line break character. */
+    private static final String CR = System.getProperty("line.separator");
+
     /** The configuration to be tested.*/
     private PropertiesConfiguration conf;
 
@@ -1075,6 +1078,36 @@ public class TestPropertiesConfiguration
         conf.clear();
         conf.load();
         assertEquals("Wrong list property", list, conf.getProperty(prop));
+    }
+
+    /**
+     * Tests whether a footer comment is correctly read.
+     */
+    @Test
+    public void testReadFooterComment()
+    {
+        assertEquals("Wrong footer comment", "\n# This is a foot comment\n",
+                conf.getFooter());
+        assertEquals("Wrong footer comment from layout",
+                "\nThis is a foot comment\n", conf.getLayout()
+                        .getCanonicalFooterCooment(false));
+    }
+
+    /**
+     * Tests whether a footer comment is correctly written out.
+     */
+    @Test
+    public void testWriteFooterComment() throws ConfigurationException,
+            IOException
+    {
+        final String footer = "my footer";
+        conf.clear();
+        conf.setProperty(PROP_NAME, PROP_VALUE);
+        conf.setFooter(footer);
+        StringWriter out = new StringWriter();
+        conf.write(out);
+        assertEquals("Wrong result", PROP_NAME + " = " + PROP_VALUE + CR + "# "
+                + footer + CR, out.toString());
     }
 
     /**

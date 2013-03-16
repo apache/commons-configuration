@@ -131,6 +131,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /** Stores the header comment. */
     private String headerComment;
 
+    /** Stores the footer comment. */
+    private String footerComment;
+
     /** The global separator that will be used for all properties. */
     private String globalSeparator;
 
@@ -206,15 +209,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     public String getCanonicalComment(String key, boolean commentChar)
     {
-        String comment = getComment(key);
-        if (comment == null)
-        {
-            return null;
-        }
-        else
-        {
-            return trimComment(comment, commentChar);
-        }
+        return constructCanonicalComment(getComment(key), commentChar);
     }
 
     /**
@@ -283,8 +278,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     public String getCanonicalHeaderComment(boolean commentChar)
     {
-        return (getHeaderComment() == null) ? null : trimComment(
-                getHeaderComment(), commentChar);
+        return constructCanonicalComment(getHeaderComment(), commentChar);
     }
 
     /**
@@ -309,6 +303,47 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     public void setHeaderComment(String comment)
     {
         headerComment = comment;
+    }
+
+    /**
+     * Returns the footer comment of the represented properties file in a
+     * canonical form. This method works like
+     * {@code getCanonicalHeaderComment()}, but reads the footer comment.
+     *
+     * @param commentChar determines the presence of comment characters
+     * @return the footer comment (can be <b>null</b>)
+     * @see #getCanonicalHeaderComment(boolean)
+     * @since 2.0
+     */
+    public String getCanonicalFooterCooment(boolean commentChar)
+    {
+        return constructCanonicalComment(getFooterComment(), commentChar);
+    }
+
+    /**
+     * Returns the footer comment of the represented properties file. This
+     * method returns the footer comment exactly as it was set using
+     * {@code setFooterComment()} or extracted from the loaded properties
+     * file.
+     *
+     * @return the footer comment (can be <b>null</b>)
+     * @since 2.0
+     */
+    public String getFooterComment()
+    {
+        return footerComment;
+    }
+
+    /**
+     * Sets the footer comment for the represented properties file. This comment
+     * will be output at the bottom of the file.
+     *
+     * @param footerComment the footer comment
+     * @since 2.0
+     */
+    public void setFooterComment(String footerComment)
+    {
+        this.footerComment = footerComment;
     }
 
     /**
@@ -512,6 +547,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     }
                 }
             }
+
+            setFooterComment(extractComment(reader.getCommentLines(), 0, reader
+                    .getCommentLines().size() - 1));
         }
         catch (IOException ioex)
         {
@@ -575,6 +613,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                             key), singleLine);
                 }
             }
+
+            writeComment(writer, getCanonicalFooterCooment(true));
             writer.flush();
         }
         catch (IOException ioex)
@@ -821,6 +861,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             PropertyLayoutData data = c.layoutData.get(key);
             layoutData.put(key, data.clone());
         }
+
+        setHeaderComment(c.getHeaderComment());
+        setFooterComment(c.getFooterComment());
     }
 
     /**
@@ -840,6 +883,21 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             writer.writeln(StringUtils.replace(comment, CR, writer
                     .getLineSeparator()));
         }
+    }
+
+    /**
+     * Helper method for generating a comment string. Depending on the boolean
+     * argument the resulting string either has no comment characters or a
+     * leading comment character at each line.
+     *
+     * @param comment the comment string to be processed
+     * @param commentChar determines the presence of comment characters
+     * @return the canonical comment string (can be <b>null</b>)
+     */
+    private static String constructCanonicalComment(String comment,
+            boolean commentChar)
+    {
+        return (comment == null) ? null : trimComment(comment, commentChar);
     }
 
     /**
