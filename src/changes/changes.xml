@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-534">
+        The includesAllowed property of PropertyConfiguration is now independent
+        from the existence of a base path.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-527" due-to="Matthias Richter">
         AbstractConfiguration.clearPropertyDirect() is now abstract.
       </action>
