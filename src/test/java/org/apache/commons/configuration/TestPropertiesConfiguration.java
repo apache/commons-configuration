@@ -156,6 +156,41 @@ public class TestPropertiesConfiguration
         assertEquals("true", loaded);
     }
 
+    /**
+     * Tests whether include files can be resolved if a configuration file is
+     * read from a reader.
+     */
+    @Test
+    public void testLoadIncludeFromReader() throws ConfigurationException,
+            IOException
+    {
+        StringReader in =
+                new StringReader(PropertiesConfiguration.getInclude() + " = "
+                        + ConfigurationAssert.getTestURL("include.properties"));
+        conf = new PropertiesConfiguration();
+        conf.read(in);
+        assertEquals("Include file not loaded", "true",
+                conf.getString("include.loaded"));
+    }
+
+    /**
+     * Tests whether include files can be disabled.
+     */
+    @Test
+    public void testDisableIncludes() throws ConfigurationException,
+            IOException
+    {
+        String content =
+                PropertiesConfiguration.getInclude()
+                        + " = nonExistingIncludeFile" + CR + PROP_NAME + " = "
+                        + PROP_VALUE + CR;
+        StringReader in = new StringReader(content);
+        conf = new PropertiesConfiguration();
+        conf.setIncludesAllowed(false);
+        conf.read(in);
+        assertEquals("Data not loaded", PROP_VALUE, conf.getString(PROP_NAME));
+    }
+
     @Test
     public void testSetInclude() throws Exception
     {
