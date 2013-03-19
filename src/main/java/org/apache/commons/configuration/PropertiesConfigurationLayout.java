@@ -122,11 +122,8 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     /** Constant for the default comment prefix. */
     private static final String COMMENT_PREFIX = "# ";
 
-    /** Stores the associated configuration object. */
-    private PropertiesConfiguration configuration;
-
     /** Stores a map with the contained layout information. */
-    private Map<String, PropertyLayoutData> layoutData;
+    private final Map<String, PropertyLayoutData> layoutData;
 
     /** Stores the header comment. */
     private String headerComment;
@@ -147,50 +144,27 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     private boolean forceSingleLine;
 
     /**
-     * Creates a new instance of {@code PropertiesConfigurationLayout}
-     * and initializes it with the associated configuration object.
-     *
-     * @param config the configuration (must not be <b>null</b>)
+     * Creates a new, empty instance of {@code PropertiesConfigurationLayout}.
      */
-    public PropertiesConfigurationLayout(PropertiesConfiguration config)
+    public PropertiesConfigurationLayout()
     {
-        this(config, null);
+        this(null);
     }
 
     /**
-     * Creates a new instance of {@code PropertiesConfigurationLayout}
-     * and initializes it with the given configuration object. The data of the
-     * specified layout object is copied.
+     * Creates a new instance of {@code PropertiesConfigurationLayout} and
+     * copies the data of the specified layout object.
      *
-     * @param config the configuration (must not be <b>null</b>)
      * @param c the layout object to be copied
      */
-    public PropertiesConfigurationLayout(PropertiesConfiguration config,
-            PropertiesConfigurationLayout c)
+    public PropertiesConfigurationLayout(PropertiesConfigurationLayout c)
     {
-        if (config == null)
-        {
-            throw new IllegalArgumentException(
-                    "Configuration must not be null!");
-        }
-        configuration = config;
         layoutData = new LinkedHashMap<String, PropertyLayoutData>();
-        config.addConfigurationListener(this);
 
         if (c != null)
         {
             copyFrom(c);
         }
-    }
-
-    /**
-     * Returns the associated configuration object.
-     *
-     * @return the associated configuration
-     */
-    public PropertiesConfiguration getConfiguration()
-    {
-        return configuration;
     }
 
     /**
@@ -498,26 +472,28 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
     /**
      * Reads a properties file and stores its internal structure. The found
-     * properties will be added to the associated configuration object.
+     * properties will be added to the specified configuration object.
      *
+     * @param config the associated configuration object
      * @param in the reader to the properties file
      * @throws ConfigurationException if an error occurs
      */
-    public void load(Reader in) throws ConfigurationException
+    public void load(PropertiesConfiguration config, Reader in)
+            throws ConfigurationException
     {
         if (++loadCounter == 1)
         {
-            getConfiguration().removeConfigurationListener(this);
+            config.removeConfigurationListener(this);
         }
-        PropertiesConfiguration.PropertiesReader reader = getConfiguration()
-                .getIOFactory().createPropertiesReader(in,
-                        getConfiguration().getListDelimiter());
+        PropertiesConfiguration.PropertiesReader reader =
+                config.getIOFactory().createPropertiesReader(in,
+                        config.getListDelimiter());
 
         try
         {
             while (reader.nextProperty())
             {
-                if (getConfiguration().propertyLoaded(reader.getPropertyName(),
+                if (config.propertyLoaded(reader.getPropertyName(),
                         reader.getPropertyValue()))
                 {
                     boolean contained = layoutData.containsKey(reader
@@ -559,7 +535,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
         {
             if (--loadCounter == 0)
             {
-                getConfiguration().addConfigurationListener(this);
+                config.addConfigurationListener(this);
             }
         }
     }
@@ -568,16 +544,17 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      * Writes the properties file to the given writer, preserving as much of its
      * structure as possible.
      *
+     * @param config the associated configuration object
      * @param out the writer
      * @throws ConfigurationException if an error occurs
      */
-    public void save(Writer out) throws ConfigurationException
+    public void save(PropertiesConfiguration config, Writer out) throws ConfigurationException
     {
         try
         {
-            char delimiter = getConfiguration().isDelimiterParsingDisabled() ? 0
-                    : getConfiguration().getListDelimiter();
-            PropertiesConfiguration.PropertiesWriter writer = getConfiguration()
+            char delimiter = config.isDelimiterParsingDisabled() ? 0
+                    : config.getListDelimiter();
+            PropertiesConfiguration.PropertiesWriter writer = config
                     .getIOFactory().createPropertiesWriter(out, delimiter);
             writer.setGlobalSeparator(getGlobalSeparator());
             if (getLineSeparator() != null)
@@ -593,7 +570,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
             for (String key : layoutData.keySet())
             {
-                if (getConfiguration().containsKey(key))
+                if (config.containsKey(key))
                 {
 
                     // Output blank lines before property
@@ -607,9 +584,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
                     // Output the property and its value
                     boolean singleLine = (isForceSingleLine() || isSingleLine(key))
-                            && !getConfiguration().isDelimiterParsingDisabled();
+                            && !config.isDelimiterParsingDisabled();
                     writer.setCurrentSeparator(getSeparator(key));
-                    writer.writeProperty(key, getConfiguration().getProperty(
+                    writer.writeProperty(key, config.getProperty(
                             key), singleLine);
                 }
             }

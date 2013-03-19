@@ -725,7 +725,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testPropertyLoaded() throws ConfigurationException
     {
-        DummyLayout layout = new DummyLayout(conf);
+        DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.propertyLoaded("layoutLoadedProperty", "yes");
         assertEquals("Layout's load() was called", 0, layout.loadCalls);
@@ -738,7 +738,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testPropertyLoadedInclude() throws ConfigurationException
     {
-        DummyLayout layout = new DummyLayout(conf);
+        DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClasspath.properties,testEqual.properties");
         assertEquals("Layout's load() was not correctly called", 2, layout.loadCalls);
@@ -752,7 +752,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testPropertyLoadedIncludeNotAllowed() throws ConfigurationException
     {
-        DummyLayout layout = new DummyLayout(conf);
+        DummyLayout layout = new DummyLayout();
         conf.setLayout(layout);
         conf.setIncludesAllowed(false);
         conf.propertyLoaded(PropertiesConfiguration.getInclude(), "testClassPath.properties,testEqual.properties");
@@ -1208,13 +1208,9 @@ public class TestPropertiesConfiguration
         /** Stores the number how often load() was called. */
         public int loadCalls;
 
-        public DummyLayout(PropertiesConfiguration config)
-        {
-            super(config);
-        }
-
         @Override
-        public void load(Reader in) throws ConfigurationException
+        public void load(PropertiesConfiguration config, Reader in)
+                throws ConfigurationException
         {
             loadCalls++;
         }

@@ -72,7 +72,7 @@ public class TestPropertiesConfigurationLayout
     public void setUp() throws Exception
     {
         config = new LayoutTestConfiguration();
-        layout = new PropertiesConfigurationLayout(config);
+        layout = new PropertiesConfigurationLayout();
         config.setLayout(layout);
         builder = new PropertiesBuilder();
     }
@@ -89,20 +89,18 @@ public class TestPropertiesConfigurationLayout
         assertTrue("No event listener registered", it.hasNext());
         assertSame("Layout not registered as event listener", layout, it.next());
         assertFalse("Multiple event listeners registered", it.hasNext());
-        assertSame("Configuration not stored", config, layout
-                .getConfiguration());
         assertFalse("Force single line flag set", layout.isForceSingleLine());
         assertNull("Got a global separator", layout.getGlobalSeparator());
     }
 
     /**
-     * Tests creating a layout object with a null configuration. This should
-     * cause an exception.
+     * Tests the copy constructor if no other layout object is passed.
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testInitNull()
     {
-        new PropertiesConfigurationLayout(null);
+        layout = new PropertiesConfigurationLayout(null);
+        assertTrue("Object contains keys", layout.getKeys().isEmpty());
     }
 
     /**
@@ -113,7 +111,7 @@ public class TestPropertiesConfigurationLayout
     {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertNull("A header comment was found", layout.getHeaderComment());
         assertEquals("Wrong number of properties", 1, layout.getKeys().size());
         assertTrue("Property not found", layout.getKeys().contains(TEST_KEY));
@@ -138,7 +136,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(TEST_COMMENT);
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertEquals("Wrong number of blanc lines", 2, layout
                 .getBlancLinesBefore(TEST_KEY));
         assertEquals("Wrong comment", TEST_COMMENT + CRNORM, layout
@@ -154,7 +152,7 @@ public class TestPropertiesConfigurationLayout
     public void testIsSingleLine() throws ConfigurationException
     {
         builder.addProperty(TEST_KEY, TEST_VALUE + "," + TEST_VALUE + "2");
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertTrue("Wrong single line flag", layout.isSingleLine(TEST_KEY));
         assertEquals("Wrong number of values", 2, config.getList(TEST_KEY)
                 .size());
@@ -169,7 +167,7 @@ public class TestPropertiesConfigurationLayout
         builder.addProperty(TEST_KEY, TEST_VALUE);
         builder.addProperty("anotherProp", "a value");
         builder.addProperty(TEST_KEY, TEST_VALUE + "2");
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertFalse("Wrong single line flag", layout.isSingleLine(TEST_KEY));
         assertEquals("Wrong number of values", 2, config.getList(TEST_KEY)
                 .size());
@@ -186,7 +184,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(null);
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE + "2");
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertEquals("Wrong combined comment",
                 TEST_COMMENT + CRNORM + TEST_COMMENT, layout.getCanonicalComment(
                         TEST_KEY, false));
@@ -203,7 +201,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(TEST_COMMENT);
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertEquals("Wrong header comment", TEST_COMMENT, layout
                 .getCanonicalHeaderComment(false));
         assertNull("Wrong comment for property", layout.getCanonicalComment(
@@ -221,7 +219,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(TEST_COMMENT);
         builder.addComment(null);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM
                 + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
         assertNull("Wrong comment for property", layout.getComment(TEST_KEY));
@@ -241,7 +239,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(null);
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         assertEquals("Wrong header comment", TEST_COMMENT + CRNORM + CRNORM
                 + TEST_COMMENT, layout.getCanonicalHeaderComment(false));
         assertEquals("Wrong comment for property", TEST_COMMENT, layout
@@ -301,7 +299,7 @@ public class TestPropertiesConfigurationLayout
     {
         builder.addComment(TEST_COMMENT);
         builder.addProperty(TEST_KEY, TEST_VALUE);
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         ConfigurationEvent event = new ConfigurationEvent(this,
                 AbstractConfiguration.EVENT_ADD_PROPERTY, TEST_KEY, TEST_VALUE,
                 false);
@@ -423,7 +421,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment("Include file");
         builder.addProperty(PropertiesConfiguration.getInclude(), "test");
 
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
 
         assertEquals("Wrong header comment", "Header comment", layout
                 .getCanonicalHeaderComment(false));
@@ -451,7 +449,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment(null);
         builder.addComment("Another comment");
         builder.addProperty("property", "and a value");
-        layout.load(builder.getReader());
+        layout.load(config, builder.getReader());
         checkLayoutString(builder.toString());
     }
 
@@ -597,8 +595,7 @@ public class TestPropertiesConfigurationLayout
     public void testInitCopy()
     {
         fillLayout();
-        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(
-                config, layout);
+        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
         assertEquals("Wrong number of keys", layout.getKeys().size(), l2
                 .getKeys().size());
         for (String key : layout.getKeys())
@@ -618,8 +615,7 @@ public class TestPropertiesConfigurationLayout
     public void testInitCopyModify()
     {
         fillLayout();
-        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(
-                config, layout);
+        PropertiesConfigurationLayout l2 = new PropertiesConfigurationLayout(layout);
         assertEquals("Comments are not equal", layout.getComment(TEST_KEY), l2
                 .getComment(TEST_KEY));
         layout.setComment(TEST_KEY, "A new comment");
@@ -705,7 +701,7 @@ public class TestPropertiesConfigurationLayout
         builder.addComment("A footer comment");
         try
         {
-            layout.load(builder.getReader());
+            layout.load(config, builder.getReader());
         }
         catch (ConfigurationException cex)
         {
@@ -723,7 +719,7 @@ public class TestPropertiesConfigurationLayout
     private String getLayoutString() throws ConfigurationException
     {
         StringWriter out = new StringWriter();
-        layout.save(out);
+        layout.save(config, out);
         return out.toString();
     }
 
@@ -832,7 +828,7 @@ public class TestPropertiesConfigurationLayout
             {
                 if (PropertiesConfiguration.getInclude().equals(key))
                 {
-                    getLayout().load(builder.getReader());
+                    getLayout().load(this, builder.getReader());
                     return false;
                 }
                 else

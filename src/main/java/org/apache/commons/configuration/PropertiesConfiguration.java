@@ -237,7 +237,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public PropertiesConfiguration()
     {
-        layout = createLayout();
+        layout = getLayout();
     }
 
     /**
@@ -398,7 +398,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     {
         if (layout == null)
         {
-            layout = createLayout();
+            setLayout(createLayout());
         }
         return layout;
     }
@@ -426,6 +426,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             this.layout = layout;
         }
+        addConfigurationListener(this.layout);
     }
 
     /**
@@ -438,7 +439,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     protected PropertiesConfigurationLayout createLayout()
     {
-        return new PropertiesConfigurationLayout(this);
+        return new PropertiesConfigurationLayout();
     }
 
     /**
@@ -495,7 +496,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
         try
         {
-            getLayout().load(in);
+            getLayout().load(this, in);
         }
         finally
         {
@@ -519,7 +520,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         enterNoReload();
         try
         {
-            getLayout().save(writer);
+            getLayout().save(this, writer);
         }
         finally
         {
@@ -556,7 +557,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         PropertiesConfiguration copy = (PropertiesConfiguration) super.clone();
         if (layout != null)
         {
-            copy.setLayout(new PropertiesConfigurationLayout(copy, layout));
+            copy.setLayout(new PropertiesConfigurationLayout(layout));
         }
         return copy;
     }
