@@ -34,7 +34,10 @@ public class TestCompositeConfigurationNonStringProperties extends BaseNonString
     public void setUp() throws Exception
     {
         CompositeConfiguration cc = new CompositeConfiguration();
-        cc.addConfiguration(new PropertiesConfiguration(testProperties));
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setFileName(testProperties);
+        pc.load();
+        cc.addConfiguration(pc);
         conf = cc;
         nonStringTestHolder.setConfiguration(conf);
     }

@@ -69,8 +69,12 @@ public class TestCompositeConfiguration
     public void setUp() throws Exception
     {
         cc = new CompositeConfiguration();
-        conf1 = new PropertiesConfiguration(testProperties);
-        conf2 = new PropertiesConfiguration(testProperties2);
+        conf1 = new PropertiesConfiguration();
+        conf1.setFileName(testProperties);
+        conf1.load();
+        conf2 = new PropertiesConfiguration();
+        conf2.setFileName(testProperties2);
+        conf2.load();
         xmlConf = new XMLConfiguration(new File(testPropertiesXML));
 
         cc.setThrowExceptionOnMissing(true);
@@ -509,7 +513,9 @@ public class TestCompositeConfiguration
         try
         {
             writeTestConfig(testFile, propFirst, "John");
-            PropertiesConfiguration c1 = new PropertiesConfiguration(testFile);
+            PropertiesConfiguration c1 = new PropertiesConfiguration();
+            c1.setFile(testFile);
+            c1.load();
             c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
             PropertiesConfiguration c2 = new PropertiesConfiguration();
             c2.addProperty(propFull, "${" + propFirst + "} Doe");

@@ -34,7 +34,9 @@ public class TestEqualsProperty
     @Test
     public void testEquals() throws Exception
     {
-        PropertiesConfiguration conf = new PropertiesConfiguration(testProperties);
+        PropertiesConfiguration conf = new PropertiesConfiguration();
+        conf.setFileName(testProperties);
+        conf.load();
 
         String equals = conf.getString("test.equals");
         assertEquals("value=one", equals);

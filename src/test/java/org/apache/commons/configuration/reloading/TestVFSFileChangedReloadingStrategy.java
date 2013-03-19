@@ -74,7 +74,9 @@ public class TestVFSFileChangedReloadingStrategy
         out.close();
 
         // load the configuration
-        PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName("target/testReload.properties");
+        config.load();
         VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
         strategy.setRefreshDelay(500);
         config.setReloadingStrategy(strategy);
@@ -149,7 +151,9 @@ public class TestVFSFileChangedReloadingStrategy
             }
         };
         strategy.setRefreshDelay(100000);
-        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName(TEST_FILE);
+        config.load();
         config.setReloadingStrategy(strategy);
         assertTrue("Reloading not required", strategy.reloadingRequired());
         assertTrue("Reloading no more required", strategy.reloadingRequired());

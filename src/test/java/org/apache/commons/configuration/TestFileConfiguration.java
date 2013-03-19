@@ -167,7 +167,8 @@ public class TestFileConfiguration
     {
         assertFalse("The file should not exist", OUT_FILE.exists());
 
-        FileConfiguration config = new PropertiesConfiguration(OUT_FILE);
+        FileConfiguration config = new PropertiesConfiguration();
+        config.setFile(OUT_FILE);
         config.save();
 
         assertTrue("The file doesn't exist", OUT_FILE.exists());
@@ -267,7 +268,8 @@ public class TestFileConfiguration
             props.store(out, "TestFileOverwrite");
             out.close();
             out = null;
-            FileConfiguration config = new PropertiesConfiguration(tempFile);
+            FileConfiguration config = new PropertiesConfiguration();
+            config.setFile(tempFile);
             config.load();
             String value = config.getString("1");
             assertTrue("one".equals(value));
@@ -323,8 +325,9 @@ public class TestFileConfiguration
             out.close();
             out = null;
 
-            PropertiesConfiguration config = new PropertiesConfiguration(
-                    configFile);
+            PropertiesConfiguration config = new PropertiesConfiguration();
+            config.setFile(configFile);
+            config.load();
             config.setReloadingStrategy(new FileChangedReloadingStrategy());
             config.setAutoSave(true);
 
@@ -360,7 +363,8 @@ public class TestFileConfiguration
             out = null;
 
             URL url = confFile.toURI().toURL();
-            PropertiesConfiguration config = new PropertiesConfiguration(url);
+            PropertiesConfiguration config = new PropertiesConfiguration();
+            config.setURL(url);
             config.load();
             assertFalse(config.getBoolean("saved"));
 
@@ -388,7 +392,8 @@ public class TestFileConfiguration
     public void testPathWithPlus() throws ConfigurationException, IOException
     {
         File saveFile = folder.newFile("test+config.properties");
-        FileConfiguration config = new PropertiesConfiguration(saveFile);
+        FileConfiguration config = new PropertiesConfiguration();
+        config.setFile(saveFile);
         config.addProperty("test", Boolean.TRUE);
         config.save();
         File configFile = config.getFile();
@@ -507,8 +512,8 @@ public class TestFileConfiguration
         PropertiesConfiguration config1 = new PropertiesConfiguration();
         config1.setFileName(RESOURCE_NAME);
         config1.load();
-        PropertiesConfiguration config2 = new PropertiesConfiguration(
-                RESOURCE_NAME);
+        PropertiesConfiguration config2 = new PropertiesConfiguration();
+        config2.load(RESOURCE_NAME);
         compare(config1, config2);
     }
 
@@ -536,8 +541,9 @@ public class TestFileConfiguration
     @Test
     public void testClone() throws ConfigurationException
     {
-        PropertiesConfiguration config = new PropertiesConfiguration(
-                RESOURCE_NAME);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName(RESOURCE_NAME);
+        config.load();
         PropertiesConfiguration copy = (PropertiesConfiguration) config.clone();
         compare(config, copy);
         assertNull("URL was not reset", copy.getURL());
@@ -565,8 +571,9 @@ public class TestFileConfiguration
     public void testReloadError() throws ConfigurationException
     {
         ConfigurationErrorListenerImpl l = new ConfigurationErrorListenerImpl();
-        PropertiesConfiguration config = new PropertiesConfiguration(
-                RESOURCE_NAME);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName(RESOURCE_NAME);
+        config.load();
         config.clearErrorListeners();
         config.addErrorListener(l);
         config.setReloadingStrategy(new FileAlwaysReloadingStrategy());
@@ -585,7 +592,9 @@ public class TestFileConfiguration
     @Test
     public void testIterationWithReloadFlat() throws ConfigurationException
     {
-        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFile(TEST_FILE);
+        config.load();
         checkIterationWithReload(config);
     }
 
@@ -607,7 +616,9 @@ public class TestFileConfiguration
     @Test
     public void testRefresh() throws ConfigurationException
     {
-        PropertiesConfiguration config = new PropertiesConfiguration(TEST_FILE);
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFile(TEST_FILE);
+        config.load();
         assertEquals("Wrong value", 10, config.getInt("test.integer"));
         config.setProperty("test.integer", new Integer(42));
         assertEquals("Wrong value after update", 42,

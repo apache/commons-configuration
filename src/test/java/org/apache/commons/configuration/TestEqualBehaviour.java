@@ -38,7 +38,10 @@ public class TestEqualBehaviour
             throws Exception
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
-        return new PropertiesConfiguration(simpleConfigurationFile);
+        PropertiesConfiguration c = new PropertiesConfiguration();
+        c.setFileName(simpleConfigurationFile);
+        c.load();
+        return c;
     }
 
     @SuppressWarnings("deprecation")

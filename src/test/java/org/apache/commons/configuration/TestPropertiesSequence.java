@@ -42,7 +42,9 @@ public class TestPropertiesSequence
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
+        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        simpleConfiguration.setFileName(simpleConfigurationFile);
+        simpleConfiguration.load();
 
         ConfigurationFactory configurationFactory = new ConfigurationFactory();
         configurationFactory.setConfigurationFileName(compositeConfigurationFile);
@@ -69,7 +71,9 @@ public class TestPropertiesSequence
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
+        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        simpleConfiguration.setFileName(simpleConfigurationFile);
+        simpleConfiguration.load();
 
         ConfigurationFactory configurationFactory = new ConfigurationFactory();
         configurationFactory.setConfigurationFileName(compositeConfigurationFile);
@@ -102,7 +106,9 @@ public class TestPropertiesSequence
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testSequence.properties").getAbsolutePath();
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
-        Configuration simpleConfiguration = new PropertiesConfiguration(simpleConfigurationFile);
+        PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
+        simpleConfiguration.setFileName(simpleConfigurationFile);
+        simpleConfiguration.load();
 
         ConfigurationFactory configurationFactory = new ConfigurationFactory();
         configurationFactory.setConfigurationFileName(compositeConfigurationFile);

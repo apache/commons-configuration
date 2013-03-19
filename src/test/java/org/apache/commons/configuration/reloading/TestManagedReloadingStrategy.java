@@ -48,7 +48,9 @@ public class TestManagedReloadingStrategy
         out.close();
 
         // load the configuration
-        PropertiesConfiguration config = new PropertiesConfiguration("target/testReload.properties");
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.setFileName("target/testReload.properties");
+        config.load();
         ManagedReloadingStrategy strategy = new ManagedReloadingStrategy();
         config.setReloadingStrategy(strategy);
         assertEquals("Initial value", "value1", config.getString("string"));

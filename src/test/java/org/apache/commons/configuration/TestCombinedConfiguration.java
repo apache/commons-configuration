@@ -462,7 +462,9 @@ public class TestCombinedConfiguration
         File testPropsFile = writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 0);
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
         c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        PropertiesConfiguration c2 = new PropertiesConfiguration(testPropsFile);
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        c2.setFile(testPropsFile);
+        c2.load();
         c2.setThrowExceptionOnMissing(true);
         c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         config.addConfiguration(c1);
@@ -514,7 +516,9 @@ public class TestCombinedConfiguration
                 writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 0);
         XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
         c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        PropertiesConfiguration c2 = new PropertiesConfiguration(testPropsFile);
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        c2.setFile(testPropsFile);
+        c2.load();
         c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         config.addConfiguration(c2);
         CombinedConfiguration cc2 = new CombinedConfiguration();
@@ -686,8 +690,9 @@ public class TestCombinedConfiguration
     public void testDeadlockWithReload() throws ConfigurationException,
             InterruptedException
     {
-        final PropertiesConfiguration child = new PropertiesConfiguration(
-                "test.properties");
+        final PropertiesConfiguration child = new PropertiesConfiguration();
+        child.setFileName("test.properties");
+        child.load();
         child.setReloadingStrategy(new FileAlwaysReloadingStrategy());
         config.addConfiguration(child);
         final int count = 1000;

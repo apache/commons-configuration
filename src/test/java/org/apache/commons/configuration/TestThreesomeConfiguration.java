@@ -38,7 +38,10 @@ public class TestThreesomeConfiguration
     @Before
     public void setUp() throws Exception
     {
-        conf = new PropertiesConfiguration("threesome.properties");
+        PropertiesConfiguration c = new PropertiesConfiguration();
+        c.setFileName("threesome.properties");
+        c.load();
+        conf = c;
     }
 
     @Test

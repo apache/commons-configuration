@@ -237,7 +237,7 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public PropertiesConfiguration()
     {
-        layout = getLayout();
+        installLayout(createLayout());
     }
 
     /**
@@ -396,10 +396,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     public synchronized PropertiesConfigurationLayout getLayout()
     {
-        if (layout == null)
-        {
-            setLayout(createLayout());
-        }
         return layout;
     }
 
@@ -411,6 +407,18 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      * @since 1.3
      */
     public synchronized void setLayout(PropertiesConfigurationLayout layout)
+    {
+        installLayout(layout);
+    }
+
+    /**
+     * Installs a layout object. It has to be ensured that the layout is
+     * registered as change listener at this configuration. If there is already
+     * a layout object installed, it has to be removed properly.
+     *
+     * @param layout the layout object to be installed
+     */
+    private void installLayout(PropertiesConfigurationLayout layout)
     {
         // only one layout must exist
         if (this.layout != null)
@@ -430,14 +438,12 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Creates the associated layout object. This method is invoked when the
-     * layout object is accessed and has not been created yet. Derived classes
-     * can override this method to hook in a different layout implementation.
+     * Creates a standard layout object. This configuration is initialized with
+     * such a standard layout.
      *
-     * @return the layout object to use
-     * @since 1.3
+     * @return the newly created layout object
      */
-    protected PropertiesConfigurationLayout createLayout()
+    private PropertiesConfigurationLayout createLayout()
     {
         return new PropertiesConfigurationLayout();
     }

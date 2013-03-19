@@ -44,7 +44,9 @@ public class TestXMLPropertiesConfiguration
     @Test
     public void testLoad() throws Exception
     {
-        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration("test.properties.xml");
+        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
+        conf.setFileName("test.properties.xml");
+        conf.load();
 
         assertEquals("header", "Description of the property list", conf.getHeader());
 
@@ -76,7 +78,9 @@ public class TestXMLPropertiesConfiguration
     public void testSave() throws Exception
     {
         // load the configuration
-        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration("test.properties.xml");
+        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
+        conf.setFileName("test.properties.xml");
+        conf.load();
 
         // update the configuration
         conf.addProperty("key4", "value4");
@@ -92,7 +96,8 @@ public class TestXMLPropertiesConfiguration
         conf.save(saveFile);
 
         // reload the configuration
-        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration(saveFile);
+        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration();
+        conf2.load(saveFile);
 
         // test the configuration
         assertEquals("header", "Description of the new property list", conf2.getHeader());
@@ -107,7 +112,9 @@ public class TestXMLPropertiesConfiguration
     public void testDOMSave() throws Exception
     {
         // load the configuration
-        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration("test.properties.xml");
+        XMLPropertiesConfiguration conf = new XMLPropertiesConfiguration();
+        conf.setFileName("test.properties.xml");
+        conf.load();
 
         // update the configuration
         conf.addProperty("key4", "value4");
@@ -133,7 +140,8 @@ public class TestXMLPropertiesConfiguration
         transformer.transform(source, result);
 
         // reload the configuration
-        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration(saveFile);
+        XMLPropertiesConfiguration conf2 = new XMLPropertiesConfiguration();
+        conf2.load(saveFile);
 
         // test the configuration
         assertEquals("header", "Description of the new property list", conf2.getHeader());

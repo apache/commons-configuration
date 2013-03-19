@@ -51,7 +51,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
-import org.apache.commons.lang.SystemUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -84,7 +83,9 @@ public class TestPropertiesConfiguration
     @Before
     public void setUp() throws Exception
     {
-        conf = new PropertiesConfiguration(testProperties);
+        conf = new PropertiesConfiguration();
+        conf.setFileName(testProperties);
+        conf.load();
 
         // remove the test save file if it exists
         if (testSavePropertiesFile.exists())
@@ -237,7 +238,9 @@ public class TestPropertiesConfiguration
         assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
 
         // read the configuration and compare the properties
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFileName(filename);
+        checkConfig.load();
         ConfigurationAssert.assertEquals(conf, checkConfig);
 
         // Save it again, verifying a save with a filename works.
@@ -252,7 +255,9 @@ public class TestPropertiesConfiguration
         conf.save(url);
 
         // reload the configuration
-        Configuration config2 = new PropertiesConfiguration(url);
+        PropertiesConfiguration config2 = new PropertiesConfiguration();
+        config2.setURL(url);
+        config2.load();
         assertEquals("true", config2.getString("configuration.loaded"));
     }
 
@@ -276,7 +281,9 @@ public class TestPropertiesConfiguration
         assertTrue("The saved file doesn't exist", testSavePropertiesFile.exists());
 
         // read the configuration and compare the properties
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(filename);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFileName(filename);
+        checkConfig.load();
         ConfigurationAssert.assertEquals(pc, checkConfig);
 
         // Save it again, verifying a save with a filename works.
@@ -337,8 +344,9 @@ public class TestPropertiesConfiguration
         assertEquals("Wrong number of list elements", 3, dirs.size());
         conf.save(testSavePropertiesFile);
 
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFile(testSavePropertiesFile);
+        checkConfig.load();
         ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
@@ -385,7 +393,9 @@ public class TestPropertiesConfiguration
     public void testLoadFromFile() throws Exception
     {
         File file = ConfigurationAssert.getTestFile("test.properties");
-        conf = new PropertiesConfiguration(file);
+        conf = new PropertiesConfiguration();
+        conf.setFile(file);
+        conf.load();
 
         assertEquals("true", conf.getString("configuration.loaded"));
     }
@@ -498,7 +508,9 @@ public class TestPropertiesConfiguration
     private PropertiesConfiguration checkSavedConfig()
             throws ConfigurationException
     {
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(testSavePropertiesFile);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFile(testSavePropertiesFile);
+        checkConfig.load();
         ConfigurationAssert.assertEquals(conf, checkConfig);
         return checkConfig;
     }
@@ -557,12 +569,16 @@ public class TestPropertiesConfiguration
     @Test
     public void testChangingDefaultListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc = new PropertiesConfiguration(testProperties);
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        pc.setFileName(testProperties);
+        pc.load();
         assertEquals(4, pc.getList("test.mixed.array").size());
 
         char delimiter = PropertiesConfiguration.getDefaultListDelimiter();
         PropertiesConfiguration.setDefaultListDelimiter('^');
-        pc = new PropertiesConfiguration(testProperties);
+        pc = new PropertiesConfiguration();
+        pc.setFileName(testProperties);
+        pc.load();
         assertEquals(2, pc.getList("test.mixed.array").size());
         PropertiesConfiguration.setDefaultListDelimiter(delimiter);
     }
@@ -570,7 +586,9 @@ public class TestPropertiesConfiguration
     @Test
     public void testChangingListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
+        PropertiesConfiguration pc1 = new PropertiesConfiguration();
+        pc1.setFileName(testProperties);
+        pc1.load();
         assertEquals(4, pc1.getList("test.mixed.array").size());
 
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
@@ -584,7 +602,9 @@ public class TestPropertiesConfiguration
     @Test
     public void testDisableListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc1 = new PropertiesConfiguration(testProperties);
+        PropertiesConfiguration pc1 = new PropertiesConfiguration();
+        pc1.setFileName(testProperties);
+        pc1.load();
         assertEquals(4, pc1.getList("test.mixed.array").size());
 
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
@@ -613,7 +633,9 @@ public class TestPropertiesConfiguration
     @Test
     public void testLoadIncludeFromClassPath() throws ConfigurationException
     {
-        conf = new PropertiesConfiguration("test.properties");
+        conf = new PropertiesConfiguration();
+        conf.setFileName("test.properties");
+        conf.load();
         assertEquals("true", conf.getString("include.loaded"));
     }
 
@@ -818,8 +840,9 @@ public class TestPropertiesConfiguration
         assertTrue("Wrong output flag", con.getDoOutput());
         assertEquals("Wrong method", "PUT", con.getRequestMethod());
 
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFile(testSavePropertiesFile);
+        checkConfig.load();
         ConfigurationAssert.assertEquals(conf, checkConfig);
     }
 
@@ -852,16 +875,15 @@ public class TestPropertiesConfiguration
     @Test
     public void testFileWithSharpSymbol() throws Exception
     {
-        if (SystemUtils.isJavaVersionAtLeast(1.4f))
-        {
-            File file = new File("target/sharp#1.properties");
-            file.createNewFile();
+        File file = new File("target/sharp#1.properties");
+        file.createNewFile();
 
-            PropertiesConfiguration conf = new PropertiesConfiguration(file);
-            conf.save();
+        PropertiesConfiguration conf = new PropertiesConfiguration();
+        conf.setFile(file);
+        conf.load();
+        conf.save();
 
-            assertTrue("Missing file " + file, file.exists());
-        }
+        assertTrue("Missing file " + file, file.exists());
     }
 
     /**
@@ -873,11 +895,13 @@ public class TestPropertiesConfiguration
     public void testInitFromNonExistingFile() throws ConfigurationException
     {
         final String testProperty = "test.successfull";
-        conf = new PropertiesConfiguration(testSavePropertiesFile);
+        conf = new PropertiesConfiguration();
+        conf.setFile(testSavePropertiesFile);
         conf.addProperty(testProperty, Boolean.TRUE);
         conf.save();
-        PropertiesConfiguration checkConfig = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setFile(testSavePropertiesFile);
+        checkConfig.load();
         assertTrue("Test property not found", checkConfig
                 .getBoolean(testProperty));
     }
@@ -914,14 +938,15 @@ public class TestPropertiesConfiguration
     @Test
     public void testSaveWithDataConfig() throws ConfigurationException
     {
-        conf = new PropertiesConfiguration(testSavePropertiesFile);
+        conf = new PropertiesConfiguration();
+        conf.setFile(testSavePropertiesFile);
         DataConfiguration dataConfig = new DataConfiguration(conf);
         dataConfig.setProperty("foo", "bar");
         assertEquals("Property not set", "bar", conf.getString("foo"));
 
         conf.save();
-        PropertiesConfiguration config2 = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration config2 = new PropertiesConfiguration();
+        config2.load(testSavePropertiesFile);
         assertEquals("Property not saved", "bar", config2.getString("foo"));
     }
 
@@ -936,12 +961,6 @@ public class TestPropertiesConfiguration
         {
             String loadEncoding;
 
-            public PropertiesConfigurationTestImpl(String fileName)
-                    throws ConfigurationException
-            {
-                super(fileName);
-            }
-
             @Override
             public void load(InputStream in, String encoding)
                     throws ConfigurationException
@@ -951,8 +970,9 @@ public class TestPropertiesConfiguration
             }
         }
 
-        PropertiesConfigurationTestImpl testConf = new PropertiesConfigurationTestImpl(
-                testProperties);
+        PropertiesConfigurationTestImpl testConf = new PropertiesConfigurationTestImpl();
+        testConf.setFileName(testProperties);
+        testConf.load();
         assertEquals("Default encoding not used", "ISO-8859-1",
                 testConf.loadEncoding);
     }
@@ -1189,8 +1209,9 @@ public class TestPropertiesConfiguration
             throws ConfigurationException
     {
         conf.save(testSavePropertiesFile);
-        PropertiesConfiguration checkConf = new PropertiesConfiguration(
-                testSavePropertiesFile);
+        PropertiesConfiguration checkConf = new PropertiesConfiguration();
+        checkConf.setFile(testSavePropertiesFile);
+        checkConf.load();
         for (Iterator<String> it = copyConf.getKeys(); it.hasNext();)
         {
             String key = it.next();

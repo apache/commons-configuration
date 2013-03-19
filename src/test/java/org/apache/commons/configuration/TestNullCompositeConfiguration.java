@@ -52,8 +52,12 @@ public class TestNullCompositeConfiguration
     public void setUp() throws Exception
     {
         cc = new CompositeConfiguration();
-        conf1 = new PropertiesConfiguration(testProperties);
-        conf2 = new PropertiesConfiguration(testProperties2);
+        conf1 = new PropertiesConfiguration();
+        conf1.setFileName(testProperties);
+        conf1.load();
+        conf2 = new PropertiesConfiguration();
+        conf2.setFileName(testProperties2);
+        conf2.load();
         xmlConf = new XMLConfiguration(new File(testPropertiesXML));
 
         cc.setThrowExceptionOnMissing(false);
