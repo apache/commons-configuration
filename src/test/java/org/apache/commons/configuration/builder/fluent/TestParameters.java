@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
@@ -174,6 +175,30 @@ public class TestParameters
                 map.get("schemaValidation"));
         assertEquals("Wrong expression engine", engine,
                 map.get("expressionEngine"));
+    }
+
+    /**
+     * Tests whether a parameters object for a properties configuration can be
+     * created.
+     */
+    @Test
+    public void testProperties()
+    {
+        PropertiesConfiguration.IOFactory factory =
+                EasyMock.createMock(PropertiesConfiguration.IOFactory.class);
+        Map<String, Object> map =
+                Parameters.properties().setThrowExceptionOnMissing(true)
+                        .setFileName("test.properties").setIOFactory(factory)
+                        .setListDelimiter('#').setIncludesAllowed(false)
+                        .getParameters();
+        checkBasicProperties(map);
+        FileBasedBuilderParametersImpl fbp =
+                FileBasedBuilderParametersImpl.fromParameters(map);
+        assertEquals("Wrong file name", "test.properties", fbp.getFileHandler()
+                .getFileName());
+        assertEquals("Wrong includes flag", Boolean.FALSE,
+                map.get("includesAllowed"));
+        assertSame("Wrong factory", factory, map.get("iOFactory"));
     }
 
     /**

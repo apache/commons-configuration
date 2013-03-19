@@ -25,6 +25,7 @@ import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
+import org.apache.commons.configuration.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;
@@ -139,6 +140,18 @@ public final class Parameters
     {
         return createParametersProxy(XMLBuilderParameters.class,
                 new XMLBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for properties
+     * configurations.
+     *
+     * @return the new parameters object
+     */
+    public static PropertiesBuilderParameters properties()
+    {
+        return createParametersProxy(PropertiesBuilderParameters.class,
+                new PropertiesBuilderParametersImpl());
     }
 
     /**
