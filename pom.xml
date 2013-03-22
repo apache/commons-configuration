@@ -39,7 +39,7 @@
         various formats
     </description>
 
-  <url>http://commons.apache.org/configuration/</url>
+  <url>http://commons.apache.org/proper/commons-configuration/</url>
 
   <issueManagement>
     <system>jira</system>
