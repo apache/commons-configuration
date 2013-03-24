@@ -24,6 +24,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 
@@ -33,7 +36,6 @@ import org.junit.Test;
  *
  * @version $Id$
  */
-@SuppressWarnings("deprecation")
 public class TestPropertiesSequence
 {
     @Test
@@ -43,12 +45,13 @@ public class TestPropertiesSequence
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        simpleConfiguration.setFileName(simpleConfigurationFile);
-        simpleConfiguration.load();
+        FileHandler handler = new FileHandler(simpleConfiguration);
+        handler.setFileName(simpleConfigurationFile);
+        handler.load();
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
+        Configuration compositeConfiguration = builder.getConfiguration();
 
         Configuration a = simpleConfiguration.subset("prefix");
         Configuration b = compositeConfiguration.subset("prefix");
@@ -72,12 +75,13 @@ public class TestPropertiesSequence
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        simpleConfiguration.setFileName(simpleConfigurationFile);
-        simpleConfiguration.load();
+        FileHandler handler = new FileHandler(simpleConfiguration);
+        handler.setFileName(simpleConfigurationFile);
+        handler.load();
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
+        Configuration compositeConfiguration = builder.getConfiguration();
 
         simpleConfiguration.setProperty("prefix.Co.test", Boolean.TRUE);
         simpleConfiguration.setProperty("prefix.Av.test", Boolean.TRUE);
@@ -107,12 +111,13 @@ public class TestPropertiesSequence
         String compositeConfigurationFile = ConfigurationAssert.getTestFile("testSequenceDigester.xml").getAbsolutePath();
 
         PropertiesConfiguration simpleConfiguration = new PropertiesConfiguration();
-        simpleConfiguration.setFileName(simpleConfigurationFile);
-        simpleConfiguration.load();
+        FileHandler handler = new FileHandler(simpleConfiguration);
+        handler.setFileName(simpleConfigurationFile);
+        handler.load();
 
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        Configuration compositeConfiguration = configurationFactory.getConfiguration();
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFileName(compositeConfigurationFile));
+        Configuration compositeConfiguration = builder.getConfiguration();
 
         Configuration mapping = new BaseConfiguration();
         Configuration mapping2 = new BaseConfiguration();
