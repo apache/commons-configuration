@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
 import java.io.FilterWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -176,9 +175,15 @@ import org.apache.commons.lang.StringUtils;
  * @author <a href="mailto:ebourg@apache.org">Emmanuel Bourg</a>
  * @version $Id$
  */
-public class PropertiesConfiguration extends AbstractFileConfiguration
+public class PropertiesConfiguration extends BaseConfiguration
     implements FileBasedConfiguration, FileLocatorAware
 {
+    /**
+     * The default encoding (ISO-8859-1 as specified by
+     * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
+     */
+    public static final String DEFAULT_ENCODING = "ISO-8859-1";
+
     /** Constant for the supported comment characters.*/
     static final String COMMENT_CHARS = "#!";
 
@@ -202,12 +207,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** The white space characters used as key/value separators. */
     private static final char[] WHITE_SPACE = new char[]{' ', '\t', '\f'};
-
-    /**
-     * The default encoding (ISO-8859-1 as specified by
-     * http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
-     */
-    private static final String DEFAULT_ENCODING = "ISO-8859-1";
 
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
@@ -244,51 +243,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public PropertiesConfiguration()
     {
         installLayout(createLayout());
-    }
-
-    /**
-     * Creates and loads the extended properties from the specified file.
-     * The specified file can contain "include = " properties which then
-     * are loaded and merged into the properties.
-     *
-     * @param fileName The name of the properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public PropertiesConfiguration(String fileName) throws ConfigurationException
-    {
-        super(fileName);
-    }
-
-    /**
-     * Creates and loads the extended properties from the specified file.
-     * The specified file can contain "include = " properties which then
-     * are loaded and merged into the properties. If the file does not exist,
-     * an empty configuration will be created. Later the {@code save()}
-     * method can be called to save the properties to the specified file.
-     *
-     * @param file The properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public PropertiesConfiguration(File file) throws ConfigurationException
-    {
-        super(file);
-
-        // If the file does not exist, no layout object was created. We have to
-        // do this manually in this case.
-        getLayout();
-    }
-
-    /**
-     * Creates and loads the extended properties from the specified URL.
-     * The specified file can contain "include = " properties which then
-     * are loaded and merged into the properties.
-     *
-     * @param url The location of the properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public PropertiesConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
     }
 
     /**
@@ -378,20 +332,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     public void setFooter(String footer)
     {
         getLayout().setFooterComment(footer);
-    }
-
-    /**
-     * Returns the encoding to be used when loading or storing configuration
-     * data. This implementation ensures that the default encoding will be used
-     * if none has been set explicitly.
-     *
-     * @return the encoding
-     */
-    @Override
-    public String getEncoding()
-    {
-        String enc = super.getEncoding();
-        return (enc != null) ? enc : DEFAULT_ENCODING;
     }
 
     /**
@@ -492,31 +432,6 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
     }
 
     /**
-     * Load the properties from the given reader.
-     * Note that the {@code clear()} method is not called, so
-     * the properties contained in the loaded file will be added to the
-     * actual set of properties.
-     *
-     * @param in An InputStream.
-     *
-     * @throws ConfigurationException if an error occurs
-     */
-    public synchronized void load(Reader in) throws ConfigurationException
-    {
-        boolean oldAutoSave = isAutoSave();
-        setAutoSave(false);
-
-        try
-        {
-            getLayout().load(this, in);
-        }
-        finally
-        {
-            setAutoSave(oldAutoSave);
-        }
-    }
-
-    /**
      * Stores the current {@code FileLocator} for a following IO operation. The
      * {@code FileLocator} is needed to resolve include files with relative file
      * names.
@@ -529,46 +444,26 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         this.locator = locator;
     }
 
+    /**
+     * {@inheritDoc} This implementation delegates to the associated layout
+     * object which does the actual loading.
+     *
+     * @since 2.0
+     */
     public void read(Reader in) throws ConfigurationException, IOException
     {
-        load(in);
+        getLayout().load(this, in);
     }
 
     /**
-     * Save the configuration to the specified stream.
+     * {@inheritDoc} This implementation delegates to the associated layout
+     * object which does the actual saving.
      *
-     * @param writer the output stream used to save the configuration
-     * @throws ConfigurationException if an error occurs
+     * @since 2.0
      */
-    public void save(Writer writer) throws ConfigurationException
-    {
-        enterNoReload();
-        try
-        {
-            getLayout().save(this, writer);
-        }
-        finally
-        {
-            exitNoReload();
-        }
-    }
-
     public void write(Writer out) throws ConfigurationException, IOException
     {
-        save(out);
-    }
-
-    /**
-     * Extend the setBasePath method to turn includes
-     * on and off based on the existence of a base path.
-     *
-     * @param basePath The new basePath to set.
-     */
-    @Override
-    public void setBasePath(String basePath)
-    {
-        super.setBasePath(basePath);
-        setIncludesAllowed(StringUtils.isNotEmpty(basePath));
+        getLayout().save(this, out);
     }
 
     /**
