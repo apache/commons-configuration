@@ -21,6 +21,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -39,8 +40,9 @@ public class TestThreesomeConfiguration
     public void setUp() throws Exception
     {
         PropertiesConfiguration c = new PropertiesConfiguration();
-        c.setFileName("threesome.properties");
-        c.load();
+        FileHandler handler = new FileHandler(c);
+        handler.setFileName("threesome.properties");
+        handler.load();
         conf = c;
     }
 
