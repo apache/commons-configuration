@@ -17,17 +17,17 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.apache.commons.configuration.io.FileLocator;
+import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
@@ -70,7 +70,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @version $Id$
  * @since 1.1
  */
-public class XMLPropertiesConfiguration extends PropertiesConfiguration
+public class XMLPropertiesConfiguration extends BaseConfiguration implements
+        FileBasedConfiguration, FileLocatorAware
 {
     /**
      * The default encoding (UTF-8 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
@@ -82,10 +83,11 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
      */
     private static final String MALFORMED_XML_EXCEPTION = "Malformed XML";
 
-    // initialization block to set the encoding before loading the file in the constructors
-    {
-        setEncoding(DEFAULT_ENCODING);
-    }
+    /** The temporary file locator. */
+    private FileLocator locator;
+
+    /** Stores a header comment. */
+    private String header;
 
     /**
      * Creates an empty XMLPropertyConfiguration object which can be
@@ -97,45 +99,6 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
     public XMLPropertiesConfiguration()
     {
         super();
-    }
-
-    /**
-     * Creates and loads the xml properties from the specified file.
-     * The specified file can contain "include" properties which then
-     * are loaded and merged into the properties.
-     *
-     * @param fileName The name of the properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public XMLPropertiesConfiguration(String fileName) throws ConfigurationException
-    {
-        super(fileName);
-    }
-
-    /**
-     * Creates and loads the xml properties from the specified file.
-     * The specified file can contain "include" properties which then
-     * are loaded and merged into the properties.
-     *
-     * @param file The properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public XMLPropertiesConfiguration(File file) throws ConfigurationException
-    {
-        super(file);
-    }
-
-    /**
-     * Creates and loads the xml properties from the specified URL.
-     * The specified file can contain "include" properties which then
-     * are loaded and merged into the properties.
-     *
-     * @param url The location of the properties file to load.
-     * @throws ConfigurationException Error while loading the properties file
-     */
-    public XMLPropertiesConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
     }
 
     /**
@@ -151,8 +114,27 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         this.load(element);
     }
 
-    @Override
-    public void load(Reader in) throws ConfigurationException
+    /**
+     * Returns the header comment of this configuration.
+     *
+     * @return the header comment
+     */
+    public String getHeader()
+    {
+        return header;
+    }
+
+    /**
+     * Sets the header comment of this configuration.
+     *
+     * @param header the header comment
+     */
+    public void setHeader(String header)
+    {
+        this.header = header;
+    }
+
+    public void read(Reader in) throws ConfigurationException
     {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         factory.setNamespaceAware(false);
@@ -219,12 +201,15 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
         }
     }
 
-    @Override
-    public void save(Writer out) throws ConfigurationException
+    public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
 
-        String encoding = getEncoding() != null ? getEncoding() : DEFAULT_ENCODING;
+        String encoding = (locator != null) ? locator.getEncoding() : null;
+        if (encoding == null)
+        {
+            encoding = DEFAULT_ENCODING;
+        }
         writer.println("<?xml version=\"1.0\" encoding=\"" + encoding + "\"?>");
         writer.println("<!DOCTYPE properties SYSTEM \"http://java.sun.com/dtd/properties.dtd\">");
         writer.println("<properties>");
@@ -328,6 +313,17 @@ public class XMLPropertiesConfiguration extends PropertiesConfiguration
                 writeProperty(document, properties, key, value);
             }
         }
+    }
+
+    /**
+     * Initializes this object with a {@code FileLocator}. The locator is
+     * accessed during load and save operations.
+     *
+     * @param locator the associated {@code FileLocator}
+     */
+    public void initFileLocator(FileLocator locator)
+    {
+        this.locator = locator;
     }
 
     private void writeProperty(Document document, Node properties, String key, Object value)
