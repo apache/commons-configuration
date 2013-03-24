@@ -23,6 +23,8 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -63,7 +65,7 @@ public class TestFileHandler
     public TemporaryFolder folder = new TemporaryFolder();
 
     /**
-     * Creates a test file test content and allows specifying a file name.
+     * Creates a test file with test content and allows specifying a file name.
      *
      * @param f the file to be created (may be <b>null</b>)
      * @return the File object pointing to the test file
@@ -697,7 +699,7 @@ public class TestFileHandler
     }
 
     /**
-     * Tries to save the handler if no location has been set.
+     * Tries to save the locator if no location has been set.
      */
     @Test(expected = ConfigurationException.class)
     public void testSaveNoLocation() throws ConfigurationException
@@ -840,12 +842,120 @@ public class TestFileHandler
     }
 
     /**
+     * Tests whether a FileLocatorAware object is initialized correctly when
+     * loading data.
+     */
+    @Test
+    public void testLoadFileLocatorAware() throws IOException,
+            ConfigurationException
+    {
+        File file = createTestFile();
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.setFile(file);
+        handler.load();
+        assertEquals("Wrong result", file.toURI().toURL().toString() + ": "
+                + CONTENT, content.getContent());
+    }
+
+    /**
+     * Checks a FileLocator which is expected to contain no data.
+     *
+     * @param content the data object which was passed the locator
+     */
+    private static void checkEmptyLocator(
+            FileBasedFileLocatorAwareTestImpl content)
+    {
+        assertNull("Got a URL", content.getLocator().getSourceURL());
+        assertNull("Got a base path", content.getLocator().getBasePath());
+        assertNull("Got a file name", content.getLocator().getFileName());
+    }
+
+    /**
+     * Tests loading with a FileLocatorAware object if data is loaded from a
+     * stream.
+     */
+    @Test
+    public void testLoadFileLocatorAwareStream() throws ConfigurationException,
+            IOException
+    {
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        ByteArrayInputStream bos = new ByteArrayInputStream(CONTENT.getBytes());
+        handler.load(bos);
+        checkEmptyLocator(content);
+    }
+
+    /**
+     * Tests a load operation with a FileLocatorAware object if data is loaded
+     * from a reader.
+     */
+    @Test
+    public void testLoadFileLocatorAwareReader() throws ConfigurationException,
+            IOException
+    {
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.load(new StringReader(CONTENT));
+        checkEmptyLocator(content);
+    }
+
+    /**
+     * Tests whether a FileLocatorAware is correctly handled when saving data.
+     */
+    @Test
+    public void testSaveFileLocatorAware() throws ConfigurationException,
+            IOException
+    {
+        File file = folder.newFile();
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.save(file);
+        assertEquals("Wrong file content", file.toURI().toURL() + ": "
+                + CONTENT, readFile(file));
+    }
+
+    /**
+     * Tests a save operation with a FileLocatorAware object if the target is a
+     * stream.
+     */
+    @Test
+    public void testSaveFileLocatorAwareToStream()
+            throws ConfigurationException, IOException
+    {
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.save(new ByteArrayOutputStream());
+        checkEmptyLocator(content);
+    }
+
+    /**
+     * Tests a save operation with a FileLocatorAware object if the target is a
+     * writer.
+     */
+    @Test
+    public void testSaveFileLocatorAwareToWriter()
+            throws ConfigurationException, IOException
+    {
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        handler.save(new StringWriter());
+        checkEmptyLocator(content);
+    }
+
+    /**
      * An implementation of the FileBased interface used for test purposes.
      */
     private static class FileBasedTestImpl implements FileBased
     {
         /** The content read from a reader. */
-        private String content;
+        private String content = CONTENT;
 
         /**
          * Returns the content read from a reader.
@@ -857,6 +967,16 @@ public class TestFileHandler
             return content;
         }
 
+        /**
+         * Allows setting the content.
+         *
+         * @param content the content
+         */
+        public void setContent(String content)
+        {
+            this.content = content;
+        }
+
         public void read(Reader in) throws ConfigurationException, IOException
         {
             content = readReader(in);
@@ -865,8 +985,50 @@ public class TestFileHandler
         public void write(Writer out) throws ConfigurationException,
                 IOException
         {
-            out.write(CONTENT);
+            out.write(getContent());
             out.flush();
+        }
+    }
+
+    /**
+     * A FileBased implementation which also implements FileLocatorAware. This
+     * class adds information about the current file locator to the content read
+     * and written.
+     */
+    private static final class FileBasedFileLocatorAwareTestImpl extends
+            FileBasedTestImpl implements FileLocatorAware
+    {
+        /** Stores the passed in file locator. */
+        private FileLocator locator;
+
+        /**
+         * Returns the locator.
+         *
+         * @return the file locator
+         */
+        public FileLocator getLocator()
+        {
+            return locator;
+        }
+
+        public void initFileLocator(FileLocator loc)
+        {
+            this.locator = loc;
+        }
+
+        @Override
+        public void read(Reader in) throws ConfigurationException, IOException
+        {
+            super.read(in);
+            setContent(String.valueOf(locator.getSourceURL()) + ": " + getContent());
+        }
+
+        @Override
+        public void write(Writer out) throws ConfigurationException,
+                IOException
+        {
+            out.write(String.valueOf(locator.getSourceURL()) + ": ");
+            super.write(out);
         }
     }
 }

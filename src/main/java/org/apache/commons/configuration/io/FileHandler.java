@@ -331,13 +331,9 @@ public class FileHandler
      */
     public void setURL(URL url)
     {
-        String basePath = ConfigurationUtils.getBasePath(url);
-        String fileName = ConfigurationUtils.getFileName(url);
         synchronized (fileSpec)
         {
-            fileSpec.setBasePath(basePath);
-            fileSpec.setFileName(fileName);
-            fileSpec.setSourceURL(url);
+            initFileSpecWithURL(fileSpec, url);
         }
     }
 
@@ -523,29 +519,7 @@ public class FileHandler
     public void load(InputStream in, String encoding)
             throws ConfigurationException
     {
-        checkContent();
-        Reader reader = null;
-
-        if (encoding != null)
-        {
-            try
-            {
-                reader = new InputStreamReader(in, encoding);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw new ConfigurationException(
-                        "The requested encoding is not supported, try the default encoding.",
-                        e);
-            }
-        }
-
-        if (reader == null)
-        {
-            reader = new InputStreamReader(in);
-        }
-
-        loadFromReader(reader);
+        loadFromStream(in, encoding, null);
     }
 
     /**
@@ -558,6 +532,7 @@ public class FileHandler
     public void load(Reader in) throws ConfigurationException
     {
         checkContent();
+        injectNullFileLocator();
         loadFromReader(in);
     }
 
@@ -640,29 +615,7 @@ public class FileHandler
     public void save(OutputStream out, String encoding)
             throws ConfigurationException
     {
-        checkContent();
-        Writer writer = null;
-
-        if (encoding != null)
-        {
-            try
-            {
-                writer = new OutputStreamWriter(out, encoding);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw new ConfigurationException(
-                        "The requested encoding is not supported, try the default encoding.",
-                        e);
-            }
-        }
-
-        if (writer == null)
-        {
-            writer = new OutputStreamWriter(out);
-        }
-
-        saveToWriter(writer);
+        saveToStream(out, encoding, null);
     }
 
     /**
@@ -675,7 +628,47 @@ public class FileHandler
     public void save(Writer out) throws ConfigurationException
     {
         checkContent();
+        injectNullFileLocator();
         saveToWriter(out);
+    }
+
+    /**
+     * Checks whether the associated {@code FileBased} object implements the
+     * {@code FileLocatorAware} interface. If this is the case, a
+     * {@code FileLocator} instance is injected which returns only <b>null</b>
+     * values. This method is called if no file location is available (e.g. if
+     * data is to be loaded from a stream).
+     */
+    private void injectNullFileLocator()
+    {
+        if (getContent() instanceof FileLocatorAware)
+        {
+            ((FileLocatorAware) getContent()).initFileLocator(new FileSpec());
+        }
+    }
+
+    /**
+     * Injects a {@code FileLocator} pointing to the specified URL if the
+     * current {@code FileBased} object implements the {@code FileLocatorAware}
+     * interface.
+     *
+     * @param url the URL for the locator
+     */
+    private void injectFileLocator(URL url)
+    {
+        if (url == null)
+        {
+            injectNullFileLocator();
+        }
+        else
+        {
+            if (getContent() instanceof FileLocatorAware)
+            {
+                FileSpec spec = new FileSpec();
+                initFileSpecWithURL(spec, url);
+                ((FileLocatorAware) getContent()).initFileLocator(spec);
+            }
+        }
     }
 
     /**
@@ -711,7 +704,7 @@ public class FileHandler
         try
         {
             in = spec.getFileSystem().getInputStream(url);
-            load(in, spec);
+            loadFromStream(in, spec.getEncoding(), url);
         }
         catch (ConfigurationException e)
         {
@@ -747,7 +740,7 @@ public class FileHandler
             throw new ConfigurationException(
                     "Cannot locate configuration source " + fileName);
         }
-        load(url);
+        load(url, spec);
     }
 
     /**
@@ -761,6 +754,43 @@ public class FileHandler
             throws ConfigurationException
     {
         load(in, spec.getEncoding());
+    }
+
+    /**
+     * Internal helper method for loading a file from an input stream.
+     *
+     * @param in the input stream
+     * @param encoding the encoding
+     * @param url the URL of the file to be loaded (if known)
+     * @throws ConfigurationException if an error occurs
+     */
+    private void loadFromStream(InputStream in, String encoding, URL url)
+            throws ConfigurationException
+    {
+        checkContent();
+        injectFileLocator(url);
+        Reader reader = null;
+
+        if (encoding != null)
+        {
+            try
+            {
+                reader = new InputStreamReader(in, encoding);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                throw new ConfigurationException(
+                        "The requested encoding is not supported, try the default encoding.",
+                        e);
+            }
+        }
+
+        if (reader == null)
+        {
+            reader = new InputStreamReader(in);
+        }
+
+        loadFromReader(reader);
     }
 
     /**
@@ -849,7 +879,7 @@ public class FileHandler
         try
         {
             out = spec.getFileSystem().getOutputStream(url);
-            save(out, spec);
+            saveToStream(out, spec.getEncoding(), url);
         }
         finally
         {
@@ -872,7 +902,11 @@ public class FileHandler
         try
         {
             out = spec.getFileSystem().getOutputStream(file);
-            save(out, spec);
+            saveToStream(out, spec.getEncoding(), file.toURI().toURL());
+        }
+        catch (MalformedURLException muex)
+        {
+            throw new ConfigurationException(muex);
         }
         finally
         {
@@ -892,6 +926,43 @@ public class FileHandler
             throws ConfigurationException
     {
         save(out, spec.getEncoding());
+    }
+
+    /**
+     * Internal helper method for saving a file to the given stream.
+     *
+     * @param out the output stream
+     * @param encoding the encoding
+     * @param url the URL of the output file if known
+     * @throws ConfigurationException if an error occurs
+     */
+    private void saveToStream(OutputStream out, String encoding, URL url)
+            throws ConfigurationException
+    {
+        checkContent();
+        injectFileLocator(url);
+        Writer writer = null;
+
+        if (encoding != null)
+        {
+            try
+            {
+                writer = new OutputStreamWriter(out, encoding);
+            }
+            catch (UnsupportedEncodingException e)
+            {
+                throw new ConfigurationException(
+                        "The requested encoding is not supported, try the default encoding.",
+                        e);
+            }
+        }
+
+        if (writer == null)
+        {
+            writer = new OutputStreamWriter(out);
+        }
+
+        saveToWriter(writer);
     }
 
     /**
@@ -957,6 +1028,22 @@ public class FileHandler
     }
 
     /**
+     * Initializes a {@code FileSpec} object with a URL. This method ensures
+     * that base path and file name are set correctly.
+     *
+     * @param spec the {@code FileSpec} to be initialized
+     * @param url the URL to set
+     */
+    private static void initFileSpecWithURL(FileSpec spec, URL url)
+    {
+        String basePath = ConfigurationUtils.getBasePath(url);
+        String fileName = ConfigurationUtils.getFileName(url);
+        spec.setBasePath(basePath);
+        spec.setFileName(fileName);
+        spec.setSourceURL(url);
+    }
+
+    /**
      * Normalizes URLs to files. Ensures that file URLs start with the correct
      * protocol.
      *
@@ -999,7 +1086,7 @@ public class FileHandler
     /**
      * A bean class defining the location of a file.
      */
-    private static class FileSpec implements Cloneable
+    private static class FileSpec implements Cloneable, FileLocator
     {
         /** Stores the file name. */
         private String fileName;
