@@ -33,7 +33,6 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.Assert;
@@ -77,12 +76,6 @@ public class TestCombinedConfiguration
 
     /** Constant for the content of a XML reload test file.*/
     private static final String RELOAD_XML_CONTENT = "<xml><xmlReload>{0}</xmlReload></xml>";
-
-    /** Constant for the name of the properties reload test file.*/
-    private static final String RELOAD_PROPS_NAME = "reload.properties";
-
-    /** Constant for the content of a properties reload test file.*/
-    private static final String RELOAD_PROPS_CONTENT = "propsReload = {0}";
 
     /** Helper object for managing temporary files. */
     @Rule
@@ -452,36 +445,6 @@ public class TestCombinedConfiguration
     }
 
     /**
-     * Tests if file-based configurations can be reloaded.
-     */
-    @Test
-    public void testReloading() throws Exception
-    {
-        config.setForceReloadCheck(true);
-        File testXmlFile = writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 0);
-        File testPropsFile = writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 0);
-        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
-        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        PropertiesConfiguration c2 = new PropertiesConfiguration();
-        c2.setFile(testPropsFile);
-        c2.load();
-        c2.setThrowExceptionOnMissing(true);
-        c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        config.addConfiguration(c1);
-        config.addConfiguration(c2);
-        assertEquals("Wrong xml reload value", 0, config.getInt("xmlReload"));
-        assertEquals("Wrong props reload value", 0, config
-                .getInt("propsReload"));
-
-        writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 1);
-        assertEquals("XML reload not detected", 1, config.getInt("xmlReload"));
-        config.setForceReloadCheck(false);
-        writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 1);
-        assertEquals("Props reload detected though check flag is false", 0, config
-                .getInt("propsReload"));
-    }
-
-    /**
      * Tests whether the reload check works with a subnode configuration. This
      * test is related to CONFIGURATION-341.
      */
@@ -499,35 +462,6 @@ public class TestCombinedConfiguration
         SubnodeConfiguration sub = config.configurationAt(prefix, true);
         writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 1);
         assertEquals("Reload not detected", 1, sub.getInt("xmlReload"));
-    }
-
-    /**
-     * Tests whether reloading works for a combined configuration nested in
-     * another combined configuration.
-     */
-    @Test
-    public void testReloadingNestedCC() throws IOException,
-            ConfigurationException
-    {
-        config.setForceReloadCheck(true);
-        File testXmlFile =
-                writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 0);
-        File testPropsFile =
-                writeReloadFile(RELOAD_PROPS_NAME, RELOAD_PROPS_CONTENT, 0);
-        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
-        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        PropertiesConfiguration c2 = new PropertiesConfiguration();
-        c2.setFile(testPropsFile);
-        c2.load();
-        c2.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        config.addConfiguration(c2);
-        CombinedConfiguration cc2 = new CombinedConfiguration();
-        cc2.setForceReloadCheck(true);
-        cc2.addConfiguration(c1);
-        config.addConfiguration(cc2);
-        assertEquals("Wrong xml reload value", 0, config.getInt("xmlReload"));
-        writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 1);
-        assertEquals("XML reload not detected", 1, config.getInt("xmlReload"));
     }
 
     /**
@@ -679,57 +613,6 @@ public class TestCombinedConfiguration
         assertEquals("Wrong property 1", "1", config.getString("test(a)<0>"));
         assertEquals("Wrong property 2", "2", config.getString("test(a)<1>"));
         assertEquals("Wrong property 3", "3", config.getString("test(a)<2>"));
-    }
-
-    /**
-     * Tests whether reload operations can cause a deadlock when the combined
-     * configuration is accessed concurrently. This test is related to
-     * CONFIGURATION-344.
-     */
-    @Test
-    public void testDeadlockWithReload() throws ConfigurationException,
-            InterruptedException
-    {
-        final PropertiesConfiguration child = new PropertiesConfiguration();
-        child.setFileName("test.properties");
-        child.load();
-        child.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        config.addConfiguration(child);
-        final int count = 1000;
-
-        class TestDeadlockReloadThread extends Thread
-        {
-            boolean error = false;
-
-            @Override
-            public void run()
-            {
-                for (int i = 0; i < count && !error; i++)
-                {
-                    try
-                    {
-                        if (!child.getBoolean("configuration.loaded"))
-                        {
-                            error = true;
-                        }
-                    }
-                    catch (NoSuchElementException nsex)
-                    {
-                        error = true;
-                    }
-                }
-            }
-        }
-
-        TestDeadlockReloadThread reloadThread = new TestDeadlockReloadThread();
-        reloadThread.start();
-        for (int i = 0; i < count; i++)
-        {
-            assertEquals("Wrong value of combined property", 10, config
-                    .getInt("test.integer"));
-        }
-        reloadThread.join();
-        assertFalse("Failure in thread", reloadThread.error);
     }
 
     @Test
