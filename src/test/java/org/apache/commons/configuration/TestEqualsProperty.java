@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Test;
 
 /**
@@ -35,8 +36,9 @@ public class TestEqualsProperty
     public void testEquals() throws Exception
     {
         PropertiesConfiguration conf = new PropertiesConfiguration();
-        conf.setFileName(testProperties);
-        conf.load();
+        FileHandler handler = new FileHandler(conf);
+        handler.setFileName(testProperties);
+        handler.load();
 
         String equals = conf.getString("test.equals");
         assertEquals("value=one", equals);
