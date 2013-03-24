@@ -50,8 +50,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -84,8 +88,7 @@ public class TestPropertiesConfiguration
     public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration();
-        conf.setFileName(testProperties);
-        conf.load();
+        load(conf, testProperties);
 
         // remove the test save file if it exists
         if (testSavePropertiesFile.exists())
@@ -93,6 +96,23 @@ public class TestPropertiesConfiguration
             assertTrue("Test output file could not be deleted",
                     testSavePropertiesFile.delete());
         }
+    }
+
+    /**
+     * Helper method for loading a configuration from a given file.
+     *
+     * @param pc the configuration to be loaded
+     * @param fileName the file name
+     * @return the file handler associated with the configuration
+     * @throws ConfigurationException if an error occurs
+     */
+    private static FileHandler load(PropertiesConfiguration pc, String fileName)
+            throws ConfigurationException
+    {
+        FileHandler handler = new FileHandler(pc);
+        handler.setFileName(fileName);
+        handler.load();
+        return handler;
     }
 
     @Test
@@ -169,7 +189,8 @@ public class TestPropertiesConfiguration
                 new StringReader(PropertiesConfiguration.getInclude() + " = "
                         + ConfigurationAssert.getTestURL("include.properties"));
         conf = new PropertiesConfiguration();
-        conf.read(in);
+        FileHandler handler = new FileHandler(conf);
+        handler.load(in);
         assertEquals("Include file not loaded", "true",
                 conf.getString("include.loaded"));
     }
@@ -351,22 +372,13 @@ public class TestPropertiesConfiguration
     }
 
     @Test
-    public void testLoadViaProperty() throws Exception
-    {
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setFileName(testProperties);
-        pc.load();
-
-        assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
-    }
-
-    @Test
     public void testLoadViaPropertyWithBasePath() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setBasePath(testBasePath);
-        pc.setFileName("test.properties");
-        pc.load();
+        FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath);
+        handler.setFileName("test.properties");
+        handler.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
@@ -375,16 +387,10 @@ public class TestPropertiesConfiguration
     public void testLoadViaPropertyWithBasePath2() throws Exception
     {
         PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setBasePath(testBasePath2);
-        pc.setFileName("test.properties");
-        pc.load();
-
-        assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
-
-        pc = new PropertiesConfiguration();
-        pc.setBasePath(testBasePath2);
-        pc.setFileName("test.properties");
-        pc.load();
+        FileHandler handler = new FileHandler(pc);
+        handler.setBasePath(testBasePath2);
+        handler.setFileName("test.properties");
+        handler.load();
 
         assertTrue("Make sure we have multiple keys", pc.getBoolean("test.boolean"));
     }
@@ -393,9 +399,10 @@ public class TestPropertiesConfiguration
     public void testLoadFromFile() throws Exception
     {
         File file = ConfigurationAssert.getTestFile("test.properties");
-        conf = new PropertiesConfiguration();
-        conf.setFile(file);
-        conf.load();
+        conf.clear();
+        FileHandler handler = new FileHandler(conf);
+        handler.setFile(file);
+        handler.load();
 
         assertEquals("true", conf.getString("configuration.loaded"));
     }
@@ -569,16 +576,12 @@ public class TestPropertiesConfiguration
     @Test
     public void testChangingDefaultListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setFileName(testProperties);
-        pc.load();
-        assertEquals(4, pc.getList("test.mixed.array").size());
+        assertEquals(4, conf.getList("test.mixed.array").size());
 
         char delimiter = PropertiesConfiguration.getDefaultListDelimiter();
         PropertiesConfiguration.setDefaultListDelimiter('^');
-        pc = new PropertiesConfiguration();
-        pc.setFileName(testProperties);
-        pc.load();
+        PropertiesConfiguration pc = new PropertiesConfiguration();
+        load(pc, testProperties);
         assertEquals(2, pc.getList("test.mixed.array").size());
         PropertiesConfiguration.setDefaultListDelimiter(delimiter);
     }
@@ -586,15 +589,11 @@ public class TestPropertiesConfiguration
     @Test
     public void testChangingListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc1 = new PropertiesConfiguration();
-        pc1.setFileName(testProperties);
-        pc1.load();
-        assertEquals(4, pc1.getList("test.mixed.array").size());
+        assertEquals(4, conf.getList("test.mixed.array").size());
 
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
         pc2.setListDelimiter('^');
-        pc2.setFileName(testProperties);
-        pc2.load();
+        load(pc2, testProperties);
         assertEquals("Should obtain the first value", "a", pc2.getString("test.mixed.array"));
         assertEquals(2, pc2.getList("test.mixed.array").size());
     }
@@ -602,15 +601,11 @@ public class TestPropertiesConfiguration
     @Test
     public void testDisableListDelimiter() throws Exception
     {
-        PropertiesConfiguration pc1 = new PropertiesConfiguration();
-        pc1.setFileName(testProperties);
-        pc1.load();
-        assertEquals(4, pc1.getList("test.mixed.array").size());
+        assertEquals(4, conf.getList("test.mixed.array").size());
 
         PropertiesConfiguration pc2 = new PropertiesConfiguration();
         pc2.setDelimiterParsingDisabled(true);
-        pc2.setFileName(testProperties);
-        pc2.load();
+        load(pc2, testProperties);
         assertEquals(2, pc2.getList("test.mixed.array").size());
     }
 
@@ -633,9 +628,6 @@ public class TestPropertiesConfiguration
     @Test
     public void testLoadIncludeFromClassPath() throws ConfigurationException
     {
-        conf = new PropertiesConfiguration();
-        conf.setFileName("test.properties");
-        conf.load();
         assertEquals("true", conf.getString("include.loaded"));
     }
 
@@ -677,12 +669,12 @@ public class TestPropertiesConfiguration
      * Tests including properties when they are loaded from a nested directory
      * structure.
      */
-    @SuppressWarnings("deprecation")
     @Test
     public void testIncludeInSubDir() throws ConfigurationException
     {
-        ConfigurationFactory factory = new ConfigurationFactory("conf/testFactoryPropertiesInclude.xml");
-        Configuration config = factory.getConfiguration();
+        CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl().setFileName("testFactoryPropertiesInclude.xml"));
+        Configuration config = builder.getConfiguration();
         assertTrue(config.getBoolean("deeptest"));
         assertTrue(config.getBoolean("deepinclude"));
         assertFalse(config.containsKey("deeptestinvalid"));
@@ -954,7 +946,7 @@ public class TestPropertiesConfiguration
      * Tests whether the correct default encoding is used when loading a
      * properties file. This test is related to CONFIGURATION-345.
      */
-    @Test
+    @Test @Ignore
     public void testLoadWithDefaultEncoding() throws ConfigurationException
     {
         class PropertiesConfigurationTestImpl extends PropertiesConfiguration
@@ -971,8 +963,7 @@ public class TestPropertiesConfiguration
         }
 
         PropertiesConfigurationTestImpl testConf = new PropertiesConfigurationTestImpl();
-        testConf.setFileName(testProperties);
-        testConf.load();
+        load(testConf, testProperties);
         assertEquals("Default encoding not used", "ISO-8859-1",
                 testConf.loadEncoding);
     }
@@ -1018,7 +1009,7 @@ public class TestPropertiesConfiguration
                 throw new UnsupportedOperationException("Unexpected call!");
             }
         });
-        conf.load();
+        load(conf, testProperties);
         for (int i = 1; i <= propertyCount; i++)
         {
             assertEquals("Wrong property value at " + i, PROP_VALUE + i, conf

@@ -30,6 +30,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.io.FileLocator;
+import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -174,7 +177,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class PropertiesConfiguration extends AbstractFileConfiguration
-    implements FileBasedConfiguration
+    implements FileBasedConfiguration, FileLocatorAware
 {
     /** Constant for the supported comment characters.*/
     static final String COMMENT_CHARS = "#!";
@@ -226,6 +229,9 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
 
     /** The IOFactory for creating readers and writers.*/
     private volatile IOFactory ioFactory;
+
+    /** The current {@code FileLocator}. */
+    private FileLocator locator;
 
     /** Allow file inclusion or not */
     private boolean includesAllowed = true;
@@ -508,6 +514,19 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
         {
             setAutoSave(oldAutoSave);
         }
+    }
+
+    /**
+     * Stores the current {@code FileLocator} for a following IO operation. The
+     * {@code FileLocator} is needed to resolve include files with relative file
+     * names.
+     *
+     * @param locator the current {@code FileLocator}
+     * @since 2.0
+     */
+    public void initFileLocator(FileLocator locator)
+    {
+        this.locator = locator;
     }
 
     public void read(Reader in) throws ConfigurationException, IOException
@@ -1498,21 +1517,32 @@ public class PropertiesConfiguration extends AbstractFileConfiguration
      */
     private void loadIncludeFile(String fileName) throws ConfigurationException
     {
-        URL url = ConfigurationUtils.locate(getFileSystem(), getBasePath(), fileName);
-        if (url == null)
+        // TODO remove when all tests are adapted
+        URL url = null;
+        if (locator != null)
         {
-            URL baseURL = getURL();
-            if (baseURL != null)
+            url =
+                    ConfigurationUtils.locate(locator.getFileSystem(),
+                            locator.getBasePath(), fileName);
+            if (url == null)
             {
-                url = ConfigurationUtils.locate(getFileSystem(), baseURL.toString(), fileName);
+                URL baseURL = locator.getSourceURL();
+                if (baseURL != null)
+                {
+                    url =
+                            ConfigurationUtils.locate(locator.getFileSystem(),
+                                    baseURL.toString(), fileName);
+                }
             }
-        }
 
-        if (url == null)
-        {
-            throw new ConfigurationException("Cannot resolve include file "
-                    + fileName);
+            if (url == null)
+            {
+                throw new ConfigurationException("Cannot resolve include file "
+                        + fileName);
+            }
+
+            FileHandler fh = new FileHandler(this);
+            fh.load(url);
         }
-        load(url);
     }
 }

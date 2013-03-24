@@ -38,6 +38,7 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -70,8 +71,9 @@ public class TestCompositeConfiguration
     {
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration();
-        conf1.setFileName(testProperties);
-        conf1.load();
+        FileHandler handler = new FileHandler(conf1);
+        handler.setFileName(testProperties);
+        handler.load();
         conf2 = new PropertiesConfiguration();
         conf2.setFileName(testProperties2);
         conf2.load();

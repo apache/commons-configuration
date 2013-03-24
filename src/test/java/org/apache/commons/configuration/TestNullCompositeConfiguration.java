@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -53,8 +54,9 @@ public class TestNullCompositeConfiguration
     {
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration();
-        conf1.setFileName(testProperties);
-        conf1.load();
+        FileHandler handler = new FileHandler(conf1);
+        handler.setFileName(testProperties);
+        handler.load();
         conf2 = new PropertiesConfiguration();
         conf2.setFileName(testProperties2);
         conf2.load();
