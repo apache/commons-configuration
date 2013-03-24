@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Test;
 
 /**
@@ -39,8 +40,9 @@ public class TestEqualBehaviour
     {
         String simpleConfigurationFile = ConfigurationAssert.getTestFile("testEqual.properties").getAbsolutePath();
         PropertiesConfiguration c = new PropertiesConfiguration();
-        c.setFileName(simpleConfigurationFile);
-        c.load();
+        FileHandler handler = new FileHandler(c);
+        handler.setFileName(simpleConfigurationFile);
+        handler.load();
         return c;
     }
 
