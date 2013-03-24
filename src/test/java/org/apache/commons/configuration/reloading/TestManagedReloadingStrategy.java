@@ -21,9 +21,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 
-import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test case for the ManagedReloadingStrategy class.
@@ -33,38 +35,53 @@ import org.junit.Test;
  */
 public class TestManagedReloadingStrategy
 {
+    /** Constant for the name of the test property. */
+    private static final String PROPERTY = "string";
+
+    /** Constant for the XML fragment to be written. */
+    private static final String FMT_XML = "<configuration><" + PROPERTY
+            + ">%s</" + PROPERTY + "></configuration>";
+
+    /** A helper object for creating temporary files. */
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    /**
+     * Writes a test configuration file containing a single property with the
+     * given value.
+     *
+     * @param file the file to be written
+     * @param value the value of the test property
+     * @throws IOException if an error occurs
+     */
+    private void writeTestFile(File file, String value) throws IOException
+    {
+        FileWriter out = new FileWriter(file);
+        out.write(String.format(FMT_XML, value));
+        out.close();
+    }
+
     @Test
     public void testManagedRefresh() throws Exception
     {
-        File file = new File("target/testReload.properties");
-        if (file.exists())
-        {
-            file.delete();
-        }
+        File file = folder.newFile();
         // create the configuration file
-        FileWriter out = new FileWriter(file);
-        out.write("string=value1");
-        out.flush();
-        out.close();
+        writeTestFile(file, "value1");
 
         // load the configuration
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        config.setFileName("target/testReload.properties");
+        XMLConfiguration config = new XMLConfiguration();
+        config.setFile(file);
         config.load();
         ManagedReloadingStrategy strategy = new ManagedReloadingStrategy();
         config.setReloadingStrategy(strategy);
-        assertEquals("Initial value", "value1", config.getString("string"));
+        assertEquals("Initial value", "value1", config.getString(PROPERTY));
 
         // change the file
-        out = new FileWriter(file);
-        out.write("string=value2");
-        out.flush();
-        out.close();
+        writeTestFile(file, "value2");
 
         // test the automatic reloading
-        assertEquals("No automatic reloading", "value1", config.getString("string"));
+        assertEquals("No automatic reloading", "value1", config.getString(PROPERTY));
         strategy.refresh();
-        assertEquals("Modified value with enabled reloading", "value2", config.getString("string"));
+        assertEquals("Modified value with enabled reloading", "value2", config.getString(PROPERTY));
     }
 
 }
