@@ -17,8 +17,6 @@
 package org.apache.commons.configuration.event;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.ConfigurationAssert;
@@ -31,7 +29,7 @@ import org.apache.commons.configuration.PropertiesConfiguration;
  * @version $Id$
  */
 public class TestPropertiesConfigurationEvents extends
-        AbstractTestFileConfigurationEvents
+        AbstractTestConfigurationEvents
 {
     /** The file to be loaded.*/
     static final File TEST_FILE = ConfigurationAssert.getTestFile("test.properties");
@@ -40,11 +38,5 @@ public class TestPropertiesConfigurationEvents extends
     protected AbstractConfiguration createConfiguration()
     {
         return new PropertiesConfiguration();
-    }
-
-    @Override
-    protected URL getSourceURL() throws IOException
-    {
-        return TEST_FILE.toURI().toURL();
     }
 }
