@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 
 
@@ -35,8 +36,9 @@ public class TestCompositeConfigurationNonStringProperties extends BaseNonString
     {
         CompositeConfiguration cc = new CompositeConfiguration();
         PropertiesConfiguration pc = new PropertiesConfiguration();
-        pc.setFileName(testProperties);
-        pc.load();
+        FileHandler handler = new FileHandler(pc);
+        handler.setFileName(testProperties);
+        handler.load();
         cc.addConfiguration(pc);
         conf = cc;
         nonStringTestHolder.setConfiguration(conf);
