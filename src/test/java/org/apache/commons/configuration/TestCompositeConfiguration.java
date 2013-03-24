@@ -27,9 +27,6 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,7 +36,6 @@ import java.util.NoSuchElementException;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.io.FileHandler;
-import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,12 +67,13 @@ public class TestCompositeConfiguration
     {
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(conf1);
-        handler.setFileName(testProperties);
-        handler.load();
+        FileHandler handler1 = new FileHandler(conf1);
+        handler1.setFileName(testProperties);
+        handler1.load();
         conf2 = new PropertiesConfiguration();
-        conf2.setFileName(testProperties2);
-        conf2.load();
+        FileHandler handler2 = new FileHandler(conf2);
+        handler2.setFileName(testProperties2);
+        handler2.load();
         xmlConf = new XMLConfiguration(new File(testPropertiesXML));
 
         cc.setThrowExceptionOnMissing(true);
@@ -499,66 +496,6 @@ public class TestCompositeConfiguration
         assertEquals("Wrong list size", 2, lst.size());
         assertEquals("Wrong first element", "test1", lst.get(0));
         assertEquals("Wrong second element", "test2", lst.get(1));
-    }
-
-    /**
-     * Tests interpolation in combination with reloading.
-     */
-    @Test
-    public void testInterpolationWithReload() throws IOException,
-            ConfigurationException
-    {
-        File testFile = new File("target/testConfig.properties");
-        final String propFirst = "first.name";
-        final String propFull = "full.name";
-
-        try
-        {
-            writeTestConfig(testFile, propFirst, "John");
-            PropertiesConfiguration c1 = new PropertiesConfiguration();
-            c1.setFile(testFile);
-            c1.load();
-            c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-            PropertiesConfiguration c2 = new PropertiesConfiguration();
-            c2.addProperty(propFull, "${" + propFirst + "} Doe");
-            CompositeConfiguration cc = new CompositeConfiguration();
-            cc.addConfiguration(c1);
-            cc.addConfiguration(c2);
-            assertEquals("Wrong name", "John Doe", cc.getString(propFull));
-
-            writeTestConfig(testFile, propFirst, "Jane");
-            assertEquals("First name not changed", "Jane", c1
-                    .getString(propFirst));
-            assertEquals("First name not changed in composite", "Jane", cc
-                    .getString(propFirst));
-            assertEquals("Full name not changed", "Jane Doe", cc
-                    .getString(propFull));
-        }
-        finally
-        {
-            if (testFile.exists())
-            {
-                testFile.delete();
-            }
-        }
-    }
-
-    /**
-     * Writes a test properties file containing a single property definition.
-     *
-     * @param f the file to write
-     * @param prop the property name
-     * @param value the property value
-     * @throws IOException if an error occurs
-     */
-    private void writeTestConfig(File f, String prop, String value)
-            throws IOException
-    {
-        PrintWriter out = new PrintWriter(new FileWriter(f));
-        out.print(prop);
-        out.print("=");
-        out.println(value);
-        out.close();
     }
 
     @Test
