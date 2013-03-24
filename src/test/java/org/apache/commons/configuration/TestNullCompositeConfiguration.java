@@ -54,12 +54,13 @@ public class TestNullCompositeConfiguration
     {
         cc = new CompositeConfiguration();
         conf1 = new PropertiesConfiguration();
-        FileHandler handler = new FileHandler(conf1);
-        handler.setFileName(testProperties);
-        handler.load();
+        FileHandler handler1 = new FileHandler(conf1);
+        handler1.setFileName(testProperties);
+        handler1.load();
         conf2 = new PropertiesConfiguration();
-        conf2.setFileName(testProperties2);
-        conf2.load();
+        FileHandler handler2 = new FileHandler(conf2);
+        handler2.setFileName(testProperties2);
+        handler2.load();
         xmlConf = new XMLConfiguration(new File(testPropertiesXML));
 
         cc.setThrowExceptionOnMissing(false);
