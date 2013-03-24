@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 
 /**
@@ -33,8 +34,9 @@ public class TestNonStringProperties extends BaseNonStringProperties
     public void setUp() throws Exception
     {
         PropertiesConfiguration c = new PropertiesConfiguration();
-        c.setFileName(testProperties);
-        c.load();
+        FileHandler handler = new FileHandler(c);
+        handler.setFileName(testProperties);
+        handler.load();
         conf = c;
         nonStringTestHolder.setConfiguration(conf);
     }
