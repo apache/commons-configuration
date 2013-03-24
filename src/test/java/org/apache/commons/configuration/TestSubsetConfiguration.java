@@ -23,7 +23,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,6 +30,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.junit.Test;
@@ -220,14 +221,14 @@ public class TestSubsetConfiguration
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Test
     public void testNested() throws Exception
     {
-        ConfigurationFactory factory = new ConfigurationFactory();
-        File src = new File(new File(TEST_DIR), TEST_FILE);
-        factory.setConfigurationURL(src.toURL());
-        Configuration config = factory.getConfiguration();
+        CombinedConfigurationBuilder builder =
+                new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(ConfigurationAssert.getTestFile(TEST_FILE)));
+        Configuration config = builder.getConfiguration();
         Configuration subConf = config.subset("tables.table(0)");
         assertTrue(subConf.getKeys().hasNext());
         Configuration subSubConf = subConf.subset("fields.field(1)");
