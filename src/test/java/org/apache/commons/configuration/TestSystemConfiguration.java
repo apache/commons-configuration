@@ -18,10 +18,16 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.configuration.io.FileHandler;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Tests for {@code SystemConfiguration}.
@@ -31,6 +37,10 @@ import org.junit.Test;
  */
 public class TestSystemConfiguration
 {
+    /** An object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     @Test
     public void testSystemConfiguration()
     {
@@ -48,5 +58,24 @@ public class TestSystemConfiguration
         props.addProperty("test.name", "Apache");
         SystemConfiguration.setSystemProperties(props);
         assertEquals("System Properties", "Apache", System.getProperty("test.name"));
+    }
+
+    /**
+     * Tests whether system properties can be set from a configuration file.
+     */
+    @Test
+    public void testSetSystemPropertiesFromPropertiesFile()
+            throws ConfigurationException, IOException
+    {
+        File file = folder.newFile("sys.properties");
+        PropertiesConfiguration pconfig = new PropertiesConfiguration();
+        FileHandler handler = new FileHandler(pconfig);
+        pconfig.addProperty("fromFile", Boolean.TRUE);
+        handler.setFile(file);
+        handler.save();
+        SystemConfiguration.setSystemProperties(handler.getBasePath(),
+                handler.getFileName());
+        SystemConfiguration sconf = new SystemConfiguration();
+        assertTrue("Property from file not found", sconf.getBoolean("fromFile"));
     }
 }

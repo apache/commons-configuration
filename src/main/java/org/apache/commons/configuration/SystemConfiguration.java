@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import java.util.Iterator;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -45,42 +46,50 @@ public class SystemConfiguration extends MapConfiguration
     }
 
     /**
-     * The method allows system properties to be set from a property file.
+     * Sets system properties from a file specified by its file name. This is
+     * just a short cut for {@code setSystemProperties(null, fileName)}.
+     *
      * @param fileName The name of the property file.
      * @throws Exception if an error occurs.
      * @since 1.6
      */
-    public static void setSystemProperties(String fileName) throws Exception
+    public static void setSystemProperties(String fileName)
+            throws ConfigurationException
     {
         setSystemProperties(null, fileName);
     }
 
     /**
-     * The method allows system properties to be set from a property file.
+     * Sets system properties from a file specified using its base path and
+     * file name. The file can either be a properties file or an XML properties
+     * file. It is loaded, and all properties it contains are added to system
+     * properties.
+     *
      * @param basePath The base path to look for the property file.
      * @param fileName The name of the property file.
-     * @throws Exception if an error occurs.
+     * @throws ConfigurationException if an error occurs.
      * @since 1.6
      */
-    public static void setSystemProperties(String basePath, String fileName) throws Exception
+    public static void setSystemProperties(String basePath, String fileName)
+            throws ConfigurationException
     {
-        PropertiesConfiguration config = fileName.endsWith(".xml")
-            ? new XMLPropertiesConfiguration() : new PropertiesConfiguration();
-        if (basePath != null)
-        {
-            config.setBasePath(basePath);
-        }
-        config.setFileName(fileName);
-        config.load();
+        FileBasedConfiguration config =
+                fileName.endsWith(".xml") ? new XMLPropertiesConfiguration()
+                        : new PropertiesConfiguration();
+
+        FileHandler handler = new FileHandler(config);
+        handler.setBasePath(basePath);
+        handler.setFileName(fileName);
+        handler.load();
         setSystemProperties(config);
     }
 
     /**
-     * Set System properties from a configuration file.
+     * Set System properties from a configuration object.
      * @param systemConfig The configuration containing the properties to be set.
      * @since 1.6
      */
-    public static void setSystemProperties(PropertiesConfiguration systemConfig)
+    public static void setSystemProperties(Configuration systemConfig)
     {
         Iterator<String> iter = systemConfig.getKeys();
         while (iter.hasNext())
