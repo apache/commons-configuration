@@ -24,6 +24,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
+import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Test;
 
@@ -46,15 +48,15 @@ public class TestEqualBehaviour
         return c;
     }
 
-    @SuppressWarnings("deprecation")
     private Configuration setupCompositeConfiguration()
-            throws Exception
+            throws ConfigurationException
     {
-        String compositeConfigurationFile = ConfigurationAssert.getTestFile("testEqualDigester.xml").getAbsolutePath();
-
-        ConfigurationFactory configurationFactory = new ConfigurationFactory();
-        configurationFactory.setConfigurationFileName(compositeConfigurationFile);
-        return configurationFactory.getConfiguration();
+        CombinedConfigurationBuilder builder =
+                new CombinedConfigurationBuilder();
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(ConfigurationAssert
+                        .getTestFile("testEqualDigester.xml")));
+        return builder.getConfiguration();
     }
 
     /**
