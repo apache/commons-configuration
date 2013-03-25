@@ -154,17 +154,17 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
         {
             lastChecked = now;
 
-            File file = getExistingFile();
-            if (file != null)
+            long modified = getLastModificationDate();
+            if (modified > 0)
             {
                 if (lastModified == 0)
                 {
                     // initialization
-                    updateLastModified(file);
+                    updateLastModified(modified);
                 }
                 else
                 {
-                    if (file.lastModified() != lastModified)
+                    if (modified != lastModified)
                     {
                         return true;
                     }
@@ -182,7 +182,31 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
      */
     public void reloadingPerformed()
     {
-        updateLastModified(getExistingFile());
+        updateLastModified(getLastModificationDate());
+    }
+
+    /**
+     * Returns the date of the last modification of the monitored file. A return
+     * value of 0 indicates, that the monitored file does not exist.
+     *
+     * @return the last modification date
+     */
+    protected long getLastModificationDate()
+    {
+        File file = getExistingFile();
+        return (file != null) ? file.lastModified() : 0;
+    }
+
+    /**
+     * Updates the last modification date of the monitored file. The need for a
+     * reload is detected only if the file's modification date is different from
+     * this value.
+     *
+     * @param time the new last modification date
+     */
+    protected void updateLastModified(long time)
+    {
+        lastModified = time;
     }
 
     /**
@@ -214,20 +238,6 @@ public class FileHandlerReloadingDetector implements ReloadingDetector
         }
 
         return file;
-    }
-
-    /**
-     * Updates the last modified field based on the given {@code File} object.
-     * The file is checked for <b>null</b>.
-     *
-     * @param file the file to be monitored
-     */
-    private void updateLastModified(File file)
-    {
-        if (file != null)
-        {
-            lastModified = file.lastModified();
-        }
     }
 
     /**
