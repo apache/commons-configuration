@@ -18,18 +18,21 @@
 package org.apache.commons.configuration.reloading;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationAssert;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.VFSFileSystem;
-import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.vfs2.FileName;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,9 +46,6 @@ import org.junit.rules.TemporaryFolder;
  */
 public class TestVFSFileChangedReloadingStrategy
 {
-    /** Constant for the name of a test properties file.*/
-    private static final String TEST_FILE = "test.xml";
-
     /** Constant for the name of the test property. */
     private static final String PROPERTY = "string";
 
@@ -71,6 +71,7 @@ public class TestVFSFileChangedReloadingStrategy
     /**
      * Writes a test configuration file containing a single property with the
      * given value.
+     *
      * @param file the file to be written
      * @param value the value of the test property
      * @throws IOException if an error occurs
@@ -82,88 +83,109 @@ public class TestVFSFileChangedReloadingStrategy
         out.close();
     }
 
+    /**
+     * Tests whether the last modification date of an existing file can be
+     * obtained.
+     */
     @Test
-    public void testAutomaticReloading() throws Exception
+    public void testLastModificationDateExisting() throws IOException
     {
-        // create a new configuration
         File file = folder.newFile();
-
-        // create the configuration file
         writeTestFile(file, "value1");
-
-        // load the configuration
-        XMLConfiguration config = new XMLConfiguration();
-        config.setFile(file);
-        config.load();
-        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
-        strategy.setRefreshDelay(500);
-        config.setReloadingStrategy(strategy);
-        assertEquals("Initial value", "value1", config.getString(PROPERTY));
-
-        Thread.sleep(2000);
-
-        // change the file
-        writeTestFile(file, "value2");
-
-        // test the automatic reloading
-        assertEquals("Modified value with enabled reloading", "value2", config.getString(PROPERTY));
-    }
-
-    @Test
-    public void testNewFileReloading() throws Exception
-    {
-        // create a new configuration
-        File file = folder.newFile();
-
-        XMLConfiguration config = new XMLConfiguration();
-        config.setFile(file);
-        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
-        strategy.setRefreshDelay(500);
-        config.setReloadingStrategy(strategy);
-
-        assertNull("Initial value", config.getString(PROPERTY));
-
-        // change the file
-        writeTestFile(file, "value1");
-        Thread.sleep(2000);
-
-        // test the automatic reloading
-        assertEquals("Modified value with enabled reloading", "value1", config.getString(PROPERTY));
-    }
-
-    @Test
-    public void testGetRefreshDelay() throws Exception
-    {
-        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy();
-        strategy.setRefreshDelay(500);
-        assertEquals("refresh delay", 500, strategy.getRefreshDelay());
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy();
+        strategy.getFileHandler().setFile(file);
+        long modificationDate = strategy.getLastModificationDate();
+        assertEquals("Wrong modification date", file.lastModified(),
+                modificationDate);
     }
 
     /**
-     * Tests calling reloadingRequired() multiple times before a reload actually
-     * happens. This test is related to CONFIGURATION-302.
+     * Tests whether a non existing file is handled correctly.
      */
     @Test
-    public void testReloadingRequiredMultipleTimes()
-            throws ConfigurationException
+    public void testLastModificationDateNonExisting()
     {
-        VFSFileChangedReloadingStrategy strategy = new VFSFileChangedReloadingStrategy()
-        {
-            @Override
-            protected boolean hasChanged()
-            {
-                // signal always a change
-                return true;
-            }
-        };
-        strategy.setRefreshDelay(100000);
-        XMLConfiguration config = new XMLConfiguration();
-        config.setFileName(TEST_FILE);
-        config.load();
-        config.setReloadingStrategy(strategy);
-        assertTrue("Reloading not required", strategy.reloadingRequired());
-        assertTrue("Reloading no more required", strategy.reloadingRequired());
-        strategy.reloadingPerformed();
-        assertFalse("Reloading still required", strategy.reloadingRequired());
+        File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
+        FileHandler handler = new FileHandler();
+        handler.setFile(file);
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy(handler);
+        assertEquals("Got a modification date", 0,
+                strategy.getLastModificationDate());
+    }
+
+    /**
+     * Tests whether an undefined file handler is handler correctly.
+     */
+    @Test
+    public void testLastModificationDateUndefinedHandler()
+    {
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy();
+        assertEquals("Got a modification date", 0,
+                strategy.getLastModificationDate());
+    }
+
+    /**
+     * Tests whether a file system exception is handled when accessing the file
+     * object.
+     */
+    @Test
+    public void testLastModificationDateFileSystemEx()
+            throws FileSystemException
+    {
+        final FileObject fo = EasyMock.createMock(FileObject.class);
+        FileName name = EasyMock.createMock(FileName.class);
+        EasyMock.expect(fo.exists()).andReturn(Boolean.TRUE);
+        EasyMock.expect(fo.getContent()).andThrow(
+                new FileSystemException("error"));
+        EasyMock.expect(fo.getName()).andReturn(name);
+        EasyMock.expect(name.getURI()).andReturn("someURI");
+        EasyMock.replay(fo, name);
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy()
+                {
+                    @Override
+                    protected FileObject getFileObject()
+                    {
+                        return fo;
+                    }
+                };
+        assertEquals("Got a modification date", 0,
+                strategy.getLastModificationDate());
+        EasyMock.verify(fo);
+    }
+
+    /**
+     * Tests a URI which cannot be resolved.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testLastModificationDateUnresolvableURI()
+    {
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy()
+                {
+                    @Override
+                    protected String resolveFileURI()
+                    {
+                        return null;
+                    }
+                };
+        strategy.getFileHandler().setFileName("test.xml");
+        strategy.getLastModificationDate();
+    }
+
+    /**
+     * Tests whether the refresh delay is correctly passed to the base class.
+     */
+    @Test
+    public void testGetRefreshDelay() throws Exception
+    {
+        final long delay = 20130325L;
+        VFSFileChangedReloadingStrategy strategy =
+                new VFSFileChangedReloadingStrategy(null, delay);
+        assertNotNull("No file handler was created", strategy.getFileHandler());
+        assertEquals("Wrong refresh delay", delay, strategy.getRefreshDelay());
     }
 }

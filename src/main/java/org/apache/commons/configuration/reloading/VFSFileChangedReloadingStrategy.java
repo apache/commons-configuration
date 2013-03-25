@@ -18,9 +18,8 @@
 package org.apache.commons.configuration.reloading;
 
 import org.apache.commons.configuration.ConfigurationRuntimeException;
-import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.configuration.FileSystem;
-import org.apache.commons.configuration.FileSystemBased;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.vfs2.FileObject;
@@ -36,7 +35,7 @@ import org.apache.commons.vfs2.VFS;
  * </p>
  * <p>
  * This reloading strategy is very similar to
- * {@link FileChangedReloadingStrategy}, except for the fact that it uses VFS
+ * {@link FileHandlerReloadingDetector}, except for the fact that it uses VFS
  * and thus can deal with a variety of different configuration sources.
  * </p>
  * <p>
@@ -49,132 +48,67 @@ import org.apache.commons.vfs2.VFS;
  * @version $Id$
  * @since 1.7
  */
-public class VFSFileChangedReloadingStrategy implements ReloadingStrategy
+public class VFSFileChangedReloadingStrategy extends FileHandlerReloadingDetector
 {
-    /** Constant for the default refresh delay.*/
-    private static final int DEFAULT_REFRESH_DELAY = 5000;
-
-    /** Stores a reference to the configuration to be monitored.*/
-    protected FileConfiguration configuration;
-
-    /** The last time the configuration file was modified. */
-    protected long lastModified;
-
-    /** The last time the file was checked for changes. */
-    protected long lastChecked;
-
-    /** The minimum delay in milliseconds between checks. */
-    protected long refreshDelay = DEFAULT_REFRESH_DELAY;
-
-    /** A flag whether a reload is required.*/
-    private boolean reloading;
-
     /** Stores the logger.*/
     private Log log = LogFactory.getLog(getClass());
 
-    public void setConfiguration(FileConfiguration configuration)
+    /**
+     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * initializes it with an empty {@code FileHandler} object.
+     */
+    public VFSFileChangedReloadingStrategy()
     {
-        this.configuration = configuration;
-    }
-
-    public void init()
-    {
-        if (configuration.getURL() == null && configuration.getFileName() == null)
-        {
-            return;
-        }
-        if (this.configuration == null)
-        {
-            throw new IllegalStateException("No configuration has been set for this strategy");
-        }
-        updateLastModified();
-    }
-
-    public boolean reloadingRequired()
-    {
-        if (!reloading)
-        {
-            long now = System.currentTimeMillis();
-
-            if (now > lastChecked + refreshDelay)
-            {
-                lastChecked = now;
-                if (hasChanged())
-                {
-                    reloading = true;
-                }
-            }
-        }
-
-        return reloading;
-    }
-
-    public void reloadingPerformed()
-    {
-        updateLastModified();
+        super();
     }
 
     /**
-     * Return the minimal time in milliseconds between two reloadings.
+     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * initializes it with the given {@code FileHandler} object and the given
+     * refresh delay.
      *
-     * @return the refresh delay (in milliseconds)
+     * @param handler the {@code FileHandler}
+     * @param refreshDelay the refresh delay
      */
-    public long getRefreshDelay()
+    public VFSFileChangedReloadingStrategy(FileHandler handler,
+            long refreshDelay)
     {
-        return refreshDelay;
+        super(handler, refreshDelay);
     }
 
     /**
-     * Set the minimal time between two reloadings.
+     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * initializes it with the given {@code FileHandler} object.
      *
-     * @param refreshDelay refresh delay in milliseconds
+     * @param handler the {@code FileHandler}
      */
-    public void setRefreshDelay(long refreshDelay)
+    public VFSFileChangedReloadingStrategy(FileHandler handler)
     {
-        this.refreshDelay = refreshDelay;
+        super(handler);
     }
 
     /**
-     * Update the last modified time.
+     * {@inheritDoc} This implementation uses Commons VFS to obtain a
+     * {@code FileObject} and read the date of the last modification.
      */
-    protected void updateLastModified()
+    @Override
+    protected long getLastModificationDate()
     {
-        FileObject file = getFile();
-        if (file != null)
-        {
-            try
-            {
-                lastModified = file.getContent().getLastModifiedTime();
-            }
-            catch (FileSystemException fse)
-            {
-                log.error("Unable to get last modified time for" + file.getName().getURI());
-            }
-        }
-        reloading = false;
-    }
-
-    /**
-     * Check if the configuration has changed since the last time it was loaded.
-     *
-     * @return a flag whether the configuration has changed
-     */
-    protected boolean hasChanged()
-    {
-        FileObject file = getFile();
+        FileObject file = getFileObject();
         try
         {
             if (file == null || !file.exists())
             {
-                return false;
+                return 0;
             }
 
-            return file.getContent().getLastModifiedTime() > lastModified;
+            return file.getContent().getLastModifiedTime();
         }
         catch (FileSystemException ex)
         {
-            log.error("Unable to get last modified time for" + file.getName().getURI());
-            return false;
+            log.error("Unable to get last modified time for"
+                    + file.getName().getURI(), ex);
+            return 0;
         }
     }
 
@@ -184,14 +118,17 @@ public class VFSFileChangedReloadingStrategy implements ReloadingStrategy
      *
      * @return the monitored file
      */
-    protected FileObject getFile()
+    protected FileObject getFileObject()
     {
+        if (!getFileHandler().isLocationDefined())
+        {
+            return null;
+        }
+
         try
         {
             FileSystemManager fsManager = VFS.getManager();
-            FileSystem fs = ((FileSystemBased) configuration).getFileSystem();
-            String uri = fs.getPath(null, configuration.getURL(), configuration.getBasePath(),
-                configuration.getFileName());
+            String uri = resolveFileURI();
             if (uri == null)
             {
                 throw new ConfigurationRuntimeException("Unable to determine file to monitor");
@@ -200,9 +137,24 @@ public class VFSFileChangedReloadingStrategy implements ReloadingStrategy
         }
         catch (FileSystemException fse)
         {
-            String msg = "Unable to monitor " + configuration.getURL().toString();
+            String msg = "Unable to monitor " + getFileHandler().getURL().toString();
             log.error(msg);
             throw new ConfigurationRuntimeException(msg, fse);
         }
+    }
+
+    /**
+     * Resolves the URI of the monitored file.
+     *
+     * @return the URI of the monitored file or <b>null</b> if it cannot be
+     *         resolved
+     */
+    protected String resolveFileURI()
+    {
+        FileSystem fs = getFileHandler().getFileSystem();
+        String uri =
+                fs.getPath(null, getFileHandler().getURL(), getFileHandler()
+                        .getBasePath(), getFileHandler().getFileName());
+        return uri;
     }
 }
