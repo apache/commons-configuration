@@ -880,6 +880,17 @@ public class FileHandler
         {
             out = spec.getFileSystem().getOutputStream(url);
             saveToStream(out, spec.getEncoding(), url);
+            if(out instanceof VerifiableOutputStream)
+            {
+                try
+                {
+                    ((VerifiableOutputStream) out).verify();
+                }
+                catch (IOException e)
+                {
+                    throw new ConfigurationException(e);
+                }
+            }
         }
         finally
         {

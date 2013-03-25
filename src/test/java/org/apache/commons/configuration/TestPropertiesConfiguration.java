@@ -52,7 +52,6 @@ import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -705,8 +704,7 @@ public class TestPropertiesConfiguration
      * Tests saving a file-based configuration to a HTTP server when the server
      * reports a failure. This should cause an exception.
      */
-    //TODO add support for VerifiableOutputStream to FileHandler
-    @Test @Ignore
+    @Test
     public void testSaveToHTTPServerFail() throws Exception
     {
         MockHttpURLStreamHandler handler = new MockHttpURLStreamHandler(

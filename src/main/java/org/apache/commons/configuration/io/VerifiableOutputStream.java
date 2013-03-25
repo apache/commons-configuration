@@ -14,18 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.commons.configuration;
+package org.apache.commons.configuration.io;
 
-import java.io.OutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 /**
  * OutputStream that can be checked for errors after it is written to.
  * @since 1.7
- * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons Configuration team</a>
+ * @version $Id$
  */
-abstract class VerifiableOutputStream extends OutputStream
+public abstract class VerifiableOutputStream extends OutputStream
 {
     public abstract void verify() throws IOException;
 }
