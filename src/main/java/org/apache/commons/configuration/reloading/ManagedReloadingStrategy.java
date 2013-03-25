@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration.reloading;
 
-import org.apache.commons.configuration.FileConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -28,24 +27,14 @@ import org.apache.commons.logging.LogFactory;
  * @author Nicolas De loof
  * @version $Id$
  */
-public class ManagedReloadingStrategy implements ReloadingStrategy,
+public class ManagedReloadingStrategy implements ReloadingDetector,
         ManagedReloadingStrategyMBean
 {
     /** The logger. */
     private Log log = LogFactory.getLog(ManagedReloadingStrategy.class);
 
-    /** Stores a reference to the associated configuration. */
-    private FileConfiguration configuration;
-
     /** A flag whether a reload is required. */
-    private boolean reloadingRequired;
-
-    /**
-     * @see org.apache.commons.configuration.reloading.ReloadingStrategy#init()
-     */
-    public void init()
-    {
-    }
+    private volatile boolean reloadingRequired;
 
     /**
      * @see org.apache.commons.configuration.reloading.ReloadingStrategy#reloadingPerformed()
@@ -62,19 +51,9 @@ public class ManagedReloadingStrategy implements ReloadingStrategy,
      * @return a flag whether reloading is required
      * @see org.apache.commons.configuration.reloading.ReloadingStrategy#reloadingRequired()
      */
-    public boolean reloadingRequired()
+    public boolean isReloadingRequired()
     {
         return reloadingRequired;
-    }
-
-    /**
-     * Sets the associated configuration.
-     *
-     * @param configuration the associated configuration
-     */
-    public void setConfiguration(FileConfiguration configuration)
-    {
-        this.configuration = configuration;
     }
 
     /**
@@ -87,8 +66,6 @@ public class ManagedReloadingStrategy implements ReloadingStrategy,
     public void refresh()
     {
         log.info("Reloading configuration.");
-        this.reloadingRequired = true;
-        // force reloading
-        configuration.isEmpty();
+        reloadingRequired = true;
     }
 }
