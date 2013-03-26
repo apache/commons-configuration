@@ -44,6 +44,17 @@ public interface FileBasedBuilderProperties<T>
     T setReloadingRefreshDelay(long reloadingRefreshDelay);
 
     /**
+     * Sets the factory for creating {@code ReloadingDetector} objects. With
+     * this method a custom factory for reloading detectors can be installed.
+     * Per default, a factory creating {@code FileHandlerReloadingDetector}
+     * objects is used.
+     *
+     * @param factory the {@code ReloadingDetectorFactory}
+     * @return a reference to this object for method chaining
+     */
+    T setReloadingDetectorFactory(ReloadingDetectorFactory factory);
+
+    /**
      * Sets the location of the associated {@code FileHandler} as a {@code File}
      * object.
      *

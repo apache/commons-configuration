@@ -82,6 +82,24 @@ public class TestFileBasedBuilderParameters
     }
 
     /**
+     * Tests whether a factory for reloading detectors can be set.
+     */
+    @Test
+    public void testSetReloadingDetectorFactory()
+    {
+        ReloadingDetectorFactory factory =
+                EasyMock.createMock(ReloadingDetectorFactory.class);
+        EasyMock.replay(factory);
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        assertNull("Got a factory", params.getReloadingDetectorFactory());
+        assertSame("Wrong result", params,
+                params.setReloadingDetectorFactory(factory));
+        assertSame("Factory not set", factory,
+                params.getReloadingDetectorFactory());
+    }
+
+    /**
      * Tests whether a file can be set.
      */
     @Test
