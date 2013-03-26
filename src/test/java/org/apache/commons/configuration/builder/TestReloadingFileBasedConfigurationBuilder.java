@@ -58,10 +58,11 @@ public class TestReloadingFileBasedConfigurationBuilder
     }
 
     /**
-     * Tests whether a correct reloading detector is created.
+     * Tests whether a correct reloading detector is created if no custom factory
+     * was set.
      */
     @Test
-    public void testCreateReloadingDetector()
+    public void testCreateReloadingDetectorDefaultFactory() throws ConfigurationException
     {
         ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
                 new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
@@ -76,6 +77,32 @@ public class TestReloadingFileBasedConfigurationBuilder
         assertSame("Wrong file handler", handler, detector.getFileHandler());
         assertEquals("Wrong refresh delay", refreshDelay,
                 detector.getRefreshDelay());
+    }
+
+    /**
+     * Tests whether a custom reloading detector factory can be installed.
+     */
+    @Test
+    public void testCreateReloadingDetectoryCustomFactory()
+            throws ConfigurationException
+    {
+        ReloadingDetector detector =
+                EasyMock.createMock(ReloadingDetector.class);
+        ReloadingDetectorFactory factory =
+                EasyMock.createMock(ReloadingDetectorFactory.class);
+        FileHandler handler = new FileHandler();
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        EasyMock.expect(factory.createReloadingDetector(handler, params))
+                .andReturn(detector);
+        EasyMock.replay(detector, factory);
+        params.setReloadingDetectorFactory(factory);
+        ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new ReloadingFileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        assertSame("Wrong detector", detector,
+                builder.createReloadingDetector(handler, params));
+        EasyMock.verify(factory);
     }
 
     /**

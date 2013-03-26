@@ -65,6 +65,10 @@ import org.apache.commons.configuration.reloading.ReloadingListener;
 public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfiguration>
         extends FileBasedConfigurationBuilder<T> implements ReloadingControllerSupport
 {
+    /** The default factory for creating reloading detector objects. */
+    private static final ReloadingDetectorFactory DEFAULT_DETECTOR_FACTORY =
+            new DefaultReloadingDetectorFactory();
+
     /** The reloading controller associated with this object. */
     private final ReloadingController reloadingController;
 
@@ -139,21 +143,23 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
     /**
      * Creates a {@code ReloadingDetector} which monitors the passed in
      * {@code FileHandler}. This method is called each time a new result object
-     * is created with the current {@code FileHandler}. The
-     * {@code ReloadingDetector} associated with this builder's
-     * {@link ReloadingController} delegates to this object. This implementation
-     * returns a new {@code FileHandlerReloadingDetector} object. Note: This
-     * method is called from a synchronized block.
+     * is created with the current {@code FileHandler}. This implementation
+     * checks whether a {@code ReloadingDetectorFactory} is specified in the
+     * current parameters. If this is the case, it is invoked. Otherwise, a
+     * default factory is used to create a {@code FileHandlerReloadingDetector}
+     * object. Note: This method is called from a synchronized block.
      *
      * @param handler the current {@code FileHandler}
      * @param fbparams the object with parameters related to file-based builders
      * @return a {@code ReloadingDetector} for this {@code FileHandler}
+     * @throws ConfigurationException if an error occurs
      */
     protected ReloadingDetector createReloadingDetector(FileHandler handler,
             FileBasedBuilderParametersImpl fbparams)
+            throws ConfigurationException
     {
-        return new FileHandlerReloadingDetector(handler,
-                fbparams.getReloadingRefreshDelay());
+        return fetchDetectorFactory(fbparams).createReloadingDetector(handler,
+                fbparams);
     }
 
     /**
@@ -242,5 +248,19 @@ public class ReloadingFileBasedConfigurationBuilder<T extends FileBasedConfigura
                         : false;
             }
         };
+    }
+
+    /**
+     * Returns a {@code ReloadingDetectorFactory} either from the passed in
+     * parameters or a default factory.
+     *
+     * @param params the current parameters object
+     * @return the {@code ReloadingDetectorFactory} to be used
+     */
+    private static ReloadingDetectorFactory fetchDetectorFactory(
+            FileBasedBuilderParametersImpl params)
+    {
+        ReloadingDetectorFactory factory = params.getReloadingDetectorFactory();
+        return (factory != null) ? factory : DEFAULT_DETECTOR_FACTORY;
     }
 }
