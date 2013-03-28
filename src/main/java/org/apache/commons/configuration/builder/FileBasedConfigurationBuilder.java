@@ -133,6 +133,19 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
+     * Convenience method which saves the associated configuration. This method
+     * expects that the managed configuration has already been created and that
+     * a valid file location is available in the current {@code FileHandler}.
+     * The file handler is then used to store the configuration.
+     *
+     * @throws ConfigurationException if an error occurs
+     */
+    public void save() throws ConfigurationException
+    {
+        getFileHandler().save();
+    }
+
+    /**
      * {@inheritDoc} This implementation deals with the creation and
      * initialization of a {@code FileHandler} associated with the new result
      * object.

@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -233,5 +234,56 @@ public class TestFileBasedConfigurationBuilder
         builder.getFileHandler().setFile(file);
         PropertiesConfiguration config = builder.getConfiguration();
         assertFalse("No data was loaded", config.isEmpty());
+    }
+
+    /**
+     * Checks whether a test configuration was saved successfully.
+     *
+     * @param file the file to which the configuration was saved
+     * @param expValue the expected value of the test property
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void checkSavedConfig(File file, int expValue)
+            throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        FileHandler handler = new FileHandler(config);
+        handler.load(file);
+        assertEquals("Configuration was not saved", expValue,
+                config.getInt(PROP));
+    }
+
+    /**
+     * Tests whether the managed configuration can be saved.
+     */
+    @Test
+    public void testSave() throws ConfigurationException
+    {
+        File file = createTestFile(1);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+        PropertiesConfiguration config = builder.getConfiguration();
+        config.setProperty(PROP, 5);
+        builder.save();
+        checkSavedConfig(file, 5);
+    }
+
+    /**
+     * Tests whether a new configuration can be saved to a file.
+     */
+    @Test
+    public void testSaveNewFile() throws ConfigurationException, IOException
+    {
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        PropertiesConfiguration config = builder.getConfiguration();
+        config.setProperty(PROP, 2);
+        File file = folder.newFile();
+        builder.getFileHandler().setFile(file);
+        builder.save();
+        checkSavedConfig(file, 2);
     }
 }
