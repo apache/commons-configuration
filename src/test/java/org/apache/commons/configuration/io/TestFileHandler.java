@@ -950,6 +950,144 @@ public class TestFileHandler
     }
 
     /**
+     * Tries to add a null listener.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testAddFileHandlerListenerNull()
+    {
+        new FileHandler().addFileHandlerListener(null);
+    }
+
+    /**
+     * Tests notifications about load operations.
+     */
+    @Test
+    public void testLoadEvents() throws ConfigurationException
+    {
+        FileHandler handler = new FileHandler(new FileBasedTestImpl());
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.load(createTestFile());
+        listener.checkMethods("loadingloaded");
+    }
+
+    /**
+     * Tests notifications about save operations.
+     */
+    @Test
+    public void testSaveEvents() throws IOException, ConfigurationException
+    {
+        FileHandler handler = new FileHandler(new FileBasedTestImpl());
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        File f = folder.newFile();
+        handler.save(f);
+        listener.checkMethods("savingsaved");
+    }
+
+    /**
+     * Tests a notification about a changed file name.
+     */
+    @Test
+    public void testLocationChangedFileName()
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setFileName(TEST_FILENAME);
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed base path.
+     */
+    @Test
+    public void testLocationChangedBasePath()
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setBasePath(TEST_FILENAME);
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed file.
+     */
+    @Test
+    public void testLocationChangedFile() throws IOException
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setFile(folder.newFile());
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed path.
+     */
+    @Test
+    public void testLocationChangedPath()
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setPath(TEST_FILENAME);
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed file system.
+     */
+    @Test
+    public void testLocationChangedFileSystem()
+    {
+        FileSystem fs = EasyMock.createMock(FileSystem.class);
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setFileSystem(fs);
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed URL.
+     */
+    @Test
+    public void testLocationChangedURL() throws IOException
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        URL url = folder.newFile().toURI().toURL();
+        handler.setURL(url);
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
+     * Tests a notification about a changed encoding.
+     */
+    @Test
+    public void testLocationChangedEncoding()
+    {
+        FileHandler handler = new FileHandler();
+        FileHandlerListenerTestImpl listener =
+                new FileHandlerListenerTestImpl(handler);
+        handler.addFileHandlerListener(listener);
+        handler.setEncoding("UTF-8");
+        listener.checkMethods("locationChanged");
+    }
+
+    /**
      * An implementation of the FileBased interface used for test purposes.
      */
     private static class FileBasedTestImpl implements FileBased
@@ -1029,6 +1167,83 @@ public class TestFileHandler
         {
             out.write(String.valueOf(locator.getSourceURL()) + ": ");
             super.write(out);
+        }
+    }
+
+    /**
+     * A test listener implementation.
+     */
+    private static class FileHandlerListenerTestImpl extends
+            FileHandlerListenerAdapter
+    {
+        /** The expected file handler. */
+        private final FileHandler expHandler;
+
+        /** A buffer for recording method invocations. */
+        private final StringBuilder methods;
+
+        public FileHandlerListenerTestImpl(FileHandler fh)
+        {
+            expHandler = fh;
+            methods = new StringBuilder();
+        }
+
+        /**
+         * Tests whether the expected listener methods have been called.
+         *
+         * @param expMethods the expected methods as plain string
+         */
+        public void checkMethods(String expMethods)
+        {
+            assertEquals("Wrong listener methods", expMethods,
+                    methods.toString());
+        }
+
+        @Override
+        public void loading(FileHandler handler)
+        {
+            super.loading(handler);
+            methodCalled(handler, "loading");
+        }
+
+        @Override
+        public void loaded(FileHandler handler)
+        {
+            super.loaded(handler);
+            methodCalled(handler, "loaded");
+        }
+
+        @Override
+        public void saving(FileHandler handler)
+        {
+            super.saving(handler);
+            methodCalled(handler, "saving");
+        }
+
+        @Override
+        public void saved(FileHandler handler)
+        {
+            super.saved(handler);
+            methodCalled(handler, "saved");
+        }
+
+        @Override
+        public void locationChanged(FileHandler handler)
+        {
+            super.locationChanged(handler);
+            methodCalled(handler, "locationChanged");
+        }
+
+        /**
+         * One of the listener methods was called. Records this invocation.
+         *
+         * @param handler the file handler
+         * @param method the called method
+         */
+        private void methodCalled(FileHandler handler, String method)
+        {
+            assertEquals("Wrong file handler", expHandler, handler);
+            methods.append(method);
         }
     }
 }
