@@ -16,11 +16,17 @@
  */
 package org.apache.commons.configuration.builder;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.FileBasedConfiguration;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * <p>
@@ -53,6 +59,10 @@ import org.apache.commons.configuration.io.FileHandler;
 public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
         extends BasicConfigurationBuilder<T>
 {
+    /** A map for storing default encodings for specific configuration classes. */
+    private static final Map<Class<?>, String> DEFAULT_ENCODINGS =
+            initializeDefaultEncodings();
+
     /** Stores the FileHandler associated with the current configuration. */
     private FileHandler currentFileHandler;
 
@@ -103,6 +113,76 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
             Map<String, Object> params, boolean allowFailOnInit)
     {
         super(resCls, params, allowFailOnInit);
+    }
+
+    /**
+     * Returns the default encoding for the specified configuration class. If an
+     * encoding has been set for the specified class (or one of its super
+     * classes), it is returned. Otherwise, result is <b>null</b>.
+     *
+     * @param configClass the configuration class in question
+     * @return the default encoding for this class (may be <b>null</b>)
+     */
+    public static String getDefaultEncoding(Class<?> configClass)
+    {
+        String enc = DEFAULT_ENCODINGS.get(configClass);
+        if (enc != null || configClass == null)
+        {
+            return enc;
+        }
+
+        List<Class<?>> superclasses =
+                ClassUtils.getAllSuperclasses(configClass);
+        for (Class<?> cls : superclasses)
+        {
+            enc = DEFAULT_ENCODINGS.get(cls);
+            if (enc != null)
+            {
+                return enc;
+            }
+        }
+
+        List<Class<?>> interfaces = ClassUtils.getAllInterfaces(configClass);
+        for (Class<?> cls : interfaces)
+        {
+            enc = DEFAULT_ENCODINGS.get(cls);
+            if (enc != null)
+            {
+                return enc;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets a default encoding for a specific configuration class. This encoding
+     * is used if an instance of this configuration class is to be created and
+     * no encoding has been set in the parameters object for this builder. The
+     * encoding passed here not only applies to the specified class but also to
+     * its sub classes. If the encoding is <b>null</b>, it is removed.
+     *
+     * @param configClass the name of the configuration class (must not be
+     *        <b>null</b>)
+     * @param encoding the default encoding for this class
+     * @throws IllegalArgumentException if the class is <b>null</b>
+     */
+    public static void setDefaultEncoding(Class<?> configClass, String encoding)
+    {
+        if (configClass == null)
+        {
+            throw new IllegalArgumentException(
+                    "Configuration class must not be null!");
+        }
+
+        if (encoding == null)
+        {
+            DEFAULT_ENCODINGS.remove(configClass);
+        }
+        else
+        {
+            DEFAULT_ENCODINGS.put(configClass, encoding);
+        }
     }
 
     /**
@@ -213,6 +293,7 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     protected void initFileHandler(FileHandler handler)
             throws ConfigurationException
     {
+        initEncoding(handler);
         if (handler.isLocationDefined())
         {
             handler.load();
@@ -267,5 +348,40 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
             autoSaveListener.updateFileHandler(null);
             autoSaveListener = null;
         }
+    }
+
+    /**
+     * Initializes the encoding of the specified file handler. If already an
+     * encoding is set, it is used. Otherwise, the default encoding for the
+     * result configuration class is obtained and set.
+     *
+     * @param handler the handler to be initialized
+     */
+    private void initEncoding(FileHandler handler)
+    {
+        if (StringUtils.isEmpty(handler.getEncoding()))
+        {
+            String encoding = getDefaultEncoding(getResultClass());
+            if (encoding != null)
+            {
+                handler.setEncoding(encoding);
+            }
+        }
+    }
+
+    /**
+     * Creates a map with default encodings for configuration classes and
+     * populates it with default entries.
+     *
+     * @return the map with default encodings
+     */
+    private static Map<Class<?>, String> initializeDefaultEncodings()
+    {
+        Map<Class<?>, String> enc = new ConcurrentHashMap<Class<?>, String>();
+        enc.put(PropertiesConfiguration.class,
+                PropertiesConfiguration.DEFAULT_ENCODING);
+        enc.put(XMLPropertiesConfiguration.class,
+                XMLPropertiesConfiguration.DEFAULT_ENCODING);
+        return enc;
     }
 }

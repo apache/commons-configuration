@@ -19,6 +19,7 @@ package org.apache.commons.configuration.builder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -30,8 +31,11 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.XMLPropertiesConfiguration;
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Rule;
 import org.junit.Test;
@@ -347,5 +351,110 @@ public class TestFileBasedConfigurationBuilder
         config.setProperty(PROP, 2);
         builder.setAutoSave(false); // should have no effect
         checkSavedConfig(file, 1);
+    }
+
+    /**
+     * Tries to set a default encoding for a null class.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetDefaultEncodingNull()
+    {
+        FileBasedConfigurationBuilder.setDefaultEncoding(null, "UTF-8");
+    }
+
+    /**
+     * Tests whether a default encoding for properties configurations is
+     * defined.
+     */
+    @Test
+    public void testGetDefaultEncodingProperties()
+    {
+        assertEquals("Wrong default encoding",
+                PropertiesConfiguration.DEFAULT_ENCODING,
+                FileBasedConfigurationBuilder
+                        .getDefaultEncoding(PropertiesConfiguration.class));
+    }
+
+    /**
+     * Tests whether a default encoding for XML properties configurations is
+     * defined.
+     */
+    @Test
+    public void testGetDefaultEncodingXmlProperties()
+    {
+        assertEquals("Wrong default encoding",
+                XMLPropertiesConfiguration.DEFAULT_ENCODING,
+                FileBasedConfigurationBuilder
+                        .getDefaultEncoding(XMLPropertiesConfiguration.class));
+    }
+
+    /**
+     * Tests whether a default encoding is find even if a sub class is queried.
+     */
+    @Test
+    public void testGetDefaultEncodingSubClass()
+    {
+        PropertiesConfiguration conf = new PropertiesConfiguration()
+        {
+        };
+        assertEquals("Wrong default encodng",
+                PropertiesConfiguration.DEFAULT_ENCODING,
+                FileBasedConfigurationBuilder.getDefaultEncoding(conf
+                        .getClass()));
+    }
+
+    /**
+     * Tests whether a default encoding can be determined even if it was set for
+     * an interface.
+     */
+    @Test
+    public void testGetDefaultEncodingInterface()
+    {
+        String encoding = "testEncoding";
+        FileBasedConfigurationBuilder.setDefaultEncoding(Configuration.class,
+                encoding);
+        assertEquals("Wrong default encoding", encoding,
+                FileBasedConfigurationBuilder
+                        .getDefaultEncoding(XMLConfiguration.class));
+        FileBasedConfigurationBuilder.setDefaultEncoding(Configuration.class,
+                null);
+        assertNull("Default encoding not removed",
+                FileBasedConfigurationBuilder
+                        .getDefaultEncoding(XMLConfiguration.class));
+    }
+
+    /**
+     * Tests whether the default encoding is set for the file handler if none is
+     * specified.
+     */
+    @Test
+    public void testInitFileHandlerSetDefaultEncoding()
+            throws ConfigurationException
+    {
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        FileHandler handler = new FileHandler();
+        builder.initFileHandler(handler);
+        assertEquals("Wrong encoding",
+                PropertiesConfiguration.DEFAULT_ENCODING, handler.getEncoding());
+    }
+
+    /**
+     * Tests whether the default encoding can be overridden when initializing
+     * the file handler.
+     */
+    @Test
+    public void testInitFileHandlerOverrideDefaultEncoding()
+            throws ConfigurationException
+    {
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        FileHandler handler = new FileHandler();
+        String encoding = "testEncoding";
+        handler.setEncoding(encoding);
+        builder.initFileHandler(handler);
+        assertEquals("Encoding was changed", encoding, handler.getEncoding());
     }
 }

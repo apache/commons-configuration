@@ -76,7 +76,7 @@ public class XMLPropertiesConfiguration extends BaseConfiguration implements
     /**
      * The default encoding (UTF-8 as specified by http://java.sun.com/j2se/1.5.0/docs/api/java/util/Properties.html)
      */
-    private static final String DEFAULT_ENCODING = "UTF-8";
+    public static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * Default string used when the XML is malformed
