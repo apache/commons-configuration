@@ -56,6 +56,9 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     /** Stores the FileHandler associated with the current configuration. */
     private FileHandler currentFileHandler;
 
+    /** A specialized listener for the auto save mechanism. */
+    private AutoSaveListener autoSaveListener;
+
     /** A flag whether the builder's parameters were reset. */
     private boolean resetParameters;
 
@@ -146,6 +149,36 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
     }
 
     /**
+     * Returns a flag whether auto save mode is currently active.
+     *
+     * @return <b>true</b> if auto save is enabled, <b>false</b> otherwise
+     */
+    public synchronized boolean isAutoSave()
+    {
+        return autoSaveListener != null;
+    }
+
+    /**
+     * Enables or disables auto save mode. If auto save mode is enabled, every
+     * update of the managed configuration causes it to be saved automatically;
+     * so changes are directly written to disk.
+     *
+     * @param enabled <b>true</b> if auto save mode is to be enabled,
+     *        <b>false</b> otherwise
+     */
+    public synchronized void setAutoSave(boolean enabled)
+    {
+        if (enabled)
+        {
+            installAutoSaveListener();
+        }
+        else
+        {
+            removeAutoSaveListener();
+        }
+    }
+
+    /**
      * {@inheritDoc} This implementation deals with the creation and
      * initialization of a {@code FileHandler} associated with the new result
      * object.
@@ -158,6 +191,11 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
                 (currentFileHandler != null && !resetParameters) ? currentFileHandler
                         : fetchFileHandlerFromParameters();
         currentFileHandler = new FileHandler(obj, srcHandler);
+
+        if (autoSaveListener != null)
+        {
+            autoSaveListener.updateFileHandler(currentFileHandler);
+        }
         initFileHandler(currentFileHandler);
         resetParameters = false;
     }
@@ -201,5 +239,33 @@ public class FileBasedConfigurationBuilder<T extends FileBasedConfiguration>
             addParameters(fileParams.getParameters());
         }
         return fileParams.getFileHandler();
+    }
+
+    /**
+     * Installs the listener for the auto save mechanism if it is not yet
+     * active.
+     */
+    private void installAutoSaveListener()
+    {
+        if (autoSaveListener == null)
+        {
+            autoSaveListener = new AutoSaveListener(this);
+            addConfigurationListener(autoSaveListener);
+            autoSaveListener.updateFileHandler(getFileHandler());
+        }
+    }
+
+    /**
+     * Removes the listener for the auto save mechanism if it is currently
+     * active.
+     */
+    private void removeAutoSaveListener()
+    {
+        if (autoSaveListener != null)
+        {
+            removeConfigurationListener(autoSaveListener);
+            autoSaveListener.updateFileHandler(null);
+            autoSaveListener = null;
+        }
     }
 }

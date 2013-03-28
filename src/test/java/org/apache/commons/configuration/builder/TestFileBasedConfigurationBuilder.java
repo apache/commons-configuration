@@ -286,4 +286,66 @@ public class TestFileBasedConfigurationBuilder
         builder.save();
         checkSavedConfig(file, 2);
     }
+
+    /**
+     * Tests whether auto save mode works.
+     */
+    @Test
+    public void testAutoSave() throws ConfigurationException
+    {
+        File file = createTestFile(0);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+        assertFalse("Wrong auto save flag", builder.isAutoSave());
+        builder.setAutoSave(true);
+        assertTrue("Auto save not enabled", builder.isAutoSave());
+        builder.setAutoSave(true); // should have no effect
+        PropertiesConfiguration config = builder.getConfiguration();
+        config.setProperty(PROP, 1);
+        checkSavedConfig(file, 1);
+    }
+
+    /**
+     * Tests that the auto save mechanism survives a reset of the builder's
+     * configuration.
+     */
+    @Test
+    public void testAutoSaveWithReset() throws ConfigurationException
+    {
+        File file = createTestFile(0);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+        PropertiesConfiguration config1 = builder.getConfiguration();
+        builder.setAutoSave(true);
+        builder.resetResult();
+        PropertiesConfiguration config2 = builder.getConfiguration();
+        assertNotSame("No new configuration created", config1, config2);
+        config2.setProperty(PROP, 1);
+        config1.setProperty(PROP, 2);
+        checkSavedConfig(file, 1);
+    }
+
+    /**
+     * Tests whether auto save mode can be disabled again.
+     */
+    @Test
+    public void testDisableAutoSave() throws ConfigurationException
+    {
+        File file = createTestFile(0);
+        FileBasedConfigurationBuilder<PropertiesConfiguration> builder =
+                new FileBasedConfigurationBuilder<PropertiesConfiguration>(
+                        PropertiesConfiguration.class);
+        builder.configure(new FileBasedBuilderParametersImpl().setFile(file));
+        PropertiesConfiguration config = builder.getConfiguration();
+        builder.setAutoSave(true);
+        config.setProperty(PROP, 1);
+        builder.setAutoSave(false);
+        config.setProperty(PROP, 2);
+        builder.setAutoSave(false); // should have no effect
+        checkSavedConfig(file, 1);
+    }
 }
