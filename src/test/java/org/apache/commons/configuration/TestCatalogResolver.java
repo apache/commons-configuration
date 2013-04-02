@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.resolver.CatalogResolver;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -59,18 +60,28 @@ public class TestCatalogResolver
         config = null;
     }
 
-    @Test
-    public void testPublic() throws Exception
+    /**
+     * Loads the test configuration from the specified file.
+     *
+     * @param fileName the file name
+     * @throws ConfigurationException if an error occurs
+     */
+    private void load(String fileName) throws ConfigurationException
     {
-        config.setFileName(PUBLIC_FILE);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.load(fileName);
     }
 
     @Test
-    public void testRewriteSystem() throws Exception
+    public void testPublic() throws ConfigurationException
     {
-        config.setFileName(REWRITE_SYSTEM_FILE);
-        config.load();
+        load(PUBLIC_FILE);
+    }
+
+    @Test
+    public void testRewriteSystem() throws ConfigurationException
+    {
+        load(REWRITE_SYSTEM_FILE);
     }
 
     /**
@@ -79,11 +90,9 @@ public class TestCatalogResolver
      * @throws Exception
      */
     @Test
-    public void testSchemaResolver() throws Exception
+    public void testSchemaResolver() throws ConfigurationException
     {
-        config.setFileName(REWRITE_SCHEMA_FILE);
-        config.setSchemaValidation(true);
-        config.load();
+        load(REWRITE_SCHEMA_FILE);
     }
 
     @Test
