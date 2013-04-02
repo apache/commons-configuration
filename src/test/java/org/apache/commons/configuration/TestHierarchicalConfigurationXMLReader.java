@@ -24,6 +24,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.sax.SAXSource;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.jxpath.JXPathContext;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,8 +48,8 @@ public class TestHierarchicalConfigurationXMLReader
     public void setUp() throws Exception
     {
         XMLConfiguration config = new XMLConfiguration();
-        config.setFileName(TEST_FILE);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.load(TEST_FILE);
         parser = new HierarchicalConfigurationXMLReader(config);
     }
 
