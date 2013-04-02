@@ -16,8 +16,11 @@
  */
 package org.apache.commons.configuration.builder.combined;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationUtils;
@@ -61,6 +64,9 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     /** A map with registered configuration builder providers. */
     private final Map<String, ConfigurationBuilderProvider> providers;
 
+    /** A list with default parameters for child configuration sources. */
+    private final Collection<BuilderParameters> childParameters;
+
     /** The base path for configuration sources to be loaded. */
     private String basePath;
 
@@ -70,6 +76,7 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     public CombinedBuilderParametersImpl()
     {
         providers = new HashMap<String, ConfigurationBuilderProvider>();
+        childParameters = new LinkedList<BuilderParameters>();
     }
 
     /**
@@ -305,6 +312,35 @@ public class CombinedBuilderParametersImpl extends BasicBuilderParameters
     {
         definitionBuilderParameters = params;
         return this;
+    }
+
+    /**
+     * {@inheritDoc} This implementation stores the passed in object in an
+     * internal collection. From there it can be queried later to perform
+     * initialization of a combined builder's child configuration sources.
+     */
+    public CombinedBuilderParametersImpl addChildParameters(
+            BuilderParameters params)
+    {
+        if (params != null)
+        {
+            childParameters.add(params);
+        }
+        return this;
+    }
+
+    /**
+     * Returns a collection with default parameter objects for child
+     * configuration sources. This collection contains the same objects (in the
+     * same order) that were passed to {@code addChildParameters()}. The
+     * returned collection is a defensive copy; it can be modified, but this has
+     * no effect on the parameters stored in this object.
+     *
+     * @return a map with default parameters for child sources
+     */
+    public Collection<? extends BuilderParameters> getDefaultChildParameters()
+    {
+        return new ArrayList<BuilderParameters>(childParameters);
     }
 
     /**

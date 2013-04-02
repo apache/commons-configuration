@@ -23,7 +23,9 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -32,7 +34,9 @@ import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.BuilderParameters;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
+import org.apache.commons.configuration.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.Test;
 
@@ -346,5 +350,46 @@ public class TestCombinedBuilderParametersImpl
                         .get("systemID"),
                 clone.getDefinitionBuilderParameters().getParameters()
                         .get("systemID"));
+    }
+
+    /**
+     * Tests whether default parameters for child sources can be added.
+     */
+    @Test
+    public void testAddChildParameters()
+    {
+        ExpressionEngine engine = EasyMock.createMock(ExpressionEngine.class);
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        XMLBuilderParametersImpl xmlParams = new XMLBuilderParametersImpl();
+        xmlParams.setExpressionEngine(engine);
+        xmlParams.setValidating(true);
+        assertSame("Wrong result (1)", params,
+                params.addChildParameters(xmlParams));
+        PropertiesBuilderParametersImpl prpParams =
+                new PropertiesBuilderParametersImpl();
+        prpParams.setIncludesAllowed(false);
+        assertSame("Wrong result (2)", params,
+                params.addChildParameters(prpParams));
+        Collection<? extends BuilderParameters> list =
+                params.getDefaultChildParameters();
+        assertEquals("Wrong number of parameters objects", 2, list.size());
+        Iterator<? extends BuilderParameters> it = list.iterator();
+        assertSame("Wrong parameters object (1)", xmlParams, it.next());
+        assertSame("Wrong parameters object (2)", prpParams, it.next());
+    }
+
+    /**
+     * Tests whether a null parameters object is handled correctly by
+     * addChildParameters().
+     */
+    @Test
+    public void testAddChildParametersNullParams()
+    {
+        CombinedBuilderParametersImpl params =
+                new CombinedBuilderParametersImpl();
+        params.addChildParameters((BuilderParameters) null);
+        assertTrue("Got child parameters", params.getDefaultChildParameters()
+                .isEmpty());
     }
 }

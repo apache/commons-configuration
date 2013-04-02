@@ -88,4 +88,27 @@ public interface CombinedBuilderProperties<T>
      * @return a reference to this object for method chaining
      */
     T setDefinitionBuilderParameters(BuilderParameters params);
+
+    /**
+     * Adds a parameters object with default parameters for child configuration
+     * sources. With this method an arbitrary number of parameters objects can
+     * be set. When creating builders for child configuration sources, their
+     * parameters are initialized with all matching properties from these
+     * default parameters. For instance, this method could be called passing in
+     * a parameters object for XML configurations. Then all XML configuration
+     * sources declared in the definition configuration will be initialized with
+     * the properties defined here. If a parameters object for a base class is
+     * passed (e.g. {@code FileBasedBuilderParametersImpl} or
+     * {@code BasicBuilderParameters}), all parameter objects derived from these
+     * base classes are initialized with the corresponding properties. So by
+     * making use of classes in the hierarchy of parameter objects, default
+     * values for specific types of configuration sources can be set in a
+     * fine-grained way. (It is still possible to override properties for a
+     * specific configuration source in the definition file.) This method can be
+     * called multiple times for defining different default parameter objects.
+     *
+     * @param params the default parameters object (can be <b>null</b>)
+     * @return a reference to this object for method chaining
+     */
+    T addChildParameters(BuilderParameters params);
 }
