@@ -61,7 +61,7 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     private ReloadingDetectorFactory reloadingDetectorFactory;
 
     /** The refresh delay for reloading support. */
-    private long reloadingRefreshDelay;
+    private Long reloadingRefreshDelay;
 
     /**
      * Creates a new instance of {@code FileBasedBuilderParametersImpl} with an
@@ -135,17 +135,18 @@ public class FileBasedBuilderParametersImpl extends BasicBuilderParameters
     }
 
     /**
-     * Returns the refresh delay for reload operations.
+     * Returns the refresh delay for reload operations. Result may be
+     * <b>null</b> if this value has not been set.
      *
      * @return the reloading refresh delay
      */
-    public long getReloadingRefreshDelay()
+    public Long getReloadingRefreshDelay()
     {
         return reloadingRefreshDelay;
     }
 
     public FileBasedBuilderParametersImpl setReloadingRefreshDelay(
-            long reloadingRefreshDelay)
+            Long reloadingRefreshDelay)
     {
         this.reloadingRefreshDelay = reloadingRefreshDelay;
         return this;

@@ -52,8 +52,7 @@ public class TestFileBasedBuilderParameters
         FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
         assertFalse("Got a location", params.getFileHandler()
                 .isLocationDefined());
-        assertEquals("Got a refresh delay", 0,
-                params.getReloadingRefreshDelay());
+        assertNull("Got a refresh delay", params.getReloadingRefreshDelay());
     }
 
     /**
@@ -75,7 +74,7 @@ public class TestFileBasedBuilderParameters
     public void testSetReloadingRefreshDelay()
     {
         FileBasedBuilderParametersImpl params = new FileBasedBuilderParametersImpl();
-        final int delay = 10000;
+        final Long delay = 10000L;
         assertSame("Wrong result", params,
                 params.setReloadingRefreshDelay(delay));
         assertEquals("Wrong delay", delay, params.getReloadingRefreshDelay());
@@ -200,7 +199,7 @@ public class TestFileBasedBuilderParameters
     {
         FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl()
-                        .setReloadingRefreshDelay(1000);
+                        .setReloadingRefreshDelay(1000L);
         params.setListDelimiter('*');
         Map<String, Object> map = params.getParameters();
         assertTrue("Object not stored", map.values().contains(params));

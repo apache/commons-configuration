@@ -41,7 +41,7 @@ public interface FileBasedBuilderProperties<T>
      * @param reloadingRefreshDelay the refresh delay (in milliseconds)
      * @return a reference to this object for method chaining
      */
-    T setReloadingRefreshDelay(long reloadingRefreshDelay);
+    T setReloadingRefreshDelay(Long reloadingRefreshDelay);
 
     /**
      * Sets the factory for creating {@code ReloadingDetector} objects. With
