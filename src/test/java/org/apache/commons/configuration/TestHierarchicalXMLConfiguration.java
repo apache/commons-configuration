@@ -25,6 +25,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -101,8 +102,9 @@ public class TestHierarchicalXMLConfiguration
     @Test
     public void testGetProperty() throws Exception
     {
-        config.setFileName(TEST_FILE);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setFileName(TEST_FILE);
+        handler.load();
 
         configTest(config);
     }
@@ -110,31 +112,33 @@ public class TestHierarchicalXMLConfiguration
     @Test
     public void testLoadURL() throws Exception
     {
-        config.load(new File(TEST_FILE).getAbsoluteFile().toURI().toURL());
+        FileHandler handler = new FileHandler(config);
+        handler.load(new File(TEST_FILE).getAbsoluteFile().toURI().toURL());
         configTest(config);
     }
 
     @Test
     public void testLoadBasePath1() throws Exception
     {
-        config.setBasePath(TEST_DIR);
-        config.setFileName(TEST_FILENAME);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setBasePath(TEST_DIR);
+        handler.setFileName(TEST_FILENAME);
+        handler.load();
         configTest(config);
     }
 
     @Test
     public void testLoadBasePath2() throws Exception
     {
-        config.setBasePath(new File(TEST_FILE).getAbsoluteFile().toURI().toURL().toString());
-        config.setFileName(TEST_FILENAME);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setBasePath(new File(TEST_FILE).getAbsoluteFile().toURI().toURL().toString());
+        handler.setFileName(TEST_FILENAME);
+        handler.load();
         configTest(config);
     }
 
     /**
      * Ensure various node types are correctly processed in config.
-     * @throws Exception
      */
     @Test
     public void testXmlNodeTypes() throws Exception
@@ -143,7 +147,8 @@ public class TestHierarchicalXMLConfiguration
         final int KEY_COUNT = 5;
 
         // Load the configuration file
-        config.load(new File(TEST_FILE2).getAbsoluteFile().toURI().toURL());
+        FileHandler handler = new FileHandler(config);
+        handler.load(new File(TEST_FILE2).getAbsoluteFile().toURI().toURL());
 
         // Validate comment in element ignored
         assertEquals("Comment in element must not change element value.", "Case1Text", config
@@ -179,13 +184,15 @@ public class TestHierarchicalXMLConfiguration
     @Test
     public void testSave() throws Exception
     {
-        config.setFileName(TEST_FILE3);
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setFileName(TEST_FILE3);
+        handler.load();
         File saveFile = folder.newFile(TEST_SAVENAME);
-        config.save(saveFile);
+        handler.save(saveFile);
 
         config = new XMLConfiguration();
-        config.load(saveFile.toURI().toURL());
+        FileHandler handler2 = new FileHandler(config);
+        handler2.load(saveFile.toURI().toURL());
         assertEquals("value", config.getProperty("element"));
         assertEquals("I'm complex!", config.getProperty("element2.subelement.subsubelement"));
         assertEquals(8, config.getInt("test.short"));
@@ -214,13 +221,15 @@ public class TestHierarchicalXMLConfiguration
         config.addProperty("tables.table(1).fields.field(1).type", "string");
         config.addProperty("tables.table(1).fields.field(1)[@null]", "true");
 
-        File saveFile = folder.newFile(TEST_SAVENAME);
-        config.setFile(saveFile);
         config.setRootElementName("myconfig");
-        config.save();
+        File saveFile = folder.newFile(TEST_SAVENAME);
+        FileHandler handler = new FileHandler(config);
+        handler.setFile(saveFile);
+        handler.save();
 
         config = new XMLConfiguration();
-        config.load(saveFile);
+        handler = new FileHandler(config);
+        handler.load(saveFile);
         assertEquals(1, config.getMaxIndex("tables.table.name"));
         assertEquals("tests", config.getString("tables.table(0).name"));
         assertEquals("test_name", config.getString("tables.table(0).fields.field(1).name"));
@@ -237,8 +246,9 @@ public class TestHierarchicalXMLConfiguration
     @Test
     public void testSaveModified() throws Exception
     {
-        config.setFile(new File(TEST_FILE3));
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setFile(new File(TEST_FILE3));
+        handler.load();
 
         assertTrue(config.getString("mean").startsWith("This is\n A long story..."));
         assertTrue(config.getString("mean").indexOf("And even longer") > 0);
@@ -253,9 +263,10 @@ public class TestHierarchicalXMLConfiguration
         config.addProperty("[@topattr_other]", "successfull");
 
         File saveFile = folder.newFile(TEST_SAVENAME);
-        config.save(saveFile);
+        handler.save(saveFile);
         config = new XMLConfiguration();
-        config.load(saveFile.getAbsolutePath());
+        handler = new FileHandler(config);
+        handler.load(saveFile.getAbsolutePath());
         assertFalse(config.containsKey("test.entity[@name]"));
         assertEquals("1<2", config.getProperty("test.entity"));
         assertEquals("new value", config.getString("element"));
@@ -288,8 +299,9 @@ public class TestHierarchicalXMLConfiguration
     @Test(expected = UnsupportedOperationException.class)
     public void testSetRootElementNameWhenLoadedFromFile() throws Exception
     {
-        config.setFile(new File(TEST_FILE3));
-        config.load();
+        FileHandler handler = new FileHandler(config);
+        handler.setFile(new File(TEST_FILE3));
+        handler.load();
         assertEquals("testconfig", config.getRootElementName());
         config.setRootElementName("anotherRootElement");
     }
