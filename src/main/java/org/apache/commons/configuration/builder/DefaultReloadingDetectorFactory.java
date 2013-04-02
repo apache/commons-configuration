@@ -40,7 +40,9 @@ public class DefaultReloadingDetectorFactory implements
             FileBasedBuilderParametersImpl params)
             throws ConfigurationException
     {
-        return new FileHandlerReloadingDetector(handler,
-                params.getReloadingRefreshDelay());
+        Long refreshDelay = params.getReloadingRefreshDelay();
+        return (refreshDelay != null) ? new FileHandlerReloadingDetector(
+                handler, refreshDelay) : new FileHandlerReloadingDetector(
+                handler);
     }
 }

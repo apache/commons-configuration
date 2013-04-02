@@ -18,6 +18,7 @@ package org.apache.commons.configuration.builder;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.io.FileHandler;
@@ -50,13 +51,29 @@ public class TestDefaultReloadingDetectorFactory
         FileHandler handler = new FileHandler();
         FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl();
-        final long refreshDelay = 10000L;
+        final Long refreshDelay = 10000L;
         params.setReloadingRefreshDelay(refreshDelay);
         FileHandlerReloadingDetector detector =
                 (FileHandlerReloadingDetector) factory.createReloadingDetector(
                         handler, params);
         assertSame("Wrong file handler", handler, detector.getFileHandler());
-        assertEquals("Wrong refresh delay", refreshDelay,
+        assertEquals("Wrong refresh delay", refreshDelay.longValue(),
                 detector.getRefreshDelay());
+    }
+
+    /**
+     * Tests whether an undefined refresh delay is handled correctly.
+     */
+    @Test
+    public void testCreateReloadingDetectorDefaultRefreshDelay()
+            throws ConfigurationException
+    {
+        FileHandler handler = new FileHandler();
+        FileBasedBuilderParametersImpl params =
+                new FileBasedBuilderParametersImpl();
+        FileHandlerReloadingDetector detector =
+                (FileHandlerReloadingDetector) factory.createReloadingDetector(
+                        handler, params);
+        assertTrue("No default refresh delay", detector.getRefreshDelay() != 0);
     }
 }
