@@ -24,10 +24,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
@@ -38,6 +34,7 @@ import junit.framework.Assert;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -636,10 +633,10 @@ public class TestCombinedConfiguration
         assertEquals("Wrong attribute value", "USER2",
                 x3.getString("key2[@override]"));
         StringWriter w = new StringWriter();
-        x3.save(w);
+        new FileHandler(x3).save(w);
         String s = w.toString();
         x3 = new XMLConfiguration();
-        x3.load(new StringReader(s));
+        new FileHandler(x3).load(new StringReader(s));
         assertEquals("Wrong element value after load", "value2.2",
                 x3.getString("key2"));
         assertEquals("Wrong attribute value after load", "USER2",
