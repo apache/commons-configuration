@@ -23,6 +23,7 @@ import java.io.File;
 
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.logging.impl.Log4JLogger;
@@ -59,7 +60,9 @@ public class TestExprLookup
         vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
-        XMLConfiguration config = new XMLConfiguration(TEST_FILE);
+        XMLConfiguration config = new XMLConfiguration();
+        FileHandler handler = new FileHandler(config);
+        handler.load(TEST_FILE);
         config.setLogger(log);
         ExprLookup lookup = new ExprLookup(vars);
         lookup.setConfiguration(config);
