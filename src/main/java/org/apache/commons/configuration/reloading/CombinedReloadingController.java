@@ -104,6 +104,19 @@ public class CombinedReloadingController extends ReloadingController
     }
 
     /**
+     * Resets the reloading state of all managed sub controllers
+     * unconditionally. This method is intended to be called after the creation
+     * of an instance. It may be the case that some of the sub controllers are
+     * already in reloading state, so their state is out of sync with this
+     * controller's global reloading state. This method ensures that the
+     * reloading state of all sub controllers is reset.
+     */
+    public void resetInitialReloadingState()
+    {
+        getDetector().reloadingPerformed();
+    }
+
+    /**
      * Checks the collection with the passed in sub controllers and creates a
      * defensive copy.
      *

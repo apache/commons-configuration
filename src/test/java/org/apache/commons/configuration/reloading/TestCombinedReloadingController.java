@@ -160,6 +160,23 @@ public class TestCombinedReloadingController
     }
 
     /**
+     * Tests whether the sub controller's reloading state can be reset
+     * unconditionally.
+     */
+    @Test
+    public void testResetInitialReloadingState()
+    {
+        CombinedReloadingController ctrl = setUpController();
+        for (ReloadingController rc : subControllers)
+        {
+            rc.resetReloadingState();
+        }
+        replaySubControllers();
+        ctrl.resetInitialReloadingState();
+        verifySubSontrollers();
+    }
+
+    /**
      * Tests whether the sub controllers can be accessed.
      */
     @Test
