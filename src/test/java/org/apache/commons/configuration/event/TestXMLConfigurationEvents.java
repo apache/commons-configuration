@@ -16,12 +16,7 @@
  */
 package org.apache.commons.configuration.event;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.XMLConfiguration;
 
 /**
@@ -30,16 +25,8 @@ import org.apache.commons.configuration.XMLConfiguration;
  * @version $Id$
  */
 public class TestXMLConfigurationEvents extends
-        AbstractTestFileConfigurationEvents
+        AbstractTestConfigurationEvents
 {
-    static final File TEST_FILE = ConfigurationAssert.getTestFile("test.xml");
-
-    @Override
-    protected URL getSourceURL() throws IOException
-    {
-        return TEST_FILE.toURI().toURL();
-    }
-
     @Override
     protected AbstractConfiguration createConfiguration()
     {
