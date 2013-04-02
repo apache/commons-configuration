@@ -74,7 +74,9 @@ public class TestCompositeConfiguration
         FileHandler handler2 = new FileHandler(conf2);
         handler2.setFileName(testProperties2);
         handler2.load();
-        xmlConf = new XMLConfiguration(new File(testPropertiesXML));
+        xmlConf = new XMLConfiguration();
+        FileHandler handler3 = new FileHandler(xmlConf);
+        handler3.load(new File(testPropertiesXML));
 
         cc.setThrowExceptionOnMissing(true);
     }
