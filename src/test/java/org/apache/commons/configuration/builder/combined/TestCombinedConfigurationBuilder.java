@@ -60,6 +60,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.resolver.CatalogResolver;
@@ -1109,9 +1110,11 @@ public class TestCombinedConfigurationBuilder
                 ConfigurationAssert.getOutFile("MultiFileReloadingTest.xml");
         switchToMultiFile(outFile.getAbsolutePath());
         XMLConfiguration reloadConfig = new XMLConfiguration();
+        FileHandler handler = new FileHandler(reloadConfig);
+        handler.setFile(outFile);
         final String key = "test.reload";
         reloadConfig.setProperty(key, "no");
-        reloadConfig.save(outFile);
+        handler.save();
         try
         {
             assertEquals("Wrong property", "no", config.getString(key));
@@ -1126,7 +1129,7 @@ public class TestCombinedConfigurationBuilder
             BuilderListenerTestImpl l = new BuilderListenerTestImpl();
             childBuilder.addBuilderListener(l);
             reloadConfig.setProperty(key, "yes");
-            reloadConfig.save(outFile);
+            handler.save();
 
             int attempts = 10;
             boolean changeDetected;
@@ -1136,7 +1139,7 @@ public class TestCombinedConfigurationBuilder
                 if (!changeDetected)
                 {
                     Thread.sleep(1000);
-                    reloadConfig.save(outFile);
+                    handler.save(outFile);
                 }
             } while (!changeDetected && --attempts > 0);
             assertTrue("No change detected", changeDetected);
