@@ -31,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -1134,6 +1135,49 @@ public class TestFileHandler
     }
 
     /**
+     * Tests whether data can be read from an input stream.
+     */
+    @Test
+    public void testLoadInputStreamSupport() throws ConfigurationException
+    {
+        FileBasedInputStreamSupportTestImpl content =
+                new FileBasedInputStreamSupportTestImpl();
+        FileHandler handler = new FileHandler(content);
+        ByteArrayInputStream bin = new ByteArrayInputStream(CONTENT.getBytes());
+        handler.load(bin);
+        assertEquals("Wrong content", "InputStream = " + CONTENT,
+                content.getContent());
+    }
+
+    /**
+     * Tests whether an IOException is handled when reading from an input
+     * stream.
+     */
+    @Test
+    public void testLoadInputStreamSupportIOException()
+            throws ConfigurationException, IOException
+    {
+        FileBasedInputStreamSupportTestImpl content =
+                EasyMock.createMock(FileBasedInputStreamSupportTestImpl.class);
+        ByteArrayInputStream bin = new ByteArrayInputStream(CONTENT.getBytes());
+        IOException ioex = new IOException();
+        content.read(bin);
+        EasyMock.expectLastCall().andThrow(ioex);
+        EasyMock.replay(content);
+        FileHandler handler = new FileHandler(content);
+        try
+        {
+            handler.load(bin);
+            fail("IOException not detected!");
+        }
+        catch (ConfigurationException cex)
+        {
+            assertEquals("Wrong cause", ioex, cex.getCause());
+        }
+        EasyMock.verify(content);
+    }
+
+    /**
      * An implementation of the FileBased interface used for test purposes.
      */
     private static class FileBasedTestImpl implements FileBased
@@ -1171,6 +1215,26 @@ public class TestFileHandler
         {
             out.write(getContent());
             out.flush();
+        }
+    }
+
+    /**
+     * A test implementation of FileBased which can also read from input
+     * streams.
+     */
+    private static class FileBasedInputStreamSupportTestImpl extends
+            FileBasedTestImpl implements InputStreamSupport
+    {
+        public void read(InputStream in) throws ConfigurationException,
+                IOException
+        {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            int c;
+            while ((c = in.read()) != -1)
+            {
+                bos.write(c);
+            }
+            setContent("InputStream = " + bos.toString());
         }
     }
 

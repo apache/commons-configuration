@@ -810,6 +810,48 @@ public class FileHandler
     {
         checkContent();
         injectFileLocator(url);
+
+        if (getContent() instanceof InputStreamSupport)
+        {
+            loadFromStreamDirectly(in);
+        }
+        else
+        {
+            loadFromTransformedStream(in, encoding);
+        }
+    }
+
+    /**
+     * Loads data from an input stream if the associated {@code FileBased}
+     * object implements the {@code InputStreamSupport} interface.
+     *
+     * @param in the input stream
+     * @throws ConfigurationException if an error occurs
+     */
+    private void loadFromStreamDirectly(InputStream in)
+            throws ConfigurationException
+    {
+        try
+        {
+            ((InputStreamSupport) getContent()).read(in);
+        }
+        catch (IOException e)
+        {
+            throw new ConfigurationException(e);
+        }
+    }
+
+    /**
+     * Internal helper method for transforming an input stream to a reader and
+     * reading its content.
+     *
+     * @param in the input stream
+     * @param encoding the encoding
+     * @throws ConfigurationException if an error occurs
+     */
+    private void loadFromTransformedStream(InputStream in, String encoding)
+            throws ConfigurationException
+    {
         Reader reader = null;
 
         if (encoding != null)
