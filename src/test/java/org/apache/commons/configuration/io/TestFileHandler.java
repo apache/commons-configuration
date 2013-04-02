@@ -979,6 +979,23 @@ public class TestFileHandler
     }
 
     /**
+     * Tests that the locator injected into the content object has an encoding
+     * set.
+     */
+    @Test
+    public void testLocatorAwareEncoding() throws ConfigurationException
+    {
+        FileBasedFileLocatorAwareTestImpl content =
+                new FileBasedFileLocatorAwareTestImpl();
+        FileHandler handler = new FileHandler(content);
+        String encoding = "testEncoding";
+        handler.setEncoding(encoding);
+        handler.save(new StringWriter());
+        assertEquals("Encoding not set", encoding, content.getLocator()
+                .getEncoding());
+    }
+
+    /**
      * Tries to add a null listener.
      */
     @Test(expected = IllegalArgumentException.class)

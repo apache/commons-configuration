@@ -675,13 +675,16 @@ public class FileHandler
      * {@code FileLocatorAware} interface. If this is the case, a
      * {@code FileLocator} instance is injected which returns only <b>null</b>
      * values. This method is called if no file location is available (e.g. if
-     * data is to be loaded from a stream).
+     * data is to be loaded from a stream). The encoding of the injected locator
+     * is derived from this object.
      */
     private void injectNullFileLocator()
     {
         if (getContent() instanceof FileLocatorAware)
         {
-            ((FileLocatorAware) getContent()).initFileLocator(new FileSpec());
+            FileSpec spec = new FileSpec();
+            spec.setEncoding(getEncoding());
+            ((FileLocatorAware) getContent()).initFileLocator(spec);
         }
     }
 
