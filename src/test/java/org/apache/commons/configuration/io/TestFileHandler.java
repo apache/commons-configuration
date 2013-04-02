@@ -297,6 +297,35 @@ public class TestFileHandler
     }
 
     /**
+     * Additional tests for setting file names in various ways. (Copied from the
+     * test for XMLConfiguration)
+     */
+    @Test
+    public void testSettingFileNames()
+    {
+        String testProperties =
+                ConfigurationAssert.getTestFile("test.xml").getAbsolutePath();
+        String testBasePath = ConfigurationAssert.TEST_DIR.getAbsolutePath();
+
+        FileHandler handler = new FileHandler();
+        handler.setFileName(testProperties);
+        assertEquals(testProperties.toString(), handler.getFileName());
+
+        handler.setBasePath(testBasePath);
+        handler.setFileName("hello.xml");
+        assertEquals("hello.xml", handler.getFileName());
+        assertEquals(testBasePath.toString(), handler.getBasePath());
+        assertEquals(new File(testBasePath, "hello.xml"), handler.getFile());
+
+        handler.setBasePath(testBasePath);
+        handler.setFileName("subdir/hello.xml");
+        assertEquals("subdir/hello.xml", handler.getFileName());
+        assertEquals(testBasePath.toString(), handler.getBasePath());
+        assertEquals(new File(testBasePath, "subdir/hello.xml"),
+                handler.getFile());
+    }
+
+    /**
      * Tries to call a load() method if no content object is available.
      */
     @Test(expected = ConfigurationException.class)
