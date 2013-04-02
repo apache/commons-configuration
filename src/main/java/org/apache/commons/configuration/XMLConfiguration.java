@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
@@ -46,6 +45,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.configuration.io.FileLocator;
+import org.apache.commons.configuration.io.FileLocatorAware;
+import org.apache.commons.configuration.io.InputStreamSupport;
 import org.apache.commons.configuration.resolver.DefaultEntityResolver;
 import org.apache.commons.configuration.resolver.EntityRegistry;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -166,8 +168,9 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author J&ouml;rg Schaible
  * @version $Id$
  */
-public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
-    implements EntityResolver, EntityRegistry, FileBasedConfiguration
+public class XMLConfiguration extends BaseHierarchicalConfiguration implements
+        EntityResolver, EntityRegistry, FileBasedConfiguration,
+        FileLocatorAware, InputStreamSupport
 {
     /**
      * The serial version UID.
@@ -215,6 +218,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     /** The EntityResolver to use */
     private EntityResolver entityResolver = new DefaultEntityResolver();
 
+    /** The current file locator. */
+    private FileLocator locator;
+
     /**
      * Creates a new instance of {@code XMLConfiguration}.
      */
@@ -243,45 +249,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Creates a new instance of{@code XMLConfiguration}. The
-     * configuration is loaded from the specified file
-     *
-     * @param fileName the name of the file to load
-     * @throws ConfigurationException if the file cannot be loaded
-     */
-    public XMLConfiguration(String fileName) throws ConfigurationException
-    {
-        super(fileName);
-        setLogger(LogFactory.getLog(XMLConfiguration.class));
-    }
-
-    /**
-     * Creates a new instance of {@code XMLConfiguration}.
-     * The configuration is loaded from the specified file.
-     *
-     * @param file the file
-     * @throws ConfigurationException if an error occurs while loading the file
-     */
-    public XMLConfiguration(File file) throws ConfigurationException
-    {
-        super(file);
-        setLogger(LogFactory.getLog(XMLConfiguration.class));
-    }
-
-    /**
-     * Creates a new instance of {@code XMLConfiguration}.
-     * The configuration is loaded from the specified URL.
-     *
-     * @param url the URL
-     * @throws ConfigurationException if loading causes an error
-     */
-    public XMLConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
-        setLogger(LogFactory.getLog(XMLConfiguration.class));
-    }
-
-    /**
      * Returns the name of the root element. If this configuration was loaded
      * from a XML document, the name of this document's root element is
      * returned. Otherwise it is possible to set a name for the root element
@@ -289,6 +256,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @return the name of the root element
      */
+    @Override
     public String getRootElementName()
     {
         if (getDocument() == null)
@@ -864,39 +832,47 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     }
 
     /**
-     * Loads the configuration from the given input stream.
-     *
-     * @param in the input stream
-     * @throws ConfigurationException if an error occurs
+     * {@inheritDoc} Stores the passed in locator for the upcoming IO operation.
      */
-    @Override
-    public void load(InputStream in) throws ConfigurationException
+    public void initFileLocator(FileLocator loc)
+    {
+        locator = loc;
+    }
+
+    /**
+     * Loads the configuration from the given reader.
+     * Note that the {@code clear()} method is not called, so
+     * the properties contained in the loaded file will be added to the
+     * current set of properties.
+     *
+     * @param in the reader
+     * @throws ConfigurationException if an error occurs
+     * @throws IOException if an IO error occurs
+     */
+    public void read(Reader in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
     }
 
     /**
-     * Load the configuration from the given reader.
-     * Note that the {@code clear()} method is not called, so
-     * the properties contained in the loaded file will be added to the
-     * actual set of properties.
+     * Loads the configuration from the given input stream. This is analogous to
+     * {@link #read(Reader)}, but data is read from a stream. Note that this
+     * method will be called most time when reading an XML configuration source.
+     * By reading XML documents directly from an input stream, the file's
+     * encoding can be correctly dealt with.
      *
-     * @param in An InputStream.
-     *
+     * @param in the input stream
      * @throws ConfigurationException if an error occurs
+     * @throws IOException if an IO error occurs
      */
-    public void load(Reader in) throws ConfigurationException
+    public void read(InputStream in) throws ConfigurationException, IOException
     {
         load(new InputSource(in));
-    }
-
-    public void read(Reader in) throws ConfigurationException, IOException
-    {
-        load(in);
     }
 
     /**
      * Loads a configuration file from the specified input source.
+     *
      * @param source the input source
      * @throws ConfigurationException if an error occurs
      */
@@ -904,7 +880,7 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
     {
         try
         {
-            URL sourceURL = getDelegate().getURL();
+            URL sourceURL = locator.getSourceURL();
             if (sourceURL != null)
             {
                 source.setSystemId(sourceURL.toString());
@@ -933,8 +909,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
      *
      * @param writer the writer used to save the configuration
      * @throws ConfigurationException if an error occurs
+     * @throws IOException if an IO error occurs
      */
-    public void save(Writer writer) throws ConfigurationException
+    public void write(Writer writer) throws ConfigurationException, IOException
     {
         try
         {
@@ -951,11 +928,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
         {
             throw new ConfigurationException("Unable to save the configuration", e);
         }
-    }
-
-    public void write(Writer out) throws ConfigurationException, IOException
-    {
-        save(out);
     }
 
     /**
@@ -1009,9 +981,9 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
                 .newTransformer();
 
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        if (getEncoding() != null)
+        if (locator.getEncoding() != null)
         {
-            transformer.setOutputProperty(OutputKeys.ENCODING, getEncoding());
+            transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());
         }
         if (getPublicID() != null)
         {
@@ -1042,23 +1014,10 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
 
         // clear document related properties
         copy.document = null;
-        copy.setDelegate(copy.createDelegate());
         // clear all references in the nodes, too
         clearReferences(copy.getRootNode());
 
         return copy;
-    }
-
-    /**
-     * Creates the file configuration delegate for this object. This implementation
-     * will return an instance of a class derived from {@code FileConfigurationDelegate}
-     * that deals with some specialties of {@code XMLConfiguration}.
-     * @return the delegate for this object
-     */
-    @Override
-    protected FileConfigurationDelegate createDelegate()
-    {
-        return new XMLFileConfigurationDelegate();
     }
 
     /**
@@ -1547,20 +1506,6 @@ public class XMLConfiguration extends AbstractHierarchicalFileConfiguration
             return (node.getName() != null && node.getReference() != null) ? (Element) node
                     .getReference()
                     : document.getDocumentElement();
-        }
-    }
-
-    /**
-     * A special implementation of the {@code FileConfiguration} interface that is
-     * used internally to implement the {@code FileConfiguration} methods
-     * for {@code XMLConfiguration}, too.
-     */
-    private class XMLFileConfigurationDelegate extends FileConfigurationDelegate
-    {
-        @Override
-        public void load(InputStream in) throws ConfigurationException
-        {
-            XMLConfiguration.this.load(in);
         }
     }
 }
