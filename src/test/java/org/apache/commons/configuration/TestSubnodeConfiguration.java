@@ -34,7 +34,7 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
-import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
@@ -496,18 +496,24 @@ public class TestSubnodeConfiguration
         {
             File testFile = folder.newFile();
             XMLConfiguration xmlConf = new XMLConfiguration(parent);
-            xmlConf.setFile(testFile);
-            xmlConf.save();
+            FileHandler handler = new FileHandler(xmlConf);
+            handler.setFile(testFile);
+            handler.save();
             config = xmlConf.configurationAt("tables.table(1)", supportReload);
             assertEquals("Wrong table name", TABLE_NAMES[1],
                     config.getString("name"));
-            xmlConf.setReloadingStrategy(new FileAlwaysReloadingStrategy());
             // Now change the configuration file
-            XMLConfiguration confUpdate = new XMLConfiguration(testFile);
+            XMLConfiguration confUpdate = new XMLConfiguration();
+            FileHandler handler2 = new FileHandler(confUpdate);
+            handler2.setFile(testFile);
+            handler2.load();
             confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
             confUpdate.setProperty("tables.table(1).fields.field(0).name",
                     "newField");
-            confUpdate.save();
+            handler2.save();
+            // Reload parent configuration
+            xmlConf.clear();
+            handler.load();
             return xmlConf;
         }
         catch (IOException ioex)
