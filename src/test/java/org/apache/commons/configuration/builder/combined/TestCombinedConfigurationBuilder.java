@@ -40,6 +40,7 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.DefaultFileSystem;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
@@ -54,8 +55,11 @@ import org.apache.commons.configuration.builder.BuilderListener;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
+import org.apache.commons.configuration.builder.PropertiesBuilderParametersImpl;
 import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.XMLBuilderParametersImpl;
+import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
@@ -64,6 +68,7 @@ import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.ReloadingController;
 import org.apache.commons.configuration.reloading.ReloadingControllerSupport;
 import org.apache.commons.configuration.resolver.CatalogResolver;
+import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.easymock.EasyMock;
 import org.junit.After;
@@ -956,6 +961,78 @@ public class TestCombinedConfigurationBuilder
                 new CombinedBuilderParametersImpl();
         builder.initChildBuilderParameters(params);
         assertEquals("Base path not set", basePath, params.getBasePath());
+    }
+
+    /**
+     * Tests whether default child properties in the combined builder's
+     * configuration are inherited by child parameter objects.
+     */
+    @Test
+    public void testInitChildBuilderParametersDefaultChildProperties()
+            throws ConfigurationException
+    {
+        final Long defRefresh = 60000L;
+        final Long xmlRefresh = 30000L;
+        builder.configure(Parameters
+                .combined()
+                .setDefinitionBuilderParameters(
+                        Parameters.fileBased().setFile(TEST_FILE))
+                .addChildParameters(
+                        new FileBasedBuilderParametersImpl()
+                                .setReloadingRefreshDelay(defRefresh)
+                                .setThrowExceptionOnMissing(true))
+                .addChildParameters(
+                        new XMLBuilderParametersImpl()
+                                .setValidating(false)
+                                .setExpressionEngine(
+                                        new XPathExpressionEngine())
+                                .setReloadingRefreshDelay(xmlRefresh)));
+        builder.getConfiguration();
+        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl();
+        builder.initChildBuilderParameters(params);
+        assertTrue(
+                "Wrong expression engine",
+                params.getParameters().get("expressionEngine") instanceof XPathExpressionEngine);
+        assertEquals("Validating flag not set", Boolean.FALSE, params
+                .getParameters().get("validating"));
+        assertEquals("Wrong XML refresh", xmlRefresh,
+                params.getReloadingRefreshDelay());
+        assertEquals("Basic flag not set", Boolean.TRUE, params.getParameters()
+                .get("throwExceptionOnMissing"));
+
+        PropertiesBuilderParametersImpl params2 =
+                new PropertiesBuilderParametersImpl();
+        builder.initChildBuilderParameters(params2);
+        assertEquals("Wrong default refresh", defRefresh,
+                params2.getReloadingRefreshDelay());
+    }
+
+    /**
+     * Tests whether exceptions on initializing default child properties are
+     * handled.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testInitChildBuilderParametersDefaultChildPropertiesEx()
+            throws ConfigurationException
+    {
+        builder.configure(Parameters
+                .combined()
+                .setDefinitionBuilderParameters(
+                        Parameters.fileBased().setFile(TEST_FILE))
+                .addChildParameters(
+                        new HierarchicalBuilderParametersImpl()
+                                .setExpressionEngine(new XPathExpressionEngine())));
+        builder.getConfiguration();
+        XMLBuilderParametersImpl params = new XMLBuilderParametersImpl()
+        {
+            @Override
+            public HierarchicalBuilderParametersImpl setExpressionEngine(
+                    ExpressionEngine engine)
+            {
+                throw new ConfigurationRuntimeException("Test exception");
+            }
+        };
+        builder.initChildBuilderParameters(params);
     }
 
     /**

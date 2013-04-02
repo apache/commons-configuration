@@ -27,10 +27,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationLookup;
+import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
@@ -991,6 +993,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
      */
     protected void initChildBuilderParameters(BuilderParameters params)
     {
+        initDefaultChildParameters(params);
+
         if (params instanceof BasicBuilderParameters)
         {
             initChildBasicParameters((BasicBuilderParameters) params);
@@ -1111,6 +1115,29 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
                 currentXMLParameters.setBasePath((url != null) ? url
                         .toExternalForm() : fileBuilder.getFileHandler()
                         .getBasePath());
+            }
+        }
+    }
+
+    /**
+     * Copies all matching default parameters for child configuration sources to
+     * the passed in parameters object. This implementation iterates over all
+     * default parameters object of the current combined builder parameters. If
+     * the passed in object is assignment compatible with one of these objects,
+     * all properties are copied.
+     *
+     * @param params the parameters to be initialized
+     * @throws ConfigurationRuntimeException if an error occurs when copying
+     *         properties
+     */
+    private void initDefaultChildParameters(BuilderParameters params)
+    {
+        for (BuilderParameters p : currentParameters
+                .getDefaultChildParameters())
+        {
+            if (p.getClass().isInstance(params))
+            {
+                copyProperties(params, p);
             }
         }
     }
@@ -1295,6 +1322,30 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
         for (Object listNode : listNodes)
         {
             cc.getNodeCombiner().addListNode((String) listNode);
+        }
+    }
+
+    /**
+     * Copies all properties from one parameters object to another one. This
+     * method copies all data contained in the parameters map. In addition,
+     * properties with get and set methods are also copied.
+     *
+     * @param dest the destination parameters object
+     * @param src the source parameters object
+     * @throws ConfigurationRuntimeException if an error occurs
+     */
+    private static void copyProperties(BuilderParameters dest,
+            BuilderParameters src)
+    {
+        try
+        {
+            PropertyUtils.copyProperties(dest, src.getParameters());
+            PropertyUtils.copyProperties(dest, src);
+        }
+        catch (Exception e)
+        {
+            // Handle all reflection-related exceptions the same way
+            throw new ConfigurationRuntimeException(e);
         }
     }
 
