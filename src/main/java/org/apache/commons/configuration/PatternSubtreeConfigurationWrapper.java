@@ -16,6 +16,7 @@
  */
 package org.apache.commons.configuration;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
@@ -27,11 +28,12 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.io.FileBased;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 
 /**
- * Wraps a BaseHierarchicalConfiguration and allows subtrees to be access via a configured path with
+ * Wraps a BaseHierarchicalConfiguration and allows subtrees to be accessed via a configured path with
  * replaceable tokens derived from the ConfigurationInterpolator. When used with injection frameworks
  * such as Spring it allows components to be injected with subtrees of the configuration.
  * @since 1.6
@@ -40,7 +42,8 @@ import org.apache.commons.configuration.tree.ExpressionEngine;
  * Configuration team</a>
  * @version $Id$
  */
-public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFileConfiguration
+public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfiguration
+    implements FileBasedConfiguration
 {
     /**
      * Prevent recursion while resolving unprefixed properties.
@@ -55,7 +58,7 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     };
 
     /** The wrapped configuration */
-    private final AbstractHierarchicalFileConfiguration config;
+    private final HierarchicalConfiguration config;
 
     /** The path to the subtree */
     private final String path;
@@ -71,18 +74,12 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
      * @param config The Configuration to be wrapped.
      * @param path The base path pattern.
      */
-    public PatternSubtreeConfigurationWrapper(AbstractHierarchicalFileConfiguration config, String path)
+    public PatternSubtreeConfigurationWrapper(HierarchicalConfiguration config, String path)
     {
         this.config = config;
         this.path = path;
         this.trailing = path.endsWith("/");
         this.init = true;
-    }
-
-    @Override
-    public Object getReloadLock()
-    {
-        return config.getReloadLock();
     }
 
     @Override
@@ -453,14 +450,14 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
         getConfig().clearErrorListeners();
     }
 
-    public void save(Writer writer) throws ConfigurationException
+    public void write(Writer writer) throws ConfigurationException, IOException
     {
-        config.save(writer);
+        fetchFileBased().write(writer);
     }
 
-    public void load(Reader reader) throws ConfigurationException
+    public void read(Reader reader) throws ConfigurationException, IOException
     {
-        config.load(reader);
+        fetchFileBased().read(reader);
     }
 
     @Override
@@ -531,5 +528,24 @@ public class PatternSubtreeConfigurationWrapper extends AbstractHierarchicalFile
     {
         Object value = getInterpolator().interpolate(pattern);
         return (value != null) ? value.toString() : null;
+    }
+
+    /**
+     * Returns the wrapped configuration as a {@code FileBased} object. If this
+     * cast is not possible, an exception is thrown.
+     *
+     * @return the wrapped configuration as {@code FileBased}
+     * @throws ConfigurationException if the wrapped configuration does not
+     *         implement {@code FileBased}
+     */
+    private FileBased fetchFileBased() throws ConfigurationException
+    {
+        if (!(config instanceof FileBased))
+        {
+            throw new ConfigurationException(
+                    "Wrapped configuration does not implement FileBased!"
+                            + " No I/O operations are supported.");
+        }
+        return (FileBased) config;
     }
 }
