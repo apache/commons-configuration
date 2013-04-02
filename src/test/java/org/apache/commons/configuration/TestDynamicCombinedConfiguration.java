@@ -48,10 +48,10 @@ public class TestDynamicCombinedConfiguration
     private static String PATTERN = "${sys:Id}";
     private static String PATTERN1 = "target/test-classes/testMultiConfiguration_${sys:Id}.xml";
     private static String DEFAULT_FILE = "target/test-classes/testMultiConfiguration_default.xml";
-    private static final File MULTI_TENENT_FILE = new File(
-            "conf/testMultiTenentConfigurationBuilder4.xml");
-    private static final File MULTI_DYNAMIC_FILE = new File(
-            "conf/testMultiTenentConfigurationBuilder5.xml");
+    private static final File MULTI_TENENT_FILE = ConfigurationAssert
+            .getTestFile("testMultiTenentConfigurationBuilder4.xml");
+    private static final File MULTI_DYNAMIC_FILE = ConfigurationAssert
+            .getTestFile("testMultiTenentConfigurationBuilder5.xml");
 
     /** Constant for the number of test threads. */
     private static final int THREAD_COUNT = 3;
@@ -208,8 +208,16 @@ public class TestDynamicCombinedConfiguration
         output.getParentFile().mkdir();
         copyFile(input, output);
 
-        ReloadingCombinedConfigurationBuilder builder = new ReloadingCombinedConfigurationBuilder();
-        builder.configure(new FileBasedBuilderParametersImpl().setFile(MULTI_DYNAMIC_FILE));
+        ReloadingCombinedConfigurationBuilder builder =
+                new ReloadingCombinedConfigurationBuilder();
+        builder.configure(Parameters
+                .combined()
+                .setDefinitionBuilderParameters(
+                        new FileBasedBuilderParametersImpl()
+                                .setFile(MULTI_DYNAMIC_FILE))
+                .addChildParameters(
+                        new FileBasedBuilderParametersImpl()
+                                .setReloadingRefreshDelay(1L)));
         CombinedConfiguration config = builder.getConfiguration();
         assertEquals("Wrong property value (1)", "ID0001",
                 config.getString("Product/FIIndex/FI[@id='123456781']"));
@@ -312,10 +320,12 @@ public class TestDynamicCombinedConfiguration
         private volatile boolean running = true;
         private volatile boolean failed = false;
         private final CombinedConfigurationBuilder builder;
+        private final Random random;
 
         public ReaderThread(CombinedConfigurationBuilder b)
         {
             builder = b;
+            random = new Random();
         }
 
         @Override
@@ -340,11 +350,17 @@ public class TestDynamicCombinedConfiguration
                     {
                         failed = true;
                     }
+                    int sleepTime = random.nextInt(75);
+                    Thread.sleep(sleepTime);
                 }
             }
             catch (ConfigurationException cex)
             {
                 failed = true;
+            }
+            catch(InterruptedException iex)
+            {
+                Thread.currentThread().interrupt();
             }
         }
 
@@ -356,6 +372,7 @@ public class TestDynamicCombinedConfiguration
         public void shutdown()
         {
             running = false;
+            interrupt();
         }
 
     }
