@@ -39,6 +39,7 @@ import org.apache.commons.configuration.builder.combined.ReloadingCombinedConfig
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Test;
 
@@ -83,8 +84,9 @@ public class TestDynamicCombinedConfiguration
         XMLConfiguration xml = new XMLConfiguration();
         xml.setExpressionEngine(engine);
         xml.setDelimiterParsingDisabled(true);
-        xml.setFile(new File(DEFAULT_FILE));
-        xml.load();
+        FileHandler handler = new FileHandler(xml);
+        handler.setFile(new File(DEFAULT_FILE));
+        handler.load();
         config.addConfiguration(xml, "Default");
 
         verify("1001", config, 15);
