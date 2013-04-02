@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -39,14 +38,10 @@ import junit.framework.Assert;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
-import org.apache.commons.configuration.reloading.FileAlwaysReloadingStrategy;
-import org.apache.commons.configuration.reloading.FileRandomReloadingStrategy;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
-import org.apache.commons.configuration.tree.MergeCombiner;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
 import org.apache.commons.configuration.tree.UnionCombiner;
-import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -70,12 +65,6 @@ public class TestCombinedConfiguration
 
     /** Constant for the name of the second child configuration.*/
     private static final String CHILD2 = TEST_NAME + "2";
-
-    /** Constant for the name of the XML reload test file.*/
-    private static final String RELOAD_XML_NAME = "reload.xml";
-
-    /** Constant for the content of a XML reload test file.*/
-    private static final String RELOAD_XML_CONTENT = "<xml><xmlReload>{0}</xmlReload></xml>";
 
     /** Helper object for managing temporary files. */
     @Rule
@@ -445,26 +434,6 @@ public class TestCombinedConfiguration
     }
 
     /**
-     * Tests whether the reload check works with a subnode configuration. This
-     * test is related to CONFIGURATION-341.
-     */
-    @Test
-    public void testReloadingSubnodeConfig() throws IOException,
-            ConfigurationException
-    {
-        config.setForceReloadCheck(true);
-        File testXmlFile = writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT,
-                0);
-        XMLConfiguration c1 = new XMLConfiguration(testXmlFile);
-        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        final String prefix = "reloadCheck";
-        config.addConfiguration(c1, CHILD1, prefix);
-        SubnodeConfiguration sub = config.configurationAt(prefix, true);
-        writeReloadFile(RELOAD_XML_NAME, RELOAD_XML_CONTENT, 1);
-        assertEquals("Reload not detected", 1, sub.getInt("xmlReload"));
-    }
-
-    /**
      * Prepares a test of the getSource() method.
      */
     private void setUpSourceTest()
@@ -645,68 +614,6 @@ public class TestCombinedConfiguration
     }
 
     /**
-     * Tests whether changes on a sub node configuration that is part of a
-     * combined configuration are detected. This test is related to
-     * CONFIGURATION-368.
-     */
-    @Test
-    public void testReloadWithSubNodeConfig() throws Exception
-    {
-        final String reloadContent = "<config><default><xmlReload1>{0}</xmlReload1></default></config>";
-        config.setForceReloadCheck(true);
-        config.setNodeCombiner(new OverrideCombiner());
-        File testXmlFile1 = writeReloadFile(RELOAD_XML_NAME, reloadContent, 0);
-        final String prefix1 = "default";
-        XMLConfiguration c1 = new XMLConfiguration(testXmlFile1);
-        SubnodeConfiguration sub1 = c1.configurationAt(prefix1, true);
-        assertEquals("Inital test for sub config 1 failed", 0, sub1
-                .getInt("xmlReload1"));
-        config.addConfiguration(sub1);
-        assertEquals(
-                "Could not get value for sub config 1 from combined config", 0,
-                config.getInt("xmlReload1"));
-        c1.setReloadingStrategy(new FileAlwaysReloadingStrategy());
-        writeReloadFile(RELOAD_XML_NAME, reloadContent, 1);
-        assertEquals("Reload of sub config 1 not detected", 1, config
-                .getInt("xmlReload1"));
-    }
-
-    @Test
-    public void testConcurrentGetAndReload() throws Exception
-    {
-        final int threadCount = 5;
-        final int loopCount = 1000;
-        config.setForceReloadCheck(true);
-        config.setNodeCombiner(new MergeCombiner());
-        final XMLConfiguration xml = new XMLConfiguration("configA.xml");
-        xml.setReloadingStrategy(new FileRandomReloadingStrategy());
-        config.addConfiguration(xml);
-        final XMLConfiguration xml2 = new XMLConfiguration("configB.xml");
-        xml2.setReloadingStrategy(new FileRandomReloadingStrategy());
-        config.addConfiguration(xml2);
-        config.setExpressionEngine(new XPathExpressionEngine());
-
-        assertEquals(config.getString("/property[@name='config']/@value"), "100");
-
-        Thread testThreads[] = new Thread[threadCount];
-        int failures[] = new int[threadCount];
-
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            testThreads[i] = new ReloadThread(config, failures, i, loopCount);
-            testThreads[i].start();
-        }
-
-        int totalFailures = 0;
-        for (int i = 0; i < testThreads.length; ++i)
-        {
-            testThreads[i].join();
-            totalFailures += failures[i];
-        }
-        assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
-    }
-
-    /**
      * Tests whether a combined configuration can be copied to an XML
      * configuration. This test is related to CONFIGURATION-445.
      */
@@ -737,101 +644,6 @@ public class TestCombinedConfiguration
                 x3.getString("key2"));
         assertEquals("Wrong attribute value after load", "USER2",
                 x3.getString("key2[@override]"));
-    }
-
-    private class ReloadThread extends Thread
-    {
-        CombinedConfiguration combined;
-        int[] failures;
-        int index;
-        int count;
-
-        ReloadThread(CombinedConfiguration config, int[] failures, int index, int count)
-        {
-            combined = config;
-            this.failures = failures;
-            this.index = index;
-            this.count = count;
-        }
-        @Override
-        public void run()
-        {
-            failures[index] = 0;
-            for (int i = 0; i < count; i++)
-            {
-                try
-                {
-                    String value = combined.getString("/property[@name='config']/@value");
-                    if (value == null || !value.equals("100"))
-                    {
-                        ++failures[index];
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ++failures[index];
-                }
-            }
-        }
-    }
-
-    /**
-     * Helper method for writing a file. The file is also added to a list and
-     * will be deleted in teadDown() automatically.
-     *
-     * @param file the file to be written
-     * @param content the file's content
-     * @throws IOException if an error occurs
-     */
-    private void writeFile(File file, String content) throws IOException
-    {
-        PrintWriter out = null;
-        try
-        {
-            out = new PrintWriter(new FileWriter(file));
-            out.print(content);
-        }
-        finally
-        {
-            if (out != null)
-            {
-                out.close();
-            }
-        }
-    }
-
-    /**
-     * Helper method for writing a test file. The file will be created in the
-     * test directory. It is also scheduled for automatic deletion after the
-     * test.
-     *
-     * @param fileName the name of the test file
-     * @param content the content of the file
-     * @return the <code>File</code> object for the test file
-     * @throws IOException if an error occurs
-     */
-    private File writeFile(String fileName, String content) throws IOException
-    {
-        File file = new File(folder.getRoot(), fileName);
-        writeFile(file, content);
-        return file;
-    }
-
-    /**
-     * Writes a file for testing reload operations.
-     *
-     * @param name the name of the reload test file
-     * @param content the content of the file
-     * @param value the value of the reload test property
-     * @return the file that was written
-     * @throws IOException if an error occurs
-     */
-    private File writeReloadFile(String name, String content, int value)
-            throws IOException
-    {
-        return writeFile(name, MessageFormat.format(content, new Object[] {
-            new Integer(value)
-        }));
     }
 
     /**

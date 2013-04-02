@@ -160,7 +160,10 @@ public class ReloadingCombinedConfigurationBuilder extends
             obtainReloadingController(subControllers, b);
         }
 
-        return new CombinedReloadingController(subControllers);
+        CombinedReloadingController ctrl =
+                new CombinedReloadingController(subControllers);
+        ctrl.resetInitialReloadingState();
+        return ctrl;
     }
 
     /**
