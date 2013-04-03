@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
@@ -36,11 +37,12 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.FileConfiguration;
-import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.StrictConfigurationComparator;
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Emmanuel Bourg
@@ -48,14 +50,42 @@ import org.junit.Test;
  */
 public class TestXMLPropertyListConfiguration
 {
-    private FileConfiguration config;
+    /** A helper object for dealing with temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
+    /** The test configuration. */
+    private XMLPropertyListConfiguration config;
 
     @Before
     public void setUp() throws Exception
     {
         config = new XMLPropertyListConfiguration();
-        config.setFile(ConfigurationAssert.getTestFile("test.plist.xml"));
-        config.load();
+        load(config, ConfigurationAssert.getTestFile("test.plist.xml"));
+    }
+
+    /**
+     * Loads a test configuration.
+     *
+     * @param c the configuration object to be loaded
+     * @param file the test file to be loaded
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void load(XMLPropertyListConfiguration c, File file)
+            throws ConfigurationException
+    {
+        new FileHandler(c).load(file);
+    }
+
+    /**
+     * Saves the test configuration to the specified file.
+     *
+     * @param file the target file
+     * @throws ConfigurationException if an error occurs
+     */
+    private void save(File file) throws ConfigurationException
+    {
+        new FileHandler(config).save(file);
     }
 
     @Test
@@ -213,13 +243,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSave() throws Exception
     {
-        File savedFile = new File("target/testsave.plist.xml");
-
-        // remove the file previously saved if necessary
-        if (savedFile.exists())
-        {
-            assertTrue(savedFile.delete());
-        }
+        File savedFile = folder.newFile();
 
         // add an array of strings to the configuration
         /*
@@ -242,13 +266,12 @@ public class TestXMLPropertyListConfiguration
         // todo : a Map added to a HierarchicalConfiguration should be decomposed as list of nodes
 
         // save the configuration
-        String filename = savedFile.getAbsolutePath();
-        config.save(filename);
-
+        save(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
+        XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
+        load(checkConfig, savedFile);
 
         Iterator<String> it = config.getKeys();
         while (it.hasNext())
@@ -298,22 +321,15 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSaveEmptyDictionary() throws Exception
     {
-        File savedFile = new File("target/testsave.plist.xml");
-
-        // remove the file previously saved if necessary
-        if (savedFile.exists())
-        {
-            assertTrue(savedFile.delete());
-        }
+        File savedFile = folder.newFile();
 
         // save the configuration
-        String filename = savedFile.getAbsolutePath();
-        config.save(filename);
-
+        save(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        Configuration checkConfig = new XMLPropertyListConfiguration(new File(filename));
+        XMLPropertyListConfiguration checkConfig = new XMLPropertyListConfiguration();
+        load(checkConfig, savedFile);
 
         assertEquals(null, config.getProperty("empty-dictionary"));
         assertEquals(null, checkConfig.getProperty("empty-dictionary"));
@@ -326,12 +342,14 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testSetDataProperty() throws Exception
     {
+        File savedFile = folder.newFile();
         byte[] expected = new byte[]{1, 2, 3, 4};
-        XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
+        config = new XMLPropertyListConfiguration();
         config.setProperty("foo", expected);
-        config.save("target/testdata.plist.xml");
+        save(savedFile);
 
-        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration("target/testdata.plist.xml");
+        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
+        load(config2, savedFile);
         Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
@@ -345,12 +363,14 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testAddDataProperty() throws Exception
     {
+        File savedFile = folder.newFile();
         byte[] expected = new byte[]{1, 2, 3, 4};
-        XMLPropertyListConfiguration config = new XMLPropertyListConfiguration();
+        config = new XMLPropertyListConfiguration();
         config.addProperty("foo", expected);
-        config.save("target/testdata.plist.xml");
+        save(savedFile);
 
-        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration("target/testdata.plist.xml");
+        XMLPropertyListConfiguration config2 = new XMLPropertyListConfiguration();
+        load(config2, savedFile);
         Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
@@ -361,7 +381,7 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testInitCopy()
     {
-        XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration((HierarchicalConfiguration) config);
+        XMLPropertyListConfiguration copy = new XMLPropertyListConfiguration(config);
         StrictConfigurationComparator comp = new StrictConfigurationComparator();
         assertTrue("Configurations are not equal", comp.compare(config, copy));
     }
@@ -375,8 +395,7 @@ public class TestXMLPropertyListConfiguration
     public void testLoadNoDict() throws ConfigurationException
     {
         XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
-        plist.setFile(ConfigurationAssert.getTestFile("test2.plist.xml"));
-        plist.load();
+        load(plist, ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
 
@@ -388,8 +407,8 @@ public class TestXMLPropertyListConfiguration
     @Test
     public void testLoadNoDictConstr() throws ConfigurationException
     {
-        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration(
-                ConfigurationAssert.getTestFile("test2.plist.xml"));
+        XMLPropertyListConfiguration plist = new XMLPropertyListConfiguration();
+        load(plist, ConfigurationAssert.getTestFile("test2.plist.xml"));
         assertFalse("Configuration is empty", plist.isEmpty());
     }
 
@@ -401,9 +420,39 @@ public class TestXMLPropertyListConfiguration
     public void testSetDatePropertyInvalid() throws ConfigurationException
     {
         config.clear();
-        config.setFile(ConfigurationAssert.getTestFile("test_invalid_date.plist.xml"));
-        config.load();
+        load(config, ConfigurationAssert.getTestFile("test_invalid_date.plist.xml"));
         assertEquals("'string' property", "value1", config.getString("string"));
         assertFalse("Date property was loaded", config.containsKey("date"));
+    }
+
+    /**
+     * Tests the header of a saved file if no encoding is specified.
+     */
+    @Test
+    public void testSaveNoEncoding() throws ConfigurationException
+    {
+        StringWriter writer = new StringWriter();
+        new FileHandler(config).save(writer);
+        assertTrue("Wrong document header",
+                writer.toString().indexOf("<?xml version=\"1.0\"?>") >= 0);
+    }
+
+    /**
+     * Tests whether the encoding is written when saving a configuration.
+     */
+    @Test
+    public void testSaveWithEncoding() throws ConfigurationException
+    {
+        String encoding = "UTF-8";
+        FileHandler handler = new FileHandler(config);
+        handler.setEncoding(encoding);
+        StringWriter writer = new StringWriter();
+        handler.save(writer);
+        assertTrue(
+                "Encoding not found",
+                writer.toString()
+                        .indexOf(
+                                "<?xml version=\"1.0\" encoding=\"" + encoding
+                                        + "\"?>") >= 0);
     }
 }

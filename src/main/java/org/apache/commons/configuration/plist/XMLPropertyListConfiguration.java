@@ -17,13 +17,11 @@
 
 package org.apache.commons.configuration.plist;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,11 +39,14 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.configuration.AbstractHierarchicalFileConfiguration;
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
+import org.apache.commons.configuration.io.FileLocator;
+import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -122,7 +123,8 @@ import org.xml.sax.helpers.DefaultHandler;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfiguration
+public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
+    implements FileBasedConfiguration, FileLocatorAware
 {
     /**
      * The serial version UID.
@@ -131,6 +133,9 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
 
     /** Size of the indentation for the generated file. */
     private static final int INDENT_SIZE = 4;
+
+    /** Temporarily stores the current file location. */
+    private FileLocator locator;
 
     /**
      * Creates an empty XMLPropertyListConfiguration object which can be
@@ -152,40 +157,6 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
     public XMLPropertyListConfiguration(HierarchicalConfiguration configuration)
     {
         super(configuration);
-    }
-
-    /**
-     * Creates and loads the property list from the specified file.
-     *
-     * @param fileName The name of the plist file to load.
-     * @throws org.apache.commons.configuration.ConfigurationException Error
-     * while loading the plist file
-     */
-    public XMLPropertyListConfiguration(String fileName) throws ConfigurationException
-    {
-        super(fileName);
-    }
-
-    /**
-     * Creates and loads the property list from the specified file.
-     *
-     * @param file The plist file to load.
-     * @throws ConfigurationException Error while loading the plist file
-     */
-    public XMLPropertyListConfiguration(File file) throws ConfigurationException
-    {
-        super(file);
-    }
-
-    /**
-     * Creates and loads the property list from the specified URL.
-     *
-     * @param url The location of the plist file to load.
-     * @throws ConfigurationException Error while loading the plist file
-     */
-    public XMLPropertyListConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
     }
 
     @Override
@@ -228,7 +199,18 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
-    public void load(Reader in) throws ConfigurationException
+    /**
+     * Stores the current file locator. This method is called before I/O
+     * operations.
+     *
+     * @param locator the current {@code FileLocator}
+     */
+    public void initFileLocator(FileLocator locator)
+    {
+        this.locator = locator;
+    }
+
+    public void read(Reader in) throws ConfigurationException
     {
         // We have to make sure that the root node is actually a PListNode.
         // If this object was not created using the standard constructor, the
@@ -265,13 +247,13 @@ public class XMLPropertyListConfiguration extends AbstractHierarchicalFileConfig
         }
     }
 
-    public void save(Writer out) throws ConfigurationException
+    public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
 
-        if (getEncoding() != null)
+        if (locator.getEncoding() != null)
         {
-            writer.println("<?xml version=\"1.0\" encoding=\"" + getEncoding() + "\"?>");
+            writer.println("<?xml version=\"1.0\" encoding=\"" + locator.getEncoding() + "\"?>");
         }
         else
         {
