@@ -27,6 +27,10 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-539">
+        The deprectated INIConfiguration class was removed.
+        HierarchicalINIConfiguration was renamed to INIConfiguration.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-537">
         The deprectated ConfigurationFactory class was removed.
       </action>
