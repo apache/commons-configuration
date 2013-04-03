@@ -17,11 +17,9 @@
 
 package org.apache.commons.configuration.plist;
 
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,9 +30,10 @@ import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.codec.binary.Hex;
-import org.apache.commons.configuration.AbstractHierarchicalFileConfiguration;
+import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.FileBasedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -83,7 +82,8 @@ import org.apache.commons.lang.StringUtils;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class PropertyListConfiguration extends AbstractHierarchicalFileConfiguration
+public class PropertyListConfiguration extends BaseHierarchicalConfiguration
+    implements FileBasedConfiguration
 {
     /** Constant for the separator parser for the date part. */
     private static final DateComponentParser DATE_SEPARATOR_PARSER = new DateSeparatorParser(
@@ -151,39 +151,6 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         super(c);
     }
 
-    /**
-     * Creates and loads the property list from the specified file.
-     *
-     * @param fileName The name of the plist file to load.
-     * @throws ConfigurationException Error while loading the plist file
-     */
-    public PropertyListConfiguration(String fileName) throws ConfigurationException
-    {
-        super(fileName);
-    }
-
-    /**
-     * Creates and loads the property list from the specified file.
-     *
-     * @param file The plist file to load.
-     * @throws ConfigurationException Error while loading the plist file
-     */
-    public PropertyListConfiguration(File file) throws ConfigurationException
-    {
-        super(file);
-    }
-
-    /**
-     * Creates and loads the property list from the specified URL.
-     *
-     * @param url The location of the plist file to load.
-     * @throws ConfigurationException Error while loading the plist file
-     */
-    public PropertyListConfiguration(URL url) throws ConfigurationException
-    {
-        super(url);
-    }
-
     @Override
     public void setProperty(String key, Object value)
     {
@@ -224,7 +191,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
     }
 
-    public void load(Reader in) throws ConfigurationException
+    public void read(Reader in) throws ConfigurationException
     {
         PropertyListParser parser = new PropertyListParser(in);
         try
@@ -238,7 +205,7 @@ public class PropertyListConfiguration extends AbstractHierarchicalFileConfigura
         }
     }
 
-    public void save(Writer out) throws ConfigurationException
+    public void write(Writer out) throws ConfigurationException
     {
         PrintWriter writer = new PrintWriter(out);
         printNode(writer, 0, getRootNode());

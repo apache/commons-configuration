@@ -40,8 +40,11 @@ import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationComparator;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.StrictConfigurationComparator;
+import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * @author Emmanuel Bourg
@@ -49,16 +52,32 @@ import org.junit.Test;
  */
 public class TestPropertyListConfiguration
 {
+    /** A helper object for dealing with temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+
     private PropertyListConfiguration config;
 
-    private String testProperties = ConfigurationAssert.getTestFile("test.plist").getAbsolutePath();
+    private File testProperties = ConfigurationAssert.getTestFile("test.plist");
 
     @Before
     public void setUp() throws Exception
     {
         config = new PropertyListConfiguration();
-        config.setFileName(testProperties);
-        config.load();
+        load(config, testProperties);
+    }
+
+    /**
+     * Loads a configuration from the specified test file.
+     *
+     * @param c the configuration to be loaded
+     * @param f the file to be loaded
+     * @throws ConfigurationException if an error occurs
+     */
+    private static void load(PropertyListConfiguration c, File f)
+            throws ConfigurationException
+    {
+        new FileHandler(c).load(f);
     }
 
     @Test
@@ -72,7 +91,7 @@ public class TestPropertyListConfiguration
     {
         config = new PropertyListConfiguration();
         try {
-            config.load(new StringReader(""));
+            new FileHandler(config).load(new StringReader(""));
             fail("No exception thrown on loading an empty file");
         } catch (ConfigurationException e) {
             // expected
@@ -210,25 +229,29 @@ public class TestPropertyListConfiguration
         assertEquals("date", date, config.getProperty("date"));
     }
 
+    /**
+     * Saves the test configuration to the specified file.
+     *
+     * @param file the target file
+     * @throws ConfigurationException if an error occurs
+     */
+    private void saveConfig(File file) throws ConfigurationException
+    {
+        new FileHandler(config).save(file);
+    }
+
     @Test
     public void testSave() throws Exception
     {
-        File savedFile = new File("target/testsave.plist");
-
-        // remove the file previously saved if necessary
-        if (savedFile.exists())
-        {
-            assertTrue(savedFile.delete());
-        }
+        File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
-        String filename = savedFile.getAbsolutePath();
-        config.save(filename);
-
+        saveConfig(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        Configuration checkConfig = new PropertyListConfiguration(new File(filename));
+        PropertyListConfiguration checkConfig = new PropertyListConfiguration();
+        load(checkConfig, savedFile);
 
         Iterator<String> it = config.getKeys();
         while (it.hasNext())
@@ -278,22 +301,15 @@ public class TestPropertyListConfiguration
     @Test
     public void testSaveEmptyDictionary() throws Exception
     {
-        File savedFile = new File("target/testsave.plist");
-
-        // remove the file previously saved if necessary
-        if (savedFile.exists())
-        {
-            assertTrue(savedFile.delete());
-        }
+        File savedFile = folder.newFile("testsave.plist");
 
         // save the configuration
-        String filename = savedFile.getAbsolutePath();
-        config.save(filename);
-
+        saveConfig(savedFile);
         assertTrue("The saved file doesn't exist", savedFile.exists());
 
         // read the configuration and compare the properties
-        PropertyListConfiguration checkConfig = new PropertyListConfiguration(new File(filename));
+        PropertyListConfiguration checkConfig = new PropertyListConfiguration();
+        load(checkConfig, savedFile);
 
         assertFalse(config.getRootNode().getChildren("empty-dictionary").isEmpty());
         assertFalse(checkConfig.getRootNode().getChildren("empty-dictionary").isEmpty());
@@ -316,12 +332,14 @@ public class TestPropertyListConfiguration
     @Test
     public void testSetDataProperty() throws Exception
     {
+        File saveFile = folder.newFile();
         byte[] expected = new byte[]{1, 2, 3, 4};
-        PropertyListConfiguration config = new PropertyListConfiguration();
+        config = new PropertyListConfiguration();
         config.setProperty("foo", expected);
-        config.save("target/testdata.plist");
+        saveConfig(saveFile);
 
-        PropertyListConfiguration config2 = new PropertyListConfiguration("target/testdata.plist");
+        PropertyListConfiguration config2 = new PropertyListConfiguration();
+        load(config2, saveFile);
         Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
@@ -335,12 +353,14 @@ public class TestPropertyListConfiguration
     @Test
     public void testAddDataProperty() throws Exception
     {
+        File saveFile = folder.newFile();
         byte[] expected = new byte[]{1, 2, 3, 4};
-        PropertyListConfiguration config = new PropertyListConfiguration();
+        config = new PropertyListConfiguration();
         config.addProperty("foo", expected);
-        config.save("target/testdata.plist");
+        saveConfig(saveFile);
 
-        PropertyListConfiguration config2 = new PropertyListConfiguration("target/testdata.plist");
+        PropertyListConfiguration config2 = new PropertyListConfiguration();
+        load(config2, saveFile);
         Object array = config2.getProperty("foo");
 
         assertNotNull("data not found", array);
