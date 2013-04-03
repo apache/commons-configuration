@@ -39,14 +39,14 @@ import org.junit.After;
 import org.junit.Test;
 
 /**
- * Test class for HierarchicalINIConfiguration.
+ * Test class for INIConfiguration.
  *
  * @author <a
  *         href="http://commons.apache.org/configuration/team-list.html">Commons
  *         Configuration team</a>
  * @version $Id$
  */
-public class TestHierarchicalINIConfiguration
+public class TestINIConfiguration
 {
     private static String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -116,17 +116,17 @@ public class TestHierarchicalINIConfiguration
     }
 
     /**
-     * Creates a HierarchicalINIConfiguration object that is initialized from
+     * Creates a INIConfiguration object that is initialized from
      * the given data.
      *
      * @param data the data of the configuration (an ini file as string)
      * @return the initialized configuration
      * @throws ConfigurationException if an error occurs
      */
-    private static HierarchicalINIConfiguration setUpConfig(String data)
+    private static INIConfiguration setUpConfig(String data)
             throws ConfigurationException
     {
-        HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        INIConfiguration instance = new INIConfiguration();
         load(instance, data);
         return instance;
     }
@@ -138,7 +138,7 @@ public class TestHierarchicalINIConfiguration
      * @param data the data to be loaded
      * @throws ConfigurationException if an error occurs
      */
-    private static void load(HierarchicalINIConfiguration instance, String data)
+    private static void load(INIConfiguration instance, String data)
             throws ConfigurationException
     {
         StringReader reader = new StringReader(data);
@@ -173,13 +173,13 @@ public class TestHierarchicalINIConfiguration
     }
 
     /**
-     * Test of save method, of class {@link HierarchicalINIConfiguration}.
+     * Test of save method, of class {@link INIConfiguration}.
      */
     @Test
     public void testSave() throws Exception
     {
         Writer writer = new StringWriter();
-        HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        INIConfiguration instance = new INIConfiguration();
         instance.addProperty("section1.var1", "foo");
         instance.addProperty("section1.var2", "451");
         instance.addProperty("section2.var1", "123.45");
@@ -203,7 +203,7 @@ public class TestHierarchicalINIConfiguration
      */
     private void checkSave(String content) throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(content);
+        INIConfiguration config = setUpConfig(content);
         StringWriter writer = new StringWriter();
         try
         {
@@ -236,7 +236,7 @@ public class TestHierarchicalINIConfiguration
     }
 
     /**
-     * Test of load method, of class {@link HierarchicalINIConfiguration}.
+     * Test of load method, of class {@link INIConfiguration}.
      */
     @Test
     public void testLoad() throws Exception
@@ -262,12 +262,12 @@ public class TestHierarchicalINIConfiguration
             IOException
     {
         writeTestFile(INI_DATA);
-        FileBasedConfigurationBuilder<HierarchicalINIConfiguration> builder =
-                new FileBasedConfigurationBuilder<HierarchicalINIConfiguration>(
-                        HierarchicalINIConfiguration.class);
+        FileBasedConfigurationBuilder<INIConfiguration> builder =
+                new FileBasedConfigurationBuilder<INIConfiguration>(
+                        INIConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
                 .setFile(TEST_FILE));
-        HierarchicalINIConfiguration config = builder.getConfiguration();
+        INIConfiguration config = builder.getConfiguration();
         checkContent(config);
     }
 
@@ -277,7 +277,7 @@ public class TestHierarchicalINIConfiguration
      *
      * @param instance the configuration to check
      */
-    private void checkContent(HierarchicalINIConfiguration instance)
+    private void checkContent(INIConfiguration instance)
     {
         assertTrue(instance.getString("section1.var1").equals("foo"));
         assertTrue(instance.getInt("section1.var2") == 451);
@@ -295,18 +295,18 @@ public class TestHierarchicalINIConfiguration
      */
     private void checkLoad(String data) throws ConfigurationException
     {
-        HierarchicalINIConfiguration instance = setUpConfig(data);
+        INIConfiguration instance = setUpConfig(data);
         checkContent(instance);
     }
 
     /**
      * Test of isCommentLine method, of class
-     * {@link HierarchicalINIConfiguration}.
+     * {@link INIConfiguration}.
      */
     @Test
     public void testIsCommentLine()
     {
-        HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        INIConfiguration instance = new INIConfiguration();
         assertTrue(instance.isCommentLine("#comment1"));
         assertTrue(instance.isCommentLine(";comment1"));
         assertFalse(instance.isCommentLine("nocomment=true"));
@@ -315,25 +315,25 @@ public class TestHierarchicalINIConfiguration
 
     /**
      * Test of isSectionLine method, of class
-     * {@link HierarchicalINIConfiguration}.
+     * {@link INIConfiguration}.
      */
     @Test
     public void testIsSectionLine()
     {
-        HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        INIConfiguration instance = new INIConfiguration();
         assertTrue(instance.isSectionLine("[section]"));
         assertFalse(instance.isSectionLine("nosection=true"));
         assertFalse(instance.isSectionLine(null));
     }
 
     /**
-     * Test of getSections method, of class {@link HierarchicalINIConfiguration}
+     * Test of getSections method, of class {@link INIConfiguration}
      * .
      */
     @Test
     public void testGetSections()
     {
-        HierarchicalINIConfiguration instance = new HierarchicalINIConfiguration();
+        INIConfiguration instance = new INIConfiguration();
         instance.addProperty("test1.foo", "bar");
         instance.addProperty("test2.foo", "abc");
         Set<String> expResult = new HashSet<String>();
@@ -346,14 +346,14 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testQuotedValue() throws Exception
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "quoted value", config.getString("section4.var1"));
     }
 
     @Test
     public void testQuotedValueWithQuotes() throws Exception
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "quoted value\\nwith \"quotes\"", config
                 .getString("section4.var2"));
     }
@@ -361,21 +361,21 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testValueWithComment() throws Exception
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "123", config.getString("section4.var3"));
     }
 
     @Test
     public void testQuotedValueWithComment() throws Exception
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "1;2;3", config.getString("section4.var4"));
     }
 
     @Test
     public void testQuotedValueWithSingleQuotes() throws Exception
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("value", "'quoted' \"value\"", config
                 .getString("section4.var5"));
     }
@@ -383,13 +383,13 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testWriteValueWithCommentChar() throws Exception
     {
-        HierarchicalINIConfiguration config = new HierarchicalINIConfiguration();
+        INIConfiguration config = new INIConfiguration();
         config.setProperty("section.key1", "1;2;3");
 
         StringWriter writer = new StringWriter();
         config.write(writer);
 
-        HierarchicalINIConfiguration config2 = new HierarchicalINIConfiguration();
+        INIConfiguration config2 = new INIConfiguration();
         config2.read(new StringReader(writer.toString()));
 
         assertEquals("value", "1;2;3", config2.getString("section.key1"));
@@ -402,7 +402,7 @@ public class TestHierarchicalINIConfiguration
     public void testQuotedValueWithWhitespace() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \"";
-        HierarchicalINIConfiguration config = setUpConfig(content);
+        INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
     }
@@ -414,7 +414,7 @@ public class TestHierarchicalINIConfiguration
     public void testQuotedValueWithWhitespaceAndComment() throws Exception
     {
         final String content = "CmdPrompt = \" [test@cmd ~]$ \" ; a comment";
-        HierarchicalINIConfiguration config = setUpConfig(content);
+        INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong propert value", " [test@cmd ~]$ ", config
                 .getString("CmdPrompt"));
     }
@@ -425,7 +425,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testQuotedValueEmpty() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         assertEquals("Wrong value for empty property", "", config
                 .getString("section4.var6"));
     }
@@ -438,7 +438,7 @@ public class TestHierarchicalINIConfiguration
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "noValue ="
                 + LINE_SEPARATOR;
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         assertEquals("Wrong value of key", "", config
                 .getString("section4.noValue"));
     }
@@ -451,7 +451,7 @@ public class TestHierarchicalINIConfiguration
     {
         final String data = INI_DATA2 + LINE_SEPARATOR + "= noKey"
                 + LINE_SEPARATOR;
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         assertEquals("Cannot find property with no key", "noKey", config
                 .getString("section4. "));
     }
@@ -462,7 +462,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGlobalProperty() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         assertEquals("Wrong value of global property", "testGlobal", config
                 .getString("globalVar"));
     }
@@ -474,7 +474,7 @@ public class TestHierarchicalINIConfiguration
      * @param config the configuration to check
      * @param expected an array with the expected sections
      */
-    private void checkSectionNames(HierarchicalINIConfiguration config,
+    private void checkSectionNames(INIConfiguration config,
             String[] expected)
     {
         Set<String> sectionNames = config.getSections();
@@ -493,10 +493,10 @@ public class TestHierarchicalINIConfiguration
      * @param expected the expected section names
      * @return the configuration instance
      */
-    private HierarchicalINIConfiguration checkSectionNames(String data,
+    private INIConfiguration checkSectionNames(String data,
             String[] expected) throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         checkSectionNames(config, expected);
         return config;
     }
@@ -543,7 +543,7 @@ public class TestHierarchicalINIConfiguration
     public void testGetSectionsDottedVar() throws ConfigurationException
     {
         final String data = "dotted.var = 1" + LINE_SEPARATOR + INI_DATA_GLOBAL;
-        HierarchicalINIConfiguration config = checkSectionNames(data,
+        INIConfiguration config = checkSectionNames(data,
                 new String[] {
                         null, "section1", "section2", "section3"
                 });
@@ -557,7 +557,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionsAdded() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA2);
+        INIConfiguration config = setUpConfig(INI_DATA2);
         config.addProperty("section5.test", Boolean.TRUE);
         checkSectionNames(config, new String[] {
                 "section4", "section5"
@@ -570,7 +570,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionExisting() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
+        INIConfiguration config = setUpConfig(INI_DATA);
         SubnodeConfiguration section = config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
@@ -585,7 +585,7 @@ public class TestHierarchicalINIConfiguration
     {
         final String data = INI_DATA + "[section1]" + LINE_SEPARATOR
                 + "var3 = merged" + LINE_SEPARATOR;
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         SubnodeConfiguration section = config.getSection("section1");
         assertEquals("Wrong value of var1", "foo", section.getString("var1"));
         assertEquals("Wrong value of var2", "451", section.getString("var2"));
@@ -598,7 +598,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionGlobal() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         SubnodeConfiguration section = config.getSection(null);
         assertEquals("Wrong value of global variable", "testGlobal", section
                 .getString("globalVar"));
@@ -611,7 +611,7 @@ public class TestHierarchicalINIConfiguration
     public void testGetSectionGloabalMultiThreaded()
             throws ConfigurationException, InterruptedException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
+        INIConfiguration config = setUpConfig(INI_DATA_GLOBAL);
         final int threadCount = 10;
         GlobalSectionTestThread[] threads = new GlobalSectionTestThread[threadCount];
         for (int i = 0; i < threadCount; i++)
@@ -632,7 +632,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionGlobalNonExisting() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
+        INIConfiguration config = setUpConfig(INI_DATA);
         SubnodeConfiguration section = config.getSection(null);
         assertTrue("Sub config not empty", section.isEmpty());
     }
@@ -643,7 +643,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionNonExisting() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
+        INIConfiguration config = setUpConfig(INI_DATA);
         SubnodeConfiguration section = config
                 .getSection("Non existing section");
         assertTrue("Sub config not empty", section.isEmpty());
@@ -655,7 +655,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuation() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two"
                 + LINE_SEPARATOR + "three", config
                 .getString("section5.multiLine"));
@@ -668,7 +668,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuationNone() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "C:\\Temp\\", config
                 .getString("section5.singleLine"));
     }
@@ -680,7 +680,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuationQuoted() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "  two  "
                 + LINE_SEPARATOR + "three", config
                 .getString("section5.multiQuoted"));
@@ -692,7 +692,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuationComment() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR + "two", config
                 .getString("section5.multiComment"));
     }
@@ -705,7 +705,7 @@ public class TestHierarchicalINIConfiguration
     public void testLineContinuationQuotedComment()
             throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", " one " + LINE_SEPARATOR + "two", config
                 .getString("section5.multiQuotedComment"));
     }
@@ -716,7 +716,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuationEmptyLine() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", LINE_SEPARATOR + "line 2", config
                 .getString("section5.noFirstLine"));
     }
@@ -727,7 +727,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testLineContinuationAtEnd() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA3);
+        INIConfiguration config = setUpConfig(INI_DATA3);
         assertEquals("Wrong value", "one" + LINE_SEPARATOR, config
                 .getString("section5.continueNoLine"));
     }
@@ -739,13 +739,13 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testSaveKeysWithDelimiters() throws ConfigurationException, IOException
     {
-        HierarchicalINIConfiguration conf = new HierarchicalINIConfiguration();
+        INIConfiguration conf = new INIConfiguration();
         final String section = "Section..with..dots";
         conf.addProperty(section + ".test1", "test1");
         conf.addProperty(section + ".test2", "test2");
         StringWriter writer = new StringWriter();
         conf.write(writer);
-        conf = new HierarchicalINIConfiguration();
+        conf = new INIConfiguration();
         conf.read(new StringReader(writer.toString()));
         assertEquals("Wrong value (1)", "test1", conf.getString(section + ".test1"));
         assertEquals("Wrong value (2)", "test2", conf.getString(section + ".test2"));
@@ -766,7 +766,7 @@ public class TestHierarchicalINIConfiguration
                         + LINE_SEPARATOR + "Class Path=" + path + "  ;comment"
                         + LINE_SEPARATOR + "Path=" + path
                         + "\t; another comment";
-        HierarchicalINIConfiguration config = setUpConfig(content);
+        INIConfiguration config = setUpConfig(content);
         assertEquals("Wrong class path", path,
                 config.getString("Environment.Class Path"));
         assertEquals("Wrong path", path, config.getString("Environment.Path"));
@@ -779,7 +779,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testSeparators() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         for (int i = 1; i <= 4; i++)
         {
             assertEquals("Wrong value", "value" + i,
@@ -793,7 +793,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testMultipleSeparators() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         assertEquals("Wrong value for var5", "value=5",
                 config.getString("section.var5"));
         assertEquals("Wrong value for var6", "6=value",
@@ -807,7 +807,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testMultipleSeparatorsQuoted() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
+        INIConfiguration config = setUpConfig(INI_DATA_SEPARATORS);
         assertEquals("Wrong value for var7", "value7",
                 config.getString("section.var:7"));
         assertEquals("Wrong value for var8", "value8",
@@ -822,7 +822,7 @@ public class TestHierarchicalINIConfiguration
     public void testSaveClearedSection() throws ConfigurationException, IOException
     {
         final String data = "[section]\ntest = failed\n";
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         SubnodeConfiguration sub = config.getSection("section");
         assertFalse("No content", sub.isEmpty());
         sub.clear();
@@ -842,7 +842,7 @@ public class TestHierarchicalINIConfiguration
     {
         final String data =
                 "[section]\nvar1 = sec1\n\n" + "[section]\nvar2 = sec2\n";
-        HierarchicalINIConfiguration config = setUpConfig(data);
+        INIConfiguration config = setUpConfig(data);
         assertEquals("Wrong value 1", "sec1", config.getString("section.var1"));
         assertEquals("Wrong value 2", "sec2", config.getString("section.var2"));
         SubnodeConfiguration sub = config.getSection("section");
@@ -865,14 +865,14 @@ public class TestHierarchicalINIConfiguration
     public void testGetSectionNonExistingManipulate()
             throws ConfigurationException, IOException
     {
-        HierarchicalINIConfiguration config = setUpConfig(INI_DATA);
+        INIConfiguration config = setUpConfig(INI_DATA);
         SubnodeConfiguration section = config.getSection("newSection");
         section.addProperty("test", "success");
         assertEquals("Main config not updated", "success",
                 config.getString("newSection.test"));
         StringWriter writer = new StringWriter();
         config.write(writer);
-        HierarchicalINIConfiguration config2 = setUpConfig(writer.toString());
+        INIConfiguration config2 = setUpConfig(writer.toString());
         section = config2.getSection("newSection");
         assertEquals("Wrong value", "success", section.getString("test"));
     }
@@ -883,8 +883,8 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testGetSectionDuplicate()
     {
-        HierarchicalINIConfiguration config =
-                new HierarchicalINIConfiguration();
+        INIConfiguration config =
+                new INIConfiguration();
         config.addProperty("section.var1", "value1");
         config.addProperty("section(-1).var2", "value2");
         SubnodeConfiguration section = config.getSection("section");
@@ -899,7 +899,7 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testValueWithDelimiters() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config =
+        INIConfiguration config =
                 setUpConfig("[test]" + LINE_SEPARATOR + "list=1,2,3"
                         + LINE_SEPARATOR);
         List<Object> list = config.getList("test.list");
@@ -915,8 +915,8 @@ public class TestHierarchicalINIConfiguration
     @Test
     public void testListParsingDisabled() throws ConfigurationException
     {
-        HierarchicalINIConfiguration config =
-                new HierarchicalINIConfiguration();
+        INIConfiguration config =
+                new INIConfiguration();
         config.setDelimiterParsingDisabled(true);
         load(config, "[test]" + LINE_SEPARATOR + "nolist=1,2,3");
         assertEquals("Wrong value", "1,2,3", config.getString("test.nolist"));
@@ -928,7 +928,7 @@ public class TestHierarchicalINIConfiguration
     private static class GlobalSectionTestThread extends Thread
     {
         /** The configuration. */
-        private final HierarchicalINIConfiguration config;
+        private final INIConfiguration config;
 
         /** A flag whether an error was found. */
         volatile boolean error;
@@ -939,7 +939,7 @@ public class TestHierarchicalINIConfiguration
          *
          * @param conf the configuration object
          */
-        public GlobalSectionTestThread(HierarchicalINIConfiguration conf)
+        public GlobalSectionTestThread(INIConfiguration conf)
         {
             config = conf;
         }

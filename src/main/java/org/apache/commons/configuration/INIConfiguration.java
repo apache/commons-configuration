@@ -199,8 +199,8 @@ import org.apache.commons.configuration.tree.ViewNode;
  * @version $Id$
  * @since 1.6
  */
-public class HierarchicalINIConfiguration extends
-        BaseHierarchicalConfiguration implements FileBasedConfiguration
+public class INIConfiguration extends BaseHierarchicalConfiguration implements
+        FileBasedConfiguration
 {
     /**
      * The characters that signal the start of a comment line.
@@ -235,19 +235,19 @@ public class HierarchicalINIConfiguration extends
     /**
      * Create a new empty INI Configuration.
      */
-    public HierarchicalINIConfiguration()
+    public INIConfiguration()
     {
         super();
     }
 
     /**
-     * Creates a new instance of {@code HierarchicalINIConfiguration} with the
+     * Creates a new instance of {@code INIConfiguration} with the
      * content of the specified {@code HierarchicalConfiguration}.
      *
      * @param c the configuration to be copied
      * @since 2.0
      */
-    public HierarchicalINIConfiguration(HierarchicalConfiguration c)
+    public INIConfiguration(HierarchicalConfiguration c)
     {
         super(c);
     }
@@ -750,7 +750,7 @@ public class HierarchicalINIConfiguration extends
      * configuration returned by this method is initialized with the first
      * occurrence of the section. (This can only happen if
      * {@code addProperty()} has been used in a way that does not conform
-     * to the storage scheme used by {@code HierarchicalINIConfiguration}.
+     * to the storage scheme used by {@code INIConfiguration}.
      * If used correctly, there will not be duplicate sections.)</li>
      * <li>There is special support for the global section: Passing in
      * <b>null</b> as section name returns a configuration with the content of

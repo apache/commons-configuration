@@ -443,7 +443,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     /** Constant for the provider for ini files. */
     private static final BaseConfigurationBuilderProvider INI_PROVIDER =
             new BaseConfigurationBuilderProvider(FILE_BUILDER, RELOADING_BUILDER,
-                    "org.apache.commons.configuration.HierarchicalINIConfiguration",
+                    "org.apache.commons.configuration.INIConfiguration",
                     Arrays.asList(FILE_PARAMS));
 
     /** Constant for the provider for environment properties. */
