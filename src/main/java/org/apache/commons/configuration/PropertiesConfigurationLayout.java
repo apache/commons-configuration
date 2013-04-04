@@ -608,15 +608,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
      */
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (event.isBeforeUpdate())
-        {
-            if (AbstractFileConfiguration.EVENT_RELOAD == event.getType())
-            {
-                clear();
-            }
-        }
-
-        else
+        if (!event.isBeforeUpdate())
         {
             switch (event.getType())
             {

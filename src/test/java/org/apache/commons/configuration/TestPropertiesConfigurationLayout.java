@@ -18,7 +18,6 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
@@ -368,35 +367,6 @@ public class TestPropertiesConfigurationLayout
         layout.configurationChanged(event);
         assertFalse("Property already stored", layout.getKeys().contains(
                 TEST_KEY));
-    }
-
-    /**
-     * Tests if a reload update is correctly processed.
-     */
-    @Test
-    public void testEventReload()
-    {
-        fillLayout();
-        ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractFileConfiguration.EVENT_RELOAD, null, null, true);
-        layout.configurationChanged(event);
-        assertTrue("Keys not empty", layout.getKeys().isEmpty());
-        assertNull("Header comment was not reset", layout.getHeaderComment());
-    }
-
-    /**
-     * Tests the event after a reload has been performed. This should be
-     * ignored.
-     */
-    @Test
-    public void testEventReloadAfter()
-    {
-        fillLayout();
-        ConfigurationEvent event = new ConfigurationEvent(this,
-                AbstractFileConfiguration.EVENT_RELOAD, null, null, false);
-        layout.configurationChanged(event);
-        assertFalse("Keys are empty", layout.getKeys().isEmpty());
-        assertNotNull("Header comment was reset", layout.getHeaderComment());
     }
 
     /**
