@@ -34,6 +34,15 @@
       <action dev="oheger" type="update" issue="CONFIGURATION-537">
         The deprectated ConfigurationFactory class was removed.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-536">
+        File-based configurations are now implemented in a different way.
+        The interfaces FileConfiguration and ReloadingStrategy have been
+        removed, also the base classes AbstractFileConfiguration and
+        AbstractHierarchicalFileConfiguration. They are replaced by the
+        FileBased interface and the FileHandler class which implements
+        central I/O functionality. Reloading is now in the responsibility of
+        configuration builders.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-534">
         The includesAllowed property of PropertyConfiguration is now independent
         from the existence of a base path.
