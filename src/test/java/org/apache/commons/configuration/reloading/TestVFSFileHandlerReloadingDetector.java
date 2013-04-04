@@ -39,12 +39,12 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 /**
- * Test case for the VFSFileMonitorReloadingStrategy class.
+ * Test case for the VFSFileHandlerReloadingDetector class.
  *
  * @author Ralph Goers
  * @version $Id$
  */
-public class TestVFSFileChangedReloadingStrategy
+public class TestVFSFileHandlerReloadingDetector
 {
     /** Constant for the name of the test property. */
     private static final String PROPERTY = "string";
@@ -92,8 +92,8 @@ public class TestVFSFileChangedReloadingStrategy
     {
         File file = folder.newFile();
         writeTestFile(file, "value1");
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy();
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector();
         strategy.getFileHandler().setFile(file);
         long modificationDate = strategy.getLastModificationDate();
         assertEquals("Wrong modification date", file.lastModified(),
@@ -109,8 +109,8 @@ public class TestVFSFileChangedReloadingStrategy
         File file = ConfigurationAssert.getOutFile("NonExistingFile.xml");
         FileHandler handler = new FileHandler();
         handler.setFile(file);
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy(handler);
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector(handler);
         assertEquals("Got a modification date", 0,
                 strategy.getLastModificationDate());
     }
@@ -121,8 +121,8 @@ public class TestVFSFileChangedReloadingStrategy
     @Test
     public void testLastModificationDateUndefinedHandler()
     {
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy();
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector();
         assertEquals("Got a modification date", 0,
                 strategy.getLastModificationDate());
     }
@@ -143,8 +143,8 @@ public class TestVFSFileChangedReloadingStrategy
         EasyMock.expect(fo.getName()).andReturn(name);
         EasyMock.expect(name.getURI()).andReturn("someURI");
         EasyMock.replay(fo, name);
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy()
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector()
                 {
                     @Override
                     protected FileObject getFileObject()
@@ -163,8 +163,8 @@ public class TestVFSFileChangedReloadingStrategy
     @Test(expected = ConfigurationRuntimeException.class)
     public void testLastModificationDateUnresolvableURI()
     {
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy()
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector()
                 {
                     @Override
                     protected String resolveFileURI()
@@ -183,8 +183,8 @@ public class TestVFSFileChangedReloadingStrategy
     public void testGetRefreshDelay() throws Exception
     {
         final long delay = 20130325L;
-        VFSFileChangedReloadingStrategy strategy =
-                new VFSFileChangedReloadingStrategy(null, delay);
+        VFSFileHandlerReloadingDetector strategy =
+                new VFSFileHandlerReloadingDetector(null, delay);
         assertNotNull("No file handler was created", strategy.getFileHandler());
         assertEquals("Wrong refresh delay", delay, strategy.getRefreshDelay());
     }

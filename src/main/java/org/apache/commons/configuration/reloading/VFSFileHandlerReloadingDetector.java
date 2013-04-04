@@ -48,41 +48,41 @@ import org.apache.commons.vfs2.VFS;
  * @version $Id$
  * @since 1.7
  */
-public class VFSFileChangedReloadingStrategy extends FileHandlerReloadingDetector
+public class VFSFileHandlerReloadingDetector extends FileHandlerReloadingDetector
 {
     /** Stores the logger.*/
     private Log log = LogFactory.getLog(getClass());
 
     /**
-     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
      * initializes it with an empty {@code FileHandler} object.
      */
-    public VFSFileChangedReloadingStrategy()
+    public VFSFileHandlerReloadingDetector()
     {
         super();
     }
 
     /**
-     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
      * initializes it with the given {@code FileHandler} object and the given
      * refresh delay.
      *
      * @param handler the {@code FileHandler}
      * @param refreshDelay the refresh delay
      */
-    public VFSFileChangedReloadingStrategy(FileHandler handler,
+    public VFSFileHandlerReloadingDetector(FileHandler handler,
             long refreshDelay)
     {
         super(handler, refreshDelay);
     }
 
     /**
-     * Creates a new instance of {@code VFSFileChangedReloadingStrategy} and
+     * Creates a new instance of {@code VFSFileHandlerReloadingDetector} and
      * initializes it with the given {@code FileHandler} object.
      *
      * @param handler the {@code FileHandler}
      */
-    public VFSFileChangedReloadingStrategy(FileHandler handler)
+    public VFSFileHandlerReloadingDetector(FileHandler handler)
     {
         super(handler);
     }
