@@ -23,7 +23,7 @@ package org.apache.commons.configuration.reloading;
  * @author Nicolas De Loof
  * @version $Id$
  */
-public interface ManagedReloadingStrategyMBean
+public interface ManagedReloadingDetectorMBean
 {
     /**
      * Management method to force configuration reload.

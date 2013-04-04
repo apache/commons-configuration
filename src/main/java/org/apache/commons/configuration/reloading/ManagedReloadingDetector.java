@@ -27,11 +27,11 @@ import org.apache.commons.logging.LogFactory;
  * @author Nicolas De loof
  * @version $Id$
  */
-public class ManagedReloadingStrategy implements ReloadingDetector,
-        ManagedReloadingStrategyMBean
+public class ManagedReloadingDetector implements ReloadingDetector,
+        ManagedReloadingDetectorMBean
 {
     /** The logger. */
-    private Log log = LogFactory.getLog(ManagedReloadingStrategy.class);
+    private Log log = LogFactory.getLog(ManagedReloadingDetector.class);
 
     /** A flag whether a reload is required. */
     private volatile boolean reloadingRequired;
@@ -61,7 +61,7 @@ public class ManagedReloadingStrategy implements ReloadingDetector,
      * refreshed. This method will typically be called from outside (through an
      * exposed MBean) on behalf of an administrator.
      *
-     * @see org.apache.commons.configuration.reloading.ManagedReloadingStrategyMBean#refresh()
+     * @see org.apache.commons.configuration.reloading.ManagedReloadingDetectorMBean#refresh()
      */
     public void refresh()
     {

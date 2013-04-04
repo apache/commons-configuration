@@ -24,20 +24,20 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test case for the ManagedReloadingStrategy class.
+ * Test case for the ManagedReloadingDetector class.
  *
  * @author Nicolas De loof
  * @version $Id$
  */
-public class TestManagedReloadingStrategy
+public class TestManagedReloadingDetector
 {
     /** The instance to be tested. */
-    private ManagedReloadingStrategy strategy;
+    private ManagedReloadingDetector strategy;
 
     @Before
     public void setUp() throws Exception
     {
-        strategy = new ManagedReloadingStrategy();
+        strategy = new ManagedReloadingDetector();
     }
 
     /**
