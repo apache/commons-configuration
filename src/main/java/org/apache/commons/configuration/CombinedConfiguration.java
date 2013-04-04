@@ -600,11 +600,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (event.getType() == AbstractFileConfiguration.EVENT_CONFIG_CHANGED)
-        {
-            fireEvent(event.getType(), event.getPropertyName(), event.getPropertyValue(), event.isBeforeUpdate());
-        }
-        else if (!event.isBeforeUpdate())
+        if (!event.isBeforeUpdate())
         {
             invalidate();
         }
