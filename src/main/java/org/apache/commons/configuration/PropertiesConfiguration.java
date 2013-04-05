@@ -35,6 +35,11 @@ import org.apache.commons.configuration.io.FileLocatorAware;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.text.translate.AggregateTranslator;
+import org.apache.commons.lang3.text.translate.CharSequenceTranslator;
+import org.apache.commons.lang3.text.translate.EntityArrays;
+import org.apache.commons.lang3.text.translate.LookupTranslator;
+import org.apache.commons.lang3.text.translate.UnicodeEscaper;
 
 /**
  * This is the "classic" Properties loader which loads the values from
@@ -855,6 +860,17 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class PropertiesWriter extends FilterWriter
     {
+        /**
+         * A translator for escaping property values. This translator performs a
+         * subset of transformations done by the ESCAPE_JAVA translator from
+         * Commons Lang 3.
+         */
+        private static final CharSequenceTranslator ESCAPE_PROPERTIES =
+                new AggregateTranslator(new LookupTranslator(new String[][] {
+                    { "\\", "\\\\" }}),
+                        new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE()),
+                        UnicodeEscaper.outsideOf(32, 0x7f));
+
         /** Constant for the initial size when creating a string buffer. */
         private static final int BUF_SIZE = 8;
 
@@ -1097,8 +1113,8 @@ public class PropertiesConfiguration extends BaseConfiguration
         protected String escapeValue(Object value, boolean inList)
         {
             String escapedValue =
-                    StringEscapeUtils
-                            .escapeJava(escapeBackslashs(value, inList));
+                    ESCAPE_PROPERTIES
+                            .translate(escapeBackslashs(value, inList));
             if (getDelimiter() != 0)
             {
                 escapedValue =

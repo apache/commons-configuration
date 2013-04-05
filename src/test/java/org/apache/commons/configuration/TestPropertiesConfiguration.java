@@ -990,6 +990,26 @@ public class TestPropertiesConfiguration
     }
 
     /**
+     * Tests the escaping of quotation marks in a properties value. This test is
+     * related to CONFIGURATION-516.
+     */
+    @Test
+    public void testEscapeQuote() throws ConfigurationException
+    {
+        conf.clear();
+        String text = "\"Hello World!\"";
+        conf.setProperty(PROP_NAME, text);
+        StringWriter out = new StringWriter();
+        new FileHandler(conf).save(out);
+        assertTrue("Value was escaped: " + out,
+                out.toString().indexOf(text) >= 0);
+        saveTestConfig();
+        PropertiesConfiguration c2 = new PropertiesConfiguration();
+        load(c2, testSavePropertiesFile.getAbsolutePath());
+        assertEquals("Wrong value", text, c2.getString(PROP_NAME));
+    }
+
+    /**
      * Helper method for testing the content of a list with elements that
      * contain backslashes.
      *
