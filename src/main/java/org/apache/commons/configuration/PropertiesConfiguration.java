@@ -859,7 +859,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         private static final int BUF_SIZE = 8;
 
         /** The delimiter for multi-valued properties.*/
-        private char delimiter;
+        private final char delimiter;
 
         /** The separator to be used for the current property. */
         private String currentSeparator;
@@ -880,6 +880,19 @@ public class PropertiesConfiguration extends BaseConfiguration
         {
             super(writer);
             this.delimiter = delimiter;
+        }
+
+        /**
+         * Returns the delimiter for properties with multiple values. This is
+         * the list delimiter character. A value of '\0' means that no delimiter
+         * is defined.
+         *
+         * @return the delimiter for properties with multiple values
+         * @since 2.0
+         */
+        public char getDelimiter()
+        {
+            return delimiter;
         }
 
         /**
@@ -1038,13 +1051,16 @@ public class PropertiesConfiguration extends BaseConfiguration
         }
 
         /**
-         * Escape the separators in the key.
+         * Escapes the key of a property before it gets written to file. This
+         * method is called on saving a configuration for each property key.
+         * It ensures that separator characters contained in the key are
+         * escaped.
          *
          * @param key the key
          * @return the escaped key
-         * @since 1.2
+         * @since 2.0
          */
-        private String escapeKey(String key)
+        protected String escapeKey(String key)
         {
             StringBuilder newkey = new StringBuilder();
 
@@ -1068,20 +1084,27 @@ public class PropertiesConfiguration extends BaseConfiguration
         }
 
         /**
-         * Escapes the given property value. Delimiter characters in the value
-         * will be escaped.
+         * Escapes the given property value. This method is called on saving the
+         * configuration for each property value. It ensures a correct handling
+         * of backslash characters and also takes care that list delimiter
+         * characters in the value are escaped.
          *
          * @param value the property value
          * @param inList a flag whether the value is part of a list
          * @return the escaped property value
-         * @since 1.3
+         * @since 2.0
          */
-        private String escapeValue(Object value, boolean inList)
+        protected String escapeValue(Object value, boolean inList)
         {
-            String escapedValue = handleBackslashs(value, inList);
-            if (delimiter != 0)
+            String escapedValue =
+                    StringEscapeUtils
+                            .escapeJava(escapeBackslashs(value, inList));
+            if (getDelimiter() != 0)
             {
-                escapedValue = StringUtils.replace(escapedValue, String.valueOf(delimiter), ESCAPE + delimiter);
+                escapedValue =
+                        StringUtils.replace(escapedValue,
+                                String.valueOf(getDelimiter()), ESCAPE
+                                        + getDelimiter());
             }
             return escapedValue;
         }
@@ -1092,13 +1115,14 @@ public class PropertiesConfiguration extends BaseConfiguration
          * character of a list delimiter, double backslashes also have to be
          * escaped if the property is part of a (single line) list. Then, in all
          * cases each backslash has to be doubled in order to produce a valid
-         * properties file.
+         * properties file. This method is called by {@code escapeValue()}.
          *
          * @param value the value to be escaped
          * @param inList a flag whether the value is part of a list
          * @return the value with escaped backslashes as string
+         * @since 2.0
          */
-        private String handleBackslashs(Object value, boolean inList)
+        protected String escapeBackslashs(Object value, boolean inList)
         {
             String strValue = String.valueOf(value);
 
@@ -1123,7 +1147,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                 strValue = buf.toString();
             }
 
-            return StringEscapeUtils.escapeJava(strValue);
+            return strValue;
         }
 
         /**
@@ -1149,7 +1173,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                     {
                         buf.append(ESCAPE).append(ESCAPE);
                     }
-                    buf.append(delimiter);
+                    buf.append(getDelimiter());
                     lastValue = escapeValue(it.next(), true);
                     buf.append(lastValue);
                 }

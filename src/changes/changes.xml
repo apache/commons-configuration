@@ -73,6 +73,11 @@
         Hierarchical configurations now provide methods to obtain sub
         configurations for all child elements of a given key.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-515">
+        The visibility of some internal methods of PropertiesConfiguration.PropertiesWriter
+        has been increased to protected. This simplifies the implementation of
+        a custom escaping strategy.
+      </action>
       <action dev="oheger" type="add" issue="CONFIGURATION-514">
         Bean declarations now support constructor invocations.
       </action>
