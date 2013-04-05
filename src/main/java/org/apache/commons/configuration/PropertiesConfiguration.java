@@ -1412,32 +1412,28 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     private void loadIncludeFile(String fileName) throws ConfigurationException
     {
-        // TODO remove when all tests are adapted
-        URL url = null;
-        if (locator != null)
+        assert locator != null : "Locator has not been set!";
+        URL url =
+                ConfigurationUtils.locate(locator.getFileSystem(),
+                        locator.getBasePath(), fileName);
+        if (url == null)
         {
-            url =
-                    ConfigurationUtils.locate(locator.getFileSystem(),
-                            locator.getBasePath(), fileName);
-            if (url == null)
+            URL baseURL = locator.getSourceURL();
+            if (baseURL != null)
             {
-                URL baseURL = locator.getSourceURL();
-                if (baseURL != null)
-                {
-                    url =
-                            ConfigurationUtils.locate(locator.getFileSystem(),
-                                    baseURL.toString(), fileName);
-                }
+                url =
+                        ConfigurationUtils.locate(locator.getFileSystem(),
+                                baseURL.toString(), fileName);
             }
-
-            if (url == null)
-            {
-                throw new ConfigurationException("Cannot resolve include file "
-                        + fileName);
-            }
-
-            FileHandler fh = new FileHandler(this);
-            fh.load(url);
         }
+
+        if (url == null)
+        {
+            throw new ConfigurationException("Cannot resolve include file "
+                    + fileName);
+        }
+
+        FileHandler fh = new FileHandler(this);
+        fh.load(url);
     }
 }
