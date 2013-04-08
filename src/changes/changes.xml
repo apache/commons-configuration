@@ -43,6 +43,10 @@
         central I/O functionality. Reloading is now in the responsibility of
         configuration builders.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-535">
+        DatabaseConfiguration now provides get methods for querying its
+        properties defining the underlying database structures.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-534">
         The includesAllowed property of PropertyConfiguration is now independent
         from the existence of a base path.
