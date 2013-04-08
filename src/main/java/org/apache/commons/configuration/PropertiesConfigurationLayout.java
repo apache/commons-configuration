@@ -664,6 +664,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         layoutData.clear();
         setHeaderComment(null);
+        setFooterComment(null);
     }
 
     /**

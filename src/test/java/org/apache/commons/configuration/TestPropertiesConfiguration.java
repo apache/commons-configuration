@@ -990,6 +990,17 @@ public class TestPropertiesConfiguration
     }
 
     /**
+     * Tests whether a clear() operation clears the footer comment.
+     */
+    @Test
+    public void testClearFooterComment()
+    {
+        conf.clear();
+        assertNull("Still got a footer comment", conf.getFooter());
+        assertNull("Still got a header comment", conf.getHeader());
+    }
+
+    /**
      * Tests the escaping of quotation marks in a properties value. This test is
      * related to CONFIGURATION-516.
      */
