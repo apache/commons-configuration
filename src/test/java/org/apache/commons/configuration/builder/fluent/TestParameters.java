@@ -220,4 +220,23 @@ public class TestParameters
                 params.getManagedBuilderParameters());
         assertEquals("Wrong pattern", pattern, params.getFilePattern());
     }
+
+    /**
+     * Tests whether a parameters object for a database configuration can be
+     * created.
+     */
+    @Test
+    public void testDatabase()
+    {
+        Map<String, Object> map =
+                Parameters.database().setThrowExceptionOnMissing(true)
+                        .setAutoCommit(true).setTable("table")
+                        .setListDelimiter('#').setKeyColumn("keyColumn")
+                        .getParameters();
+        checkBasicProperties(map);
+        assertEquals("Wrong table name", "table", map.get("table"));
+        assertEquals("Wrong key column name", "keyColumn", map.get("keyColumn"));
+        assertEquals("Wrong auto commit flag", Boolean.TRUE,
+                map.get("autoCommit"));
+    }
 }

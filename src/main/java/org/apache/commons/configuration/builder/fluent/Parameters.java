@@ -22,6 +22,7 @@ import java.lang.reflect.Proxy;
 
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
+import org.apache.commons.configuration.builder.DatabaseBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.HierarchicalBuilderParametersImpl;
 import org.apache.commons.configuration.builder.JndiBuilderParametersImpl;
@@ -164,6 +165,18 @@ public final class Parameters
     {
         return createParametersProxy(MultiFileBuilderParameters.class,
                 new MultiFileBuilderParametersImpl());
+    }
+
+    /**
+     * Creates a new instance of a parameters object for database
+     * configurations.
+     *
+     * @return the new parameters object
+     */
+    public static DatabaseBuilderParameters database()
+    {
+        return createParametersProxy(DatabaseBuilderParameters.class,
+                new DatabaseBuilderParametersImpl());
     }
 
     /**
