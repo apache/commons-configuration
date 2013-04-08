@@ -87,6 +87,21 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DatabaseConfiguration extends AbstractConfiguration
 {
+    /** Constant for the statement used by getProperty.*/
+    private static final String SQL_GET_PROPERTY = "SELECT * FROM %s WHERE %s =?";
+
+    /** Constant for the statement used by isEmpty.*/
+    private static final String SQL_IS_EMPTY = "SELECT count(*) FROM %s WHERE 1 = 1";
+
+    /** Constant for the statement used by clearProperty.*/
+    private static final String SQL_CLEAR_PROPERTY = "DELETE FROM %s WHERE %s =?";
+
+    /** Constant for the statement used by clear.*/
+    private static final String SQL_CLEAR = "DELETE FROM %s WHERE 1 = 1";
+
+    /** Constant for the statement used by getKeys.*/
+    private static final String SQL_GET_KEYS = "SELECT DISTINCT %s FROM %s WHERE 1 = 1";
+
     /** The datasource to connect to the database. */
     private final DataSource datasource;
 
@@ -204,71 +219,47 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param key the key of the desired property
      * @return the value of this property
      */
-    public Object getProperty(String key)
+    public Object getProperty(final String key)
     {
-        Object result = null;
-
-        // build the query
-        StringBuilder query = new StringBuilder("SELECT * FROM ");
-        query.append(table).append(" WHERE ");
-        query.append(keyColumn).append("=?");
-        if (nameColumn != null)
+        JdbcOperation<Object> op = new JdbcOperation<Object>(EVENT_READ_PROPERTY, key, null)
         {
-            query.append(" AND " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            pstmt.setString(1, key);
-            if (nameColumn != null)
+            @Override
+            protected Object performOperation() throws SQLException
             {
-                pstmt.setString(2, name);
-            }
+                ResultSet rs = openResultSet(String.format(
+                        SQL_GET_PROPERTY, table, keyColumn), true, key);
 
-            rs = pstmt.executeQuery();
-
-            List<Object> results = new ArrayList<Object>();
-            while (rs.next())
-            {
-                Object value = rs.getObject(valueColumn);
-                if (isDelimiterParsingDisabled())
+                List<Object> results = new ArrayList<Object>();
+                while (rs.next())
                 {
-                    results.add(value);
+                    Object value = rs.getObject(valueColumn);
+                    if (isDelimiterParsingDisabled())
+                    {
+                        results.add(value);
+                    }
+                    else
+                    {
+                        // Split value if it contains the list delimiter
+                        Iterator<?> it = PropertyConverter.toIterator(value, getListDelimiter());
+                        while (it.hasNext())
+                        {
+                            results.add(it.next());
+                        }
+                    }
+                }
+
+                if (!results.isEmpty())
+                {
+                    return (results.size() > 1) ? results : results.get(0);
                 }
                 else
                 {
-                    // Split value if it contains the list delimiter
-                    Iterator<?> it = PropertyConverter.toIterator(value, getListDelimiter());
-                    while (it.hasNext())
-                    {
-                        results.add(it.next());
-                    }
+                    return null;
                 }
             }
+        };
 
-            if (!results.isEmpty())
-            {
-                result = (results.size() > 1) ? results : results.get(0);
-            }
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
-        }
-        finally
-        {
-            close(conn, pstmt, rs);
-        }
-
-        return result;
+        return op.execute();
     }
 
     /**
@@ -282,48 +273,39 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param obj the value of the property to add
      */
     @Override
-    protected void addPropertyDirect(String key, Object obj)
+    protected void addPropertyDirect(final String key, final Object obj)
     {
-        // build the query
-        StringBuilder query = new StringBuilder("INSERT INTO " + table);
-        if (nameColumn != null)
+        new JdbcOperation<Void>(EVENT_ADD_PROPERTY, key, obj)
         {
-            query.append(" (" + nameColumn + ", " + keyColumn + ", " + valueColumn + ") VALUES (?, ?, ?)");
-        }
-        else
-        {
-            query.append(" (" + keyColumn + ", " + valueColumn + ") VALUES (?, ?)");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            int index = 1;
-            if (nameColumn != null)
+            @Override
+            protected Void performOperation() throws SQLException
             {
-                pstmt.setString(index++, name);
-            }
-            pstmt.setString(index++, key);
-            pstmt.setString(index++, String.valueOf(obj));
+                StringBuilder query = new StringBuilder("INSERT INTO ");
+                query.append(table).append(" (");
+                query.append(keyColumn).append(", ");
+                query.append(valueColumn);
+                if (nameColumn != null)
+                {
+                    query.append(", ").append(nameColumn);
+                }
+                query.append(") VALUES (?, ?");
+                if (nameColumn != null)
+                {
+                    query.append(", ?");
+                }
+                query.append(")");
 
-            pstmt.executeUpdate();
-            commitIfRequired(conn);
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_ADD_PROPERTY, key, obj, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, null);
-        }
+                PreparedStatement pstmt = initStatement(query.toString(),
+                        false, key, String.valueOf(obj));
+                if (nameColumn != null)
+                {
+                    pstmt.setString(3, name);
+                }
+
+                pstmt.executeUpdate();
+                return null;
+            }
+        }.execute();
     }
 
     /**
@@ -367,48 +349,21 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public boolean isEmpty()
     {
-        boolean empty = true;
 
-        // build the query
-        StringBuilder query = new StringBuilder("SELECT count(*) FROM " + table);
-        if (nameColumn != null)
+        JdbcOperation<Integer> op = new JdbcOperation<Integer>(EVENT_READ_PROPERTY, null, null)
         {
-            query.append(" WHERE " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            if (nameColumn != null)
+            @Override
+            protected Integer performOperation() throws SQLException
             {
-                pstmt.setString(1, name);
+                ResultSet rs = openResultSet(String.format(
+                        SQL_IS_EMPTY, table), true);
+
+                return rs.next() ? Integer.valueOf(rs.getInt(1)) : null;
             }
+        };
 
-            rs = pstmt.executeQuery();
-
-            if (rs.next())
-            {
-                empty = rs.getInt(1) == 0;
-            }
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, rs);
-        }
-
-        return empty;
+        Integer count = op.execute();
+        return count == null || count.intValue() == 0;
     }
 
     /**
@@ -421,48 +376,23 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param key the key to be checked
      * @return a flag whether this key is defined
      */
-    public boolean containsKey(String key)
+    public boolean containsKey(final String key)
     {
-        boolean found = false;
-
-        // build the query
-        StringBuilder query = new StringBuilder("SELECT * FROM " + table + " WHERE " + keyColumn + "=?");
-        if (nameColumn != null)
+        JdbcOperation<Boolean> op = new JdbcOperation<Boolean>(EVENT_READ_PROPERTY, key, null)
         {
-            query.append(" AND " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            pstmt.setString(1, key);
-            if (nameColumn != null)
+            @Override
+            protected Boolean performOperation() throws SQLException
             {
-                pstmt.setString(2, name);
+                PreparedStatement pstmt = initStatement(String.format(
+                        SQL_GET_PROPERTY, table, keyColumn), true, key);
+                ResultSet rs = pstmt.executeQuery();
+
+                return rs.next();
             }
+        };
 
-            rs = pstmt.executeQuery();
-
-            found = rs.next();
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_READ_PROPERTY, key, null, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, rs);
-        }
-
-        return found;
+        Boolean result = op.execute();
+        return result != null && result.booleanValue();
     }
 
     /**
@@ -475,42 +405,19 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param key the key of the property to be removed
      */
     @Override
-    protected void clearPropertyDirect(String key)
+    protected void clearPropertyDirect(final String key)
     {
-        // build the query
-        StringBuilder query = new StringBuilder("DELETE FROM " + table + " WHERE " + keyColumn + "=?");
-        if (nameColumn != null)
+        new JdbcOperation<Void>(EVENT_CLEAR_PROPERTY, key, null)
         {
-            query.append(" AND " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            pstmt.setString(1, key);
-            if (nameColumn != null)
+            @Override
+            protected Void performOperation() throws SQLException
             {
-                pstmt.setString(2, name);
+                PreparedStatement ps = initStatement(String.format(
+                        SQL_CLEAR_PROPERTY, table, keyColumn), true, key);
+                ps.executeUpdate();
+                return null;
             }
-
-            pstmt.executeUpdate();
-            commitIfRequired(conn);
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_CLEAR_PROPERTY, key, null, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, null);
-        }
+        }.execute();
     }
 
     /**
@@ -524,39 +431,16 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public void clear()
     {
         fireEvent(EVENT_CLEAR, null, null, true);
-        // build the query
-        StringBuilder query = new StringBuilder("DELETE FROM " + table);
-        if (nameColumn != null)
+        new JdbcOperation<Void>(EVENT_CLEAR, null, null)
         {
-            query.append(" WHERE " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            if (nameColumn != null)
+            @Override
+            protected Void performOperation() throws SQLException
             {
-                pstmt.setString(1, name);
+                initStatement(String.format(SQL_CLEAR,
+                        table), true).executeUpdate();
+                return null;
             }
-
-            pstmt.executeUpdate();
-            commitIfRequired(conn);
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_CLEAR, null, null, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, null);
-        }
+        }.execute();
         fireEvent(EVENT_CLEAR, null, null, false);
     }
 
@@ -572,46 +456,22 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public Iterator<String> getKeys()
     {
-        Collection<String> keys = new ArrayList<String>();
-
-        // build the query
-        StringBuilder query = new StringBuilder("SELECT DISTINCT " + keyColumn + " FROM " + table);
-        if (nameColumn != null)
+        final Collection<String> keys = new ArrayList<String>();
+        new JdbcOperation<Collection<String>>(EVENT_READ_PROPERTY, null, null)
         {
-            query.append(" WHERE " + nameColumn + "=?");
-        }
-
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try
-        {
-            conn = getConnection();
-
-            // bind the parameters
-            pstmt = conn.prepareStatement(query.toString());
-            if (nameColumn != null)
+            @Override
+            protected Collection<String> performOperation() throws SQLException
             {
-                pstmt.setString(1, name);
-            }
+                ResultSet rs = openResultSet(String.format(
+                        SQL_GET_KEYS, keyColumn, table), true);
 
-            rs = pstmt.executeQuery();
-
-            while (rs.next())
-            {
-                keys.add(rs.getString(1));
+                while (rs.next())
+                {
+                    keys.add(rs.getString(1));
+                }
+                return keys;
             }
-        }
-        catch (SQLException e)
-        {
-            fireError(EVENT_READ_PROPERTY, null, null, e);
-        }
-        finally
-        {
-            // clean up
-            close(conn, pstmt, rs);
-        }
+        }.execute();
 
         return keys.iterator();
     }
@@ -625,23 +485,6 @@ public class DatabaseConfiguration extends AbstractConfiguration
     public DataSource getDatasource()
     {
         return datasource;
-    }
-
-    /**
-     * Returns a {@code Connection} object. This method is called when
-     * ever the database is to be accessed. This implementation returns a
-     * connection from the current {@code DataSource}.
-     *
-     * @return the {@code Connection} object to be used
-     * @throws SQLException if an error occurs
-     * @since 1.4
-     * @deprecated Use a custom data source to change the connection used by the
-     * class. To be removed in Commons Configuration 2.0
-     */
-    @Deprecated
-    protected Connection getConnection() throws SQLException
-    {
-        return getDatasource().getConnection();
     }
 
     /**
@@ -692,18 +535,180 @@ public class DatabaseConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Performs a commit if needed. This method is called after updates of the
-     * managed database table. If the configuration should perform commits, it
-     * does so now.
-     *
-     * @param conn the active connection
-     * @throws SQLException if an error occurs
+     * An internally used helper class for simplifying database access through
+     * plain JDBC. This class provides a simple framework for creating and
+     * executing a JDBC statement. It especially takes care of proper handling
+     * of JDBC resources even in case of an error.
+     * @param <T> the type of the results produced by a JDBC operation
      */
-    private void commitIfRequired(Connection conn) throws SQLException
+    private abstract class JdbcOperation<T>
     {
-        if (isDoCommits())
+        /** Stores the connection. */
+        private Connection conn;
+
+        /** Stores the statement. */
+        private PreparedStatement pstmt;
+
+        /** Stores the result set. */
+        private ResultSet resultSet;
+
+        /** The type of the event to send in case of an error. */
+        private final int errorEventType;
+
+        /** The property name for an error event. */
+        private final String errorPropertyName;
+
+        /** The property value for an error event. */
+        private final Object errorPropertyValue;
+
+        /**
+         * Creates a new instance of {@code JdbcOperation} and initializes
+         * the properties related to the error event.
+         *
+         * @param errEvType the type of the error event
+         * @param errPropName the property name for the error event
+         * @param errPropVal the property value for the error event
+         */
+        protected JdbcOperation(int errEvType, String errPropName,
+                Object errPropVal)
         {
-            conn.commit();
+            errorEventType = errEvType;
+            errorPropertyName = errPropName;
+            errorPropertyValue = errPropVal;
         }
+
+        /**
+         * Executes this operation. This method obtains a database connection
+         * and then delegates to {@code performOperation()}. Afterwards it
+         * performs the necessary clean up. Exceptions that are thrown during
+         * the JDBC operation are caught and transformed into configuration
+         * error events.
+         *
+         * @return the result of the operation
+         */
+        public T execute()
+        {
+            T result = null;
+
+            try
+            {
+                conn = getDatasource().getConnection();
+                result = performOperation();
+
+                if (isDoCommits())
+                {
+                    conn.commit();
+                }
+            }
+            catch (SQLException e)
+            {
+                fireError(errorEventType, errorPropertyName,
+                        errorPropertyValue, e);
+            }
+            finally
+            {
+                close(conn, pstmt, resultSet);
+            }
+
+            return result;
+        }
+
+        /**
+         * Returns the current connection. This method can be called while
+         * {@code execute()} is running. It returns <b>null</b> otherwise.
+         *
+         * @return the current connection
+         */
+        protected Connection getConnection()
+        {
+            return conn;
+        }
+
+        /**
+         * Creates a {@code PreparedStatement} object for executing the
+         * specified SQL statement.
+         *
+         * @param sql the statement to be executed
+         * @param nameCol a flag whether the name column should be taken into
+         *        account
+         * @return the prepared statement object
+         * @throws SQLException if an SQL error occurs
+         */
+        protected PreparedStatement createStatement(String sql, boolean nameCol)
+                throws SQLException
+        {
+            String statement;
+            if (nameCol && nameColumn != null)
+            {
+                StringBuilder buf = new StringBuilder(sql);
+                buf.append(" AND ").append(nameColumn).append("=?");
+                statement = buf.toString();
+            }
+            else
+            {
+                statement = sql;
+            }
+
+            pstmt = getConnection().prepareStatement(statement);
+            return pstmt;
+        }
+
+        /**
+         * Creates an initializes a {@code PreparedStatement} object for
+         * executing an SQL statement. This method first calls
+         * {@code createStatement()} for creating the statement and then
+         * initializes the statement's parameters.
+         *
+         * @param sql the statement to be executed
+         * @param nameCol a flag whether the name column should be taken into
+         *        account
+         * @param params the parameters for the statement
+         * @return the initialized statement object
+         * @throws SQLException if an SQL error occurs
+         */
+        protected PreparedStatement initStatement(String sql, boolean nameCol,
+                Object... params) throws SQLException
+        {
+            PreparedStatement ps = createStatement(sql, nameCol);
+
+            int idx = 1;
+            for (Object param : params)
+            {
+                ps.setObject(idx++, param);
+            }
+            if (nameCol && nameColumn != null)
+            {
+                ps.setString(idx, name);
+            }
+
+            return ps;
+        }
+
+        /**
+         * Creates a {@code PreparedStatement} for a query, initializes it and
+         * executes it. The resulting {@code ResultSet} is returned.
+         *
+         * @param sql the statement to be executed
+         * @param nameCol a flag whether the name column should be taken into
+         *        account
+         * @param params the parameters for the statement
+         * @return the {@code ResultSet} produced by the query
+         * @throws SQLException if an SQL error occurs
+         */
+        protected ResultSet openResultSet(String sql, boolean nameCol,
+                Object... params) throws SQLException
+        {
+            return initStatement(sql, nameCol, params).executeQuery();
+        }
+
+        /**
+         * Performs the JDBC operation. This method is called by
+         * {@code execute()} after this object has been fully initialized.
+         * Here the actual JDBC logic has to be placed.
+         *
+         * @return the result of the operation
+         * @throws SQLException if an SQL error occurs
+         */
+        protected abstract T performOperation() throws SQLException;
     }
 }

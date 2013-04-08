@@ -21,13 +21,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.easymock.EasyMock;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -539,13 +539,25 @@ public class TestDatabaseConfiguration
         }
 
         @Override
-        protected Connection getConnection() throws SQLException
+        public DataSource getDatasource()
         {
             if (failOnConnect)
             {
-                throw new SQLException("Simulated DB error");
+                DataSource ds = EasyMock.createMock(DataSource.class);
+                try
+                {
+                    EasyMock.expect(ds.getConnection()).andThrow(
+                            new SQLException("Simulated DB error"));
+                }
+                catch (SQLException e)
+                {
+                    // should not happen
+                    throw new AssertionError("Unexpected exception!");
+                }
+                EasyMock.replay(ds);
+                return ds;
             }
-            return super.getConnection();
+            return super.getDatasource();
         }
     }
 }
