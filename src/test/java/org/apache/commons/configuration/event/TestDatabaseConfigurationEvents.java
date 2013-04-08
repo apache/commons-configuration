@@ -17,6 +17,7 @@
 package org.apache.commons.configuration.event;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.DatabaseConfigurationTestHelper;
 import org.junit.After;
 import org.junit.Before;
@@ -51,6 +52,13 @@ public class TestDatabaseConfigurationEvents extends
     @Override
     protected AbstractConfiguration createConfiguration()
     {
-        return helper.setUpConfig();
+        try
+        {
+            return helper.setUpConfig();
+        }
+        catch (ConfigurationException e)
+        {
+            throw new AssertionError(e);
+        }
     }
 }

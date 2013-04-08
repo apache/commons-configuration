@@ -22,6 +22,9 @@ import java.sql.Connection;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
+import org.apache.commons.configuration.builder.fluent.DatabaseBuilderParameters;
+import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.test.HsqlDB;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.dbunit.database.DatabaseConnection;
@@ -77,14 +80,14 @@ public class DatabaseConfigurationTestHelper
     private DataSource datasource;
 
     /**
-     * The auto-commit mode for the connections created by the managed data
-     * source.
+     * The auto-commit mode for the configuration instances created by this
+     * helper.
      */
-    private boolean autoCommit = true;
+    private boolean autoCommit;
 
     /**
-     * Returns the auto-commit mode of the connections created by the managed
-     * data source.
+     * Returns the auto-commit mode of the configuration instances created by
+     * this helper.
      *
      * @return the auto-commit mode
      */
@@ -94,8 +97,8 @@ public class DatabaseConfigurationTestHelper
     }
 
     /**
-     * Sets the auto-commit mode of the connections created by the managed data
-     * source.
+     * Sets the auto-commit mode of the configuration instances created by this
+     * helper.
      *
      * @param autoCommit the auto-commit mode
      */
@@ -133,14 +136,93 @@ public class DatabaseConfigurationTestHelper
     }
 
     /**
-     * Creates a database configuration with default values.
+     * Returns a parameters object with default settings.
+     *
+     * @return the parameters object
+     */
+    public DatabaseBuilderParameters setUpDefaultParameters()
+    {
+        return Parameters.database().setDataSource(getDatasource())
+                .setTable(TABLE).setKeyColumn(COL_KEY)
+                .setValueColumn(COL_VALUE).setAutoCommit(isAutoCommit());
+    }
+
+    /**
+     * Returns a parameters object with settings for a configuration table
+     * containing the data of multiple configurations.
+     *
+     * @param configName the name of the configuration instance or <b>null</b>
+     *        for the default name
+     * @return the parameters object
+     */
+    public DatabaseBuilderParameters setUpMultiParameters(String configName)
+    {
+        return setUpDefaultParameters()
+                .setTable(TABLE_MULTI)
+                .setConfigurationNameColumn(COL_NAME)
+                .setConfigurationName(
+                        (configName != null) ? configName : CONFIG_NAME);
+    }
+
+    /**
+     * Creates a configuration instance of the specified class with the given
+     * parameters.
+     *
+     * @param <T> the type of the result configuration
+     * @param configCls the configuration class
+     * @param params the parameters object
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    public <T extends DatabaseConfiguration> T createConfig(Class<T> configCls,
+            DatabaseBuilderParameters params) throws ConfigurationException
+    {
+        return new BasicConfigurationBuilder<T>(configCls).configure(params)
+                .getConfiguration();
+    }
+
+    /**
+     * Creates a database configuration with default settings of the specified
+     * class.
+     *
+     * @param <T> the type of the result configuration
+     * @param configCls the configuration class
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    public <T extends DatabaseConfiguration> T setUpConfig(Class<T> configCls)
+            throws ConfigurationException
+    {
+        return createConfig(configCls, setUpDefaultParameters());
+    }
+
+    /**
+     * Creates a database configuration with default settings.
      *
      * @return the configuration
+     * @throws ConfigurationException if an error occurs
      */
-    public DatabaseConfiguration setUpConfig()
+    public DatabaseConfiguration setUpConfig() throws ConfigurationException
     {
-        return new DatabaseConfiguration(getDatasource(), TABLE, COL_KEY,
-                COL_VALUE, !isAutoCommit());
+        return setUpConfig(DatabaseConfiguration.class);
+    }
+
+    /**
+     * Creates a configuration with support for multiple configuration instances
+     * in a single table of the specified class.
+     *
+     * @param <T> the type of the result configuration
+     * @param configCls the configuration class
+     * @param configName the name of the configuration instance or <b>null</b>
+     *        for the default name
+     * @return the newly created configuration instance
+     * @throws ConfigurationException if an error occurs
+     */
+    public <T extends DatabaseConfiguration> T setUpMultiConfig(
+            Class<T> configCls, String configName)
+            throws ConfigurationException
+    {
+        return createConfig(configCls, setUpMultiParameters(configName));
     }
 
     /**
@@ -148,23 +230,11 @@ public class DatabaseConfigurationTestHelper
      * a table with default values.
      *
      * @return the configuration
+     * @throws ConfigurationException if an error occurs
      */
-    public DatabaseConfiguration setUpMultiConfig()
+    public DatabaseConfiguration setUpMultiConfig() throws ConfigurationException
     {
-        return setUpMultiConfig(CONFIG_NAME);
-    }
-
-    /**
-     * Creates a database configuration that supports multiple configurations in
-     * a table and sets the specified configuration name.
-     *
-     * @param configName the name of the configuration
-     * @return the configuration
-     */
-    public DatabaseConfiguration setUpMultiConfig(String configName)
-    {
-        return new DatabaseConfiguration(getDatasource(), TABLE_MULTI,
-                COL_NAME, COL_KEY, COL_VALUE, configName, !isAutoCommit());
+        return setUpMultiConfig(DatabaseConfiguration.class, null);
     }
 
     /**
@@ -204,7 +274,7 @@ public class DatabaseConfigurationTestHelper
         ds.setUrl(DATABASE_URL);
         ds.setUsername(DATABASE_USERNAME);
         ds.setPassword(DATABASE_PASSWORD);
-        ds.setDefaultAutoCommit(isAutoCommit());
+        ds.setDefaultAutoCommit(!isAutoCommit());
 
         // prepare the database
         Connection conn = ds.getConnection();

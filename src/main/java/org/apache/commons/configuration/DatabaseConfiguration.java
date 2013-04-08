@@ -36,7 +36,15 @@ import org.apache.commons.logging.LogFactory;
  * table containing at least one column for the keys, and one column for the
  * values. It's possible to store several configurations in the same table by
  * adding a column containing the name of the configuration. The name of the
- * table and the columns is specified in the constructor.
+ * table and the columns have to be specified using the corresponding
+ * properties.
+ * <p>
+ * The recommended way to create an instance of {@code DatabaseConfiguration}
+ * is to use a <em>configuration builder</em>. The builder is configured with
+ * a special parameters object defining the database structures used by the
+ * configuration. Such an object can be created using the {@code database()}
+ * method of the {@code Parameters} class. See the examples below for more
+ * details.
  *
  * <h4>Example 1 - One configuration per table</h4>
  *
@@ -48,8 +56,16 @@ import org.apache.commons.logging.LogFactory;
  *
  * INSERT INTO myconfig (key, value) VALUES ('foo', 'bar');
  *
- *
- * Configuration config = new DatabaseConfiguration(datasource, "myconfig", "key", "value");
+ * BasicConfigurationBuilder<DatabaseConfiguration> builder =
+ *     new BasicConfigurationBuilder<DatabaseConfiguration>(DatabaseConfiguration.class);
+ * builder.configure(
+ *     Parameters.database()
+ *         .setDataSource(dataSource)
+ *         .setTable("myconfig")
+ *         .setKeyColumn("key")
+ *         .setValueColumn("value")
+ * );
+ * Configuration config = builder.getConfiguration();
  * String value = config.getString("foo");
  * </pre>
  *
@@ -66,12 +82,19 @@ import org.apache.commons.logging.LogFactory;
  * INSERT INTO myconfigs (name, key, value) VALUES ('config1', 'key1', 'value1');
  * INSERT INTO myconfigs (name, key, value) VALUES ('config2', 'key2', 'value2');
  *
- *
- * Configuration config1 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config1");
+ * BasicConfigurationBuilder<DatabaseConfiguration> builder =
+ *     new BasicConfigurationBuilder<DatabaseConfiguration>(DatabaseConfiguration.class);
+ * builder.configure(
+ *     Parameters.database()
+ *         .setDataSource(dataSource)
+ *         .setTable("myconfigs")
+ *         .setKeyColumn("key")
+ *         .setValueColumn("value")
+ *         .setConfigurationNameColumn("name")
+ *         .setConfigurationName("config1")
+ * );
+ * Configuration config1 = new DatabaseConfiguration(dataSource, "myconfigs", "name", "key", "value", "config1");
  * String value1 = conf.getString("key1");
- *
- * Configuration config2 = new DatabaseConfiguration(datasource, "myconfigs", "name", "key", "value", "config2");
- * String value2 = conf.getString("key2");
  * </pre>
  * The configuration can be instructed to perform commits after database updates.
  * This is achieved by setting the {@code commits} parameter of the
@@ -102,100 +125,155 @@ public class DatabaseConfiguration extends AbstractConfiguration
     /** Constant for the statement used by getKeys.*/
     private static final String SQL_GET_KEYS = "SELECT DISTINCT %s FROM %s WHERE 1 = 1";
 
-    /** The datasource to connect to the database. */
-    private final DataSource datasource;
+    /** The data source to connect to the database. */
+    private DataSource dataSource;
 
-    /** The name of the table containing the configurations. */
-    private final String table;
+    /** The configurationName of the table containing the configurations. */
+    private String table;
 
-    /** The column containing the name of the configuration. */
-    private final String nameColumn;
+    /** The column containing the configurationName of the configuration. */
+    private String configurationNameColumn;
 
     /** The column containing the keys. */
-    private final String keyColumn;
+    private String keyColumn;
 
     /** The column containing the values. */
-    private final String valueColumn;
+    private String valueColumn;
 
-    /** The name of the configuration. */
-    private final String name;
+    /** The configurationName of the configuration. */
+    private String configurationName;
 
     /** A flag whether commits should be performed by this configuration. */
-    private final boolean doCommits;
+    private boolean autoCommit;
 
     /**
-     * Build a configuration from a table containing multiple configurations.
-     * No commits are performed by the new configuration instance.
-     *
-     * @param datasource    the datasource to connect to the database
-     * @param table         the name of the table containing the configurations
-     * @param nameColumn    the column containing the name of the configuration
-     * @param keyColumn     the column containing the keys of the configuration
-     * @param valueColumn   the column containing the values of the configuration
-     * @param name          the name of the configuration
+     * Creates a new instance of {@code DatabaseConfiguration}.
      */
-    public DatabaseConfiguration(DataSource datasource, String table, String nameColumn,
-            String keyColumn, String valueColumn, String name)
+    public DatabaseConfiguration()
     {
-        this(datasource, table, nameColumn, keyColumn, valueColumn, name, false);
-    }
-
-    /**
-     * Creates a new instance of {@code DatabaseConfiguration} that operates on
-     * a database table containing multiple configurations.
-     *
-     * @param datasource the {@code DataSource} to connect to the database
-     * @param table the name of the table containing the configurations
-     * @param nameColumn the column containing the name of the configuration
-     * @param keyColumn the column containing the keys of the configuration
-     * @param valueColumn the column containing the values of the configuration
-     * @param name the name of the configuration
-     * @param commits a flag whether the configuration should perform a commit
-     *        after a database update
-     */
-    public DatabaseConfiguration(DataSource datasource, String table,
-            String nameColumn, String keyColumn, String valueColumn,
-            String name, boolean commits)
-    {
-        this.datasource = datasource;
-        this.table = table;
-        this.nameColumn = nameColumn;
-        this.keyColumn = keyColumn;
-        this.valueColumn = valueColumn;
-        this.name = name;
-        doCommits = commits;
         setLogger(LogFactory.getLog(getClass()));
-        addErrorLogListener();  // log errors per default
+        addErrorLogListener();
     }
 
     /**
-     * Build a configuration from a table.
+     * Returns the {@code DataSource} for obtaining database connections.
      *
-     * @param datasource    the datasource to connect to the database
-     * @param table         the name of the table containing the configurations
-     * @param keyColumn     the column containing the keys of the configuration
-     * @param valueColumn   the column containing the values of the configuration
+     * @return the {@code DataSource}
      */
-    public DatabaseConfiguration(DataSource datasource, String table, String keyColumn, String valueColumn)
+    public DataSource getDataSource()
     {
-        this(datasource, table, null, keyColumn, valueColumn, null);
+        return dataSource;
     }
 
     /**
-     * Creates a new instance of {@code DatabaseConfiguration} that
-     * operates on a database table containing a single configuration only.
+     * Sets the {@code DataSource} for obtaining database connections.
      *
-     * @param datasource the {@code DataSource} to connect to the database
-     * @param table the name of the table containing the configurations
-     * @param keyColumn the column containing the keys of the configuration
-     * @param valueColumn the column containing the values of the configuration
-     * @param commits a flag whether the configuration should perform a commit
-     *        after a database update
+     * @param dataSource the {@code DataSource}
      */
-    public DatabaseConfiguration(DataSource datasource, String table,
-            String keyColumn, String valueColumn, boolean commits)
+    public void setDataSource(DataSource dataSource)
     {
-        this(datasource, table, null, keyColumn, valueColumn, null, commits);
+        this.dataSource = dataSource;
+    }
+
+    /**
+     * Returns the name of the table containing configuration data.
+     *
+     * @return the name of the table to be queried
+     */
+    public String getTable()
+    {
+        return table;
+    }
+
+    /**
+     * Sets the name of the table containing configuration data.
+     *
+     * @param table the table name
+     */
+    public void setTable(String table)
+    {
+        this.table = table;
+    }
+
+    /**
+     * Returns the name of the table column with the configuration name.
+     *
+     * @return the name of the configuration name column
+     */
+    public String getConfigurationNameColumn()
+    {
+        return configurationNameColumn;
+    }
+
+    /**
+     * Sets the name of the table column with the configuration name.
+     *
+     * @param configurationNameColumn the name of the column with the
+     *        configuration name
+     */
+    public void setConfigurationNameColumn(String configurationNameColumn)
+    {
+        this.configurationNameColumn = configurationNameColumn;
+    }
+
+    /**
+     * Returns the name of the column containing the configuration keys.
+     *
+     * @return the name of the key column
+     */
+    public String getKeyColumn()
+    {
+        return keyColumn;
+    }
+
+    /**
+     * Sets the name of the column containing the configuration keys.
+     *
+     * @param keyColumn the name of the key column
+     */
+    public void setKeyColumn(String keyColumn)
+    {
+        this.keyColumn = keyColumn;
+    }
+
+    /**
+     * Returns the name of the column containing the configuration values.
+     *
+     * @return the name of the value column
+     */
+    public String getValueColumn()
+    {
+        return valueColumn;
+    }
+
+    /**
+     * Sets the name of the column containing the configuration values.
+     *
+     * @param valueColumn the name of the value column
+     */
+    public void setValueColumn(String valueColumn)
+    {
+        this.valueColumn = valueColumn;
+    }
+
+    /**
+     * Returns the name of this configuration instance.
+     *
+     * @return the name of this configuration
+     */
+    public String getConfigurationName()
+    {
+        return configurationName;
+    }
+
+    /**
+     * Sets the name of this configuration instance.
+     *
+     * @param configurationName the name of this configuration
+     */
+    public void setConfigurationName(String configurationName)
+    {
+        this.configurationName = configurationName;
     }
 
     /**
@@ -204,9 +282,20 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @return a flag whether commits are performed
      */
-    public boolean isDoCommits()
+    public boolean isAutoCommit()
     {
-        return doCommits;
+        return autoCommit;
+    }
+
+    /**
+     * Sets the auto commit flag. If set to <b>true</b>, this configuration
+     * performs a commit after each database update.
+     *
+     * @param autoCommit the auto commit flag
+     */
+    public void setAutoCommit(boolean autoCommit)
+    {
+        this.autoCommit = autoCommit;
     }
 
     /**
@@ -284,12 +373,12 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 query.append(table).append(" (");
                 query.append(keyColumn).append(", ");
                 query.append(valueColumn);
-                if (nameColumn != null)
+                if (configurationNameColumn != null)
                 {
-                    query.append(", ").append(nameColumn);
+                    query.append(", ").append(configurationNameColumn);
                 }
                 query.append(") VALUES (?, ?");
-                if (nameColumn != null)
+                if (configurationNameColumn != null)
                 {
                     query.append(", ?");
                 }
@@ -297,9 +386,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
 
                 PreparedStatement pstmt = initStatement(query.toString(),
                         false, key, String.valueOf(obj));
-                if (nameColumn != null)
+                if (configurationNameColumn != null)
                 {
-                    pstmt.setString(3, name);
+                    pstmt.setString(3, configurationName);
                 }
 
                 pstmt.executeUpdate();
@@ -484,7 +573,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      */
     public DataSource getDatasource()
     {
-        return datasource;
+        return dataSource;
     }
 
     /**
@@ -495,7 +584,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param stmt The statement to close
      * @param rs the result set to close
      */
-    private void close(Connection conn, Statement stmt, ResultSet rs)
+    protected void close(Connection conn, Statement stmt, ResultSet rs)
     {
         try
         {
@@ -555,7 +644,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
         /** The type of the event to send in case of an error. */
         private final int errorEventType;
 
-        /** The property name for an error event. */
+        /** The property configurationName for an error event. */
         private final String errorPropertyName;
 
         /** The property value for an error event. */
@@ -566,7 +655,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * the properties related to the error event.
          *
          * @param errEvType the type of the error event
-         * @param errPropName the property name for the error event
+         * @param errPropName the property configurationName for the error event
          * @param errPropVal the property value for the error event
          */
         protected JdbcOperation(int errEvType, String errPropName,
@@ -595,7 +684,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 conn = getDatasource().getConnection();
                 result = performOperation();
 
-                if (isDoCommits())
+                if (isAutoCommit())
                 {
                     conn.commit();
                 }
@@ -629,7 +718,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * specified SQL statement.
          *
          * @param sql the statement to be executed
-         * @param nameCol a flag whether the name column should be taken into
+         * @param nameCol a flag whether the configurationName column should be taken into
          *        account
          * @return the prepared statement object
          * @throws SQLException if an SQL error occurs
@@ -638,10 +727,10 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 throws SQLException
         {
             String statement;
-            if (nameCol && nameColumn != null)
+            if (nameCol && configurationNameColumn != null)
             {
                 StringBuilder buf = new StringBuilder(sql);
-                buf.append(" AND ").append(nameColumn).append("=?");
+                buf.append(" AND ").append(configurationNameColumn).append("=?");
                 statement = buf.toString();
             }
             else
@@ -660,7 +749,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * initializes the statement's parameters.
          *
          * @param sql the statement to be executed
-         * @param nameCol a flag whether the name column should be taken into
+         * @param nameCol a flag whether the configurationName column should be taken into
          *        account
          * @param params the parameters for the statement
          * @return the initialized statement object
@@ -676,9 +765,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
             {
                 ps.setObject(idx++, param);
             }
-            if (nameCol && nameColumn != null)
+            if (nameCol && configurationNameColumn != null)
             {
-                ps.setString(idx, name);
+                ps.setString(idx, configurationName);
             }
 
             return ps;
@@ -689,7 +778,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
          * executes it. The resulting {@code ResultSet} is returned.
          *
          * @param sql the statement to be executed
-         * @param nameCol a flag whether the name column should be taken into
+         * @param nameCol a flag whether the configurationName column should be taken into
          *        account
          * @param params the parameters for the statement
          * @return the {@code ResultSet} produced by the query
