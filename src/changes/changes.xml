@@ -51,6 +51,10 @@
         The includesAllowed property of PropertyConfiguration is now independent
         from the existence of a base path.
       </action>
+      <action dev="oheger" type="add" issue="CONFIGURATION-533">
+        DatabaseConfiguration now automatically converts CLOBs to strings if
+        they appear in property values.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-527" due-to="Matthias Richter">
         AbstractConfiguration.clearPropertyDirect() is now abstract.
       </action>

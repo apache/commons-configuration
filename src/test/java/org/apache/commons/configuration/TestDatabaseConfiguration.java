@@ -21,6 +21,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Clob;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -500,6 +502,49 @@ public class TestDatabaseConfiguration
         String[] values = config.getStringArray("keyList");
         assertEquals("Wrong number of property values", 3, values.length);
         assertEquals("Wrong value at index 1", "2", values[1]);
+    }
+
+    /**
+     * Tests whether a CLOB as a property value is handled correctly.
+     */
+    @Test
+    public void testExtractPropertyValueCLOB() throws ConfigurationException,
+            SQLException
+    {
+        ResultSet rs = EasyMock.createMock(ResultSet.class);
+        Clob clob = EasyMock.createMock(Clob.class);
+        final String content = "This is the content of the test CLOB!";
+        EasyMock.expect(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE))
+                .andReturn(clob);
+        EasyMock.expect(clob.length())
+                .andReturn(Long.valueOf(content.length()));
+        EasyMock.expect(clob.getSubString(1, content.length())).andReturn(
+                content);
+        EasyMock.replay(rs, clob);
+        DatabaseConfiguration config = helper.setUpConfig();
+        assertEquals("Wrong extracted value", content,
+                config.extractPropertyValue(rs));
+        EasyMock.verify(rs, clob);
+    }
+
+    /**
+     * Tests whether an empty CLOB is correctly handled by
+     * extractPropertyValue().
+     */
+    @Test
+    public void testExtractPropertyValueCLOBEmpty()
+            throws ConfigurationException, SQLException
+    {
+        ResultSet rs = EasyMock.createMock(ResultSet.class);
+        Clob clob = EasyMock.createMock(Clob.class);
+        EasyMock.expect(rs.getObject(DatabaseConfigurationTestHelper.COL_VALUE))
+                .andReturn(clob);
+        EasyMock.expect(clob.length()).andReturn(0L);
+        EasyMock.replay(rs, clob);
+        DatabaseConfiguration config = helper.setUpConfig();
+        assertEquals("Wrong extracted value", "",
+                config.extractPropertyValue(rs));
+        EasyMock.verify(rs, clob);
     }
 
     /**

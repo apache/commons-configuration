@@ -17,6 +17,7 @@
 
 package org.apache.commons.configuration;
 
+import java.sql.Clob;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,6 +30,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
 /**
@@ -321,7 +323,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 List<Object> results = new ArrayList<Object>();
                 while (rs.next())
                 {
-                    Object value = rs.getObject(valueColumn);
+                    Object value = extractPropertyValue(rs);
                     if (isDelimiterParsingDisabled())
                     {
                         results.add(value);
@@ -621,6 +623,41 @@ public class DatabaseConfiguration extends AbstractConfiguration
         {
             getLogger().error("An error occured on closing the connection", e);
         }
+    }
+
+    /**
+     * Extracts the value of a property from the given result set. The passed in
+     * {@code ResultSet} was created by a SELECT statement on the underlying
+     * database table. This implementation reads the value of the column
+     * determined by the {@code valueColumn} property. Normally the contained
+     * value is directly returned. However, if it is of type {@code CLOB}, text
+     * is extracted as string.
+     *
+     * @param rs the current {@code ResultSet}
+     * @return the value of the property column
+     * @throws SQLException if an error occurs
+     */
+    protected Object extractPropertyValue(ResultSet rs) throws SQLException
+    {
+        Object value = rs.getObject(valueColumn);
+        if (value instanceof Clob)
+        {
+            value = convertClob((Clob) value);
+        }
+        return value;
+    }
+
+    /**
+     * Converts a CLOB to a string.
+     *
+     * @param clob the CLOB to be converted
+     * @return the extracted string value
+     * @throws SQLException if an error occurs
+     */
+    private static Object convertClob(Clob clob) throws SQLException
+    {
+        int len = (int) clob.length();
+        return (len > 0) ? clob.getSubString(1, len) : StringUtils.EMPTY;
     }
 
     /**
