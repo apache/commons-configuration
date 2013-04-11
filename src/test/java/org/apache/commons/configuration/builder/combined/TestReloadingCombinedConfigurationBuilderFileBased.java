@@ -30,9 +30,11 @@ import org.apache.commons.configuration.CombinedConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.ReloadingDetectorFactory;
+import org.apache.commons.configuration.builder.ReloadingFileBasedConfigurationBuilder;
 import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.AlwaysReloadingDetector;
@@ -262,6 +264,88 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
             totalFailures += failures[i];
         }
         assertTrue(totalFailures + " failures Occurred", totalFailures == 0);
+    }
+
+    /**
+     * Helper method for testing whether the builder's definition file can be
+     * reloaded. This method expects that the test builder has been fully
+     * initialized.
+     *
+     * @param defFile the path to the definition file
+     * @throws IOException if an I/O error occurs
+     * @throws ConfigurationException if a configuration-related error occurs
+     * @throws InterruptedException if waiting is interrupted
+     */
+    private void checkReloadDefinitionFile(File defFile) throws IOException,
+            ConfigurationException, InterruptedException
+    {
+        File src1 = writeReloadFile(null, 1, 0);
+        File src2 = writeReloadFile(null, 1, 1);
+        writeDefinitionFile(defFile, src1);
+        CombinedConfiguration config = builder.getConfiguration();
+        assertEquals("Wrong initial value", 0, config.getInt(testProperty(1)));
+
+        // No change definition file
+        boolean reloaded = false;
+        for (int attempts = 0; attempts < 10 && !reloaded; attempts++)
+        {
+            writeDefinitionFile(defFile, src2);
+            reloaded = builder.getReloadingController().checkForReloading(null);
+            if (!reloaded)
+            {
+                Thread.sleep(100);
+            }
+        }
+        assertTrue("Need for reload not detected", reloaded);
+        config = builder.getConfiguration();
+        assertEquals("Wrong reloaded value", 1, config.getInt(testProperty(1)));
+    }
+
+    /**
+     * Tests whether a change in the definition file is detected and causes a
+     * reload if a specific builder for the definition configuration is
+     * provided.
+     */
+    @Test
+    public void testReloadDefinitionFileExplicitBuilder()
+            throws ConfigurationException, IOException, InterruptedException
+    {
+        File defFile = folder.newFile();
+        builder.configure(Parameters.combined().setDefinitionBuilder(
+                new ReloadingFileBasedConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class).configure(Parameters.xml()
+                        .setReloadingRefreshDelay(0L).setFile(defFile))));
+        checkReloadDefinitionFile(defFile);
+    }
+
+    /**
+     * Tests whether the default definition builder is capable of detecting a
+     * change in the definition configuration.
+     */
+    @Test
+    public void testReloadDefinitioinFileDefaultBuilder()
+            throws ConfigurationException, IOException, InterruptedException
+    {
+        File defFile = folder.newFile();
+        builder.configure(Parameters.combined().setDefinitionBuilderParameters(
+                Parameters.xml().setReloadingRefreshDelay(0L).setFile(defFile)));
+        checkReloadDefinitionFile(defFile);
+    }
+
+    /**
+     * Writes a configuration definition file that refers to the specified file
+     * source.
+     *
+     * @param defFile the target definition file
+     * @param src the configuration source file to be referenced
+     * @throws ConfigurationException if an error occurs
+     */
+    private void writeDefinitionFile(File defFile, File src)
+            throws ConfigurationException
+    {
+        XMLConfiguration defConf = new XMLConfiguration();
+        addReloadSource(defConf, src.getAbsolutePath());
+        new FileHandler(defConf).save(defFile);
     }
 
     /**
