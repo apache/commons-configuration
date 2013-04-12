@@ -170,22 +170,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         try
         {
             BaseConfiguration copy = (BaseConfiguration) super.clone();
-            // This is safe because the type of the map is known
-            @SuppressWarnings("unchecked")
-            Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
-            copy.store = clonedStore;
-
-            // Handle collections in the map; they have to be cloned, too
-            for (Map.Entry<String, Object> e : store.entrySet())
-            {
-                if (e.getValue() instanceof Collection)
-                {
-                    // This is safe because the collections were created by ourselves
-                    @SuppressWarnings("unchecked")
-                    Collection<String> strList = (Collection<String>) e.getValue();
-                    copy.store.put(e.getKey(), new ArrayList<String>(strList));
-                }
-            }
+            cloneStore(copy);
+            copy.cloneInterpolator(this);
 
             return copy;
         }
@@ -193,6 +179,33 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
         {
             // should not happen
             throw new ConfigurationRuntimeException(cex);
+        }
+    }
+
+    /**
+     * Clones the internal map with the data of this configuration.
+     *
+     * @param copy the copy created by the {@code clone()} method
+     * @throws CloneNotSupportedException if the map cannot be cloned
+     */
+    private void cloneStore(BaseConfiguration copy)
+            throws CloneNotSupportedException
+    {
+        // This is safe because the type of the map is known
+        @SuppressWarnings("unchecked")
+        Map<String, Object> clonedStore = (Map<String, Object>) ConfigurationUtils.clone(store);
+        copy.store = clonedStore;
+
+        // Handle collections in the map; they have to be cloned, too
+        for (Map.Entry<String, Object> e : store.entrySet())
+        {
+            if (e.getValue() instanceof Collection)
+            {
+                // This is safe because the collections were created by ourselves
+                @SuppressWarnings("unchecked")
+                Collection<String> strList = (Collection<String>) e.getValue();
+                copy.store.put(e.getKey(), new ArrayList<String>(strList));
+            }
         }
     }
 }

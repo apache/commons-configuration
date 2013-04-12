@@ -800,4 +800,21 @@ public class TestBaseConfiguration
         assertEquals("Wrong number of original properties", 2, config.getList(
                 key).size());
     }
+
+    /**
+     * Tests whether interpolation works as expected after cloning.
+     */
+    @Test
+    public void testCloneInterpolation()
+    {
+        final String keyAnswer = "answer";
+        config.addProperty(keyAnswer, "The answer is ${" + KEY_NUMBER + "}.");
+        config.addProperty(KEY_NUMBER, 42);
+        BaseConfiguration clone = (BaseConfiguration) config.clone();
+        clone.setProperty(KEY_NUMBER, 43);
+        assertEquals("Wrong interpolation in original", "The answer is 42.",
+                config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.",
+                clone.getString(keyAnswer));
+    }
 }

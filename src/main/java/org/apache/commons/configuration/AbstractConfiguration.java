@@ -145,7 +145,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     private boolean throwExceptionOnMissing;
 
     /** Stores a reference to the object that handles variable interpolation. */
-    private final AtomicReference<ConfigurationInterpolator> interpolator;
+    private AtomicReference<ConfigurationInterpolator> interpolator;
 
     /** Stores the logger.*/
     private Log log;
@@ -426,6 +426,39 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * Creates a clone of the {@code ConfigurationInterpolator} used by this
+     * instance. This method can be called by {@code clone()} implementations of
+     * derived classes. Normally, the {@code ConfigurationInterpolator} of a
+     * configuration instance must not be shared with other instances because it
+     * contains a specific {@code Lookup} object pointing to the owning
+     * configuration. This has to be taken into account when cloning a
+     * configuration. This method creates a new
+     * {@code ConfigurationInterpolator} for this configuration instance which
+     * contains all lookup objects from the original
+     * {@code ConfigurationInterpolator} except for the configuration specific
+     * lookup pointing to the passed in original configuration. This one is
+     * replaced by a corresponding {@code Lookup} referring to this
+     * configuration.
+     *
+     * @param orgConfig the original configuration from which this one was
+     *        cloned
+     * @since 2.0
+     */
+    protected void cloneInterpolator(AbstractConfiguration orgConfig)
+    {
+        interpolator = new AtomicReference<ConfigurationInterpolator>();
+        ConfigurationInterpolator orgInterpolator = orgConfig.getInterpolator();
+        List<Lookup> defaultLookups = orgInterpolator.getDefaultLookups();
+        Lookup lookup = findConfigurationLookup(orgInterpolator, orgConfig);
+        if (lookup != null)
+        {
+            defaultLookups.remove(lookup);
+        }
+
+        installInterpolator(orgInterpolator.getLookups(), defaultLookups);
+    }
+
+    /**
      * Creates a default {@code ConfigurationInterpolator} which is initialized
      * with all default {@code Lookup} objects. This method is called by the
      * constructor. It ensures that default interpolation works for every new
@@ -448,11 +481,26 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     private Lookup findConfigurationLookup(ConfigurationInterpolator ci)
     {
+        return findConfigurationLookup(ci, this);
+    }
+
+    /**
+     * Finds a {@code ConfigurationLookup} pointing to the specified
+     * configuration in the default lookups for the specified
+     * {@code ConfigurationInterpolator}.
+     *
+     * @param ci the {@code ConfigurationInterpolator} in question
+     * @param targetConf the target configuration of the searched lookup
+     * @return the found {@code Lookup} object or <b>null</b>
+     */
+    private static Lookup findConfigurationLookup(ConfigurationInterpolator ci,
+            ImmutableConfiguration targetConf)
+    {
         for (Lookup l : ci.getDefaultLookups())
         {
             if (l instanceof ConfigurationLookup)
             {
-                if (this == ((ConfigurationLookup) l).getConfiguration())
+                if (targetConf == ((ConfigurationLookup) l).getConfiguration())
                 {
                     return l;
                 }
