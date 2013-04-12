@@ -108,6 +108,25 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     /**
+     * Tests whether interpolation works as expected after cloning.
+     */
+    @Test
+    public void testCloneInterpolation()
+    {
+        final String keyAnswer = "answer";
+        final String keyValue = "value";
+        MapConfiguration config = (MapConfiguration) getConfiguration();
+        config.addProperty(keyAnswer, "The answer is ${" + keyValue + "}.");
+        config.addProperty(keyValue, 42);
+        MapConfiguration clone = (MapConfiguration) config.clone();
+        clone.setProperty(keyValue, 43);
+        assertEquals("Wrong interpolation in original", "The answer is 42.",
+                config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.",
+                clone.getString(keyAnswer));
+    }
+
+    /**
      * Tests adding another value to an existing property.
      */
     @Test
