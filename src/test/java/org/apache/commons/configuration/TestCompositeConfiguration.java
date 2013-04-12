@@ -559,6 +559,17 @@ public class TestCompositeConfiguration
     }
 
     /**
+     * Tests whether interpolation works as expected after cloning.
+     */
+    @Test
+    public void testCloneInterpolation()
+    {
+        CompositeConfiguration cc2 = (CompositeConfiguration) cc.clone();
+        assertNotSame("Interpolator was not cloned", cc.getInterpolator(),
+                cc2.getInterpolator());
+    }
+
+    /**
      * Tests whether add property events are triggered.
      */
     @Test

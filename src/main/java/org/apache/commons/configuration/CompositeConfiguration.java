@@ -441,6 +441,7 @@ implements Cloneable
                 }
             }
 
+            copy.cloneInterpolator(this);
             return copy;
         }
         catch (CloneNotSupportedException cnex)
