@@ -940,6 +940,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             CloneVisitor v = new CloneVisitor();
             getRootNode().visit(v);
             copy.setRootNode(v.getClone());
+            copy.cloneInterpolator(this);
 
             return copy;
         }

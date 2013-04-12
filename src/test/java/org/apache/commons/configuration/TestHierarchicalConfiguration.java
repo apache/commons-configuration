@@ -742,6 +742,25 @@ public class TestHierarchicalConfiguration
                 .getConfigurationListeners().isEmpty());
     }
 
+    /**
+     * Tests whether interpolation works as expected after cloning.
+     */
+    @Test
+    public void testCloneInterpolation()
+    {
+        final String keyAnswer = "answer";
+        final String keyValue = "value";
+        config.addProperty(keyAnswer, "The answer is ${" + keyValue + "}.");
+        config.addProperty(keyValue, 42);
+        BaseHierarchicalConfiguration clone =
+                (BaseHierarchicalConfiguration) config.clone();
+        clone.setProperty(keyValue, 43);
+        assertEquals("Wrong interpolation in original", "The answer is 42.",
+                config.getString(keyAnswer));
+        assertEquals("Wrong interpolation in clone", "The answer is 43.",
+                clone.getString(keyAnswer));
+    }
+
     @Test
     public void testAddNodes()
     {
