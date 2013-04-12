@@ -67,6 +67,10 @@
         properties file. A new footer property was added for reading and
         writing this footer comment.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-524">
+        Interpolation now works correctly after a configuration was cloned.
+        The ConfigurationInterpolator instance is now cloned, too.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-521" due-to="Oliver Kopp">
         ConfigurationUtils.fileFromUrl() now correctly handles URL containing
         encoded percent characters.
