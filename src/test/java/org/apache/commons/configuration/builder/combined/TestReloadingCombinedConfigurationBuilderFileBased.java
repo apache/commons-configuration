@@ -287,7 +287,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
 
         // No change definition file
         boolean reloaded = false;
-        for (int attempts = 0; attempts < 10 && !reloaded; attempts++)
+        for (int attempts = 0; attempts < 50 && !reloaded; attempts++)
         {
             writeDefinitionFile(defFile, src2);
             reloaded = builder.getReloadingController().checkForReloading(null);
@@ -323,7 +323,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * change in the definition configuration.
      */
     @Test
-    public void testReloadDefinitioinFileDefaultBuilder()
+    public void testReloadDefinitionFileDefaultBuilder()
             throws ConfigurationException, IOException, InterruptedException
     {
         File defFile = folder.newFile();
