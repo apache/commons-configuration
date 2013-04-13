@@ -18,7 +18,6 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -108,15 +107,16 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     }
 
     /**
-     * Creates a new instance of {@code MapConfiguration} and initializes its
-     * content from the specified {@code Properties} object. The resulting
-     * configuration is not connected to the {@code Properties} object, but all
-     * keys which are strings are copied (keys of other types are ignored).
+     * Creates a new instance of {@code MapConfiguration} which uses the
+     * specified {@code Properties} object as its data store. All changes of
+     * this configuration affect the given {@code Properties} object and
+     * vice versa. Note that while {@code Properties} actually
+     * implements {@code Map<Object, Object>}, we expect it to contain only
+     * string keys. Other key types will lead to {@code ClassCastException}
+     * exceptions on certain methods.
      *
      * @param props the {@code Properties} object defining the content of this
      *        configuration
-     * @throws NullPointerException if the {@code Properties} object is
-     *         <b>null</b>
      * @since 1.8
      */
     public MapConfiguration(Properties props)
@@ -250,22 +250,19 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     }
 
     /**
-     * Helper method for copying all string keys from the given
-     * {@code Properties} object to a newly created map.
+     * Helper method for converting the type of the {@code Properties} object
+     * to a supported map type. As stated by the comment of the constructor,
+     * we expect the {@code Properties} object to contain only String key;
+     * therefore, it is safe to do this cast.
      *
      * @param props the {@code Properties} to be copied
      * @return a newly created map with all string keys of the properties
      */
+    @SuppressWarnings("unchecked")
     private static Map<String, Object> convertPropertiesToMap(Properties props)
     {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (Map.Entry<Object, Object> e : props.entrySet())
-        {
-            if (e.getKey() instanceof String)
-            {
-                map.put((String) e.getKey(), e.getValue());
-            }
-        }
+        @SuppressWarnings("rawtypes")
+        Map map = props;
         return map;
     }
 }

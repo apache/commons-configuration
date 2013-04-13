@@ -27,6 +27,13 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-540">
+        MapConfiguration now directly uses a Properties object passed to its
+        constructor as data store rather than copying it. This allows
+        SystemConfiguration to be connected to system properties; i.e.
+        changing a property through SystemConfiguration immediately affects
+        the corresponding system property.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-539">
         The deprectated INIConfiguration class was removed.
         HierarchicalINIConfiguration was renamed to INIConfiguration.

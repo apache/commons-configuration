@@ -78,4 +78,17 @@ public class TestSystemConfiguration
         SystemConfiguration sconf = new SystemConfiguration();
         assertTrue("Property from file not found", sconf.getBoolean("fromFile"));
     }
+
+    /**
+     * Tests whether the configuration can be used to change system properties.
+     */
+    @Test
+    public void testChangeSystemProperties()
+    {
+        String testProperty = "someTest";
+        SystemConfiguration config = new SystemConfiguration();
+        config.setProperty(testProperty, "true");
+        assertEquals("System property not changed", "true",
+                System.getProperty(testProperty));
+    }
 }
