@@ -730,7 +730,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      *
      * @param key the key to be removed
      */
-    public void clearProperty(String key)
+    public final void clearProperty(String key)
     {
         getSynchronizer().beginWrite();
         try

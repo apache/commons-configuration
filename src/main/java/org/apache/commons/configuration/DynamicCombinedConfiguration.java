@@ -345,7 +345,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         this.getCurrentConfig().clearProperty(key);
     }

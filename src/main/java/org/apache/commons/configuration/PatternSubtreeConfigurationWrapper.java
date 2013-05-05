@@ -95,7 +95,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         config.clearProperty(makePath(key));
     }

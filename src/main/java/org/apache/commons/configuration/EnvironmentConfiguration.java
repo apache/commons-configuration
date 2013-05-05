@@ -73,7 +73,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * @param key the key of the property to be removed
      */
     @Override
-    public void clearProperty(String key)
+    protected void clearPropertyDirect(String key)
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }

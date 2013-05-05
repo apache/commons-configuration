@@ -158,22 +158,9 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     }
 
     @Override
-    public void clearProperty(String key)
-    {
-        configuration.clearProperty(key);
-    }
-
-    @Override
     protected void clearPropertyDirect(String key)
     {
-        if (configuration instanceof AbstractConfiguration)
-        {
-            ((AbstractConfiguration) configuration).clearPropertyDirect(key);
-        }
-        else
-        {
-            configuration.clearProperty(key);
-        }
+        configuration.clearProperty(key);
     }
 
     @Override
