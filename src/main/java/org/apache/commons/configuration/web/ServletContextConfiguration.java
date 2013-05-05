@@ -60,7 +60,8 @@ public class ServletContextConfiguration extends BaseWebConfiguration
         this.context = context;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return handleDelimiters(context.getInitParameter(key));
     }

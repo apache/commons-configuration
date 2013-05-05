@@ -49,7 +49,8 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         this.request = request;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         String[] values = request.getParameterValues(key);
 

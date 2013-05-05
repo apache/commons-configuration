@@ -182,7 +182,8 @@ public class SubsetConfiguration extends AbstractConfiguration
         parent.clearProperty(getParentKey(key));
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return parent.getProperty(getParentKey(key));
     }

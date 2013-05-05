@@ -396,7 +396,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param key the key of the property
      * @return the value of this property
      */
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         if (clearedProperties.contains(key))
         {

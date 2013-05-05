@@ -269,7 +269,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public Object getProperty(String key)
+    protected Object getPropertyInternal(String key)
     {
         return config.getProperty(makePath(key));
     }

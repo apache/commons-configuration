@@ -63,7 +63,8 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return null;
     }

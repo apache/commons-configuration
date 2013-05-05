@@ -46,7 +46,8 @@ public class AppletConfiguration extends BaseWebConfiguration
         this.applet = applet;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return handleDelimiters(applet.getParameter(key));
     }

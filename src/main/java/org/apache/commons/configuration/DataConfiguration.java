@@ -123,7 +123,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return configuration.getProperty(key);
     }

@@ -160,7 +160,8 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         this.trimmingDisabled = trimmingDisabled;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         Object value = map.get(key);
         if ((value instanceof String) && (!isDelimiterParsingDisabled()))

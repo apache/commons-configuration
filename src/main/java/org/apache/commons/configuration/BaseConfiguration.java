@@ -62,7 +62,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     @Override
     protected void addPropertyDirect(String key, Object value)
     {
-        Object previousValue = getProperty(key);
+        Object previousValue = getPropertyInternal(key);
 
         if (previousValue == null)
         {
@@ -94,7 +94,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @return object associated with the given configuration key.
      */
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return store.get(key);
     }

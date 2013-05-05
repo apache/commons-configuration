@@ -846,6 +846,35 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return new PrefixedKeysIterator(getKeys(), prefix);
     }
 
+    /**
+     * {@inheritDoc} This implementation ensures proper synchronization.
+     * Subclasses have to define the abstract {@code getPropertyInternal()}
+     * method which is called from here.
+     */
+    public final Object getProperty(String key)
+    {
+        getSynchronizer().beginRead();
+        try
+        {
+            return getPropertyInternal(key);
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
+    }
+
+    /**
+     * Actually obtains the value of the specified property. This method is
+     * called by {@code getProperty()}. Concrete subclasses must define it to
+     * fetch the value of the desired property.
+     *
+     * @param key the key of the property in question
+     * @return the (raw) value of this property
+     * @since 2.0
+     */
+    protected abstract Object getPropertyInternal(String key);
+
     public Properties getProperties(String key)
     {
         return getProperties(key, null);
@@ -1344,7 +1373,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public String[] getStringArray(String key)
     {
-        Object value = readProperty(key);
+        Object value = getProperty(key);
 
         String[] array;
 
@@ -1391,7 +1420,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public List<Object> getList(String key, List<Object> defaultValue)
     {
-        Object value = readProperty(key);
+        Object value = getProperty(key);
         List<Object> list;
 
         if (value instanceof String)
@@ -1440,7 +1469,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected Object resolveContainerStore(String key)
     {
-        Object value = readProperty(key);
+        Object value = getProperty(key);
         if (value != null)
         {
             if (value instanceof Collection)
@@ -1577,24 +1606,5 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
         c.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         return c;
-    }
-
-    /**
-     * Obtains a value of a property. Ensures proper synchronization.
-     *
-     * @param key the key to be read
-     * @return the value of this property
-     */
-    private Object readProperty(String key)
-    {
-        getSynchronizer().beginRead();
-        try
-        {
-            return getProperty(key);
-        }
-        finally
-        {
-            getSynchronizer().endRead();
-        }
     }
 }

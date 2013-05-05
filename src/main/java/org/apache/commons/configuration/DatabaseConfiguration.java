@@ -310,7 +310,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param key the key of the desired property
      * @return the value of this property
      */
-    public Object getProperty(final String key)
+    @Override
+    protected Object getPropertyInternal(final String key)
     {
         JdbcOperation<Object> op = new JdbcOperation<Object>(EVENT_READ_PROPERTY, key, null)
         {

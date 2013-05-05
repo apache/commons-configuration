@@ -619,7 +619,8 @@ public class TestAbstractConfigurationBasicFeatures
             return config.getKeys();
         }
 
-        public Object getProperty(String key)
+        @Override
+        protected Object getPropertyInternal(String key)
         {
             return config.getProperty(key);
         }

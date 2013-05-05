@@ -253,7 +253,8 @@ implements Cloneable
      *
      * @return object associated with the given configuration key.
      */
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         Configuration firstMatchingConfiguration = null;
         for (Configuration config : configList)

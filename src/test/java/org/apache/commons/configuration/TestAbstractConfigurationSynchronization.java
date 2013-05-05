@@ -112,8 +112,6 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether read access to properties is synchronized.
      */
     @Test
-    @Ignore
-    // TODO prevent subclasses from overriding getProperty()
     public void testGetPropertySynchronized()
     {
         assertEquals("Wrong raw value", "true", config.getProperty(PROP));

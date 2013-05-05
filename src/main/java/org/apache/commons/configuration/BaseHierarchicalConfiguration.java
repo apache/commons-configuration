@@ -300,7 +300,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param key the key to be looked up
      * @return the found value
      */
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         List<ConfigurationNode> nodes = fetchNodeList(key);
 

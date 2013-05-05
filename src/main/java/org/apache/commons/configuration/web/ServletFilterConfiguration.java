@@ -47,7 +47,8 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
         this.config = config;
     }
 
-    public Object getProperty(String key)
+    @Override
+    protected Object getPropertyInternal(String key)
     {
         return handleDelimiters(config.getInitParameter(key));
     }

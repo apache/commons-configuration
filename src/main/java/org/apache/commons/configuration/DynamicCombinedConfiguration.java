@@ -519,7 +519,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Object getProperty(String key)
+    protected Object getPropertyInternal(String key)
     {
         return this.getCurrentConfig().getProperty(key);
     }
