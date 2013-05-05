@@ -519,9 +519,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * will be undefined.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
-        fireEvent(EVENT_CLEAR, null, null, true);
         new JdbcOperation<Void>(EVENT_CLEAR, null, null)
         {
             @Override
@@ -532,7 +531,6 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 return null;
             }
         }.execute();
-        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

@@ -468,9 +468,9 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * was loaded from a file, the associated DOM document is also cleared.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
-        super.clear();
+        super.clearInternal();
         getRootNode().setReference(null);
         document = null;
     }

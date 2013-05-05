@@ -74,7 +74,18 @@ import org.apache.commons.logging.impl.NoOpLog;
  * <li>Basic event support. Whenever this configuration is modified registered
  * event listeners are notified. Refer to the various {@code EVENT_XXX}
  * constants to get an impression about which event types are supported.</li>
+ * <li>Support for proper synchronization based on the {@link Synchronizer}
+ * interface.</li>
  * </ul></p>
+ * <p>
+ * Most methods defined by the {@code Configuration} interface are already
+ * implemented in this class. Many method implementations perform basic
+ * book-keeping tasks (e.g. firing events, handling synchronization), and then
+ * delegate to other (protected) methods executing the actual work. Subclasses
+ * override these protected methods to define or adapt behavior. The public
+ * entry point methods are final to prevent subclasses from breaking basic
+ * functionality.
+ * </p>
  *
  * @author <a href="mailto:ksh@scand.com">Konstantin Shaposhnikov </a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen </a>
@@ -728,55 +739,67 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected abstract void clearPropertyDirect(String key);
 
-    public void clear()
+    public final void clear()
     {
         getSynchronizer().beginWrite();
         try
         {
             fireEvent(EVENT_CLEAR, null, null, true);
-            setDetailEvents(false);
-            boolean useIterator = true;
-            try
-            {
-                Iterator<String> it = getKeys();
-                while (it.hasNext())
-                {
-                    String key = it.next();
-                    if (useIterator)
-                    {
-                        try
-                        {
-                            it.remove();
-                        }
-                        catch (UnsupportedOperationException usoex)
-                        {
-                            useIterator = false;
-                        }
-                    }
-
-                    if (useIterator && containsKey(key))
-                    {
-                        useIterator = false;
-                    }
-
-                    if (!useIterator)
-                    {
-                        // workaround for Iterators that do not remove the
-                        // property
-                        // on calling remove() or do not support remove() at all
-                        clearProperty(key);
-                    }
-                }
-            }
-            finally
-            {
-                setDetailEvents(true);
-            }
+            clearInternal();
             fireEvent(EVENT_CLEAR, null, null, false);
         }
         finally
         {
             getSynchronizer().endWrite();
+        }
+    }
+
+    /**
+     * Clears the whole configuration. This method is called by {@code clear()}
+     * after some preparations have been made. This base implementation uses
+     * the iterator provided by {@code getKeys()} to remove every single
+     * property. Subclasses should override this method if there is a more
+     * efficient way of clearing the configuration.
+     */
+    protected void clearInternal()
+    {
+        setDetailEvents(false);
+        boolean useIterator = true;
+        try
+        {
+            Iterator<String> it = getKeys();
+            while (it.hasNext())
+            {
+                String key = it.next();
+                if (useIterator)
+                {
+                    try
+                    {
+                        it.remove();
+                    }
+                    catch (UnsupportedOperationException usoex)
+                    {
+                        useIterator = false;
+                    }
+                }
+
+                if (useIterator && containsKey(key))
+                {
+                    useIterator = false;
+                }
+
+                if (!useIterator)
+                {
+                    // workaround for Iterators that do not remove the
+                    // property
+                    // on calling remove() or do not support remove() at all
+                    clearProperty(key);
+                }
+            }
+        }
+        finally
+        {
+            setDetailEvents(true);
         }
     }
 

@@ -806,13 +806,11 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * the root node.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
-        fireEvent(EVENT_CLEAR, null, null, true);
         getRootNode().removeAttributes();
         getRootNode().removeChildren();
         getRootNode().setValue(null);
-        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

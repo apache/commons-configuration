@@ -89,7 +89,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void clear()
+    protected void clearInternal()
     {
         getConfig().clear();
     }

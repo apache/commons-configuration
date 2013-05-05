@@ -84,7 +84,7 @@ public class EnvironmentConfiguration extends MapConfiguration
      * an exception.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
         throw new UnsupportedOperationException("EnvironmentConfiguration is read-only!");
     }

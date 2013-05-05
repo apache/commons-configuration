@@ -631,12 +631,10 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * Clears this configuration. All contained configurations will be removed.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
-        fireEvent(EVENT_CLEAR, null, null, true);
         configurations = new ArrayList<ConfigData>();
         namedConfigurations = new HashMap<String, Configuration>();
-        fireEvent(EVENT_CLEAR, null, null, false);
         invalidate();
     }
 

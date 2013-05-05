@@ -336,7 +336,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void clear()
+    protected void clearInternal()
     {
         if (configs != null)
         {

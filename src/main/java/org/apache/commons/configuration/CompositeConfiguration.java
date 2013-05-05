@@ -222,7 +222,7 @@ implements Cloneable
      * configuration is created; the old one is lost.
      */
     @Override
-    public void clear()
+    protected void clearInternal()
     {
         configList.clear();
         // recreate the in memory configuration

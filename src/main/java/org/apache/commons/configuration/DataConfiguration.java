@@ -141,12 +141,6 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
     }
 
-    @Override
-    public void addProperty(String key, Object value)
-    {
-        getConfiguration().addProperty(key, value);
-    }
-
     public boolean isEmpty()
     {
         return configuration.isEmpty();

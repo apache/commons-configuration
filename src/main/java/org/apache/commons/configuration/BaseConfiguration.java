@@ -138,11 +138,9 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     }
 
     @Override
-    public void clear()
+    protected void clearInternal()
     {
-        fireEvent(EVENT_CLEAR, null, null, true);
         store.clear();
-        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**

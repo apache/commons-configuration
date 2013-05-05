@@ -101,8 +101,6 @@ public class TestAbstractConfigurationSynchronization
      * Tests the correct synchronization of clear().
      */
     @Test
-    @Ignore
-    // TODO prevent subclasses from overriding clear()
     public void testClearSynchronized()
     {
         config.clear();
