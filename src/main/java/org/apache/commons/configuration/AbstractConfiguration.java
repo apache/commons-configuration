@@ -601,9 +601,69 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         this.synchronizer = synchronizer;
     }
 
-    public final void addProperty(String key, Object value)
+    /**
+     * Notifies this configuration's {@link Synchronizer} that a read operation
+     * is about to start. This method is called by all methods which access this
+     * configuration in a read-only mode. Subclasses may override it to perform
+     * additional actions before this read operation. <strong>In any case the
+     * inherited method must be called! Otherwise, proper synchronization is not
+     * guaranteed.</strong>
+     *
+     * @since 2.0
+     */
+    protected void beginRead()
+    {
+        getSynchronizer().beginRead();
+    }
+
+    /**
+     * Notifies this configuration's {@link Synchronizer} that a read operation
+     * has finished. This method is called by all methods which access this
+     * configuration in a read-only manner at the end of their execution.
+     * Subclasses may override it to perform additional actions after this read
+     * operation. <strong>In any case the inherited method must be called!
+     * Otherwise, the read lock will not be released.</strong>
+     *
+     * @since 2.0
+     */
+    protected void endRead()
+    {
+        getSynchronizer().endRead();
+    }
+
+    /**
+     * Notifies this configuration's {@link Synchronizer} that an update
+     * operation is about to start. This method is called by all methods which
+     * modify this configuration. Subclasses may override it to perform
+     * additional operations before an update. <strong>In any case the inherited
+     * method must be called! Otherwise, proper synchronization is not
+     * guaranteed.</strong>
+     *
+     * @since 2.0
+     */
+    protected void beginWrite()
     {
         getSynchronizer().beginWrite();
+    }
+
+    /**
+     * Notifies this configuration's {@link Synchronizer} that an update
+     * operation has finished. This method is called by all methods which modify
+     * this configuration at the end of their execution. Subclasses may override
+     * it to perform additional operations after an update. <strong>In any case
+     * the inherited method must be called! Otherwise, the write lock will not
+     * be released.</strong>
+     *
+     * @since 2.0
+     */
+    protected void endWrite()
+    {
+        getSynchronizer().endWrite();
+    }
+
+    public final void addProperty(String key, Object value)
+    {
+        beginWrite();
         try
         {
             fireEvent(EVENT_ADD_PROPERTY, key, value, true);
@@ -612,7 +672,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
         finally
         {
-            getSynchronizer().endWrite();
+            endWrite();
         }
     }
 
@@ -701,7 +761,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public final void setProperty(String key, Object value)
     {
-        getSynchronizer().beginWrite();
+        beginWrite();
         try
         {
             fireEvent(EVENT_SET_PROPERTY, key, value, true);
@@ -710,7 +770,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
         finally
         {
-            getSynchronizer().endWrite();
+            endWrite();
         }
     }
 
@@ -748,7 +808,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final void clearProperty(String key)
     {
-        getSynchronizer().beginWrite();
+        beginWrite();
         try
         {
             fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
@@ -757,7 +817,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
         finally
         {
-            getSynchronizer().endWrite();
+            endWrite();
         }
     }
 
@@ -772,7 +832,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public final void clear()
     {
-        getSynchronizer().beginWrite();
+        beginWrite();
         try
         {
             fireEvent(EVENT_CLEAR, null, null, true);
@@ -781,7 +841,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         }
         finally
         {
-            getSynchronizer().endWrite();
+            endWrite();
         }
     }
 
@@ -842,14 +902,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Iterator<String> getKeys()
     {
-        getSynchronizer().beginRead();
+        beginRead();
         try
         {
             return getKeysInternal();
         }
         finally
         {
-            getSynchronizer().endRead();
+            endRead();
         }
     }
 
@@ -862,14 +922,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Iterator<String> getKeys(String prefix)
     {
-        getSynchronizer().beginRead();
+        beginRead();
         try
         {
             return getKeysInternal(prefix);
         }
         finally
         {
-            getSynchronizer().endRead();
+            endRead();
         }
     }
 
@@ -907,14 +967,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Object getProperty(String key)
     {
-        getSynchronizer().beginRead();
+        beginRead();
         try
         {
             return getPropertyInternal(key);
         }
         finally
         {
-            getSynchronizer().endRead();
+            endRead();
         }
     }
 
@@ -935,14 +995,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final boolean isEmpty()
     {
-        getSynchronizer().beginRead();
+        beginRead();
         try
         {
             return isEmptyInternal();
         }
         finally
         {
-            getSynchronizer().endRead();
+            endRead();
         }
     }
 
@@ -962,14 +1022,14 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final boolean containsKey(String key)
     {
-        getSynchronizer().beginRead();
+        beginRead();
         try
         {
             return containsKeyInternal(key);
         }
         finally
         {
-            getSynchronizer().endRead();
+            endRead();
         }
     }
 
