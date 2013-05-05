@@ -257,7 +257,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @return the name of the root element
      */
     @Override
-    public String getRootElementName()
+    protected String getRootElementNameInternal()
     {
         if (getDocument() == null)
         {

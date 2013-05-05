@@ -624,7 +624,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public int getMaxIndex(String key)
+    protected int getMaxIndexInternal(String key)
     {
         return this.getCurrentConfig().getMaxIndex(key);
     }

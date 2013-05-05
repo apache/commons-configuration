@@ -224,9 +224,31 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc} This implementation just returns the name of the root node.
+     * {@inheritDoc} This implementation handles synchronization and delegates
+     * to {@code getRootElementNameInternal()}.
      */
-    public String getRootElementName()
+    public final String getRootElementName()
+    {
+        beginRead();
+        try
+        {
+            return getRootElementNameInternal();
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Actually obtains the name of the root element. This method is called by
+     * {@code getRootElementName()}. It just returns the name of the root node.
+     * Subclasses that treat the root element name differently can override this
+     * method.
+     * @return the name of this configuration's root element
+     * @since 2.0
+     */
+    protected String getRootElementNameInternal()
     {
         return getRootNode().getName();
     }
@@ -908,12 +930,35 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * Returns the maximum defined index for the given key. This is useful if
      * there are multiple values for this key. They can then be addressed
      * separately by specifying indices from 0 to the return value of this
-     * method.
+     * method. If the passed in key is not contained in this configuration,
+     * result is -1.
      *
      * @param key the key to be checked
      * @return the maximum defined index for this key
      */
-    public int getMaxIndex(String key)
+    public final int getMaxIndex(String key)
+    {
+        beginRead();
+        try
+        {
+            return getMaxIndexInternal(key);
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * Actually retrieves the maximum defined index for the given key. This
+     * method is called by {@code getMaxIndex()}. Subclasses that need to adapt
+     * this operation have to override this method.
+     *
+     * @param key the key to be checked
+     * @return the maximum defined index for this key
+     * @since 2.0
+     */
+    protected int getMaxIndexInternal(String key)
     {
         return fetchNodeList(key).size() - 1;
     }
@@ -929,6 +974,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     @Override
     public Object clone()
     {
+        beginRead();
         try
         {
             BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) super
@@ -946,6 +992,10 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         {
             // should not happen
             throw new ConfigurationRuntimeException(cex);
+        }
+        finally
+        {
+            endRead();
         }
     }
 

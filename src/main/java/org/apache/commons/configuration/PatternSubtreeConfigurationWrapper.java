@@ -397,7 +397,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public int getMaxIndex(String key)
+    protected int getMaxIndexInternal(String key)
     {
         return config.getMaxIndex(makePath(key));
     }
