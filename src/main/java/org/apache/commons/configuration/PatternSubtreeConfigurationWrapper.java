@@ -83,7 +83,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void addProperty(String key, Object value)
+    protected void addPropertyInternal(String key, Object value)
     {
         config.addProperty(makePath(key), value);
     }

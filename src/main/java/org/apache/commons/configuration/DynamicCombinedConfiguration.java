@@ -330,7 +330,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void addProperty(String key, Object value)
+    protected void addPropertyInternal(String key, Object value)
     {
         this.getCurrentConfig().addProperty(key, value);
     }

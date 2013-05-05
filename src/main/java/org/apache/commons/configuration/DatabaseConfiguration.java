@@ -412,7 +412,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param value the value to be added
      */
     @Override
-    public void addProperty(String key, Object value)
+    protected void addPropertyInternal(String key, Object value)
     {
         boolean parsingFlag = isDelimiterParsingDisabled();
         try
@@ -422,7 +422,7 @@ public class DatabaseConfiguration extends AbstractConfiguration
                 // temporarily disable delimiter parsing
                 setDelimiterParsingDisabled(true);
             }
-            super.addProperty(key, value);
+            super.addPropertyInternal(key, value);
         }
         finally
         {

@@ -185,17 +185,15 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    public void addProperty(String key, Object value)
+    protected void addPropertyInternal(String key, Object value)
     {
         if (value instanceof byte[])
         {
-            fireEvent(EVENT_ADD_PROPERTY, key, value, true);
             addPropertyDirect(key, value);
-            fireEvent(EVENT_ADD_PROPERTY, key, value, false);
         }
         else
         {
-            super.addProperty(key, value);
+            super.addPropertyInternal(key, value);
         }
     }
 

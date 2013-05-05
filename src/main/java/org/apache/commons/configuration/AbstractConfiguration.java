@@ -601,21 +601,36 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         this.synchronizer = synchronizer;
     }
 
-    public void addProperty(String key, Object value)
+    public final void addProperty(String key, Object value)
     {
         getSynchronizer().beginWrite();
         try
         {
             fireEvent(EVENT_ADD_PROPERTY, key, value, true);
-            addPropertyValues(key, value,
-                    isDelimiterParsingDisabled() ? DISABLED_DELIMITER
-                            : getListDelimiter());
+            addPropertyInternal(key, value);
             fireEvent(EVENT_ADD_PROPERTY, key, value, false);
         }
         finally
         {
             getSynchronizer().endWrite();
         }
+    }
+
+    /**
+     * Actually adds a property to this configuration. This method is called by
+     * {@code addProperty()}. It performs list splitting if necessary and
+     * delegates to {@link #addPropertyDirect(String, Object)} for every single
+     * property value.
+     *
+     * @param key the key of the property to be added
+     * @param value the new property value
+     * @since 2.0
+     */
+    protected void addPropertyInternal(String key, Object value)
+    {
+        addPropertyValues(key, value,
+                isDelimiterParsingDisabled() ? DISABLED_DELIMITER
+                        : getListDelimiter());
     }
 
     /**
