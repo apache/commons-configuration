@@ -46,9 +46,10 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      *
      * @return a flag whether this configuration is empty
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
-        return !getKeys().hasNext();
+        return !getKeysInternal().hasNext();
     }
 
     /**

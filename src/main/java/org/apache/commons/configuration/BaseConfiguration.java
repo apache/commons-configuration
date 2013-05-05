@@ -106,7 +106,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @return {@code true} if Configuration is empty,
      * {@code false} otherwise.
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         return store.isEmpty();
     }

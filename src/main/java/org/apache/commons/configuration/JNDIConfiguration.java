@@ -286,7 +286,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @return the empty flag
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         try
         {

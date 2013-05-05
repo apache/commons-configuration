@@ -136,8 +136,6 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether isEmpty() is correctly synchronized.
      */
     @Test
-    @Ignore
-    // TODO prevent subclasses from overriding containsKey()
     public void testIsEmptySychronized()
     {
         assertFalse("Configuration is empty", config.isEmpty());

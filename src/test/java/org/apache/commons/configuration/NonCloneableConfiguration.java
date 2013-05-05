@@ -39,7 +39,8 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         return true;
     }

@@ -929,6 +929,33 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected abstract Object getPropertyInternal(String key);
 
+    /**
+     * {@inheritDoc} This implementation handles synchronization and delegates
+     * to {@code isEmptyInternal()}.
+     */
+    public final boolean isEmpty()
+    {
+        getSynchronizer().beginRead();
+        try
+        {
+            return isEmptyInternal();
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
+    }
+
+    /**
+     * Actually checks whether this configuration contains data. This method is
+     * called by {@code isEmpty()}. It has to be defined by concrete subclasses.
+     *
+     * @return <b>true</b> if this configuration contains no data, <b>false</b>
+     *         otherwise
+     * @since 2.0
+     */
+    protected abstract boolean isEmptyInternal();
+
     public Properties getProperties(String key)
     {
         return getProperties(key, null);

@@ -439,9 +439,9 @@ public class DatabaseConfiguration extends AbstractConfiguration
      *
      * @return a flag whether this configuration is empty.
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
-
         JdbcOperation<Integer> op = new JdbcOperation<Integer>(EVENT_READ_PROPERTY, null, null)
         {
             @Override

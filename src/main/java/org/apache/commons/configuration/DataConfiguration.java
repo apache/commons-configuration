@@ -148,7 +148,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         }
     }
 
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         return configuration.isEmpty();
     }

@@ -201,7 +201,8 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         }
     }
 
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         return map.isEmpty();
     }

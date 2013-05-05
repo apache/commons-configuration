@@ -561,7 +561,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public boolean isEmpty()
+    protected boolean isEmptyInternal()
     {
         return this.getCurrentConfig().isEmpty();
     }

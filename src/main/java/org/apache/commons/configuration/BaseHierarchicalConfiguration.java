@@ -417,7 +417,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      *
      * @return a flag if this configuration is empty
      */
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         return !nodeDefined(getRootNode());
     }

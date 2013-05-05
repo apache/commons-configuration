@@ -160,9 +160,10 @@ public class SubsetConfiguration extends AbstractConfiguration
         return parent.subset(getParentKey(prefix));
     }
 
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
-        return !getKeys().hasNext();
+        return !getKeysInternal().hasNext();
     }
 
     public boolean containsKey(String key)

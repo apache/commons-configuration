@@ -626,7 +626,8 @@ public class TestAbstractConfigurationBasicFeatures
             return config.getProperty(key);
         }
 
-        public boolean isEmpty()
+        @Override
+        protected boolean isEmptyInternal()
         {
             return config.isEmpty();
         }

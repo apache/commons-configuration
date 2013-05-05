@@ -306,7 +306,8 @@ implements Cloneable
         return keys.iterator();
     }
 
-    public boolean isEmpty()
+    @Override
+    protected boolean isEmptyInternal()
     {
         for (Configuration config : configList)
         {

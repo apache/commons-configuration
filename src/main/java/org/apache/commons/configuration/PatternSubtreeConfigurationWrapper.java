@@ -311,7 +311,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public boolean isEmpty()
+    protected boolean isEmptyInternal()
     {
         return getConfig().isEmpty();
     }
