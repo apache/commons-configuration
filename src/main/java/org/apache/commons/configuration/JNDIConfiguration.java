@@ -321,7 +321,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @throws UnsupportedOperationException
      */
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
         throw new UnsupportedOperationException("This operation is not supported");
     }

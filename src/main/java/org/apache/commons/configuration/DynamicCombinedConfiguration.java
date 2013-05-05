@@ -567,7 +567,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
         if (configs != null)
         {

@@ -317,7 +317,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
         getConfig().setProperty(key, value);
     }

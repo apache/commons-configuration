@@ -699,27 +699,43 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         return ConfigurationUtils.unmodifiableConfiguration(subset(prefix));
     }
 
-    public void setProperty(String key, Object value)
+    public final void setProperty(String key, Object value)
     {
         getSynchronizer().beginWrite();
         try
         {
             fireEvent(EVENT_SET_PROPERTY, key, value, true);
-            setDetailEvents(false);
-            try
-            {
-                clearProperty(key);
-                addProperty(key, value);
-            }
-            finally
-            {
-                setDetailEvents(true);
-            }
+            setPropertyInternal(key, value);
             fireEvent(EVENT_SET_PROPERTY, key, value, false);
         }
         finally
         {
             getSynchronizer().endWrite();
+        }
+    }
+
+    /**
+     * Actually sets the value of a property. This method is called by
+     * {@code setProperty()}. It provides a default implementation of this
+     * functionality by clearing the specified key and delegating to
+     * {@code addProperty()}. Subclasses should override this method if they can
+     * provide a more efficient algorithm for setting a property value.
+     *
+     * @param key the property key
+     * @param value the new property value
+     * @since 2.0
+     */
+    protected void setPropertyInternal(String key, Object value)
+    {
+        setDetailEvents(false);
+        try
+        {
+            clearProperty(key);
+            addProperty(key, value);
+        }
+        finally
+        {
+            setDetailEvents(true);
         }
     }
 

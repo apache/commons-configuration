@@ -164,7 +164,7 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
     }
 
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
         configuration.setProperty(key, value);
     }

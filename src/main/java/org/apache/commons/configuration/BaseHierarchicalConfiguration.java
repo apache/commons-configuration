@@ -764,10 +764,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param value the new value of this property
      */
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
-        fireEvent(EVENT_SET_PROPERTY, key, value, true);
-
         // Update the existing nodes for this property
         Iterator<ConfigurationNode> itNodes = fetchNodeList(key).iterator();
         Iterator<?> itValues;
@@ -796,8 +794,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         {
             clearNode(itNodes.next());
         }
-
-        fireEvent(EVENT_SET_PROPERTY, key, value, false);
     }
 
     /**

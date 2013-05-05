@@ -160,12 +160,11 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
     }
 
     @Override
-    public void setProperty(String key, Object value)
+    protected void setPropertyInternal(String key, Object value)
     {
         // special case for byte arrays, they must be stored as is in the configuration
         if (value instanceof byte[])
         {
-            fireEvent(EVENT_SET_PROPERTY, key, value, true);
             setDetailEvents(false);
             try
             {
@@ -176,11 +175,10 @@ public class XMLPropertyListConfiguration extends BaseHierarchicalConfiguration
             {
                 setDetailEvents(true);
             }
-            fireEvent(EVENT_SET_PROPERTY, key, value, false);
         }
         else
         {
-            super.setProperty(key, value);
+            super.setPropertyInternal(key, value);
         }
     }
 
