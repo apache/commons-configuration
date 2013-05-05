@@ -37,7 +37,8 @@ public class ManagedReloadingDetector implements ReloadingDetector,
     private volatile boolean reloadingRequired;
 
     /**
-     * @see org.apache.commons.configuration.reloading.ReloadingStrategy#reloadingPerformed()
+     * {@inheritDoc} This implementation resets the internal flag indicating
+     * that a reload should be performed.
      */
     public void reloadingPerformed()
     {
@@ -49,7 +50,6 @@ public class ManagedReloadingDetector implements ReloadingDetector,
      * the {@code refresh()} method has been invoked.
      *
      * @return a flag whether reloading is required
-     * @see org.apache.commons.configuration.reloading.ReloadingStrategy#reloadingRequired()
      */
     public boolean isReloadingRequired()
     {
