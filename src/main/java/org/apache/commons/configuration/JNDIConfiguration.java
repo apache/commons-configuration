@@ -177,9 +177,10 @@ public class JNDIConfiguration extends AbstractConfiguration
      *
      * @return an iterator with all keys
      */
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
-        return getKeys("");
+        return getKeysInternal("");
     }
 
     /**
@@ -190,7 +191,7 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @return an iterator with the selected keys
      */
     @Override
-    public Iterator<String> getKeys(String prefix)
+    protected Iterator<String> getKeysInternal(String prefix)
     {
         // build the path
         String[] splitPath = StringUtils.split(prefix, ".");

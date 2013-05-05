@@ -82,7 +82,8 @@ public class ServletRequestConfiguration extends BaseWebConfiguration
         }
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         // According to the documentation of getParameterMap(), keys are Strings.
         @SuppressWarnings("unchecked")

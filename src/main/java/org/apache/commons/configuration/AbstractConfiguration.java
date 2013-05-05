@@ -835,15 +835,69 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     }
 
     /**
+     * {@inheritDoc} This implementation takes care of synchronization and then
+     * delegates to {@code getKeysInternal()} for obtaining the actual iterator.
+     * Note that depending on a concrete implementation, an iteration may fail
+     * if the configuration is updated concurrently.
+     */
+    public final Iterator<String> getKeys()
+    {
+        getSynchronizer().beginRead();
+        try
+        {
+            return getKeysInternal();
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
+    }
+
+    /**
      * {@inheritDoc} This implementation returns keys that either match the
      * prefix or start with the prefix followed by a dot ('.'). So the call
      * {@code getKeys("db");} will find the keys {@code db},
      * {@code db.user}, or {@code db.password}, but not the key
      * {@code dbdriver}.
      */
-    public Iterator<String> getKeys(String prefix)
+    public final Iterator<String> getKeys(String prefix)
     {
-        return new PrefixedKeysIterator(getKeys(), prefix);
+        getSynchronizer().beginRead();
+        try
+        {
+            return getKeysInternal(prefix);
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
+    }
+
+    /**
+     * Actually creates an iterator for iterating over the keys in this
+     * configuration. This method is called by {@code getKeys()}, it has to be
+     * defined by concrete subclasses.
+     *
+     * @return an {@code Iterator} with all property keys in this configuration
+     * @since 2.0
+     */
+    protected abstract Iterator<String> getKeysInternal();
+
+    /**
+     * Returns an {@code Iterator} with all property keys starting with the
+     * specified prefix. This method is called by {@link #getKeys(String)}. It
+     * is fully implemented by delegating to {@code getKeysInternal()} and
+     * returning a special iterator which filters for the passed in prefix.
+     * Subclasses can override it if they can provide a more efficient way to
+     * iterate over specific keys only.
+     *
+     * @param prefix the prefix for the keys to be taken into account
+     * @return an {@code Iterator} returning the filtered keys
+     * @since 2.0
+     */
+    protected Iterator<String> getKeysInternal(String prefix)
+    {
+        return new PrefixedKeysIterator(getKeysInternal(), prefix);
     }
 
     /**

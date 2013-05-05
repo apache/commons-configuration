@@ -55,7 +55,8 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         return null;
     }

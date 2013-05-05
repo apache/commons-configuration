@@ -52,7 +52,8 @@ public class AppletConfiguration extends BaseWebConfiguration
         return handleDelimiters(applet.getParameter(key));
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         String[][] paramsInfo = applet.getParameterInfo();
         String[] keys = new String[paramsInfo != null ? paramsInfo.length : 0];

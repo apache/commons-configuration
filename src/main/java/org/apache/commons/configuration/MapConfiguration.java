@@ -217,7 +217,8 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         map.remove(key);
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         return map.keySet().iterator();
     }

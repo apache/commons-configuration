@@ -221,13 +221,13 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public Iterator<String> getKeys()
+    protected Iterator<String> getKeysInternal()
     {
         return config.getKeys(makePath());
     }
 
     @Override
-    public Iterator<String> getKeys(String prefix)
+    protected Iterator<String> getKeysInternal(String prefix)
     {
         return config.getKeys(makePath(prefix));
     }

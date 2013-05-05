@@ -150,7 +150,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      *
      * @return An Iterator.
      */
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         return store.keySet().iterator();
     }

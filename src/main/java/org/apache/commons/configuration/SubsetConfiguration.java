@@ -189,12 +189,13 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     @Override
-    public Iterator<String> getKeys(String prefix)
+    protected Iterator<String> getKeysInternal(String prefix)
     {
         return new SubsetIterator(parent.getKeys(getParentKey(prefix)));
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         return new SubsetIterator(parent.getKeys(prefix));
     }

@@ -170,7 +170,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         configuration.setProperty(key, value);
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         return configuration.getKeys();
     }

@@ -855,7 +855,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      *
      * @return an iterator with the defined keys in this configuration
      */
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor();
         getRootNode().visit(visitor);
@@ -875,7 +876,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @return an iterator with the found keys
      */
     @Override
-    public Iterator<String> getKeys(String prefix)
+    protected Iterator<String> getKeysInternal(String prefix)
     {
         DefinedKeysVisitor visitor = new DefinedKeysVisitor(prefix);
         if (containsKey(prefix))

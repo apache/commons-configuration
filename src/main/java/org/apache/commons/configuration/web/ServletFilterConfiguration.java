@@ -53,7 +53,8 @@ public class ServletFilterConfiguration extends BaseWebConfiguration
         return handleDelimiters(config.getInitParameter(key));
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         // According to the documentation of getInitParameterNames() the
         // enumeration is of type String.

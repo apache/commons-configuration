@@ -544,7 +544,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @return an iterator with the contained keys (an empty iterator in case
      * of an error)
      */
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         final Collection<String> keys = new ArrayList<String>();
         new JdbcOperation<Collection<String>>(EVENT_READ_PROPERTY, null, null)

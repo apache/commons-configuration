@@ -276,7 +276,8 @@ implements Cloneable
         }
     }
 
-    public Iterator<String> getKeys()
+    @Override
+    protected Iterator<String> getKeysInternal()
     {
         Set<String> keys = new LinkedHashSet<String>();
         for (Configuration config : configList)
@@ -291,7 +292,7 @@ implements Cloneable
     }
 
     @Override
-    public Iterator<String> getKeys(String key)
+    protected Iterator<String> getKeysInternal(String key)
     {
         Set<String> keys = new LinkedHashSet<String>();
         for (Configuration config : configList)

@@ -148,11 +148,19 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether getKeys() is correctly synchronized.
      */
     @Test
-    @Ignore
-    // TODO prevent subclasses from overriding containsKey()
     public void testGetKeysSychronized()
     {
         assertTrue("No keys", config.getKeys().hasNext());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether getKeys(String prefix) is correctly synchronized.
+     */
+    @Test
+    public void testGetKeysPrefixSynchronized()
+    {
+        config.getKeys("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 

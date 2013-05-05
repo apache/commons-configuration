@@ -471,13 +471,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public Iterator<String> getKeys()
+    protected Iterator<String> getKeysInternal()
     {
         return this.getCurrentConfig().getKeys();
     }
 
     @Override
-    public Iterator<String> getKeys(String prefix)
+    protected Iterator<String> getKeysInternal(String prefix)
     {
         return this.getCurrentConfig().getKeys(prefix);
     }

@@ -63,7 +63,7 @@ public class TestAbstractConfigurationBasicFeatures
         {
             // return an iterator that does not support remove operations
             @Override
-            public Iterator<String> getKeys()
+            protected Iterator<String> getKeysInternal()
             {
                 Collection<String> keyCol = new ArrayList<String>();
                 CollectionUtils.addAll(keyCol, getUnderlyingConfiguration()
@@ -614,7 +614,8 @@ public class TestAbstractConfigurationBasicFeatures
             return config.containsKey(key);
         }
 
-        public Iterator<String> getKeys()
+        @Override
+        protected Iterator<String> getKeysInternal()
         {
             return config.getKeys();
         }
