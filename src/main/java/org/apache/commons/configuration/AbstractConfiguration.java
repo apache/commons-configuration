@@ -147,6 +147,9 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     /** Stores a reference to the object that handles variable interpolation. */
     private AtomicReference<ConfigurationInterpolator> interpolator;
 
+    /** The object responsible for synchronization. */
+    private volatile Synchronizer synchronizer;
+
     /** Stores the logger.*/
     private Log log;
 
@@ -556,13 +559,52 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         });
     }
 
+    /**
+     * Returns the object responsible for synchronizing this configuration. All
+     * access to this configuration - both read and write access - is controlled
+     * by this object. This implementation never returns <b>null</b>. If no
+     * {@code Synchronizer} has been set, a {@link NoOpSynchronizer} is
+     * returned. So, per default, instances of {@code AbstractConfiguration} are
+     * not thread-safe unless a suitable {@code Synchronizer} is set!
+     *
+     * @return the {@code Synchronizer} used by this instance
+     * @since 2.0
+     */
+    public final Synchronizer getSynchronizer()
+    {
+        Synchronizer sync = synchronizer;
+        return (sync != null) ? sync : NoOpSynchronizer.INSTANCE;
+    }
+
+    /**
+     * Sets the object responsible for synchronizing this configuration. This
+     * method has to be called with a suitable {@code Synchronizer} object when
+     * initializing this configuration instance in order to make it thread-safe.
+     *
+     * @param synchronizer the new {@code Synchronizer}; can be <b>null</b>,
+     *        then this instance uses a {@link NoOpSynchronizer}
+     * @since 2.0
+     */
+    public final void setSynchronizer(Synchronizer synchronizer)
+    {
+        this.synchronizer = synchronizer;
+    }
+
     public void addProperty(String key, Object value)
     {
-        fireEvent(EVENT_ADD_PROPERTY, key, value, true);
-        addPropertyValues(key, value,
-                isDelimiterParsingDisabled() ? DISABLED_DELIMITER
-                        : getListDelimiter());
-        fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+        getSynchronizer().beginWrite();
+        try
+        {
+            fireEvent(EVENT_ADD_PROPERTY, key, value, true);
+            addPropertyValues(key, value,
+                    isDelimiterParsingDisabled() ? DISABLED_DELIMITER
+                            : getListDelimiter());
+            fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+        }
+        finally
+        {
+            getSynchronizer().endWrite();
+        }
     }
 
     /**
@@ -633,18 +675,26 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public void setProperty(String key, Object value)
     {
-        fireEvent(EVENT_SET_PROPERTY, key, value, true);
-        setDetailEvents(false);
+        getSynchronizer().beginWrite();
         try
         {
-            clearProperty(key);
-            addProperty(key, value);
+            fireEvent(EVENT_SET_PROPERTY, key, value, true);
+            setDetailEvents(false);
+            try
+            {
+                clearProperty(key);
+                addProperty(key, value);
+            }
+            finally
+            {
+                setDetailEvents(true);
+            }
+            fireEvent(EVENT_SET_PROPERTY, key, value, false);
         }
         finally
         {
-            setDetailEvents(true);
+            getSynchronizer().endWrite();
         }
-        fireEvent(EVENT_SET_PROPERTY, key, value, false);
     }
 
     /**
@@ -656,9 +706,17 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public void clearProperty(String key)
     {
-        fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
-        clearPropertyDirect(key);
-        fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
+        getSynchronizer().beginWrite();
+        try
+        {
+            fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
+            clearPropertyDirect(key);
+            fireEvent(EVENT_CLEAR_PROPERTY, key, null, false);
+        }
+        finally
+        {
+            getSynchronizer().endWrite();
+        }
     }
 
     /**
@@ -672,45 +730,54 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public void clear()
     {
-        fireEvent(EVENT_CLEAR, null, null, true);
-        setDetailEvents(false);
-        boolean useIterator = true;
+        getSynchronizer().beginWrite();
         try
         {
-            Iterator<String> it = getKeys();
-            while (it.hasNext())
+            fireEvent(EVENT_CLEAR, null, null, true);
+            setDetailEvents(false);
+            boolean useIterator = true;
+            try
             {
-                String key = it.next();
-                if (useIterator)
+                Iterator<String> it = getKeys();
+                while (it.hasNext())
                 {
-                    try
+                    String key = it.next();
+                    if (useIterator)
                     {
-                        it.remove();
+                        try
+                        {
+                            it.remove();
+                        }
+                        catch (UnsupportedOperationException usoex)
+                        {
+                            useIterator = false;
+                        }
                     }
-                    catch (UnsupportedOperationException usoex)
+
+                    if (useIterator && containsKey(key))
                     {
                         useIterator = false;
                     }
-                }
 
-                if (useIterator && containsKey(key))
-                {
-                    useIterator = false;
-                }
-
-                if (!useIterator)
-                {
-                    // workaround for Iterators that do not remove the property
-                    // on calling remove() or do not support remove() at all
-                    clearProperty(key);
+                    if (!useIterator)
+                    {
+                        // workaround for Iterators that do not remove the
+                        // property
+                        // on calling remove() or do not support remove() at all
+                        clearProperty(key);
+                    }
                 }
             }
+            finally
+            {
+                setDetailEvents(true);
+            }
+            fireEvent(EVENT_CLEAR, null, null, false);
         }
         finally
         {
-            setDetailEvents(true);
+            getSynchronizer().endWrite();
         }
-        fireEvent(EVENT_CLEAR, null, null, false);
     }
 
     /**
@@ -1223,7 +1290,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public String[] getStringArray(String key)
     {
-        Object value = getProperty(key);
+        Object value = readProperty(key);
 
         String[] array;
 
@@ -1270,7 +1337,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public List<Object> getList(String key, List<Object> defaultValue)
     {
-        Object value = getProperty(key);
+        Object value = readProperty(key);
         List<Object> list;
 
         if (value instanceof String)
@@ -1319,7 +1386,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected Object resolveContainerStore(String key)
     {
-        Object value = getProperty(key);
+        Object value = readProperty(key);
         if (value != null)
         {
             if (value instanceof Collection)
@@ -1456,5 +1523,24 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
         c.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
         return c;
+    }
+
+    /**
+     * Obtains a value of a property. Ensures proper synchronization.
+     *
+     * @param key the key to be read
+     * @return the value of this property
+     */
+    private Object readProperty(String key)
+    {
+        getSynchronizer().beginRead();
+        try
+        {
+            return getProperty(key);
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
     }
 }
