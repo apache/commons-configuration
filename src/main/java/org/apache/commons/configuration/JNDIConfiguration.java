@@ -345,7 +345,8 @@ public class JNDIConfiguration extends AbstractConfiguration
      * @param key the key to check
      * @return a flag whether this key is stored in this configuration
      */
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         if (clearedProperties.contains(key))
         {

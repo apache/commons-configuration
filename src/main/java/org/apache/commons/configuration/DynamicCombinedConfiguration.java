@@ -351,7 +351,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public boolean containsKey(String key)
+    protected boolean containsKeyInternal(String key)
     {
         return this.getCurrentConfig().containsKey(key);
     }

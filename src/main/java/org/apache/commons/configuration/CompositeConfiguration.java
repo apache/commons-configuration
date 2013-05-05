@@ -329,7 +329,8 @@ implements Cloneable
         }
     }
 
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         for (Configuration config : configList)
         {

@@ -166,7 +166,8 @@ public class SubsetConfiguration extends AbstractConfiguration
         return !getKeysInternal().hasNext();
     }
 
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         return parent.containsKey(getParentKey(key));
     }

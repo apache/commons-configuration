@@ -207,7 +207,8 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
         return map.isEmpty();
     }
 
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         return map.containsKey(key);
     }

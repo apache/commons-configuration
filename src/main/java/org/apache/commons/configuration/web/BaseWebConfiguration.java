@@ -58,9 +58,10 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      * @param key the key
      * @return a flag whether this key exists in this configuration
      */
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
-        return getProperty(key) != null;
+        return getPropertyInternal(key) != null;
     }
 
     /**

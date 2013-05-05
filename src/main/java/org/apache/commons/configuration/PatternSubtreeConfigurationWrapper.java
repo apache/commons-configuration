@@ -101,7 +101,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public boolean containsKey(String key)
+    protected boolean containsKeyInternal(String key)
     {
         return config.containsKey(makePath(key));
     }

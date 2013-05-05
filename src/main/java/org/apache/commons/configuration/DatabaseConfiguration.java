@@ -468,7 +468,8 @@ public class DatabaseConfiguration extends AbstractConfiguration
      * @param key the key to be checked
      * @return a flag whether this key is defined
      */
-    public boolean containsKey(final String key)
+    @Override
+    protected boolean containsKeyInternal(final String key)
     {
         JdbcOperation<Boolean> op = new JdbcOperation<Boolean>(EVENT_READ_PROPERTY, key, null)
         {

@@ -23,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.io.FileHandler;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -124,8 +123,6 @@ public class TestAbstractConfigurationSynchronization
      * Tests whether containsKey() is correctly synchronized.
      */
     @Test
-    @Ignore
-    // TODO prevent subclasses from overriding containsKey()
     public void testContainsKeySychronized()
     {
         assertTrue("Wrong result", config.containsKey(PROP));

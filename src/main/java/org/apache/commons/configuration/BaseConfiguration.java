@@ -120,7 +120,8 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
      * @return {@code true} if Configuration contain given key,
      * {@code false} otherwise.
      */
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         return store.containsKey(key);
     }
@@ -133,10 +134,7 @@ public class BaseConfiguration extends AbstractConfiguration implements Cloneabl
     @Override
     protected void clearPropertyDirect(String key)
     {
-        if (containsKey(key))
-        {
-            store.remove(key);
-        }
+        store.remove(key);
     }
 
     @Override

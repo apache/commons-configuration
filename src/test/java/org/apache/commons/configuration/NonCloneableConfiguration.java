@@ -48,7 +48,8 @@ public class NonCloneableConfiguration extends AbstractConfiguration
     /**
      * Dummy implementation of this method.
      */
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         return false;
     }

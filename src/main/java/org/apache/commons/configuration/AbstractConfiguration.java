@@ -956,6 +956,35 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected abstract boolean isEmptyInternal();
 
+    /**
+     * {@inheritDoc} This implementation handles synchronization and delegates
+     * to {@code containsKeyInternal()}.
+     */
+    public final boolean containsKey(String key)
+    {
+        getSynchronizer().beginRead();
+        try
+        {
+            return containsKeyInternal(key);
+        }
+        finally
+        {
+            getSynchronizer().endRead();
+        }
+    }
+
+    /**
+     * Actually checks whether the specified key is contained in this
+     * configuration. This method is called by {@code containsKey()}. It has to
+     * be defined by concrete subclasses.
+     *
+     * @param key the key in question
+     * @return <b>true</b> if this key is contained in this configuration,
+     *         <b>false</b> otherwise
+     * @since 2.0
+     */
+    protected abstract boolean containsKeyInternal(String key);
+
     public Properties getProperties(String key)
     {
         return getProperties(key, null);

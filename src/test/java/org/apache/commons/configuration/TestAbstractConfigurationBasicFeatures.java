@@ -609,7 +609,8 @@ public class TestAbstractConfigurationBasicFeatures
             config.addPropertyDirect(key, value);
         }
 
-        public boolean containsKey(String key)
+        @Override
+        protected boolean containsKeyInternal(String key)
         {
             return config.containsKey(key);
         }

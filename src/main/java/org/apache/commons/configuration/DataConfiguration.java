@@ -154,7 +154,8 @@ public class DataConfiguration extends AbstractConfiguration implements Serializ
         return configuration.isEmpty();
     }
 
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
         return configuration.containsKey(key);
     }

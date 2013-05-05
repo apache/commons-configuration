@@ -751,12 +751,13 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * value but children (either defined or undefined), this method will still
      * return <b>false </b>.
      *
-     * @param key the key to be chekced
+     * @param key the key to be checked
      * @return a flag if this key is contained in this configuration
      */
-    public boolean containsKey(String key)
+    @Override
+    protected boolean containsKeyInternal(String key)
     {
-        return getProperty(key) != null;
+        return getPropertyInternal(key) != null;
     }
 
     /**
