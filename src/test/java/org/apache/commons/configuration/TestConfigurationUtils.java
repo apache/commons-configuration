@@ -19,6 +19,7 @@ package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
@@ -662,5 +663,104 @@ public class TestConfigurationUtils
         assertFalse("Wrong result (1)", source.removeConfigurationListener(cl));
         assertFalse("Wrong result (2)", source.removeErrorListener(el));
         source.addConfigurationListener(null);
+    }
+
+    /**
+     * Tries to clone a null Synchronizer.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testCloneSynchronizerNull()
+    {
+        ConfigurationUtils.cloneSynchronizer(null);
+    }
+
+    /**
+     * Tests whether the NoOpSyhnchronizer can be cloned.
+     */
+    @Test
+    public void testCloneSynchronizerNoOp()
+    {
+        assertSame("Wrong result", NoOpSynchronizer.INSTANCE,
+                ConfigurationUtils.cloneSynchronizer(NoOpSynchronizer.INSTANCE));
+    }
+
+    /**
+     * Tests whether a new Synchronizer can be created using reflection.
+     */
+    @Test
+    public void testCloneSynchronizerNewInstance()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        SynchronizerTestImpl sync2 =
+                (SynchronizerTestImpl) ConfigurationUtils
+                        .cloneSynchronizer(sync);
+        assertNotNull("Clone is null", sync2);
+        assertNotSame("Same instance", sync, sync2);
+    }
+
+    /**
+     * Tests whether a Synchronizer can be cloned using its clone() method.
+     */
+    @Test
+    public void testCloneSynchronizerClone()
+    {
+        CloneableSynchronizer sync = new CloneableSynchronizer(false);
+        CloneableSynchronizer sync2 =
+                (CloneableSynchronizer) ConfigurationUtils
+                        .cloneSynchronizer(sync);
+        assertTrue("Not cloned", sync2.isCloned());
+    }
+
+    /**
+     * Tests cloneSynchronizer() if the argument cannot be cloned.
+     */
+    @Test(expected = ConfigurationRuntimeException.class)
+    public void testCloneSynchronizerFailed()
+    {
+        ConfigurationUtils.cloneSynchronizer(new NonCloneableSynchronizer());
+    }
+
+    /**
+     * A test Synchronizer implementation which cannot be cloned.
+     */
+    private static class NonCloneableSynchronizer extends SynchronizerTestImpl
+    {
+    }
+
+    /**
+     * A test Synchronizer implementation which can be cloned.
+     */
+    private static class CloneableSynchronizer extends NonCloneableSynchronizer
+            implements Cloneable
+    {
+        /** A flag whether clone() was called. */
+        private final boolean cloned;
+
+        /**
+         * Creates a new instance of {@code CloneableSynchronizer} and sets the
+         * clone flag.
+         *
+         * @param clone the clone flag
+         */
+        public CloneableSynchronizer(boolean clone)
+        {
+            cloned = clone;
+        }
+
+        /**
+         * Returns a flag whether this object was cloned.
+         *
+         * @return the clone flag
+         */
+        public boolean isCloned()
+        {
+            return cloned;
+        }
+
+        @Override
+        public Object clone()
+        {
+            return new CloneableSynchronizer(true);
+        }
     }
 }

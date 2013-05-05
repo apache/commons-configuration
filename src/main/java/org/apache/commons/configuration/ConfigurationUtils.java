@@ -397,6 +397,56 @@ public final class ConfigurationUtils
     }
 
     /**
+     * Creates a clone of the specified {@code Synchronizer}. This method can be
+     * called by {@code clone()} implementations in configuration classes that
+     * also need to copy the {@code Synchronizer} object. This method can handle
+     * some well-known {@code Synchronizer} implementations directly. For other
+     * classes, it uses the following algorithm:
+     * <ul>
+     * <li>If the class of the {@code Synchronizer} has a standard constructor,
+     * a new instance is created using reflection.</li>
+     * <li>If this is not possible, it is tried whether the object can be
+     * cloned.</li>
+     * </ul>
+     * If all attempts fail, a {@code ConfigurationRuntimeException} is thrown.
+     *
+     * @param sync the {@code Synchronizer} object to be cloned
+     * @return the clone of this {@code Synchronizer}
+     * @throws ConfigurationRuntimeException if no clone can be created
+     * @throws IllegalArgumentException if <b>null</b> is passed in
+     */
+    public static Synchronizer cloneSynchronizer(Synchronizer sync)
+    {
+        if (sync == null)
+        {
+            throw new IllegalArgumentException("Synchronizer must not be null!");
+        }
+        if (NoOpSynchronizer.INSTANCE == sync)
+        {
+            return sync;
+        }
+
+        try
+        {
+            return sync.getClass().newInstance();
+        }
+        catch (Exception ex)
+        {
+            LOG.info("Cannot create new instance of " + sync.getClass());
+        }
+
+        try
+        {
+            return (Synchronizer) clone(sync);
+        }
+        catch (CloneNotSupportedException cnex)
+        {
+            throw new ConfigurationRuntimeException(
+                    "Cannot clone Synchronizer " + sync);
+        }
+    }
+
+    /**
      * Constructs a URL from a base path and a file name. The file name can
      * be absolute, relative or a full URL. If necessary the base path URL is
      * applied.
