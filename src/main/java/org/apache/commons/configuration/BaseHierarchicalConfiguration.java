@@ -214,12 +214,34 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * @param rootNode the root node
      * @since 1.3
      */
-    public void setRootNode(ConfigurationNode rootNode)
+    public final void setRootNode(ConfigurationNode rootNode)
     {
         if (rootNode == null)
         {
             throw new IllegalArgumentException("Root node must not be null!");
         }
+
+        beginWrite();
+        try
+        {
+            setRootNodeInternal(rootNode);
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
+     * Actually sets the root node of this configuration. This method is called
+     * by {@code setRootNode()}. Subclasses that need to adapt this operation
+     * can override it.
+     *
+     * @param rootNode the new root node of this configuration
+     * @since 2.0
+     */
+    protected void setRootNodeInternal(ConfigurationNode rootNode)
+    {
         this.rootNode = rootNode;
     }
 
@@ -383,21 +405,47 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * before calling {@code addNodes()}.) If the passed in key refers to
      * an existing and unique node, the new nodes are added to this node.
      * Otherwise a new node will be created at the specified position in the
-     * hierarchy.
+     * hierarchy. Implementation node: This method performs some book-keeping
+     * and then delegates to {@code addNodesInternal()}.
      *
-     * @param key the key where the nodes are to be added; can be <b>null </b>,
+     * @param key the key where the nodes are to be added; can be <b>null</b>,
      * then they are added to the root node
      * @param nodes a collection with the {@code Node} objects to be
      * added
      */
-    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
+    public final void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
     {
         if (nodes == null || nodes.isEmpty())
         {
             return;
         }
 
-        fireEvent(EVENT_ADD_NODES, key, nodes, true);
+        beginWrite();
+        try
+        {
+            fireEvent(EVENT_ADD_NODES, key, nodes, true);
+            addNodesInternal(key, nodes);
+            fireEvent(EVENT_ADD_NODES, key, nodes, false);
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
+     * Actually adds a collection of new nodes to this configuration. This
+     * method is called by {@code addNodes()}. It can be overridden by subclasses
+     * that need to adapt this operation.
+     * @param key the key where the nodes are to be added; can be <b>null</b>,
+     * then they are added to the root node
+     * @param nodes a collection with the {@code Node} objects to be
+     * added
+     * @since 2.0
+     */
+    protected void addNodesInternal(String key,
+            Collection<? extends ConfigurationNode> nodes)
+    {
         ConfigurationNode parent;
         List<ConfigurationNode> target = fetchNodeList(key);
         if (target.size() == 1)
@@ -430,7 +478,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             }
             clearReferences(child);
         }
-        fireEvent(EVENT_ADD_NODES, key, nodes, false);
     }
 
     /**
@@ -842,16 +889,40 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      *
      * @param key the key of the property to be removed
      */
-    public void clearTree(String key)
+    public final void clearTree(String key)
     {
-        fireEvent(EVENT_CLEAR_TREE, key, null, true);
+        beginWrite();
+        try
+        {
+            fireEvent(EVENT_CLEAR_TREE, key, null, true);
+            List<ConfigurationNode> nodes = clearTreeInternal(key);
+            fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
+        }
+        finally
+        {
+            endWrite();
+        }
+    }
+
+    /**
+     * Actually clears the tree of elements referenced by the given key. This
+     * method is called by {@code clearTree()}. Subclasses that need to adapt
+     * this operation can override this method.
+     *
+     * @param key the key of the property to be removed
+     * @return a collection with the nodes that have been removed (this is
+     *         needed for firing a meaningful event of type EVENT_CLEAR_TREE)
+     * @since 2.0
+     */
+    protected List<ConfigurationNode> clearTreeInternal(String key)
+    {
         List<ConfigurationNode> nodes = fetchNodeList(key);
 
         for (ConfigurationNode node : nodes)
         {
             removeNode(node);
         }
-        fireEvent(EVENT_CLEAR_TREE, key, nodes, false);
+        return nodes;
     }
 
     /**
@@ -979,12 +1050,14 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         {
             BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) super
                     .clone();
+            copy.setSynchronizer(NoOpSynchronizer.INSTANCE);
 
             // clone the nodes, too
             CloneVisitor v = new CloneVisitor();
             getRootNode().visit(v);
             copy.setRootNode(v.getClone());
             copy.cloneInterpolator(this);
+            copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
 
             return copy;
         }

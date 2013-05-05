@@ -1030,7 +1030,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      * @since 1.5
      */
     @Override
-    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
+    protected void addNodesInternal(String key, Collection<? extends ConfigurationNode> nodes)
     {
         if (nodes != null && !nodes.isEmpty())
         {
@@ -1040,11 +1040,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             {
                 xmlNodes.add(convertToXMLNode(node));
             }
-            super.addNodes(key, xmlNodes);
+            super.addNodesInternal(key, xmlNodes);
         }
         else
         {
-            super.addNodes(key, nodes);
+            super.addNodesInternal(key, nodes);
         }
     }
 

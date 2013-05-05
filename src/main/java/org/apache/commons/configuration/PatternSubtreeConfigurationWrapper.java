@@ -22,6 +22,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -335,7 +336,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void setRootNode(ConfigurationNode rootNode)
+    protected void setRootNodeInternal(ConfigurationNode rootNode)
     {
         if (init)
         {
@@ -343,7 +344,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
         }
         else
         {
-            super.setRootNode(rootNode);
+            super.setRootNodeInternal(rootNode);
         }
     }
 
@@ -367,7 +368,7 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
+    protected void addNodesInternal(String key, Collection<? extends ConfigurationNode> nodes)
     {
         getConfig().addNodes(key, nodes);
     }
@@ -391,9 +392,10 @@ public class PatternSubtreeConfigurationWrapper extends BaseHierarchicalConfigur
     }
 
     @Override
-    public void clearTree(String key)
+    protected List<ConfigurationNode> clearTreeInternal(String key)
     {
         config.clearTree(makePath(key));
+        return Collections.emptyList();
     }
 
     @Override

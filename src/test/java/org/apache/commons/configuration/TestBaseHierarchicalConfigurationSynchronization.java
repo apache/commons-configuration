@@ -17,10 +17,14 @@
 package org.apache.commons.configuration;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Collections;
 
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -76,7 +80,42 @@ public class TestBaseHierarchicalConfigurationSynchronization
     @Test
     public void testCloneSynchronized()
     {
-        config.clone();
+        BaseHierarchicalConfiguration clone =
+                (BaseHierarchicalConfiguration) config.clone();
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNotSame("Synchronizer was not cloned", config.getSynchronizer(),
+                clone.getSynchronizer());
+    }
+
+    /**
+     * Tests whether addNodes() is correctly synchronized.
+     */
+    @Test
+    public void testAddNodesSynchronized()
+    {
+        DefaultConfigurationNode node =
+                new DefaultConfigurationNode("newNode", "true");
+        config.addNodes("test.addNodes", Collections.singleton(node));
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether clearTree() is correctly synchronized.
+     */
+    @Test
+    public void testClearTreeSynchronized()
+    {
+        config.clearTree("clear");
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether setRootNode() is correctly synchronized.
+     */
+    @Test
+    public void testSetRootNodeSynchronized()
+    {
+        config.setRootNode(new DefaultConfigurationNode("testRoot"));
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
 }

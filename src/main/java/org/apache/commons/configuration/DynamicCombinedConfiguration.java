@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -317,7 +318,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void setRootNode(ConfigurationNode rootNode)
+    protected void setRootNodeInternal(ConfigurationNode rootNode)
     {
         if (configs != null)
         {
@@ -325,7 +326,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
         else
         {
-            super.setRootNode(rootNode);
+            super.setRootNodeInternal(rootNode);
         }
     }
 
@@ -594,7 +595,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void addNodes(String key, Collection<? extends ConfigurationNode> nodes)
+    protected void addNodesInternal(String key, Collection<? extends ConfigurationNode> nodes)
     {
         this.getCurrentConfig().addNodes(key, nodes);
     }
@@ -618,9 +619,10 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     @Override
-    public void clearTree(String key)
+    protected List<ConfigurationNode> clearTreeInternal(String key)
     {
         this.getCurrentConfig().clearTree(key);
+        return Collections.emptyList();
     }
 
     @Override
