@@ -117,9 +117,24 @@ import org.apache.commons.configuration.tree.NodeAddData;
  * that was created from this configuration has been changed. The value property
  * of the event object contains the original event object as it was sent by the
  * subnode configuration.</dd></dl></p>
- * <p><em>Note:</em>Configuration objects of this type can be read concurrently
- * by multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.</p>
+ * <p>
+ * Whether a {@code BaseHierarchicalConfiguration} object is thread-safe or not
+ * depends on the {@link Synchronizer} it is associated with. (Per default, a
+ * dummy {@code Synchronizer} is used which is not thread-safe!) The methods
+ * for querying or updating configuration data invoke this {@code Synchronizer}
+ * accordingly. There is one exception to this rule: The {@link #getRootNode()}
+ * method is not guarded using the {@code Synchronizer}. This is due to the
+ * fact that the caller can do anything with this root node, so it is not
+ * clear which kind of synchronization should be performed. So when accessing
+ * the configuration's root node directly, the client application is responsible
+ * for proper synchronization. This is achieved by calling the methods
+ * {@link #lock(LockMode)}, and {@link #unlock(LockMode)} with a proper
+ * {@link LockMode} argument. In any case, it is recommended to not access the
+ * root node directly, but to use corresponding methods for querying or
+ * updating configuration data instead. Direct manipulations of a
+ * configuration's node structure circumvent many internal mechanisms and thus
+ * can cause undesired effects.
+ * </p>
  *
  * @version $Id$
  */
