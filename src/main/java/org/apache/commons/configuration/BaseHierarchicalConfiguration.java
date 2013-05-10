@@ -30,6 +30,7 @@ import java.util.Stack;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ConfigurationNode;
@@ -197,9 +198,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         this();
         if (c != null)
         {
-            CloneVisitor visitor = new CloneVisitor();
-            c.getRootNode().visit(visitor);
-            rootNode = visitor.getClone();
+            rootNode = copyRootNode(c);
         }
     }
 
@@ -1260,6 +1259,28 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             res.add(ConfigurationUtils.unmodifiableConfiguration(sub));
         }
         return res;
+    }
+
+    /**
+     * Creates a copy of the node structure of the passed in configuration.
+     *
+     * @param c the configuration whose nodes are to be copied
+     * @return the copied root node
+     */
+    private static ConfigurationNode copyRootNode(HierarchicalConfiguration c)
+    {
+        CloneVisitor visitor = new CloneVisitor();
+        c.lock(LockMode.READ);
+        try
+        {
+            c.getRootNode().visit(visitor);
+        }
+        finally
+        {
+            c.unlock(LockMode.READ);
+        }
+        ConfigurationNode nd = visitor.getClone();
+        return nd;
     }
 
     /**

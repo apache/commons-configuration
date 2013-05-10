@@ -118,4 +118,16 @@ public class TestBaseHierarchicalConfigurationSynchronization
         config.setRootNode(new DefaultConfigurationNode("testRoot"));
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
+
+    /**
+     * Tests whether synchronization is performed when copying a configuration.
+     */
+    @Test
+    public void testCopyConstructorSynchronized()
+    {
+        BaseHierarchicalConfiguration copy =
+                new BaseHierarchicalConfiguration(config);
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNotSame("Synchronizer was copied", sync, copy.getSynchronizer());
+    }
 }
