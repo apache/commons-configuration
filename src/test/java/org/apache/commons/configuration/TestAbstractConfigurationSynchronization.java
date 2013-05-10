@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.junit.Before;
 import org.junit.Test;
 

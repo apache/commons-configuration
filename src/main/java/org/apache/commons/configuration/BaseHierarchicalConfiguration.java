@@ -30,6 +30,8 @@ import java.util.Stack;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
+import org.apache.commons.configuration.sync.NoOpSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.ConfigurationNodeVisitorAdapter;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;

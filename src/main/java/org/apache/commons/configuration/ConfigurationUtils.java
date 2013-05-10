@@ -33,6 +33,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
 import org.apache.commons.configuration.reloading.Reloadable;
+import org.apache.commons.configuration.sync.NoOpSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

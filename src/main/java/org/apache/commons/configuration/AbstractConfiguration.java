@@ -37,6 +37,8 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.NoOpSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.ObjectUtils;

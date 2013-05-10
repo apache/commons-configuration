@@ -19,6 +19,8 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import org.apache.commons.configuration.sync.Synchronizer;
+
 /**
  * A test implementation of Synchronizer which allows keeping track about
  * the methods called by the configuration.
