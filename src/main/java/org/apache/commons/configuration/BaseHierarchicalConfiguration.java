@@ -180,7 +180,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public BaseHierarchicalConfiguration()
     {
-        setRootNode(new DefaultConfigurationNode());
+        rootNode = new DefaultConfigurationNode();
     }
 
     /**
@@ -199,7 +199,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         {
             CloneVisitor visitor = new CloneVisitor();
             c.getRootNode().visit(visitor);
-            setRootNode(visitor.getClone());
+            rootNode = visitor.getClone();
         }
     }
 
