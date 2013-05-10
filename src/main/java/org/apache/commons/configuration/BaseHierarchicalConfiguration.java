@@ -21,12 +21,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
+import java.util.WeakHashMap;
 
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
@@ -177,11 +180,20 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     private transient ExpressionEngine expressionEngine;
 
     /**
+     * A map for managing the {@code SubnodeConfiguration} instances created
+     * from this configuration.
+     */
+    private Map<SubnodeConfiguration, Object> subConfigs;
+
+    /** A listener for reacting on changes to update sub configurations. */
+    private ConfigurationListener changeListener;
+
+    /**
      * Creates a new instance of {@code BaseHierarchicalConfiguration}.
      */
     public BaseHierarchicalConfiguration()
     {
-        rootNode = new DefaultConfigurationNode();
+        this(new DefaultConfigurationNode());
     }
 
     /**
@@ -195,11 +207,19 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public BaseHierarchicalConfiguration(HierarchicalConfiguration c)
     {
-        this();
-        if (c != null)
-        {
-            rootNode = copyRootNode(c);
-        }
+        this(copyRootNode(c));
+    }
+
+    /**
+     * Creates a new instance of {@code BaseHierarchicalConfiguration} with the
+     * passed in node as root node.
+     *
+     * @param root the root node (not <b>null</b>)
+     * @since 2.0
+     */
+    protected BaseHierarchicalConfiguration(ConfigurationNode root)
+    {
+        rootNode = root;
     }
 
     /**
@@ -627,15 +647,22 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public SubnodeConfiguration configurationAt(String key,
             boolean supportUpdates)
     {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-        if (nodes.size() != 1)
+        beginWrite();
+        try
         {
-            throw new IllegalArgumentException(
-                    "Passed in key must select exactly one node: " + key);
+            List<ConfigurationNode> nodes = fetchNodeList(key);
+            if (nodes.size() != 1)
+            {
+                throw new IllegalArgumentException(
+                        "Passed in key must select exactly one node: " + key);
+            }
+            return createAndInitializeSubnodeConfiguration(nodes.get(0), key,
+                    supportUpdates);
         }
-        return supportUpdates ? createSubnodeConfiguration(
-                nodes.get(0), key)
-                : createSubnodeConfiguration(nodes.get(0));
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -706,13 +733,23 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public List<SubnodeConfiguration> configurationsAt(String key)
     {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-        List<SubnodeConfiguration> configs = new ArrayList<SubnodeConfiguration>(nodes.size());
-        for (ConfigurationNode node : nodes)
+        beginWrite();
+        try
         {
-            configs.add(createSubnodeConfiguration(node));
+            List<ConfigurationNode> nodes = fetchNodeList(key);
+            List<SubnodeConfiguration> configs =
+                    new ArrayList<SubnodeConfiguration>(nodes.size());
+            for (ConfigurationNode node : nodes)
+            {
+                configs.add(createAndInitializeSubnodeConfiguration(node, null,
+                        false));
+            }
+            return configs;
         }
-        return configs;
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -734,20 +771,29 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public List<SubnodeConfiguration> childConfigurationsAt(String key)
     {
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-        if (nodes.size() != 1)
+        beginWrite();
+        try
         {
-            return Collections.emptyList();
-        }
+            List<ConfigurationNode> nodes = fetchNodeList(key);
+            if (nodes.size() != 1)
+            {
+                return Collections.emptyList();
+            }
 
-        ConfigurationNode parent = nodes.get(0);
-        List<SubnodeConfiguration> subs =
-                new ArrayList<SubnodeConfiguration>(parent.getChildrenCount());
-        for (ConfigurationNode c : parent.getChildren())
-        {
-            subs.add(createSubnodeConfiguration(c));
+            ConfigurationNode parent = nodes.get(0);
+            List<SubnodeConfiguration> subs =
+                    new ArrayList<SubnodeConfiguration>(
+                            parent.getChildrenCount());
+            for (ConfigurationNode c : parent.getChildren())
+            {
+                subs.add(createAndInitializeSubnodeConfiguration(c, null, false));
+            }
+            return subs;
         }
-        return subs;
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -763,27 +809,13 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Creates a subnode configuration for the specified node. This method is
-     * called by {@code configurationAt()} and
-     * {@code configurationsAt()}.
+     * Creates a new {@code SubnodeConfiguration} for the specified node and
+     * sets its construction key. If the key is not <b>null</b>, a
+     * {@code SubnodeConfiguration} created this way will be aware of structural
+     * changes of its parent.
      *
-     * @param node the node, for which a subnode configuration is to be created
-     * @return the configuration for the given node
-     * @since 1.3
-     */
-    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
-    {
-        SubnodeConfiguration result = new SubnodeConfiguration(this, node);
-        registerSubnodeConfiguration(result);
-        return result;
-    }
-
-    /**
-     * Creates a new subnode configuration for the specified node and sets its
-     * construction key. A subnode configuration created this way will be aware
-     * of structural changes of its parent.
-     *
-     * @param node the node, for which a subnode configuration is to be created
+     * @param node the node, for which a {@code SubnodeConfiguration} is to be
+     *        created
      * @param subnodeKey the key used to construct the configuration
      * @return the configuration for the given node
      * @since 1.5
@@ -791,9 +823,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     protected SubnodeConfiguration createSubnodeConfiguration(
             ConfigurationNode node, String subnodeKey)
     {
-        SubnodeConfiguration result = createSubnodeConfiguration(node);
-        result.setSubnodeKey(subnodeKey);
-        return result;
+        return new SubnodeConfiguration(this, node, subnodeKey);
     }
 
     /**
@@ -811,22 +841,117 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Registers this instance at the given subnode configuration. This
-     * implementation will register a change listener, so that modifications of
-     * the subnode configuration can be tracked.
+     * Creates a new {@code SubnodeConfiguration} instance from this
+     * configuration and initializes it. This method also takes care that data
+     * structures are created to manage all {@code SubnodeConfiguration}
+     * instances with support for updates. They are stored, so that they can be
+     * triggered when this configuration is changed.
      *
-     * @param config the subnode configuration
-     * @since 1.5
+     * @param node the root node of the new {@code SubnodeConfiguration}
+     * @param key the key to this node
+     * @param supportUpdates a flag whether updates are supported
+     * @return the newly created and initialized {@code SubnodeConfiguration}
+     * @since 2.0
      */
-    void registerSubnodeConfiguration(SubnodeConfiguration config)
+    protected final SubnodeConfiguration createAndInitializeSubnodeConfiguration(
+            ConfigurationNode node, String key, boolean supportUpdates)
     {
-        config.addConfigurationListener(new ConfigurationListener()
+        String subnodeKey = supportUpdates ? key : null;
+        SubnodeConfiguration sub = createSubnodeConfiguration(node, subnodeKey);
+
+        if (changeListener == null)
+        {
+            changeListener = createChangeListener();
+            subConfigs = new WeakHashMap<SubnodeConfiguration, Object>();
+            addConfigurationListener(changeListener);
+        }
+        sub.addConfigurationListener(changeListener);
+        sub.initSubConfigManagementData(subConfigs, changeListener);
+        sub.setSynchronizer(getSynchronizer());
+
+        if (supportUpdates)
+        {
+            // store this configuration so it can later be validated
+            subConfigs.put(sub, Boolean.TRUE);
+        }
+        return sub;
+    }
+
+    /**
+     * Initializes the data related to the management of
+     * {@code SubnodeConfiguration} instances. This method is called each time a
+     * new {@code SubnodeConfiguration} was created. A configuration and its
+     * {@code SubnodeConfiguration} instances operate on the same set of data.
+     *
+     * @param subMap the map with all {@code SubnodeConfiguration} instances
+     * @param listener the listener for reacting on changes
+     */
+    void initSubConfigManagementData(Map<SubnodeConfiguration, Object> subMap,
+            ConfigurationListener listener)
+    {
+        subConfigs = subMap;
+        changeListener = listener;
+    }
+
+    /**
+     * Creates a listener which reacts on all changes on this configuration or
+     * one of its {@code SubnodeConfiguration} instances. If such a change is
+     * detected, some updates have to be performed.
+     *
+     * @return the newly created change listener
+     */
+    private ConfigurationListener createChangeListener()
+    {
+        return new ConfigurationListener()
         {
             public void configurationChanged(ConfigurationEvent event)
             {
-                subnodeConfigurationChanged(event);
+                nodeStructureChanged(event);
             }
-        });
+        };
+    }
+
+    /**
+     * A change on the node structure of this configuration has been detected.
+     * This can be caused either by an update of this configuration or by one if
+     * its {@code SubnodeConfiguration} instances. This method calls
+     * {@link #subnodeConfigurationChanged(ConfigurationEvent)} if necessary and
+     * ensures that all {@code SubnodeConfiguration} instances are validated.
+     * Note: when this method is called, a write lock is held on this
+     * configuration.
+     *
+     * @param event the change event
+     */
+    private void nodeStructureChanged(ConfigurationEvent event)
+    {
+        if (this != event.getSource())
+        {
+            subnodeConfigurationChanged(event);
+        }
+
+        if (!event.isBeforeUpdate() && EVENT_SUBNODE_CHANGED != event.getType())
+        {
+            validSubnodeConfigurations(event);
+        }
+    }
+
+    /**
+     * Triggers validation on all {@code SubnodeConfiguration} instances created
+     * by this configuration.
+     *
+     * @param event the change event
+     */
+    private void validSubnodeConfigurations(ConfigurationEvent event)
+    {
+        Set<SubnodeConfiguration> subs =
+                new HashSet<SubnodeConfiguration>(subConfigs.keySet());
+        for (SubnodeConfiguration sub : subs)
+        {
+            if (sub != event.getSource())
+            {
+                sub.validateRootNode();
+            }
+        }
     }
 
     /**
@@ -1264,11 +1389,16 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     /**
      * Creates a copy of the node structure of the passed in configuration.
      *
-     * @param c the configuration whose nodes are to be copied
+     * @param c the configuration whose nodes are to be copied (may be <b>null</b>)
      * @return the copied root node
      */
     private static ConfigurationNode copyRootNode(HierarchicalConfiguration c)
     {
+        if (c == null)
+        {
+            return new DefaultConfigurationNode();
+        }
+
         CloneVisitor visitor = new CloneVisitor();
         c.lock(LockMode.READ);
         try

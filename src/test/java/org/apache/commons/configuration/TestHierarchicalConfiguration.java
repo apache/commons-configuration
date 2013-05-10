@@ -596,16 +596,13 @@ public class TestHierarchicalConfiguration
     @Test
     public void testImmutableConfigurationAtSupportUpdates()
     {
-        String[] tables2 = new String[tables.length];
-        for(int i = 0; i < tables2.length; i++)
-        {
-            tables2[i] = tables[i] + "_other";
-        }
+        String newTableName = tables[1] + "_other";
         ImmutableHierarchicalConfiguration subConfig =
                 config.immutableConfigurationAt("tables.table(1)", true);
-        config.clear();
-        fillConfiguration(tables2);
-        assertEquals("Name not updated", tables2[1], subConfig.getString("name"));
+        config.addProperty("tables.table(-1).name", newTableName);
+        config.clearTree("tables.table(1)");
+        assertEquals("Name not updated", newTableName,
+                subConfig.getString("name"));
     }
 
     /**
@@ -1044,7 +1041,9 @@ public class TestHierarchicalConfiguration
     @Test
     public void testInitCopyNull()
     {
-        BaseHierarchicalConfiguration copy = new BaseHierarchicalConfiguration(null);
+        BaseHierarchicalConfiguration copy =
+                new BaseHierarchicalConfiguration(
+                        (HierarchicalConfiguration) null);
         assertTrue("Configuration not empty", copy.isEmpty());
     }
 

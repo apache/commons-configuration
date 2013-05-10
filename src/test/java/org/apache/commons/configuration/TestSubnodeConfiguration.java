@@ -21,8 +21,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -34,13 +32,10 @@ import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
-import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 
 /**
  * Test case for SubnodeConfiguration.
@@ -65,9 +60,8 @@ public class TestSubnodeConfiguration
     /** Constant for an updated table name.*/
     private static final String NEW_TABLE_NAME = "newTable";
 
-    /** A helper object for creating temporary files. */
-    @Rule
-    public TemporaryFolder folder = new TemporaryFolder();
+    /** The key used for the SubnodeConfiguration. */
+    private static final String SUB_KEY = "tables.table(1)";
 
     /** The parent configuration. */
     private BaseHierarchicalConfiguration parent;
@@ -104,7 +98,7 @@ public class TestSubnodeConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullParent()
     {
-        config = new SubnodeConfiguration(null, getSubnodeRoot(parent));
+        config = new SubnodeConfiguration(null, getSubnodeRoot(parent), null);
     }
 
     /**
@@ -114,7 +108,7 @@ public class TestSubnodeConfiguration
     @Test(expected = IllegalArgumentException.class)
     public void testInitSubNodeConfigWithNullNode()
     {
-        config = new SubnodeConfiguration(parent, null);
+        config = new SubnodeConfiguration(parent, null, null);
     }
 
     /**
@@ -390,7 +384,7 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentReloadNotSupported() throws ConfigurationException
     {
-        Configuration c = setUpReloadTest(false);
+        Configuration c = setUpLiveUpdateTest(false);
         assertEquals("Name changed in sub config", TABLE_NAMES[1], config
                 .getString("name"));
         assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
@@ -404,7 +398,7 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentReloadSupported() throws ConfigurationException
     {
-        Configuration c = setUpReloadTest(true);
+        Configuration c = setUpLiveUpdateTest(true);
         assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
                 .getString("name"));
         assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
@@ -417,11 +411,11 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentReloadEvents() throws ConfigurationException
     {
-        setUpReloadTest(true);
+        config = parent.configurationAt(SUB_KEY, true);
         ConfigurationListenerTestImpl l = new ConfigurationListenerTestImpl();
         config.addConfigurationListener(l);
-        config.getString("name");
-        assertEquals("Wrong number of events", 2, l.events.size());
+        updateParent();
+        assertEquals("Wrong number of events", 4, l.events.size());
         boolean before = true;
         for (ConfigurationEvent e : l.events)
         {
@@ -445,7 +439,7 @@ public class TestSubnodeConfiguration
     public void testParentReloadSupportAccessParent()
             throws ConfigurationException
     {
-        Configuration c = setUpReloadTest(true);
+        Configuration c = setUpLiveUpdateTest(true);
         assertEquals("Name not changed in parent", NEW_TABLE_NAME, c
                 .getString("tables.table(1).name"));
         assertEquals("Name not changed in sub config", NEW_TABLE_NAME, config
@@ -458,7 +452,7 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentReloadSubSubnode() throws ConfigurationException
     {
-        setUpReloadTest(true);
+        setUpLiveUpdateTest(true);
         SubnodeConfiguration sub = config.configurationAt("fields", true);
         assertEquals("Wrong subnode key", "tables.table(1).fields", sub
                 .getSubnodeKey());
@@ -474,7 +468,7 @@ public class TestSubnodeConfiguration
     public void testParentReloadSubSubnodeNoChangeSupport()
             throws ConfigurationException
     {
-        setUpReloadTest(false);
+        setUpLiveUpdateTest(false);
         SubnodeConfiguration sub = config.configurationAt("fields", true);
         assertNull("Sub sub config is attached to parent", sub.getSubnodeKey());
         assertEquals("Changed field name returned", TABLE_FIELDS[1][0], sub
@@ -482,44 +476,39 @@ public class TestSubnodeConfiguration
     }
 
     /**
-     * Prepares a test for a reload operation.
+     * Prepares a test for updates of a SubnodeConfiguration if the node
+     * structure of the parent changes. This method replaces the nodes for the
+     * tables with new ones.
      *
-     * @param supportReload a flag whether the subnode configuration should
-     * support reload operations
+     * @param supportReload a flag whether the SubnodeConfiguration should
+     *        support reload operations
      * @return the parent configuration that can be used for testing
-     * @throws ConfigurationException if an error occurs
      */
-    private XMLConfiguration setUpReloadTest(boolean supportReload)
-            throws ConfigurationException
+    private HierarchicalConfiguration setUpLiveUpdateTest(boolean supportReload)
     {
-        try
+        config = parent.configurationAt(SUB_KEY, supportReload);
+        updateParent();
+        return parent;
+    }
+
+    /**
+     * Updates the parent configuration. Replaces the node structure so that
+     * an attached SubnodeConfiguration should be removed now.
+     */
+    private void updateParent()
+    {
+        String[] tableNamesNew = TABLE_NAMES.clone();
+        String[][] fieldNamesNew = new String[TABLE_FIELDS.length][];
+        for(int i = 0; i < TABLE_FIELDS.length; i++)
         {
-            File testFile = folder.newFile();
-            XMLConfiguration xmlConf = new XMLConfiguration(parent);
-            FileHandler handler = new FileHandler(xmlConf);
-            handler.setFile(testFile);
-            handler.save();
-            config = xmlConf.configurationAt("tables.table(1)", supportReload);
-            assertEquals("Wrong table name", TABLE_NAMES[1],
-                    config.getString("name"));
-            // Now change the configuration file
-            XMLConfiguration confUpdate = new XMLConfiguration();
-            FileHandler handler2 = new FileHandler(confUpdate);
-            handler2.setFile(testFile);
-            handler2.load();
-            confUpdate.setProperty("tables.table(1).name", NEW_TABLE_NAME);
-            confUpdate.setProperty("tables.table(1).fields.field(0).name",
-                    "newField");
-            handler2.save();
-            // Reload parent configuration
-            xmlConf.clear();
-            handler.load();
-            return xmlConf;
+            fieldNamesNew[i] = TABLE_FIELDS[i].clone();
         }
-        catch (IOException ioex)
-        {
-            throw new ConfigurationException(ioex);
-        }
+        tableNamesNew[1] = NEW_TABLE_NAME;
+        fieldNamesNew[1][0] = "newField";
+        addTableData(parent, tableNamesNew, fieldNamesNew);
+        String keyClear = "tables.table(0)";
+        parent.clearTree(keyClear);
+        parent.clearTree(keyClear);
     }
 
     /**
@@ -530,7 +519,7 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentChangeDetach()
     {
-        final String key = "tables.table(1)";
+        final String key = SUB_KEY;
         config = parent.configurationAt(key, true);
         assertEquals("Wrong subnode key", key, config.getSubnodeKey());
         assertEquals("Wrong table name", TABLE_NAMES[1], config
@@ -549,8 +538,9 @@ public class TestSubnodeConfiguration
     @Test
     public void testParentChangeDetatchException()
     {
-        config = parent.configurationAt("tables.table(1)", true);
+        config = parent.configurationAt(SUB_KEY, true);
         parent.setExpressionEngine(new XPathExpressionEngine());
+        parent.addProperty("newProp", "value");
         assertEquals("Wrong name of table", TABLE_NAMES[1], config
                 .getString("name"));
         assertNull("Sub config was not detached", config.getSubnodeKey());
@@ -580,16 +570,30 @@ public class TestSubnodeConfiguration
                 return super.createNode(name);
             }
         };
-        for (int i = 0; i < TABLE_NAMES.length; i++)
+        addTableData(conf, TABLE_NAMES, TABLE_FIELDS);
+        return conf;
+    }
+
+    /**
+     * Appends properties for table names and their fields to the given
+     * configuration.
+     *
+     * @param conf the configuration to be filled
+     * @param tableNames an array with the names of the tables to add
+     * @param fields and array with the field names per table
+     */
+    private static void addTableData(Configuration conf, String[] tableNames,
+            String[][] fields)
+    {
+        for (int i = 0; i < tableNames.length; i++)
         {
-            conf.addProperty("tables.table(-1).name", TABLE_NAMES[i]);
-            for (int j = 0; j < TABLE_FIELDS[i].length; j++)
+            conf.addProperty("tables.table(-1).name", tableNames[i]);
+            for (int j = 0; j < fields[i].length; j++)
             {
                 conf.addProperty("tables.table.fields.field(-1).name",
-                        TABLE_FIELDS[i][j]);
+                        fields[i][j]);
             }
         }
-        return conf;
     }
 
     /**
@@ -610,7 +614,7 @@ public class TestSubnodeConfiguration
      */
     protected void setUpSubnodeConfig()
     {
-        config = new SubnodeConfiguration(parent, getSubnodeRoot(parent));
+        config = new SubnodeConfiguration(parent, getSubnodeRoot(parent), null);
     }
 
     /**

@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 
 /**
@@ -50,9 +49,8 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * <p>
  * There are however changes at the parent configuration, which cause the
  * subnode configuration to become detached. An example for such a change is a
- * reload operation of a file-based configuration, which replaces all nodes of
- * the parent configuration. The subnode configuration per default still
- * references the old nodes. Another example are list structures: a subnode
+ * {@code clearTree()} operation, which replaces the sub tree to which this
+ * configuration's root node belongs. Another example are list structures: a subnode
  * configuration can be created to point on the <em>i</em>th element of the
  * list. Now list elements can be added or removed, so that the list elements'
  * indices change. In such a scenario the subnode configuration would always
@@ -66,8 +64,8 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * configuration will evaluate it on each access, thus ensuring that it is
  * always in sync with its parent. In this mode the subnode configuration really
  * behaves like a live-view on its parent. The price for this is a decreased
- * performance because now an additional evaluation has to be performed on each
- * property access. So this mode should only be used if necessary; if for
+ * performance because now additional evaluation has to be performed to keep
+ * the root node up-to-date. So this mode should only be used if necessary; if for
  * instance a subnode configuration is only used for a temporary convenient
  * access to a complex configuration, there is no need to make it aware for
  * structural changes of its parent. If a subnode configuration is created
@@ -95,8 +93,17 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * {@code throwExceptionOnMissing} flag or the settings for handling list
  * delimiters) or the expression engine. If these settings are changed later in
  * either the subnode or the parent configuration, the changes are not visible
- * for each other. So you could create a subnode configuration, change its
+ * for each other. So you could create a subnode configuration, and change its
  * expression engine without affecting the parent configuration.
+ * </p>
+ * <p>
+ * Because the {@code SubnodeConfiguration} operates on the same nodes
+ * structure as its parent it uses the same {@code Synchronizer} instance per
+ * default. This means that locks held on one {@code SubnodeConfiguration}
+ * also impact the parent configuration and all of its other {@code SubnodeConfiguration}
+ * objects. You should not change this without a good reason! Otherwise, there
+ * is the risk of data corruption when multiple threads access these
+ * configuration concurrently.
  * </p>
  * <p>
  * From its purpose this class is quite similar to
@@ -108,6 +115,13 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * class instead of {@code SubsetConfiguration} because creating a subset
  * configuration is more expensive than creating a subnode configuration.
  * </p>
+ * <p>
+ * It is strongly recommended to create {@code SubnodeConfiguration} instances
+ * only through the {@code configurationAt()} methods of a hierarchical
+ * configuration. These methods ensure that all necessary initializations are
+ * done. Creating instances manually without doing proper initialization may
+ * break some of the functionality provided by this class.
+ * </p>
  *
  * @since 1.3
  * @author <a
@@ -115,7 +129,7 @@ import org.apache.commons.configuration.tree.ConfigurationNode;
  * Configuration team</a>
  * @version $Id$
  */
-public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
+public class SubnodeConfiguration extends BaseHierarchicalConfiguration
 {
     /**
      * The serial version UID.
@@ -129,15 +143,18 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     private String subnodeKey;
 
     /**
-     * Creates a new instance of {@code SubnodeConfiguration} and
-     * initializes it with the parent configuration and the new root node.
+     * Creates a new instance of {@code SubnodeConfiguration} and initializes it
+     * with the parent configuration and the new root node.
      *
      * @param parent the parent configuration
-     * @param root the root node of this subnode configuration
+     * @param root the root node of this {@code SubnodeConfiguration}
+     * @param subKey the key associated with this {@code SubnodeConfiguration}
+     *        (can be <b>null</b>)
      */
-    public SubnodeConfiguration(BaseHierarchicalConfiguration parent, ConfigurationNode root)
+    public SubnodeConfiguration(BaseHierarchicalConfiguration parent,
+            ConfigurationNode root, String subKey)
     {
-        super(parent instanceof Reloadable ? ((Reloadable) parent).getReloadLock() : null);
+        super(root);
         if (parent == null)
         {
             throw new IllegalArgumentException(
@@ -148,8 +165,8 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
             throw new IllegalArgumentException("Root node must not be null!");
         }
 
-        setRootNode(root);
         this.parent = parent;
+        subnodeKey = subKey;
         initFromParent(parent);
         initInterpolator();
     }
@@ -175,7 +192,15 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      */
     public String getSubnodeKey()
     {
-        return subnodeKey;
+        beginRead();
+        try
+        {
+            return subnodeKey;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -188,56 +213,15 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      */
     public void setSubnodeKey(String subnodeKey)
     {
-        this.subnodeKey = subnodeKey;
-    }
-
-    /**
-     * Returns the root node for this configuration. If a subnode key is set,
-     * this implementation re-evaluates this key to find out if this subnode
-     * configuration needs to be reconstructed. This ensures that the subnode
-     * configuration is always synchronized with its parent configuration.
-     *
-     * @return the root node of this configuration
-     * @since 1.5
-     * @see #setSubnodeKey(String)
-     */
-    @Override
-    public ConfigurationNode getRootNode()
-    {
-        if (getSubnodeKey() != null)
+        beginWrite();
+        try
         {
-            try
-            {
-                List<ConfigurationNode> nodes = getParent().fetchNodeList(getSubnodeKey());
-                if (nodes.size() != 1)
-                {
-                    // key is invalid, so detach this subnode configuration
-                    setSubnodeKey(null);
-                }
-                else
-                {
-                    ConfigurationNode currentRoot = nodes.get(0);
-                    if (currentRoot != super.getRootNode())
-                    {
-                        // the root node was changed due to a change of the
-                        // parent
-                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, true);
-                        setRootNode(currentRoot);
-                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, false);
-                    }
-                    return currentRoot;
-                }
-            }
-            catch (Exception ex)
-            {
-                // Evaluation of the key caused an exception. Probably the
-                // expression engine has changed on the parent. Detach this
-                // configuration, there is not much we can do about this.
-                setSubnodeKey(null);
-            }
+            this.subnodeKey = subnodeKey;
         }
-
-        return super.getRootNode(); // use stored root node
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -253,26 +237,17 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      */
     public void clearAndDetachFromParent()
     {
-        clear();
-        setSubnodeKey(null); // always detach
-        getParent().removeNode(getRootNode());
-    }
-
-    /**
-     * Returns a hierarchical configuration object for the given sub node.
-     * This implementation will ensure that the returned
-     * {@code SubnodeConfiguration} object will have the same parent than
-     * this object.
-     *
-     * @param node the sub node, for which the configuration is to be created
-     * @return a hierarchical configuration for this sub node
-     */
-    @Override
-    protected SubnodeConfiguration createSubnodeConfiguration(ConfigurationNode node)
-    {
-        SubnodeConfiguration result = new SubnodeConfiguration(getParent(), node);
-        getParent().registerSubnodeConfiguration(result);
-        return result;
+        beginWrite();
+        try
+        {
+            clearInternal();
+            subnodeKey = null; // always detach
+            getParent().removeNode(getRootNode());
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -286,40 +261,18 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
      * configuration must also be aware of such changes.
      *
      * @param node the sub node, for which the configuration is to be created
-     * @param subnodeKey the construction key
+     * @param subKey the construction key
      * @return a hierarchical configuration for this sub node
      * @since 1.5
      */
     @Override
     protected SubnodeConfiguration createSubnodeConfiguration(
-            ConfigurationNode node, String subnodeKey)
+            ConfigurationNode node, String subKey)
     {
-        SubnodeConfiguration result = createSubnodeConfiguration(node);
-
-        if (getSubnodeKey() != null)
-        {
-            // construct the correct subnode key
-            // determine path to root node
-            List<ConfigurationNode> lstPathToRoot = new ArrayList<ConfigurationNode>();
-            ConfigurationNode top = super.getRootNode();
-            ConfigurationNode nd = node;
-            while (nd != top)
-            {
-                lstPathToRoot.add(nd);
-                nd = nd.getParentNode();
-            }
-
-            // construct the keys for the nodes on this path
-            Collections.reverse(lstPathToRoot);
-            String key = getSubnodeKey();
-            for (ConfigurationNode pathNode : lstPathToRoot)
-            {
-                key = getParent().getExpressionEngine().nodeKey(pathNode, key);
-            }
-            result.setSubnodeKey(key);
-        }
-
-        return result;
+        String key =
+                (subKey != null && subnodeKey != null) ? constructSubKeyForSubnodeConfig(node)
+                        : null;
+        return new SubnodeConfiguration(getParent(), node, key);
     }
 
     /**
@@ -350,6 +303,47 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     }
 
     /**
+     * Validates this configuration's root node. This method checks whether the
+     * key associated with this {@code SubnodeConfiguration} (if any) still
+     * points to a valid node in the parent configuration. If not, the key is
+     * cleared, and this configuration is now detached from its parent.
+     */
+    void validateRootNode()
+    {
+        if (subnodeKey != null)
+        {
+            try
+            {
+                List<ConfigurationNode> nodes = getParent().fetchNodeList(subnodeKey);
+                if (nodes.size() != 1)
+                {
+                    // key is invalid, so detach this subnode configuration
+                    subnodeKey = null;
+                }
+                else
+                {
+                    ConfigurationNode currentRoot = nodes.get(0);
+                    if (currentRoot != super.getRootNode())
+                    {
+                        // the root node was changed due to a change of the
+                        // parent
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, true);
+                        setRootNode(currentRoot);
+                        fireEvent(EVENT_SUBNODE_CHANGED, null, null, false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Evaluation of the key caused an exception. Probably the
+                // expression engine has changed on the parent. Detach this
+                // configuration, there is not much we can do about this.
+                subnodeKey = null;
+            }
+        }
+    }
+
+    /**
      * Initializes the {@code ConfigurationInterpolator} for this sub configuration.
      * This is a standard {@code ConfigurationInterpolator} which also references
      * the {@code ConfigurationInterpolator} of the parent configuration.
@@ -357,5 +351,35 @@ public class SubnodeConfiguration extends HierarchicalReloadableConfiguration
     private void initInterpolator()
     {
         getInterpolator().setParentInterpolator(getParent().getInterpolator());
+    }
+
+    /**
+     * Constructs the key for a {@code SubnodeConfiguration} for associating it
+     * with a node in the parent configuration. This method creates a canonical
+     * key based on the path from the given node to the root node.
+     *
+     * @param node the root node for the new {@code SubnodeConfiguration}
+     * @return the key for this {@code SubnodeConfiguration}
+     */
+    private String constructSubKeyForSubnodeConfig(ConfigurationNode node)
+    {
+        List<ConfigurationNode> lstPathToRoot =
+                new ArrayList<ConfigurationNode>();
+        ConfigurationNode top = super.getRootNode();
+        ConfigurationNode nd = node;
+        while (nd != top)
+        {
+            lstPathToRoot.add(nd);
+            nd = nd.getParentNode();
+        }
+
+        // construct the keys for the nodes on this path
+        Collections.reverse(lstPathToRoot);
+        String key = subnodeKey;
+        for (ConfigurationNode pathNode : lstPathToRoot)
+        {
+            key = getParent().getExpressionEngine().nodeKey(pathNode, key);
+        }
+        return key;
     }
 }

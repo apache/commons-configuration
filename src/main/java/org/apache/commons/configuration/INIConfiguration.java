@@ -274,7 +274,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 out.print(section);
                 out.print("]");
                 out.println();
-                subset = createSubnodeConfiguration(getSectionNode(section));
+                subset = createSubnodeConfiguration(getSectionNode(section), null);
             }
             else
             {
@@ -779,7 +779,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             {
                 // the passed in key does not map to exactly one node
                 // obtain the node for the section, create it on demand
-                return new SubnodeConfiguration(this, getSectionNode(name));
+                return createAndInitializeSubnodeConfiguration(getSectionNode(name), null, false);
             }
         }
     }
@@ -827,7 +827,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
             }
         }
 
-        return createSubnodeConfiguration(parent);
+        return createAndInitializeSubnodeConfiguration(parent, null, false);
     }
 
     /**
