@@ -37,6 +37,7 @@ import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.lang.BooleanUtils;
@@ -601,6 +602,53 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public final void setSynchronizer(Synchronizer synchronizer)
     {
         this.synchronizer = synchronizer;
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to {@code beginRead()} or
+     * {@code beginWrite()}, depending on the {@code LockMode} argument.
+     * Subclasses can override these protected methods to perform additional
+     * steps when a configuration is locked.
+     *
+     * @since 2.0
+     * @throws NullPointerException if the argument is <b>null</b>
+     */
+    public final void lock(LockMode mode)
+    {
+        switch (mode)
+        {
+        case READ:
+            beginRead();
+            break;
+        case WRITE:
+            beginWrite();
+            break;
+        default:
+            throw new IllegalArgumentException("Unsupported LockMode: " + mode);
+        }
+    }
+
+    /**
+     * {@inheritDoc} This implementation delegates to {@code endRead()} or
+     * {@code endWrite()}, depending on the {@code LockMode} argument.
+     * Subclasses can override these protected methods to perform additional
+     * steps when a configuration's lock is released.
+     *
+     * @throws NullPointerException if the argument is <b>null</b>
+     */
+    public final void unlock(LockMode mode)
+    {
+        switch (mode)
+        {
+        case READ:
+            endRead();
+            break;
+        case WRITE:
+            endWrite();
+            break;
+        default:
+            throw new IllegalArgumentException("Unsupported LockMode: " + mode);
+        }
     }
 
     /**

@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.SynchronizerSupport;
 
 
 /**
@@ -55,7 +56,7 @@ import org.apache.commons.configuration.interpol.Lookup;
  * @author Commons Configuration team
  * @version $Id$
  */
-public interface Configuration extends ImmutableConfiguration
+public interface Configuration extends ImmutableConfiguration, SynchronizerSupport
 {
     /**
      * Return a decorator Configuration containing every key from the current

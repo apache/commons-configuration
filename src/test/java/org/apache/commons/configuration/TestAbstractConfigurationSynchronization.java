@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,6 +66,55 @@ public class TestAbstractConfigurationSynchronization
     {
         assertSame("Wrong default synchronizer", NoOpSynchronizer.INSTANCE,
                 new PropertiesConfiguration().getSynchronizer());
+    }
+
+    /**
+     * Tests whether a read lock can be obtained.
+     */
+    @Test
+    public void testLockRead()
+    {
+        config.lock(LockMode.READ);
+        sync.verify(Methods.BEGIN_READ);
+    }
+
+    /**
+     * Tests whether a write lock can be obtained.
+     */
+    @Test
+    public void testLockWrite()
+    {
+        config.lock(LockMode.WRITE);
+        sync.verify(Methods.BEGIN_WRITE);
+    }
+
+    /**
+     * Tests lock() with a null argument.
+     */
+    @Test(expected = NullPointerException.class)
+    public void testLockNull()
+    {
+        config.lock(null);
+    }
+
+    /**
+     * Tests whether a read lock can be released.
+     */
+    @Test
+    public void testUnlockRead()
+    {
+        config.unlock(LockMode.READ);
+        sync.verify(Methods.END_READ);
+    }
+
+    /**
+     * Tests whether a write lock can be released.
+     */
+    @Test
+    public void testUnlockWrite()
+    {
+        config.unlock(LockMode.WRITE);
+        sync.verify(Methods.END_WRITE);
     }
 
     /**
