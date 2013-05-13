@@ -35,8 +35,9 @@ import java.util.Set;
 
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
-import org.junit.After;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 /**
  * Test class for INIConfiguration.
@@ -102,18 +103,9 @@ public class TestINIConfiguration
     private static final String INI_DATA_GLOBAL = INI_DATA_GLOBAL_ONLY
             + INI_DATA;
 
-    /** A test ini file. */
-    private static final File TEST_FILE = new File("target/test.ini");
-
-    @After
-    public void tearDown() throws Exception
-    {
-        if (TEST_FILE.exists())
-        {
-            assertTrue("Cannot remove test file: " + TEST_FILE, TEST_FILE
-                    .delete());
-        }
-    }
+    /** A helper object for creating temporary files. */
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
 
     /**
      * Creates a INIConfiguration object that is initialized from
@@ -157,11 +149,13 @@ public class TestINIConfiguration
      * Writes a test ini file.
      *
      * @param content the content of the file
+     * @return the newly created file
      * @throws IOException if an error occurs
      */
-    private static void writeTestFile(String content) throws IOException
+    private File writeTestFile(String content) throws IOException
     {
-        PrintWriter out = new PrintWriter(new FileWriter(TEST_FILE));
+        File file = folder.newFile();
+        PrintWriter out = new PrintWriter(new FileWriter(file));
         try
         {
             out.println(content);
@@ -170,6 +164,7 @@ public class TestINIConfiguration
         {
             out.close();
         }
+        return file;
     }
 
     /**
@@ -261,12 +256,12 @@ public class TestINIConfiguration
     public void testLoadFromBuilder() throws ConfigurationException,
             IOException
     {
-        writeTestFile(INI_DATA);
+        File file = writeTestFile(INI_DATA);
         FileBasedConfigurationBuilder<INIConfiguration> builder =
                 new FileBasedConfigurationBuilder<INIConfiguration>(
                         INIConfiguration.class);
         builder.configure(new FileBasedBuilderParametersImpl()
-                .setFile(TEST_FILE));
+                .setFile(file));
         INIConfiguration config = builder.getConfiguration();
         checkContent(config);
     }
