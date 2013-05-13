@@ -27,7 +27,7 @@ import org.apache.commons.configuration.sync.Synchronizer;
  *
  * @version $Id$
  */
-class SynchronizerTestImpl implements Synchronizer
+public class SynchronizerTestImpl implements Synchronizer
 {
     /** A buffer for registering the methods invoked by clients. */
     private final StringBuilder methods = new StringBuilder();
