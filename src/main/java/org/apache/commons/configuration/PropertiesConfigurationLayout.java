@@ -570,7 +570,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
 
             for (String key : layoutData.keySet())
             {
-                if (config.containsKey(key))
+                if (config.containsKeyInternal(key))
                 {
 
                     // Output blank lines before property
@@ -586,7 +586,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
                     boolean singleLine = (isForceSingleLine() || isSingleLine(key))
                             && !config.isDelimiterParsingDisabled();
                     writer.setCurrentSeparator(getSeparator(key));
-                    writer.writeProperty(key, config.getProperty(
+                    writer.writeProperty(key, config.getPropertyInternal(
                             key), singleLine);
                 }
             }

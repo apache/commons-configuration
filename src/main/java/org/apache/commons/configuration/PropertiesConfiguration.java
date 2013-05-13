@@ -451,7 +451,10 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /**
      * {@inheritDoc} This implementation delegates to the associated layout
-     * object which does the actual loading.
+     * object which does the actual loading. Note that this method does not
+     * do any synchronization. This lies in the responsibility of the caller.
+     * (Typically, the caller is a {@code FileHandler} object which takes
+     * care for proper synchronization.)
      *
      * @since 2.0
      */
@@ -462,7 +465,8 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /**
      * {@inheritDoc} This implementation delegates to the associated layout
-     * object which does the actual saving.
+     * object which does the actual saving. Note that, analogous to
+     * {@link #read(Reader)}, this method does not do any synchronization.
      *
      * @since 2.0
      */
@@ -532,7 +536,7 @@ public class PropertiesConfiguration extends BaseConfiguration
 
         else
         {
-            addProperty(key, value);
+            addPropertyInternal(key, value);
             result = true;
         }
 
