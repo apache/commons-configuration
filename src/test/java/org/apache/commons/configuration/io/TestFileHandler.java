@@ -42,6 +42,9 @@ import java.net.URL;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SynchronizerTestImpl;
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.easymock.EasyMock;
 import org.junit.Rule;
 import org.junit.Test;
@@ -1175,6 +1178,37 @@ public class TestFileHandler
             assertEquals("Wrong cause", ioex, cex.getCause());
         }
         EasyMock.verify(content);
+    }
+
+    /**
+     * Tests whether a load() operation is correctly synchronized.
+     */
+    @Test
+    public void testLoadSynchronized() throws ConfigurationException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        FileHandler handler = new FileHandler(config);
+        handler.load(ConfigurationAssert.getTestFile("test.properties"));
+        sync.verifyStart(Methods.BEGIN_WRITE);
+        sync.verifyEnd(Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether a save() operation is correctly synchronized.
+     */
+    @Test
+    public void testSaveSynchronized() throws ConfigurationException, IOException
+    {
+        PropertiesConfiguration config = new PropertiesConfiguration();
+        config.addProperty("test.synchronized", Boolean.TRUE);
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        FileHandler handler = new FileHandler(config);
+        File f = folder.newFile();
+        handler.save(f);
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
 
     /**

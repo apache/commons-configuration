@@ -34,6 +34,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.FileSystem;
+import org.apache.commons.configuration.sync.LockMode;
+import org.apache.commons.configuration.sync.NoOpSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
+import org.apache.commons.configuration.sync.SynchronizerSupport;
 
 /**
  * <p>
@@ -70,6 +74,22 @@ import org.apache.commons.configuration.FileSystem;
  * location is not changed.
  * </p>
  * <p>
+ * When loading or saving a {@code FileBased} object some additional functionality
+ * is performed if the object implements one of the following interfaces:
+ * <ul>
+ * <li>{@code FileLocatorAware}: In this case an object with the current file
+ * location is injected before the load or save operation is executed. This is
+ * useful for {@code FileBased} objects that depend on their current location,
+ * e.g. to resolve relative path names.</li>
+ * <li>{@code SynchronizerSupport}: If this interface is implemented, load and
+ * save operations obtain a write lock on the {@code FileBased} object before
+ * they access it. (In case of a save operation, a read lock would probably be
+ * sufficient, but because of the possible injection of a {@link FileLocator}
+ * object it is not allowed to perform multiple save operations in parallel;
+ * therefore, by obtaining a write lock, we are on the safe side.)</li>
+ * </ul>
+ * </p>
+ * <p>
  * This class is thread-safe.
  * </p>
  *
@@ -82,6 +102,33 @@ public class FileHandler
 
     /** Constant for the URI scheme for files with slashes. */
     private static final String FILE_SCHEME_SLASH = FILE_SCHEME + "//";
+
+    /**
+     * A dummy implementation of {@code SynchronizerSupport}. This object is
+     * used when the file handler's content does not implement the
+     * {@code SynchronizerSupport} interface. All methods are just empty dummy
+     * implementations.
+     */
+    private static final SynchronizerSupport DUMMY_SYNC_SUPPORT =
+            new SynchronizerSupport()
+            {
+                public void unlock(LockMode mode)
+                {
+                }
+
+                public void setSynchronizer(Synchronizer sync)
+                {
+                }
+
+                public void lock(LockMode mode)
+                {
+                }
+
+                public Synchronizer getSynchronizer()
+                {
+                    return NoOpSynchronizer.INSTANCE;
+                }
+            };
 
     /** The file-based object managed by this handler. */
     private final FileBased content;
@@ -713,6 +760,23 @@ public class FileHandler
     }
 
     /**
+     * Obtains a {@code SynchronizerSupport} for the current content. If the
+     * content implements this interface, it is returned. Otherwise, result is a
+     * dummy object. This method is called before load and save operations. The
+     * returned object is used for synchronization.
+     *
+     * @return the {@code SynchronizerSupport} for synchronization
+     */
+    private SynchronizerSupport fetchSynchronizerSupport()
+    {
+        if (getContent() instanceof SynchronizerSupport)
+        {
+            return (SynchronizerSupport) getContent();
+        }
+        return DUMMY_SYNC_SUPPORT;
+    }
+
+    /**
      * Internal helper method for loading the associated file from the location
      * specified in the given {@code FileSpec}.
      *
@@ -809,15 +873,24 @@ public class FileHandler
             throws ConfigurationException
     {
         checkContent();
-        injectFileLocator(url);
+        SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        syncSupport.lock(LockMode.WRITE);
+        try
+        {
+            injectFileLocator(url);
 
-        if (getContent() instanceof InputStreamSupport)
-        {
-            loadFromStreamDirectly(in);
+            if (getContent() instanceof InputStreamSupport)
+            {
+                loadFromStreamDirectly(in);
+            }
+            else
+            {
+                loadFromTransformedStream(in, encoding);
+            }
         }
-        else
+        finally
         {
-            loadFromTransformedStream(in, encoding);
+            syncSupport.unlock(LockMode.WRITE);
         }
     }
 
@@ -1039,29 +1112,38 @@ public class FileHandler
             throws ConfigurationException
     {
         checkContent();
-        injectFileLocator(url);
-        Writer writer = null;
-
-        if (encoding != null)
+        SynchronizerSupport syncSupport = fetchSynchronizerSupport();
+        syncSupport.lock(LockMode.WRITE);
+        try
         {
-            try
-            {
-                writer = new OutputStreamWriter(out, encoding);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                throw new ConfigurationException(
-                        "The requested encoding is not supported, try the default encoding.",
-                        e);
-            }
-        }
+            injectFileLocator(url);
+            Writer writer = null;
 
-        if (writer == null)
+            if (encoding != null)
+            {
+                try
+                {
+                    writer = new OutputStreamWriter(out, encoding);
+                }
+                catch (UnsupportedEncodingException e)
+                {
+                    throw new ConfigurationException(
+                            "The requested encoding is not supported, try the default encoding.",
+                            e);
+                }
+            }
+
+            if (writer == null)
+            {
+                writer = new OutputStreamWriter(out);
+            }
+
+            saveToWriter(writer);
+        }
+        finally
         {
-            writer = new OutputStreamWriter(out);
+            syncSupport.unlock(LockMode.WRITE);
         }
-
-        saveToWriter(writer);
     }
 
     /**
