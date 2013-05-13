@@ -845,7 +845,9 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * configuration and initializes it. This method also takes care that data
      * structures are created to manage all {@code SubnodeConfiguration}
      * instances with support for updates. They are stored, so that they can be
-     * triggered when this configuration is changed.
+     * triggered when this configuration is changed. <strong>Important
+     * note:</strong> This method expects that a write lock is held on this
+     * configuration!
      *
      * @param node the root node of the new {@code SubnodeConfiguration}
      * @param key the key to this node
