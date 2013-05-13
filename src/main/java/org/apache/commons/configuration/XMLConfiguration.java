@@ -159,9 +159,17 @@ import org.xml.sax.helpers.DefaultHandler;
  * features can be found in the documentation of
  * {@link AbstractFileConfiguration}.</p>
  *
- * <p><em>Note:</em>Configuration objects of this type can be read concurrently
- * by multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.</p>
+ * <p>Like other {@code Configuration} implementations, this class uses a
+ * {@code Synchronizer} object to control concurrent access. By choosing a
+ * suitable implementation of the {@code Synchronizer} interface, an instance
+ * can be made thread-safe or not. Note that access to most of the properties
+ * typically set through a builder is not protected by the {@code Synchronizer}.
+ * The intended usage is that these properties are set once at construction
+ * time through the builder and after that remain constant. If you wish to
+ * change such properties during life time of an instance, you have to use
+ * the {@code lock()} and {@code unlock()} methods manually to ensure that
+ * other threads see your changes.
+ * </p>
  *
  * @since commons-configuration 1.0
  *
@@ -259,13 +267,13 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     @Override
     protected String getRootElementNameInternal()
     {
-        if (getDocument() == null)
+        if (document == null)
         {
             return (rootElementName == null) ? DEFAULT_ROOT_NAME : rootElementName;
         }
         else
         {
-            return getDocument().getDocumentElement().getNodeName();
+            return document.getDocumentElement().getNodeName();
         }
     }
 
@@ -330,7 +338,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public String getPublicID()
     {
-        return publicID;
+        beginRead();
+        try
+        {
+            return publicID;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -343,7 +359,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void setPublicID(String publicID)
     {
-        this.publicID = publicID;
+        beginWrite();
+        try
+        {
+            this.publicID = publicID;
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -356,7 +380,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public String getSystemID()
     {
-        return systemID;
+        beginRead();
+        try
+        {
+            return systemID;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -369,7 +401,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void setSystemID(String systemID)
     {
-        this.systemID = systemID;
+        beginWrite();
+        try
+        {
+            this.systemID = systemID;
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -460,7 +500,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public Document getDocument()
     {
-        return document;
+        beginRead();
+        try
+        {
+            return document;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -936,6 +984,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void validate() throws ConfigurationException
     {
+        beginWrite();
         try
         {
             Transformer transformer = createTransformer();
@@ -963,6 +1012,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             throw new ConfigurationException("Validation failed", pce);
         }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -985,15 +1038,15 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         {
             transformer.setOutputProperty(OutputKeys.ENCODING, locator.getEncoding());
         }
-        if (getPublicID() != null)
+        if (publicID != null)
         {
             transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
-                    getPublicID());
+                    publicID);
         }
-        if (getSystemID() != null)
+        if (systemID != null)
         {
             transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,
-                    getSystemID());
+                    systemID);
         }
 
         return transformer;

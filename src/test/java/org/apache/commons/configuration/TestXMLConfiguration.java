@@ -40,6 +40,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
@@ -1468,7 +1469,10 @@ public class TestXMLConfiguration
         conf.setSchemaValidation(true);
         load(conf, testFile2);
         conf.setProperty("Employee.SSN", "123456789");
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
         conf.validate();
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
         saveTestConfig();
         conf = new XMLConfiguration();
         load(conf, testSaveConf.getAbsolutePath());
@@ -1623,6 +1627,46 @@ public class TestXMLConfiguration
         XMLConfiguration conf2 = new XMLConfiguration();
         load(conf2, testSaveConf.getAbsolutePath());
         assertEquals("Wrong list property", list, conf2.getProperty(prop));
+    }
+
+    /**
+     * Tests whether the system ID is accessed in a synchronized manner.
+     */
+    @Test
+    public void testSystemIdSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        conf.setSystemID(SYSTEM_ID);
+        assertEquals("SystemID not set", SYSTEM_ID, conf.getSystemID());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
+                Methods.END_READ);
+    }
+
+    /**
+     * Tests whether the public ID is accessed in a synchronized manner.
+     */
+    @Test
+    public void testPublicIdSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        conf.setPublicID(PUBLIC_ID);
+        assertEquals("PublicID not set", PUBLIC_ID, conf.getPublicID());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
+                Methods.END_READ);
+    }
+
+    /**
+     * Tests whether access to the document is synchronized.
+     */
+    @Test
+    public void testGetDocumentSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        assertNotNull("No document", conf.getDocument());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
     /**
