@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.io.FileHandler;
@@ -41,7 +42,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test loading multiple configurations.
+ * Test class for {@code CompositeConfiguration}.
  *
  * @version $Id$
  */
@@ -870,6 +871,77 @@ public class TestCompositeConfiguration
                 conf1.getString("newProperty1"));
         assertEquals("In-memory config not changed", "newValue2",
                 conf2.getString("newProperty2"));
+    }
+
+    /**
+     * Creates a test synchronizer and installs it at the test configuration.
+     *
+     * @return the test synchronizer
+     */
+    private SynchronizerTestImpl installSynchronizer()
+    {
+        cc.addConfiguration(conf1);
+        cc.addConfiguration(conf2);
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        cc.setSynchronizer(sync);
+        return sync;
+    }
+
+    /**
+     * Tests whether adding a child configuration is synchronized.
+     */
+    @Test
+    public void testAddConfigurationSynchronized()
+    {
+        SynchronizerTestImpl sync = installSynchronizer();
+        cc.addConfiguration(xmlConf);
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether removing a child configuration is synchronized.
+     */
+    @Test
+    public void testRemoveConfigurationSynchronized()
+    {
+        SynchronizerTestImpl sync = installSynchronizer();
+        cc.removeConfiguration(conf1);
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether access to a configuration by index is synchronized.
+     */
+    @Test
+    public void testGetConfigurationSynchronized()
+    {
+        SynchronizerTestImpl sync = installSynchronizer();
+        assertEquals("Wrong result", conf1, cc.getConfiguration(0));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether access to the in-memory configuration is synchronized.
+     */
+    @Test
+    public void testGetInMemoryConfigurationSynchronized()
+    {
+        SynchronizerTestImpl sync = installSynchronizer();
+        cc.getInMemoryConfiguration();
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether querying the number of child configurations is
+     * synchronized.
+     */
+    @Test
+    public void testGetNumberOfConfigurationsSynchronized()
+    {
+        SynchronizerTestImpl sync = installSynchronizer();
+        assertEquals("Wrong number of configurations", 3,
+                cc.getNumberOfConfigurations());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
     }
 
     /**

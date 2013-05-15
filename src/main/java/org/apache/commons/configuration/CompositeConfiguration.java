@@ -47,6 +47,18 @@ import java.util.Set;
  * configurations at the position it was added, i.e. its priority for property
  * queries can be defined by adding the child configurations in the correct
  * order.</p>
+ * <p>
+ * This configuration class uses a {@code Synchronizer} to control concurrent
+ * access. While all methods for reading and writing configuration properties
+ * make use of this {@code Synchronizer} per default, the methods for managing
+ * the list of child configurations and the in-memory configuration
+ * ({@code addConfiguration(), getNumberOfConfigurations(), removeConfiguration(),
+ * getConfiguration(), getInMemoryConfiguration()}) are guarded, too. Because
+ * most methods for accessing configuration data delegate to the list of child
+ * configurations, the thread-safety of a {@code CompositeConfiguration}
+ * object also depends on the {@code Synchronizer} objects used by these
+ * children.
+ * </p>
  *
  * @author <a href="mailto:epugh@upstate.com">Eric Pugh</a>
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
@@ -158,36 +170,43 @@ implements Cloneable
      */
     public void addConfiguration(Configuration config, boolean asInMemory)
     {
-        if (!configList.contains(config))
+        beginWrite();
+        try
         {
-            if (asInMemory)
+            if (!configList.contains(config))
             {
-                replaceInMemoryConfiguration(config);
-                inMemoryConfigIsChild = true;
-            }
+                if (asInMemory)
+                {
+                    replaceInMemoryConfiguration(config);
+                    inMemoryConfigIsChild = true;
+                }
 
-            if (!inMemoryConfigIsChild)
-            {
-                // As the inMemoryConfiguration contains all manually added
-                // keys, we must make sure that it is always last. "Normal", non
-                // composed configurations add their keys at the end of the
-                // configuration and we want to mimic this behavior.
-                configList.add(configList.indexOf(inMemoryConfiguration),
-                        config);
-            }
-            else
-            {
-                // However, if the in-memory configuration is a regular child,
-                // only the order in which child configurations are added is
-                // relevant
-                configList.add(config);
-            }
+                if (!inMemoryConfigIsChild)
+                {
+                    // As the inMemoryConfiguration contains all manually added
+                    // keys, we must make sure that it is always last. "Normal", non
+                    // composed configurations add their keys at the end of the
+                    // configuration and we want to mimic this behavior.
+                    configList.add(configList.indexOf(inMemoryConfiguration),
+                            config);
+                }
+                else
+                {
+                    // However, if the in-memory configuration is a regular child,
+                    // only the order in which child configurations are added is relevant
+                    configList.add(config);
+                }
 
-            if (config instanceof AbstractConfiguration)
-            {
-                ((AbstractConfiguration) config)
-                        .setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+                if (config instanceof AbstractConfiguration)
+                {
+                    ((AbstractConfiguration) config)
+                            .setThrowExceptionOnMissing(isThrowExceptionOnMissing());
+                }
             }
+        }
+        finally
+        {
+            endWrite();
         }
     }
 
@@ -198,11 +217,19 @@ implements Cloneable
      */
     public void removeConfiguration(Configuration config)
     {
-        // Make sure that you can't remove the inMemoryConfiguration from
-        // the CompositeConfiguration object
-        if (!config.equals(inMemoryConfiguration))
+        beginWrite();
+        try
         {
-            configList.remove(config);
+            // Make sure that you can't remove the inMemoryConfiguration from
+            // the CompositeConfiguration object
+            if (!config.equals(inMemoryConfiguration))
+            {
+                configList.remove(config);
+            }
+        }
+        finally
+        {
+            endWrite();
         }
     }
 
@@ -213,7 +240,15 @@ implements Cloneable
      */
     public int getNumberOfConfigurations()
     {
-        return configList.size();
+        beginRead();
+        try
+        {
+            return configList.size();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -399,7 +434,15 @@ implements Cloneable
      */
     public Configuration getConfiguration(int index)
     {
-        return configList.get(index);
+        beginRead();
+        try
+        {
+            return configList.get(index);
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -410,7 +453,15 @@ implements Cloneable
      */
     public Configuration getInMemoryConfiguration()
     {
-        return inMemoryConfiguration;
+        beginRead();
+        try
+        {
+            return inMemoryConfiguration;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
