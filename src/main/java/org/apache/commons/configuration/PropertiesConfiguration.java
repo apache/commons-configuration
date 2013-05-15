@@ -159,9 +159,16 @@ import org.apache.commons.lang3.text.translate.UnicodeEscaper;
  * method can be used to obtain this layout object. With {@code setLayout()}
  * a new layout object can be set. This should be done before a properties file
  * was loaded.
- * <p><em>Note:</em>Configuration objects of this type can be read concurrently
- * by multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.
+ * <p>Like other {@code Configuration} implementations, this class uses a
+ * {@code Synchronizer} object to control concurrent access. By choosing a
+ * suitable implementation of the {@code Synchronizer} interface, an instance
+ * can be made thread-safe or not. Note that access to most of the properties
+ * typically set through a builder is not protected by the {@code Synchronizer}.
+ * The intended usage is that these properties are set once at construction
+ * time through the builder and after that remain constant. If you wish to
+ * change such properties during life time of an instance, you have to use
+ * the {@code lock()} and {@code unlock()} methods manually to ensure that
+ * other threads see your changes.
  *
  * @see java.util.Properties#load
  *
@@ -232,7 +239,7 @@ public class PropertiesConfiguration extends BaseConfiguration
     private PropertiesConfigurationLayout layout;
 
     /** The IOFactory for creating readers and writers.*/
-    private volatile IOFactory ioFactory;
+    private IOFactory ioFactory;
 
     /** The current {@code FileLocator}. */
     private FileLocator locator;
@@ -301,7 +308,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public String getHeader()
     {
-        return getLayout().getHeaderComment();
+        beginRead();
+        try
+        {
+            return getLayout().getHeaderComment();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -312,7 +327,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public void setHeader(String header)
     {
-        getLayout().setHeaderComment(header);
+        beginWrite();
+        try
+        {
+            getLayout().setHeaderComment(header);
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -324,7 +347,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public String getFooter()
     {
-        return getLayout().getFooterComment();
+        beginRead();
+        try
+        {
+            return getLayout().getFooterComment();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -336,7 +367,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public void setFooter(String footer)
     {
-        getLayout().setFooterComment(footer);
+        beginWrite();
+        try
+        {
+            getLayout().setFooterComment(footer);
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -345,7 +384,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * @return the associated layout object
      * @since 1.3
      */
-    public synchronized PropertiesConfigurationLayout getLayout()
+    public PropertiesConfigurationLayout getLayout()
     {
         return layout;
     }
@@ -357,7 +396,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      * layout object will be created
      * @since 1.3
      */
-    public synchronized void setLayout(PropertiesConfigurationLayout layout)
+    public void setLayout(PropertiesConfigurationLayout layout)
     {
         installLayout(layout);
     }

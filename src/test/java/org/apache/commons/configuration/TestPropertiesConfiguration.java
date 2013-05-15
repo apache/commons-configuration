@@ -48,6 +48,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
@@ -998,6 +999,54 @@ public class TestPropertiesConfiguration
         conf.clear();
         assertNull("Still got a footer comment", conf.getFooter());
         assertNull("Still got a header comment", conf.getHeader());
+    }
+
+    /**
+     * Tests whether read access to the footer comment is synchronized.
+     */
+    @Test
+    public void testGetFooterSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        assertNotNull("No footer comment", conf.getFooter());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether write access to the footer comment is synchronized.
+     */
+    @Test
+    public void testSetFooterSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        conf.setFooter("new comment");
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether read access to the header comment is synchronized.
+     */
+    @Test
+    public void testGetHeaderSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        assertNull("Got a header comment", conf.getHeader());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether write access to the header comment is synchronized.
+     */
+    @Test
+    public void testSetHeaderSynchronized()
+    {
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        conf.setSynchronizer(sync);
+        conf.setHeader("new comment");
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
     }
 
     /**
