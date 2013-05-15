@@ -188,9 +188,16 @@ import org.apache.commons.configuration.tree.ViewNode;
  * {@code getSection()} method can be used.
  * </p>
  * <p>
- * <em>Note:</em> Configuration objects of this type can be read concurrently by
- * multiple threads. However if one of these threads modifies the object,
- * synchronization has to be performed manually.
+ * Like other {@code Configuration} implementations, this class uses a
+ * {@code Synchronizer} object to control concurrent access. By choosing a
+ * suitable implementation of the {@code Synchronizer} interface, an instance
+ * can be made thread-safe or not. Note that access to most of the properties
+ * typically set through a builder is not protected by the {@code Synchronizer}.
+ * The intended usage is that these properties are set once at construction
+ * time through the builder and after that remain constant. If you wish to
+ * change such properties during life time of an instance, you have to use
+ * the {@code lock()} and {@code unlock()} methods manually to ensure that
+ * other threads see your changes.
  * </p>
  *
  * @author <a
