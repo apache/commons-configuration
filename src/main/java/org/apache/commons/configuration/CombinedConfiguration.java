@@ -220,8 +220,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public CombinedConfiguration(NodeCombiner comb)
     {
-        setNodeCombiner((comb != null) ? comb : DEFAULT_COMBINER);
-        clear();
+        nodeCombiner = (comb != null) ? comb : DEFAULT_COMBINER;
+        initChildCollections();
     }
 
     /**
@@ -263,7 +263,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                     "Node combiner must not be null!");
         }
         this.nodeCombiner = nodeCombiner;
-        invalidate();
+        invalidateInternal();
     }
 
     /**
@@ -343,7 +343,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         registerListenerAt(config);
-        invalidate();
+        invalidateInternal();
     }
 
     /**
@@ -474,7 +474,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             namedConfigurations.remove(cd.getName());
         }
         unregisterListenerAt(cd.getConfiguration());
-        invalidate();
+        invalidateInternal();
         return cd.getConfiguration();
     }
 
@@ -518,8 +518,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void invalidate()
     {
-        reloadRequired = true;
-        fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
+        invalidateInternal();
     }
 
     /**
@@ -564,9 +563,8 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     protected void clearInternal()
     {
-        configurations = new ArrayList<ConfigData>();
-        namedConfigurations = new HashMap<String, Configuration>();
-        invalidate();
+        initChildCollections();
+        invalidateInternal();
     }
 
     /**
@@ -582,7 +580,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     public Object clone()
     {
         CombinedConfiguration copy = (CombinedConfiguration) super.clone();
-        copy.clear();
+        copy.initChildCollections();
         for (ConfigData cd : configurations)
         {
             copy.addConfiguration(ConfigurationUtils
@@ -643,6 +641,28 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
         }
 
         return source;
+    }
+
+    /**
+     * Marks this configuration as invalid. This means that the next access
+     * re-creates the root node. An invalidate event is also fired. Note:
+     * This implementation expects that an exclusive (write) lock is held on
+     * this instance.
+     */
+    private void invalidateInternal()
+    {
+        reloadRequired = true;
+        fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
+    }
+
+    /**
+     * Initializes internal data structures for storing information about
+     * child configurations.
+     */
+    private void initChildCollections()
+    {
+        configurations = new ArrayList<ConfigData>();
+        namedConfigurations = new HashMap<String, Configuration>();
     }
 
     /**
