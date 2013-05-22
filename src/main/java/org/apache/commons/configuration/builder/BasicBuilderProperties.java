@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.logging.Log;
 
 /**
@@ -140,4 +141,16 @@ public interface BasicBuilderProperties<T>
      * @see ConfigurationInterpolator#setParentInterpolator(ConfigurationInterpolator)
      */
     T setParentInterpolator(ConfigurationInterpolator parent);
+
+    /**
+     * Sets the {@code Synchronizer} object for this configuration. This object
+     * is used to protect this configuration instance against concurrent access.
+     * The concrete {@code Synchronizer} implementation used determines whether
+     * a configuration instance is thread-safe or not.
+     *
+     * @param sync the {@code Synchronizer} to be used (a value of <b>null</b>
+     *        means that a default {@code Synchronizer} is used)
+     * @return a reference to this object for method chaining
+     */
+    T setSynchronizer(Synchronizer sync);
 }

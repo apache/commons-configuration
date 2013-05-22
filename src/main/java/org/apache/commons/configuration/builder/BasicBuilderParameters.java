@@ -24,6 +24,7 @@ import java.util.Map;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.logging.Log;
 
 /**
@@ -74,6 +75,9 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
 
     /** The key for the <em>parentInterpolator</em> property. */
     private static final String PROP_PARENT_INTERPOLATOR = "parentInterpolator";
+
+    /** The key for the <em>synchronizer</em> property. */
+    private static final String PROP_SYNCHRONIZER = "synchronizer";
 
     /** The map for storing the current property values. */
     private Map<String, Object> properties;
@@ -224,6 +228,15 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
             ConfigurationInterpolator parent)
     {
         return setProperty(PROP_PARENT_INTERPOLATOR, parent);
+    }
+
+    /**
+     * {@inheritDoc} This implementation stores the passed in
+     * {@code Synchronizer} object in the internal parameters map.
+     */
+    public BasicBuilderParameters setSynchronizer(Synchronizer sync)
+    {
+        return setProperty(PROP_SYNCHRONIZER, sync);
     }
 
     /**

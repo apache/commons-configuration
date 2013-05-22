@@ -32,6 +32,7 @@ import java.util.Map;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.logging.Log;
 import org.easymock.EasyMock;
 import org.junit.Before;
@@ -458,5 +459,18 @@ public class TestBasicBuilderParameters
         defLooks = (Collection<?>) clone.getParameters().get("defaultLookups");
         assertEquals("Wrong number of default lookups", 1, defLooks.size());
         assertTrue("Wrong default lookup", defLooks.contains(look));
+    }
+
+    /**
+     * Tests whether a Synchronizer can be set.
+     */
+    @Test
+    public void testSetSynchronizer()
+    {
+        Synchronizer sync = EasyMock.createMock(Synchronizer.class);
+        EasyMock.replay(sync);
+        assertSame("Wrong result", params, params.setSynchronizer(sync));
+        assertSame("Synchronizer not set", sync,
+                params.getParameters().get("synchronizer"));
     }
 }
