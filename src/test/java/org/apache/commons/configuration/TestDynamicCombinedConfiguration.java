@@ -41,6 +41,7 @@ import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestDynamicCombinedConfiguration
@@ -101,7 +102,7 @@ public class TestDynamicCombinedConfiguration
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
-    @Test
+    @Test @Ignore
     public void testConcurrentGetAndReload() throws Exception
     {
         System.getProperties().remove("Id");
@@ -128,7 +129,7 @@ public class TestDynamicCombinedConfiguration
         assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test
+    @Test @Ignore
     public void testConcurrentGetAndReload2() throws Exception
     {
         System.getProperties().remove("Id");
@@ -158,7 +159,7 @@ public class TestDynamicCombinedConfiguration
         assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test
+    @Test @Ignore
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
         System.getProperties().remove("Id");

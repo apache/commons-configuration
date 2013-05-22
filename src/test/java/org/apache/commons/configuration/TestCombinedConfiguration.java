@@ -23,18 +23,27 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.sync.LockMode;
+import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultExpressionEngine;
 import org.apache.commons.configuration.tree.NodeCombiner;
 import org.apache.commons.configuration.tree.OverrideCombiner;
@@ -56,6 +65,9 @@ public class TestCombinedConfiguration
 
     /** Constant for a test key. */
     private static final String TEST_KEY = "test.value";
+
+    /** Constant for a key to be used for a concurrent test. */
+    private static final String KEY_CONCURRENT = "concurrent.access.test";
 
     /** Constant for the name of the first child configuration.*/
     private static final String CHILD1 = TEST_NAME + "1";
@@ -371,6 +383,8 @@ public class TestCombinedConfiguration
         config.addConfiguration(new PropertiesConfiguration(), "props");
 
         CombinedConfiguration cc2 = (CombinedConfiguration) config.clone();
+        assertNotNull("No root node", cc2.getRootNode());
+        assertNotSame("Root node not copied", config.getRootNode(), cc2.getRootNode());
         assertEquals("Wrong number of contained configurations", config
                 .getNumberOfConfigurations(), cc2.getNumberOfConfigurations());
         assertSame("Wrong node combiner", config.getNodeCombiner(), cc2
@@ -542,19 +556,20 @@ public class TestCombinedConfiguration
     }
 
     /**
-     * Tests whether an invalidate event is fired only after a change. This test
-     * is related to CONFIGURATION-315.
+     * Tests whether only a single invalidate event is fired for a change. This
+     * test is related to CONFIGURATION-315.
      */
     @Test
-    public void testInvalidateAfterChange()
+    public void testInvalidateEventBeforeAndAfterChange()
     {
-        ConfigurationEvent event = new ConfigurationEvent(config, 0, null,
-                null, true);
-        config.configurationChanged(event);
-        assertEquals("Invalidate event fired", 0, listener.invalidateEvents);
-        event = new ConfigurationEvent(config, 0, null, null, false);
+        ConfigurationEvent event =
+                new ConfigurationEvent(config, 0, null, null, true);
         config.configurationChanged(event);
         assertEquals("No invalidate event fired", 1, listener.invalidateEvents);
+        event = new ConfigurationEvent(config, 0, null, null, false);
+        config.configurationChanged(event);
+        assertEquals("Another invalidate event fired", 1,
+                listener.invalidateEvents);
     }
 
     /**
@@ -643,6 +658,299 @@ public class TestCombinedConfiguration
     }
 
     /**
+     * Prepares a test for synchronization. This method installs a test
+     * synchronizer and adds some test configurations.
+     *
+     * @return the test synchronizer
+     */
+    private SynchronizerTestImpl setUpSynchronizerTest()
+    {
+        setUpSourceTest();
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        return sync;
+    }
+
+    /**
+     * Tests whether adding a new configuration is synchronized.
+     */
+    @Test
+    public void testAddConfigurationSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        config.addConfiguration(new BaseHierarchicalConfiguration());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+        assertNull("Root node not reset", config.getRootNode());
+    }
+
+    /**
+     * Tests whether setNodeCombiner() is correctly synchronized.
+     */
+    @Test
+    public void testSetNodeCombinerSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        config.setNodeCombiner(new UnionCombiner());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+        assertNull("Root node not reset", config.getRootNode());
+    }
+
+    /**
+     * Tests whether getNodeCombiner() is correctly synchronized.
+     */
+    @Test
+    public void testGetNodeCombinerSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertNotNull("No node combiner", config.getNodeCombiner());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether access to a configuration by index is correctly
+     * synchronized.
+     */
+    @Test
+    public void testGetConfigurationByIdxSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertNotNull("No configuration", config.getConfiguration(0));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether access to a configuration by name is correctly
+     * synchronized.
+     */
+    @Test
+    public void testGetConfigurationByNameSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertNotNull("No configuration", config.getConfiguration(CHILD1));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether querying the name set of child configurations is
+     * synchronized.
+     */
+    @Test
+    public void testGetConfigurationNamesSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertFalse("No child names", config.getConfigurationNames().isEmpty());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether querying the name list of child configurations is
+     * synchronized.
+     */
+    @Test
+    public void testGetConfigurationNameListSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertFalse("No child names", config.getConfigurationNameList()
+                .isEmpty());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether querying the list of child configurations is synchronized.
+     */
+    @Test
+    public void testGetConfigurationsSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertFalse("No child configurations", config.getConfigurations()
+                .isEmpty());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether read access to the conversion expression engine is
+     * synchronized.
+     */
+    @Test
+    public void testGetConversionExpressionEngineSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertNull("Got a conversion engine",
+                config.getConversionExpressionEngine());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether write access to the conversion expression engine is
+     * synchronized.
+     */
+    @Test
+    public void testSetConversionExpressionEngineSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        config.setConversionExpressionEngine(new DefaultExpressionEngine());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether invalidate() performs correct synchronization.
+     */
+    @Test
+    public void testInvalidateSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        config.invalidate();
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether getSource() is correctly synchronized.
+     */
+    @Test
+    public void testGetSourceSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertNotNull("No source found", config.getSource(TEST_KEY));
+        sync.verifyStart(Methods.BEGIN_READ);
+        sync.verifyEnd(Methods.END_READ);
+    }
+
+    /**
+     * Tests whether querying the number of child configurations is
+     * synchronized.
+     */
+    @Test
+    public void testGetNumberOfConfigurationsSynchronized()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        assertEquals("Wrong number of configurations", 2,
+                config.getNumberOfConfigurations());
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertNull("Root node was constructed", config.getRootNode());
+    }
+
+    /**
+     * Tests whether cloning of a configuration is correctly synchronized.
+     */
+    @Test
+    public void testCloneSynchronized()
+    {
+        setUpSourceTest();
+        config.lock(LockMode.READ); // Causes the root node to be constructed
+        config.unlock(LockMode.READ);
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        config.clone();
+        // clone() of base class is wrapped by another read lock
+        sync.verifyStart(Methods.BEGIN_READ, Methods.BEGIN_READ);
+        sync.verifyEnd(Methods.END_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether requested locks are freed correctly if an exception occurs
+     * while constructing the root node.
+     */
+    @Test
+    public void testLockHandlingWithExceptionWhenConstructingRootNode()
+    {
+        SynchronizerTestImpl sync = setUpSynchronizerTest();
+        final RuntimeException testEx =
+                new ConfigurationRuntimeException("Test exception");
+        BaseHierarchicalConfiguration childEx =
+                new BaseHierarchicalConfiguration()
+                {
+                    private static final long serialVersionUID = 1L;
+
+                    @Override
+                    public ConfigurationNode getRootNode()
+                    {
+                        throw testEx;
+                    };
+                };
+        config.addConfiguration(childEx);
+        try
+        {
+            config.lock(LockMode.READ);
+            fail("Exception not detected!");
+        }
+        catch (Exception ex)
+        {
+            assertEquals("Unexpected exception", testEx, ex);
+        }
+        // 1 x add configuration, then obtain read lock and create root node
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
+                Methods.END_READ, Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests concurrent read and write access on a combined configuration. There
+     * are multiple reader threads and a single writer thread. It is checked
+     * that no inconsistencies occur.
+     */
+    @Test
+    public void testConcurrentAccess() throws ConfigurationException,
+            InterruptedException
+    {
+        // populate the test combined configuration
+        setUpSourceTest();
+        XMLConfiguration xmlConf = new XMLConfiguration();
+        new FileHandler(xmlConf).load(ConfigurationAssert
+                .getTestFile("test.xml"));
+        config.addConfiguration(xmlConf);
+        PropertiesConfiguration propConf = new PropertiesConfiguration();
+        new FileHandler(propConf).load(ConfigurationAssert
+                .getTestFile("test.properties"));
+        for (int i = 0; i < 8; i++)
+        {
+            config.addConfiguration(new BaseHierarchicalConfiguration());
+        }
+        config.getConfiguration(0).addProperty(KEY_CONCURRENT, TEST_NAME);
+
+        // Set a single synchronizer for all involved configurations
+        Synchronizer sync = new ReadWriteSynchronizer();
+        config.setSynchronizer(sync);
+        for (Configuration c : config.getConfigurations())
+        {
+            c.setSynchronizer(sync);
+        }
+
+        // setup test threads
+        final int numberOfReaders = 3;
+        final int readCount = 5000;
+        final int writeCount = 3000;
+        CountDownLatch latch = new CountDownLatch(1);
+        AtomicInteger errorCount = new AtomicInteger();
+        Collection<Thread> threads = new ArrayList<Thread>(numberOfReaders + 1);
+        Thread writeThread =
+                new WriteThread(config, latch, errorCount, writeCount);
+        writeThread.start();
+        threads.add(writeThread);
+        for (int i = 0; i < numberOfReaders; i++)
+        {
+            Thread readThread =
+                    new ReadThread(config, latch, errorCount, readCount);
+            readThread.start();
+            threads.add(readThread);
+        }
+
+        // perform test
+        latch.countDown();
+        for (Thread t : threads)
+        {
+            t.join();
+        }
+        assertEquals("Got errors", 0, errorCount.get());
+    }
+
+    /**
      * Helper method for creating a test configuration to be added to the
      * combined configuration.
      *
@@ -660,7 +968,7 @@ public class TestCombinedConfiguration
      * Test event listener class for checking if the expected invalidate events
      * are fired.
      */
-    static class CombinedListener implements ConfigurationListener
+    private static class CombinedListener implements ConfigurationListener
     {
         int invalidateEvents;
 
@@ -690,6 +998,163 @@ public class TestCombinedConfiguration
                     expectedInvalidate, invalidateEvents);
             Assert.assertEquals("Wrong number of other events", expectedOthers,
                     otherEvents);
+        }
+    }
+
+    /**
+     * A test thread performing reads on a combined configuration. This thread
+     * reads a certain property from the configuration. If everything works
+     * well, this property should have at least one and at most two values.
+     */
+    private static class ReadThread extends Thread
+    {
+        /** The configuration to be accessed. */
+        private final Configuration config;
+
+        /** The latch for synchronizing thread start. */
+        private final CountDownLatch startLatch;
+
+        /** A counter for read errors. */
+        private final AtomicInteger errorCount;
+
+        /** The number of reads to be performed. */
+        private final int numberOfReads;
+
+        /**
+         * Creates a new instance of {@code ReadThread}.
+         *
+         * @param readConfig the configuration to be read
+         * @param latch the latch for synchronizing thread start
+         * @param errCnt the counter for read errors
+         * @param readCount the number of reads to be performed
+         */
+        public ReadThread(Configuration readConfig, CountDownLatch latch,
+                AtomicInteger errCnt, int readCount)
+        {
+            config = readConfig;
+            startLatch = latch;
+            errorCount = errCnt;
+            numberOfReads = readCount;
+        }
+
+        /**
+         * Reads from the test configuration.
+         */
+        @Override
+        public void run()
+        {
+            try
+            {
+                startLatch.await();
+                for (int i = 0; i < numberOfReads; i++)
+                {
+                    readConfiguration();
+                }
+            }
+            catch (Exception e)
+            {
+                errorCount.incrementAndGet();
+            }
+        }
+
+        /**
+         * Reads the test property from the associated configuration. Its values
+         * are checked.
+         */
+        private void readConfiguration()
+        {
+            List<Object> values = config.getList(KEY_CONCURRENT);
+            if (values.size() < 1 || values.size() > 2)
+            {
+                errorCount.incrementAndGet();
+            }
+            else
+            {
+                boolean ok = true;
+                for (Object value : values)
+                {
+                    if (!TEST_NAME.equals(value))
+                    {
+                        ok = false;
+                    }
+                }
+                if (!ok)
+                {
+                    errorCount.incrementAndGet();
+                }
+            }
+        }
+    }
+
+    /**
+     * A test thread performing updates on a test configuration. This thread
+     * modifies configurations which are children of a combined configuration.
+     * Each update operation adds a value to one of the child configurations and
+     * removes it from another one (which contained it before). So if concurrent
+     * reads are performed, the test property should always have between 1 and 2
+     * values.
+     */
+    private static class WriteThread extends Thread
+    {
+        /** The list with the child configurations. */
+        private final List<Configuration> testConfigs;
+
+        /** The latch for synchronizing thread start. */
+        private final CountDownLatch startLatch;
+
+        /** A counter for errors. */
+        private final AtomicInteger errorCount;
+
+        /** The number of write operations to be performed. */
+        private final int numberOfWrites;
+
+        /** The index of the child configuration containing the test property. */
+        private int currentChildConfigIdx;
+
+        /**
+         * Creates a new instance of {@code WriteThread}.
+         *
+         * @param cc the test combined configuration
+         * @param latch the latch for synchronizing test start
+         * @param errCnt a counter for errors
+         * @param writeCount the number of writes to be performed
+         */
+        public WriteThread(CombinedConfiguration cc, CountDownLatch latch,
+                AtomicInteger errCnt, int writeCount)
+        {
+            testConfigs = cc.getConfigurations();
+            startLatch = latch;
+            errorCount = errCnt;
+            numberOfWrites = writeCount;
+        }
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                startLatch.await();
+                for (int i = 0; i < numberOfWrites; i++)
+                {
+                    updateConfigurations();
+                }
+            }
+            catch (InterruptedException e)
+            {
+                errorCount.incrementAndGet();
+            }
+        }
+
+        /**
+         * Performs the update operation.
+         */
+        private void updateConfigurations()
+        {
+            int newIdx = (currentChildConfigIdx + 1) % testConfigs.size();
+            testConfigs.get(newIdx).addProperty(KEY_CONCURRENT, TEST_NAME);
+            testConfigs.get(currentChildConfigIdx)
+                    .clearProperty(KEY_CONCURRENT);
+            currentChildConfigIdx = newIdx;
         }
     }
 }

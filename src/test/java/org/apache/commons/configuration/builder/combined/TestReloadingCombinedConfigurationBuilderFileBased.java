@@ -43,6 +43,7 @@ import org.apache.commons.configuration.reloading.ReloadingDetector;
 import org.apache.commons.configuration.tree.MergeCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -215,7 +216,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * Tests concurrent access to a reloading builder for combined
      * configurations.
      */
-    @Test
+    @Test @Ignore
     public void testConcurrentGetAndReload() throws Exception
     {
         final int threadCount = 4;

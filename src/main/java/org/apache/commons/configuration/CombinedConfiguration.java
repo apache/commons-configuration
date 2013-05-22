@@ -29,6 +29,7 @@ import java.util.Set;
 import org.apache.commons.configuration.event.ConfigurationEvent;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.apache.commons.configuration.event.EventSource;
+import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationKey;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
@@ -45,7 +46,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * </p>
  * <p>
  * This class maintains a list of configuration objects, which can be added
- * using the divers {@code addConfiguration()} methods. After that the
+ * using the diverse {@code addConfiguration()} methods. After that the
  * configurations can be accessed either by name (if one was provided when the
  * configuration was added) or by index. For the whole set of managed
  * configurations a logical node structure is constructed. For this purpose a
@@ -158,10 +159,16 @@ import org.apache.commons.configuration.tree.ViewNode;
  * also makes it possible to add a combined configuration into another one.
  * </p>
  * <p>
- * Implementation note: Adding and removing configurations to and from a
- * combined configuration is not thread-safe. If a combined configuration is
- * manipulated by multiple threads, the developer has to take care about
- * properly synchronization.
+ * Notes about thread-safety: This configuration implementation uses a
+ * {@code Synchronizer} object to protect instances against concurrent access.
+ * The concrete {@code Synchronizer} implementation used determines whether an
+ * instance of this class is thread-safe or not. All methods accessing
+ * configuration data or querying or altering this configuration's child
+ * configurations are guarded by the {@code Synchronizer}. Because a combined
+ * configuration operates on node structures partly owned by its child
+ * configurations it makes sense that a single {@code Synchronizer} object is
+ * used and shared between all involved configurations (including the combined
+ * configuration itself). However, this is not enforced.
  * </p>
  *
  * @author <a
@@ -194,16 +201,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private NodeCombiner nodeCombiner;
 
     /** Stores the combined root node. */
-    private volatile ConfigurationNode combinedRoot;
+    private ConfigurationNode combinedRoot;
 
     /** Stores a list with the contained configurations. */
     private List<ConfigData> configurations;
 
     /** Stores a map with the named configurations. */
     private Map<String, Configuration> namedConfigurations;
-
-    /** Set to true when the backing file has changed */
-    private boolean reloadRequired;
 
     /**
      * An expression engine used for converting child configurations to
@@ -243,7 +247,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public NodeCombiner getNodeCombiner()
     {
-        return nodeCombiner;
+        readLock();
+        try
+        {
+            return nodeCombiner;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -262,8 +274,17 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             throw new IllegalArgumentException(
                     "Node combiner must not be null!");
         }
-        this.nodeCombiner = nodeCombiner;
-        invalidateInternal();
+
+        writeLock();
+        try
+        {
+            this.nodeCombiner = nodeCombiner;
+            invalidateInternal();
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -275,7 +296,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public ExpressionEngine getConversionExpressionEngine()
     {
-        return conversionExpressionEngine;
+        readLock();
+        try
+        {
+            return conversionExpressionEngine;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -296,7 +325,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     public void setConversionExpressionEngine(
             ExpressionEngine conversionExpressionEngine)
     {
-        this.conversionExpressionEngine = conversionExpressionEngine;
+        writeLock();
+        try
+        {
+            this.conversionExpressionEngine = conversionExpressionEngine;
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -323,27 +360,38 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             throw new IllegalArgumentException(
                     "Added configuration must not be null!");
         }
-        if (name != null && namedConfigurations.containsKey(name))
-        {
-            throw new ConfigurationRuntimeException(
-                    "A configuration with the name '"
-                            + name
-                            + "' already exists in this combined configuration!");
-        }
 
-        ConfigData cd = new ConfigData(config, name, at);
-        if (getLogger().isDebugEnabled())
+        writeLock();
+        try
         {
-            getLogger().debug("Adding configuration " + config + " with name " + name);
-        }
-        configurations.add(cd);
-        if (name != null)
-        {
-            namedConfigurations.put(name, config);
-        }
+            if (name != null && namedConfigurations.containsKey(name))
+            {
+                throw new ConfigurationRuntimeException(
+                        "A configuration with the name '"
+                                + name
+                                + "' already exists in this combined configuration!");
+            }
 
+            ConfigData cd = new ConfigData(config, name, at);
+            if (getLogger().isDebugEnabled())
+            {
+                getLogger()
+                        .debug("Adding configuration " + config + " with name "
+                                + name);
+            }
+            configurations.add(cd);
+            if (name != null)
+            {
+                namedConfigurations.put(name, config);
+            }
+
+            invalidateInternal();
+        }
+        finally
+        {
+            endWrite();
+        }
         registerListenerAt(config);
-        invalidateInternal();
     }
 
     /**
@@ -379,7 +427,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public int getNumberOfConfigurations()
     {
-        return configurations.size();
+        readLock();
+        try
+        {
+            return getNumberOfConfigurationsInternal();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -392,8 +448,16 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = configurations.get(index);
-        return cd.getConfiguration();
+        readLock();
+        try
+        {
+            ConfigData cd = configurations.get(index);
+            return cd.getConfiguration();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -405,7 +469,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Configuration getConfiguration(String name)
     {
-        return namedConfigurations.get(name);
+        readLock();
+        try
+        {
+            return namedConfigurations.get(name);
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -415,12 +487,21 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public List<Configuration> getConfigurations()
     {
-        List<Configuration> list = new ArrayList<Configuration>(configurations.size());
-        for (ConfigData cd : configurations)
+        readLock();
+        try
         {
-            list.add(cd.getConfiguration());
+            List<Configuration> list =
+                    new ArrayList<Configuration>(getNumberOfConfigurationsInternal());
+            for (ConfigData cd : configurations)
+            {
+                list.add(cd.getConfiguration());
+            }
+            return list;
         }
-        return list;
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -432,12 +513,20 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public List<String> getConfigurationNameList()
     {
-        List<String> list = new ArrayList<String>(configurations.size());
-        for (ConfigData cd : configurations)
+        readLock();
+        try
         {
-            list.add(cd.getName());
+            List<String> list = new ArrayList<String>(getNumberOfConfigurationsInternal());
+            for (ConfigData cd : configurations)
+            {
+                list.add(cd.getName());
+            }
+            return list;
         }
-        return list;
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -505,7 +594,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Set<String> getConfigurationNames()
     {
-        return namedConfigurations.keySet();
+        readLock();
+        try
+        {
+            return namedConfigurations.keySet();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -518,7 +615,15 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void invalidate()
     {
-        invalidateInternal();
+        writeLock();
+        try
+        {
+            invalidateInternal();
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -530,31 +635,26 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void configurationChanged(ConfigurationEvent event)
     {
-        if (!event.isBeforeUpdate())
+        if (event.isBeforeUpdate())
         {
             invalidate();
         }
     }
 
     /**
-     * Returns the configuration root node of this combined configuration. This
-     * method will construct a combined node structure using the current node
-     * combiner if necessary.
+     * Returns the configuration root node of this combined configuration. When
+     * starting a read or write operation (by obtaining a corresponding lock for
+     * this configuration) a combined node structure is constructed if necessary
+     * using the current node combiner. This method just returns this combined
+     * node. Note that this method should only be called with a lock held!
+     * Otherwise, result may be <b>null</b> under certain circumstances.
      *
      * @return the combined root node
      */
     @Override
     public ConfigurationNode getRootNode()
     {
-        synchronized (getReloadLock())
-        {
-            if (reloadRequired || combinedRoot == null)
-            {
-                combinedRoot = constructCombinedNode();
-                reloadRequired = false;
-            }
-            return combinedRoot;
-        }
+        return combinedRoot;
     }
 
     /**
@@ -579,17 +679,24 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     public Object clone()
     {
-        CombinedConfiguration copy = (CombinedConfiguration) super.clone();
-        copy.initChildCollections();
-        for (ConfigData cd : configurations)
+        beginRead();
+        try
         {
-            copy.addConfiguration(ConfigurationUtils
-                    .cloneConfiguration(cd.getConfiguration()), cd.getName(),
-                    cd.getAt());
-        }
+            CombinedConfiguration copy = (CombinedConfiguration) super.clone();
+            copy.initChildCollections();
+            for (ConfigData cd : configurations)
+            {
+                copy.addConfiguration(ConfigurationUtils.cloneConfiguration(cd
+                        .getConfiguration()), cd.getName(), cd.getAt());
+            }
 
-        copy.setRootNode(new DefaultConfigurationNode());
-        return copy;
+            copy.setRootNode(new DefaultConfigurationNode());
+            return copy;
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -622,25 +729,80 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             throw new IllegalArgumentException("Key must not be null!");
         }
 
-        List<ConfigurationNode> nodes = fetchNodeList(key);
-        if (nodes.isEmpty())
+        beginRead();
+        try
         {
-            return null;
-        }
-
-        Iterator<ConfigurationNode> it = nodes.iterator();
-        Configuration source = findSourceConfiguration(it.next());
-        while (it.hasNext())
-        {
-            Configuration src = findSourceConfiguration(it.next());
-            if (src != source)
+            List<ConfigurationNode> nodes = fetchNodeList(key);
+            if (nodes.isEmpty())
             {
-                throw new IllegalArgumentException("The key " + key
-                        + " is defined by multiple sources!");
+                return null;
+            }
+
+            Iterator<ConfigurationNode> it = nodes.iterator();
+            Configuration source = findSourceConfiguration(it.next());
+            while (it.hasNext())
+            {
+                Configuration src = findSourceConfiguration(it.next());
+                if (src != source)
+                {
+                    throw new IllegalArgumentException("The key " + key
+                            + " is defined by multiple sources!");
+                }
+            }
+
+            return source;
+        }
+        finally
+        {
+            endRead();
+        }
+    }
+
+    /**
+     * {@inheritDoc} This implementation checks whether a combined root node
+     * is available. If not, it is constructed by requesting a write lock.
+     */
+    @Override
+    protected void beginRead()
+    {
+        boolean lockObtained = false;
+        do
+        {
+            readLock();
+            if (combinedRoot != null)
+            {
+                lockObtained = true;
+            }
+            else
+            {
+                // release read lock and try to obtain a write lock
+                endRead();
+                beginWrite(); // this constructs the root node
+                endWrite();
+            }
+        } while (!lockObtained);
+    }
+
+    /**
+     * {@inheritDoc} This implementation checks whether a combined root node
+     * is available. If not, it is constructed now.
+     */
+    @Override
+    protected void beginWrite()
+    {
+        writeLock();
+        try
+        {
+            if (combinedRoot == null)
+            {
+                combinedRoot = constructCombinedNode();
             }
         }
-
-        return source;
+        catch (RuntimeException rex)
+        {
+            endWrite();
+            throw rex;
+        }
     }
 
     /**
@@ -651,7 +813,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void invalidateInternal()
     {
-        reloadRequired = true;
+        combinedRoot = null;
         fireEvent(EVENT_COMBINED_INVALIDATE, null, null, false);
     }
 
@@ -672,7 +834,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private ConfigurationNode constructCombinedNode()
     {
-        if (getNumberOfConfigurations() < 1)
+        if (getNumberOfConfigurationsInternal() < 1)
         {
             if (getLogger().isDebugEnabled())
             {
@@ -687,7 +849,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             ConfigurationNode node = it.next().getTransformedRoot();
             while (it.hasNext())
             {
-                node = getNodeCombiner().combine(node,
+                node = nodeCombiner.combine(node,
                         it.next().getTransformedRoot());
             }
             if (getLogger().isDebugEnabled())
@@ -709,25 +871,22 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private Configuration findSourceConfiguration(ConfigurationNode node)
     {
-        synchronized (getReloadLock())
+        ConfigurationNode root = null;
+        ConfigurationNode current = node;
+
+        // find the root node in this hierarchy
+        while (current != null)
         {
-            ConfigurationNode root = null;
-            ConfigurationNode current = node;
+            root = current;
+            current = current.getParentNode();
+        }
 
-            // find the root node in this hierarchy
-            while (current != null)
+        // Check with the root nodes of the child configurations
+        for (ConfigData cd : configurations)
+        {
+            if (root == cd.getRootNode())
             {
-                root = current;
-                current = current.getParentNode();
-            }
-
-            // Check with the root nodes of the child configurations
-            for (ConfigData cd : configurations)
-            {
-                if (root == cd.getRootNode())
-                {
-                    return cd.getConfiguration();
-                }
+                return cd.getConfiguration();
             }
         }
 
@@ -763,10 +922,42 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     }
 
     /**
+     * Returns the number of child configurations in this combined
+     * configuration. The internal list of child configurations is accessed
+     * without synchronization.
+     *
+     * @return the number of child configurations
+     */
+    private int getNumberOfConfigurationsInternal()
+    {
+        return configurations.size();
+    }
+
+    /**
+     * Obtains this configuration's read lock without performing additional
+     * initialization. This method is called by operations which do not require
+     * access to the root node (and thus do not have to re-construct it).
+     */
+    private void readLock()
+    {
+        super.beginRead();
+    }
+
+    /**
+     * Obtains this configuration's write lock without performing additional
+     * initialization. This method is called by operations which do not require
+     * access to the root node (and thus do not have to re-construct it).
+     */
+    private void writeLock()
+    {
+        super.beginWrite();
+    }
+
+    /**
      * An internal helper class for storing information about contained
      * configurations.
      */
-    class ConfigData
+    private class ConfigData
     {
         /** Stores a reference to the configuration. */
         private Configuration configuration;
@@ -865,12 +1056,21 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             }
 
             // Copy data of the root node to the new path
-            ConfigurationNode root = ConfigurationUtils
-                    .convertToHierarchical(getConfiguration(),
-                            getConversionExpressionEngine()).getRootNode();
-            atParent.appendChildren(root);
-            atParent.appendAttributes(root);
-            rootNode = root;
+            getConfiguration().lock(LockMode.READ);
+            try
+            {
+                ConfigurationNode root =
+                        ConfigurationUtils.convertToHierarchical(
+                                getConfiguration(), conversionExpressionEngine)
+                                .getRootNode();
+                atParent.appendChildren(root);
+                atParent.appendAttributes(root);
+                rootNode = root;
+            }
+            finally
+            {
+                getConfiguration().unlock(LockMode.READ);
+            }
 
             return result;
         }
