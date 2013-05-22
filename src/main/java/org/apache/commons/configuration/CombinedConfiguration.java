@@ -170,7 +170,7 @@ import org.apache.commons.configuration.tree.ViewNode;
  * @since 1.3
  * @version $Id$
  */
-public class CombinedConfiguration extends HierarchicalReloadableConfiguration implements
+public class CombinedConfiguration extends BaseHierarchicalConfiguration implements
         ConfigurationListener, Cloneable
 {
     /**
@@ -190,9 +190,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /** Constant for the default node combiner. */
     private static final NodeCombiner DEFAULT_COMBINER = new UnionCombiner();
 
-    /** Constant for the name of the property used for the reload check.*/
-    private static final String PROP_RELOAD_CHECK = "CombinedConfigurationReloadCheck";
-
     /** Stores the combiner. */
     private NodeCombiner nodeCombiner;
 
@@ -205,9 +202,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     /** Stores a map with the named configurations. */
     private Map<String, Configuration> namedConfigurations;
 
-    /** The default behavior is to ignore exceptions that occur during reload */
-    private boolean ignoreReloadExceptions = true;
-
     /** Set to true when the backing file has changed */
     private boolean reloadRequired;
 
@@ -216,9 +210,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      * hierarchical ones.
      */
     private ExpressionEngine conversionExpressionEngine;
-
-    /** A flag whether an enhanced reload check is to be performed.*/
-    private boolean forceReloadCheck;
 
     /**
      * Creates a new instance of {@code CombinedConfiguration} and
@@ -233,18 +224,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         clear();
     }
 
-    public CombinedConfiguration(NodeCombiner comb, Lock lock)
-    {
-        super(lock);
-        setNodeCombiner((comb != null) ? comb : DEFAULT_COMBINER);
-        clear();
-    }
-
-    public CombinedConfiguration(Lock lock)
-    {
-        this(null, lock);
-    }
-
     /**
      * Creates a new instance of {@code CombinedConfiguration} that uses
      * a union combiner.
@@ -253,7 +232,7 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
      */
     public CombinedConfiguration()
     {
-        this(null, null);
+        this(null);
     }
 
     /**
@@ -288,34 +267,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
     }
 
     /**
-     * Returns a flag whether an enhanced reload check must be performed.
-     *
-     * @return the force reload check flag
-     * @since 1.4
-     */
-    public boolean isForceReloadCheck()
-    {
-        return forceReloadCheck;
-    }
-
-    /**
-     * Sets the force reload check flag. If this flag is set, each property
-     * access on this configuration will cause a reload check on the contained
-     * configurations. This is a workaround for a problem with some reload
-     * implementations that only check if a reload is required when they are
-     * triggered. Per default this mode is disabled. If the force reload check
-     * flag is set to <b>true</b>, accessing properties will be less
-     * efficient, but reloads on contained configurations will be detected.
-     *
-     * @param forceReloadCheck the value of the flag
-     * @since 1.4
-     */
-    public void setForceReloadCheck(boolean forceReloadCheck)
-    {
-        this.forceReloadCheck = forceReloadCheck;
-    }
-
-    /**
      * Returns the {@code ExpressionEngine} for converting flat child
      * configurations to hierarchical ones.
      *
@@ -346,26 +297,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
             ExpressionEngine conversionExpressionEngine)
     {
         this.conversionExpressionEngine = conversionExpressionEngine;
-    }
-
-    /**
-     * Retrieves the value of the ignoreReloadExceptions flag.
-     * @return true if exceptions are ignored, false otherwise.
-     */
-    public boolean isIgnoreReloadExceptions()
-    {
-        return ignoreReloadExceptions;
-    }
-
-    /**
-     * If set to true then exceptions that occur during reloading will be
-     * ignored. If false then the exceptions will be allowed to be thrown
-     * back to the caller.
-     * @param ignoreReloadExceptions true if exceptions should be ignored.
-     */
-    public void setIgnoreReloadExceptions(boolean ignoreReloadExceptions)
-    {
-        this.ignoreReloadExceptions = ignoreReloadExceptions;
     }
 
     /**
@@ -712,55 +643,6 @@ public class CombinedConfiguration extends HierarchicalReloadableConfiguration i
         }
 
         return source;
-    }
-
-    /**
-     * Evaluates the passed in property key and returns a list with the matching
-     * configuration nodes. This implementation also evaluates the
-     * <em>force reload check</em> flag. If it is set,
-     * {@code performReloadCheck()} is invoked.
-     *
-     * @param key the property key
-     * @return a list with the matching configuration nodes
-     */
-    @Override
-    protected List<ConfigurationNode> fetchNodeList(String key)
-    {
-        if (isForceReloadCheck())
-        {
-            performReloadCheck();
-        }
-
-        return super.fetchNodeList(key);
-    }
-
-    /**
-     * Triggers the contained configurations to perform a reload check if
-     * necessary. This method is called when a property of this combined
-     * configuration is accessed and the {@code forceReloadCheck} property
-     * is set to <b>true</b>.
-     *
-     * @see #setForceReloadCheck(boolean)
-     * @since 1.6
-     */
-    protected void performReloadCheck()
-    {
-        for (ConfigData cd : configurations)
-        {
-            try
-            {
-                // simply retrieve a property; this is enough for
-                // triggering a reload
-                cd.getConfiguration().getProperty(PROP_RELOAD_CHECK);
-            }
-            catch (Exception ex)
-            {
-                if (!ignoreReloadExceptions)
-                {
-                    throw new ConfigurationRuntimeException(ex);
-                }
-            }
-        }
     }
 
     /**

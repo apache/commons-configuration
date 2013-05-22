@@ -98,7 +98,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     {
         super();
         setNodeCombiner(comb);
-        setIgnoreReloadExceptions(false);
         setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
     }
@@ -112,7 +111,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public DynamicCombinedConfiguration()
     {
         super();
-        setIgnoreReloadExceptions(false);
         setLogger(LogFactory.getLog(DynamicCombinedConfiguration.class));
         localSubst = initLocalInterpolator();
     }
@@ -828,7 +826,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                             config.setLogger(log);
                         }
                     }
-                    config.setIgnoreReloadExceptions(isIgnoreReloadExceptions());
                     config.setExpressionEngine(this.getExpressionEngine());
                     config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
                     config.setConversionExpressionEngine(getConversionExpressionEngine());
@@ -841,7 +838,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
                     {
                         config.addConfigurationListener(listener);
                     }
-                    config.setForceReloadCheck(isForceReloadCheck());
                     for (ConfigData data : configurations)
                     {
                         config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());

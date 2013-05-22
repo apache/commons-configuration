@@ -94,7 +94,6 @@ public class TestCombinedConfiguration
         assertTrue("Wrong node combiner",
                 config.getNodeCombiner() instanceof UnionCombiner);
         assertNull("Test config was found", config.getConfiguration(TEST_NAME));
-        assertFalse("Force reload check flag is set", config.isForceReloadCheck());
     }
 
     /**

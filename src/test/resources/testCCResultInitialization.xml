@@ -20,8 +20,7 @@
 -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true"
-      ignoreReloadExceptions="true">
+    <result delimiterParsingDisabled="true">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>

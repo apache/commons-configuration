@@ -22,7 +22,7 @@
 -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true" forceReloadCheck="true" loggerName="TestLogger"
+    <result delimiterParsingDisabled="true" loggerName="TestLogger"
             config-class="org.apache.commons.configuration.DynamicCombinedConfiguration"
             keyPattern="$${sys:Id}">
       <nodeCombiner config-class="org.apache.commons.configuration.tree.MergeCombiner"/>

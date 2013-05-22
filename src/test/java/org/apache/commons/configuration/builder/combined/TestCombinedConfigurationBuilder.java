@@ -522,8 +522,6 @@ public class TestCombinedConfigurationBuilder
     {
         assertTrue("Wrong delimiter parsing flag",
                 cc.isDelimiterParsingDisabled());
-        assertTrue("Wrong reload check", cc.isForceReloadCheck());
-        assertTrue("Wrong ignore reload ex flag", cc.isIgnoreReloadExceptions());
     }
 
     /**
