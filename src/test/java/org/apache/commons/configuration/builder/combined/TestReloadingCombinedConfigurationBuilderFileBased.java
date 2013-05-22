@@ -31,6 +31,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BasicConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.ReloadingDetectorFactory;
@@ -40,10 +41,11 @@ import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.reloading.AlwaysReloadingDetector;
 import org.apache.commons.configuration.reloading.RandomReloadingDetector;
 import org.apache.commons.configuration.reloading.ReloadingDetector;
+import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
+import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.MergeCombiner;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -216,7 +218,7 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
      * Tests concurrent access to a reloading builder for combined
      * configurations.
      */
-    @Test @Ignore
+    @Test
     public void testConcurrentGetAndReload() throws Exception
     {
         final int threadCount = 4;
@@ -239,9 +241,13 @@ public class TestReloadingCombinedConfigurationBuilderFileBased
                 XPathExpressionEngine.class.getName());
         addReloadSource(defConf, "configA.xml");
         addReloadSource(defConf, "configB.xml");
+        Synchronizer sync = new ReadWriteSynchronizer();
         builder.configure(Parameters
                 .combined()
                 .setDefinitionBuilder(new ConstantConfigurationBuilder(defConf))
+                .setSynchronizer(sync)
+                .addChildParameters(
+                        new BasicBuilderParameters().setSynchronizer(sync))
                 .addChildParameters(
                         new FileBasedBuilderParametersImpl()
                                 .setReloadingDetectorFactory(detectorFactory)));
