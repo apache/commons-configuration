@@ -21,6 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.util.Collections;
@@ -250,5 +251,16 @@ public class TestBaseHierarchicalConfigurationSynchronization
         sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE,
                 Methods.BEGIN_WRITE, Methods.END_WRITE, Methods.BEGIN_READ,
                 Methods.END_READ);
+    }
+
+    /**
+     * Tests whether subset() is correctly synchronized.
+     */
+    @Test
+    public void testSubsetSynchronized()
+    {
+        Configuration subset = config.subset("test");
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+        assertSame("Wrong Synchronizer", sync, subset.getSynchronizer());
     }
 }

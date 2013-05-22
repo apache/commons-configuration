@@ -541,7 +541,8 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      * values are merged together). Note that the returned
      * {@code Configuration} object is not connected to its source
      * configuration: updates on the source configuration are not reflected in
-     * the subset and vice versa.
+     * the subset and vice versa. The returned configuration uses the same
+     * {@code Synchronizer} as this configuration.
      *
      * @param prefix the prefix of the keys for the subset
      * @return a new configuration object representing the selected subset
@@ -549,52 +550,70 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     @Override
     public Configuration subset(String prefix)
     {
-        Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
-        if (nodes.isEmpty())
+        beginRead();
+        try
         {
-            return new BaseHierarchicalConfiguration();
+            Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
+            if (nodes.isEmpty())
+            {
+                return new BaseHierarchicalConfiguration();
+            }
+
+            final BaseHierarchicalConfiguration parent = this;
+            BaseHierarchicalConfiguration result =
+                    new BaseHierarchicalConfiguration()
+                    {
+                        // Override interpolate to always interpolate on the parent
+                        @Override
+                        protected Object interpolate(Object value)
+                        {
+                            return parent.interpolate(value);
+                        }
+                    };
+            CloneVisitor visitor = new CloneVisitor();
+
+            // Initialize the new root node
+            Object value = null;
+            int valueCount = 0;
+            for (ConfigurationNode nd : nodes)
+            {
+                if (nd.getValue() != null)
+                {
+                    value = nd.getValue();
+                    valueCount++;
+                }
+                nd.visit(visitor);
+
+                for (ConfigurationNode c : visitor.getClone().getChildren())
+                {
+                    result.getRootNode().addChild(c);
+                }
+                for (ConfigurationNode attr : visitor.getClone()
+                        .getAttributes())
+                {
+                    result.getRootNode().addAttribute(attr);
+                }
+            }
+
+            // Determine the value of the new root
+            if (valueCount == 1)
+            {
+                result.getRootNode().setValue(value);
+            }
+            if (result.isEmpty())
+            {
+                return new BaseHierarchicalConfiguration();
+            }
+            else
+            {
+                result.setSynchronizer(getSynchronizer());
+                return result;
+            }
         }
-
-        final BaseHierarchicalConfiguration parent = this;
-        BaseHierarchicalConfiguration result = new BaseHierarchicalConfiguration()
+        finally
         {
-            // Override interpolate to always interpolate on the parent
-            @Override
-            protected Object interpolate(Object value)
-            {
-                return parent.interpolate(value);
-            }
-        };
-        CloneVisitor visitor = new CloneVisitor();
-
-        // Initialize the new root node
-        Object value = null;
-        int valueCount = 0;
-        for (ConfigurationNode nd : nodes)
-        {
-            if (nd.getValue() != null)
-            {
-                value = nd.getValue();
-                valueCount++;
-            }
-            nd.visit(visitor);
-
-            for (ConfigurationNode c : visitor.getClone().getChildren())
-            {
-                result.getRootNode().addChild(c);
-            }
-            for (ConfigurationNode attr : visitor.getClone().getAttributes())
-            {
-                result.getRootNode().addAttribute(attr);
-            }
+            endRead();
         }
-
-        // Determine the value of the new root
-        if (valueCount == 1)
-        {
-            result.getRootNode().setValue(value);
-        }
-        return (result.isEmpty()) ? new BaseHierarchicalConfiguration() : result;
     }
 
     /**
