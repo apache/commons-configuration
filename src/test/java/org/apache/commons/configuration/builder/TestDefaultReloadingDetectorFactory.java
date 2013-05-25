@@ -29,7 +29,7 @@ import org.junit.Test;
 /**
  * Test class for {@code DefaultReloadingDetectorFactory}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestDefaultReloadingDetectorFactory
 {

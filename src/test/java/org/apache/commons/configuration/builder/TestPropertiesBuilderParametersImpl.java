@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * Test class for {@code PropertiesBuilderParametersImpl}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestPropertiesBuilderParametersImpl
 {

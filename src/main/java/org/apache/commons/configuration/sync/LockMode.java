@@ -30,7 +30,7 @@ package org.apache.commons.configuration.sync;
  * {@link Synchronizer} how these lock modes are interpreted.)
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public enum LockMode

@@ -36,7 +36,7 @@ package org.apache.commons.configuration.io;
  * accessed before their {@code read()} or {@code write()} method is called.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface FileLocatorAware

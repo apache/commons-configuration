@@ -28,7 +28,7 @@ package org.apache.commons.configuration.io;
  * need.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class FileHandlerListenerAdapter implements FileHandlerListener

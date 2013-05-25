@@ -37,7 +37,7 @@ import org.apache.commons.configuration.ConfigurationException;
  * input stream directly rather than transforming it to a reader.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface InputStreamSupport

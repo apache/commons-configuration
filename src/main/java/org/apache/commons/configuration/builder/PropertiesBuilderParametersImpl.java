@@ -36,7 +36,7 @@ import org.apache.commons.configuration.PropertiesConfigurationLayout;
  * {@code ConfigurationBuilder}.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class PropertiesBuilderParametersImpl extends

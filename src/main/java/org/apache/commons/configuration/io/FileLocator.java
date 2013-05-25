@@ -30,7 +30,7 @@ import org.apache.commons.configuration.FileSystem;
  * used by {@link FileHandler} to locate a file.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface FileLocator

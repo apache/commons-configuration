@@ -49,7 +49,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
  * desired operation is granted.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface Synchronizer

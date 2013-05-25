@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * Test class for {@code DatabaseBuilderParametersImpl}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestDatabaseBuilderParametersImpl
 {

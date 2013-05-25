@@ -54,7 +54,7 @@ import org.junit.rules.TemporaryFolder;
  * Test class for {@code ReloadingCombinedConfigurationBuilder} which actually
  * accesses files to be reloaded.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestReloadingCombinedConfigurationBuilderFileBased
 {

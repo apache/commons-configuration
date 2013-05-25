@@ -22,7 +22,7 @@ import java.util.Random;
  * An implementation of {@code ReloadingDetector} which randomly returns
  * true or false.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class RandomReloadingDetector implements ReloadingDetector
 {

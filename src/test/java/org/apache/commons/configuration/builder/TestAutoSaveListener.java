@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * Test class for {@code AutoSaveListener}.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestAutoSaveListener
 {
