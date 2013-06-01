@@ -1157,6 +1157,35 @@ public class TestHierarchicalConfiguration
     }
 
     /**
+     * Tests the initialize() method. We can only test that a new configuration
+     * listener was added.
+     */
+    @Test
+    public void testInitialize()
+    {
+        Collection<ConfigurationListener> listeners =
+                config.getConfigurationListeners();
+        config.initialize();
+        assertEquals("No new listener added", listeners.size() + 1, config
+                .getConfigurationListeners().size());
+    }
+
+    /**
+     * Tests that calling initialize() multiple times does not initialize
+     * internal structures more than once.
+     */
+    @Test
+    public void testInitializeTwice()
+    {
+        Collection<ConfigurationListener> listeners =
+                config.getConfigurationListeners();
+        config.initialize();
+        config.initialize();
+        assertEquals("Too many listener added", listeners.size() + 1, config
+                .getConfigurationListeners().size());
+    }
+
+    /**
      * Helper method for testing the getKeys(String) method.
      *
      * @param prefix the key to pass into getKeys()

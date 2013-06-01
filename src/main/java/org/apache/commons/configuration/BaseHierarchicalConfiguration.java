@@ -145,7 +145,7 @@ import org.apache.commons.configuration.tree.NodeAddData;
  * @version $Id$
  */
 public class BaseHierarchicalConfiguration extends AbstractConfiguration
-    implements Serializable, Cloneable, HierarchicalConfiguration
+    implements Serializable, Cloneable, HierarchicalConfiguration, Initializable
 {
     /**
      * Constant for the clear tree event.
@@ -231,6 +231,18 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public Object getReloadLock()
     {
         return this;
+    }
+
+    /**
+     * Performs special initialization of this configuration. This
+     * implementation ensures that internal data structures for managing
+     * {@code SubnodeConfiguration} objects are initialized. If this is done
+     * directly after the creation of an instance, this instance can be accessed
+     * in a read-only manner without requiring a specific {@code Synchronizer}.
+     */
+    public void initialize()
+    {
+        ensureSubConfigManagementDataSetUp();
     }
 
     /**
@@ -880,10 +892,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
         String subnodeKey = supportUpdates ? key : null;
         SubnodeConfiguration sub = createSubnodeConfiguration(node, subnodeKey);
 
-        if (changeListener == null)
-        {
-            setUpSubConfigManagementData();
-        }
+        ensureSubConfigManagementDataSetUp();
         sub.addConfigurationListener(changeListener);
         sub.initSubConfigManagementData(subConfigs, changeListener);
         sub.setSynchronizer(getSynchronizer());
@@ -910,6 +919,18 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         subConfigs = subMap;
         changeListener = listener;
+    }
+
+    /**
+     * Ensures that internal data structures for managing associated
+     * {@code SubnodeConfiguration} objects are initialized.
+     */
+    private void ensureSubConfigManagementDataSetUp()
+    {
+        if (changeListener == null)
+        {
+            setUpSubConfigManagementData();
+        }
     }
 
     /**
