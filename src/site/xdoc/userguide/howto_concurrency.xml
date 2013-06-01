@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+
+<document>
+
+ <properties>
+  <title>Configurations and Concurrent Access</title>
+ </properties>
+
+<body>
+    <section name="Configurations and Concurrent Access">
+    <p>
+      Configuration objects are often central resources of an application and
+      are accessed by multiple components. If multiple threads are involved
+      which read or even update configuration data, care has to be taken that
+      access to a Configuration object is properly synchronized to avoid data
+      corruption or spurious exceptions. This section of the user's guide deals
+      with concurrency and describes the actions necessary to make a
+      Configuration work in a multi-threaded environment.
+    </p>
+
+    <subsection name="Synchronizers">
+    <p>
+      Whether a Configuration object has to be thread-safe or not strongly
+      depends on a concrete use case. For an application which only reads
+      some configuration properties in its <code>main()</code> method at
+      startup, it does not matter whether this configuration can safely be
+      accessed from multiple threads. In this case, the overhead of synchronizing
+      access to the configuration is not needed, and thus operations on the
+      <code>Configuration</code> object can be more efficient. On the other
+      hand, if the Configuration object is accessed by multiple components
+      running in different threads it should better be thread-safe.
+    </p>
+    <p>
+      To support these different use cases, Commons Configuration takes a
+      similar approach as the Java Collections framework. Here collections are
+      per default not thread-safe (and thus more efficient). If an application
+      needs a thread-safe collection, it can &quot;upgrade&quot; an existing
+      one by calling a method of the <code>Collections</code> class.
+    </p>
+    <p>
+      Objects implementing the <code>Configuration</code> interface can be
+      associated with a 
+      <code><a href="../apidocs/org/apache/commons/configuration/sync/Synchronizer.html">
+      Synchronizer</a></code> object. This synchronizer is triggered on each
+      access to the configuration (distinguishing between read and write
+      access). It can decide whether access is allowed or block the calling
+      thread until it is safe to continue. Per default, a Configuration object
+      uses a <code><a href="../apidocs/org/apache/commons/configuration/sync/NoOpSynchronizer.html">
+      NoOpSynchronizer</a></code> instance. As the name implies, this class does
+      nothing to protect its associated configuration against concurrent
+      access; its methods are just empty dummies. It is appropriate for use
+      cases in which a configuration is only accessed by a single thread.
+    </p>
+    <p>
+      If multiple threads are involved, Configuration objects have to be
+      thread-safe. For this purpose, there is another implementation of
+      <code>Synchronizer</code>:
+      <code><a href="../apidocs/org/apache/commons/configuration/sync/ReadWriteSynchronizer.html">
+      ReadWriteSynchronizer</a></code>. This class is based on the
+      <code>ReentrantReadWriteLock</code> class from the JDK. It implements
+      the typical behavior desired when accessing a configuration in a
+      multi-threaded environment:
+      <ul>
+        <li>An arbitrary number of threads can read the configuration
+        simultaneously.</li>
+        <li>Updates of a configuration can only happen with an exclusive lock;
+        so if a thread changes configuration data, all other threads (readers
+        and writers) are blocked until the update operation is complete.</li>
+      </ul>
+    </p>
+    <p>
+      The synchronizer associated with a Configuration can be changed at any
+      time by calling the <code>setSynchronizer()</code> method. The following
+      example shows how this method is used to make a <code>Configuration</code>
+      instance thread-safe:
+    </p>
+    <source><![CDATA[
+config.setSynchronizer(new ReadWriteSynchronizer());
+]]></source>
+    <p>
+      It is also possible to set the synchronizer to <strong>null</strong>. In
+      this case, the default <code>NoOpSynchronizer</code> is installed, which
+      means that the configuration is no longer protected against concurrent
+      access.
+    </p>
+    <p>
+      With the two classes <code>NoOpSynchronizer</code> and
+      <code>ReadWriteSynchronizer</code> the Commons Configuration library
+      covers the basic use cases of no protection and full protection of
+      multi-threaded access. As the <code>Synchronizer</code> interface is
+      pretty simple, applications are free to provide their own implementations
+      according to their specific needs. However, this requires a certain
+      understanding of internal mechanisms in Configuration implementations.
+      Some caveats are provided in the remaining of this chapter.
+    </p>
+    </subsection>
+    
+    <subsection name="Basic operations and thread-safety">
+    <p>
+      <code><a href="../apidocs/org/apache/commons/configuration/AbstractConfiguration.html">
+      AbstractConfiguration</a></code> already provides a major part of the
+      implementation of correctly interacting with a <code>Synchronizer</code>
+      object. Methods for reading configuration data (such as
+      <code>getProperty()</code>, <code>isEmpty()</code>, or
+      <code>getKeys()</code>) and for changing properties (e.g.
+      <code>setProperty()</code>, <code>addProperty()</code>, or
+      <code>clearProperty()</code>) already call the correct methods of the
+      <code>Synchronizer</code>. These methods are declared <strong>final</strong>
+      to avoid that subclasses accidently break thread-safety by incorrectly
+      usage of the <code>Synchronizer</code>.
+    </p>
+    <p>
+      Classes derived from <code>AbstractConfiguration</code> sometimes offer
+      specific methods for accessing properties. For instance, hierarchical
+      configurations offer operations on whole subtrees, or
+      <code><a href="../apidocs/org/apache/commons/configuration/INIConfiguration.html">
+      INIConfiguration</a></code> allows querying specific sections. These
+      methods are also aware of the associated <code>Synchronizer</code> and
+      invoke it correctly.
+    </p>
+    <p>
+      There is another pair of methods available for each <code>Configuration</code>
+      object allowing direct control over the <code>Synchronizer</code>:
+      <code>lock()</code> and <code>unlock()</code>. Both methods expect an
+      argument of type
+      <code><a href="../apidocs/org/apache/commons/configuration/sync/LockMode.html">
+      LockMode</a></code> which tells them whether the configuration is to be
+      locked for read or write access. These methods can be used to extend the
+      locking behavior of standard methods. For instance, if multiple properties
+      are to be added in an atomic way, <code>lock()</code> can be called first,
+      then all properties are added, and finally <code>unlock()</code> is called.
+      Provided that a corresponding <code>Synchronizer</code> implementation is
+      used, other threads will not interfere with this sequence. Note that it is
+      important to always call <code>unlock()</code> after a <code>lock()</code>
+      call; this is done best in a <strong>finally</strong> block as shown in
+      the following example:
+    </p>
+    <source><![CDATA[
+config.lock(LockMode.WRITE);
+try
+{
+    config.addProperty("prop1", "value1");
+    ...
+    config.addProperty("prop_n", "value_n");
+}
+finally
+{
+    config.unlock(LockMode.WRITE);
+}
+]]></source>
+    <p>
+      So, in a nutshell: When accessing configuration data from standard
+      configuration classes all operations are controlled via the
+      configuration's <code>Synchronizer</code> object. Client code is only
+      responsible for setting a correct <code>Synchronizer</code> object
+      which is suitable for the intended use case.
+    </p>
+    </subsection>
+
+	<subsection name="Other flags">
+	<p>
+      In addition to the actual configuration data, each <code>Configuration</code>
+      object has some flags controlling its behavior. One example for such a
+      flag is the boolean <code>throwExceptionOnMissing</code> property. Other
+      helper objects like the object responsible for interpolation or the
+      expression engine for hierarchical configurations fall into the same
+      category. The manipulation of those flags and helper objects is also
+      related to thread-safety.
+    </p>
+    <p>
+      In contrast to configuration data, access to flags is <strong>not</strong>
+      guarded by the <code>Synchronizer</code>. This means that when changing a
+      flag in a multi-threaded environment, there is no guarantee that this
+      change is visible to other threads.
+    </p>
+    <p>
+      The reason for this design is that the preferred way to create a
+      <code>Configuration</code> object is using a <em>configuration builder</em>.
+      The builder is responsible for fully initializing the configuration;
+      afterwards, no behavioral changes should be performed any more. Because
+      builders are always synchronized the values of all flags are safely
+      published to all involved threads.
+    </p>
+    <p>
+      If there really is the need to change a flag later on in the life-cycle
+      of a <code>Configuration</code> object, the <code>lock()</code> and
+      <code>unlock()</code> methods described in the previous section should be
+      used to do the change with a write lock held.
+    </p>
+    </subsection>
+    
+    <subsection name="Special cases">
+    <p>
+      Thread-safety is certainly a complex topic. This section describes some
+      corner cases which may occur when some of the more advanced configuration
+      classes are involved.
+    </p>
+    <p>
+      <ul>
+        <li>All hierarchical configurations support methods for creating
+        <code><a href="../apidocs/org/apache/commons/configuration/SubnodeConfiguration.html">
+        SubnodeConfiguration</a></code> objects. The <code>SubnodeConfiguration</code>
+        operates on the same nodes as its parent configuration. Therefore, it
+        uses the same <code>Synchronizer</code> per default. Actually, the
+        relation between a configuration and its subconfigurations is pretty
+        complex because under certain circumstances updates have to be
+        propagated between all parties (also refer to the Javadocs of the
+        <code>configurationAt(String, boolean)</code> method of
+        <code><a href="../apidocs/org/apache/commons/configuration/BaseHierarchicalConfiguration.html">
+        BaseHierarchicalConfiguration</a></code>). To achieve this, the creation
+        of a <code>SubnodeConfiguration</code> requires updating of some internal
+        data structures to keep track of all involved <code>Configuration</code>
+        objects. Therefore, this operation is run with a write lock held which
+        may not be obvious.</li>
+        <li><code><a href="../apidocs/org/apache/commons/configuration/CombinedConfiguration.html">
+        CombinedConfiguration</a></code> is also a bit special regarding lock
+        handling. An instance manages a node tree which is constructed
+        dynamically from the nodes of all contained configurations using the
+        current <em>node combiner</em>. When one of the child configurations is
+        changed the node tree is reset so that is has to be re-constructed on
+        next access. Because this operation changes the configuration's internal
+        state it is performed with a write lock held. So even if only data is
+        read from a <code>CombinedConfiguration</code>, it may be the case that
+        temporarily a write lock is obtained for constructing the combined node
+        tree. Because the combined tree is built up from the nodes of the child
+        configurations it is recommended that child configurations share the
+        same <code>Synchronizer</code> with their parent
+        <code>CombinedConfiguration</code>.</li>
+      </ul>
+    </p>
+    </subsection>
+	</section>
+</body>
+
+</document>

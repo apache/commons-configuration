@@ -141,6 +141,13 @@
         <li><a href="howto_filesystems.html#File_Systems#File_Options_Provider">File Options Provider</a></li>
         <li><a href="howto_filesystems.html#File_Systems#File_Reloading_Strategy">File Reloading Strategy</a></li>
       </ul>
+      <li><a href="howto_concurrency.html">Configurations and Concurrent Access</a></li>
+      <ul>
+        <li><a href="howto_concurrency.html#Synchronizers">Synchronizers</a></li>
+        <li><a href="howto_concurrency.html#Basic_operations_and_thread-safety">Basic operations and thread-safety</a></li>
+        <li><a href="howto_concurrency.html#Other_flags">Other flags</a></li>
+        <li><a href="howto_concurrency.html#Special_cases">Special cases</a></li>
+      </ul>
     </ul>
     </section>
 
