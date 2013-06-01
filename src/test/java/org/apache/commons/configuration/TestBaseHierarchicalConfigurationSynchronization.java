@@ -23,13 +23,19 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
+import org.apache.commons.configuration.builder.FileBasedConfigurationBuilder;
+import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.io.FileHandler;
 import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
@@ -48,6 +54,9 @@ public class TestBaseHierarchicalConfigurationSynchronization
     /** The test synchronizer. */
     private SynchronizerTestImpl sync;
 
+    /** The test file to be read. */
+    private File testFile;
+
     /** The test configuration. */
     private BaseHierarchicalConfiguration config;
 
@@ -55,7 +64,8 @@ public class TestBaseHierarchicalConfigurationSynchronization
     public void setUp() throws Exception
     {
         XMLConfiguration c = new XMLConfiguration();
-        new FileHandler(c).load(ConfigurationAssert.getTestFile("test.xml"));
+        testFile = ConfigurationAssert.getTestFile("test.xml");
+        new FileHandler(c).load(testFile);
         sync = new SynchronizerTestImpl();
         c.setSynchronizer(sync);
         config = c;
@@ -316,5 +326,116 @@ public class TestBaseHierarchicalConfigurationSynchronization
         Configuration subset = config.subset("test");
         sync.verify(Methods.BEGIN_READ, Methods.END_READ);
         assertSame("Wrong Synchronizer", sync, subset.getSynchronizer());
+    }
+
+    /**
+     * Tests that access to an initialized configuration's sub configurations is
+     * possible without a special synchronizer.
+     */
+    @Test
+    public void testReadOnlyAccessToSubConfigurations()
+            throws ConfigurationException
+    {
+        FileBasedConfigurationBuilder<XMLConfiguration> builder =
+                new FileBasedConfigurationBuilder<XMLConfiguration>(
+                        XMLConfiguration.class);
+        builder.configure(Parameters.fileBased().setFile(testFile));
+        config = builder.getConfiguration();
+
+        CountDownLatch startLatch = new CountDownLatch(1);
+        Collection<SubNodeAccessThread> threads =
+                new ArrayList<SubNodeAccessThread>();
+        for (int i = 0; i < 4; i++)
+        {
+            SubNodeAccessThread t =
+                    new SubNodeAccessThread(config, startLatch, "element2",
+                            "subelement.subsubelement");
+            t.start();
+            threads.add(t);
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            SubNodeAccessThread t =
+                    new SubNodeAccessThread(config, startLatch,
+                            "element2.subelement", "subsubelement");
+            t.start();
+            threads.add(t);
+        }
+
+        startLatch.countDown();
+        for (SubNodeAccessThread t : threads)
+        {
+            t.verify();
+        }
+    }
+
+    /**
+     * A thread class for testing concurrent access to SubNode configurations.
+     */
+    private static class SubNodeAccessThread extends Thread
+    {
+        /** The test configuration. */
+        private final HierarchicalConfiguration config;
+
+        /** The latch for synchronizing thread start. */
+        private final CountDownLatch latch;
+
+        /** The key for the sub configuration. */
+        private final String keySub;
+
+        /** The key for the property. */
+        private final String keyProp;
+
+        /** The value read by this thread. */
+        private String value;
+
+        /**
+         * Creates a new instance of {@code SubNodeAccessThread}
+         *
+         * @param c the test configuration
+         * @param startLatch the start latch
+         * @param keySubConfig the key for the sub configuration
+         * @param keyProperty the key for the property
+         */
+        public SubNodeAccessThread(HierarchicalConfiguration c,
+                CountDownLatch startLatch, String keySubConfig,
+                String keyProperty)
+        {
+            config = c;
+            latch = startLatch;
+            keySub = keySubConfig;
+            keyProp = keyProperty;
+        }
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                latch.await();
+                SubnodeConfiguration subConfig = config.configurationAt(keySub);
+                value = subConfig.getString(keyProp);
+            }
+            catch (InterruptedException iex)
+            {
+                // ignore
+            }
+        }
+
+        /**
+         * Verifies that the correct value was read.
+         */
+        public void verify()
+        {
+            try
+            {
+                join();
+            }
+            catch (InterruptedException e)
+            {
+                fail("Waiting was interrupted: " + e);
+            }
+            assertEquals("Wrong value", "I'm complex!", value);
+        }
     }
 }
