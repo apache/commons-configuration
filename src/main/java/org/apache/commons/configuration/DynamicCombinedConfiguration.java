@@ -79,6 +79,13 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     };
 
+    /**
+     * Stores the current configuration for each involved thread. This value is
+     * set at the beginning of an operation and removed at the end.
+     */
+    private static final ThreadLocal<CurrentConfigHolder> currentConfig =
+            new ThreadLocal<CurrentConfigHolder>();
+
     /** The CombinedConfigurations */
     private final ConcurrentMap<String, CombinedConfiguration> configs =
             new ConcurrentHashMap<String, CombinedConfiguration>();
@@ -201,7 +208,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public void addConfiguration(Configuration config, String name,
             String at)
     {
-        beginWrite(false);
+        beginWrite(true);
         try
         {
             ConfigData cd = new ConfigData(config, name, at);
@@ -210,6 +217,9 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             {
                 namedConfigurations.put(name, config);
             }
+
+            // clear cache of all child configurations
+            configs.clear();
         }
         finally
         {
@@ -844,10 +854,6 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
 
     public void invalidateAll()
     {
-        if (configs == null)
-        {
-            return;
-        }
         for (CombinedConfiguration cc : configs.values())
         {
             cc.invalidate();
@@ -877,28 +883,105 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         }
     }
 
+    /**
+     * {@inheritDoc} This implementation ensures that the current configuration
+     * is initialized. The lock counter is increased.
+     */
+    @Override
+    protected void beginRead(boolean optimize)
+    {
+        CurrentConfigHolder cch = ensureCurrentConfiguration();
+        cch.incrementLockCount();
+        if (!optimize && cch.getCurrentConfiguration() == null)
+        {
+            // delegate to beginWrite() which creates the child configuration
+            beginWrite(optimize);
+            endWrite();
+        }
+
+        super.beginRead(optimize);
+    }
+
+    /**
+     * {@inheritDoc} This implementation ensures that the current configuration
+     * is initialized. If necessary, a new child configuration instance is
+     * created.
+     */
+    @Override
+    protected void beginWrite(boolean optimize)
+    {
+        CurrentConfigHolder cch = ensureCurrentConfiguration();
+        cch.incrementLockCount();
+
+        super.beginWrite(optimize);
+        if (!optimize && cch.getCurrentConfiguration() == null)
+        {
+            cch.setCurrentConfiguration(createChildConfiguration());
+            configs.put(cch.getKey(), cch.getCurrentConfiguration());
+            initChildConfiguration(cch.getCurrentConfiguration());
+        }
+    }
+
+    /**
+     * {@inheritDoc} This implementation clears the current configuration if
+     * necessary.
+     */
+    @Override
+    protected void endRead()
+    {
+        super.endRead();
+        releaseLock();
+    }
+
+    /**
+     * {@inheritDoc} This implementation clears the current configuration if
+     * necessary.
+     */
+    @Override
+    protected void endWrite()
+    {
+        super.endWrite();
+        releaseLock();
+    }
+
+    /**
+     * Decrements the lock count of the current configuration holder. If it
+     * reaches 0, the current configuration is removed. (It is then reevaluated
+     * when the next operation starts.)
+     */
+    private void releaseLock()
+    {
+        CurrentConfigHolder cch = currentConfig.get();
+        assert cch != null : "No current configuration!";
+        if(cch.decrementLockCountAndCheckRelease())
+        {
+            currentConfig.remove();
+        }
+    }
+
+    /**
+     * Returns the current configuration. This configuration was initialized at
+     * the beginning of an operation and stored in a thread-local variable. Some
+     * methods of this class call this method directly without requesting a lock
+     * before. To deal with this, we always request an additional read lock.
+     *
+     * @return the current configuration
+     */
     private CombinedConfiguration getCurrentConfig()
     {
-        String key = String.valueOf(localSubst.interpolate(keyPattern));
-        CombinedConfiguration config = configs.get(key);
-        // The double-checked works here due to the Thread guarantees of ConcurrentMap.
-        if (config == null)
+        CombinedConfiguration config;
+        String key;
+        beginRead(false);
+        try
         {
-            beginWrite(false);
-            try
-            {
-                config = configs.get(key);
-                if (config == null)
-                {
-                    config = createChildConfiguration();
-                    configs.put(key, config);
-                }
-            }
-            finally
-            {
-                endWrite();
-            }
+            config = currentConfig.get().getCurrentConfiguration();
+            key = currentConfig.get().getKey();
         }
+        finally
+        {
+            endRead();
+        }
+
         if (getLogger().isDebugEnabled())
         {
             getLogger().debug("Returning config for " + key + ": " + config);
@@ -907,16 +990,23 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     }
 
     /**
-     * Creates a new child configuration. This method creates a new
-     * {@code CombinedConfiguration} object and initializes it with properties
-     * from this instance.
+     * Creates a new, uninitialized child configuration.
      *
      * @return the new child configuration
      */
     private CombinedConfiguration createChildConfiguration()
     {
-        CombinedConfiguration config;
-        config = new CombinedConfiguration(getNodeCombiner());
+        return new CombinedConfiguration(getNodeCombiner());
+    }
+
+    /**
+     * Initializes a newly created child configuration. This method copies a
+     * bunch of settings from this instance to the child configuration.
+     *
+     * @param config the child configuration to be initialized
+     */
+    private void initChildConfiguration(CombinedConfiguration config)
+    {
         if (loggerName != null)
         {
             Log log = LogFactory.getLog(loggerName);
@@ -942,8 +1032,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             config.addConfiguration(data.getConfiguration(), data.getName(),
                     data.getAt());
         }
-        config.setSynchronizer(getSynchronizer());
-        return config;
+        config.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
     }
 
     /**
@@ -967,6 +1056,28 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             }
         };
         return ci;
+    }
+
+    /**
+     * Checks whether the current configuration is set. If not, a
+     * {@code CurrentConfigHolder} is now created and initialized, and
+     * associated with the current thread. The member for the current
+     * configuration is undefined if for the current key no configuration exists
+     * yet.
+     *
+     * @return the {@code CurrentConfigHolder} instance for the current thread
+     */
+    private CurrentConfigHolder ensureCurrentConfiguration()
+    {
+        CurrentConfigHolder cch = currentConfig.get();
+        if (cch == null)
+        {
+            String key = String.valueOf(localSubst.interpolate(keyPattern));
+            cch = new CurrentConfigHolder(key);
+            cch.setCurrentConfiguration(configs.get(key));
+            currentConfig.set(cch);
+        }
+        return cch;
     }
 
     /**
@@ -1028,5 +1139,86 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             return at;
         }
 
+    }
+
+    /**
+     * A simple data class holding information about the current configuration
+     * while an operation for a thread is processed.
+     */
+    private static class CurrentConfigHolder
+    {
+        /** Stores the current configuration of the current thread. */
+        private CombinedConfiguration currentConfiguration;
+
+        /**
+         * Stores the key of the configuration evaluated for the current thread
+         * at the beginning of an operation.
+         */
+        private final String key;
+
+        /** A counter for reentrant locks. */
+        private int lockCount;
+
+        /**
+         * Creates a new instance of {@code CurrentConfigHolder} and initializes
+         * it with the key for the current configuration.
+         *
+         * @param curKey the current key
+         */
+        public CurrentConfigHolder(String curKey)
+        {
+            key = curKey;
+        }
+
+        /**
+         * Returns the current configuration.
+         *
+         * @return the current configuration
+         */
+        public CombinedConfiguration getCurrentConfiguration()
+        {
+            return currentConfiguration;
+        }
+
+        /**
+         * Sets the current configuration.
+         *
+         * @param currentConfiguration the current configuration
+         */
+        public void setCurrentConfiguration(
+                CombinedConfiguration currentConfiguration)
+        {
+            this.currentConfiguration = currentConfiguration;
+        }
+
+        /**
+         * Returns the current key.
+         *
+         * @return the current key
+         */
+        public String getKey()
+        {
+            return key;
+        }
+
+        /**
+         * Increments the lock counter.
+         */
+        public void incrementLockCount()
+        {
+            lockCount++;
+        }
+
+        /**
+         * Decrements the lock counter and checks whether it has reached 0. In
+         * this cause, the operation is complete, and the lock can be released.
+         *
+         * @return <b>true</b> if the lock count reaches 0, <b>false</b>
+         *         otherwise
+         */
+        public boolean decrementLockCountAndCheckRelease()
+        {
+            return --lockCount == 0;
+        }
     }
 }
