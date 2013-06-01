@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.CombinedConfiguration;
@@ -1250,6 +1252,33 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests whether a newly created instance can be read concurrently without a
+     * special synchronizer.
+     */
+    @Test
+    public void testConcurrentReadAccessWithoutSynchronizer()
+            throws ConfigurationException
+    {
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        CombinedConfiguration config = builder.getConfiguration();
+        final int threadCount = 32;
+        CountDownLatch startLatch = new CountDownLatch(1);
+        ReadThread[] threads = new ReadThread[threadCount];
+        for (int i = 0; i < threadCount; i++)
+        {
+            threads[i] = new ReadThread(config, startLatch);
+            threads[i].start();
+        }
+
+        startLatch.countDown();
+        for (ReadThread t : threads)
+        {
+            t.verify();
+        }
+    }
+
+    /**
      * A test builder provider implementation for testing whether providers can
      * be defined in the definition file.
      */
@@ -1421,6 +1450,58 @@ public class TestCombinedConfigurationBuilder
         public List<ConfigurationBuilder<? extends Configuration>> getBuilders()
         {
             return builders;
+        }
+    }
+
+    /**
+     * A thread class for testing concurrent read access to a newly created
+     * configuration.
+     */
+    private static class ReadThread extends Thread
+    {
+        /** The configuration to access. */
+        private final CombinedConfiguration config;
+
+        /** The start latch. */
+        private final CountDownLatch startLatch;
+
+        /** The value read from the configuration. */
+        private Boolean value;
+
+        public ReadThread(CombinedConfiguration cc, CountDownLatch latch)
+        {
+            config = cc;
+            startLatch = latch;
+        }
+
+        @Override
+        public void run()
+        {
+            try
+            {
+                startLatch.await();
+                value = config.getBoolean("configuration.loaded");
+            }
+            catch (InterruptedException iex)
+            {
+                // ignore
+            }
+        }
+
+        /**
+         * Verifies that the correct value was read.
+         */
+        public void verify()
+        {
+            try
+            {
+                join();
+            }
+            catch (InterruptedException iex)
+            {
+                fail("Waiting was interrupted: " + iex);
+            }
+            assertEquals("Wrong value read", Boolean.TRUE, value);
         }
     }
 }
