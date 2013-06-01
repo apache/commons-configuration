@@ -882,9 +882,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
 
         if (changeListener == null)
         {
-            changeListener = createChangeListener();
-            subConfigs = new WeakHashMap<SubnodeConfiguration, Object>();
-            addConfigurationListener(changeListener);
+            setUpSubConfigManagementData();
         }
         sub.addConfigurationListener(changeListener);
         sub.initSubConfigManagementData(subConfigs, changeListener);
@@ -912,6 +910,17 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     {
         subConfigs = subMap;
         changeListener = listener;
+    }
+
+    /**
+     * Initializes internal data structures for managing associated
+     * {@code SubnodeConfiguration} objects.
+     */
+    private void setUpSubConfigManagementData()
+    {
+        changeListener = createChangeListener();
+        subConfigs = new WeakHashMap<SubnodeConfiguration, Object>();
+        addConfigurationListener(changeListener);
     }
 
     /**
@@ -1219,6 +1228,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             getRootNode().visit(v);
             copy.setRootNode(v.getClone());
             copy.cloneInterpolator(this);
+            copy.setUpSubConfigManagementData();
             copy.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
 
             return copy;

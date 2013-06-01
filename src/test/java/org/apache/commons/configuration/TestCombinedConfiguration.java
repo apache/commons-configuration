@@ -29,6 +29,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -391,8 +392,8 @@ public class TestCombinedConfiguration
                 .getNodeCombiner());
         assertEquals("Wrong number of names", config.getConfigurationNames()
                 .size(), cc2.getConfigurationNames().size());
-        assertTrue("Event listeners were cloned", cc2
-                .getConfigurationListeners().isEmpty());
+        assertTrue("Found duplicate event listeners", Collections.disjoint(cc2
+                .getConfigurationListeners(), config.getConfigurationListeners()));
 
         StrictConfigurationComparator comp = new StrictConfigurationComparator();
         for (int i = 0; i < config.getNumberOfConfigurations(); i++)

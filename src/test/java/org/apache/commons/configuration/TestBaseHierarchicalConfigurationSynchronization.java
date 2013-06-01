@@ -24,11 +24,14 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.tree.ConfigurationNode;
 import org.apache.commons.configuration.tree.DefaultConfigurationNode;
 import org.junit.Before;
 import org.junit.Test;
@@ -235,6 +238,57 @@ public class TestBaseHierarchicalConfigurationSynchronization
                 Methods.END_WRITE, Methods.BEGIN_WRITE, Methods.END_WRITE);
         assertNull("Sub2 still attached", sub2.getSubnodeKey());
         assertNull("Subsub still attached", subsub.getSubnodeKey());
+    }
+
+    /**
+     * Tests whether a clone() operation also copies the data used to manage
+     * SubnodeConfiguration objects.
+     */
+    @Test
+    public void testCloneCopySubnodeData()
+    {
+        final Collection<SubnodeConfiguration> validatedConfigs =
+                new LinkedList<SubnodeConfiguration>();
+
+        // A special configuration class which creates SubConfigurations that
+        // record validation operations
+        BaseHierarchicalConfiguration conf2 =
+                new BaseHierarchicalConfiguration(config)
+                {
+                    private static final long serialVersionUID = 1L;
+
+                    @Override
+                    protected SubnodeConfiguration createSubnodeConfiguration(
+                            ConfigurationNode node, String subnodeKey)
+                    {
+                        return new SubnodeConfiguration(this, node, subnodeKey)
+                        {
+                            private static final long serialVersionUID = 1L;
+
+                            @Override
+                            void validateRootNode()
+                            {
+                                super.validateRootNode();
+                                validatedConfigs.add(this);
+                            }
+                        };
+                    }
+                };
+
+        SubnodeConfiguration sub =
+                conf2.configurationAt("element2.subelement", true);
+        HierarchicalConfiguration copy =
+                (HierarchicalConfiguration) conf2.clone();
+        SubnodeConfiguration sub2 =
+                copy.configurationAt("element2.subelement", true);
+        // This must not cause a validate operation on sub1, but on sub2
+        copy.clearTree("element2");
+        assertNull("Sub2 not detached", sub2.getSubnodeKey());
+        assertNotNull("Sub 1 was detached", sub.getSubnodeKey());
+        assertEquals("Wrong number of validated configs", 1,
+                validatedConfigs.size());
+        assertSame("Wrong validated config", sub2, validatedConfigs.iterator()
+                .next());
     }
 
     /**

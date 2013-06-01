@@ -726,17 +726,18 @@ public class TestHierarchicalConfiguration
     @Test
     public void testCloneWithEventListeners()
     {
-        config.addConfigurationListener(new ConfigurationListener()
+        ConfigurationListener l = new ConfigurationListener()
         {
             public void configurationChanged(ConfigurationEvent event)
             {
                 // just a dummy
             }
-        });
+        };
+        config.addConfigurationListener(l);
         BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) config
                 .clone();
-        assertTrue("Event listener registered at clone", copy
-                .getConfigurationListeners().isEmpty());
+        assertFalse("Event listener registered at clone", copy
+                .getConfigurationListeners().contains(l));
     }
 
     /**
