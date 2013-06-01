@@ -247,7 +247,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public NodeCombiner getNodeCombiner()
     {
-        readLock();
+        beginRead(true);
         try
         {
             return nodeCombiner;
@@ -275,7 +275,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                     "Node combiner must not be null!");
         }
 
-        writeLock();
+        beginWrite(true);
         try
         {
             this.nodeCombiner = nodeCombiner;
@@ -296,7 +296,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public ExpressionEngine getConversionExpressionEngine()
     {
-        readLock();
+        beginRead(true);
         try
         {
             return conversionExpressionEngine;
@@ -325,7 +325,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     public void setConversionExpressionEngine(
             ExpressionEngine conversionExpressionEngine)
     {
-        writeLock();
+        beginWrite(true);
         try
         {
             this.conversionExpressionEngine = conversionExpressionEngine;
@@ -361,7 +361,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
                     "Added configuration must not be null!");
         }
 
-        writeLock();
+        beginWrite(true);
         try
         {
             if (name != null && namedConfigurations.containsKey(name))
@@ -427,7 +427,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public int getNumberOfConfigurations()
     {
-        readLock();
+        beginRead(true);
         try
         {
             return getNumberOfConfigurationsInternal();
@@ -448,7 +448,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Configuration getConfiguration(int index)
     {
-        readLock();
+        beginRead(true);
         try
         {
             ConfigData cd = configurations.get(index);
@@ -469,7 +469,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Configuration getConfiguration(String name)
     {
-        readLock();
+        beginRead(true);
         try
         {
             return namedConfigurations.get(name);
@@ -487,7 +487,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public List<Configuration> getConfigurations()
     {
-        readLock();
+        beginRead(true);
         try
         {
             List<Configuration> list =
@@ -513,7 +513,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public List<String> getConfigurationNameList()
     {
-        readLock();
+        beginRead(true);
         try
         {
             List<String> list = new ArrayList<String>(getNumberOfConfigurationsInternal());
@@ -594,7 +594,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public Set<String> getConfigurationNames()
     {
-        readLock();
+        beginRead(true);
         try
         {
             return namedConfigurations.keySet();
@@ -615,7 +615,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     public void invalidate()
     {
-        writeLock();
+        beginWrite(true);
         try
         {
             invalidateInternal();
@@ -765,10 +765,17 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     protected void beginRead(boolean optimize)
     {
+        if (optimize)
+        {
+            // just need a lock, don't construct configuration
+            super.beginRead(true);
+            return;
+        }
+
         boolean lockObtained = false;
         do
         {
-            readLock();
+            super.beginRead(optimize);
             if (combinedRoot != null)
             {
                 lockObtained = true;
@@ -790,7 +797,13 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     protected void beginWrite(boolean optimize)
     {
-        writeLock();
+        super.beginWrite(true);
+        if(optimize)
+        {
+            // just need a lock, don't construct configuration
+            return;
+        }
+
         try
         {
             if (combinedRoot == null)
@@ -931,26 +944,6 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     private int getNumberOfConfigurationsInternal()
     {
         return configurations.size();
-    }
-
-    /**
-     * Obtains this configuration's read lock without performing additional
-     * initialization. This method is called by operations which do not require
-     * access to the root node (and thus do not have to re-construct it).
-     */
-    private void readLock()
-    {
-        super.beginRead(false);
-    }
-
-    /**
-     * Obtains this configuration's write lock without performing additional
-     * initialization. This method is called by operations which do not require
-     * access to the root node (and thus do not have to re-construct it).
-     */
-    private void writeLock()
-    {
-        super.beginWrite(false);
     }
 
     /**
