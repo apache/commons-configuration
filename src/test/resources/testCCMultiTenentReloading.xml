@@ -27,6 +27,7 @@
   </header>
   <override>
     <multiXml filePattern="$${sys:Id}"
-               config-name="clientConfig" config-reload="true"/>
+               config-name="clientConfig" config-reload="true"
+               config-optional="true" config-forceCreate="true"/>
   </override>
 </configuration>

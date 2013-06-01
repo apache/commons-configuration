@@ -1236,6 +1236,20 @@ public class TestCombinedConfigurationBuilder
     }
 
     /**
+     * Tests that the combined configuration has been fully constructed
+     * (including its root node) when it is returned from the builder.
+     */
+    @Test
+    public void testRootNodeInitializedAfterCreation()
+            throws ConfigurationException
+    {
+        builder.configure(new FileBasedBuilderParametersImpl()
+                .setFile(TEST_FILE));
+        CombinedConfiguration cc = builder.getConfiguration();
+        assertNotNull("Root node not initialized", cc.getRootNode());
+    }
+
+    /**
      * A test builder provider implementation for testing whether providers can
      * be defined in the definition file.
      */

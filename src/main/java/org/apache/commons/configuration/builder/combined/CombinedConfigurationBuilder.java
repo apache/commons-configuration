@@ -811,6 +811,8 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
             initNodeCombinerListNodes(addConfig, config, KEY_ADDITIONAL_LIST);
             data.createAndAddConfigurations(addConfig, data.getUnionSources());
         }
+
+        result.isEmpty();  // this sets up the node structure
         currentConfiguration = null;
     }
 

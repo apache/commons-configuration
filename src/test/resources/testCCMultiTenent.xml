@@ -30,7 +30,8 @@
   </header>
   <override>
     <multiXml filePattern="testMultiConfiguration_$${sys:Id}.xml"
-               config-name="clientConfig" schemaValidation="false">
+               config-name="clientConfig" schemaValidation="false"
+               config-optional="true" config-forceCreate="true">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </multiXml>
