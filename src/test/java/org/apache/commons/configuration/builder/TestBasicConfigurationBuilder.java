@@ -30,10 +30,12 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.Initializable;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
@@ -512,6 +514,23 @@ public class TestBasicConfigurationBuilder
     }
 
     /**
+     * Tests whether a configuration implementing {@code Initializable} is
+     * correctly handled.
+     */
+    @Test
+    public void testInitializableCalled() throws ConfigurationException
+    {
+        BasicConfigurationBuilder<InitializableConfiguration> builder =
+                new BasicConfigurationBuilder<InitializableConfiguration>(
+                        InitializableConfiguration.class);
+        builder.configure(new BasicBuilderParameters()
+                .setThrowExceptionOnMissing(true));
+        InitializableConfiguration config = builder.getConfiguration();
+        assertEquals("Property not correctly initialized",
+                "Initialized with flag true", config.getInitProperty());
+    }
+
+    /**
      * A test thread class for testing whether the builder's result object can
      * be requested concurrently.
      */
@@ -583,6 +602,32 @@ public class TestBasicConfigurationBuilder
                 throws ConfigurationException
         {
             throw new ConfigurationException("Initialization test exception!");
+        }
+    }
+
+    /**
+     * A test configuration implementation which also implements Initializable.
+     */
+    public static class InitializableConfiguration extends BaseConfiguration
+            implements Initializable
+    {
+        /** A property which is initialized if the builder works as expected. */
+        private String initProperty;
+
+        /**
+         * Sets the value of the initProperty member based on other flag values.
+         * This tests whether the method is called after other properties have
+         * been set.
+         */
+        public void initialize()
+        {
+            initProperty =
+                    "Initialized with flag " + isThrowExceptionOnMissing();
+        }
+
+        public String getInitProperty()
+        {
+            return initProperty;
         }
     }
 }

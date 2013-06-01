@@ -27,6 +27,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ConfigurationUtils;
+import org.apache.commons.configuration.Initializable;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
 import org.apache.commons.configuration.beanutils.BeanHelper;
 import org.apache.commons.configuration.beanutils.ConstructorArg;
@@ -50,6 +51,12 @@ import org.apache.commons.lang3.event.EventListenerSupport;
  * This cache - and also the initialization properties set so far - can be
  * flushed by calling one of the {@code reset()} methods. That way other
  * {@code Configuration} instances with different properties can be created.
+ * </p>
+ * <p>
+ * If the newly created {@code Configuration} object implements the
+ * {@code Initializable} interface, its {@code initialize()} method is called
+ * after all initialization properties have been set. This way a concrete
+ * implementation class can perform arbitrary initialization steps.
  * </p>
  * <p>
  * There are multiple options for setting up a {@code BasicConfigurationBuilder}
@@ -482,6 +489,7 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
     {
         BeanHelper.initBean(obj, getResultDeclaration());
         registerEventListeners(obj);
+        handleInitializable(obj);
     }
 
     /**
@@ -680,5 +688,21 @@ public class BasicConfigurationBuilder<T extends Configuration> implements
             }
         }
         return filteredMap;
+    }
+
+    /**
+     * Performs special initialization of the result object. This method is
+     * called after parameters have been set on a newly created result instance.
+     * If supported by the result class, the {@code initialize()} method is now
+     * called.
+     *
+     * @param obj the newly created result object
+     */
+    private void handleInitializable(T obj)
+    {
+        if (obj instanceof Initializable)
+        {
+            ((Initializable) obj).initialize();
+        }
     }
 }
