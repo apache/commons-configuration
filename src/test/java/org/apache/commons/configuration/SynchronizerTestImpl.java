@@ -100,6 +100,18 @@ public class SynchronizerTestImpl implements Synchronizer
     }
 
     /**
+     * Verifies that the specified sequence of methods was called somewhere in
+     * the interaction with the synchronizer.
+     *
+     * @param expMethods the expected methods
+     */
+    public void verifyContains(Methods... expMethods)
+    {
+        assertTrue("Expected methods not found: " + methods, methods.toString()
+                .indexOf(constructExpectedMethods(expMethods)) >= 0);
+    }
+
+    /**
      * Generates a string with expected methods from the given array.
      *
      * @param expMethods the array with expected methods

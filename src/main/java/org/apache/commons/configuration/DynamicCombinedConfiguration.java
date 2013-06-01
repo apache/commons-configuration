@@ -41,13 +41,28 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be used. Each CombinedConfiguration
- * is referenced by a key that is dynamically constructed from a key pattern on each call. The key pattern
- * will be resolved using the configured ConfigurationInterpolator.
+ * <p>
+ * DynamicCombinedConfiguration allows a set of CombinedConfigurations to be
+ * used.
+ * </p>
+ * <p>
+ * Each CombinedConfiguration is referenced by a key that is dynamically
+ * constructed from a key pattern on each call. The key pattern will be resolved
+ * using the configured ConfigurationInterpolator.
+ * </p>
+ * <p>
+ * This Configuration implementation uses the configured {@code Synchronizer} to
+ * guard itself against concurrent access. If there are multiple threads
+ * accessing an instance concurrently, a fully functional {@code Synchronizer}
+ * implementation (e.g. {@code ReadWriteSynchronizer}) has to be used to ensure
+ * consistency and to avoid exceptions. The {@code Synchronizer} assigned to an
+ * instance is also passed to child configuration objects when they are created.
+ * </p>
+ *
  * @since 1.6
  * @author <a
- * href="http://commons.apache.org/configuration/team-list.html">Commons
- * Configuration team</a>
+ *         href="http://commons.apache.org/configuration/team-list.html">Commons
+ *         Configuration team</a>
  * @version $Id$
  */
 public class DynamicCombinedConfiguration extends CombinedConfiguration
@@ -186,11 +201,19 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public void addConfiguration(Configuration config, String name,
             String at)
     {
-        ConfigData cd = new ConfigData(config, name, at);
-        configurations.add(cd);
-        if (name != null)
+        beginWrite();
+        try
         {
-            namedConfigurations.put(name, config);
+            ConfigData cd = new ConfigData(config, name, at);
+            configurations.add(cd);
+            if (name != null)
+            {
+                namedConfigurations.put(name, config);
+            }
+        }
+        finally
+        {
+            endWrite();
         }
     }
        /**
@@ -202,7 +225,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public int getNumberOfConfigurations()
     {
-        return configurations.size();
+        beginRead();
+        try
+        {
+            return configurations.size();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -216,8 +247,16 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(int index)
     {
-        ConfigData cd = configurations.get(index);
-        return cd.getConfiguration();
+        beginRead();
+        try
+        {
+            ConfigData cd = configurations.get(index);
+            return cd.getConfiguration();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -230,7 +269,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(String name)
     {
-        return namedConfigurations.get(name);
+        beginRead();
+        try
+        {
+            return namedConfigurations.get(name);
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -244,7 +291,15 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Set<String> getConfigurationNames()
     {
-        return namedConfigurations.keySet();
+        beginRead();
+        try
+        {
+            return namedConfigurations.keySet();
+        }
+        finally
+        {
+            endRead();
+        }
     }
 
     /**
@@ -274,16 +329,24 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public boolean removeConfiguration(Configuration config)
     {
-        for (int index = 0; index < getNumberOfConfigurations(); index++)
+        beginWrite();
+        try
         {
-            if (configurations.get(index).getConfiguration() == config)
+            for (int index = 0; index < getNumberOfConfigurations(); index++)
             {
-                removeConfigurationAt(index);
-
+                if (configurations.get(index).getConfiguration() == config)
+                {
+                    removeConfigurationAt(index);
+                    return true;
+                }
             }
-        }
 
-        return super.removeConfiguration(config);
+            return false;
+        }
+        finally
+        {
+            endWrite();
+        }
     }
 
     /**
@@ -295,13 +358,22 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration removeConfigurationAt(int index)
     {
-        ConfigData cd = configurations.remove(index);
-        if (cd.getName() != null)
+        beginWrite();
+        try
         {
-            namedConfigurations.remove(cd.getName());
+            ConfigData cd = configurations.remove(index);
+            if (cd.getName() != null)
+            {
+                namedConfigurations.remove(cd.getName());
+            }
+            return cd.getConfiguration();
         }
-        return super.removeConfigurationAt(index);
+        finally
+        {
+            endWrite();
+        }
     }
+
     /**
      * Returns the configuration root node of this combined configuration. This
      * method will construct a combined node structure using the current node
@@ -812,44 +884,65 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         // The double-checked works here due to the Thread guarantees of ConcurrentMap.
         if (config == null)
         {
-            synchronized (configs)
+            beginWrite();
+            try
             {
                 config = configs.get(key);
                 if (config == null)
                 {
-                    config = new CombinedConfiguration(getNodeCombiner());
-                    if (loggerName != null)
-                    {
-                        Log log = LogFactory.getLog(loggerName);
-                        if (log != null)
-                        {
-                            config.setLogger(log);
-                        }
-                    }
-                    config.setExpressionEngine(this.getExpressionEngine());
-                    config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
-                    config.setConversionExpressionEngine(getConversionExpressionEngine());
-                    config.setListDelimiter(getListDelimiter());
-                    for (ConfigurationErrorListener listener : getErrorListeners())
-                    {
-                        config.addErrorListener(listener);
-                    }
-                    for (ConfigurationListener listener : getConfigurationListeners())
-                    {
-                        config.addConfigurationListener(listener);
-                    }
-                    for (ConfigData data : configurations)
-                    {
-                        config.addConfiguration(data.getConfiguration(), data.getName(), data.getAt());
-                    }
+                    config = createChildConfiguration();
                     configs.put(key, config);
                 }
+            }
+            finally
+            {
+                endWrite();
             }
         }
         if (getLogger().isDebugEnabled())
         {
             getLogger().debug("Returning config for " + key + ": " + config);
         }
+        return config;
+    }
+
+    /**
+     * Creates a new child configuration. This method creates a new
+     * {@code CombinedConfiguration} object and initializes it with properties
+     * from this instance.
+     *
+     * @return the new child configuration
+     */
+    private CombinedConfiguration createChildConfiguration()
+    {
+        CombinedConfiguration config;
+        config = new CombinedConfiguration(getNodeCombiner());
+        if (loggerName != null)
+        {
+            Log log = LogFactory.getLog(loggerName);
+            if (log != null)
+            {
+                config.setLogger(log);
+            }
+        }
+        config.setExpressionEngine(this.getExpressionEngine());
+        config.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        config.setConversionExpressionEngine(getConversionExpressionEngine());
+        config.setListDelimiter(getListDelimiter());
+        for (ConfigurationErrorListener listener : getErrorListeners())
+        {
+            config.addErrorListener(listener);
+        }
+        for (ConfigurationListener listener : getConfigurationListeners())
+        {
+            config.addConfigurationListener(listener);
+        }
+        for (ConfigData data : configurations)
+        {
+            config.addConfiguration(data.getConfiguration(), data.getName(),
+                    data.getAt());
+        }
+        config.setSynchronizer(getSynchronizer());
         return config;
     }
 

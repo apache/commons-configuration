@@ -20,6 +20,8 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -30,6 +32,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Random;
 
+import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.BuilderConfigurationWrapperFactory;
 import org.apache.commons.configuration.builder.ConfigurationBuilder;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
@@ -40,8 +43,9 @@ import org.apache.commons.configuration.builder.fluent.Parameters;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.configuration.sync.LockMode;
+import org.apache.commons.configuration.sync.ReadWriteSynchronizer;
 import org.apache.commons.configuration.tree.xpath.XPathExpressionEngine;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestDynamicCombinedConfiguration
@@ -102,12 +106,111 @@ public class TestDynamicCombinedConfiguration
         assertEquals("a\\,b\\,c", config.getString("split/list2"));
     }
 
-    @Test @Ignore
+    /**
+     * Prepares a test for calling the Synchronizer. This method creates a test
+     * Synchronizer, installs it at the configuration and returns it.
+     *
+     * @param config the configuration
+     * @return the test Synchronizer
+     */
+    private SynchronizerTestImpl prepareSynchronizerTest(Configuration config)
+    {
+        config.lock(LockMode.READ);
+        config.unlock(LockMode.READ); // ensure that root node is constructed
+        SynchronizerTestImpl sync = new SynchronizerTestImpl();
+        config.setSynchronizer(sync);
+        return sync;
+    }
+
+    /**
+     * Tests whether adding a configuration is synchronized.
+     */
+    @Test
+    public void testAddConfigurationSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        config.addConfiguration(new PropertiesConfiguration());
+        sync.verify(Methods.BEGIN_WRITE, Methods.END_WRITE);
+    }
+
+    /**
+     * Tests whether querying the number of configurations is synchronized.
+     */
+    @Test
+    public void testGetNumberOfConfigurationsSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        config.getNumberOfConfigurations();
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether querying a configuration by index is synchronized.
+     */
+    @Test
+    public void testGetConfigurationByIdxSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        Configuration child = new PropertiesConfiguration();
+        config.addConfiguration(child);
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        assertSame("Wrong configuration", child, config.getConfiguration(0));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether querying a configuration by name is synchronized.
+     */
+    @Test
+    public void testGetConfigurationByNameSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        assertNull("Wrong result", config.getConfiguration("unknown config"));
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether querying the set of configuration names is synchronized.
+     */
+    @Test
+    public void testGetConfigurationNamesSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        config.getConfigurationNames();
+        sync.verify(Methods.BEGIN_READ, Methods.END_READ);
+    }
+
+    /**
+     * Tests whether removing a child configuration is synchronized.
+     */
+    @Test
+    public void testRemoveConfigurationSynchronized()
+    {
+        DynamicCombinedConfiguration config =
+                new DynamicCombinedConfiguration();
+        String configName = "testConfig";
+        config.addConfiguration(new PropertiesConfiguration(), configName);
+        SynchronizerTestImpl sync = prepareSynchronizerTest(config);
+        config.removeConfiguration(configName);
+        sync.verifyContains(Methods.BEGIN_WRITE);
+    }
+
+    @Test
     public void testConcurrentGetAndReload() throws Exception
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+                .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals("Wrong value", "50", config.getString("rowsPerPage"));
@@ -129,12 +232,13 @@ public class TestDynamicCombinedConfiguration
         assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test @Ignore
+    @Test
     public void testConcurrentGetAndReload2() throws Exception
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+                .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
@@ -159,12 +263,13 @@ public class TestDynamicCombinedConfiguration
         assertEquals(totalFailures + " failures Occurred", 0, totalFailures);
     }
 
-    @Test @Ignore
+    @Test
     public void testConcurrentGetAndReloadMultipleClients() throws Exception
     {
         System.getProperties().remove("Id");
         CombinedConfigurationBuilder builder = new CombinedConfigurationBuilder();
-        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE));
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+                .setSynchronizer(new ReadWriteSynchronizer()));
         CombinedConfiguration config = builder.getConfiguration();
 
         assertEquals(config.getString("rowsPerPage"), "50");
@@ -213,6 +318,7 @@ public class TestDynamicCombinedConfiguration
                 new ReloadingCombinedConfigurationBuilder();
         builder.configure(Parameters
                 .combined()
+                .setSynchronizer(new ReadWriteSynchronizer())
                 .setDefinitionBuilderParameters(
                         new FileBasedBuilderParametersImpl()
                                 .setFile(MULTI_DYNAMIC_FILE))
