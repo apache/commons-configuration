@@ -147,6 +147,7 @@
         <li><a href="howto_concurrency.html#Basic_operations_and_thread-safety">Basic operations and thread-safety</a></li>
         <li><a href="howto_concurrency.html#Other_flags">Other flags</a></li>
         <li><a href="howto_concurrency.html#Special_cases">Special cases</a></li>
+        <li><a href="howto_concurrency.html#Read-only_configurations">Read-only configurations</a></li>
       </ul>
     </ul>
     </section>

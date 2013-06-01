@@ -242,7 +242,81 @@ finally
         configurations it is recommended that child configurations share the
         same <code>Synchronizer</code> with their parent
         <code>CombinedConfiguration</code>.</li>
+        <li>Derived from <code>CombinedConfiguration</code> is
+        <code><a href="../apidocs/org/apache/commons/configuration/DynamicCombinedConfiguration.html">
+        DynamicCombinedConfiguration</a></code> which extends its base class by
+        the ability to manage multiple combined configuration instances. The
+        current instance is selected based on a key constructed by a
+        <code><a href="../apidocs/org/apache/commons/configuration/interpol/ConfigurationInterpolator.html">
+        ConfigurationInterpolator</a></code> instance. If this yields a key
+        which has not been encountered before, a new <code>CombinedConfiguration</code>
+        object is created. Here again it turns out that even a read access to a
+        <code>DynamicCombinedConfiguration</code> may cause internal state
+        changes which require a write lock to be held. The <code>Synchronizer</code>
+        objects used by the child combined configurations are not under the
+        control of client code. The <code>DynamicCombinedConfiguration</code>
+        initializes each child configuration with a new <code>Synchronizer</code>
+        that is a clone from its own.</li>
       </ul>
+    </p>
+    </subsection>
+
+    <subsection name="Read-only configurations">
+    <p>
+      Objects that are not changed typically play well in an environment with
+      multiple threads - provided that they are initialized in a safe way.
+      For the safe initialization of <code>Configuration</code> objects
+      specialized builders are responsible. These are classes derived from
+      <code><a href="../apidocs/org/apache/commons/configuration/builder/BasicConfigurationBuilder.html">
+      BasicConfigurationBuilder</a></code>. Configuration builders are designed
+      to be thread-safe: their <code>getConfiguration()</code> method is
+      synchronized, so that configurations can be created and initialized in a
+      safe way even if multiple threads are interacting with the builder.
+      Synchronization also ensures that all values stored in member fields of
+      newly created <code>Configuration</code> objects are safely published to
+      all involved threads.
+    </p>
+    <p>
+      As long as a configuration returned freshly from a builder is not changed
+      in any way, it can be used without a special <code>Synchronizer</code>
+      (this means that the default <code>NoOpSynchronizer</code> is used).
+      As was discussed in the previous section, there are special cases in which
+      read-only access to <code>Configuration</code> objects causes internal
+      state changes. This would be critical without a fully functional
+      <code>Synchronizer</code> object. However, the builders dealing with
+      affected classes are implemented in a way that they take care about these
+      special cases and perform extra initialization steps which make write
+      locks for later read operations unneccessary.
+    </p>
+    <p>
+      For instance, the builder for combined configurations explicitly accesses
+      a newly created <code>CombinedConfiguration</code> object so that it is
+      forced to construct its node tree. This happens in the builder's
+      <code>getConfiguration()</code> method which is synchronized. So provided
+      that the combined configuration is not changed (no other child
+      configurations are added, no updates are performed on existing child
+      configurations), no protection against concurrent access is needed - a
+      simple <code>NoOpSynchronizer</code> can do the job.
+    </p>
+    <p>
+      Situation is similar for the other special cases described in the previous
+      section. One exception is <code>DynamicCombinedConfiguration</code>:
+      Whether an instance can be used in a read-only manner without a fully
+      functional <code>Synchronizer</code> depends on the way it constructs its
+      keys. If the keys remain constant during the life time of an instance
+      (for instance, they are based on a system property specified as startup
+      option of the Java virtual machine), <code>NoOpSynchronizer</code> is
+      sufficient. If the keys are more dynamic, a fully functional
+      <code>Synchronizer</code> is required for concurrent access - even if only
+      reads are performed.
+    </p>
+    <p>
+      So to sum up, except for very few cases configurations can be read by
+      multiple threads without having to use a special <code>Synchronizer</code>.
+      For this to be safe, the configurations have to be created through a
+      builder, and they must not be updated by any of these threads. A good way
+      to prevent updates to a <code>Configuration</code> object is to wrap it
+      by an immutable configuration.
     </p>
     </subsection>
 	</section>
