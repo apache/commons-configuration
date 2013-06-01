@@ -723,7 +723,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
         boolean globalSection = false;
         boolean inSection = false;
 
-        beginRead();
+        beginRead(false);
         try
         {
             for (ConfigurationNode node : getRootNode().getChildren())
@@ -795,7 +795,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
                 // the passed in key does not map to exactly one node
                 // obtain the node for the section, create it on demand
                 // (creation of a SubnodeConfiguration has to be synchronized)
-                beginWrite();
+                beginWrite(false);
                 try
                 {
                     return createAndInitializeSubnodeConfiguration(
@@ -841,7 +841,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     {
         ViewNode parent = new ViewNode();
 
-        beginWrite();
+        beginWrite(false);
         try
         {
             for (ConfigurationNode node : getRootNode().getChildren())

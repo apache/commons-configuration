@@ -192,7 +192,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      */
     public String getSubnodeKey()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return subnodeKey;
@@ -213,7 +213,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      */
     public void setSubnodeKey(String subnodeKey)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             this.subnodeKey = subnodeKey;
@@ -237,7 +237,7 @@ public class SubnodeConfiguration extends BaseHierarchicalConfiguration
      */
     public void clearAndDetachFromParent()
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             clearInternal();

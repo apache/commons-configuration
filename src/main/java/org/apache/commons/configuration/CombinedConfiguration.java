@@ -679,7 +679,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
     @Override
     public Object clone()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             CombinedConfiguration copy = (CombinedConfiguration) super.clone();
@@ -729,7 +729,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             throw new IllegalArgumentException("Key must not be null!");
         }
 
-        beginRead();
+        beginRead(false);
         try
         {
             List<ConfigurationNode> nodes = fetchNodeList(key);
@@ -763,7 +763,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * is available. If not, it is constructed by requesting a write lock.
      */
     @Override
-    protected void beginRead()
+    protected void beginRead(boolean optimize)
     {
         boolean lockObtained = false;
         do
@@ -777,7 +777,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
             {
                 // release read lock and try to obtain a write lock
                 endRead();
-                beginWrite(); // this constructs the root node
+                beginWrite(false); // this constructs the root node
                 endWrite();
             }
         } while (!lockObtained);
@@ -788,7 +788,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      * is available. If not, it is constructed now.
      */
     @Override
-    protected void beginWrite()
+    protected void beginWrite(boolean optimize)
     {
         writeLock();
         try
@@ -940,7 +940,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void readLock()
     {
-        super.beginRead();
+        super.beginRead(false);
     }
 
     /**
@@ -950,7 +950,7 @@ public class CombinedConfiguration extends BaseHierarchicalConfiguration impleme
      */
     private void writeLock()
     {
-        super.beginWrite();
+        super.beginWrite(false);
     }
 
     /**

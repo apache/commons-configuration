@@ -338,7 +338,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public String getPublicID()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return publicID;
@@ -359,7 +359,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void setPublicID(String publicID)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             this.publicID = publicID;
@@ -380,7 +380,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public String getSystemID()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return systemID;
@@ -401,7 +401,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void setSystemID(String systemID)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             this.systemID = systemID;
@@ -500,7 +500,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public Document getDocument()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return document;
@@ -984,7 +984,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
      */
     public void validate() throws ConfigurationException
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             Transformer transformer = createTransformer();

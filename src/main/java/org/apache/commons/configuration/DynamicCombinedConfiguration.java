@@ -201,7 +201,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     public void addConfiguration(Configuration config, String name,
             String at)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             ConfigData cd = new ConfigData(config, name, at);
@@ -225,7 +225,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public int getNumberOfConfigurations()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return configurations.size();
@@ -247,7 +247,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(int index)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             ConfigData cd = configurations.get(index);
@@ -269,7 +269,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration getConfiguration(String name)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return namedConfigurations.get(name);
@@ -291,7 +291,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Set<String> getConfigurationNames()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return namedConfigurations.keySet();
@@ -329,7 +329,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public boolean removeConfiguration(Configuration config)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             for (int index = 0; index < getNumberOfConfigurations(); index++)
@@ -358,7 +358,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     public Configuration removeConfigurationAt(int index)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             ConfigData cd = configurations.remove(index);
@@ -884,7 +884,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
         // The double-checked works here due to the Thread guarantees of ConcurrentMap.
         if (config == null)
         {
-            beginWrite();
+            beginWrite(false);
             try
             {
                 config = configs.get(key);

@@ -308,7 +308,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public String getHeader()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getLayout().getHeaderComment();
@@ -327,7 +327,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public void setHeader(String header)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             getLayout().setHeaderComment(header);
@@ -347,7 +347,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public String getFooter()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getLayout().getFooterComment();
@@ -367,7 +367,7 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public void setFooter(String footer)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             getLayout().setFooterComment(footer);

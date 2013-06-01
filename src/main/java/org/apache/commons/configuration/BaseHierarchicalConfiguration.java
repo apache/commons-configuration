@@ -257,7 +257,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             throw new IllegalArgumentException("Root node must not be null!");
         }
 
-        beginWrite();
+        beginWrite(false);
         try
         {
             setRootNodeInternal(rootNode);
@@ -287,7 +287,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public final String getRootElementName()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getRootElementNameInternal();
@@ -456,7 +456,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
             return;
         }
 
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_ADD_NODES, key, nodes, true);
@@ -550,7 +550,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     @Override
     public Configuration subset(String prefix)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             Collection<ConfigurationNode> nodes = fetchNodeList(prefix);
@@ -666,7 +666,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     public SubnodeConfiguration configurationAt(String key,
             boolean supportUpdates)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             List<ConfigurationNode> nodes = fetchNodeList(key);
@@ -752,7 +752,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public List<SubnodeConfiguration> configurationsAt(String key)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             List<ConfigurationNode> nodes = fetchNodeList(key);
@@ -790,7 +790,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public List<SubnodeConfiguration> childConfigurationsAt(String key)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             List<ConfigurationNode> nodes = fetchNodeList(key);
@@ -1062,7 +1062,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public final void clearTree(String key)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_CLEAR_TREE, key, null, true);
@@ -1180,7 +1180,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
      */
     public final int getMaxIndex(String key)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getMaxIndexInternal(key);
@@ -1216,7 +1216,7 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     @Override
     public Object clone()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             BaseHierarchicalConfiguration copy = (BaseHierarchicalConfiguration) super

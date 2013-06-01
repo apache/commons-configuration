@@ -170,7 +170,7 @@ implements Cloneable
      */
     public void addConfiguration(Configuration config, boolean asInMemory)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             if (!configList.contains(config))
@@ -217,7 +217,7 @@ implements Cloneable
      */
     public void removeConfiguration(Configuration config)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             // Make sure that you can't remove the inMemoryConfiguration from
@@ -240,7 +240,7 @@ implements Cloneable
      */
     public int getNumberOfConfigurations()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return configList.size();
@@ -434,7 +434,7 @@ implements Cloneable
      */
     public Configuration getConfiguration(int index)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return configList.get(index);
@@ -453,7 +453,7 @@ implements Cloneable
      */
     public Configuration getInMemoryConfiguration()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return inMemoryConfiguration;

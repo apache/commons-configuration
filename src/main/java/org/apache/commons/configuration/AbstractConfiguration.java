@@ -618,10 +618,10 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         switch (mode)
         {
         case READ:
-            beginRead();
+            beginRead(false);
             break;
         case WRITE:
-            beginWrite();
+            beginWrite(false);
             break;
         default:
             throw new IllegalArgumentException("Unsupported LockMode: " + mode);
@@ -655,13 +655,22 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Notifies this configuration's {@link Synchronizer} that a read operation
      * is about to start. This method is called by all methods which access this
      * configuration in a read-only mode. Subclasses may override it to perform
-     * additional actions before this read operation. <strong>In any case the
+     * additional actions before this read operation. The boolean
+     * <em>optimize</em> argument can be evaluated by overridden methods in
+     * derived classes. Some operations which require a lock do not need a fully
+     * initialized configuration object. By setting this flag to
+     * <strong>true</strong>, such operations can give a corresponding hint. An
+     * overridden implementation of {@code beginRead()} can then decide to skip
+     * some initialization steps. All basic operations in this class (and most
+     * of the basic {@code Configuration} implementations) call this method with
+     * a parameter value of <strong>false</strong>. <strong>In any case the
      * inherited method must be called! Otherwise, proper synchronization is not
      * guaranteed.</strong>
      *
+     * @param optimize a flag whether optimization can be performed
      * @since 2.0
      */
-    protected void beginRead()
+    protected void beginRead(boolean optimize)
     {
         getSynchronizer().beginRead();
     }
@@ -685,13 +694,16 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * Notifies this configuration's {@link Synchronizer} that an update
      * operation is about to start. This method is called by all methods which
      * modify this configuration. Subclasses may override it to perform
-     * additional operations before an update. <strong>In any case the inherited
-     * method must be called! Otherwise, proper synchronization is not
-     * guaranteed.</strong>
+     * additional operations before an update. For a description of the boolean
+     * <em>optimize</em> argument refer to the documentation of
+     * {@code beginRead()}. <strong>In any case the inherited method must be
+     * called! Otherwise, proper synchronization is not guaranteed.</strong>
      *
+     * @param optimize a flag whether optimization can be performed
+     * @see #beginRead(boolean)
      * @since 2.0
      */
-    protected void beginWrite()
+    protected void beginWrite(boolean optimize)
     {
         getSynchronizer().beginWrite();
     }
@@ -713,7 +725,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public final void addProperty(String key, Object value)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_ADD_PROPERTY, key, value, true);
@@ -811,7 +823,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public final void setProperty(String key, Object value)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_SET_PROPERTY, key, value, true);
@@ -858,7 +870,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final void clearProperty(String key)
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_CLEAR_PROPERTY, key, null, true);
@@ -882,7 +894,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
 
     public final void clear()
     {
-        beginWrite();
+        beginWrite(false);
         try
         {
             fireEvent(EVENT_CLEAR, null, null, true);
@@ -952,7 +964,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Iterator<String> getKeys()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getKeysInternal();
@@ -972,7 +984,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Iterator<String> getKeys(String prefix)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getKeysInternal(prefix);
@@ -1017,7 +1029,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final Object getProperty(String key)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return getPropertyInternal(key);
@@ -1045,7 +1057,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final boolean isEmpty()
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return isEmptyInternal();
@@ -1072,7 +1084,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public final boolean containsKey(String key)
     {
-        beginRead();
+        beginRead(false);
         try
         {
             return containsKeyInternal(key);
