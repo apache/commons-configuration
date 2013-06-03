@@ -27,6 +27,12 @@
   <body>
     <release version="2.0" date="in SVN"
       description="TBD">
+      <action dev="oheger" type="update" issue="CONFIGURATION-542">
+        The mechanism for synchronizing configurations has been completely
+        redesigned. It is now based on Synchronizer objects which can be
+        configured by client code. A new chapter was added to the user's guide
+        regarding thread-safety of configurations.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-540">
         MapConfiguration now directly uses a Properties object passed to its
         constructor as data store rather than copying it. This allows
@@ -61,6 +67,12 @@
       <action dev="oheger" type="add" issue="CONFIGURATION-533">
         DatabaseConfiguration now automatically converts CLOBs to strings if
         they appear in property values.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-530">
+        Concurrent access to configurations and reloading have been completely
+        redesigned. Because reloading is now handled by configuration builders
+        there is no need to acquire a lock in order to protected against a
+        reload operations.
       </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-527" due-to="Matthias Richter">
         AbstractConfiguration.clearPropertyDirect() is now abstract.
@@ -134,9 +146,16 @@
         XMLConfiguration now adds attributes of elements defining a list to
         all list nodes.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-496">
+        Concurrent access to configurations and reloading have been completely
+        redesigned. This should reduce the amount of synchronization.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-419">
         EventSource is now an interface. With BaseEventSource there is a
         default implementation.
+      </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-330">
+        Concurrent access to configurations has been reworked.
       </action>
     </release>
 
