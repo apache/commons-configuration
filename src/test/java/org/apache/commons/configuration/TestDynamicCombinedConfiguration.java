@@ -107,6 +107,22 @@ public class TestDynamicCombinedConfiguration
     }
 
     /**
+     * Tests whether a configuration can be updated.
+     */
+    @Test
+    public void testUpdateConfiguration() throws ConfigurationException
+    {
+        System.getProperties().remove("Id");
+        CombinedConfigurationBuilder builder =
+                new CombinedConfigurationBuilder();
+        builder.configure(Parameters.fileBased().setFile(MULTI_TENENT_FILE)
+                .setSynchronizer(new ReadWriteSynchronizer()));
+        CombinedConfiguration config = builder.getConfiguration();
+        config.getConfiguration(1).setProperty("rowsPerPage", "25");
+        assertEquals("Value not changed", "25", config.getString("rowsPerPage"));
+    }
+
+    /**
      * Prepares a test for calling the Synchronizer. This method creates a test
      * Synchronizer, installs it at the configuration and returns it.
      *
@@ -115,10 +131,11 @@ public class TestDynamicCombinedConfiguration
      */
     private SynchronizerTestImpl prepareSynchronizerTest(Configuration config)
     {
-        config.lock(LockMode.READ);
-        config.unlock(LockMode.READ); // ensure that root node is constructed
         SynchronizerTestImpl sync = new SynchronizerTestImpl();
         config.setSynchronizer(sync);
+        config.lock(LockMode.READ);
+        config.unlock(LockMode.READ); // ensure that root node is constructed
+        sync.clear();
         return sync;
     }
 

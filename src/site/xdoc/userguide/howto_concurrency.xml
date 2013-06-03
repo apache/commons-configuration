@@ -252,11 +252,11 @@ finally
         which has not been encountered before, a new <code>CombinedConfiguration</code>
         object is created. Here again it turns out that even a read access to a
         <code>DynamicCombinedConfiguration</code> may cause internal state
-        changes which require a write lock to be held. The <code>Synchronizer</code>
-        objects used by the child combined configurations are not under the
-        control of client code. The <code>DynamicCombinedConfiguration</code>
-        initializes each child configuration with a new <code>Synchronizer</code>
-        that is a clone from its own.</li>
+        changes which require a write lock to be held. When creating a new
+        child combined configuration it is passed the <code>Synchronizer</code>
+        of the owning <code>DynamicCombinedConfiguration</code>; so there is
+        actually only a single <code>Synchronizer</code> controlling the
+        access to all involved configurations.</li>
       </ul>
     </p>
     </subsection>

@@ -112,6 +112,14 @@ public class SynchronizerTestImpl implements Synchronizer
     }
 
     /**
+     * Clears the methods recorded so far.
+     */
+    public void clear()
+    {
+        methods.setLength(0);
+    }
+
+    /**
      * Generates a string with expected methods from the given array.
      *
      * @param expMethods the array with expected methods

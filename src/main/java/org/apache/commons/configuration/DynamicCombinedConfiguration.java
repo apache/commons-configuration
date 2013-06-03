@@ -899,7 +899,8 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             endWrite();
         }
 
-        super.beginRead(optimize);
+        // This actually uses our own synchronizer
+        cch.getCurrentConfiguration().beginRead(optimize);
     }
 
     /**
@@ -929,7 +930,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
     @Override
     protected void endRead()
     {
-        super.endRead();
+        currentConfig.get().getCurrentConfiguration().endRead();
         releaseLock();
     }
 
@@ -1032,7 +1033,7 @@ public class DynamicCombinedConfiguration extends CombinedConfiguration
             config.addConfiguration(data.getConfiguration(), data.getName(),
                     data.getAt());
         }
-        config.setSynchronizer(ConfigurationUtils.cloneSynchronizer(getSynchronizer()));
+        config.setSynchronizer(getSynchronizer());
     }
 
     /**
