@@ -223,17 +223,6 @@ public class BaseHierarchicalConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns the object to synchronize on a reload. This class is not
-     * reloadable so this object isn't important
-     *
-     * @return the lock object
-     */
-    public Object getReloadLock()
-    {
-        return this;
-    }
-
-    /**
      * Performs special initialization of this configuration. This
      * implementation ensures that internal data structures for managing
      * {@code SubnodeConfiguration} objects are initialized. If this is done
