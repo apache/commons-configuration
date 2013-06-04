@@ -36,7 +36,7 @@ package org.apache.commons.configuration;
  * used with a {@code NoOpSynchronizer} if it is not modified.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface Initializable
