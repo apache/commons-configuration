@@ -27,6 +27,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationRuntimeException;
@@ -214,6 +215,21 @@ public class TestBeanHelper
         data.setBeanFactoryName(TEST_FACTORY);
         data.setBeanClassName(BeanCreationTestBean.class.getName());
         checkBean((BeanCreationTestBean) BeanHelper.createBean(data, null));
+        assertNull("A parameter was passed", factory.parameter);
+    }
+
+    /**
+     * Tests whether a bean with a property of type collection can be created.
+     */
+    @Test
+    public void testCreateBeanWithListChildBean()
+    {
+        TestBeanFactory factory = new TestBeanFactory();
+        BeanHelper.registerBeanFactory(TEST_FACTORY, factory);
+        BeanDeclarationTestImpl data = setUpBeanDeclarationWithListChild();
+        data.setBeanFactoryName(TEST_FACTORY);
+        data.setBeanClassName(BeanCreationTestBeanWithListChild.class.getName());
+        checkBean((BeanCreationTestBeanWithListChild) BeanHelper.createBean(data, null));
         assertNull("A parameter was passed", factory.parameter);
     }
 
@@ -449,10 +465,58 @@ public class TestBeanHelper
         {
             buddyData.setBeanFactoryName(TEST_FACTORY);
         }
+
         Map<String, Object> nested = new HashMap<String, Object>();
         nested.put("buddy", buddyData);
         data.setNestedBeanDeclarations(nested);
         return data;
+    }
+
+    /**
+     * Same as setUpBeanDeclaration, but returns a nested array of beans
+     * as a single property. Tests multi-value (Collection<BeanDeclaration>)
+     * children construction.
+     *
+     * @return The bean declaration with a list child bean proerty
+     */
+    private BeanDeclarationTestImpl setUpBeanDeclarationWithListChild()
+    {
+        BeanDeclarationTestImpl data = new BeanDeclarationTestImpl();
+        Map<String, Object> properties = new HashMap<String, Object>();
+        properties.put("stringValue", TEST_STRING);
+        properties.put("intValue", String.valueOf(TEST_INT));
+        data.setBeanProperties(properties);
+
+        List<BeanDeclaration> childData = new ArrayList<BeanDeclaration>();
+        childData.add(createChildBean("child1"));
+        childData.add(createChildBean("child2"));
+        Map<String, Object> nested = new HashMap<String, Object>();
+        nested.put("children", childData);
+        data.setNestedBeanDeclarations(nested);
+        return data;
+    }
+
+    /**
+     * Create a simple bean declaration that has no children for testing
+     * of nested children bean declarations.
+     *
+     * @param name A name prefix that can be used to disambiguate the children
+     * @return A simple declaration
+     */
+    private BeanDeclarationTestImpl createChildBean(String name)
+    {
+        BeanDeclarationTestImpl childBean = new BeanDeclarationTestImpl();
+        Map<String, Object> properties2 = new HashMap<String, Object>();
+        properties2.put("stringValue", name + " Another test string");
+        properties2.put("intValue", new Integer(100));
+        childBean.setBeanProperties(properties2);
+        childBean.setBeanClassName(BeanCreationTestBean.class.getName());
+        if (BeanHelper.getDefaultBeanFactory() == null)
+        {
+            childBean.setBeanFactoryName(TEST_FACTORY);
+        }
+
+        return childBean;
     }
 
     /**
@@ -474,6 +538,24 @@ public class TestBeanHelper
     }
 
     /**
+     * Tests if the bean was correctly initialized from the data of the test
+     * bean declaration.
+     *
+     * @param bean the bean to be checked
+     */
+    private void checkBean(BeanCreationTestBeanWithListChild bean)
+    {
+        assertEquals("Wrong string property", TEST_STRING, bean
+                .getStringValue());
+        assertEquals("Wrong int property", TEST_INT, bean.getIntValue());
+        List<BeanCreationTestBean> children = bean.getChildren();
+        assertNotNull("Children were not set", children);
+        assertEquals("Wrong number of children created", children.size(), 2);
+        assertNotNull("First child was set as null", children.get(0));
+        assertNotNull("Second child was set as null", children.get(1));
+    }
+
+    /**
      * An implementation of the BeanFactory interface used for testing. This
      * implementation is really simple: If the BeanCreationTestBean class is provided, a new
      * instance will be created. Otherwise an exception is thrown.
@@ -491,6 +573,12 @@ public class TestBeanHelper
             if (BeanCreationTestBean.class.equals(beanClass))
             {
                 BeanCreationTestBean bean = new BeanCreationTestBean();
+                BeanHelper.initBean(bean, data);
+                return bean;
+            }
+            else if (BeanCreationTestBeanWithListChild.class.equals(beanClass))
+            {
+                BeanCreationTestBeanWithListChild bean = new BeanCreationTestBeanWithListChild();
                 BeanHelper.initBean(bean, data);
                 return bean;
             }
