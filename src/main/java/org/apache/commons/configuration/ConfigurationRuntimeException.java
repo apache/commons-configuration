@@ -17,7 +17,6 @@
 
 package org.apache.commons.configuration;
 
-import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * A configuration related runtime exception.
@@ -27,7 +26,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  * @author Emmanuel Bourg
  * @version $Id$
  */
-public class ConfigurationRuntimeException extends NestableRuntimeException
+public class ConfigurationRuntimeException extends RuntimeException
 {
     /**
      * The serial version ID.
