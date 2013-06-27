@@ -53,7 +53,7 @@
     <property name="lib" value="${maven.repo.local}"/> <!-- only sets if unset - i.e., repo.check succeeded -->
 	<path id="build.classpath">
         <pathelement location="${lib}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
-        <pathelement location="${lib}/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
+        <pathelement location="${lib}/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
         <pathelement location="${lib}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
         <pathelement location="${lib}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
         <pathelement location="${lib}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
@@ -75,7 +75,7 @@
 	</path>
 	<path id="build.test.classpath">
 	    <pathelement location="${lib}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar"/>
-	    <pathelement location="${lib}/commons-lang/commons-lang/2.6/commons-lang-2.6.jar"/>
+        <pathelement location="${lib}/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"/>
 	    <pathelement location="${lib}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar"/>
 	    <pathelement location="${lib}/commons-digester/commons-digester/1.8.1/commons-digester-1.8.1.jar"/>
 	    <pathelement location="${lib}/commons-beanutils/commons-beanutils/1.8.3/commons-beanutils-1.8.3.jar"/>
@@ -101,6 +101,8 @@
 	    <pathelement location="${lib}/junit/junit/4.10/junit-4.10.jar"/>
 	    <pathelement location="${lib}/junit-addons/junit-addons/1.4/junit-addons-1.4.jar"/>
 	    <pathelement location="${lib}/org/easymock/easymock/3.1/easymock-3.1.jar"/>
+	    <pathelement location="${lib}/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar"/>
+	    <pathelement location="${lib}/org/objenesis/objenesis/1.2/objenesis-1.2.jar"/>
 	    <pathelement location="${lib}/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar"/>
 	    <pathelement location="${lib}/mockobjects/mockobjects-jdk1.4-j2ee1.3/0.09/mockobjects-jdk1.4-j2ee1.3-0.09.jar"/>
 	    <pathelement location="${lib}/javax/mail/mail/1.4/mail-1.4.jar"/>
@@ -210,8 +212,7 @@
           <include name="**/*TestCase.java"/>
           <exclude name="**/TestWebdavConfigurationBuilder.java"/>
           <exclude name="**/TestAbstractConfiguration.java"/>
-          <exclude name="**/AbstractCombinerTest.java"/>
-          <exclude name="**/AbstractXPathTest.java"/>
+          <exclude name="**/Abstract*Test.java"/>
         </fileset>
       </batchtest>
       <batchtest  todir="${build.dir}">
@@ -259,7 +260,7 @@
       <link href="http://download.oracle.com/javase/6/docs/api/"/>
       <link href="http://download.oracle.com/javaee/6/api/"/>
       <link href="http://commons.apache.org/collections/api-3.1"/>
-      <link href="http://commons.apache.org/lang/api-2.6"/>
+      <link href="http://commons.apache.org/proper/commons-lang/javadocs/api-3.1"/>
       <link href="http://commons.apache.org/beanutils/v1.8.3/apidocs"/>
     </javadoc>
   </target>
@@ -281,11 +282,11 @@
          dest="${lib}/commons-collections/commons-collections/3.2.1/commons-collections-3.2.1.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
-    <mkdir dir="${lib}/commons-lang/commons-lang/2.6"/>
-    <get src="http://repo1.maven.org/maven2/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" 
-         dest="${lib}/commons-lang/commons-lang/2.6/commons-lang-2.6.jar" 
-         usetimestamp="true" 
-         ignoreerrors="true"/>
+    <mkdir dir="${lib}/commons-lang/commons-lang/3.1"/>
+    <get src="http://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"
+        dest="${lib}/org/apache/commons/commons-lang3/3.1/commons-lang3-3.1.jar"
+        usetimestamp="true"
+        ignoreerrors="true"/>
     <mkdir dir="${lib}/commons-logging/commons-logging/1.1.1"/>
     <get src="http://repo1.maven.org/maven2/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
          dest="${lib}/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" 
@@ -411,6 +412,16 @@
          dest="${lib}/org/easymock/easymock/3.1/easymock-3.1.jar" 
          usetimestamp="true" 
          ignoreerrors="true"/>
+    <mkdir dir="${lib}/cglib/cglib-nodep/2.2.2"/>
+    <get src="http://repo1.maven.org/maven2/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar"
+        dest="${lib}/cglib/cglib-nodep/2.2.2/cglib-nodep-2.2.2.jar"
+        usetimestamp="true"
+        ignoreerrors="true"/>
+    <mkdir dir="${lib}/org/objenesis/objenesis/1.2"/>
+    <get src="http://repo1.maven.org/maven2/org/objenesis/objenesis/1.2/objenesis-1.2.jar"
+        dest="${lib}/org/objenesis/objenesis/1.2/objenesis-1.2.jar"
+        usetimestamp="true"
+        ignoreerrors="true"/>
     <mkdir dir="${lib}/mockobjects/mockobjects-core/0.09"/>
     <get src="http://repo1.maven.org/maven2/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar" 
          dest="${lib}/mockobjects/mockobjects-core/0.09/mockobjects-core-0.09.jar" 
