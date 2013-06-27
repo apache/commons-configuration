@@ -18,13 +18,12 @@ package org.apache.commons.configuration.test;
  */
 
 import java.io.FileReader;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -90,7 +89,7 @@ public class HsqlDB
                 {
                     log.warn("Statement: " + cmd + ": " + sqle.getMessage());
                 }
-                
+
                 commands = commands.substring(targetPos + 2);
             }
         }

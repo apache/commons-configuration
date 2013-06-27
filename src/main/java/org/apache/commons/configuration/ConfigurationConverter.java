@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.collections.ExtendedProperties;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Configuration converter. Helper class to convert between Configuration,

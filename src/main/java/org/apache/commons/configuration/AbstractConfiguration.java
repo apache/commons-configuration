@@ -40,9 +40,8 @@ import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.sync.LockMode;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.ClassUtils;
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ClassUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.impl.NoOpLog;
 
@@ -1184,7 +1183,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public boolean getBoolean(String key, boolean defaultValue)
     {
-        return getBoolean(key, BooleanUtils.toBooleanObject(defaultValue)).booleanValue();
+        return getBoolean(key, Boolean.valueOf(defaultValue)).booleanValue();
     }
 
     /**

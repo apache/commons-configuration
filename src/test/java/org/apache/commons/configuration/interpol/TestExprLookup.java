@@ -57,7 +57,7 @@ public class TestExprLookup
         logger.setLevel(Level.DEBUG);
         logger.setAdditivity(false);
         ExprLookup.Variables vars = new ExprLookup.Variables();
-        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         vars.add(new ExprLookup.Variable("Util", new Utility("Hello")));
         vars.add(new ExprLookup.Variable("System", "Class:java.lang.System"));
         XMLConfiguration config = new XMLConfiguration();
@@ -80,7 +80,7 @@ public class TestExprLookup
     public void testLookupNoConfiguration()
     {
         ExprLookup.Variables vars = new ExprLookup.Variables();
-        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang.StringUtils.class));
+        vars.add(new ExprLookup.Variable("String", org.apache.commons.lang3.StringUtils.class));
         ExprLookup lookup = new ExprLookup(vars);
         String value = "test";
         assertEquals("Wrong result", value, lookup.lookup(value));

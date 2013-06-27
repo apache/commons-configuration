@@ -27,7 +27,7 @@ import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 /**

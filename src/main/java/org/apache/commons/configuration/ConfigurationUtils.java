@@ -36,7 +36,7 @@ import org.apache.commons.configuration.reloading.Reloadable;
 import org.apache.commons.configuration.sync.NoOpSynchronizer;
 import org.apache.commons.configuration.sync.Synchronizer;
 import org.apache.commons.configuration.tree.ExpressionEngine;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
