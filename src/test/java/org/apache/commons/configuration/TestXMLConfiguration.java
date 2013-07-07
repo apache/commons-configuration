@@ -1033,6 +1033,7 @@ public class TestXMLConfiguration
     public void testInitCopy() throws ConfigurationException
     {
         XMLConfiguration copy = new XMLConfiguration(conf);
+        copy.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         assertEquals("value", copy.getProperty("element"));
         assertNull("Document was copied, too", copy.getDocument());
         ConfigurationNode root = copy.getRootNode();
@@ -1206,13 +1207,13 @@ public class TestXMLConfiguration
             throws ConfigurationException
     {
         conf.clear();
-        conf.setDelimiterParsingDisabled(true);
+        conf.setListDelimiterHandler(new DisabledListDelimiterHandler());
         load(conf, testProperties);
         conf.setProperty(key, "C:\\Temp\\,C:\\Data\\");
         conf.addProperty(key, "a,b,c");
         saveTestConfig();
         XMLConfiguration checkConf = new XMLConfiguration();
-        checkConf.setDelimiterParsingDisabled(true);
+        checkConf.setListDelimiterHandler(conf.getListDelimiterHandler());
         load(checkConf, testSaveConf.getAbsolutePath());
         ConfigurationAssert.assertEquals(conf, checkConf);
     }
@@ -1546,6 +1547,7 @@ public class TestXMLConfiguration
     public void testSaveWindowsPath() throws ConfigurationException
     {
         conf.clear();
+        conf.setListDelimiterHandler(new DisabledListDelimiterHandler());
         conf.addProperty("path", "C:\\Temp");
         StringWriter writer = new StringWriter();
         new FileHandler(conf).save(writer);

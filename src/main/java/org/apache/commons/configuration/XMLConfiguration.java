@@ -676,7 +676,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
     {
         if (child.getValue() != null)
         {
-            List<String> values;
+            Collection<String> values;
             if (isDelimiterParsingDisabled())
             {
                 values = new ArrayList<String>();
@@ -684,8 +684,8 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
             else
             {
-                values = PropertyConverter.split(child.getValue().toString(),
-                    getListDelimiter(), trim);
+                values = getListDelimiterHandler().split(
+                            child.getValue().toString(), trim);
             }
 
             if (values.size() > 1)
@@ -720,7 +720,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             {
                 // we will have to replace the value because it might
                 // contain escaped delimiters
-                child.setValue(values.get(0));
+                child.setValue(values.iterator().next());
             }
         }
     }
@@ -822,8 +822,7 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 document = newDocument;
             }
 
-            XMLBuilderVisitor builder = new XMLBuilderVisitor(document,
-                    isDelimiterParsingDisabled() ? (char) 0 : getListDelimiter());
+            XMLBuilderVisitor builder = new XMLBuilderVisitor(document, getListDelimiterHandler());
             builder.processDocument(getRootNode());
             initRootElementText(document, getRootNode().getValue());
             return document;
@@ -1309,10 +1308,11 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
             }
             else
             {
+                String newValue =
+                        String.valueOf(getListDelimiterHandler().escape(value,
+                                ListDelimiterHandler.NOOP_TRANSFORMER));
                 if (txtNode == null)
                 {
-                    String newValue = isDelimiterParsingDisabled() ? value.toString()
-                        : PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
                     txtNode = document.createTextNode(newValue);
                     if (((Element) getReference()).getFirstChild() != null)
                     {
@@ -1326,8 +1326,6 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 }
                 else
                 {
-                    String newValue = isDelimiterParsingDisabled() ? value.toString()
-                        : PropertyConverter.escapeDelimiters(value.toString(), getListDelimiter());
                     txtNode.setNodeValue(newValue);
                 }
             }
@@ -1398,19 +1396,19 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
         /** Stores the document to be constructed. */
         private Document document;
 
-        /** Stores the list delimiter.*/
-        private final char listDelimiter;
+        /** Stores the list delimiter handler .*/
+        private final ListDelimiterHandler listDelimiterHandler;
 
         /**
          * Creates a new instance of {@code XMLBuilderVisitor}.
          *
          * @param doc the document to be created
-         * @param listDelimiter the delimiter for attribute properties with multiple values
+         * @param handler the delimiter handler for properties with multiple values
          */
-        public XMLBuilderVisitor(Document doc, char listDelimiter)
+        public XMLBuilderVisitor(Document doc, ListDelimiterHandler handler)
         {
             document = doc;
-            this.listDelimiter = listDelimiter;
+            listDelimiterHandler = handler;
         }
 
         /**
@@ -1449,11 +1447,10 @@ public class XMLConfiguration extends BaseHierarchicalConfiguration implements
                 Element elem = document.createElement(newNode.getName());
                 if (newNode.getValue() != null)
                 {
-                    String txt = newNode.getValue().toString();
-                    if (listDelimiter != 0)
-                    {
-                        txt = PropertyConverter.escapeListDelimiter(txt, listDelimiter);
-                    }
+                    String txt =
+                            String.valueOf(listDelimiterHandler.escape(
+                                    newNode.getValue(),
+                                    ListDelimiterHandler.NOOP_TRANSFORMER));
                     elem.appendChild(document.createTextNode(txt));
                 }
                 if (sibling2 == null)
