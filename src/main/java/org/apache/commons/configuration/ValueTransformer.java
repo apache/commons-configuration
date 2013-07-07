@@ -38,7 +38,7 @@ package org.apache.commons.configuration;
  * back to perform the additional encoding as its pleasure.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public interface ValueTransformer

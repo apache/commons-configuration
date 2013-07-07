@@ -49,7 +49,7 @@ import org.apache.commons.lang3.StringUtils;
  * multiple {@code Configuration} instances.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler

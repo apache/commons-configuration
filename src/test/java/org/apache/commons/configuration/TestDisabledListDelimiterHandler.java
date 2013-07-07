@@ -30,7 +30,7 @@ import org.junit.Test;
  * Test class for {@code DisabledListDelimiterHandler}. Note that some
  * functionality of the base class is tested, too.
  *
- * @version $Id: $
+ * @version $Id$
  */
 public class TestDisabledListDelimiterHandler
 {

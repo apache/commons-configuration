@@ -36,7 +36,7 @@ import java.util.LinkedList;
  * corresponding checks.
  * </p>
  *
- * @version $Id: $
+ * @version $Id$
  * @since 2.0
  */
 public abstract class AbstractListDelimiterHandler implements
