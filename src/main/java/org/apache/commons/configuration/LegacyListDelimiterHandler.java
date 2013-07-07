@@ -241,7 +241,7 @@ public class LegacyListDelimiterHandler extends AbstractListDelimiterHandler
             strValue = StringUtils.replace(strValue, DOUBLE_ESC, QUAD_ESC);
         }
 
-        return StringUtils.replace(strValue, ESCAPE, DOUBLE_ESC);
+        return strValue;
     }
 
     /**

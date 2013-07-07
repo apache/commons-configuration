@@ -52,6 +52,7 @@ import org.apache.commons.configuration.SynchronizerTestImpl.Methods;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.io.FileHandler;
+import org.apache.commons.lang3.mutable.MutableObject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -296,19 +297,35 @@ public class TestPropertiesConfiguration
     }
 
     /**
-     * Tests saving a configuration when delimiter parsing is disabled.
+     * Tests saving a configuration if delimiter parsing is disabled.
      */
     @Test
     public void testSaveWithDelimiterParsingDisabled() throws ConfigurationException
     {
         conf.clear();
-        conf.setDelimiterParsingDisabled(true);
+        conf.setListDelimiterHandler(new DisabledListDelimiterHandler());
         conf.addProperty("test.list", "a,b,c");
         conf.addProperty("test.dirs", "C:\\Temp\\,D:\\Data\\");
         saveTestConfig();
 
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
-        checkConfig.setDelimiterParsingDisabled(true);
+        checkConfig.setListDelimiterHandler(new DisabledListDelimiterHandler());
+        new FileHandler(checkConfig).load(testSavePropertiesFile);
+        ConfigurationAssert.assertEquals(conf, checkConfig);
+    }
+
+    /**
+     * Tests whether saving works correctly with the default list delimiter
+     * handler implementation.
+     */
+    @Test
+    public void testSaveWithDefaultListDelimiterHandler() throws ConfigurationException
+    {
+        conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        saveTestConfig();
+
+        PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setListDelimiterHandler(conf.getListDelimiterHandler());
         new FileHandler(checkConfig).load(testSavePropertiesFile);
         ConfigurationAssert.assertEquals(conf, checkConfig);
     }
@@ -426,7 +443,7 @@ public class TestPropertiesConfiguration
     @Test
     public void testUnescapeJava()
     {
-        assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test", ','));
+        assertEquals("test\\,test", PropertiesConfiguration.unescapeJava("test\\,test"));
     }
 
     @Test
@@ -834,14 +851,13 @@ public class TestPropertiesConfiguration
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
-                    Reader in, char delimiter)
+                    Reader in)
             {
-                return new PropertiesReaderTestImpl(in, delimiter,
-                        propertyCount);
+                return new PropertiesReaderTestImpl(in, propertyCount);
             }
 
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
-                    Writer out, char delimiter)
+                    Writer out, ListDelimiterHandler handler)
             {
                 throw new UnsupportedOperationException("Unexpected call!");
             }
@@ -860,23 +876,32 @@ public class TestPropertiesConfiguration
     @Test
     public void testSetIOFactoryWriter() throws ConfigurationException, IOException
     {
-        final PropertiesWriterTestImpl testWriter = new PropertiesWriterTestImpl(',');
+        final MutableObject<Writer> propertiesWriter = new MutableObject<Writer>();
         conf.setIOFactory(new PropertiesConfiguration.IOFactory()
         {
             public PropertiesConfiguration.PropertiesReader createPropertiesReader(
-                    Reader in, char delimiter)
+                    Reader in)
             {
                 throw new UnsupportedOperationException("Unexpected call!");
             }
 
             public PropertiesConfiguration.PropertiesWriter createPropertiesWriter(
-                    Writer out, char delimiter)
+                    Writer out, ListDelimiterHandler handler)
             {
-                return testWriter;
+                try
+                {
+                    PropertiesWriterTestImpl propWriter = new PropertiesWriterTestImpl(handler);
+                    propertiesWriter.setValue(propWriter);
+                    return propWriter;
+                }
+                catch (IOException e)
+                {
+                    return null;
+                }
             }
         });
         new FileHandler(conf).save(new StringWriter());
-        testWriter.close();
+        propertiesWriter.getValue().close();
         checkSavedConfig();
     }
 
@@ -1248,11 +1273,9 @@ public class TestPropertiesConfiguration
         /** The current number of properties. */
         private int propertyCount;
 
-        public PropertiesReaderTestImpl(Reader reader, char listDelimiter,
-                int maxProps)
+        public PropertiesReaderTestImpl(Reader reader, int maxProps)
         {
-            super(reader, listDelimiter);
-            assertEquals("Wrong list delimiter", ',', listDelimiter);
+            super(reader);
             maxProperties = maxProps;
         }
 
@@ -1284,9 +1307,9 @@ public class TestPropertiesConfiguration
     private static class PropertiesWriterTestImpl extends
             PropertiesConfiguration.PropertiesWriter
     {
-        public PropertiesWriterTestImpl(char delimiter) throws IOException
+        public PropertiesWriterTestImpl(ListDelimiterHandler handler) throws IOException
         {
-            super(new FileWriter(testSavePropertiesFile), delimiter);
+            super(new FileWriter(testSavePropertiesFile), handler);
         }
     }
 }

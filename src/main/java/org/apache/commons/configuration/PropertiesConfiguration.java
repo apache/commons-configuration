@@ -24,7 +24,6 @@ import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -222,12 +221,6 @@ public class PropertiesConfiguration extends BaseConfiguration
 
     /** Constant for the platform specific line separator.*/
     private static final String LINE_SEPARATOR = System.getProperty("line.separator");
-
-    /** Constant for the escaping character.*/
-    private static final String ESCAPE = "\\";
-
-    /** Constant for the escaped escaping character.*/
-    private static final String DOUBLE_ESC = ESCAPE + ESCAPE;
 
     /** Constant for the radix of hex numbers.*/
     private static final int HEX_RADIX = 16;
@@ -639,7 +632,7 @@ public class PropertiesConfiguration extends BaseConfiguration
         private static final int IDX_SEPARATOR = 3;
 
         /** Stores the comment lines for the currently processed property.*/
-        private List<String> commentLines;
+        private final List<String> commentLines;
 
         /** Stores the name of the last read property.*/
         private String propertyName;
@@ -650,9 +643,6 @@ public class PropertiesConfiguration extends BaseConfiguration
         /** Stores the property separator of the last read property.*/
         private String propertySeparator = DEFAULT_SEPARATOR;
 
-        /** Stores the list delimiter character.*/
-        private char delimiter;
-
         /**
          * Constructor.
          *
@@ -660,22 +650,8 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         public PropertiesReader(Reader reader)
         {
-            this(reader, AbstractConfiguration.getDefaultListDelimiter());
-        }
-
-        /**
-         * Creates a new instance of {@code PropertiesReader} and sets
-         * the underlying reader and the list delimiter.
-         *
-         * @param reader the reader
-         * @param listDelimiter the list delimiter character
-         * @since 1.3
-         */
-        public PropertiesReader(Reader reader, char listDelimiter)
-        {
             super(reader);
             commentLines = new ArrayList<String>();
-            delimiter = listDelimiter;
         }
 
         /**
@@ -844,7 +820,7 @@ public class PropertiesConfiguration extends BaseConfiguration
          */
         protected void initPropertyValue(String value)
         {
-            propertyValue = unescapeJava(value, delimiter);
+            propertyValue = unescapeJava(value);
         }
 
         /**
@@ -914,11 +890,23 @@ public class PropertiesConfiguration extends BaseConfiguration
                         new LookupTranslator(EntityArrays.JAVA_CTRL_CHARS_ESCAPE()),
                         UnicodeEscaper.outsideOf(32, 0x7f));
 
-        /** Constant for the initial size when creating a string buffer. */
-        private static final int BUF_SIZE = 8;
+        /**
+         * A {@code ValueTransformer} implementation used to escape property
+         * values. This implementation applies the transformation defined by the
+         * {@link #ESCAPE_PROPERTIES} translator.
+         */
+        private static final ValueTransformer TRANSFORMER =
+                new ValueTransformer()
+                {
+                    public Object transformValue(Object value)
+                    {
+                        String strVal = String.valueOf(value);
+                        return ESCAPE_PROPERTIES.translate(strVal);
+                    }
+                };
 
-        /** The delimiter for multi-valued properties.*/
-        private final char delimiter;
+        /** The list delimiter handler.*/
+        private final ListDelimiterHandler delimiterHandler;
 
         /** The separator to be used for the current property. */
         private String currentSeparator;
@@ -930,28 +918,29 @@ public class PropertiesConfiguration extends BaseConfiguration
         private String lineSeparator;
 
         /**
-         * Constructor.
+         * Creates a new instance of {@code PropertiesWriter}.
          *
          * @param writer a Writer object providing the underlying stream
-         * @param delimiter the delimiter character for multi-valued properties
+         * @param delHandler the delimiter handler for dealing with properties
+         *        with multiple values
          */
-        public PropertiesWriter(Writer writer, char delimiter)
+        public PropertiesWriter(Writer writer, ListDelimiterHandler delHandler)
         {
             super(writer);
-            this.delimiter = delimiter;
+            delimiterHandler = delHandler;
         }
 
         /**
-         * Returns the delimiter for properties with multiple values. This is
-         * the list delimiter character. A value of '\0' means that no delimiter
-         * is defined.
+         * Returns the delimiter handler for properties with multiple values.
+         * This object is used to escape property values so that they can be
+         * read in correctly the next time they are loaded.
          *
-         * @return the delimiter for properties with multiple values
+         * @return the delimiter handler for properties with multiple values
          * @since 2.0
          */
-        public char getDelimiter()
+        public ListDelimiterHandler getDelimiterHandler()
         {
-            return delimiter;
+            return delimiterHandler;
         }
 
         /**
@@ -1075,12 +1064,22 @@ public class PropertiesConfiguration extends BaseConfiguration
 
             if (value instanceof List)
             {
+                v = null;
                 List<?> values = (List<?>) value;
                 if (forceSingleLine)
                 {
-                    v = makeSingleLineValue(values);
+                    try
+                    {
+                        v = String.valueOf(getDelimiterHandler()
+                                        .escapeList(values, TRANSFORMER));
+                    }
+                    catch (UnsupportedOperationException uoex)
+                    {
+                        // the handler may not support escaping lists,
+                        // then the list is written in multiple lines
+                    }
                 }
-                else
+                if (v == null)
                 {
                     writeProperty(key, values);
                     return;
@@ -1088,7 +1087,7 @@ public class PropertiesConfiguration extends BaseConfiguration
             }
             else
             {
-                v = escapeValue(value, false);
+                v = String.valueOf(getDelimiterHandler().escape(value, TRANSFORMER));
             }
 
             write(escapeKey(key));
@@ -1140,108 +1139,6 @@ public class PropertiesConfiguration extends BaseConfiguration
             }
 
             return newkey.toString();
-        }
-
-        /**
-         * Escapes the given property value. This method is called on saving the
-         * configuration for each property value. It ensures a correct handling
-         * of backslash characters and also takes care that list delimiter
-         * characters in the value are escaped.
-         *
-         * @param value the property value
-         * @param inList a flag whether the value is part of a list
-         * @return the escaped property value
-         * @since 2.0
-         */
-        protected String escapeValue(Object value, boolean inList)
-        {
-            String escapedValue =
-                    ESCAPE_PROPERTIES
-                            .translate(escapeBackslashs(value, inList));
-            if (getDelimiter() != 0)
-            {
-                escapedValue =
-                        StringUtils.replace(escapedValue,
-                                String.valueOf(getDelimiter()), ESCAPE
-                                        + getDelimiter());
-            }
-            return escapedValue;
-        }
-
-        /**
-         * Performs the escaping of backslashes in the specified properties
-         * value. Because a double backslash is used to escape the escape
-         * character of a list delimiter, double backslashes also have to be
-         * escaped if the property is part of a (single line) list. Then, in all
-         * cases each backslash has to be doubled in order to produce a valid
-         * properties file. This method is called by {@code escapeValue()}.
-         *
-         * @param value the value to be escaped
-         * @param inList a flag whether the value is part of a list
-         * @return the value with escaped backslashes as string
-         * @since 2.0
-         */
-        protected String escapeBackslashs(Object value, boolean inList)
-        {
-            String strValue = String.valueOf(value);
-
-            if (inList && strValue.indexOf(DOUBLE_ESC) >= 0)
-            {
-                char esc = ESCAPE.charAt(0);
-                StringBuilder buf = new StringBuilder(strValue.length() + BUF_SIZE);
-                for (int i = 0; i < strValue.length(); i++)
-                {
-                    if (strValue.charAt(i) == esc && i < strValue.length() - 1
-                            && strValue.charAt(i + 1) == esc)
-                    {
-                        buf.append(DOUBLE_ESC).append(DOUBLE_ESC);
-                        i++;
-                    }
-                    else
-                    {
-                        buf.append(strValue.charAt(i));
-                    }
-                }
-
-                strValue = buf.toString();
-            }
-
-            return strValue;
-        }
-
-        /**
-         * Transforms a list of values into a single line value.
-         *
-         * @param values the list with the values
-         * @return a string with the single line value (can be <b>null</b>)
-         * @since 1.3
-         */
-        private String makeSingleLineValue(List<?> values)
-        {
-            if (!values.isEmpty())
-            {
-                Iterator<?> it = values.iterator();
-                String lastValue = escapeValue(it.next(), true);
-                StringBuilder buf = new StringBuilder(lastValue);
-                while (it.hasNext())
-                {
-                    // if the last value ended with an escape character, it has
-                    // to be escaped itself; otherwise the list delimiter will
-                    // be escaped
-                    if (lastValue.endsWith(ESCAPE) && (countTrailingBS(lastValue) / 2) % 2 != 0)
-                    {
-                        buf.append(ESCAPE).append(ESCAPE);
-                    }
-                    buf.append(getDelimiter());
-                    lastValue = escapeValue(it.next(), true);
-                    buf.append(lastValue);
-                }
-                return buf.toString();
-            }
-            else
-            {
-                return null;
-            }
         }
 
         /**
@@ -1312,11 +1209,10 @@ public class PropertiesConfiguration extends BaseConfiguration
          * by this method is then used for parsing the properties file.
          *
          * @param in the underlying reader (of the properties file)
-         * @param delimiter the delimiter character for list parsing
          * @return the {@code PropertiesReader} for loading the
          *         configuration
          */
-        PropertiesReader createPropertiesReader(Reader in, char delimiter);
+        PropertiesReader createPropertiesReader(Reader in);
 
         /**
          * Creates a {@code PropertiesWriter} for writing a properties
@@ -1325,11 +1221,12 @@ public class PropertiesConfiguration extends BaseConfiguration
          * this method is then used for writing the properties file.
          *
          * @param out the underlying writer (to the properties file)
-         * @param delimiter the delimiter character for list parsing
+         * @param handler the list delimiter delimiter for list parsing
          * @return the {@code PropertiesWriter} for saving the
          *         configuration
          */
-        PropertiesWriter createPropertiesWriter(Writer out, char delimiter);
+        PropertiesWriter createPropertiesWriter(Writer out,
+                ListDelimiterHandler handler);
     }
 
     /**
@@ -1349,15 +1246,15 @@ public class PropertiesConfiguration extends BaseConfiguration
      */
     public static class DefaultIOFactory implements IOFactory
     {
-        public PropertiesReader createPropertiesReader(Reader in, char delimiter)
+        public PropertiesReader createPropertiesReader(Reader in)
         {
-            return new PropertiesReader(in, delimiter);
+            return new PropertiesReader(in);
         }
 
         public PropertiesWriter createPropertiesWriter(Writer out,
-                char delimiter)
+                ListDelimiterHandler handler)
         {
-            return new PropertiesWriter(out, delimiter);
+            return new PropertiesWriter(out, handler);
         }
     }
 
@@ -1368,11 +1265,10 @@ public class PropertiesConfiguration extends BaseConfiguration
      * drop escaped separators (i.e '\,').
      *
      * @param str  the {@code String} to unescape, may be null
-     * @param delimiter the delimiter for multi-valued properties
      * @return the processed string
      * @throws IllegalArgumentException if the Writer is {@code null}
      */
-    protected static String unescapeJava(String str, char delimiter)
+    protected static String unescapeJava(String str)
     {
         if (str == null)
         {
@@ -1448,11 +1344,6 @@ public class PropertiesConfiguration extends BaseConfiguration
                 {
                     out.append('\b');
                 }
-                else if (ch == delimiter)
-                {
-                    out.append('\\');
-                    out.append(delimiter);
-                }
                 else if (ch == 'u')
                 {
                     // uh-oh, we're in unicode country....
@@ -1460,6 +1351,7 @@ public class PropertiesConfiguration extends BaseConfiguration
                 }
                 else
                 {
+                    out.append('\\');
                     out.append(ch);
                 }
 

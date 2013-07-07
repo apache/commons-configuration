@@ -486,8 +486,7 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
             config.removeConfigurationListener(this);
         }
         PropertiesConfiguration.PropertiesReader reader =
-                config.getIOFactory().createPropertiesReader(in,
-                        config.getListDelimiter());
+                config.getIOFactory().createPropertiesReader(in);
 
         try
         {
@@ -552,10 +551,9 @@ public class PropertiesConfigurationLayout implements ConfigurationListener
     {
         try
         {
-            char delimiter = config.isDelimiterParsingDisabled() ? 0
-                    : config.getListDelimiter();
-            PropertiesConfiguration.PropertiesWriter writer = config
-                    .getIOFactory().createPropertiesWriter(out, delimiter);
+            PropertiesConfiguration.PropertiesWriter writer =
+                    config.getIOFactory().createPropertiesWriter(out,
+                            config.getListDelimiterHandler());
             writer.setGlobalSeparator(getGlobalSeparator());
             if (getLineSeparator() != null)
             {
