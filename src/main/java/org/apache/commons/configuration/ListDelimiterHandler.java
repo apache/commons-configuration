@@ -55,6 +55,20 @@ import java.util.List;
 public interface ListDelimiterHandler
 {
     /**
+     * A specialized {@code ValueTransformer} implementation which does no
+     * transformation. The {@code transformValue()} method just returns the
+     * passed in object without changes. This instance can be used by
+     * configurations which do not require additional encoding.
+     */
+    ValueTransformer NOOP_TRANSFORMER = new ValueTransformer()
+    {
+        public Object transformValue(Object value)
+        {
+            return value;
+        }
+    };
+
+    /**
      * Parses the specified value for list delimiters and splits it if
      * necessary. The passed in object can be either a single value or a complex
      * one, e.g. a collection, an array, or an {@code Iterable}. It is the
@@ -90,9 +104,11 @@ public interface ListDelimiterHandler
      * escape them accordingly.
      *
      * @param value the value to be escaped
+     * @param transformer a {@code ValueTransformer} for an additional encoding
+     *        (must not be <b>null</b>)
      * @return the escaped value
      */
-    Object escape(Object value);
+    Object escape(Object value, ValueTransformer transformer);
 
     /**
      * Escapes all values in the given list and concatenates them to a single
@@ -103,7 +119,9 @@ public interface ListDelimiterHandler
      *
      * @param values the list with all the values to be converted to a single
      *        value
+     * @param transformer a {@code ValueTransformer} for an additional encoding
+     *        (must not be <b>null</b>)
      * @return the resulting escaped value
      */
-    Object escapeList(List<?> values);
+    Object escapeList(List<?> values, ValueTransformer transformer);
 }

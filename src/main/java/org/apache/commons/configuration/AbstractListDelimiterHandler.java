@@ -79,16 +79,16 @@ public abstract class AbstractListDelimiterHandler implements
 
     /**
      * {@inheritDoc} This implementation checks whether the object to be escaped
-     * is a string. If yes, it delegates to {@link #escapeString(String)}. In
-     * all other cases the object is returned unchanged.
+     * is a string. If yes, it delegates to {@link #escapeString(String)},
+     * otherwise no escaping is performed. Eventually, the passed in transformer
+     * is invoked so that additional encoding can be performed.
      */
-    public Object escape(Object value)
+    public Object escape(Object value, ValueTransformer transformer)
     {
-        if (value instanceof String)
-        {
-            return escapeString((String) value);
-        }
-        return value;
+        Object escValue =
+                (value instanceof String) ? escapeString((String) value)
+                        : value;
+        return transformer.transformValue(escValue);
     }
 
     /**

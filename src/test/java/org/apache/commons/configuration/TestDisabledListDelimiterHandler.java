@@ -22,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -119,7 +120,23 @@ public class TestDisabledListDelimiterHandler
     public void testEscapeStringValue()
     {
         assertEquals("Wrong escaped string", STR_VALUE,
-                handler.escape(STR_VALUE));
+                handler.escape(STR_VALUE, ListDelimiterHandler.NOOP_TRANSFORMER));
+    }
+
+    /**
+     * Tests whether the transformer is correctly invoked when escaping a
+     * string.
+     */
+    @Test
+    public void testEscapeStringValueTransformer()
+    {
+        ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        String testStr = "Some other string";
+        EasyMock.expect(trans.transformValue(testStr)).andReturn(STR_VALUE);
+        EasyMock.replay(trans);
+        assertEquals("Wrong escaped string", STR_VALUE,
+                handler.escape(testStr, trans));
+        EasyMock.verify(trans);
     }
 
     /**
@@ -130,7 +147,24 @@ public class TestDisabledListDelimiterHandler
     public void testEscapeNonStringValue()
     {
         Object value = 42;
-        assertEquals("Wrong escaped object", value, handler.escape(value));
+        assertEquals("Wrong escaped object", value,
+                handler.escape(value, ListDelimiterHandler.NOOP_TRANSFORMER));
+    }
+
+    /**
+     * Tests whether the transformer is correctly called when escaping a non
+     * string value.
+     */
+    @Test
+    public void testEscapeNonStringValueTransformer()
+    {
+        ValueTransformer trans = EasyMock.createMock(ValueTransformer.class);
+        Object value = 42;
+        EasyMock.expect(trans.transformValue(value)).andReturn(STR_VALUE);
+        EasyMock.replay(trans);
+        assertEquals("Wrong escaped object", STR_VALUE,
+                handler.escape(value, trans));
+        EasyMock.verify(trans);
     }
 
     /**
@@ -139,6 +173,7 @@ public class TestDisabledListDelimiterHandler
     @Test(expected = UnsupportedOperationException.class)
     public void testEscapeList()
     {
-        handler.escapeList(Arrays.asList(VALUES));
+        handler.escapeList(Arrays.asList(VALUES),
+                ListDelimiterHandler.NOOP_TRANSFORMER);
     }
 }
