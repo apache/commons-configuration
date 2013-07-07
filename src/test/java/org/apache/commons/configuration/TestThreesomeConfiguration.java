@@ -40,6 +40,7 @@ public class TestThreesomeConfiguration
     public void setUp() throws Exception
     {
         PropertiesConfiguration c = new PropertiesConfiguration();
+        c.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         FileHandler handler = new FileHandler(c);
         handler.setFileName("threesome.properties");
         handler.load();

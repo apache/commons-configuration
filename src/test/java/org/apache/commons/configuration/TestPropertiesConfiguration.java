@@ -85,6 +85,7 @@ public class TestPropertiesConfiguration
     public void setUp() throws Exception
     {
         conf = new PropertiesConfiguration();
+        conf.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         load(conf, testProperties);
 
         // remove the test save file if it exists
@@ -402,6 +403,7 @@ public class TestPropertiesConfiguration
             throws ConfigurationException
     {
         PropertiesConfiguration checkConfig = new PropertiesConfiguration();
+        checkConfig.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         load(checkConfig, testSavePropertiesFile.getAbsolutePath());
         ConfigurationAssert.assertEquals(conf, checkConfig);
         return checkConfig;

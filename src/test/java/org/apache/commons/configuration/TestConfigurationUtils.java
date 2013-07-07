@@ -344,7 +344,8 @@ public class TestConfigurationUtils
     @Test
     public void testConvertToHierarchicalDelimiters()
     {
-        Configuration conf = new BaseConfiguration();
+        BaseConfiguration conf = new BaseConfiguration();
+        conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.addProperty("test.key", "1\\,2\\,3");
         assertEquals("Wrong property value", "1,2,3", conf
                 .getString("test.key"));
@@ -412,6 +413,7 @@ public class TestConfigurationUtils
     public void testConvertToHierarchicalMultiValues()
     {
         BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.addProperty("test", "1,2,3");
         HierarchicalConfiguration hc = ConfigurationUtils
                 .convertToHierarchical(config);

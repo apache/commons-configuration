@@ -551,6 +551,7 @@ public class TestCombinedConfiguration
     public void testEscapeListDelimiters()
     {
         PropertiesConfiguration sub = new PropertiesConfiguration();
+        sub.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         sub.addProperty("test.pi", "3\\,1415");
         config.addConfiguration(sub);
         assertEquals("Wrong value", "3,1415", config.getString("test.pi"));
@@ -581,6 +582,7 @@ public class TestCombinedConfiguration
     public void testConversionExpressionEngine()
     {
         PropertiesConfiguration child = new PropertiesConfiguration();
+        child.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         child.addProperty("test(a)", "1,2,3");
         config.addConfiguration(child);
         DefaultExpressionEngine engineQuery = new DefaultExpressionEngine();

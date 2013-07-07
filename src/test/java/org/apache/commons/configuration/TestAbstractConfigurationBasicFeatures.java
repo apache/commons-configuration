@@ -89,6 +89,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         AbstractConfiguration config = new TestConfigurationImpl(
                 new PropertiesConfiguration());
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config
                 .addProperty(
                         "mypath",
@@ -171,7 +172,7 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
-     * Tests the copy() method when properties with multiple values and escaped
+     * Tests the copy() method if properties with multiple values and escaped
      * list delimiters are involved.
      */
     @Test
@@ -206,6 +207,22 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config = setUpDestConfig();
         config.copy(null);
         ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+    }
+
+    /**
+     * Tests whether list delimiters are correctly handled when copying a
+     * configuration.
+     */
+    @Test
+    public void testCopyDelimiterHandling()
+    {
+        BaseConfiguration srcConfig = new BaseConfiguration();
+        BaseConfiguration dstConfig = new BaseConfiguration();
+        dstConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        srcConfig.setProperty(KEY_PREFIX, "C:\\Temp\\,D:\\Data");
+        dstConfig.copy(srcConfig);
+        assertEquals("Wrong property value", srcConfig.getString(KEY_PREFIX),
+                dstConfig.getString(KEY_PREFIX));
     }
 
     /**
@@ -272,6 +289,22 @@ public class TestAbstractConfigurationBasicFeatures
         AbstractConfiguration config = setUpDestConfig();
         config.append(null);
         ConfigurationAssert.assertEquals(setUpDestConfig(), config);
+    }
+
+    /**
+     * Tests whether the list delimiter is correctly handled if a configuration
+     * is appended.
+     */
+    @Test
+    public void testAppendDelimiterHandling()
+    {
+        BaseConfiguration srcConfig = new BaseConfiguration();
+        BaseConfiguration dstConfig = new BaseConfiguration();
+        dstConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        srcConfig.setProperty(KEY_PREFIX, "C:\\Temp\\,D:\\Data");
+        dstConfig.append(srcConfig);
+        assertEquals("Wrong property value", srcConfig.getString(KEY_PREFIX),
+                dstConfig.getString(KEY_PREFIX));
     }
 
     /**
@@ -493,6 +526,28 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
+     * Tries to set a null list delimiter handler.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetListDelimiterHandlerNull()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiterHandler(null);
+    }
+
+    /**
+     * Tests the default list delimiter hander.
+     */
+    @Test
+    public void testDefaultListDelimiterHandler()
+    {
+        BaseConfiguration config = new BaseConfiguration();
+        assertTrue(
+                "Wrong list delimiter handler",
+                config.getListDelimiterHandler() instanceof DisabledListDelimiterHandler);
+    }
+
+    /**
      * Creates the source configuration for testing the copy() and append()
      * methods. This configuration contains keys with an odd index and values
      * starting with the prefix "src". There are also some list properties.
@@ -502,6 +557,7 @@ public class TestAbstractConfigurationBasicFeatures
     private Configuration setUpSourceConfig()
     {
         BaseConfiguration config = new BaseConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         for (int i = 1; i < PROP_COUNT; i += 2)
         {
             config.addProperty(KEY_PREFIX + i, "src" + i);
@@ -522,6 +578,7 @@ public class TestAbstractConfigurationBasicFeatures
     {
         AbstractConfiguration config = new TestConfigurationImpl(
                 new PropertiesConfiguration());
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         for (int i = 0; i < PROP_COUNT; i++)
         {
             config.addProperty(KEY_PREFIX + i, "value" + i);
@@ -560,8 +617,6 @@ public class TestAbstractConfigurationBasicFeatures
             assertEquals("Wrong event type", eventType, e.getType());
             assertTrue("Unknown property: " + e.getPropertyName(), src
                     .containsKey(e.getPropertyName()));
-            assertEquals("Wrong property value for " + e.getPropertyName(), e
-                    .getPropertyValue(), src.getProperty(e.getPropertyName()));
             if (!e.isBeforeUpdate())
             {
                 assertTrue("After event without before event", events

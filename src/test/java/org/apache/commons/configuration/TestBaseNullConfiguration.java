@@ -47,6 +47,7 @@ public class TestBaseNullConfiguration
     public void setUp() throws Exception
     {
         config = new BaseConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         config.setThrowExceptionOnMissing(false);
     }
 

@@ -126,21 +126,21 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     public static final int EVENT_READ_PROPERTY = 5;
 
+    /** Constant for the default list delimiter handler. */
+    private static final ListDelimiterHandler DEFAULT_LIST_DELIMITER_HANDLER =
+            new DisabledListDelimiterHandler();
+
     /** start token */
     protected static final String START_TOKEN = "${";
 
     /** end token */
     protected static final String END_TOKEN = "}";
 
-    /**
-     * Constant for the disabled list delimiter. This character is passed to the
-     * list parsing methods if delimiter parsing is disabled. So this character
-     * should not occur in string property values.
-     */
-    private static final char DISABLED_DELIMITER = '\0';
-
     /** The default value for listDelimiter */
     private static char defaultListDelimiter = ',';
+
+    /** The list delimiter handler. */
+    private ListDelimiterHandler listDelimiterHandler;
 
     /** Delimiter used to convert single values to lists */
     private char listDelimiter = defaultListDelimiter;
@@ -174,6 +174,7 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
         interpolator = new AtomicReference<ConfigurationInterpolator>();
         setLogger(null);
         installDefaultInterpolator();
+        listDelimiterHandler = DEFAULT_LIST_DELIMITER_HANDLER;
     }
 
     /**
@@ -222,6 +223,42 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
     public static char getDelimiter()
     {
         return getDefaultListDelimiter();
+    }
+
+    /**
+     * Returns the {@code ListDelimiterHandler} used by this instance.
+     *
+     * @return the {@code ListDelimiterHandler}
+     * @since 2.0
+     */
+    public ListDelimiterHandler getListDelimiterHandler()
+    {
+        return listDelimiterHandler;
+    }
+
+    /**
+     * Sets the {@code ListDelimiterHandler} to be used by this instance. This
+     * object is invoked every time when dealing with string properties that may
+     * contain a list delimiter and thus have to be split to multiple values.
+     * Per default, a {@code ListDelimiterHandler} implementation is set which
+     * does not support list splitting. This can be changed for instance by
+     * setting a {@link DefaultListDelimiterHandler} object.
+     *
+     * @param listDelimiterHandler the {@code ListDelimiterHandler} to be used
+     *        (must not be <b>null</b>)
+     * @throws IllegalArgumentException if the {@code ListDelimiterHandler} is
+     *         <b>null</b>
+     * @since 2.0
+     */
+    public void setListDelimiterHandler(
+            ListDelimiterHandler listDelimiterHandler)
+    {
+        if (listDelimiterHandler == null)
+        {
+            throw new IllegalArgumentException(
+                    "List delimiter handler must not be null!");
+        }
+        this.listDelimiterHandler = listDelimiterHandler;
     }
 
     /**
@@ -749,9 +786,11 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      */
     protected void addPropertyInternal(String key, Object value)
     {
-        addPropertyValues(key, value,
-                isDelimiterParsingDisabled() ? DISABLED_DELIMITER
-                        : getListDelimiter());
+        for (Iterator<?> it = getListDelimiterHandler().parse(value); it
+                .hasNext();)
+        {
+            addPropertyDirect(key, it.next());
+        }
     }
 
     /**
@@ -762,25 +801,6 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
      * @param value object to store
      */
     protected abstract void addPropertyDirect(String key, Object value);
-
-    /**
-     * Adds the specified value for the given property. This method supports
-     * single values and containers (e.g. collections or arrays) as well. In the
-     * latter case, {@code addPropertyDirect()} will be called for each
-     * element.
-     *
-     * @param key the property key
-     * @param value the value object
-     * @param delimiter the list delimiter character
-     */
-    private void addPropertyValues(String key, Object value, char delimiter)
-    {
-        Iterator<?> it = PropertyConverter.toIterator(value, delimiter);
-        while (it.hasNext())
-        {
-            addPropertyDirect(key, it.next());
-        }
-    }
 
     /**
      * interpolate key names to handle ${key} stuff
@@ -1757,19 +1777,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
                 String key = it.next();
-                Object value = c.getProperty(key);
-                fireEvent(EVENT_SET_PROPERTY, key, value, true);
-                setDetailEvents(false);
-                try
-                {
-                    clearProperty(key);
-                    addPropertyValues(key, value, DISABLED_DELIMITER);
-                }
-                finally
-                {
-                    setDetailEvents(true);
-                }
-                fireEvent(EVENT_SET_PROPERTY, key, value, false);
+                Object value = encodeForCopy(c.getProperty(key));
+                setProperty(key, value);
             }
         }
     }
@@ -1798,10 +1807,8 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
             for (Iterator<String> it = c.getKeys(); it.hasNext();)
             {
                 String key = it.next();
-                Object value = c.getProperty(key);
-                fireEvent(EVENT_ADD_PROPERTY, key, value, true);
-                addPropertyValues(key, value, DISABLED_DELIMITER);
-                fireEvent(EVENT_ADD_PROPERTY, key, value, false);
+                Object value = encodeForCopy(c.getProperty(key));
+                addProperty(key, value);
             }
         }
     }
@@ -1828,14 +1835,51 @@ public abstract class AbstractConfiguration extends BaseEventSource implements C
                 .cloneConfiguration(this);
 
         // now perform interpolation
-        c.setDelimiterParsingDisabled(true);
+        c.setListDelimiterHandler(new DisabledListDelimiterHandler());
         for (Iterator<String> it = getKeys(); it.hasNext();)
         {
             String key = it.next();
             c.setProperty(key, getList(key));
         }
 
-        c.setDelimiterParsingDisabled(isDelimiterParsingDisabled());
+        c.setListDelimiterHandler(getListDelimiterHandler());
         return c;
+    }
+
+    /**
+     * Encodes a property value so that it can be added to this configuration.
+     * This method deals with list delimiters. The passed in object has to be
+     * escaped so that an add operation yields the same result. If it is a list,
+     * all of its values have to be escaped.
+     *
+     * @param value the value to be encoded
+     * @return the encoded value
+     */
+    private Object encodeForCopy(Object value)
+    {
+        if (value instanceof Collection)
+        {
+            return encodeListForCopy((Collection<?>) value);
+        }
+        return getListDelimiterHandler().escape(value,
+                ListDelimiterHandler.NOOP_TRANSFORMER);
+    }
+
+    /**
+     * Encodes a list with property values so that it can be added to this
+     * configuration. This method calls {@code encodeForCopy()} for all list
+     * elements.
+     *
+     * @param values the list to be encoded
+     * @return a list with encoded elements
+     */
+    private Object encodeListForCopy(Collection<?> values)
+    {
+        List<Object> result = new ArrayList<Object>(values.size());
+        for (Object value : values)
+        {
+            result.add(encodeForCopy(value));
+        }
+        return result;
     }
 }

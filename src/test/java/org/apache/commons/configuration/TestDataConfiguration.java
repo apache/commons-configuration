@@ -57,7 +57,9 @@ public class TestDataConfiguration
     @Before
     public void setUp() throws Exception
     {
-        conf = new DataConfiguration(new BaseConfiguration());
+        BaseConfiguration baseConfig = new BaseConfiguration();
+        baseConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        conf = new DataConfiguration(baseConfig);
 
         // empty value
         conf.addProperty("empty", "");

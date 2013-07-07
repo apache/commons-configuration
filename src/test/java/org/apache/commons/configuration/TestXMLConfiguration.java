@@ -131,6 +131,7 @@ public class TestXMLConfiguration
             throws ConfigurationException
     {
         XMLConfiguration config = new XMLConfiguration();
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         load(config, fileName);
         return config;
     }
@@ -1702,9 +1703,7 @@ public class TestXMLConfiguration
     private XMLConfiguration checkSavedConfig(File saveFile)
             throws ConfigurationException
     {
-        XMLConfiguration config = new XMLConfiguration();
-        FileHandler handler = new FileHandler(config);
-        handler.load(saveFile);
+        XMLConfiguration config = createFromFile(saveFile.getAbsolutePath());
         ConfigurationAssert.assertEquals(conf, config);
         return config;
     }

@@ -150,7 +150,8 @@ public class TestSubsetConfiguration
     @Test
     public void testGetList()
     {
-        Configuration conf = new BaseConfiguration();
+        BaseConfiguration conf = new BaseConfiguration();
+        conf.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         conf.setProperty("test.abc", "value0,value1");
         conf.addProperty("test.abc", "value3");
 
@@ -260,16 +261,17 @@ public class TestSubsetConfiguration
     }
 
     @Test
-    public void testSetListDelimiter()
+    public void testSetListDelimiterHandler()
     {
         BaseConfiguration config = new BaseConfiguration();
         Configuration subset = config.subset("prefix");
-        config.setListDelimiter('/');
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler('/'));
         subset.addProperty("list", "a/b/c");
         assertEquals("Wrong size of list", 3, config.getList("prefix.list")
                 .size());
 
-        ((AbstractConfiguration) subset).setListDelimiter(';');
+        ((AbstractConfiguration) subset)
+                .setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         subset.addProperty("list2", "a;b;c");
         assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
                 .size());
@@ -294,12 +296,12 @@ public class TestSubsetConfiguration
     {
         BaseConfiguration config = new BaseConfiguration();
         Configuration subset = config.subset("prefix");
-        config.setDelimiterParsingDisabled(true);
         subset.addProperty("list", "a,b,c");
         assertEquals("Wrong value of property", "a,b,c", config
                 .getString("prefix.list"));
 
-        ((AbstractConfiguration) subset).setDelimiterParsingDisabled(false);
+        ((AbstractConfiguration) subset)
+                .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
         subset.addProperty("list2", "a,b,c");
         assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
                 .size());

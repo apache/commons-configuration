@@ -68,6 +68,7 @@ public class TestBaseConfiguration
     {
         config = new BaseConfiguration();
         config.setThrowExceptionOnMissing(true);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
     }
 
     @Test

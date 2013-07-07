@@ -53,11 +53,14 @@ public class TestNullCompositeConfiguration
     public void setUp() throws Exception
     {
         cc = new CompositeConfiguration();
+        ListDelimiterHandler listHandler = new LegacyListDelimiterHandler(',');
         conf1 = new PropertiesConfiguration();
+        conf1.setListDelimiterHandler(listHandler);
         FileHandler handler1 = new FileHandler(conf1);
         handler1.setFileName(testProperties);
         handler1.load();
         conf2 = new PropertiesConfiguration();
+        conf2.setListDelimiterHandler(listHandler);
         FileHandler handler2 = new FileHandler(conf2);
         handler2.setFileName(testProperties2);
         handler2.load();

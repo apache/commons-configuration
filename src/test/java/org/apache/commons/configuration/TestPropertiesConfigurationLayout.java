@@ -50,27 +50,28 @@ public class TestPropertiesConfigurationLayout
     private static final String CRNORM = "\n";
 
     /** Constant for a test property key. */
-    static final String TEST_KEY = "myProperty";
+    private static final String TEST_KEY = "myProperty";
 
     /** Constant for a test comment. */
-    static final String TEST_COMMENT = "A comment for my test property";
+    private static final String TEST_COMMENT = "A comment for my test property";
 
     /** Constant for a test property value. */
-    static final String TEST_VALUE = "myPropertyValue";
+    private static final String TEST_VALUE = "myPropertyValue";
 
     /** The layout object under test. */
-    PropertiesConfigurationLayout layout;
+    private PropertiesConfigurationLayout layout;
 
     /** The associated configuration object. */
-    LayoutTestConfiguration config;
+    private LayoutTestConfiguration config;
 
     /** A properties builder that can be used for testing. */
-    PropertiesBuilder builder;
+    private PropertiesBuilder builder;
 
     @Before
     public void setUp() throws Exception
     {
         config = new LayoutTestConfiguration();
+        config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
         layout = new PropertiesConfigurationLayout();
         config.setLayout(layout);
         builder = new PropertiesBuilder();
@@ -452,6 +453,7 @@ public class TestPropertiesConfigurationLayout
     public void testSaveForceSingleLine() throws ConfigurationException
     {
         config.setListDelimiter(';');
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(';'));
         config.addProperty(TEST_KEY, TEST_VALUE);
         config.addProperty(TEST_KEY, TEST_VALUE + "2");
         config.addProperty("AnotherProperty", "value1;value2;value3");
