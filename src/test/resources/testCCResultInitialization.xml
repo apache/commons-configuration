@@ -20,7 +20,11 @@
 -->
 <configuration>
   <header>
-    <result delimiterParsingDisabled="true">
+    <result>
+      <listDelimiterHandler
+        config-class="org.apache.commons.configuration.DefaultListDelimiterHandler">
+        <config-constrarg config-value=","/>
+      </listDelimiterHandler>
       <nodeCombiner config-class="org.apache.commons.configuration.tree.OverrideCombiner"/>
       <expressionEngine config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </result>

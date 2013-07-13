@@ -524,8 +524,11 @@ public class TestCombinedConfigurationBuilder
      */
     private static void checkCombinedConfigAttrs(CombinedConfiguration cc)
     {
-        assertTrue("Wrong delimiter parsing flag",
-                cc.isDelimiterParsingDisabled());
+        ListDelimiterHandler handler = cc.getListDelimiterHandler();
+        assertTrue("Wrong delimiter handler: " + handler,
+                handler instanceof DefaultListDelimiterHandler);
+        assertEquals("Wrong list delimiter character", ',',
+                ((DefaultListDelimiterHandler) handler).getDelimiter());
     }
 
     /**

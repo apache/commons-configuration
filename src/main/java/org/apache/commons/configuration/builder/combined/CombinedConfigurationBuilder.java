@@ -834,8 +834,7 @@ public class CombinedConfigurationBuilder extends BasicConfigurationBuilder<Comb
     {
         CombinedConfiguration addConfig =
                 new CombinedConfiguration(new UnionCombiner());
-        addConfig.setDelimiterParsingDisabled(resultConfig
-                .isDelimiterParsingDisabled());
+        addConfig.setListDelimiterHandler(resultConfig.getListDelimiterHandler());
         return addConfig;
     }
 
