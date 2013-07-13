@@ -953,7 +953,6 @@ public class TestINIConfiguration
     {
         INIConfiguration config =
                 new INIConfiguration();
-        config.setDelimiterParsingDisabled(true);
         load(config, "[test]" + LINE_SEPARATOR + "nolist=1,2,3");
         assertEquals("Wrong value", "1,2,3", config.getString("test.nolist"));
     }
