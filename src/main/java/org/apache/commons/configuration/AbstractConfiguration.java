@@ -60,15 +60,17 @@ import org.apache.commons.logging.impl.NoOpLog;
  * <li>Support for variable interpolation. Property values containing special
  * variable tokens (like <code>${var}</code>) will be replaced by their
  * corresponding values.</li>
- * <li>Support for string lists. The values of properties to be added to this
+ * <li>Optional support for string lists. The values of properties to be added to this
  * configuration are checked whether they contain a list delimiter character. If
  * this is the case and if list splitting is enabled, the string is split and
- * multiple values are added for this property. (With the
- * {@code setListDelimiter()} method the delimiter character can be
- * specified; per default a comma is used. The
- * {@code setDelimiterParsingDisabled()} method can be used to disable
- * list splitting completely.)</li>
- * <li>Allows to specify how missing properties are treated. Per default the
+ * multiple values are added for this property. List splitting is controlled
+ * by a {@link ListDelimiterHandler} object which can be set using the
+ * {@link #setListDelimiterHandler(ListDelimiterHandler)} method. It is
+ * disabled per default. To enable this feature, set a suitable
+ * {@code ListDelimiterHandler}, e.g. an instance of
+ * {@link DefaultListDelimiterHandler} configured with the desired list
+ * delimiter character.</li>
+ * <li>Allows specifying how missing properties are treated. Per default the
  * get methods returning an object will return <b>null</b> if the searched
  * property key is not found (and no default value is provided). With the
  * {@code setThrowExceptionOnMissing()} method this behavior can be
