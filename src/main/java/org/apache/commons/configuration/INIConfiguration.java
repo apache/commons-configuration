@@ -22,7 +22,6 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -389,15 +388,7 @@ public class INIConfiguration extends BaseHierarchicalConfiguration implements
     private void createValueNodes(ConfigurationNode sectionNode, String key,
             String value)
     {
-        Collection<String> values;
-        if (isDelimiterParsingDisabled())
-        {
-            values = Collections.singleton(value);
-        }
-        else
-        {
-            values = getListDelimiterHandler().split(value, false);
-        }
+        Collection<String> values = getListDelimiterHandler().split(value, false);
 
         for (String v : values)
         {
