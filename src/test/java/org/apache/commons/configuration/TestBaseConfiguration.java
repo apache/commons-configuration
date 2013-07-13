@@ -534,7 +534,6 @@ public class TestBaseConfiguration
     @Test
     public void testInterpolationEnvironment()
     {
-        config.setDelimiterParsingDisabled(true);
         InterpolationTestHelper.testInterpolationEnvironment(config);
     }
 
