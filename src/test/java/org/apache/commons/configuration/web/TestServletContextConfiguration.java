@@ -26,6 +26,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServlet;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.TestAbstractConfiguration;
 import org.junit.Test;
 
@@ -84,7 +85,9 @@ public class TestServletContextConfiguration extends TestAbstractConfiguration
             }
         };
 
-        return new ServletContextConfiguration(servlet);
+        ServletContextConfiguration resultConfig = new ServletContextConfiguration(servlet);
+        resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return resultConfig;
     }
 
     @Override

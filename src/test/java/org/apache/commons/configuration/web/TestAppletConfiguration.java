@@ -24,6 +24,7 @@ import java.util.Properties;
 
 import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.TestAbstractConfiguration;
 import org.junit.Before;
@@ -65,6 +66,7 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
     @Override
     protected AbstractConfiguration getConfiguration()
     {
+        AbstractConfiguration config;
         final Properties parameters = new Properties();
         parameters.setProperty("key1", "value1");
         parameters.setProperty("key2", "value2");
@@ -98,12 +100,15 @@ public class TestAppletConfiguration extends TestAbstractConfiguration
                 }
             };
 
-            return new AppletConfiguration(applet);
+            config = new AppletConfiguration(applet);
         }
         else
         {
-            return new MapConfiguration(parameters);
+            config = new MapConfiguration(parameters);
         }
+
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return config;
     }
 
     @Override

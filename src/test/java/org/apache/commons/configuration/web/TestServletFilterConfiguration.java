@@ -24,6 +24,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.TestAbstractConfiguration;
 import org.junit.Test;
 
@@ -44,7 +45,9 @@ public class TestServletFilterConfiguration extends TestAbstractConfiguration
         config.setInitParameter("list", "value1, value2");
         config.setInitParameter("listesc", "value1\\,value2");
 
-        return new ServletFilterConfiguration(config);
+        ServletFilterConfiguration resultConfig = new ServletFilterConfiguration(config);
+        resultConfig.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return resultConfig;
     }
 
     @Override

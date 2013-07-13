@@ -29,6 +29,7 @@ import org.apache.commons.configuration.AbstractConfiguration;
 import org.apache.commons.configuration.BaseConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationMap;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.TestAbstractConfiguration;
 import org.junit.Test;
 
@@ -101,7 +102,9 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
             }
         };
 
-        return new ServletRequestConfiguration(request);
+        ServletRequestConfiguration config = new ServletRequestConfiguration(request);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return config;
     }
 
     @Override

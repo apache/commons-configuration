@@ -16,10 +16,9 @@
  */
 package org.apache.commons.configuration.web;
 
-import java.util.List;
+import java.util.Collection;
 
 import org.apache.commons.configuration.AbstractConfiguration;
-import org.apache.commons.configuration.PropertyConverter;
 
 /**
  * <p>
@@ -103,11 +102,11 @@ abstract class BaseWebConfiguration extends AbstractConfiguration
      */
     protected Object handleDelimiters(Object value)
     {
-        if (!isDelimiterParsingDisabled() && value instanceof String)
+        if (value instanceof String)
         {
-            List<String> list = PropertyConverter.split((String) value,
-                    getListDelimiter());
-            value = list.size() > 1 ? list : list.get(0);
+            Collection<String> values =
+                    getListDelimiterHandler().split((String) value, true);
+            value = values.size() > 1 ? values : values.iterator().next();
         }
 
         return value;
