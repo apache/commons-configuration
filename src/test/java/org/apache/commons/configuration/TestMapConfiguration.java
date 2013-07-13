@@ -55,7 +55,9 @@ public class TestMapConfiguration extends TestAbstractConfiguration
         map.put("list", "value1, value2");
         map.put("listesc", "value1\\,value2");
 
-        return new MapConfiguration(map);
+        MapConfiguration config = new MapConfiguration(map);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
+        return config;
     }
 
     @Override
@@ -163,7 +165,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     }
 
     /**
-     * Tests querying a property when trimming is enabled, but list splitting is
+     * Tests querying a property if trimming is enabled, but list splitting is
      * disabled. In this case no trimming is performed (trimming only works if
      * list splitting is enabled).
      */
@@ -172,7 +174,7 @@ public class TestMapConfiguration extends TestAbstractConfiguration
     {
         MapConfiguration config = (MapConfiguration) getConfiguration();
         config.getMap().put(KEY, SPACE_VALUE);
-        config.setDelimiterParsingDisabled(true);
+        config.setListDelimiterHandler(new DisabledListDelimiterHandler());
         assertEquals("Wrong trimmed value", SPACE_VALUE, config.getProperty(KEY));
     }
 }

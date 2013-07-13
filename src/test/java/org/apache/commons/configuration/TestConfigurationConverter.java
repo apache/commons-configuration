@@ -62,7 +62,9 @@ public class TestConfigurationConverter
         props.setProperty("int", "123");
         props.setProperty("list", "item 1, item 2");
 
-        Configuration config = ConfigurationConverter.getConfiguration(props);
+        AbstractConfiguration config =
+                (AbstractConfiguration) ConfigurationConverter.getConfiguration(props);
+        config.setListDelimiterHandler(new DefaultListDelimiterHandler(','));
 
         assertEquals("This returns 'teststring'", "teststring", config.getString("string"));
         List<Object> item1 = config.getList("list");

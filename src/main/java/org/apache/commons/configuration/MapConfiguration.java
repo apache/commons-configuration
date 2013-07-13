@@ -18,6 +18,7 @@
 package org.apache.commons.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -164,10 +165,10 @@ public class MapConfiguration extends AbstractConfiguration implements Cloneable
     protected Object getPropertyInternal(String key)
     {
         Object value = map.get(key);
-        if ((value instanceof String) && (!isDelimiterParsingDisabled()))
+        if (value instanceof String)
         {
-            List<String> list = PropertyConverter.split((String) value, getListDelimiter(), !isTrimmingDisabled());
-            return list.size() > 1 ? list : list.get(0);
+            Collection<String> list = getListDelimiterHandler().split((String) value, !isTrimmingDisabled());
+            return list.size() > 1 ? list : list.iterator().next();
         }
         else
         {
