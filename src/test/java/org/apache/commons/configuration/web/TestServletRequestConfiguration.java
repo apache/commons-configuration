@@ -131,7 +131,6 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
         String listKey = "test.list";
 
         BaseConfiguration config = new BaseConfiguration();
-        config.setListDelimiter('\0');
         config.addProperty(listKey, values);
 
         assertEquals("Wrong number of list elements", values.length, config.getList(listKey).size());
