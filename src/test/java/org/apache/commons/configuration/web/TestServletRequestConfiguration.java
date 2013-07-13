@@ -47,7 +47,6 @@ public class TestServletRequestConfiguration extends TestAbstractConfiguration
     protected AbstractConfiguration getConfiguration()
     {
         final Configuration configuration = new BaseConfiguration();
-        ((BaseConfiguration) configuration).setListDelimiter('\0');
         configuration.setProperty("key1", "value1");
         configuration.setProperty("key2", "value2");
         configuration.addProperty("list", "value1");
