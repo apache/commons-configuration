@@ -467,8 +467,6 @@ public class TestDatabaseConfiguration
     public void testGetListWithDelimiterParsingDisabled() throws ConfigurationException
     {
         DatabaseConfiguration config = setUpConfig();
-        config.setListDelimiter(';');
-        config.setDelimiterParsingDisabled(true);
         assertEquals("Wrong value of property", "a;b;c", config.getString("keyMulti"));
     }
 
