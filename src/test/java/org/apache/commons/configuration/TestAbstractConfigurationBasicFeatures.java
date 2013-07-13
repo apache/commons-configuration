@@ -112,14 +112,13 @@ public class TestAbstractConfigurationBasicFeatures
     }
 
     /**
-     * Tests adding list properties when delimiter parsing is disabled.
+     * Tests adding list properties if delimiter parsing is disabled.
      */
     @Test
     public void testAddPropertyListNoDelimiterParsing()
     {
         AbstractConfiguration config = new TestConfigurationImpl(
                 new PropertiesConfiguration());
-        config.setDelimiterParsingDisabled(true);
         checkAddListProperty(config);
     }
 
