@@ -53,16 +53,13 @@ import java.util.Properties;
  * {@code addProperty()}; results may be different than expected.
  * </p>
  * <p>
- * An important point is the handling of list delimiters: If delimiter parsing
- * is enabled (which it is per default), {@code getProperty()} checks
- * whether the value of a property is a string and whether it contains the list
- * delimiter character. If this is the case, the value is split at the delimiter
- * resulting in a list. This split operation typically also involves trimming
- * the single values as the list delimiter character may be surrounded by
- * whitespace. Trimming can be disabled with the
- * {@link #setTrimmingDisabled(boolean)} method. The whole list splitting
- * behavior can be disabled using the
- * {@link #setDelimiterParsingDisabled(boolean)} method.
+ * The handling of list delimiters is a bit different for this configuration
+ * implementation: When a property of type String is queried, it is passed to
+ * the current {@link ListDelimiterHandler} which may generate multiple values.
+ * Note that per default a list delimiter handler is set which does not do any
+ * list splitting, so this feature is disabled. It can be enabled by setting
+ * a properly configured {@code ListDelimiterHandler} implementation, e.g. a
+ * {@link DefaultListDelimiterHandler} object.
  * </p>
  * <p>
  * Notice that list splitting is only performed for single string values. If a
