@@ -36,7 +36,7 @@
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </multiXml>
     <xml fileName="testMultiConfiguration_default.xml"
-         config-name="defaultConfig" delimiterParsingDisabled="true">
+         config-name="defaultConfig">
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </xml>

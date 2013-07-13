@@ -35,7 +35,9 @@ import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.Initializable;
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.apache.commons.configuration.beanutils.BeanDeclaration;
@@ -43,6 +45,7 @@ import org.apache.commons.configuration.beanutils.XMLBeanDeclaration;
 import org.apache.commons.configuration.event.ConfigurationErrorListener;
 import org.apache.commons.configuration.event.ConfigurationListener;
 import org.easymock.EasyMock;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -52,6 +55,15 @@ import org.junit.Test;
  */
 public class TestBasicConfigurationBuilder
 {
+    /** A test list delimiter handler. */
+    private static ListDelimiterHandler listHandler;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception
+    {
+        listHandler = new DefaultListDelimiterHandler(';');
+    }
+
     /**
      * Tries to create an instance without a result class.
      */
@@ -71,8 +83,7 @@ public class TestBasicConfigurationBuilder
     {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("throwExceptionOnMissing", Boolean.TRUE);
-        params.put("delimiterParsingDisabled", Boolean.TRUE);
-        params.put("listDelimiter", Character.valueOf('.'));
+        params.put("listDelimiterHandler", listHandler);
         return params;
     }
 
@@ -141,8 +152,7 @@ public class TestBasicConfigurationBuilder
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class)
                         .configure(new BasicBuilderParameters()
-                                .setDelimiterParsingDisabled(true)
-                                .setListDelimiter('.')
+                                .setListDelimiterHandler(listHandler)
                                 .setThrowExceptionOnMissing(true));
         Map<String, Object> params2 =
                 new HashMap<String, Object>(builder.getParameters());
@@ -223,13 +233,12 @@ public class TestBasicConfigurationBuilder
         PropertiesConfiguration config =
                 new BasicConfigurationBuilder<PropertiesConfiguration>(
                         PropertiesConfiguration.class).configure(
-                        new BasicBuilderParameters().setListDelimiter('*')
-                                .setThrowExceptionOnMissing(true))
+                        new BasicBuilderParameters().setListDelimiterHandler(
+                                listHandler).setThrowExceptionOnMissing(true))
                         .getConfiguration();
-        assertTrue("Delimiter parsing not disabled",
-                config.isDelimiterParsingDisabled());
         assertTrue("Wrong exception flag", config.isThrowExceptionOnMissing());
-        assertEquals("Wrong list delimiter", '*', config.getListDelimiter());
+        assertEquals("Wrong list delimiter handler", listHandler,
+                config.getListDelimiterHandler());
     }
 
     /**

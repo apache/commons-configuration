@@ -76,12 +76,10 @@ public class TestJndiBuilderParametersImpl
     public void testGetParametersBaseProperties()
     {
         params.setPrefix("somePrefix");
-        params.setListDelimiter('?');
+        params.setThrowExceptionOnMissing(true);
         Map<String, Object> paramsMap = params.getParameters();
-        assertEquals("Wrong delimiter parsing flag", Boolean.TRUE,
-                paramsMap.get("delimiterParsingDisabled"));
-        assertEquals("Wrong list delimiter", Character.valueOf('?'),
-                paramsMap.get("listDelimiter"));
+        assertEquals("Wrong exception flag", Boolean.TRUE,
+                paramsMap.get("throwExceptionOnMissing"));
     }
 
     /**

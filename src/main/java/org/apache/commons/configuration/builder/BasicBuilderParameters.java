@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
@@ -54,12 +56,8 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     private static final String PROP_THROW_EXCEPTION_ON_MISSING =
             "throwExceptionOnMissing";
 
-    /** The key of the <em>delimiterParsingDisabled</em> property. */
-    private static final String PROP_DELIMITER_PARSING_DISABLED =
-            "delimiterParsingDisabled";
-
-    /** The key of the <em>listDelimiter</em> property. */
-    private static final String PROP_LIST_DELIMITER = "listDelimiter";
+    /** The key of the <em>listDelimiterHandler</em> property. */
+    private static final String PROP_LIST_DELIMITER_HANDLER = "listDelimiterHandler";
 
     /** The key of the <em>logger</em> property. */
     private static final String PROP_LOGGER = "logger";
@@ -88,7 +86,6 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     public BasicBuilderParameters()
     {
         properties = new HashMap<String, Object>();
-        initDefaults();
     }
 
     /**
@@ -127,21 +124,6 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     }
 
     /**
-     * Sets the value of the <em>delimiterParsingDisabled</em> property. This
-     * property controls whether the configuration should look for list
-     * delimiter characters in the values of newly added properties. If the
-     * property value is <b>true</b> and such characters are encountered,
-     * multiple values are stored for the affected property.
-     *
-     * @param b the value of the property
-     * @return a reference to this object for method chaining
-     */
-    public BasicBuilderParameters setDelimiterParsingDisabled(boolean b)
-    {
-        return setProperty(PROP_DELIMITER_PARSING_DISABLED, Boolean.valueOf(b));
-    }
-
-    /**
      * Sets the value of the <em>throwExceptionOnMissing</em> property. This
      * property controls the configuration's behavior if missing properties are
      * queried: a value of <b>true</b> causes the configuration to throw an
@@ -158,17 +140,20 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     }
 
     /**
-     * Sets the value of the <em>listDelimiter</em> property. This property
-     * defines the list delimiter character. It is evaluated only if the
-     * <em>delimiterParsingDisabled</em> property is set to <b>false</b>.
+     * Sets the value of the <em>listDelimiterHandler</em> property. This
+     * property defines the object responsible for dealing with list delimiter
+     * and escaping characters. Note: {@link AbstractConfiguration} does not
+     * allow setting this property to <b>null</b>. If the default
+     * {@code ListDelimiterHandler} is to be used, do not call this method.
      *
-     * @param c the list delimiter character
+     * @param handler the {@code ListDelimiterHandler}
      * @return a reference to this object for method chaining
-     * @see #setDelimiterParsingDisabled(boolean)
+     * @see AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)
      */
-    public BasicBuilderParameters setListDelimiter(char c)
+    public BasicBuilderParameters setListDelimiterHandler(
+            ListDelimiterHandler handler)
     {
-        return setProperty(PROP_LIST_DELIMITER, Character.valueOf(c));
+        return setProperty(PROP_LIST_DELIMITER_HANDLER, handler);
     }
 
     /**
@@ -357,14 +342,6 @@ public class BasicBuilderParameters implements Cloneable, BuilderParameters,
     protected Object fetchProperty(String key)
     {
         return properties.get(key);
-    }
-
-    /**
-     * Sets default parameter values.
-     */
-    private void initDefaults()
-    {
-        properties.put(PROP_DELIMITER_PARSING_DISABLED, Boolean.TRUE);
     }
 
     /**

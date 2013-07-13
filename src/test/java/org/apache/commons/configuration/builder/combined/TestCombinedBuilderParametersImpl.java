@@ -96,8 +96,6 @@ public class TestCombinedBuilderParametersImpl
         Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not found", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
-        assertEquals("Wrong delimiter parsing flag", Boolean.TRUE,
-                map.get("delimiterParsingDisabled"));
     }
 
     /**

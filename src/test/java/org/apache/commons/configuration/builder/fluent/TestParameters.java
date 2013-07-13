@@ -23,6 +23,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Map;
 
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.BuilderParameters;
@@ -31,6 +32,7 @@ import org.apache.commons.configuration.builder.combined.CombinedBuilderParamete
 import org.apache.commons.configuration.builder.combined.MultiFileBuilderParametersImpl;
 import org.apache.commons.configuration.tree.ExpressionEngine;
 import org.easymock.EasyMock;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,6 +42,15 @@ import org.junit.Test;
  */
 public class TestParameters
 {
+    /** A test list delimiter handler. */
+    private static ListDelimiterHandler listHandler;
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws Exception
+    {
+        listHandler = EasyMock.createMock(ListDelimiterHandler.class);
+    }
+
     /**
      * Tests whether a basic parameters object can be created.
      */
@@ -58,10 +69,8 @@ public class TestParameters
      */
     private static void checkBasicProperties(Map<String, Object> map)
     {
-        assertEquals("Delimiter flag not set", Boolean.TRUE,
-                map.get("delimiterParsingDisabled"));
-        assertEquals("Wrong delimiter", Character.valueOf('#'),
-                map.get("listDelimiter"));
+        assertEquals("Wrong delimiter handler", listHandler,
+                map.get("listDelimiterHandler"));
         assertEquals("Wrong exception flag value", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
     }
@@ -74,7 +83,7 @@ public class TestParameters
     {
         Map<String, Object> map =
                 Parameters.fileBased().setThrowExceptionOnMissing(true)
-                        .setEncoding("UTF-8").setListDelimiter('#')
+                        .setEncoding("UTF-8").setListDelimiterHandler(listHandler)
                         .setFileName("test.xml").getParameters();
         FileBasedBuilderParametersImpl fbparams =
                 FileBasedBuilderParametersImpl.fromParameters(map);
@@ -108,7 +117,7 @@ public class TestParameters
     {
         Map<String, Object> map =
                 Parameters.combined().setThrowExceptionOnMissing(true)
-                        .setBasePath("test").setListDelimiter('#')
+                        .setBasePath("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         CombinedBuilderParametersImpl cparams =
                 CombinedBuilderParametersImpl.fromParameters(map);
@@ -124,7 +133,7 @@ public class TestParameters
     {
         Map<String, Object> map =
                 Parameters.jndi().setThrowExceptionOnMissing(true)
-                        .setPrefix("test").setListDelimiter('#')
+                        .setPrefix("test").setListDelimiterHandler(listHandler)
                         .getParameters();
         assertEquals("Wrong prefix", "test", map.get("prefix"));
         checkBasicProperties(map);
@@ -141,7 +150,7 @@ public class TestParameters
         Map<String, Object> map =
                 Parameters.hierarchical().setThrowExceptionOnMissing(true)
                         .setExpressionEngine(engine).setFileName("test.xml")
-                        .setListDelimiter('#').getParameters();
+                        .setListDelimiterHandler(listHandler).getParameters();
         checkBasicProperties(map);
         FileBasedBuilderParametersImpl fbp =
                 FileBasedBuilderParametersImpl.fromParameters(map);
@@ -162,7 +171,7 @@ public class TestParameters
         Map<String, Object> map =
                 Parameters.xml().setThrowExceptionOnMissing(true)
                         .setFileName("test.xml").setValidating(true)
-                        .setExpressionEngine(engine).setListDelimiter('#')
+                        .setExpressionEngine(engine).setListDelimiterHandler(listHandler)
                         .setSchemaValidation(true).getParameters();
         checkBasicProperties(map);
         FileBasedBuilderParametersImpl fbp =
@@ -189,7 +198,7 @@ public class TestParameters
         Map<String, Object> map =
                 Parameters.properties().setThrowExceptionOnMissing(true)
                         .setFileName("test.properties").setIOFactory(factory)
-                        .setListDelimiter('#').setIncludesAllowed(false)
+                        .setListDelimiterHandler(listHandler).setIncludesAllowed(false)
                         .getParameters();
         checkBasicProperties(map);
         FileBasedBuilderParametersImpl fbp =
@@ -211,7 +220,7 @@ public class TestParameters
         String pattern = "a pattern";
         Map<String, Object> map =
                 Parameters.multiFile().setThrowExceptionOnMissing(true)
-                        .setFilePattern(pattern).setListDelimiter('#')
+                        .setFilePattern(pattern).setListDelimiterHandler(listHandler)
                         .setManagedBuilderParameters(bp).getParameters();
         checkBasicProperties(map);
         MultiFileBuilderParametersImpl params =
@@ -231,7 +240,7 @@ public class TestParameters
         Map<String, Object> map =
                 Parameters.database().setThrowExceptionOnMissing(true)
                         .setAutoCommit(true).setTable("table")
-                        .setListDelimiter('#').setKeyColumn("keyColumn")
+                        .setListDelimiterHandler(listHandler).setKeyColumn("keyColumn")
                         .getParameters();
         checkBasicProperties(map);
         assertEquals("Wrong table name", "table", map.get("table"));

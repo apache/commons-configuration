@@ -30,6 +30,7 @@ import java.util.Collections;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationLookup;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -162,18 +163,22 @@ public class TestMultiFileConfigurationBuilder extends AbstractMultiFileConfigur
         ExpressionEngine engine = new XPathExpressionEngine();
         BuilderParameters xmlParams =
                 new XMLBuilderParametersImpl().setExpressionEngine(engine)
-                        .setListDelimiter(';');
+                        .setListDelimiterHandler(
+                                new DefaultListDelimiterHandler(';'));
         MultiFileBuilderParametersImpl params =
                 new MultiFileBuilderParametersImpl().setFilePattern(PATTERN)
                         .setManagedBuilderParameters(xmlParams);
         ConfigurationInterpolator ci = createInterpolator();
-        params.setInterpolator(ci).setListDelimiter('#');
+        params.setInterpolator(ci).setListDelimiterHandler(
+                new DefaultListDelimiterHandler('#'));
         builder.configure(params);
         switchToConfig(1);
         XMLConfiguration config = builder.getConfiguration();
         assertSame("Wrong expression engine", engine,
                 config.getExpressionEngine());
-        assertEquals("Wrong list delimiter", ';', config.getListDelimiter());
+        DefaultListDelimiterHandler listHandler =
+                (DefaultListDelimiterHandler) config.getListDelimiterHandler();
+        assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
         assertNotSame("Interpolator was copied", ci, config.getInterpolator());
     }
 

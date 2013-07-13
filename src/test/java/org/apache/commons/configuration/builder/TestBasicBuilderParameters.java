@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.InterpolatorSpecification;
 import org.apache.commons.configuration.interpol.Lookup;
@@ -61,9 +62,7 @@ public class TestBasicBuilderParameters
     public void testDefaults()
     {
         Map<String, Object> paramMap = params.getParameters();
-        assertEquals("Wrong number of parameters", 1, paramMap.size());
-        assertEquals("Delimiter flag not set", Boolean.TRUE,
-                paramMap.get("delimiterParsingDisabled"));
+        assertTrue("Got parameters", paramMap.isEmpty());
     }
 
     /**
@@ -95,18 +94,6 @@ public class TestBasicBuilderParameters
     }
 
     /**
-     * Tests whether the delimiter parsing disabled property can be set.
-     */
-    @Test
-    public void testSetDelimiterParsingDisabled()
-    {
-        assertSame("Wrong result", params,
-                params.setDelimiterParsingDisabled(false));
-        assertEquals("Wrong flag value", Boolean.FALSE, params.getParameters()
-                .get("delimiterParsingDisabled"));
-    }
-
-    /**
      * Tests whether the throw exception on missing property can be set.
      */
     @Test
@@ -119,14 +106,18 @@ public class TestBasicBuilderParameters
     }
 
     /**
-     * Tests whether the list delimiter property can be set.
+     * Tests whether the list delimiter handler property can be set.
      */
     @Test
     public void testSetListDelimiter()
     {
-        assertSame("Wrong result", params, params.setListDelimiter(';'));
-        assertEquals("Wrong delimiter", Character.valueOf(';'), params
-                .getParameters().get("listDelimiter"));
+        ListDelimiterHandler handler =
+                EasyMock.createMock(ListDelimiterHandler.class);
+        EasyMock.replay(handler);
+        assertSame("Wrong result", params,
+                params.setListDelimiterHandler(handler));
+        assertSame("Wrong delimiter handler", handler, params.getParameters()
+                .get("listDelimiterHandler"));
     }
 
     /**
@@ -256,20 +247,22 @@ public class TestBasicBuilderParameters
     @Test
     public void testMerge()
     {
+        ListDelimiterHandler handler1 = EasyMock.createMock(ListDelimiterHandler.class);
+        ListDelimiterHandler handler2 = EasyMock.createMock(ListDelimiterHandler.class);
         Map<String, Object> props = new HashMap<String, Object>();
         props.put("throwExceptionOnMissing", Boolean.TRUE);
-        props.put("listDelimiter", Character.valueOf('-'));
+        props.put("listDelimiterHandler", handler1);
         props.put("other", "test");
         props.put(BuilderParameters.RESERVED_PARAMETER_PREFIX + "test",
                 "reserved");
         BuilderParameters p = EasyMock.createMock(BuilderParameters.class);
         EasyMock.expect(p.getParameters()).andReturn(props);
         EasyMock.replay(p);
-        params.setListDelimiter('+');
+        params.setListDelimiterHandler(handler2);
         params.merge(p);
         Map<String, Object> map = params.getParameters();
-        assertEquals("Wrong list delimiter", Character.valueOf('+'),
-                map.get("listDelimiter"));
+        assertEquals("Wrong list delimiter handler", handler2,
+                map.get("listDelimiterHandler"));
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
         assertEquals("Wrong other property", "test", map.get("other"));
@@ -410,18 +403,20 @@ public class TestBasicBuilderParameters
         Log log = EasyMock.createMock(Log.class);
         ConfigurationInterpolator ci =
                 EasyMock.createMock(ConfigurationInterpolator.class);
-        params.setListDelimiter('#');
+        ListDelimiterHandler handler1 = EasyMock.createMock(ListDelimiterHandler.class);
+        ListDelimiterHandler handler2 = EasyMock.createMock(ListDelimiterHandler.class);
+        params.setListDelimiterHandler(handler1);
         params.setLogger(log);
         params.setInterpolator(ci);
         params.setThrowExceptionOnMissing(true);
         BasicBuilderParameters clone = params.clone();
-        params.setListDelimiter('.');
+        params.setListDelimiterHandler(handler2);
         params.setThrowExceptionOnMissing(false);
         Map<String, Object> map = clone.getParameters();
         assertSame("Wrong logger", log, map.get("logger"));
         assertSame("Wrong interpolator", ci, map.get("interpolator"));
-        assertEquals("Wrong list delimiter", Character.valueOf('#'),
-                map.get("listDelimiter"));
+        assertEquals("Wrong list delimiter handler", handler1,
+                map.get("listDelimiterHandler"));
         assertEquals("Wrong exception flag", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
     }

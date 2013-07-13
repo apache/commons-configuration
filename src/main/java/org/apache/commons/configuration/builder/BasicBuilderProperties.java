@@ -19,6 +19,8 @@ package org.apache.commons.configuration.builder;
 import java.util.Collection;
 import java.util.Map;
 
+import org.apache.commons.configuration.AbstractConfiguration;
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
 import org.apache.commons.configuration.sync.Synchronizer;
@@ -53,18 +55,6 @@ public interface BasicBuilderProperties<T>
     T setLogger(Log log);
 
     /**
-     * Sets the value of the <em>delimiterParsingDisabled</em> property. This
-     * property controls whether the configuration should look for list
-     * delimiter characters in the values of newly added properties. If the
-     * property value is <b>true</b> and such characters are encountered,
-     * multiple values are stored for the affected property.
-     *
-     * @param b the value of the property
-     * @return a reference to this object for method chaining
-     */
-    T setDelimiterParsingDisabled(boolean b);
-
-    /**
      * Sets the value of the <em>throwExceptionOnMissing</em> property. This
      * property controls the configuration's behavior if missing properties are
      * queried: a value of <b>true</b> causes the configuration to throw an
@@ -78,15 +68,17 @@ public interface BasicBuilderProperties<T>
     T setThrowExceptionOnMissing(boolean b);
 
     /**
-     * Sets the value of the <em>listDelimiter</em> property. This property
-     * defines the list delimiter character. It is evaluated only if the
-     * <em>delimiterParsingDisabled</em> property is set to <b>false</b>.
+     * Sets the value of the <em>listDelimiterHandler</em> property. This
+     * property defines the object responsible for dealing with list delimiter
+     * and escaping characters. Note: {@link AbstractConfiguration} does not
+     * allow setting this property to <b>null</b>. If the default
+     * {@code ListDelimiterHandler} is to be used, do not call this method.
      *
-     * @param c the list delimiter character
+     * @param handler the {@code ListDelimiterHandler}
      * @return a reference to this object for method chaining
-     * @see #setDelimiterParsingDisabled(boolean)
+     * @see AbstractConfiguration#setListDelimiterHandler(ListDelimiterHandler)
      */
-    T setListDelimiter(char c);
+    T setListDelimiterHandler(ListDelimiterHandler handler);
 
     /**
      * Sets the {@code ConfigurationInterpolator} to be used for this

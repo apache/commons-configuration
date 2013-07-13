@@ -25,6 +25,8 @@ import org.apache.commons.configuration.BaseHierarchicalConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationAssert;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.DisabledListDelimiterHandler;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
@@ -54,11 +56,14 @@ public class TestBaseConfigurationBuilderProvider
         HierarchicalConfiguration config = new BaseHierarchicalConfiguration();
         config.addProperty(CombinedConfigurationBuilder.ATTR_RELOAD,
                 Boolean.valueOf(reload));
-        config.addProperty("[@delimiterParsingDisabled]", Boolean.TRUE);
-        config.addProperty("[@listDelimiter]", ';');
+        config.addProperty("[@throwExceptionOnMissing]", Boolean.TRUE);
         config.addProperty("[@path]",
                 ConfigurationAssert.getTestFile("test.properties")
                         .getAbsolutePath());
+        config.addProperty("listDelimiterHandler[@config-class]",
+                DefaultListDelimiterHandler.class.getName());
+        config.addProperty(
+                "listDelimiterHandler.config-constrarg[@config-value]", ";");
         return config;
     }
 
@@ -83,7 +88,7 @@ public class TestBaseConfigurationBuilderProvider
                         if (params instanceof BasicBuilderParameters)
                         {
                             ((BasicBuilderParameters) params)
-                                    .setListDelimiter('!');
+                                    .setListDelimiterHandler(DisabledListDelimiterHandler.INSTANCE);
                         }
                     }
                 };
@@ -132,9 +137,11 @@ public class TestBaseConfigurationBuilderProvider
         assertEquals("Wrong configuration class",
                 PropertiesConfiguration.class, config.getClass());
         PropertiesConfiguration pconfig = (PropertiesConfiguration) config;
-        assertTrue("Wrong delimiter parsing flag",
-                pconfig.isDelimiterParsingDisabled());
-        assertEquals("Wrong list delimiter", ';', pconfig.getListDelimiter());
+        assertTrue("Wrong exception flag",
+                pconfig.isThrowExceptionOnMissing());
+        DefaultListDelimiterHandler listHandler =
+                (DefaultListDelimiterHandler) pconfig.getListDelimiterHandler();
+        assertEquals("Wrong list delimiter", ';', listHandler.getDelimiter());
         assertTrue("Configuration not loaded",
                 pconfig.getBoolean("configuration.loaded"));
         return builder;

@@ -200,13 +200,11 @@ public class TestFileBasedBuilderParameters
         FileBasedBuilderParametersImpl params =
                 new FileBasedBuilderParametersImpl()
                         .setReloadingRefreshDelay(1000L);
-        params.setListDelimiter('*');
+        params.setThrowExceptionOnMissing(true);
         Map<String, Object> map = params.getParameters();
         assertTrue("Object not stored", map.values().contains(params));
-        assertEquals("Wrong delimiter parsing flag", Boolean.TRUE,
-                map.get("delimiterParsingDisabled"));
-        assertEquals("Wrong delimiter", Character.valueOf('*'), params
-                .getParameters().get("listDelimiter"));
+        assertEquals("Wrong exception flag", Boolean.TRUE, params
+                .getParameters().get("throwExceptionOnMissing"));
     }
 
     /**

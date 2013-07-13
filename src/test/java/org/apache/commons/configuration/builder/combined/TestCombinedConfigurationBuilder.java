@@ -45,9 +45,11 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.ConfigurationRuntimeException;
 import org.apache.commons.configuration.ConfigurationUtils;
 import org.apache.commons.configuration.DefaultFileSystem;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
 import org.apache.commons.configuration.DynamicCombinedConfiguration;
 import org.apache.commons.configuration.FileSystem;
 import org.apache.commons.configuration.HierarchicalConfiguration;
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SubnodeConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
@@ -842,15 +844,18 @@ public class TestCombinedConfigurationBuilder
     {
         File testFile =
                 ConfigurationAssert.getTestFile("testCCResultClass.xml");
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('.');
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilderParameters(
                         new XMLBuilderParametersImpl().setFile(testFile))
-                .setListDelimiter('.').setThrowExceptionOnMissing(false));
+                .setListDelimiterHandler(listHandler)
+                .setThrowExceptionOnMissing(false));
         CombinedConfiguration cc = builder.getConfiguration();
         assertTrue("Wrong configuration class: " + cc.getClass(),
                 cc instanceof CombinedConfigurationTestImpl);
         assertTrue("Wrong exception flag", cc.isThrowExceptionOnMissing());
-        assertEquals("Wrong list delimiter", '.', cc.getListDelimiter());
+        assertEquals("Wrong list delimiter handler", listHandler,
+                cc.getListDelimiterHandler());
     }
 
     /**
@@ -885,15 +890,17 @@ public class TestCombinedConfigurationBuilder
         File testFile =
                 ConfigurationAssert
                         .getTestFile("testCCCombinedChildBuilder.xml");
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('*');
         builder.configure(new CombinedBuilderParametersImpl()
                 .setDefinitionBuilderParameters(
                         new XMLBuilderParametersImpl().setFile(testFile))
-                .setListDelimiter('*'));
+                .setListDelimiterHandler(listHandler));
         CombinedConfiguration cc = builder.getConfiguration();
         CombinedConfiguration cc2 =
                 (CombinedConfiguration) cc.getConfiguration("subcc");
         assertFalse("Wrong exception flag", cc2.isThrowExceptionOnMissing());
-        assertEquals("Wrong list delimiter", '*', cc2.getListDelimiter());
+        assertEquals("Wrong list delimiter handler", listHandler,
+                cc2.getListDelimiterHandler());
     }
 
     /**

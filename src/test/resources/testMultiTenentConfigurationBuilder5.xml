@@ -34,14 +34,13 @@
   <override>
     <multiXml filePattern="testwrite/testMultiConfiguration_$${sys:Id}.xml"
                config-name="clientConfig" config-optional="true"
-               config-forceCreate="true" delimiterParsingDisabled="true"
-               schemaValidation="false">
+               config-forceCreate="true" schemaValidation="false">
        <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </multiXml>
     <xml fileName="testwrite/testMultiDynamic_default.xml"
          config-name="defaultConfig" config-reload="true" 
-         delimiterParsingDisabled="true" schemaValidation="false">
+         schemaValidation="false">
       <expressionEngine
           config-class="org.apache.commons.configuration.tree.xpath.XPathExpressionEngine"/>
     </xml>

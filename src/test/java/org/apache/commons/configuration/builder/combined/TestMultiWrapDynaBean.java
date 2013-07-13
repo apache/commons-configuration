@@ -28,6 +28,8 @@ import java.util.Map;
 import org.apache.commons.beanutils.DynaClass;
 import org.apache.commons.beanutils.LazyDynaBean;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.configuration.DefaultListDelimiterHandler;
+import org.apache.commons.configuration.ListDelimiterHandler;
 import org.apache.commons.configuration.builder.BasicBuilderParameters;
 import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.junit.Test;
@@ -224,15 +226,16 @@ public class TestMultiWrapDynaBean
             beans.add(new BasicBuilderParameters());
         }
         MultiWrapDynaBean bean = new MultiWrapDynaBean(beans);
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler('+');
         PropertyUtils
                 .setProperty(bean, "throwExceptionOnMissing", Boolean.TRUE);
         PropertyUtils
-                .setProperty(bean, "listDelimiter", Character.valueOf('+'));
+                .setProperty(bean, "listDelimiterHandler", listHandler);
         Map<String, Object> map = params.getParameters();
         assertEquals("Exception flag not set", Boolean.TRUE,
                 map.get("throwExceptionOnMissing"));
-        assertEquals("List delimiter not set", Character.valueOf('+'),
-                map.get("listDelimiter"));
+        assertEquals("List delimiter handler not set", listHandler,
+                map.get("listDelimiterHandler"));
     }
 
     /**

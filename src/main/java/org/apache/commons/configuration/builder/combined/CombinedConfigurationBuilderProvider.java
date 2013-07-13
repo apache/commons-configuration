@@ -126,8 +126,7 @@ public class CombinedConfigurationBuilderProvider extends
     private static void setUpBasicParameters(CombinedConfiguration config,
             BasicBuilderParameters params)
     {
-        params.setDelimiterParsingDisabled(config.isDelimiterParsingDisabled())
-                .setListDelimiter(config.getListDelimiter())
+        params.setListDelimiterHandler(config.getListDelimiterHandler())
                 .setLogger(config.getLogger())
                 .setThrowExceptionOnMissing(config.isThrowExceptionOnMissing());
     }
