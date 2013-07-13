@@ -101,6 +101,10 @@ public final class PropertyConverter
         {
             return toBoolean(value);
         }
+        else if (Character.class.equals(cls) || Character.TYPE.equals(cls))
+        {
+            return toCharacter(value);
+        }
         else if (Number.class.isAssignableFrom(cls) || cls.isPrimitive())
         {
             if (Integer.class.equals(cls) || Integer.TYPE.equals(cls))
@@ -204,6 +208,32 @@ public final class PropertyConverter
         else
         {
             throw new ConversionException("The value " + value + " can't be converted to a Boolean object");
+        }
+    }
+
+    /**
+     * Converts the specified value object to a {@code Character}. This method
+     * converts the passed in object to a string. If the string has exactly one
+     * character, this character is returned as result. Otherwise, conversion
+     * fails.
+     *
+     * @param value the value to be converted
+     * @return the resulting {@code Character} object
+     * @throws ConversionException if the conversion is not possible
+     */
+    public static Character toCharacter(Object value) throws ConversionException
+    {
+        String strValue = String.valueOf(value);
+        if (strValue.length() == 1)
+        {
+            return Character.valueOf(strValue.charAt(0));
+        }
+        else
+        {
+            throw new ConversionException(
+                    String.format(
+                            "The value '%s' cannot be converted to a Character object!",
+                            strValue));
         }
     }
 
