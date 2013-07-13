@@ -167,6 +167,11 @@
         EventSource is now an interface. With BaseEventSource there is a
         default implementation.
       </action>
+      <action dev="oheger" type="update" issue="CONFIGURATION-418">
+        The handling of list delimiters and their escape characters has been
+        reworked. A new ListDelimiterHandler interface was introduced allowing
+        applications to customize the treatment of list delimiters.
+      </action>
       <action dev="oheger" type="update" issue="CONFIGURATION-330">
         Concurrent access to configurations has been reworked.
       </action>
