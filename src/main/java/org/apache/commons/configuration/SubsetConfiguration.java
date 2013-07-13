@@ -239,76 +239,34 @@ public class SubsetConfiguration extends AbstractConfiguration
     }
 
     /**
-     * Returns the list delimiter. This property will be fetched from the parent
-     * configuration if supported.
-     *
-     * @return the list delimiter
-     * @since 1.4
+     * {@inheritDoc} If the parent configuration extends
+     * {@link AbstractConfiguration}, the list delimiter handler is obtained
+     * from there.
      */
     @Override
-    public char getListDelimiter()
+    public ListDelimiterHandler getListDelimiterHandler()
     {
         return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
-                .getListDelimiter()
-                : super.getListDelimiter();
+                .getListDelimiterHandler() : super.getListDelimiterHandler();
     }
 
     /**
-     * Sets the list delimiter. If the parent configuration supports this
-     * feature, the delimiter will be set at the parent.
-     *
-     * @param delim the new list delimiter
-     * @since 1.4
+     * {@inheritDoc} If the parent configuration extends
+     * {@link AbstractConfiguration}, the list delimiter handler is passed to
+     * the parent.
      */
     @Override
-    public void setListDelimiter(char delim)
-    {
-        if (parent instanceof AbstractConfiguration)
-        {
-            ((AbstractConfiguration) parent).setListDelimiter(delim);
-        }
-        else
-        {
-            super.setListDelimiter(delim);
-        }
-    }
-
-    /**
-     * Returns a flag whether string properties should be checked for list
-     * delimiter characters. This implementation ensures that this flag is kept
-     * in sync with the parent configuration if this object supports this
-     * feature.
-     *
-     * @return the delimiter parsing disabled flag
-     * @since 1.4
-     */
-    @Override
-    public boolean isDelimiterParsingDisabled()
-    {
-        return (parent instanceof AbstractConfiguration) ? ((AbstractConfiguration) parent)
-                .isDelimiterParsingDisabled()
-                : super.isDelimiterParsingDisabled();
-    }
-
-    /**
-     * Sets a flag whether list parsing is disabled. This implementation will
-     * also set the flag at the parent configuration if this object supports
-     * this feature.
-     *
-     * @param delimiterParsingDisabled the delimiter parsing disabled flag
-     * @since 1.4
-     */
-    @Override
-    public void setDelimiterParsingDisabled(boolean delimiterParsingDisabled)
+    public void setListDelimiterHandler(
+            ListDelimiterHandler listDelimiterHandler)
     {
         if (parent instanceof AbstractConfiguration)
         {
             ((AbstractConfiguration) parent)
-                    .setDelimiterParsingDisabled(delimiterParsingDisabled);
+                    .setListDelimiterHandler(listDelimiterHandler);
         }
         else
         {
-            super.setDelimiterParsingDisabled(delimiterParsingDisabled);
+            super.setListDelimiterHandler(listDelimiterHandler);
         }
     }
 

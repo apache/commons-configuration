@@ -20,6 +20,7 @@ package org.apache.commons.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -34,6 +35,7 @@ import org.apache.commons.configuration.builder.FileBasedBuilderParametersImpl;
 import org.apache.commons.configuration.builder.combined.CombinedConfigurationBuilder;
 import org.apache.commons.configuration.interpol.ConfigurationInterpolator;
 import org.apache.commons.configuration.interpol.Lookup;
+import org.easymock.EasyMock;
 import org.junit.Test;
 
 /**
@@ -260,8 +262,11 @@ public class TestSubsetConfiguration
         assertFalse("the parent configuration is empty", config.isEmpty());
     }
 
+    /**
+     * Tests whether a list delimiter handler is used correctly.
+     */
     @Test
-    public void testSetListDelimiterHandler()
+    public void testListDelimiterHandling()
     {
         BaseConfiguration config = new BaseConfiguration();
         Configuration subset = config.subset("prefix");
@@ -277,48 +282,52 @@ public class TestSubsetConfiguration
                 .size());
     }
 
+    /**
+     * Tests whether the list delimiter handler is also set for the parent
+     * configuration.
+     */
     @Test
-    public void testGetListDelimiter()
+    public void testSetListDelimiterHandlerInParent()
     {
         BaseConfiguration config = new BaseConfiguration();
-        AbstractConfiguration subset = (AbstractConfiguration) config
-                .subset("prefix");
-        config.setListDelimiter('/');
-        assertEquals("Wrong list delimiter in subset", '/', subset
-                .getListDelimiter());
-        subset.setListDelimiter(';');
-        assertEquals("Wrong list delimiter in parent", ';', config
-                .getListDelimiter());
+        AbstractConfiguration subset =
+                (AbstractConfiguration) config.subset("prefix");
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
+        subset.setListDelimiterHandler(listHandler);
+        assertSame("Handler not passed to parent", listHandler,
+                config.getListDelimiterHandler());
     }
 
+    /**
+     * Tests whether the list delimiter handler from the parent configuration is
+     * used.
+     */
     @Test
-    public void testSetDelimiterParsingDisabled()
+    public void testGetListDelimiterHandlerFromParent()
     {
         BaseConfiguration config = new BaseConfiguration();
-        Configuration subset = config.subset("prefix");
-        subset.addProperty("list", "a,b,c");
-        assertEquals("Wrong value of property", "a,b,c", config
-                .getString("prefix.list"));
-
-        ((AbstractConfiguration) subset)
-                .setListDelimiterHandler(new DefaultListDelimiterHandler(','));
-        subset.addProperty("list2", "a,b,c");
-        assertEquals("Wrong size of list2", 3, config.getList("prefix.list2")
-                .size());
+        AbstractConfiguration subset =
+                (AbstractConfiguration) config.subset("prefix");
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
+        config.setListDelimiterHandler(listHandler);
+        assertSame("Not list handler from parent", listHandler,
+                subset.getListDelimiterHandler());
     }
 
+    /**
+     * Tests the case that the parent configuration is not derived from
+     * AbstractConfiguration and thus does not support a list delimiter handler.
+     */
     @Test
-    public void testIsDelimiterParsingDisabled()
+    public void testSetListDelimiterHandlerParentNotSupported()
     {
-        BaseConfiguration config = new BaseConfiguration();
-        AbstractConfiguration subset = (AbstractConfiguration) config
-                .subset("prefix");
-        config.setDelimiterParsingDisabled(true);
-        assertTrue("Wrong value of list parsing flag in subset", subset
-                .isDelimiterParsingDisabled());
-        subset.setDelimiterParsingDisabled(false);
-        assertFalse("Wrong value of list parsing flag in parent", config
-                .isDelimiterParsingDisabled());
+        Configuration config = EasyMock.createNiceMock(Configuration.class);
+        EasyMock.replay(config);
+        SubsetConfiguration subset = new SubsetConfiguration(config, "prefix");
+        ListDelimiterHandler listHandler = new DefaultListDelimiterHandler(',');
+        subset.setListDelimiterHandler(listHandler);
+        assertSame("List delimiter handler not set", listHandler,
+                subset.getListDelimiterHandler());
     }
 
     /**
