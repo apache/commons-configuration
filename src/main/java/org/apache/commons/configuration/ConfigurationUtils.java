@@ -288,11 +288,9 @@ public final class ConfigurationUtils
                 hc.setExpressionEngine(engine);
             }
 
-            // Workaround for problem with copy()
-            boolean delimiterParsingStatus = hc.isDelimiterParsingDisabled();
-            hc.setDelimiterParsingDisabled(true);
+            // Per default, a DisabledListDelimiterHandler is set.
+            // So list delimiters in property values are not an issue.
             hc.append(conf);
-            hc.setDelimiterParsingDisabled(delimiterParsingStatus);
             return hc;
         }
     }
